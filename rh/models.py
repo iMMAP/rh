@@ -9,6 +9,9 @@ class Organization(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now_add=True)
 
+class Cluster(models.Model):
+    title = models.CharField(max_length=200)
+
 class User(AbstractUser):
     first_name = None
     last_name = None
@@ -16,7 +19,7 @@ class User(AbstractUser):
     organization = models.ForeignKey(Organization, on_delete=models.CASCADE, null=True)
     name = models.CharField(max_length=200)
     visits = models.IntegerField(null=True)
-    cluster = models.CharField(max_length=200, null=True)
+    cluster = models.ForeignKey(Cluster, on_delete=models.CASCADE, null=True)
     position = models.CharField(max_length=200, null=True)
     phone = models.CharField(max_length=200, null=True)
     pass
@@ -30,6 +33,16 @@ class Project(models.Model):
     end_date = models.DateTimeField('end date')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+class Activity(models.Model):
+    cluster = models.ForeignKey(Cluster, on_delete=models.CASCADE)
+    title = models.CharField(max_length=200)
+    start_date = models.DateTimeField('start date', null=True)
+    end_date = models.DateTimeField('end date', null=True)
+    
+class Indicator(models.Model):
+    activity = models.ForeignKey(Activity, on_delete=models.CASCADE, null=True)
+    title = models.CharField(max_length=200)
 
 class Report(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)

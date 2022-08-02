@@ -1,7 +1,7 @@
 {% extends 'report/base.html' %}
 
 {% block content %}
-<form action="{% url 'add_project' %}" method="post">
+<form action="/add_project/" method="post">
     {% csrf_token %}
     {{ form.as_p }}
     <input type="submit" value="Submit">

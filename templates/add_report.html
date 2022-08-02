@@ -1,0 +1,42 @@
+{% extends '_base.html' %}
+
+{% block content %}
+    <!-- {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %} -->
+
+        <div class="w-full bg-black shadow dark:border md:mt-0 xl:p-0 dark:bg-gray-800 dark:border-gray-700 flex flex-col">
+            <div class="p-6 space-y-28 md:space-y-6 sm:p-8">
+                <div class="dark:bg-gray-800 bg-blue-700 text-white p-6 text-xl font-bold"><h3>Add project</h3></div>
+                <form class="mx-3 space-y-28 md:space-y-6" method="post" action="/add_project/">
+                    {% csrf_token %}
+                    <div>
+                        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{ form.title.label }}</label>
+                        {{form.title}}
+                    </div>
+                    <div>
+                        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{ form.description.label }}</label>
+                        {{form.description}}
+                    </div>
+                    <div class="flex items-center">
+                        <div  class="ml-2 w-full">
+                            <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{ form.start_date.label }}</label>
+                            {{form.start_date}}
+                        </div>
+                        <div class="ml-3 w-full">
+                            <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{ form.end_date.label }}</label>
+                            {{form.end_date}}
+                        </div>
+                    </div>
+                    <button type="submit" class="w-full py-2 px-4 text-sm text-center font-medium text-white bg-transparent rounded-lg border border-gray-900 hover:bg-gray-900 hover:text-white focus:z-10 focus:ring-2 focus:ring-gray-500 focus:bg-gray-900 focus:text-white dark:border-white dark:text-white dark:hover:text-white dark:hover:bg-gray-700 dark:focus:bg-gray-700 bg-blue-700">SAVE</button>
+
+                </form>
+            </div>
+        </div>
+
+
+{% endblock %}

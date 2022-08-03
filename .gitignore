@@ -30,7 +30,6 @@ MANIFEST
 # Templating
 node_modules
 static/CACHE/
-static/src/output.css
 
 # PyInstaller
 #  Usually these files are written by a python script from a template

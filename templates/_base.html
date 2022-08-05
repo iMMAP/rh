@@ -2,6 +2,7 @@
 
 {% load compress %}
 {% load static %}
+{% load unicorn %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -15,7 +16,7 @@
     {% compress css %}
     <link rel="stylesheet" href="{% static 'src/output.css' %}">
     {% endcompress %}
-
+    {% unicorn_scripts %}
 </head>
 
 <body class="bg-gray-50">
@@ -47,11 +48,11 @@
         </div>
     </nav>
     <!-- End of new HTML -->
-
     <div>
         {% block content %}
         {% endblock content %}
     </div>
+    {% csrf_token %}
     <script src="https://unpkg.com/flowbite@1.5.1/dist/flowbite.js"></script>
 </body>
 

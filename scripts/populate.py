@@ -5,19 +5,19 @@ import pandas as pd
 con = sqlite3.connect("../db.sqlite3")
 
 ac = pd.read_csv(
-    '../data/activities.csv', parse_dates=['start_date', 'end_date']
+    '../data/activities.csv', usecols=['cluster', 'activity_type_name', 'indicator_name', 'active']
 ).drop_duplicates().dropna(
     subset=['activity_type_name']
 ).reset_index(drop=True)
 
-ac.to_sql('tmp_activities', con, index=False)
+ac[ac.active == True].to_sql('tmp_activities', con, index=False)
 
 con.execute("""
 insert into rh_cluster (title) select distinct cluster from tmp_activities;
 """)
 
 con.execute("""
-insert into rh_activity (cluster_id,title,start_date,end_date) select distinct id,activity_type_name,start_date,end_date 
+insert into rh_activity (cluster_id,title,active,created_at,updated_at) select distinct id,activity_type_name,True,date('now'),date('now')
 from rh_cluster c inner join tmp_activities a on a."cluster"=c.title;
 """)
 

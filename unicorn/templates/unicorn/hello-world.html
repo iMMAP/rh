@@ -1,0 +1,23 @@
+<div>
+    <form unicorn:submit.prevent="add">
+        <input type="checkbox" unicorn:model.lazy="task" id="c1" name="alaki" unicorn:click="add">sdfsdf</input>
+        <input type="checkbox" unicorn:model.lazy="task" id="c2" name="hichi" unicorn:click="add">sdfdsfdsfd</input>
+    </form>
+    <!-- <button unicorn:click="add">Add</button> -->
+
+    
+    <p>
+        {% if tasks %}
+        <ul>
+            {% for task in tasks %}
+            <li>{{ task }}</li>
+            <li>One more task</li>
+            {% endfor %}
+        </ul>
+
+        <button unicorn:click="$reset">Clear all tasks</button>
+        {% else %}
+        No tasks 🎉
+        {% endif %}
+    </p>
+</div>

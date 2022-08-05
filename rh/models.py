@@ -37,9 +37,10 @@ class Project(models.Model):
 class Activity(models.Model):
     cluster = models.ForeignKey(Cluster, on_delete=models.CASCADE)
     title = models.CharField(max_length=200)
-    start_date = models.DateTimeField('start date', null=True)
-    end_date = models.DateTimeField('end date', null=True)
-    
+    active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now_add=True)
+
 class Indicator(models.Model):
     activity = models.ForeignKey(Activity, on_delete=models.CASCADE, null=True)
     title = models.CharField(max_length=200)
@@ -59,9 +60,13 @@ class Beneficiary(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
 class Location(models.Model):
-    report = models.ForeignKey(Report, on_delete=models.CASCADE)
-    boys = models.IntegerField()
-    girls = models.IntegerField()
-    men = models.IntegerField()
-    women = models.IntegerField()
+    parent = models.ForeignKey("self", default=0, on_delete=models.CASCADE)
+    level = models.IntegerField(default=0)
+    code = models.CharField(max_length=200)
+    name = models.CharField(max_length=200)
+    original_name = models.CharField(max_length=200, null=True)
+    type = models.CharField(max_length=200, default='country')
+    lat = models.FloatField(null=True)
+    long = models.FloatField(null=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now_add=True)

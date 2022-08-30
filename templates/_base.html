@@ -2,7 +2,6 @@
 
 {% load compress %}
 {% load static %}
-{% load unicorn %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -16,10 +15,11 @@
     {% compress css %}
     <link rel="stylesheet" href="{% static 'src/output.css' %}">
     {% endcompress %}
-    {% unicorn_scripts %}
+
+    <script src="https://unpkg.com/htmx.org@1.8.0"></script>
 </head>
 
-<body class="bg-gray-50">
+<body class="bg-gray-50" hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
     <!-- Add this -->
     <nav class="bg-gray-50 border-gray-200 px-2 sm:px-4 py-2.5 rounded dark:bg-gray-800">
         <div class="container flex flex-wrap items-center justify-between mx-auto">

@@ -1,64 +1,70 @@
 {% extends '_base.html' %}
-{% load unicorn %}
 
 {% block content %}
-    {% unicorn 'hello-world' name="Universe" %}
-    <!-- {% if messages %}
-    <ul class="messages">
-        {% for message in messages %}
-        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-        {% endfor %}
-    </ul>
-    {% endif %} -->
-        <div class="container mx-auto px-4 md:mt-0 sm:max-w-md xl:p-0 ">
-            <div>
-                <form class="mx-3 space-y-28 md:space-y-6" method="post" action="/add_project/">
-                    {% csrf_token %}
-                    <div>
-                        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{ form.title.label }}</label>
-                        {{form.title}}
-                    </div>
-                    <div>
-                        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{ form.description.label }}</label>
-                        {{form.description}}
-                    </div>
-                    <div class="flex items-center">
-                        <div  class="ml-2 w-full">
-                            <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{ form.start_date.label }}</label>
-                            {{form.start_date}}
-                        </div>
-                        <div class="ml-3 w-full">
-                            <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{ form.end_date.label }}</label>
-                            {{form.end_date}}
-                        </div>
-                    </div>
-                    <div>Select Clusters</div>
-                    <fieldset>
-                        <legend class="sr-only">Checkbox variants</legend>
-                      
-                        <div class="flex items-center mb-4">
-                            <input checked id="checkbox-1" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" >
-                            <label for="checkbox-1" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">I agree to the <a href="#" class="text-blue-600 hover:underline dark:text-blue-500">terms and conditions</a>.</label>
-                        </div>
-                      
-                        <div class="flex items-center mb-4">
-                            <input id="checkbox-2" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                            <label for="checkbox-2" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">I want to get promotional offers</label>
-                        </div>
-                      
-                        <div class="flex items-center mb-4">
-                            <input id="checkbox-3" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                            <label for="checkbox-3" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">I am 18 years or older</label>
-                        </div>
-                        
-                        <div class="flex items-center">
-                            <input id="international-shipping-disabled" type="checkbox" value="" class="w-4 h-4 bg-gray-50 rounded border-gray-300 focus:ring-3 focus:ring-blue-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-600 dark:ring-offset-gray-800" disabled>
-                            <label for="international-shipping-disabled" class="ml-2 text-sm font-medium text-gray-400 dark:text-gray-500">Eligible for international shipping (disabled)</label>
-                        </div>
-                      </fieldset>
-                    <button type="submit" class="w-full py-2 px-4 text-sm text-center font-medium  bg-transparent rounded-lg border border-gray-900 hover:bg-gray-900 hover:text-white focus:z-10 focus:ring-2 focus:ring-gray-500 focus:bg-gray-900 focus:text-white dark:border-white dark:text-white dark:hover:text-white dark:hover:bg-gray-700 dark:focus:bg-gray-700 bg-blue-700">SAVE</button>
-                </form>
-            </div>
+
+<div class="container mx-auto px-4 md:mt-0 sm:max-w-md xl:p-0 ">
+    <form class="mx-3 space-y-28 md:space-y-6" action="/add_project/" method="GET" id="projectForm">
+        {% csrf_token %}
+        <div>
+            <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Select Cluster</label>
+            <select class="w-full rounded-lg focus:ring-primary-600 focus:border-primary-600" name="posts"
+                id="id_cluster" multiple>
+            </select>
         </div>
+        <div>
+            <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Select Activity type</label>
+            <select class="w-full rounded-lg focus:ring-primary-600 focus:border-primary-600" name="users"
+                id="id_activity_type" multiple>
+            </select>
+        </div>
+        <button type="submit"
+            class="w-full py-2 px-4 text-sm text-center font-medium  bg-transparent rounded-lg border border-gray-900 hover:bg-gray-900 hover:text-white focus:z-10 focus:ring-2 focus:ring-gray-500 focus:bg-gray-900 focus:text-white dark:border-white dark:text-white dark:hover:text-white dark:hover:bg-gray-700 dark:focus:bg-gray-700 bg-blue-700">SAVE</button>
+    </form>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        var userUrl = "https://jsonplaceholder.typicode.com/users"
+
+        $.getJSON(userUrl, function (data) {
+            $.each(data, function (index, value) {
+                $('#id_cluster').append('<option style="background-color:powderblue;" value="' + value.id + '">' + value.name + '</option>');
+            });
+        });
+
+
+        $("select#id_cluster").change(function () {
+
+            var selectedUser = $(this).children("option:selected").map(function (_, e) {
+                return "&userId=" + e.value
+            }).get().join('');
+
+            var postUrl = "https://jsonplaceholder.typicode.com/posts?" + selectedUser
+
+            $.getJSON(postUrl, function (data) {
+                $.each(data, function (index, value) {
+                    $('#id_activity_type').append('<option value="' + value.id + '">' + value.title + '</option>');
+                });
+            });
+
+            if ($(this).children("option:selected").empty()) {
+                $('#id_activity_type').empty()
+            }
+        });
+    });
+
+    $(document).ready(function () {
+        $("#id_cluster").select2({
+            placeholder: 'Select Cluster...'
+        });
+        $("#id_activity_type").select2({
+            placeholder: 'Select Activity Type...'
+        });
+    });
+</script>
 
 {% endblock %}

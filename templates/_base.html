@@ -31,7 +31,24 @@
           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
             
           </ul>
-          <a class="nav-link" href="{% url 'login' %}"><i class="fa-solid fa-user"></i>&nbsp;Login</a>
+          <ul class="navbar-nav">
+              {% if user.is_superuser %}
+                <a class="nav-link" href="{% url 'admin:index' %}"><i class="fa-solid fa-screwdriver-wrench"></i>&nbsp;Admin</a>
+              {% endif %}
+              {% if user.is_authenticated %}
+              <li>
+                <a class="nav-link" href="{% url 'profile' %}"><i class="fa-solid fa-user"></i>&nbsp;Profile</a>
+              </li>
+              <li>
+                <a class="nav-link" href="{% url 'logout' %}"><i class="fa-solid fa-power-off"></i>&nbsp;Sign out</a>
+              </li>
+              {% else %}
+              <li>
+                <a class="nav-link" href="{% url 'login' %}"><i class="fa-solid fa-user"></i>&nbsp;Login</a>
+              </li>
+              {% endif %}
+          </ul>
+          
         </div>
       </div>
     </nav>

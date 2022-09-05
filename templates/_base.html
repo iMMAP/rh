@@ -18,27 +18,20 @@
   </head>
 
   <body style="background-color: #f6f1f1">
-    <nav class="navbar navbar-expand-lg" style="background-color: #e1e0e0;">
+    <nav class="navbar navbar-expand-lg bg-light">
       <div class="container-fluid">
-          <a class="navbar-brand" href="#">
-              <i class="fa-solid fa-arrows-spin" style="color: #002B5B;"></i>&nbsp;
-              ReportHub
-            </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-          <ul class="navbar-nav">
-            <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="#">Home</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="{% url 'login' %}">Features</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">Pricing</a>
-            </li>
+        <a class="navbar-brand" href="/">
+          <i class="fa-solid fa-arrows-spin" style="color: #002B5B;"></i>&nbsp;
+          ReportHub
+        </a>
+        <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            
           </ul>
+          <a class="nav-link" href="{% url 'login' %}"><i class="fa-solid fa-user"></i>&nbsp;Login</a>
         </div>
       </div>
     </nav>

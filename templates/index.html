@@ -12,7 +12,12 @@
             <div class="col-lg-8 align-self-baseline">
                 <p class="mb-3">Humanitarian Decision Support in Real-Time</p>
                 <div class="mb-5 btn-group">
+                    {% if user.is_authenticated %}
+                    <a class="btn btn-outline-dark" href="{% url 'profile' %}"><i class="fa-solid fa-user"></i>&nbsp;Profile</a>
+                    {% else %}
                     <a class="btn btn-outline-dark" href="{% url 'login' %}"><i class="fa-solid fa-user"></i>&nbsp;Login</a>
+                    {% endif %}
+                    
                     <a class="btn btn-outline-dark"><i class="fa-solid fa-magnifying-glass"></i>&nbsp;5W Dashboard</a>
                     <a class="btn btn-outline-dark"><i class="fa-solid fa-download"></i>&nbsp;Download</a>
                 </div>

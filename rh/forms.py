@@ -1,28 +1,17 @@
+from curses.ascii import US
+from statistics import mode
 from django import forms
+from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import get_user_model
-
-
 
 User = get_user_model()
 
-
-class RegisterForm(forms.Form):
+class RegisterForm(UserCreationForm):
     """Registration form"""
 
-    username = forms.CharField()
-    email = forms.EmailField()
-    password1 = forms.CharField(
-        label="Password",
-        widget=forms.PasswordInput(
-            attrs={"class": "form-control", "id": "user-password1"}
-        ),
-    )
-    password2 = forms.CharField(
-        label="Confirm Password",
-        widget=forms.PasswordInput(
-            attrs={"class": "form-control", "id": "user-password2"}
-        ),
-    )
+    class Meta:
+        model = User
+        fields = ['username', 'email', 'password1', 'password2']
 
     def clean_username(self):
         """check if username already exists"""
@@ -30,7 +19,7 @@ class RegisterForm(forms.Form):
         qs = User.objects.filter(username__iexact=username)
         if qs.exists():
             raise forms.ValidationError(
-                "This is an invalid username, please pick another."
+                f"{username} is invalid, please pick another."
             )
         return username
 
@@ -40,7 +29,7 @@ class RegisterForm(forms.Form):
         qs = User.objects.filter(email__iexact=email)
         if qs.exists():
             raise forms.ValidationError(
-                "This is an invalid email address, please pick another."
+                f"{email} is invalid, please pick another."
             )
         return email
 

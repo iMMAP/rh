@@ -9,27 +9,37 @@
             <h1 class="m-5">Report Hub</h1>
             {% if form.errors %}
             {{ form.errors }}
-                <p>Your username and password didn't match. Please try again.</p>
             {% endif %}
+
+            {% if messages %}
+                {% for message in messages %}
+                    {% if message.tags %}
+                            <div class="alert alert-{{ message.tags }}" role="alert">{{ message }}</div>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+                
             <p>Humanitarian Decision Support in Real-Time</p>
             <p>Sign into your account</p>
-            <form method="post" action="{% url 'login' %}">
+            <form method="POST" action="">
                 {% csrf_token %}
                 <div class="mb-3">
-                    <input type="text" name="{{ form.username.html_name }}" id="{{ form.username.id_for_label }}" class="form-control" placeholder="Username">
+                    <input type="text" name="username" id="{{ form.username.id_for_label }}" class="form-control" placeholder="Username"/>
                 </div>
                 <div class="mb-3">
-                    <input type="password" class="form-control" name="{{ form.password.html_name }}" id="{{ form.password.id_for_label }}" placeholder="Password">
+                    <input type="password" class="form-control" name="password" id="{{ form.password.id_for_label }}" placeholder="Password"/>
                 </div>
                 <div class="mb-3 d-grid">
-                    <input type="submit" class="btn btn-outline-dark" value="Sign in">
+                    <input type="submit" class="btn btn-outline-dark" value="Sign in"/>
                 </div>
             </form>
             <p class="mb-0">
                 Forgot your passowrd?
-                <a href="{% url 'register' %}" class="mb-0">Register</a>
-
             </p> 
+            <p class="mb-0">
+                Don't have an account?
+                <a href="{% url 'register' %}" class="mb-0">Register</a>
+            </p>
         </div>
     </div>
 </div>

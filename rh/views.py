@@ -1,43 +1,67 @@
-from email import message
+from functools import cache
+import pandas as pd
+import datetime
+import sqlite3
 from multiprocessing import context
+from tkinter import E
+
+from django.contrib import messages
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth import login, logout, authenticate
+from django.contrib.auth.decorators import login_required
+from django.views.decorators.cache import cache_control
 
-# Create your views here.
+
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
 from django.conf import settings
-from .models import Project, User
+
+from .models import Project
 from .forms import ProjectForm, RegisterForm
-import datetime
-
-import pandas as pd
-import sqlite3
+from .decorators import unauthenticated_user
 
 
+@unauthenticated_user
 def register_view(request):
-    form = RegisterForm(request.POST or None)
-    if form.is_valid():
-        username = form.cleaned_data.get("username")
-        email = form.cleaned_data.get("email")
-        password = form.cleaned_data.get("password1")
-        try:
-            user = User.objects.create_user(username, email, password)
-        except Exception as e:
-            user = None
-        if user != None:
+    template = loader.get_template('registration/signup.html')
+    form = RegisterForm()
+    if request.method == 'POST':
+        form = RegisterForm(request.POST)
+        if form.is_valid():
+            username = form.cleaned_data.get('username')
+            form.save()
+            messages.success(request, f'Account created successfully for {username}.')
+            return redirect('login')
+    context = {'form': form}
+    return HttpResponse(template.render(context, request))
+
+
+@unauthenticated_user
+def login_view(request):
+    template = loader.get_template('registration/login.html')
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        user = authenticate(request, username=username, password=password)
+
+        if user is not None:
             login(request, user)
-            return redirect("/profile")
+            return redirect('index')
         else:
-            request.session["register_error"] = 1
-    return render(request, "registration/signup.html", {"form": form})
+            messages.info(request, f'Enter correct username and password.')
+        print(username, password)
+    context = {}
+    return HttpResponse(template.render(context, request))
 
 
 def logout_view(request):
+    messages.info(request, f'{request.user} logged out.')
     logout(request)
     return redirect("/login")
 
+@cache_control(no_store=True)
+@login_required
 def index(request):
     template = loader.get_template('index.html')
 
@@ -125,10 +149,11 @@ def index(request):
 #         'activities': activities,
 #     }
     context = {}
-
     return HttpResponse(template.render(context, request))
 
 
+@cache_control(no_store=True)
+@login_required
 def profile(request):
     template = loader.get_template('profile.html')
     user = request.user
@@ -136,6 +161,8 @@ def profile(request):
     return HttpResponse(template.render(context, request))
 
 
+@cache_control(no_store=True)
+@login_required
 def add_project(request):
     if request.method == 'POST':
         form = ProjectForm(request.POST)

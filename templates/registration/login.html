@@ -22,10 +22,14 @@
                     <input type="password" class="form-control" name="{{ form.password.html_name }}" id="{{ form.password.id_for_label }}" placeholder="Password">
                 </div>
                 <div class="mb-3 d-grid">
-                    <input type="submit" class="btn btn-outline-dark" value="Sign in"></input>
+                    <input type="submit" class="btn btn-outline-dark" value="Sign in">
                 </div>
             </form>
-            <p class="mb-0">Forgot your passowrd?</p>
+            <p class="mb-0">
+                Forgot your passowrd?
+                <a href="{% url 'register' %}" class="mb-0">Register</a>
+
+            </p> 
         </div>
     </div>
 </div>

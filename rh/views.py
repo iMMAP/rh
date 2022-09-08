@@ -21,24 +21,31 @@ from .models import Project
 from .forms import ProjectForm, RegisterForm
 from .decorators import unauthenticated_user
 
-
+@cache_control(no_store=True)
 @unauthenticated_user
 def register_view(request):
+    """Registration view for creating new signing up"""
     template = loader.get_template('registration/signup.html')
     form = RegisterForm()
     if request.method == 'POST':
         form = RegisterForm(request.POST)
         if form.is_valid():
             username = form.cleaned_data.get('username')
-            form.save()
+            name = form.cleaned_data.get('name')
+            user = form.save()
+            #TODO: When user is created populate the name field with username for now.
+            if not name:
+                user.name = username
+                user.save()
             messages.success(request, f'Account created successfully for {username}.')
             return redirect('login')
     context = {'form': form}
     return HttpResponse(template.render(context, request))
 
-
+@cache_control(no_store=True)
 @unauthenticated_user
 def login_view(request):
+    """User Login View """
     template = loader.get_template('registration/login.html')
     if request.method == 'POST':
         username = request.POST.get('username')
@@ -50,12 +57,12 @@ def login_view(request):
             return redirect('index')
         else:
             messages.info(request, f'Enter correct username and password.')
-        print(username, password)
     context = {}
     return HttpResponse(template.render(context, request))
 
 
 def logout_view(request):
+    """User Logout View"""
     messages.info(request, f'{request.user} logged out.')
     logout(request)
     return redirect("/login")

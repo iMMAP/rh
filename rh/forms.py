@@ -7,11 +7,12 @@ from django.contrib.auth import get_user_model
 User = get_user_model()
 
 class RegisterForm(UserCreationForm):
-    """Registration form"""
+    """User Registration form"""
 
+    # TODO: Add the custom user details in future
     class Meta:
         model = User
-        fields = ['username', 'email', 'password1', 'password2']
+        fields = ['name', 'username', 'email', 'password1', 'password2']
 
     def clean_username(self):
         """check if username already exists"""
@@ -19,7 +20,7 @@ class RegisterForm(UserCreationForm):
         qs = User.objects.filter(username__iexact=username)
         if qs.exists():
             raise forms.ValidationError(
-                f"{username} is invalid, please pick another."
+                f"{username} is an invalid username, please pick another."
             )
         return username
 
@@ -29,7 +30,7 @@ class RegisterForm(UserCreationForm):
         qs = User.objects.filter(email__iexact=email)
         if qs.exists():
             raise forms.ValidationError(
-                f"{email} is invalid, please pick another."
+                f"{email} is an invalid email address, please pick another."
             )
         return email
 

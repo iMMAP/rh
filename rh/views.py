@@ -155,7 +155,6 @@ ORDER BY month, l2.name, people_recieved desc;
         'WASH': clusters['WASH'],
         'activities': activities,
     }
-    context = {}
     return HttpResponse(template.render(context, request))
 
 

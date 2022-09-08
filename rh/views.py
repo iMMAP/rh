@@ -1,9 +1,6 @@
-from functools import cache
 import pandas as pd
 import datetime
 import sqlite3
-from multiprocessing import context
-from tkinter import E
 
 from django.contrib import messages
 from django.shortcuts import render, redirect
@@ -17,9 +14,10 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
 from django.conf import settings
 
-from .models import Project
+from .models import Organization, Project
 from .forms import ProjectForm, RegisterForm
 from .decorators import unauthenticated_user
+
 
 @cache_control(no_store=True)
 @unauthenticated_user
@@ -27,20 +25,22 @@ def register_view(request):
     """Registration view for creating new signing up"""
     template = loader.get_template('registration/signup.html')
     form = RegisterForm()
+    organizations = Organization.objects.all()
     if request.method == 'POST':
         form = RegisterForm(request.POST)
         if form.is_valid():
             username = form.cleaned_data.get('username')
             name = form.cleaned_data.get('name')
             user = form.save()
-            #TODO: When user is created populate the name field with username for now.
+            #TODO: When user is created populate the name field with username if not provided for now.
             if not name:
                 user.name = username
                 user.save()
             messages.success(request, f'Account created successfully for {username}.')
             return redirect('login')
-    context = {'form': form}
+    context = {'form': form, 'organizations': organizations}
     return HttpResponse(template.render(context, request))
+
 
 @cache_control(no_store=True)
 @unauthenticated_user
@@ -67,8 +67,8 @@ def logout_view(request):
     logout(request)
     return redirect("/login")
 
+
 @cache_control(no_store=True)
-@login_required
 def index(request):
     template = loader.get_template('index.html')
 

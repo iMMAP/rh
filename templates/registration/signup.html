@@ -23,6 +23,9 @@
             <form method="post" action="{% url 'register' %}">
                 {% csrf_token %}
                 <div class="mb-3">
+                    <input type="text" name="{{ form.name.html_name }}" id="{{ form.name.id_for_label }}" class="form-control" placeholder="Full Name"/ >
+                </div>
+                <div class="mb-3">
                     <input type="text" name="{{ form.username.html_name }}" id="{{ form.username.id_for_label }}" class="form-control" placeholder="Username" required/>
                 </div>
                 <div class="mb-3">
@@ -35,6 +38,7 @@
                     <input type="password" class="form-control" name="{{ form.password2.html_name }}" id="{{ form.password2.id_for_label }}" placeholder="Confirm Password" required/>
                     <span id='message'></span>
                 </div>
+                {% comment %} TODO: Add the other custom user details input here in future {% endcomment %}
                 <div class="mb-3 d-grid">
                     <input type="submit" class="btn btn-outline-dark" value="Sign Up"/>
                 </div>
@@ -48,25 +52,33 @@
     </div>
 </div>
 
-<script>
+{% comment %} <script>
     $('#id_password2').keyup(function(){
-        var pass1 = $('#id_password1').val();
-        var pass2 = $('#id_password2').val();
-        if(pass1 != pass2){
+        var pass1 = $('#id_password1');
+        var pass2 = $('#id_password2');
+        if(pass1.val() != pass2.val()){
             debugger
-            $('#message').attr({class:'red'});
+            pass1.attr({style:'box-shadow: 0 0 5px rgb(225 84 84)'});
+            pass2.attr({style:'box-shadow: 0 0 5px rgb(225 84 84)'});
         }
         else{
-            $('#message').attr({class:'green'});
+            pass1.attr({style:'box-shadow: 0 0 5px rgb(74 181 88)'});
+            pass2.attr({style:'box-shadow: 0 0 5px rgb(74 181 88)'});
         }
     });
-        //$('.activity').hide();
-        //$('.land').click(function(e){
-        //$('#province').text($(this).attr("title"));
-        //$('#province-help').hide();
-        //$('.activity').hide();
-        //$('.' + $(this).attr("title")).show();
-        //});
-</script>
+    $('#id_password1').keyup(function(){
+        var pass1 = $('#id_password1');
+        var pass2 = $('#id_password2');
+        if(pass1.val() != pass2.val()){
+            debugger
+            pass1.attr({style:'box-shadow: 0 0 5px rgb(225 84 84)'});
+            pass2.attr({style:'box-shadow: 0 0 5px rgb(225 84 84)'});
+        }
+        else{
+            pass1.attr({style:'box-shadow: 0 0 5px rgb(74 181 88)'});
+            pass2.attr({style:'box-shadow: 0 0 5px rgb(74 181 88)'});
+        }
+    });
+</script> {% endcomment %}
 
 {% endblock %}

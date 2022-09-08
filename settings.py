@@ -132,4 +132,4 @@ LOGIN_REDIRECT_URL= '/profile/'
 LOGOUT_URL= '/'
 LOGOUT_REDIRECT_URL = '/'
 
-# PLAY_DB = env("PLAY_DB")
+PLAY_DB = env("PLAY_DB")

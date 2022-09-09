@@ -1,11 +1,12 @@
 from django import forms
-from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth import get_user_model
+from django.contrib.auth.forms import UserCreationForm, PasswordResetForm, SetPasswordForm, PasswordChangeForm
+from django.contrib.auth import get_user_model, password_validation
+
 
 User = get_user_model()
 
 class RegisterForm(UserCreationForm):
-    """User Registration form"""
+    """Subclass User Registration form"""
 
     # TODO: Add the custom user details in future
     class Meta:
@@ -31,6 +32,105 @@ class RegisterForm(UserCreationForm):
                 f"{email} is an invalid email address, please pick another."
             )
         return email
+
+
+class UserPasswordChangeForm(PasswordChangeForm):
+    """Subclass Password change form to remove labels and classes"""
+
+    def __init__(self, *args, **kwargs):
+        """Call super"""
+        super(UserPasswordChangeForm, self).__init__(*args, **kwargs)
+    
+    old_password = forms.CharField(
+        label='',
+        strip=False,
+        widget=forms.PasswordInput(
+            attrs={
+                "autocomplete": "current-password", 
+                "autofocus": True,
+                'class': 'form-control',
+                'placeholder': 'Old Password',
+                'type': 'password',
+                'name': 'old_password',
+                
+            }
+        ),
+    )
+
+    new_password1 = forms.CharField(label='', 
+        help_text=password_validation.password_validators_help_text_html(),
+        widget=forms.PasswordInput(
+            attrs={
+                'class': 'form-control',
+                'placeholder': 'New Password',
+                'type': 'password',
+                'name': 'new_password1',
+                'autocomplete': 'new-password'
+            }
+        ),
+    )
+    new_password2 = forms.CharField(label='', 
+        widget=forms.PasswordInput(
+            attrs={
+                'class': 'form-control',
+                'placeholder': 'Confirm New Password',
+                'type': 'password',
+                'name': 'new_password2',
+                "autocomplete": "new-password"
+            }
+        ),
+    )
+
+class UserSetPasswordForm(SetPasswordForm):
+    """Override password reset form to add styling to the input fields"""
+
+    def __init__(self, *args, **kwargs):
+        """Call super"""
+        super(UserSetPasswordForm, self).__init__(*args, **kwargs)
+
+    new_password1 = forms.CharField(label='', 
+        help_text=password_validation.password_validators_help_text_html(),
+        widget=forms.PasswordInput(
+            attrs={
+                'class': 'form-control',
+                'placeholder': 'New Password',
+                'type': 'password',
+                'name': 'new_password1',
+                'autocomplete': 'new-password'
+            }
+        ),
+    )
+    new_password2 = forms.CharField(label='', 
+        widget=forms.PasswordInput(
+            attrs={
+                'class': 'form-control',
+                'placeholder': 'Confirm New Password',
+                'type': 'password',
+                'name': 'new_password2',
+                "autocomplete": "new-password"
+            }
+        ),
+    )
+
+
+class UserPasswordResetForm(PasswordResetForm):
+    """Override password reset form to add styling to the input fields"""
+
+    def __init__(self, *args, **kwargs):
+        """Call super"""
+        super(UserPasswordResetForm, self).__init__(*args, **kwargs)
+
+    email = forms.EmailField(label='', 
+        widget=forms.EmailInput(
+            attrs={
+                'class': 'form-control',
+                'placeholder': 'e.g abc@gmail.com',
+                'type': 'email',
+                'name': 'email'
+            }
+        ),
+    )
+
 
 class ProjectForm(forms.Form):
     title = forms.CharField(widget=forms.TextInput(attrs={

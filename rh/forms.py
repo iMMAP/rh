@@ -1,4 +1,36 @@
 from django import forms
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
+
+class RegisterForm(UserCreationForm):
+    """User Registration form"""
+
+    # TODO: Add the custom user details in future
+    class Meta:
+        model = User
+        fields = ['name', 'username', 'email', 'password1', 'password2', 'organization']
+
+    def clean_username(self):
+        """check if username already exists"""
+        username = self.cleaned_data.get("username")
+        qs = User.objects.filter(username__iexact=username)
+        if qs.exists():
+            raise forms.ValidationError(
+                f"{username} is an invalid username, please pick another."
+            )
+        return username
+
+    def clean_email(self):
+        """check if email already exists"""
+        email = self.cleaned_data.get("email")
+        qs = User.objects.filter(email__iexact=email)
+        if qs.exists():
+            raise forms.ValidationError(
+                f"{email} is an invalid email address, please pick another."
+            )
+        return email
 
 class ProjectForm(forms.Form):
     title = forms.CharField(widget=forms.TextInput(attrs={

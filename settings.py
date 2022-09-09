@@ -133,7 +133,7 @@ LOGOUT_URL= '/'
 LOGOUT_REDIRECT_URL = '/'
 
 # MailTrap SMTP Setup for dev and staging only. (aleem account)
-# TODO: Replace with actual SMTP Credentials for production
+# TODO: Replace with actual SMTP Credentials for production (save in environ)
 EMAIL_HOST = 'smtp.mailtrap.io'
 EMAIL_HOST_USER = 'e3af6f00303b12'
 EMAIL_HOST_PASSWORD = 'f256e68fa6c832'

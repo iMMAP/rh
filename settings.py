@@ -4,10 +4,8 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent
 
-
 env = environ.Env()
 environ.Env.read_env()
-
 
 # SECURITY WARNING: keep the secret key used in production secret!
 # SECRET_KEY = 'django-insecure-4-vwuk3dtdi9jmc(&m4kqys%ltg_#rn0vt%z(=v2*9y68*@$9s'
@@ -68,7 +66,6 @@ STATICFILES_FINDERS = ('compressor.finders.CompressorFinder',)
 
 WSGI_APPLICATION = 'wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
@@ -78,7 +75,6 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
@@ -115,7 +111,6 @@ USE_I18N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
@@ -127,16 +122,15 @@ STATIC_ROOT = BASE_DIR / 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-LOGIN_URL= '/login/'
-LOGIN_REDIRECT_URL= '/profile/'
-LOGOUT_URL= '/'
+LOGIN_URL = '/login/'
+LOGIN_REDIRECT_URL = '/profile/'
+LOGOUT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 
-# MailTrap SMTP Setup for dev and staging only. (aleem account)
-# TODO: Replace with actual SMTP Credentials for production (save in environ)
-EMAIL_HOST = 'smtp.mailtrap.io'
-EMAIL_HOST_USER = 'e3af6f00303b12'
-EMAIL_HOST_PASSWORD = 'f256e68fa6c832'
-EMAIL_PORT = '2525'
+# MailTrap SMTP Setup for dev and staging only.
+EMAIL_HOST = env('EMAIL_HOST')  # 'smtp.mailtrap.io'
+EMAIL_HOST_USER = env('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
+EMAIL_PORT = env('EMAIL_PORT')  # 2525
 
 PLAY_DB = env("PLAY_DB")

@@ -2,7 +2,12 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 
 
+class Country(models.Model): 
+    name = models.CharField(max_length=200)
+    code = models.CharField(max_length=200)
+
 class Organization(models.Model):
+    countires = models.ManyToManyField(Country)
     name = models.CharField(max_length=200)
     code = models.CharField(max_length=200)
     type = models.CharField(max_length=200)
@@ -27,40 +32,17 @@ class User(AbstractUser):
     phone = models.CharField(max_length=200, null=True)
     pass
 
-# Create your models here.
-class Project(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    title = models.CharField(max_length=200)
-    description = models.TextField()
-    start_date = models.DateTimeField('start date')
-    end_date = models.DateTimeField('end date')
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
 
 class Activity(models.Model):
-    cluster = models.ForeignKey(Cluster, on_delete=models.CASCADE)
+    clusters = models.ManyToManyField(Cluster)
     title = models.CharField(max_length=200)
+    description = models.CharField(max_length=200)
+    countries = models.ManyToManyField(Country)
+    fields = models.JSONField()
     active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now_add=True)
 
-class Indicator(models.Model):
-    activity = models.ForeignKey(Activity, on_delete=models.CASCADE, null=True)
-    title = models.CharField(max_length=200)
-
-class Report(models.Model):
-    project = models.ForeignKey(Project, on_delete=models.CASCADE)
-    notes =  models.TextField()
-    submitted_at = models.DateTimeField(auto_now_add=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-
-class Beneficiary(models.Model):
-    report = models.ForeignKey(Report, on_delete=models.CASCADE)
-    boys = models.IntegerField()
-    girls = models.IntegerField()
-    men = models.IntegerField()
-    women = models.IntegerField()
-    created_at = models.DateTimeField(auto_now_add=True)
 
 class Location(models.Model):
     parent = models.ForeignKey("self", default=0, on_delete=models.CASCADE)
@@ -73,3 +55,44 @@ class Location(models.Model):
     long = models.FloatField(null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now_add=True)
+
+class Project(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    activities = models.ManyToManyField(Activity)
+    locations = models.ManyToManyField(Location)
+    title = models.CharField(max_length=200)
+    description = models.TextField()
+    start_date = models.DateTimeField('start date')
+    end_date = models.DateTimeField('end date')
+    budget = models.IntegerField()
+    budget_currency = models.IntegerChoices('Currency', 'EUR USD')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+class ActivityPlan(models.Model):
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, null=True)
+    activity = models.ForeignKey(Activity, on_delete=models.CASCADE, null=True)
+    activity_fields = models.JSONField()
+    boys = models.IntegerField()
+    girls = models.IntegerField()
+    men = models.IntegerField()
+    women = models.IntegerField()
+    elderly_men = models.IntegerField()
+    elderly_women = models.IntegerField()
+    households = models.IntegerField()
+
+class Report(models.Model):
+    project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    activity_plan = models.ForeignKey(ActivityPlan, on_delete=models.CASCADE)
+    location = models.ForeignKey(Location, on_delete=models.CASCADE)
+    boys = models.IntegerField()
+    girls = models.IntegerField()
+    men = models.IntegerField()
+    women = models.IntegerField()
+    elderly_men = models.IntegerField()
+    elderly_women = models.IntegerField()
+    households = models.IntegerField()
+    notes =  models.TextField()
+    submitted_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+

@@ -15,6 +15,9 @@ SECRET_KEY = env("SECRET_KEY", default="unsafe-secret-key")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env("DEBUG", default=True)
 
+# For Testing the registration email confirmation, make debug=True
+# DEBUG = False
+
 ALLOWED_HOSTS = ['dev.reporthub.immap.org', '127.0.0.1']
 
 # Application definition
@@ -127,7 +130,7 @@ LOGIN_REDIRECT_URL = '/profile/'
 LOGOUT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 
-# MailTrap SMTP Setup for dev and staging only.
+# Can use MailTrap SMTP Setup for now (dev and staging only).
 EMAIL_HOST = env('EMAIL_HOST')  # 'smtp.mailtrap.io'
 EMAIL_HOST_USER = env('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')

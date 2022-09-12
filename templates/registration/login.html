@@ -7,14 +7,15 @@
     <div class="row h-100 align-items-center justify-content-center text-center">
         <div class="col-lg-4 align-self-end">
             <h1 class="m-5">Report Hub</h1>
-            {% if form.errors %}
-            {{ form.errors }}
-            {% endif %}
-
+            
             {% if messages %}
                 {% for message in messages %}
-                    {% if message.tags %}
-                            <div class="alert alert-{{ message.tags }}" role="alert">{{ message }}</div>
+                    {% if message.tags in 'info,warning,success' %}
+                        <div class="alert alert-{{ message.tags }}" role="alert">{{ message }}</div>
+                    {% elif message.tags == 'error' %}
+                        <div class="alert alert-danger" role="alert">{{ message }}</div>
+                    {% else %}
+                        <div class="alert alert-warning" role="alert">{{ message }}</div>
                     {% endif %}
                 {% endfor %}
             {% endif %}
@@ -23,6 +24,11 @@
             <p>Sign into your account</p>
             <form method="POST" action="">
                 {% csrf_token %}
+                
+                {% if request.GET.next %}
+                    <input type="hidden" name="next" id="rh_next" value="{{ request.GET.next }}"/>
+                {% endif %}
+                    
                 <div class="mb-3">
                     <input type="text" name="username" id="id_username" class="form-control" placeholder="Username"/>
                 </div>

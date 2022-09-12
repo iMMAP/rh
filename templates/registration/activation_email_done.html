@@ -1,0 +1,20 @@
+{% extends '_base.html' %}
+
+{% block content %}
+
+<div class="container px-4 px-lg-5 h-100">
+    <div class="row h-100 align-items-center justify-content-center text-center">
+        <div class="col-lg-4 align-self-end">
+            <h1 class="m-5">Report Hub</h1>
+            <h3>Activattion Email Sent</h3>
+            <p>Dear <b>{{ user.name }}</b>, <br/>
+                please go to your email <b>{{ user.email }}</b> 
+                inbox and click on the activation link to confirm and complete your registration. 
+                <br/><b>Note: </b>Check your spam folder if email not found in inbox.
+            </p>
+            <br class="clear">
+
+        </div>
+    </div>
+</div>
+{% endblock %}

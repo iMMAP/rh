@@ -6,6 +6,7 @@ class Country(models.Model):
     name = models.CharField(max_length=200)
     code = models.CharField(max_length=200)
 
+
 class Organization(models.Model):
     countires = models.ManyToManyField(Country)
     name = models.CharField(max_length=200)
@@ -17,8 +18,10 @@ class Organization(models.Model):
     def __str__(self):
         return self.name
 
+
 class Cluster(models.Model):
     title = models.CharField(max_length=200)
+
 
 class User(AbstractUser):
     first_name = None
@@ -56,6 +59,7 @@ class Location(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now_add=True)
 
+
 class Project(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     activities = models.ManyToManyField(Activity)
@@ -69,6 +73,7 @@ class Project(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+
 class ActivityPlan(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE, null=True)
     activity = models.ForeignKey(Activity, on_delete=models.CASCADE, null=True)
@@ -80,6 +85,7 @@ class ActivityPlan(models.Model):
     elderly_men = models.IntegerField()
     elderly_women = models.IntegerField()
     households = models.IntegerField()
+
 
 class Report(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
@@ -95,4 +101,3 @@ class Report(models.Model):
     notes =  models.TextField()
     submitted_at = models.DateTimeField(auto_now_add=True)
     created_at = models.DateTimeField(auto_now_add=True)
-

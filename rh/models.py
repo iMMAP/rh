@@ -3,11 +3,45 @@ from django.contrib.auth.models import AbstractUser
 
 
 class Country(models.Model): 
+    """Countries Model"""
     name = models.CharField(max_length=200)
     code = models.CharField(max_length=200)
 
+    def __str__(self):
+        return self.name
+    
+    class Meta:
+        verbose_name = 'Country'
+        verbose_name_plural = "Countries"
+    
+
+class Cluster(models.Model):
+    """Clustures Model"""
+    title = models.CharField(max_length=200)
+
+    def __str__(self):
+        return self.title
+
+
+class Location(models.Model):
+    """Locations Model"""
+    parent = models.ForeignKey("self", default=0, on_delete=models.CASCADE, blank=True, null=True)
+    level = models.IntegerField(default=0)
+    code = models.CharField(max_length=200)
+    name = models.CharField(max_length=200)
+    original_name = models.CharField(max_length=200, null=True)
+    type = models.CharField(max_length=200, default='country')
+    lat = models.FloatField(null=True)
+    long = models.FloatField(null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.name
+
 
 class Organization(models.Model):
+    """Organizations Model"""
     countires = models.ManyToManyField(Country)
     name = models.CharField(max_length=200)
     code = models.CharField(max_length=200)
@@ -19,53 +53,46 @@ class Organization(models.Model):
         return self.name
 
 
-class Cluster(models.Model):
-    title = models.CharField(max_length=200)
-
-
 class User(AbstractUser):
+    """Inherit AbstractUser model and include our custom fields"""
     first_name = None
     last_name = None
 
-    organization = models.ForeignKey(Organization, on_delete=models.CASCADE, null=True)
+    organization = models.ForeignKey(Organization, on_delete=models.CASCADE, blank=True, null=True)
     name = models.CharField(max_length=200)
-    visits = models.IntegerField(null=True)
-    cluster = models.ForeignKey(Cluster, on_delete=models.CASCADE, null=True)
-    position = models.CharField(max_length=200, null=True)
-    phone = models.CharField(max_length=200, null=True)
+    visits = models.IntegerField(blank=True, null=True)
+    cluster = models.ForeignKey(Cluster, on_delete=models.CASCADE, blank=True, null=True)
+    position = models.CharField(max_length=200, blank=True, null=True)
+    phone = models.CharField(max_length=200, blank=True, null=True)
     pass
 
 
 class Activity(models.Model):
+    """Activities model"""
     clusters = models.ManyToManyField(Cluster)
     title = models.CharField(max_length=200)
-    description = models.CharField(max_length=200)
+    description = models.CharField(max_length=200, blank=True, null=True)
     countries = models.ManyToManyField(Country)
-    fields = models.JSONField()
+    fields = models.JSONField(blank=True, null=True)
     active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now_add=True)
 
-
-class Location(models.Model):
-    parent = models.ForeignKey("self", default=0, on_delete=models.CASCADE)
-    level = models.IntegerField(default=0)
-    code = models.CharField(max_length=200)
-    name = models.CharField(max_length=200)
-    original_name = models.CharField(max_length=200, null=True)
-    type = models.CharField(max_length=200, default='country')
-    lat = models.FloatField(null=True)
-    long = models.FloatField(null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now_add=True)
+    def __str__(self):
+        return self.title
+    
+    class Meta:
+        verbose_name = 'Activity'
+        verbose_name_plural = "Activities"
 
 
 class Project(models.Model):
+    """Projects model"""
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     activities = models.ManyToManyField(Activity)
     locations = models.ManyToManyField(Location)
     title = models.CharField(max_length=200)
-    description = models.TextField()
+    description = models.TextField(blank=True, null=True)
     start_date = models.DateTimeField('start date')
     end_date = models.DateTimeField('end date')
     budget = models.IntegerField()
@@ -73,31 +100,39 @@ class Project(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    def __str__(self):
+        return self.title
+
 
 class ActivityPlan(models.Model):
+    """Activity Plans model"""
     project = models.ForeignKey(Project, on_delete=models.CASCADE, null=True)
     activity = models.ForeignKey(Activity, on_delete=models.CASCADE, null=True)
-    activity_fields = models.JSONField()
-    boys = models.IntegerField()
-    girls = models.IntegerField()
-    men = models.IntegerField()
-    women = models.IntegerField()
-    elderly_men = models.IntegerField()
-    elderly_women = models.IntegerField()
-    households = models.IntegerField()
+    activity_fields = models.JSONField(blank=True, null=True)
+    boys = models.IntegerField(blank=True, null=True)
+    girls = models.IntegerField(blank=True, null=True)
+    men = models.IntegerField(blank=True, null=True)
+    women = models.IntegerField(blank=True, null=True)
+    elderly_men = models.IntegerField(blank=True, null=True)
+    elderly_women = models.IntegerField(blank=True, null=True)
+    households = models.IntegerField(blank=True, null=True)
+
+    class Meta:
+        verbose_name = 'Activity Plan'
+        verbose_name_plural = "Activity Plans"
 
 
 class Report(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     activity_plan = models.ForeignKey(ActivityPlan, on_delete=models.CASCADE)
     location = models.ForeignKey(Location, on_delete=models.CASCADE)
-    boys = models.IntegerField()
-    girls = models.IntegerField()
-    men = models.IntegerField()
-    women = models.IntegerField()
-    elderly_men = models.IntegerField()
-    elderly_women = models.IntegerField()
-    households = models.IntegerField()
-    notes =  models.TextField()
+    boys = models.IntegerField(blank=True, null=True)
+    girls = models.IntegerField(blank=True, null=True)
+    men = models.IntegerField(blank=True, null=True)
+    women = models.IntegerField(blank=True, null=True)
+    elderly_men = models.IntegerField(blank=True, null=True)
+    elderly_women = models.IntegerField(blank=True, null=True)
+    households = models.IntegerField(blank=True, null=True)
+    notes =  models.TextField(blank=True, null=True)
     submitted_at = models.DateTimeField(auto_now_add=True)
     created_at = models.DateTimeField(auto_now_add=True)

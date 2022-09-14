@@ -38,7 +38,6 @@ def get_app_list(self, request):
         if app['app_label'] == 'rh':
             ordering = {
                 "Countries": 3,
-                "Currencies": 3,
                 "Clusters": 4,
                 "Locations": 5,
                 "Organizations": 6,

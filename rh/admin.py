@@ -1,11 +1,11 @@
 from django.utils.translation import gettext_lazy as _
-from django.utils.safestring import mark_safe    
+# from django.utils.safestring import mark_safe    
 
-from django.urls import reverse
+# from django.urls import reverse
 
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from django.apps import apps 
+# from django.apps import apps 
 
 
 from .models import *
@@ -13,6 +13,13 @@ from .models import *
 
 def get_app_list(self, request):
     """
+
+    ***IMPORTANT***
+    Add future new models here in this ordering method and then register 
+    in admin.
+    ***IMPORTANT***
+
+    *Overrides orignal method of sorting models in admin view.
     Return a sorted list of all the installed apps that have been
     registered in this site.
     """
@@ -31,6 +38,7 @@ def get_app_list(self, request):
         if app['app_label'] == 'rh':
             ordering = {
                 "Countries": 3,
+                "Currencies": 3,
                 "Clusters": 4,
                 "Locations": 5,
                 "Organizations": 6,
@@ -109,13 +117,22 @@ admin.site.register(Country, CountryAdmin)
 
 
 ##############################################
-############ Country Model Admin #############
+############ Currency Model Admin #############
+##############################################
+# class CurrencyAdmin(admin.ModelAdmin):
+#     list_display = ('name', 'code', 'symbol')
+#     search_fields = ('name', 'code', 'symbol')
+# admin.site.register(Currency, CurrencyAdmin)
+
+
+##############################################
+############ Cluster Model Admin #############
 ##############################################
 admin.site.register(Cluster)
 
 
 ##############################################
-############ Location Model Admin #############
+########### Location Model Admin #############
 ##############################################
 class LocationAdmin(admin.ModelAdmin):
     list_display = ('name', 'parent', 'code', 'level', 'original_name', 'type')
@@ -125,7 +142,7 @@ admin.site.register(Location, LocationAdmin)
 
 
 ##############################################
-############ Organization Model Admin #############
+######### Organization Model Admin ###########
 ##############################################
 class OrganizationAdmin(admin.ModelAdmin):
     list_display = ('name', 'code', 'type', 'show_countries')
@@ -133,6 +150,10 @@ class OrganizationAdmin(admin.ModelAdmin):
     list_filter = ('code', 'type', 'countires')
 
     def show_countries(self, obj):
+        """
+        Show countries as Manytomany fields can't be 
+        placed directly in list view or search
+        """
         return ",\n".join([a.name for a in obj.countires.all()])
     show_countries.short_description = 'Countries'
 
@@ -140,7 +161,7 @@ admin.site.register(Organization, OrganizationAdmin)
 
 
 ##############################################
-############ Activity Model Admin #############
+############ Activity Model Admin ############
 ##############################################
 class ActivityAdmin(admin.ModelAdmin):
     list_display = ('title', 'show_clusters', 'show_countries', 'active')
@@ -162,10 +183,11 @@ admin.site.register(Activity, ActivityAdmin)
 ############ Project Model Admin #############
 ##############################################
 class ProjectAdmin(admin.ModelAdmin):
-    list_display = ('title', 'user', 'show_activities', 'show_locations', 'budget')
+    list_display = ('title', 'user', 'show_activities', 'show_locations', 'budget', 'budget_currency')
     search_fields = ('title', 'activities__title', 'locations__name')
     list_filter = ('user', 'activities', 'locations')
 
+    # To create a clickable link between to models
     # def user_link(self, obj):
     #     url = f"admin:{obj.user._meta.app_label}_{obj.user._meta.model_name}_change"
     #     reverse = reverse(url, args=(obj.user.pk,))
@@ -180,7 +202,24 @@ class ProjectAdmin(admin.ModelAdmin):
     def show_locations(self, obj):
         return ",\n".join([a.name for a in obj.locations.all()])
     show_locations.short_description = 'Locations'
-
 admin.site.register(Project, ProjectAdmin)
-admin.site.register(ActivityPlan)
-admin.site.register(Report)
+
+
+##############################################
+######### Activity Plan Model Admin ##########
+##############################################
+class ActivityPlanAdmin(admin.ModelAdmin):
+    list_display = ('project', 'activity', 'boys', 'girls', 'men', 'women', 'elderly_men', 'elderly_women', 'households')
+    search_fields = ('project__title', 'activity__title', 'boys', 'girls', 'men', 'women', 'elderly_men', 'elderly_women', 'households')
+    list_filter = ('project', 'activity')
+admin.site.register(ActivityPlan, ActivityPlanAdmin)
+
+
+##############################################
+######### Report Model Admin ##########
+##############################################
+class ReportAdmin(admin.ModelAdmin):
+    list_display = ('project', 'activity_plan', 'location', 'boys', 'girls', 'men', 'women', 'elderly_men', 'elderly_women', 'households')
+    search_fields = ('project__title', 'location__name', 'boys', 'girls', 'men', 'women', 'elderly_men', 'elderly_women', 'households')
+    list_filter = ('project', 'activity_plan', 'location')
+admin.site.register(Report, ReportAdmin)

@@ -37,14 +37,15 @@ def get_app_list(self, request):
             app['models'].sort(key=lambda x: ordering[x['name']])
         if app['app_label'] == 'rh':
             ordering = {
-                "Countries": 3,
-                "Clusters": 4,
-                "Locations": 5,
-                "Organizations": 6,
-                "Activities": 7,
-                "Projects": 8,
-                "Activity Plans": 9,
-                "Reports": 10,
+                "Currencies": 3,
+                "Countries": 4,
+                "Clusters": 5,
+                "Locations": 6,
+                "Organizations": 7,
+                "Activities": 8,
+                "Projects": 9,
+                "Activity Plans": 10,
+                "Reports": 11,
             }
     return app_list
 
@@ -107,21 +108,21 @@ admin.site.register(User, CustomUserAdmin)
 # apps.get_model('rh.User')._meta.app_label = 'auth'
 
 
+#############################################
+########### Currency Model Admin #############
+#############################################
+class CurrencyAdmin(admin.ModelAdmin):
+    list_display = ('name', 'code', 'symbol')
+    search_fields = ('name', 'code', 'symbol')
+admin.site.register(Currency, CurrencyAdmin)
+
+
 ##############################################
 ############ Country Model Admin #############
 ##############################################
 class CountryAdmin(admin.ModelAdmin):
     list_display = ('name', 'code')
 admin.site.register(Country, CountryAdmin)
-
-
-##############################################
-############ Currency Model Admin #############
-##############################################
-# class CurrencyAdmin(admin.ModelAdmin):
-#     list_display = ('name', 'code', 'symbol')
-#     search_fields = ('name', 'code', 'symbol')
-# admin.site.register(Currency, CurrencyAdmin)
 
 
 ##############################################

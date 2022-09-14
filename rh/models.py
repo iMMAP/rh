@@ -85,28 +85,22 @@ class Activity(models.Model):
         verbose_name = 'Activity'
         verbose_name_plural = "Activities"
 
-# In cases we needed it in the future
-# class Currency(models.Model):
-#     """Currencies model"""
-#     code = models.CharField(max_length=15, null=True)
-#     name = models.CharField(max_length=200, null=True)
-#     symbol = models.CharField(max_length=15, null=True)
+class Currency(models.Model):
+    """Currencies model"""
+    code = models.CharField(max_length=15, null=True)
+    name = models.CharField(max_length=200, null=True)
+    symbol = models.CharField(max_length=15, null=True)
 
-#     def __str__(self):
-#         return self.code
+    def __str__(self):
+        return self.code
     
-#     class Meta:
-#         verbose_name = 'Currency'
-#         verbose_name_plural = "Currencies"
+    class Meta:
+        verbose_name = 'Currency'
+        verbose_name_plural = "Currencies"
 
 
 class Project(models.Model):
     """Projects model"""
-
-    class Currency(models.TextChoices):
-        USD = 'usd', "USD"
-        EUR = 'eur', "EUR"
-
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     activities = models.ManyToManyField(Activity)
     locations = models.ManyToManyField(Location)
@@ -115,7 +109,7 @@ class Project(models.Model):
     start_date = models.DateTimeField('start date')
     end_date = models.DateTimeField('end date')
     budget = models.IntegerField()
-    budget_currency = models.CharField(max_length=200, choices=Currency.choices, default=Currency.USD, null=True)
+    budget_currency = models.ForeignKey('Currency', on_delete=models.SET_NULL, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

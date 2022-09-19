@@ -1,3 +1,6 @@
+import json
+from .models import *
+
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, PasswordResetForm, SetPasswordForm, PasswordChangeForm
 from django.contrib.auth import get_user_model, password_validation
@@ -149,3 +152,91 @@ class ProjectForm(forms.Form):
         "type": "date",
         "class": " focus:ring-primary-600 rounded-lg focus:border-primary-600 w-full"
     }), label='End date')
+
+
+class FieldHandler():
+    formfields = {}
+    def __init__(self, fields, data=None):
+        for field in fields:
+            options = self.get_options(field)
+            if data:
+                name = field.get('name', False)
+                instance = data.get(name, None)
+            else:
+                instance = None
+            f = getattr(self, "create_field_for_"+field['type'] )(field, options, instance)
+            self.formfields[field['name']] = f
+
+    def get_options(self, field):
+        options = {}
+        options['help_text'] = field.get("help_text", None)
+        options['required'] = bool(field.get("required", 0) )
+        return options
+
+    def create_field_for_text(self, field, options, data=None):
+        options['max_length'] = int(field.get("max_length", "20") )
+        return forms.CharField(widget=forms.TextInput(attrs={
+                                     'class': 'form-control',
+                                     'type': 'text',
+                                 }), initial=data, **options)
+
+    def create_field_for_textarea(self, field, options, data=None):
+        options['max_length'] = int(field.get("max_value", "9999") )
+        return forms.CharField(widget=forms.Textarea(attrs={
+                                     'class': 'form-control',
+                                     'type': 'text',
+                                 }), initial=data, **options)
+
+    def create_field_for_integer(self, field, options, data=None):
+        options['max_value'] = int(field.get("max_value", "999999999") )
+        options['min_value'] = int(field.get("min_value", "-999999999") )
+        return forms.IntegerField(widget=forms.NumberInput(attrs={
+                                     'class': 'form-control',
+                                     'type': 'number',
+                                 }), initial=data, **options)
+
+    def create_field_for_radio(self, field, options, data=None):
+        options['choices'] = [ (c.lower(), c.capitalize() ) for c in field['value'] ]
+        return forms.ChoiceField(widget=forms.RadioSelect, **options)
+
+    def create_field_for_select(self, field, options, data=None):
+        options['choices']  = [ (c.lower(), c.capitalize() ) for c in field['value'] ]
+        return forms.ChoiceField(widget=forms.Select(attrs={
+                                     'class': 'form-control',
+                                     'type': 'select',
+                                 }), initial=data, **options)
+    
+    def create_field_for_multi(self, field, options, data=None):
+        options['choices']  = [ (c.lower(), c.capitalize() ) for c in field['value'] ]
+        return forms.MultipleChoiceField(widget=forms.SelectMultiple(attrs={
+                                     'class': 'form-control',
+                                     'type': 'select',
+                                 }), initial=data, **options)
+
+    def create_field_for_checkbox(self, field, options, data=None):
+        return forms.BooleanField(widget=forms.CheckboxInput(attrs={
+                                     'class': 'form-check-input',
+                                     'type': 'checkbox',
+                                 }), initial=data, **options)
+
+
+def get_dynamic_form(jstr, data=None):
+    # fields=json.loads(jstr)
+    field_handler = FieldHandler(jstr, data)
+    return type('DynamicForm', (forms.Form,), field_handler.formfields)
+
+
+class ActivityPlanForm(forms.ModelForm):
+    class Meta:
+        model = ActivityPlan
+        fields = "__all__"
+        widgets = {
+        'activity_fields': forms.Textarea(attrs={'readonly':True}),
+        }
+
+    def clean_activity_fields(self):
+        if self.instance: 
+            return self.instance.activity_fields
+        else: 
+            return self.fields['activity_fields']
+        

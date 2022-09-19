@@ -37,4 +37,10 @@ urlpatterns = [
     # Pages routes
     path('profile/', user_views.profile, name='profile'),
     path('add_project/', user_views.add_project, name='add_project'),
+
+    path('activity_plan/activity_form/', user_views.activity_json_form, name='form'),
+    path('activity_plans/', user_views.activity_plans, name='activity_plan'),
+    path('activity_plan/create/', user_views.create_activity_plan, name='create_activity_plan'),
+    path('activity_plan/update/<str:pk>', user_views.update_activity_plan, name='update_activity_plan'),
+
 ]

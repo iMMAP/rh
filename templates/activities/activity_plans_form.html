@@ -1,0 +1,60 @@
+{% extends '_base.html' %}
+{% load crispy_forms_tags %}
+
+
+{% block content %}
+
+<div class="container px-4 px-lg-5 h-100">
+    <div class="row h-100 align-items-center justify-content-center text-left">
+        <div class="col-lg-4 align-self-end">
+            <h1 class="m-5">Report Hub</h1>
+
+            <h3>Activity Planning</h3>
+
+            <form method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="next" id="activity_plan_id" value="{{ activity_plan }}"/>
+                {{ form|crispy }}
+                {{ json_form}}
+                <div class="mb-3 mt-3 d-grid">
+                    <input type="submit" class="btn btn-outline-dark" value="Submit"/>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+<script>
+    function get_activity_form(){
+        $.ajax({
+            type: 'GET',
+            url: '/activity_plan/activity_form/',
+            data: {
+                activity: $("#id_activity").val(),
+                activity_plan_id: $("#activity_plan_id").val(),
+            },
+            dataType: 'json',
+            success: function(response){
+                if ($("#activity_form")){
+                    $("#activity_form").remove()
+                }
+                var activity_form = `
+                    <div id="activity_form" style="background-color: white;padding: 10px;">
+                        <h5>Activity</h5>
+                        ${response.form}
+                    </div>`
+                $("#div_id_activity").after(activity_form)
+            }
+        })
+    }
+
+    document.getElementById('id_activity').addEventListener("change", function(){
+        get_activity_form()
+    })
+    $('#id_activity_fields').ready(function () {
+        get_activity_form()
+    });
+    
+</script>
+{% endblock %}

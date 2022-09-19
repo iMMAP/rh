@@ -48,13 +48,13 @@
             }
         })
     }
-
-    document.getElementById('id_activity').addEventListener("change", function(){
-        get_activity_form()
-    })
     $('#id_activity_fields').ready(function () {
         get_activity_form()
     });
+
+    $('#id_activity').change(function(){
+        get_activity_form()
+    })
     
 </script>
 {% endblock %}

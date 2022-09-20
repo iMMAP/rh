@@ -154,8 +154,9 @@ class ProjectForm(forms.Form):
     }), label='End date')
 
 
-class FieldHandler():
-    formfields = {}
+class FieldHandler:
+    form_fields = {}
+
     def __init__(self, fields, data=None):
         for field in fields:
             options = self.get_options(field)
@@ -165,12 +166,10 @@ class FieldHandler():
             else:
                 instance = None
             f = getattr(self, "create_field_for_"+field['type'] )(field, options, instance)
-            self.formfields[field['name']] = f
+            self.form_fields[field['name']] = f
 
     def get_options(self, field):
-        options = {}
-        options['help_text'] = field.get("help_text", None)
-        options['required'] = bool(field.get("required", 0) )
+        options = {'help_text': field.get("help_text", None), 'required': bool(field.get("required", 0))}
         return options
 
     def create_field_for_text(self, field, options, data=None):
@@ -220,10 +219,10 @@ class FieldHandler():
                                  }), initial=data, **options)
 
 
-def get_dynamic_form(jstr, data=None):
-    # fields=json.loads(jstr)
-    field_handler = FieldHandler(jstr, data)
-    return type('DynamicForm', (forms.Form,), field_handler.formfields)
+def get_dynamic_form(json_fields, data=None):
+    # fields=json.loads(json_fields)
+    field_handler = FieldHandler(json_fields, data)
+    return type('DynamicForm', (forms.Form,), field_handler.form_fields)
 
 
 class ActivityPlanForm(forms.ModelForm):
@@ -231,7 +230,7 @@ class ActivityPlanForm(forms.ModelForm):
         model = ActivityPlan
         fields = "__all__"
         widgets = {
-        'activity_fields': forms.Textarea(attrs={'readonly':True}),
+            'activity_fields': forms.Textarea(attrs={'readonly':True}),
         }
 
     def clean_activity_fields(self):

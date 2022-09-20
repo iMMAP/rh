@@ -157,71 +157,71 @@ class ProjectForm(forms.Form):
 class FieldHandler:
     form_fields = {}
 
-    def __init__(self, fields, data=None):
+    def __init__(self, fields, initial_data=None):
         for field in fields:
             options = self.get_options(field)
-            if data:
+            if initial_data:
                 name = field.get('name', False)
-                instance = data.get(name, None)
+                initials = initial_data.get(name, None)
             else:
-                instance = None
-            f = getattr(self, "create_field_for_"+field['type'] )(field, options, instance)
+                initials = None
+            f = getattr(self, "create_field_for_"+field['type'] )(field, options, initials)
             self.form_fields[field['name']] = f
 
     def get_options(self, field):
         options = {'help_text': field.get("help_text", None), 'required': bool(field.get("required", 0))}
         return options
 
-    def create_field_for_text(self, field, options, data=None):
+    def create_field_for_text(self, field, options, initials=None):
         options['max_length'] = int(field.get("max_length", "20") )
         return forms.CharField(widget=forms.TextInput(attrs={
                                      'class': 'form-control',
                                      'type': 'text',
-                                 }), initial=data, **options)
+                                 }), initial=initials, **options)
 
-    def create_field_for_textarea(self, field, options, data=None):
+    def create_field_for_textarea(self, field, options, initials=None):
         options['max_length'] = int(field.get("max_value", "9999") )
         return forms.CharField(widget=forms.Textarea(attrs={
                                      'class': 'form-control',
                                      'type': 'text',
-                                 }), initial=data, **options)
+                                 }), initial=initials, **options)
 
-    def create_field_for_integer(self, field, options, data=None):
+    def create_field_for_integer(self, field, options, initials=None):
         options['max_value'] = int(field.get("max_value", "999999999") )
         options['min_value'] = int(field.get("min_value", "-999999999") )
         return forms.IntegerField(widget=forms.NumberInput(attrs={
                                      'class': 'form-control',
                                      'type': 'number',
-                                 }), initial=data, **options)
+                                 }), initial=initials, **options)
 
-    def create_field_for_radio(self, field, options, data=None):
+    def create_field_for_radio(self, field, options, initials=None):
         options['choices'] = [ (c.lower(), c.capitalize() ) for c in field['value'] ]
-        return forms.ChoiceField(widget=forms.RadioSelect, **options)
+        return forms.ChoiceField(widget=forms.RadioSelect, initial=initials, **options)
 
-    def create_field_for_select(self, field, options, data=None):
+    def create_field_for_select(self, field, options, initials=None):
         options['choices']  = [ (c.lower(), c.capitalize() ) for c in field['value'] ]
         return forms.ChoiceField(widget=forms.Select(attrs={
                                      'class': 'form-control',
                                      'type': 'select',
-                                 }), initial=data, **options)
+                                 }), initial=initials, **options)
     
-    def create_field_for_multi(self, field, options, data=None):
+    def create_field_for_multi(self, field, options, initials=None):
         options['choices']  = [ (c.lower(), c.capitalize() ) for c in field['value'] ]
         return forms.MultipleChoiceField(widget=forms.SelectMultiple(attrs={
                                      'class': 'form-control',
                                      'type': 'select',
-                                 }), initial=data, **options)
+                                 }), initial=initials, **options)
 
-    def create_field_for_checkbox(self, field, options, data=None):
+    def create_field_for_checkbox(self, field, options, initials=None):
         return forms.BooleanField(widget=forms.CheckboxInput(attrs={
                                      'class': 'form-check-input',
                                      'type': 'checkbox',
-                                 }), initial=data, **options)
+                                 }), initial=initials, **options)
 
 
-def get_dynamic_form(json_fields, data=None):
+def get_dynamic_form(json_fields, initial_data=None):
     # fields=json.loads(json_fields)
-    field_handler = FieldHandler(json_fields, data)
+    field_handler = FieldHandler(json_fields, initial_data)
     return type('DynamicForm', (forms.Form,), field_handler.form_fields)
 
 

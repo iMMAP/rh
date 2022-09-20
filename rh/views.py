@@ -291,6 +291,7 @@ def create_activity_plan(request):
             activity_plan = form.save(commit=False)
             activity_plan.activity_fields = json_data
             form.save()
+            return redirect('/activity_plans')
     else:
         form = ActivityPlanForm()
     return render(request, 'activities/activity_plans_form.html', {'form': form})
@@ -300,7 +301,7 @@ def update_activity_plan(request, pk):
     """Update Activity"""
     activity_plan = ActivityPlan.objects.get(id=pk)
     form = ActivityPlanForm(instance=activity_plan)
-    json_class = get_dynamic_form(activity_plan.activity.fields, data=activity_plan.activity_fields)
+    json_class = get_dynamic_form(activity_plan.activity.fields, initial_data=activity_plan.activity_fields)
     json_form = json_class()
     if request.method == 'POST':
         form = ActivityPlanForm(request.POST, instance=activity_plan)

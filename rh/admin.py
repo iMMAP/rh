@@ -122,13 +122,17 @@ admin.site.register(Currency, CurrencyAdmin)
 ##############################################
 class CountryAdmin(admin.ModelAdmin):
     list_display = ('name', 'code')
+    search_fields = ('name', 'code')
 admin.site.register(Country, CountryAdmin)
 
 
 ##############################################
 ############ Cluster Model Admin #############
 ##############################################
-admin.site.register(Cluster)
+class ClusterAdmin(admin.ModelAdmin):
+    list_display = ('title',)
+    search_fields = ('title',)
+admin.site.register(Cluster, ClusterAdmin)
 
 
 ##############################################
@@ -136,7 +140,7 @@ admin.site.register(Cluster)
 ##############################################
 class LocationAdmin(admin.ModelAdmin):
     list_display = ('name', 'parent', 'code', 'level', 'original_name', 'type')
-    list_filter = ('parent', 'level', 'type')
+    list_filter = ('level', 'type')
     search_fields = ('name', 'parent', 'level', 'type')
 admin.site.register(Location, LocationAdmin)
 
@@ -147,7 +151,7 @@ admin.site.register(Location, LocationAdmin)
 class OrganizationAdmin(admin.ModelAdmin):
     list_display = ('name', 'code', 'type', 'show_countries')
     search_fields = ('name', 'countires__name', 'type')
-    list_filter = ('code', 'type', 'countires')
+    list_filter = ('type', 'countires')
 
     def show_countries(self, obj):
         """

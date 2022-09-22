@@ -5,7 +5,7 @@ from django.contrib.auth.models import AbstractUser
 class Country(models.Model): 
     """Countries Model"""
     name = models.CharField(max_length=200)
-    code = models.CharField(max_length=200)
+    code = models.CharField(max_length=200, blank=True, null=True)
 
     def __str__(self):
         return self.name
@@ -29,12 +29,12 @@ class Location(models.Model):
     level = models.IntegerField(default=0)
     code = models.CharField(max_length=200)
     name = models.CharField(max_length=200)
-    original_name = models.CharField(max_length=200, null=True)
-    type = models.CharField(max_length=200, default='country')
-    lat = models.FloatField(null=True)
-    long = models.FloatField(null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now_add=True)
+    original_name = models.CharField(max_length=200, blank=True, null=True)
+    type = models.CharField(max_length=200, blank=True, null=True)
+    lat = models.FloatField(null=True, blank=True)
+    long = models.FloatField(null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
+    updated_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
 
     def __str__(self):
         return self.name
@@ -46,8 +46,8 @@ class Organization(models.Model):
     name = models.CharField(max_length=200)
     code = models.CharField(max_length=200)
     type = models.CharField(max_length=200)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
+    updated_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
 
     def __str__(self):
         return self.name
@@ -59,7 +59,7 @@ class User(AbstractUser):
     last_name = None
 
     organization = models.ForeignKey(Organization, on_delete=models.CASCADE, blank=True, null=True)
-    name = models.CharField(max_length=200)
+    name = models.CharField(max_length=200, blank=True, null=True)
     visits = models.IntegerField(blank=True, null=True)
     cluster = models.ForeignKey(Cluster, on_delete=models.CASCADE, blank=True, null=True)
     position = models.CharField(max_length=200, blank=True, null=True)
@@ -75,8 +75,8 @@ class Activity(models.Model):
     countries = models.ManyToManyField(Country)
     fields = models.JSONField(blank=True, null=True)
     active = models.BooleanField(default=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
+    updated_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
 
     def __str__(self):
         return self.title
@@ -110,8 +110,8 @@ class Project(models.Model):
     end_date = models.DateTimeField('end date')
     budget = models.IntegerField()
     budget_currency = models.ForeignKey('Currency', on_delete=models.SET_NULL, null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, blank=True, null=True)
 
     def __str__(self):
         return self.title
@@ -150,5 +150,5 @@ class Report(models.Model):
     elderly_women = models.IntegerField(blank=True, null=True)
     households = models.IntegerField(blank=True, null=True)
     notes =  models.TextField(blank=True, null=True)
-    submitted_at = models.DateTimeField(auto_now_add=True)
-    created_at = models.DateTimeField(auto_now_add=True)
+    submitted_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)

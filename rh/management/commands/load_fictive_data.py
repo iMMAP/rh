@@ -382,10 +382,14 @@ class Command(BaseCommand):
 
         # Create Superuser
         user_model = get_user_model()
+        username = 'admin'
+        password = 'admin'
+        email = f"{username}@{fake.domain_name()}"
+
         Admin = user_model.objects.filter(username="admin").first()
         try:
             if not Admin:
-                Admin = user_model.objects.create_superuser('admin', 'admin@admin.cokm', 'admin')
+                Admin = user_model.objects.create_superuser(username, email, password)
         except Exception:
             self.stdout.write(self.style.Danger("Failed to create superuser"))
 
@@ -537,3 +541,10 @@ class Command(BaseCommand):
             
         activity_plans_count = ActivityPlan.objects.all().count()
         self.stdout.write(self.style.SUCCESS(f"Number of Activity Plans Created: {activity_plans_count}"))
+
+        self.stdout.write(self.style.SUCCESS(
+            f"""
+        Super User Created Successfully: 
+        Username: {username}
+        Password: {password}
+        """))

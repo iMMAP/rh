@@ -1,9 +1,10 @@
 import pandas as pd
 import datetime
 import sqlite3
+import json
 
 from django.shortcuts import render, redirect
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.template import loader
 
 from django.contrib import messages
@@ -18,8 +19,8 @@ from django.core.mail import EmailMessage
 from django.views.decorators.cache import cache_control
 from django.conf import settings
 
-from .models import Organization, Project
-from .forms import ProjectForm, RegisterForm
+from .models import *
+from .forms import *
 from .decorators import unauthenticated_user
 from .tokens import account_activation_token 
 
@@ -213,6 +214,7 @@ ORDER BY month, l2.name, people_recieved desc;
         'WASH': clusters['WASH'],
         'activities': activities,
     }
+    # context = {}
     return HttpResponse(template.render(context, request))
 
 
@@ -251,3 +253,69 @@ def add_project(request):
     # user = request.user
     # context = {'user': user}
     # return HttpResponse(template.render(context, request))
+
+
+def activity_json_form(request):
+    """Create form elements and return JsonResponse to template"""
+    data = None
+    json_fields = {}
+    if request.GET.get('activity', ''):
+        activity_id = int(request.GET.get('activity', ''))
+        json_fields = Activity.objects.get(id=activity_id).fields
+    if request.GET.get('activity_plan_id', False):
+        activity_plan_id = int(request.GET.get('activity_plan_id', ''))
+        data = ActivityPlan.objects.get(id=activity_plan_id).activity_fields
+    form_class = get_dynamic_form(json_fields, data)
+    form = form_class()
+    temp = loader.render_to_string("activities/dynamic_form_fields.html", {'form': form})
+    return JsonResponse({"form": temp})
+
+
+def activity_plans(request):
+    """Activity Plans"""
+    activity_plans = ActivityPlan.objects.all()
+    return render(request, 'activities/activity_plans.html', {'activity_plans': activity_plans})
+
+
+def create_activity_plan(request):
+    """Create Activity Plans"""
+    if request.method == 'POST':
+        form = ActivityPlanForm(request.POST)
+        if form.is_valid():
+            json_data = {}
+            activity = Activity.objects.get(id=request.POST.get('activity'))
+            json_class = get_dynamic_form(activity.fields)
+            json_form = json_class(request.POST)
+            if json_form.is_valid():
+                json_data = json_form.cleaned_data
+            activity_plan = form.save(commit=False)
+            activity_plan.activity_fields = json_data
+            form.save()
+            return redirect('/activity_plans')
+    else:
+        form = ActivityPlanForm()
+    return render(request, 'activities/activity_plans_form.html', {'form': form})
+
+
+def update_activity_plan(request, pk):
+    """Update Activity"""
+    activity_plan = ActivityPlan.objects.get(id=pk)
+    form = ActivityPlanForm(instance=activity_plan)
+    json_class = get_dynamic_form(activity_plan.activity.fields, initial_data=activity_plan.activity_fields)
+    json_form = json_class()
+    if request.method == 'POST':
+        form = ActivityPlanForm(request.POST, instance=activity_plan)
+        if form.is_valid():
+            json_data = {}
+            activity = Activity.objects.get(id=request.POST.get('activity'))
+            json_class = get_dynamic_form(activity.fields)
+            json_form = json_class(request.POST)
+            if json_form.is_valid():
+                json_data = json_form.cleaned_data
+            activity_plan = form.save(commit=False)
+            activity_plan.activity_fields = json_data
+            form.save()
+            return redirect('/activity_plans')
+    context = {'form': form, 'activity_plan': activity_plan.id}
+    return render(request, 'activities/activity_plans_form.html', context)
+

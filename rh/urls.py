@@ -34,15 +34,14 @@ urlpatterns = [
           auth_views.PasswordResetCompleteView.as_view(template_name='registration/password_reset_complete.html'),
           name='password_reset_complete'),
 
-     # Pages routes
+     # Profile routes
      path('profile/', user_views.profile, name='profile'),
-     path('add_project/', user_views.add_project, name='add_project'),
 
-          # Activities routes
-     path('activity_plan/activity_form/', user_views.activity_json_form, name='form'),
+     # Activities routes
      path('activity_plans/', user_views.activity_plans, name='activity_plan'),
      path('activity_plan/create/', user_views.create_activity_plan, name='create_activity_plan'),
      path('activity_plan/update/<str:pk>/', user_views.update_activity_plan, name='update_activity_plan'),
+     path('ajax/activity_plan/activity_form/', user_views.load_activity_json_form, name='ajax-load-activityfields'),
 
      # Projects routes
      path('projects/', user_views.projects_view, name='projects'),

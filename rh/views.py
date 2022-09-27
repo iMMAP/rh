@@ -25,6 +25,9 @@ from .decorators import unauthenticated_user
 from .tokens import account_activation_token 
 
 
+#############################################
+########### Authntication Views #############
+#############################################
 def activate_account(request, uidb64, token):
     """Activate User account"""
     User = get_user_model()
@@ -127,97 +130,103 @@ def logout_view(request):
     return redirect("/login")
 
 
+#############################################
+############### Index Views #################
+#############################################
 @cache_control(no_store=True)
 def index(request):
     template = loader.get_template('index.html')
 
-#     play_db = settings.PLAY_DB
-#     con = sqlite3.connect(play_db)
+    play_db = settings.PLAY_DB
+    con = sqlite3.connect(play_db)
 
-#     play = con.execute("""
-# SELECT 
-# DATE('2022-0' || (r.month +1) || '-01') as month,
-# SUM(boys) + SUM(girls) + SUM(men) + SUM(women) + SUM(elderly_women) + SUM(elderly_men) AS people_recieved
-# FROM benef b 
-# INNER JOIN report r on b.report_id=r.id
-# INNER JOIN activity a on a.id = b.activity_id
-# INNER JOIN project p on p.id=r.project_id
-# INNER JOIN org o on o.id=p.org_id
-# INNER JOIN locs on locs.id = b.loc_id
-# WHERE substr(locs.code, 0, 3) = 'AF' AND 
-# o.short <> 'iMMAP' AND 
-# r.year = 2022
-# GROUP BY r.month
-# ORDER BY month
-# """)
+    play = con.execute("""
+SELECT 
+DATE('2022-0' || (r.month +1) || '-01') as month,
+SUM(boys) + SUM(girls) + SUM(men) + SUM(women) + SUM(elderly_women) + SUM(elderly_men) AS people_recieved
+FROM benef b 
+INNER JOIN report r on b.report_id=r.id
+INNER JOIN activity a on a.id = b.activity_id
+INNER JOIN project p on p.id=r.project_id
+INNER JOIN org o on o.id=p.org_id
+INNER JOIN locs on locs.id = b.loc_id
+WHERE substr(locs.code, 0, 3) = 'AF' AND 
+o.short <> 'iMMAP' AND 
+r.year = 2022
+GROUP BY r.month
+ORDER BY month
+""")
 
-#     types = []
-#     nb_benef = []
-#     for x in play:
-#         types.append(
-#             datetime.date.fromisoformat(x[0]).strftime('%B')
-#         )
-#         nb_benef.append(x[1])
+    types = []
+    nb_benef = []
+    for x in play:
+        types.append(
+            datetime.date.fromisoformat(x[0]).strftime('%B')
+        )
+        nb_benef.append(x[1])
 
     
-#     months = str(types[0:10])
-#     benefs = str(nb_benef[0:10])
+    months = str(types[0:10])
+    benefs = str(nb_benef[0:10])
 
-#     df = pd.read_sql("""
-# SELECT 
-# DATE('2022-0' || (r.month +1) || '-01') as month, p.cluster,
-# --a.activity_type || ' - ' || a.activity_desc as activity,
-# SUM(boys) + SUM(girls) + SUM(men) + SUM(women) + SUM(elderly_women) + SUM(elderly_men) AS people_recieved
-# FROM benef b 
-# INNER JOIN report r on b.report_id=r.id
-# INNER JOIN activity a on a.id = b.activity_id
-# INNER JOIN project p on p.id=r.project_id
-# INNER JOIN org o on o.id=p.org_id
-# INNER JOIN locs on locs.id = b.loc_id
-# WHERE substr(locs.code, 0, 3) = 'AF' AND 
-# o.short <> 'iMMAP' AND 
-# r.year = 2022 AND
-# p.cluster IN ('ESNFI', 'FSAC', 'Protection', 'WASH')
-# GROUP BY r.month, p.cluster
-# ORDER BY month, cluster;
-#     """, con=con)
+    df = pd.read_sql("""
+SELECT 
+DATE('2022-0' || (r.month +1) || '-01') as month, p.cluster,
+--a.activity_type || ' - ' || a.activity_desc as activity,
+SUM(boys) + SUM(girls) + SUM(men) + SUM(women) + SUM(elderly_women) + SUM(elderly_men) AS people_recieved
+FROM benef b 
+INNER JOIN report r on b.report_id=r.id
+INNER JOIN activity a on a.id = b.activity_id
+INNER JOIN project p on p.id=r.project_id
+INNER JOIN org o on o.id=p.org_id
+INNER JOIN locs on locs.id = b.loc_id
+WHERE substr(locs.code, 0, 3) = 'AF' AND 
+o.short <> 'iMMAP' AND 
+r.year = 2022 AND
+p.cluster IN ('ESNFI', 'FSAC', 'Protection', 'WASH')
+GROUP BY r.month, p.cluster
+ORDER BY month, cluster;
+    """, con=con)
     
-#     clusters = df.pivot(index='month', columns='cluster', values='people_recieved').convert_dtypes().fillna(0).to_dict('list')
+    clusters = df.pivot(index='month', columns='cluster', values='people_recieved').convert_dtypes().fillna(0).to_dict('list')
 
-#     df = pd.read_sql("""
-#     SELECT 
-# a.activity_type || ' - ' || a.activity_desc as activity, o.short, l2.name,
-# printf("%,d", SUM(boys) + SUM(girls) + SUM(men) + SUM(women) + SUM(elderly_women) + SUM(elderly_men)) AS people_recieved
-# FROM benef b 
-# INNER JOIN report r on b.report_id=r.id
-# INNER JOIN activity a on a.id = b.activity_id
-# INNER JOIN project p on p.id=r.project_id
-# INNER JOIN org o on o.id=p.org_id
-# INNER JOIN locs on locs.id = b.loc_id
-# INNER JOIN locs l2 on locs.parent_id = l2.id
-# WHERE substr(locs.code, 0, 3) = 'AF' AND 
-# o.short <> 'iMMAP' AND 
-# r.year = 2022 AND
-# r.month = 6 AND r.status='complete'
-# GROUP BY l2.id, activity_type, activity_desc HAVING people_recieved IS NOT NULL
-# ORDER BY month, l2.name, people_recieved desc;
-#     """, con=con)
+    df = pd.read_sql("""
+    SELECT 
+a.activity_type || ' - ' || a.activity_desc as activity, o.short, l2.name,
+printf("%,d", SUM(boys) + SUM(girls) + SUM(men) + SUM(women) + SUM(elderly_women) + SUM(elderly_men)) AS people_recieved
+FROM benef b 
+INNER JOIN report r on b.report_id=r.id
+INNER JOIN activity a on a.id = b.activity_id
+INNER JOIN project p on p.id=r.project_id
+INNER JOIN org o on o.id=p.org_id
+INNER JOIN locs on locs.id = b.loc_id
+INNER JOIN locs l2 on locs.parent_id = l2.id
+WHERE substr(locs.code, 0, 3) = 'AF' AND 
+o.short <> 'iMMAP' AND 
+r.year = 2022 AND
+r.month = 6 AND r.status='complete'
+GROUP BY l2.id, activity_type, activity_desc HAVING people_recieved IS NOT NULL
+ORDER BY month, l2.name, people_recieved desc;
+    """, con=con)
 
-#     activities = df.to_dict('records')
-#     # import pdb; pdb.set_trace()
-#     context = {
-#         'months': months, 
-#         'benefs': benefs,
-#         'ESNFI': clusters['ESNFI'],
-#         'FSAC': clusters['FSAC'],
-#         'Protection': clusters['Protection'],
-#         'WASH': clusters['WASH'],
-#         'activities': activities,
-#     }
-    context = {}
+    activities = df.to_dict('records')
+    # import pdb; pdb.set_trace()
+    context = {
+        'months': months, 
+        'benefs': benefs,
+        'ESNFI': clusters['ESNFI'],
+        'FSAC': clusters['FSAC'],
+        'Protection': clusters['Protection'],
+        'WASH': clusters['WASH'],
+        'activities': activities,
+    }
+    # context = {}
     return HttpResponse(template.render(context, request))
 
 
+#############################################
+############### Profile Views #################
+#############################################
 @cache_control(no_store=True)
 @login_required
 def profile(request):
@@ -227,35 +236,12 @@ def profile(request):
     return HttpResponse(template.render(context, request))
 
 
+#############################################
+############# Activities Views ##############
+#############################################
 @cache_control(no_store=True)
 @login_required
-def add_project(request):
-    if request.method == 'POST':
-        form = ProjectForm(request.POST)
-        project = Project(
-            user=request.user,
-            title=request.POST['title'],
-            description=request.POST['description'],
-            start_date=request.POST.get('start_date'),
-            end_date=request.POST.get('end_date'),
-        )
-
-        if form.is_valid():
-            project.save()
-            # return HttpResponseRedirect(reverse('index', args=(project.id,)))
-            # messages.info(request, "Report saved successfully")
-            return HttpResponseRedirect('/profile/')
-
-    else:
-        form = ProjectForm()
-    return render(request, 'add_report.html', {'form': form})
-    # template = loader.get_template('report/add.html')
-    # user = request.user
-    # context = {'user': user}
-    # return HttpResponse(template.render(context, request))
-
-
-def activity_json_form(request):
+def load_activity_json_form(request):
     """Create form elements and return JsonResponse to template"""
     data = None
     json_fields = {}
@@ -271,12 +257,16 @@ def activity_json_form(request):
     return JsonResponse({"form": temp})
 
 
+@cache_control(no_store=True)
+@login_required
 def activity_plans(request):
     """Activity Plans"""
     activity_plans = ActivityPlan.objects.all()
     return render(request, 'activities/activity_plans.html', {'activity_plans': activity_plans})
 
 
+@cache_control(no_store=True)
+@login_required
 def create_activity_plan(request):
     """Create Activity Plans"""
     if request.method == 'POST':
@@ -297,6 +287,8 @@ def create_activity_plan(request):
     return render(request, 'activities/activity_plans_form.html', {'form': form})
 
 
+@cache_control(no_store=True)
+@login_required
 def update_activity_plan(request, pk):
     """Update Activity"""
     activity_plan = ActivityPlan.objects.get(id=pk)
@@ -320,41 +312,62 @@ def update_activity_plan(request, pk):
     return render(request, 'activities/activity_plans_form.html', context)
 
 
+
+#############################################
+############## Project Views ################
+#############################################
+@cache_control(no_store=True)
+@login_required
+def load_activities_details(request):
+    cluster_ids = dict(request.GET.lists()).get('clusters[]', [])
+    listed_activity_ids = dict(request.GET.lists()).get('listed_activities[]', [])
+    # if '' in listed_activity_ids:
+        # listed_activity_ids.remove('')
+    cluster_ids = list(map(int, cluster_ids))
+    listed_activity_ids = list(map(int, listed_activity_ids))
+    activities = Activity.objects.filter(clusters__in=cluster_ids).order_by('title').distinct()
+    activities_options = """"""
+    for activity in activities:
+        option = f"""
+        <option value="{activity.pk}">{activity.title}</option>
+        """
+        activities_options+=option
+    return HttpResponse(activities_options)
+
+
+@cache_control(no_store=True)
+@login_required
 def projects_view(request):
     """Projects Plans"""
     projects = Project.objects.all()
     return render(request, 'projects/projects.html', {'projects': projects})
 
 
+@cache_control(no_store=True)
+@login_required
 def create_project_view(request):
     """Create Project"""
     if request.method == 'POST':
         form = ProjectForm(request.POST)
         if form.is_valid():
-            # json_data = {}
-            # activity = Activity.objects.get(id=request.POST.get('activity'))
-            # json_class = get_dynamic_form(activity.fields)
-            # json_form = json_class(request.POST)
-            # if json_form.is_valid():
-            #     json_data = json_form.cleaned_data
             form.save()
-            # activity_plan.activity_fields = json_data
-            # form.save()
             return redirect('/projects')
     else:
         form = ProjectForm(initial={'user': request.user})
-    return render(request, 'projects/project_form.html', {'form': form})
-
-def load_activities_details(request):
-    cluster_ids = dict(request.GET.lists()).get('clusters[]', [])
-    listed_activity_ids = dict(request.GET.lists()).get('listed_activities[]', [])
-    if '' in listed_activity_ids:
-        listed_activity_ids.remove('')
-    cluster_ids = list(map(int, cluster_ids))
-    listed_activity_ids = list(map(int, listed_activity_ids))
-    activities = Activity.objects.filter(clusters__in=cluster_ids).order_by('title').distinct()
-    return render(request, 'projects/load_activities_options.html', {'activities': activities})
+    context = {'form': form}
+    return render(request, 'projects/project_form.html', context)
 
 
-def update_project_view(request):
-    pass
+@cache_control(no_store=True)
+@login_required
+def update_project_view(request, pk):
+    """Update Project view"""
+    project = Project.objects.get(id=pk)
+    form = ProjectForm(instance=project)
+    if request.method == 'POST':
+        form = ProjectForm(request.POST, instance=project)
+        if form.is_valid():
+            form.save()
+            return redirect('/projects')
+    context = {'form': form}
+    return render(request, 'projects/project_form.html', context)

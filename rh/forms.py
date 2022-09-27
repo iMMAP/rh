@@ -12,7 +12,6 @@ User = get_user_model()
 class RegisterForm(UserCreationForm):
     """Subclass User Registration form"""
 
-    # TODO: Add the custom user details in future
     class Meta:
         model = User
         fields = ['name', 'username', 'email', 'password1', 'password2', 'organization']
@@ -137,24 +136,6 @@ class UserPasswordResetForm(PasswordResetForm):
                              )
 
 
-class ProjectForm(forms.Form):
-    title = forms.CharField(widget=forms.TextInput(attrs={
-        "class": "w-full rounded-lg focus:ring-primary-600 focus:border-primary-600"
-    }), label='Project Title', max_length=100)
-
-    description = forms.CharField(widget=forms.Textarea(attrs={
-        "class": "w-full rounded-lg focus:ring-primary-600 focus:border-primary-600"
-    }), label='Description')
-    start_date = forms.DateField(widget=forms.widgets.TextInput(attrs={
-        "type": "date",
-        "class": "focus:ring-primary-600 rounded-lg focus:border-primary-600 w-full"
-    }), label='Start date')
-    end_date = forms.DateField(widget=forms.widgets.TextInput(attrs={
-        "type": "date",
-        "class": " focus:ring-primary-600 rounded-lg focus:border-primary-600 w-full"
-    }), label='End date')
-
-
 class FieldHandler:
     form_fields = {}
 
@@ -231,8 +212,9 @@ class ActivityPlanForm(forms.ModelForm):
     class Meta:
         model = ActivityPlan
         fields = "__all__"
+        
         widgets = {
-            'activity_fields': forms.Textarea(attrs={'readonly':True}),
+            'activity_fields': forms.Textarea(attrs={'readonly':True, 'activityfields-queries-url': reverse_lazy('ajax-load-activityfields')})
         }
 
     def clean_activity_fields(self):
@@ -252,16 +234,6 @@ class ProjectForm(forms.ModelForm):
             'activities': forms.SelectMultiple(attrs={'activities-queries-url': reverse_lazy('ajax-load-activities'),
                                             'class': 'js-example-basic-multiple', 'name': 'states[]'
                                             }),
-        }
-    
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields['activities'].queryset = Activity.objects.none()
-       
-
-    # def clean_activity_fields(self):
-    #     if self.instance: 
-    #         return self.instance.activity_fields
-    #     else: 
-    #         return self.fields['activity_fields']
-        
+            'start_date': forms.widgets.DateInput(attrs={'type': 'date'}),
+            'end_date': forms.widgets.DateInput(attrs={'type': 'date'}),
+        }    

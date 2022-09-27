@@ -87,12 +87,10 @@ class Activity(models.Model):
 
 class Currency(models.Model):
     """Currencies model"""
-    code = models.CharField(max_length=15, null=True)
     name = models.CharField(max_length=200, null=True)
-    symbol = models.CharField(max_length=15, null=True)
 
     def __str__(self):
-        return self.code
+        return self.name
     
     class Meta:
         verbose_name = 'Currency'

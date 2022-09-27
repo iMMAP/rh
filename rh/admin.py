@@ -111,10 +111,7 @@ admin.site.register(User, CustomUserAdmin)
 #############################################
 ########### Currency Model Admin #############
 #############################################
-class CurrencyAdmin(admin.ModelAdmin):
-    list_display = ('name', 'code', 'symbol')
-    search_fields = ('name', 'code', 'symbol')
-admin.site.register(Currency, CurrencyAdmin)
+admin.site.register(Currency)
 
 
 ##############################################

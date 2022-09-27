@@ -4,6 +4,7 @@ from .models import *
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, PasswordResetForm, SetPasswordForm, PasswordChangeForm
 from django.contrib.auth import get_user_model, password_validation
+from django.urls import reverse_lazy
 
 User = get_user_model()
 
@@ -239,4 +240,28 @@ class ActivityPlanForm(forms.ModelForm):
             return self.instance.activity_fields
         else: 
             return self.fields['activity_fields']
+
+class ProjectForm(forms.ModelForm):
+    class Meta:
+        model = Project
+        fields = "__all__"
+    
+        widgets = {
+            'locations': forms.SelectMultiple(attrs={'class': 'js-example-basic-multiple', 'name': 'states[]'}),
+            'clusters': forms.SelectMultiple(attrs={'class': 'js-example-basic-multiple', 'name': 'states[]'}),
+            'activities': forms.SelectMultiple(attrs={'activities-queries-url': reverse_lazy('ajax-load-activities'),
+                                            'class': 'js-example-basic-multiple', 'name': 'states[]'
+                                            }),
+        }
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['activities'].queryset = Activity.objects.none()
+       
+
+    # def clean_activity_fields(self):
+    #     if self.instance: 
+    #         return self.instance.activity_fields
+    #     else: 
+    #         return self.fields['activity_fields']
         

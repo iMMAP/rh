@@ -280,10 +280,10 @@ class Command(BaseCommand):
                                         active=True,
                                         fields=JSON1 if j==1 else JSON2
                                     )
-            for c in Country.objects.order_by('?')[0:fake.unique_number(records_range=4)]:
+            for c in Country.objects.order_by('?')[0:fake.unique_number(records_range=2)]:
                 activity.countries.add(c.id)
 
-            for cl in Cluster.objects.order_by('?')[0:fake.unique_number(records_range=4)]:
+            for cl in Cluster.objects.order_by('?')[0:fake.unique_number(records_range=2)]:
                 activity.clusters.add(cl.id)
             
         activities_count = Activity.objects.all().count()
@@ -304,13 +304,13 @@ class Command(BaseCommand):
                                 budget=random.randint(1, 50)*1000,
                                 budget_currency=Currency.objects.order_by('?')[0],
                             )
-            for a in Activity.objects.order_by('?')[0:fake.unique_number(records_range=4)]:
+            for a in Activity.objects.order_by('?')[0:fake.unique_number(records_range=2)]:
                 project.activities.add(a.id)
 
-            for cl in Cluster.objects.order_by('?')[0:fake.unique_number(records_range=4)]:
+            for cl in Cluster.objects.order_by('?')[0:fake.unique_number(records_range=2)]:
                 project.clusters.add(cl.id)
             
-            for loc in Location.objects.order_by('?')[0:fake.unique_number(records_range=4)]:
+            for loc in Location.objects.order_by('?')[0:fake.unique_number(records_range=2)]:
                 project.locations.add(loc.id)
             
         projects_count = Project.objects.all().count()

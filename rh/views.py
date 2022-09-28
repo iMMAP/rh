@@ -319,10 +319,9 @@ def update_activity_plan(request, pk):
 @cache_control(no_store=True)
 @login_required
 def load_activities_details(request):
+    """Load activities related to a cluster"""
     cluster_ids = dict(request.GET.lists()).get('clusters[]', [])
     listed_activity_ids = dict(request.GET.lists()).get('listed_activities[]', [])
-    # if '' in listed_activity_ids:
-        # listed_activity_ids.remove('')
     cluster_ids = list(map(int, cluster_ids))
     listed_activity_ids = list(map(int, listed_activity_ids))
     activities = Activity.objects.filter(clusters__in=cluster_ids).order_by('title').distinct()
@@ -333,6 +332,39 @@ def load_activities_details(request):
         """
         activities_options+=option
     return HttpResponse(activities_options)
+
+
+@cache_control(no_store=True)
+@login_required
+def load_locations_details(request):
+    """Load Locations with group info"""
+    countries = Location.objects.filter(type='Country')
+    provinces = Location.objects.filter(type='Province').order_by('name')
+    country_group = """"""
+    province_group = """"""
+    for country in countries:
+        for province in provinces:
+            district_options = """"""
+            districts = Location.objects.filter(parent=province)
+            for district in districts:
+                district_options += f"""
+                <option value="{district.pk}">
+                    {district.name}
+                </option>"""
+            
+            province_group += f"""
+            <optgroup label="{province.name}">
+                <option value="{province.pk}">{province.name} ({province.type})</option>
+                {district_options}
+            </optgroup>"""
+
+        country_group += f"""
+        <optgroup label="{country.name}">
+            <option value="{country.pk}">{country.name}</option>
+        </optgroup>
+        {province_group}
+        """
+    return HttpResponse(country_group)
 
 
 @cache_control(no_store=True)

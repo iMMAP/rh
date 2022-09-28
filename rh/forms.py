@@ -229,10 +229,10 @@ class ProjectForm(forms.ModelForm):
         fields = "__all__"
     
         widgets = {
-            'locations': forms.SelectMultiple(attrs={'class': 'js-example-basic-multiple', 'name': 'states[]'}),
-            'clusters': forms.SelectMultiple(attrs={'class': 'js-example-basic-multiple', 'name': 'states[]'}),
+            'locations': forms.SelectMultiple(attrs={'class': 'js-example-basic-multiple', 'locations-queries-url': reverse_lazy('ajax-load-locations')}),
+            'clusters': forms.SelectMultiple(attrs={'class': 'js-example-basic-multiple'}),
             'activities': forms.SelectMultiple(attrs={'activities-queries-url': reverse_lazy('ajax-load-activities'),
-                                            'class': 'js-example-basic-multiple', 'name': 'states[]'
+                                            'class': 'js-example-basic-multiple'
                                             }),
             'start_date': forms.widgets.DateInput(attrs={'type': 'date'}),
             'end_date': forms.widgets.DateInput(attrs={'type': 'date'}),

@@ -100,11 +100,11 @@ class Currency(models.Model):
 class Project(models.Model):
     """Projects model"""
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    title = models.CharField(max_length=200)
+    description = models.TextField(blank=True, null=True)
     clusters = models.ManyToManyField(Cluster)
     activities = models.ManyToManyField(Activity)
     locations = models.ManyToManyField(Location)
-    title = models.CharField(max_length=200)
-    description = models.TextField(blank=True, null=True)
     start_date = models.DateField('start date')
     end_date = models.DateField('end date')
     budget = models.IntegerField()

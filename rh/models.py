@@ -87,7 +87,7 @@ class Activity(models.Model):
 
 class Currency(models.Model):
     """Currencies model"""
-    name = models.CharField(max_length=200, null=True)
+    name = models.CharField(max_length=15, null=True)
 
     def __str__(self):
         return self.name

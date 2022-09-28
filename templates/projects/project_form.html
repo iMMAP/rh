@@ -36,7 +36,8 @@
     function get_activities(){
         const activities_url = $("#id_activities").attr("activities-queries-url");
         const activityIds = $("select#id_activities option").map(function() {return $(this).val();}).get();
-        const clusterIds = $("#id_clusters").val();     
+        const clusterIds = $("#id_clusters").val();    
+        const selected_activities = $("select#id_activities").val() 
         $.ajax({    
             type: 'GET',
             url: activities_url,
@@ -46,9 +47,27 @@
             },
             success: function (data) {  
                 $("#id_activities").html(data); 
+                $("select#id_activities").val(selected_activities); 
             }
         });
     }
+    function get_locations(){
+        const locations_url = $("#id_locations").attr("locations-queries-url");
+        const selected_locations = $("select#id_locations").val()
+        $.ajax({    
+            type: 'GET',
+            url: locations_url,
+            success: function (data) {  
+                $("#id_locations").html(data); 
+                $("select#id_locations").val(selected_locations); 
+                
+            }
+        });
+    };
+
+    $('#id_locations').ready(function () {
+        get_locations()
+    });
 
     $('#id_activities').ready(function () {
         get_activities()

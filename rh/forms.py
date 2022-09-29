@@ -209,12 +209,14 @@ def get_dynamic_form(json_fields, initial_data=None):
 
 
 class ActivityPlanForm(forms.ModelForm):
+    activity_plan = forms.CharField(widget=forms.HiddenInput())
     class Meta:
         model = ActivityPlan
         fields = "__all__"
         
         widgets = {
-            'activity_fields': forms.Textarea(attrs={'readonly':True, 'activityfields-queries-url': reverse_lazy('ajax-load-activityfields')})
+            'activity_fields': forms.Textarea(attrs={'class': 'ajax-activity-fields-class', 'readonly':True, 'activityfields-queries-url': reverse_lazy('ajax-load-activityfields')}),
+            'activity': forms.Select(attrs={'class': 'ajax-activity-class'}),
         }
 
     def clean_activity_fields(self):
@@ -222,6 +224,7 @@ class ActivityPlanForm(forms.ModelForm):
             return self.instance.activity_fields
         else: 
             return self.fields['activity_fields']
+
 
 class ProjectForm(forms.ModelForm):
     class Meta:

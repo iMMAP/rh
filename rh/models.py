@@ -120,7 +120,6 @@ class ActivityPlan(models.Model):
     """Activity Plans model"""
     project = models.ForeignKey(Project, on_delete=models.CASCADE, null=True)
     activity = models.ForeignKey(Activity, on_delete=models.CASCADE, null=True)
-    activity_fields = models.JSONField(blank=True, null=True)
     boys = models.IntegerField(blank=True, null=True)
     girls = models.IntegerField(blank=True, null=True)
     men = models.IntegerField(blank=True, null=True)
@@ -128,6 +127,7 @@ class ActivityPlan(models.Model):
     elderly_men = models.IntegerField(blank=True, null=True)
     elderly_women = models.IntegerField(blank=True, null=True)
     households = models.IntegerField(blank=True, null=True)
+    activity_fields = models.JSONField(blank=True, null=True)
 
     def __str__(self):
         return f"{self.project.title}, {self.activity.title}"

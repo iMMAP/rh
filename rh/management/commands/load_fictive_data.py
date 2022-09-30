@@ -45,26 +45,80 @@ DLOCATION = [
     {'parent': 'AF22', 'level': 2, 'name': 'Gosfandi', 'code': 'AF2206', 'original_name': '', 'type': 'District', 'lat': 33.211648, 'long': 66.54342}
 ]
 
-JSON2 = {
+JSON3 = {
    "fields": [
       {
-         "name":"firstname",
+         "name":"Text Input",
          "type":"text"
-      },
+      },      
       {
-         "name":"lastname",
-         "type":"text"
-      },
-      {
-         "name":"smallcv",
+         "name":"Text Area",
          "type":"textarea"
       },
       {
-         "name":"age",
+         "name":"Integer Input",
          "type":"integer"
       },
       {
-         "name":"marital_status",
+         "name":"Radio Select",
+         "type":"radio",
+         "value":[
+            "Radio 1",
+            "Radio 2",
+            "Radio 3",
+            "Radio 4"
+         ]
+      },
+      {
+         "name":"Simple Select",
+         "type":"select",
+         "value":[
+            "Select 1",
+            "Select 2",
+            "Select 3",
+            
+         ]
+      },
+      {
+         "name":"Check Box",
+         "type":"checkbox"
+      },
+      {
+         "name":"Multi Select",
+         "type":"multi",
+         "value":[
+            "M Select 1",
+            "M Select 2",
+            "M Select 3",
+            "M Select 4",
+            "M Select 5",
+            "M Select 6",
+            "M Select 7"
+         ]
+      }
+   ],
+}
+
+JSON2 = {
+   "fields": [
+      {
+         "name":"Firstname",
+         "type":"text"
+      },
+      {
+         "name":"Lastname",
+         "type":"text"
+      },
+      {
+         "name":"Smallcv",
+         "type":"textarea"
+      },
+      {
+         "name":"Age",
+         "type":"integer"
+      },
+      {
+         "name":"Merital Status",
          "type":"radio",
          "value":[
             "Married",
@@ -74,8 +128,7 @@ JSON2 = {
          ]
       },
       {
-         "name":"occupation",
-         "label":"Occupation",
+         "name":"Occupation",
          "type":"select",
          "value":[
             "Farmer",
@@ -88,17 +141,17 @@ JSON2 = {
          ]
       },
       {
-         "name":"internet",
+         "name":"Internet",
          "type":"checkbox"
       },
       {
-         "name":"indicator",
+         "name":"Multi Select",
          "type":"multi",
          "value":[
-            "choice 1",
-            "choice 2",
-            "choice 3",
-            "choice 4"
+            "Select 1",
+            "Select 2",
+            "Select 3",
+            "Select 4"
          ]
       }
    ],
@@ -107,36 +160,36 @@ JSON2 = {
 JSON1 = {
     "fields": [
         {
-            "name": "indicator",
+            "name": "Indicator",
             "type": "multi",
             "value": ["choice 1", "choice 2", "choice 3", "choice 4"]
         },
         {
-            "name": "winterization",
+            "name": "Winterization",
             "type": "checkbox"
         },
         {
-            "name": "covid",
+            "name": "Covid",
             "type": "checkbox"
         },
         {
-            "name": "transfer type",
+            "name": "Transfer Type",
             "type": "select",
             "value": ["cash", "hawala", "bank"]
         },
         {
-            "name":"population",
+            "name":"Population",
             "type":"integer"
         },
         {
-         "name":"marital_status",
-         "type":"radio",
-         "value":[
-            "Married",
-            "Single",
-            "Divorced",
-            "Widower"
-         ]
+            "name":"Availability Status",
+            "type":"radio",
+            "value":[
+                "Busy",
+                "Available",
+                "Off",
+                "Do not Disturb"
+            ]
       },
     ]
 }
@@ -278,12 +331,12 @@ class Command(BaseCommand):
                                         title=f"Activity_{a}", 
                                         description=description,
                                         active=True,
-                                        fields=JSON1 if j==1 else JSON2
+                                        fields=JSON1 if j==1 else (JSON2 if j==2  else JSON3)
                                     )
-            for c in Country.objects.order_by('?')[0:fake.unique_number(records_range=4)]:
+            for c in Country.objects.order_by('?')[0:fake.unique_number(records_range=2)]:
                 activity.countries.add(c.id)
 
-            for cl in Cluster.objects.order_by('?')[0:fake.unique_number(records_range=4)]:
+            for cl in Cluster.objects.order_by('?')[0:fake.unique_number(records_range=2)]:
                 activity.clusters.add(cl.id)
             
         activities_count = Activity.objects.all().count()
@@ -304,13 +357,13 @@ class Command(BaseCommand):
                                 budget=random.randint(1, 50)*1000,
                                 budget_currency=Currency.objects.order_by('?')[0],
                             )
-            for a in Activity.objects.order_by('?')[0:fake.unique_number(records_range=4)]:
+            for a in Activity.objects.order_by('?')[0:fake.unique_number(records_range=2)]:
                 project.activities.add(a.id)
 
-            for cl in Cluster.objects.order_by('?')[0:fake.unique_number(records_range=4)]:
+            for cl in Cluster.objects.order_by('?')[0:fake.unique_number(records_range=2)]:
                 project.clusters.add(cl.id)
             
-            for loc in Location.objects.order_by('?')[0:fake.unique_number(records_range=4)]:
+            for loc in Location.objects.order_by('?')[0:fake.unique_number(records_range=2)]:
                 project.locations.add(loc.id)
             
         projects_count = Project.objects.all().count()

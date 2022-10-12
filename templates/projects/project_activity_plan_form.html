@@ -1,0 +1,104 @@
+{% extends '_base.html' %}
+{% load crispy_forms_tags %}
+
+
+{% block content %}
+
+<div class="container px-4 px-lg-5 h-100">
+    <div class="row h-100 align-items-center justify-content-center text-left">
+        <div class="col-lg-6 align-self-end">
+            <h1 class="m-5">Report Hub</h1>
+
+            <h3>Activities Planning</h3>
+
+            {% if messages %}
+                {% for message in messages %}
+                    {% if message.tags in 'info,warning,success' %}
+                        <div class="alert alert-{{ message.tags }}" role="alert">{{ message }}</div>
+                    {% elif message.tags == 'error' %}
+                        <div class="alert alert-danger" role="alert">{{ message }}</div>
+                    {% else %}
+                        <div class="alert alert-warning" role="alert">{{ message }}</div>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+
+            <form method="POST" enctype="multipart/form-data">
+                {{ formset.management_form }}
+                {% csrf_token %}
+                {% for form in formset %}              
+                    <div class="accordion mb-3" id="accordionActivity{{forloop.counter0}}">
+                        <div class="accordion-item">
+                        <h2 class="accordion-header" id="activityHeading{{forloop.counter0}}">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{forloop.counter0}}" aria-expanded="true" aria-controls="collapse{{forloop.counter0}}">
+                                
+                                {% if form.instance.pk %}
+                                    {{ form.instance }}
+                                {% else %}
+                                {{ form.initial.project }}, {{ form.initial.activity }}
+                                {% endif %}
+                                    
+                            </button>
+                    </h2>
+                    <div id="collapse{{forloop.counter0}}" class="accordion-collapse collapse hide" aria-labelledby="activityHeading{{forloop.counter0}}" data-bs-parent="#accordionActivity{{forloop.counter0}}">
+                        <div class="accordion-body" id="accordion-body-{{forloop.counter0}}">
+                                <input type="hidden" name="next" id="activity_plan_id_{{forloop.counter0}}" value="{{ form.id.value }}"/>
+                                <input type="hidden" name="form_set_id" id="id_form_set" value="{{ forloop.counter0 }}"/>
+                                {{ form|crispy }}
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                {% endfor %}
+                <div class="mb-3 mt-3 d-grid">
+                    <input type="submit" class="btn btn-outline-dark" value="Submit"/>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+<script>
+    function get_activity_form(event){
+        if (event.target == undefined){
+            var parentElement = $(event).parent().parent()
+        }
+        else{
+            var parentElement = $(event.target).parent().parent()
+        }
+        const formSetId = parentElement.find('#id_form_set').val()
+        const activityFieldsUrl = $(`#id_form-${formSetId}-activity_fields`).attr("activityfields-queries-url");
+        const activityId = $(`#id_form-${formSetId}-activity_id`).val();
+        const activityPlanId = $(`#activity_plan_id_${formSetId}`).val();
+        $.ajax({
+            type: 'GET',
+            url: activityFieldsUrl,
+            data: {
+                activity: activityId,
+                activity_plan_id: activityPlanId,
+            },
+            dataType: 'json',
+            success: function(response){
+                var activityFormEl = parentElement.find("#activity_form")
+                if (activityFormEl){
+                    activityFormEl.remove()
+                }
+                var activityFormEl = `
+                    <div id="activity_form" class="mb-3" style="background-color: aliceblue;padding: 10px;">
+                        <h5>Activity</h5>
+                        ${response.form}
+                    </div>`
+                $(`#accordion-body-${formSetId}`).prepend(activityFormEl)
+                //$(`#div_id_form-${formSetId}-activity`).remove()
+            }
+        })
+    }
+    $('.ajax-activity-fields-class').ready(function (ev) {
+        for (var i=0; i < $('.ajax-activity-fields-class').length; i++){
+            get_activity_form($('.ajax-activity-fields-class')[i])
+        }
+    });
+    
+</script>
+{% endblock %}

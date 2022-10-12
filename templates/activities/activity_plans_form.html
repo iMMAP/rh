@@ -15,7 +15,6 @@
                 {% csrf_token %}
                 <input type="hidden" name="next" id="activity_plan_id" value="{{ activity_plan }}"/>
                 {{ form|crispy }}
-                {{ json_form}}
                 <div class="mb-3 mt-3 d-grid">
                     <input type="submit" class="btn btn-outline-dark" value="Submit"/>
                 </div>
@@ -27,12 +26,16 @@
 <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
 <script>
     function get_activity_form(){
+        const activityFieldsUrl = $("#id_activity_fields").attr("activityfields-queries-url");
+        const activityId = $("#id_activity").val();
+        const activityPlanId = $("#activity_plan_id").val();
+        
         $.ajax({
             type: 'GET',
-            url: '/activity_plan/activity_form/',
+            url: activityFieldsUrl,
             data: {
-                activity: $("#id_activity").val(),
-                activity_plan_id: $("#activity_plan_id").val(),
+                activity: activityId,
+                activity_plan_id: activityPlanId,
             },
             dataType: 'json',
             success: function(response){

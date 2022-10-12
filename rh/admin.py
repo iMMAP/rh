@@ -184,9 +184,9 @@ admin.site.register(Activity, ActivityAdmin)
 ############ Project Model Admin #############
 ##############################################
 class ProjectAdmin(admin.ModelAdmin):
-    list_display = ('title', 'user', 'show_activities', 'show_locations', 'budget', 'budget_currency')
-    search_fields = ('title', 'activities__title', 'locations__name')
-    list_filter = ('user', 'activities', 'locations')
+    list_display = ('title', 'user', 'show_clusters', 'show_activities', 'show_locations', 'budget', 'budget_currency')
+    search_fields = ('title', 'clusters__title', 'activities__title', 'locations__name')
+    list_filter = ('user', 'clusters', 'activities', 'locations')
 
     # To create a clickable link between to models
     # def user_link(self, obj):
@@ -195,6 +195,10 @@ class ProjectAdmin(admin.ModelAdmin):
     #     link_tag = f'<a href="{reverse}">{obj.user.username}</a>'
     #     return mark_safe(link_tag)
     # user_link.short_description = 'user'
+
+    def show_clusters(self, obj):
+        return ",\n".join([a.title for a in obj.clusters.all()])
+    show_clusters.short_description = 'Clusters'
 
     def show_activities(self, obj):
         return ",\n".join([a.title for a in obj.activities.all()])

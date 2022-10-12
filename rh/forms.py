@@ -4,6 +4,7 @@ from .models import *
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, PasswordResetForm, SetPasswordForm, PasswordChangeForm
 from django.contrib.auth import get_user_model, password_validation
+from django.urls import reverse_lazy
 
 User = get_user_model()
 
@@ -11,7 +12,6 @@ User = get_user_model()
 class RegisterForm(UserCreationForm):
     """Subclass User Registration form"""
 
-    # TODO: Add the custom user details in future
     class Meta:
         model = User
         fields = ['name', 'username', 'email', 'password1', 'password2', 'organization']
@@ -136,24 +136,6 @@ class UserPasswordResetForm(PasswordResetForm):
                              )
 
 
-class ProjectForm(forms.Form):
-    title = forms.CharField(widget=forms.TextInput(attrs={
-        "class": "w-full rounded-lg focus:ring-primary-600 focus:border-primary-600"
-    }), label='Project Title', max_length=100)
-
-    description = forms.CharField(widget=forms.Textarea(attrs={
-        "class": "w-full rounded-lg focus:ring-primary-600 focus:border-primary-600"
-    }), label='Description')
-    start_date = forms.DateField(widget=forms.widgets.TextInput(attrs={
-        "type": "date",
-        "class": "focus:ring-primary-600 rounded-lg focus:border-primary-600 w-full"
-    }), label='Start date')
-    end_date = forms.DateField(widget=forms.widgets.TextInput(attrs={
-        "type": "date",
-        "class": " focus:ring-primary-600 rounded-lg focus:border-primary-600 w-full"
-    }), label='End date')
-
-
 class FieldHandler:
     form_fields = {}
 
@@ -220,18 +202,19 @@ class FieldHandler:
 
 
 def get_dynamic_form(json_fields, initial_data=None):
-    # fields=json.loads(json_fields)
     fields_list = json_fields.get('fields', [])
     field_handler = FieldHandler(fields_list, initial_data)
     return type('DynamicForm', (forms.Form,), field_handler.form_fields)
 
 
 class ActivityPlanForm(forms.ModelForm):
+    activity_plan = forms.CharField(widget=forms.HiddenInput(), required=False)
+    activity_id = forms.CharField(widget=forms.HiddenInput(), required=False)
     class Meta:
         model = ActivityPlan
         fields = "__all__"
         widgets = {
-            'activity_fields': forms.Textarea(attrs={'readonly':True}),
+            'activity_fields': forms.Textarea(attrs={'class': 'ajax-activity-fields-class', 'readonly':True, 'activityfields-queries-url': reverse_lazy('ajax-load-activityfields')}),
         }
 
     def clean_activity_fields(self):
@@ -239,4 +222,19 @@ class ActivityPlanForm(forms.ModelForm):
             return self.instance.activity_fields
         else: 
             return self.fields['activity_fields']
-        
+
+
+class ProjectForm(forms.ModelForm):
+    class Meta:
+        model = Project
+        fields = "__all__"
+    
+        widgets = {
+            'locations': forms.SelectMultiple(attrs={'class': 'js-example-basic-multiple', 'locations-queries-url': reverse_lazy('ajax-load-locations')}),
+            'clusters': forms.SelectMultiple(attrs={'class': 'js-example-basic-multiple'}),
+            'activities': forms.SelectMultiple(attrs={'activities-queries-url': reverse_lazy('ajax-load-activities'),
+                                            'class': 'js-example-basic-multiple'
+                                            }),
+            'start_date': forms.widgets.DateInput(attrs={'type': 'date'}),
+            'end_date': forms.widgets.DateInput(attrs={'type': 'date'}),
+        }    

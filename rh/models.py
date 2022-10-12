@@ -100,11 +100,11 @@ class Currency(models.Model):
 class Project(models.Model):
     """Projects model"""
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    title = models.CharField(max_length=200)
+    description = models.TextField(blank=True, null=True)
     clusters = models.ManyToManyField(Cluster)
     activities = models.ManyToManyField(Activity)
     locations = models.ManyToManyField(Location)
-    title = models.CharField(max_length=200)
-    description = models.TextField(blank=True, null=True)
     start_date = models.DateField('start date')
     end_date = models.DateField('end date')
     budget = models.IntegerField()
@@ -120,7 +120,6 @@ class ActivityPlan(models.Model):
     """Activity Plans model"""
     project = models.ForeignKey(Project, on_delete=models.CASCADE, null=True)
     activity = models.ForeignKey(Activity, on_delete=models.CASCADE, null=True)
-    activity_fields = models.JSONField(blank=True, null=True)
     boys = models.IntegerField(blank=True, null=True)
     girls = models.IntegerField(blank=True, null=True)
     men = models.IntegerField(blank=True, null=True)
@@ -128,6 +127,7 @@ class ActivityPlan(models.Model):
     elderly_men = models.IntegerField(blank=True, null=True)
     elderly_women = models.IntegerField(blank=True, null=True)
     households = models.IntegerField(blank=True, null=True)
+    activity_fields = models.JSONField(blank=True, null=True)
 
     def __str__(self):
         return f"{self.project.title}, {self.activity.title}"

@@ -1,0 +1,81 @@
+{% extends '_base.html' %}
+{% load crispy_forms_tags %}
+
+
+{% block content %}
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+
+<div class="container px-4 px-lg-5 h-100">
+    <div class="row h-100 align-items-center justify-content-center text-left">
+        <div class="col-lg-4 align-self-end">
+            <h1 class="m-5">Report Hub</h1>
+
+            <h3>Project</h3>
+            <form method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="next" id="project_id" value="{{ project }}"/>
+                {{ form|crispy }}
+                <div class="mb-3 mt-3 d-grid">
+                    <input type="submit" class="btn btn-outline-dark" value="Submit"/>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+<script>
+
+    $(document).ready(function() {
+        $('.js-example-basic-multiple').select2();
+    });
+
+    function get_activities(){
+        const activities_url = $("#id_activities").attr("activities-queries-url");
+        const activityIds = $("select#id_activities option").map(function() {return $(this).val();}).get();
+        const clusterIds = $("#id_clusters").val();    
+        const selected_activities = $("select#id_activities").val() 
+        $.ajax({    
+            type: 'GET',
+            url: activities_url,
+            data: {
+                clusters: clusterIds,
+                listed_activities: activityIds,
+            },
+            success: function (data) {  
+                $("#id_activities").html(data); 
+                $("select#id_activities").val(selected_activities); 
+            }
+        });
+    }
+    function get_locations(){
+        const locations_url = $("#id_locations").attr("locations-queries-url");
+        const selected_locations = $("select#id_locations").val()
+        $.ajax({    
+            type: 'GET',
+            url: locations_url,
+            success: function (data) {  
+                $("#id_locations").html(data); 
+                $("select#id_locations").val(selected_locations); 
+                
+            }
+        });
+    };
+
+    $('#id_locations').ready(function () {
+        get_locations()
+    });
+
+    $('#id_activities').ready(function () {
+        get_activities()
+    });
+
+    $("#id_clusters").change(function () {
+        get_activities()
+    });
+    
+</script>
+{% endblock %}

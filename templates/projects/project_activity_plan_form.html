@@ -30,7 +30,7 @@
                     <div class="accordion mb-3" id="accordionActivity{{forloop.counter0}}">
                         <div class="accordion-item">
                         <h2 class="accordion-header" id="activityHeading{{forloop.counter0}}">
-                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{forloop.counter0}}" aria-expanded="true" aria-controls="collapse{{forloop.counter0}}">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{forloop.counter0}}" aria-expanded="false" aria-controls="collapse{{forloop.counter0}}">
                                 
                                 {% if form.instance.pk %}
                                     {{ form.instance }}

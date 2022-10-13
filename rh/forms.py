@@ -238,3 +238,14 @@ class ProjectForm(forms.ModelForm):
             'start_date': forms.widgets.DateInput(attrs={'type': 'date'}),
             'end_date': forms.widgets.DateInput(attrs={'type': 'date'}),
         }    
+
+
+class WarehouseLocationForm(forms.ModelForm):
+    class Meta:
+        model = WarehouseLocation
+        fields = "__all__"
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['province'].queryset = Location.objects.filter(type='Province')
+        self.fields['district'].queryset = Location.objects.filter(type='District')

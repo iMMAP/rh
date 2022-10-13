@@ -46,6 +46,10 @@ def get_app_list(self, request):
                 "Projects": 9,
                 "Activity Plans": 10,
                 "Reports": 11,
+                "StockType": 12,
+                "StockUnit": 13,
+                "WarehouseLocation": 14,
+                "StockLocationReport": 15,
             }
     return app_list
 
@@ -228,3 +232,42 @@ class ReportAdmin(admin.ModelAdmin):
     search_fields = ('project__title', 'location__name', 'boys', 'girls', 'men', 'women', 'elderly_men', 'elderly_women', 'households')
     list_filter = ('project', 'activity_plan', 'location')
 admin.site.register(Report, ReportAdmin)
+
+
+#############################################
+########### Stock Types Model Admin #############
+#############################################
+admin.site.register(StockType)
+
+
+#############################################
+########### Stock Units Model Admin #############
+#############################################
+admin.site.register(StockUnit)
+
+
+##############################################
+###### Warehouse Location Model Admin ########
+##############################################
+class WarehouseLocationAdmin(admin.ModelAdmin):
+    list_display = ('name', 'province', 'district')
+    search_fields = ('name', 'province__name')
+    list_filter = ('name', 'province')
+
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        if db_field.name == "province":
+            kwargs["queryset"] = Location.objects.filter(type='Province')
+        if db_field.name == "district":
+            kwargs["queryset"] = Location.objects.filter(type='District')
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)
+admin.site.register(WarehouseLocation, WarehouseLocationAdmin)
+
+
+##############################################
+###### Warehouse Location Model Admin ########
+##############################################
+# class StockLocationReportAdmin(admin.ModelAdmin):
+#     list_display = ('name', 'province', 'district')
+#     search_fields = ('name', 'province__name')
+#     list_filter = ('name', 'province')
+admin.site.register(StockLocationReport)

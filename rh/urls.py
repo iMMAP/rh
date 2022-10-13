@@ -51,4 +51,9 @@ urlpatterns = [
      path('project/activity_plan/update/?project=<str:project>/', user_views.update_project_activity_plan, name='update_project_activity_plan'),
      path('ajax/load-activities-details/', user_views.load_activities_details, name='ajax-load-activities'),
      path('ajax/load-locations-details/', user_views.load_locations_details, name='ajax-load-locations'),
+
+     # Stock Warehouse Routes
+     path('stocks/', user_views.stock_views, name='stocks'),
+     path('stocks/report/<str:pk>', user_views.stock_report_views, name='stock_report'),
+
 ]

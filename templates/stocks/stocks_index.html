@@ -6,19 +6,17 @@
 
 <div class="container px-4 px-lg-5 h-100">
     <div class="row h-100 align-items-center justify-content-center text-left">
-        <div class="col-lg-6 align-self-end">
+        <div class="col-lg-9 align-self-end">
             <h1 class="m-5">Report Hub</h1>
             <div class="card">
                 <div class="card-body">
-                    <h3 class="card-title">
+                    <h3 class="card-title bg-light p-3">
                         Warehouse Locations
-                        {% comment %} <a class="btn btn-outline-success float-end" href="#" role="button">Create</a> {% endcomment %}
                     </h3>
-                    
                     <form method="POST" enctype="multipart/form-data">
-                        {{ formset.management_form }}
+                        {{ warehouse_location_formset.management_form }}
                         {% csrf_token %}
-                        {% for form in formset %}
+                        {% for form in warehouse_location_formset %}
                             <div class="accordion mb-3" id="warehouse_location_{{forloop.counter0}}">
                                 <div class="accordion-item">
                                 <h2 class="accordion-header" id="warehouse_location_name_{{forloop.counter0}}">
@@ -28,8 +26,8 @@
                                         <i class="fa fa-map-marker" aria-hidden="true"></i> &nbsp; 
                                         {{ form.instance.province }}, {{ form.instance.district }}, {{ form.instance.name }}
                                         {% else %}
-                                            Add new warehouse
-                                            {% endif %}
+                                            <i class="fa fa-plus-square"></i>&nbsp; Add new warehouse
+                                        {% endif %}
                                             
                                         </button>
                                     </h2>
@@ -38,16 +36,16 @@
                                             {{ form|crispy }}
                                             {% if form.instance.id %}
                                             <div class="mb-3 mt-3 text-end">
-                                                <input type="submit" class="btn btn-outline-danger" name="delete_warehouse_{{ form.instance.id }}" value="Delete"/>
+                                                <input type="submit" class="btn btn-outline-danger" name="delete_{{ form.instance.id }}_warehouse" value="Delete"/>
                                             </div>
                                             {% endif %}
                                         </div>
-                                </div>
+                                    </div>
                                 </div>
                             </div>
                         {% endfor %}
                         <div class="mb-3 mt-3 d-grid">
-                            <input type="submit" class="btn btn-outline-dark" value="Submit"/>
+                            <input type="submit" class="btn btn-outline-dark" value="Save"/>
                         </div>
                     </form>
                 </div>
@@ -56,7 +54,7 @@
             
             <div class="card mt-4">
                 <div class="card-body">
-                    <h3 class="card-title">
+                    <h3 class="card-title bg-light p-3">
                         Stock Reports
                         {% comment %} <a class="btn btn-outline-success float-end" href="#" role="button">Create</a> {% endcomment %}
                     </h3>
@@ -69,7 +67,9 @@
                                     <div class="fw-bold">{{report.created_at|date:"F, Y"}}</div>
                                     Monthly Stock Report for {{report.created_at|date:"F, Y"}}
                                 </div>
-                                <span class="badge bg-{% if report.due_date > now %}success {% else %}danger {% endif %}p-2">
+                                {% comment %} TODO: Handle Timezones in future {% endcomment %}
+                                {% now "r" as todays_date %}
+                                <span class="badge bg-{% if report.due_date|date:'r' > todays_date %}success {% else %}danger {% endif %}p-2">
                                     Due Date: {{ report.due_date|date:"d F, Y" }}
                                 </span>
                                 </li>

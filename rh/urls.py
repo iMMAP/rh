@@ -53,7 +53,7 @@ urlpatterns = [
      path('ajax/load-locations-details/', user_views.load_locations_details, name='ajax-load-locations'),
 
      # Stock Warehouse Routes
-     path('stocks/', user_views.stock_views, name='stocks'),
-     path('stocks/report/<str:pk>', user_views.stock_report_views, name='stock_report'),
+     path('stocks/', user_views.stock_index_view, name='stocks'),
+     path('stocks/report/<str:pk>', user_views.stock_report_view, name='stock_report'),
 
 ]

@@ -163,20 +163,6 @@ class Report(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
 
 
-class WarehouseLocation(models.Model):
-    
-    province = models.ForeignKey(Location, related_name='province', on_delete=models.SET_NULL, null=True, blank=True)
-    district = models.ForeignKey(Location, related_name='district', on_delete=models.SET_NULL, null=True, blank=True)
-    name = models.CharField(max_length=255, blank=True, null=True)
-    
-    def __str__(self):
-        return self.name
-    
-    class Meta:
-        verbose_name = 'Warehouse Location Plan'
-        verbose_name_plural = "Warehouse Locations"
-
-
 class StockType(models.Model):
     name = models.CharField(max_length=255, blank=True, null=True)
 
@@ -199,7 +185,21 @@ class StockUnit(models.Model):
         verbose_name_plural = "Stock Units"
     
 
-class StockLocationReport(models.Model):
+class WarehouseLocation(models.Model):
+    
+    province = models.ForeignKey(Location, related_name='province', on_delete=models.SET_NULL, null=True, blank=True)
+    district = models.ForeignKey(Location, related_name='district', on_delete=models.SET_NULL, null=True, blank=True)
+    name = models.CharField(max_length=255, blank=True, null=True)
+    
+    def __str__(self):
+        return self.name
+    
+    class Meta:
+        verbose_name = 'Warehouse Location Plan'
+        verbose_name_plural = "Warehouse Locations"
+
+
+class StockLocationDetails(models.Model):
     PURPOSE_TYPES = [
         ('Prepositioned', 'Prepositioned'),
         ('Operational', 'Operational'),
@@ -214,7 +214,7 @@ class StockLocationReport(models.Model):
         ('Available', 'Available'),
         ('Reserved', 'Reserved'),
     ]
-    warhouse_location = models.ForeignKey(WarehouseLocation, on_delete=models.CASCADE)
+    warehouse_location = models.ForeignKey(WarehouseLocation, on_delete=models.CASCADE, null=True, blank=True)
     cluster = models.ForeignKey(Cluster, on_delete=models.SET_NULL, null=True, blank=True)
     stock_purpose = models.CharField(
         max_length=255,
@@ -236,14 +236,26 @@ class StockLocationReport(models.Model):
     qty_in_stock = models.IntegerField(default=0, verbose_name="Qty in Stock", null=True, blank=True)
     qty_in_pipeline = models.IntegerField(default=0, verbose_name="Qty in Pipeline", null=True, blank=True)
     beneficiary_coverage = models.IntegerField(default=0, blank=True, null=True)
-    created_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
-    updated_at = models.DateTimeField(auto_now=True, blank=True, null=True)
-    due_date = models.DateField(auto_now=True, blank=True, null=True)
-    submitted = models.BooleanField(default=False)
-    submitted_at = models.DateTimeField(auto_now=True, blank=True, null=True)
 
     def __str__(self):
-        return self.warhouse_location.province.name + ", " + self.warhouse_location.district.name + ", " + self.warhouse_location.name
+        return f"{self.warehouse_location} Stock Details"
+    
+    class Meta:
+        verbose_name = 'Stock Detail'
+        verbose_name_plural = "Stock Details"
+
+
+class StockReports(models.Model):
+    stock_location_details = models.ManyToManyField(StockLocationDetails)
+    created_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, blank=True, null=True)
+    due_date = models.DateTimeField(blank=True, null=True)
+    submitted = models.BooleanField(default=False)
+    submitted_at = models.DateTimeField(auto_now=True, blank=True, null=True)
+    note = models.TextField(blank=True, null=True)
+
+    def __str__(self):
+        return self.created_at.strftime("%B, %Y")
     
     class Meta:
         verbose_name = 'Stock Report'

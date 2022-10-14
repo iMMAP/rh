@@ -3,6 +3,8 @@ import datetime
 import sqlite3
 import json
 import re, urllib
+from dateutil.relativedelta import relativedelta
+
 
 
 from django.shortcuts import render, redirect
@@ -498,38 +500,87 @@ def update_project_activity_plan(request, project):
 
 @cache_control(no_store=True)
 @login_required
-def stock_views(request):
+def stock_index_view(request):
     """Stock Views"""
     WarehouseLocationFormset = modelformset_factory(WarehouseLocation, fields='__all__', form=WarehouseLocationForm)
     if request.method == 'POST':
-        enurl=urllib.parse.urlencode(request.POST)  # To convert POST into a string
-        matchobj=re.search(r'delete_warehouse_\d', enurl)  # To match for e.g. del_btn1
-        if matchobj:
-            btnname=matchobj.group()  # Contains matched button name
-            pri_key=btnname[-1]  # slice the number of btn to identify primarykey 
-        if matchobj:
-            WarehouseLocation.objects.get(pk=pri_key).delete()
+        enurl = urllib.parse.urlencode(request.POST)  # To convert POST into a string
+        delete_btn = re.search(r'delete_(.*?)_warehouse', enurl)  # To match for e.g. delete_<num>_warehouse
+        if delete_btn:
+            warehouse_id = delete_btn.group(1)
+            try:
+                warehouse_location_id = WarehouseLocation.objects.get(pk=warehouse_id)
+            except:
+                warehouse_location_id = None
+            if warehouse_location_id:
+                warehouse_location_id.delete()
+            
             formset = WarehouseLocationFormset(request.POST, request.FILES)
             if formset.is_valid():
                 formset.save()
-                formset = WarehouseLocationFormset(queryset=WarehouseLocation.objects.all())
 
         formset = WarehouseLocationFormset(request.POST, queryset=WarehouseLocation.objects.all())
         if formset.is_valid():
             instances = formset.save()
             for instance in instances:
-                StockLocationReport.objects.create(warhouse_location=instance)
+                now =  datetime.datetime.now(datetime.timezone.utc)
+                due_date = now + relativedelta(day=31)
+
+                stock_report = StockReports.objects.filter(created_at__range=[now.date(), due_date.date()])
+                if not stock_report:
+                    stock_report = StockReports(due_date=due_date)
+                    stock_report.save()
                 instance.save()
 
             return redirect('stocks')
     formset = WarehouseLocationFormset(queryset=WarehouseLocation.objects.all())
 
-    stock_reports = StockLocationReport.objects.all()
+    stock_reports = StockReports.objects.all()
 
-    return render(request, 'stocks/warehouse_locations.html', {'formset': formset, 'stock_reports': stock_reports})
+    return render(request, 'stocks/stocks_index.html', {'warehouse_location_formset': formset, 'stock_reports': stock_reports})
 
 
-def stock_report_views(request, pk):
-    stock_report = StockLocationReport.objects.get(id=pk)
+def stock_report_view(request, pk):
+    stock_report = StockReports.objects.get(id=pk)
+    stock_location_details = stock_report.stock_location_details.all()
+    warehouse_locations = WarehouseLocation.objects.all()
+    warehouse_location_stocks = {}
 
-    return render(request, 'stocks/stock_location_reports.html', {'report': stock_report})
+    for warehouse in warehouse_locations:
+        StockLocationDetailsFormSet = modelformset_factory(StockLocationDetails, exclude=['warehouse_location'], form=StockLocationDetailsForm, extra=1)
+        warehouse_stock_details = stock_location_details.filter(warehouse_location__id=warehouse.id)
+        formset = StockLocationDetailsFormSet(queryset=warehouse_stock_details, prefix=f'warehouse-{warehouse.id}-stock')
+        warehouse_location_stocks.update({ warehouse: formset })
+
+        if request.method == 'POST':
+            enurl = urllib.parse.urlencode(request.POST)  # To convert POST into a string
+            delete_btn = re.search(r'delete_(.*?)_stock_detail', enurl)  # To match for e.g. delete_<num>_warehouse
+            if delete_btn:
+                stock_detail_id = delete_btn.group(1)
+                try:
+                    stock_location_id = StockLocationDetails.objects.get(pk=stock_detail_id)
+                except:
+                    stock_location_id = None
+
+                if stock_location_id:
+                    stock_location_id.delete()
+                    return redirect('stock_report', pk=pk)
+
+            formset = StockLocationDetailsFormSet(request.POST, request.FILES, queryset=warehouse_stock_details, prefix=f'warehouse-{warehouse.id}-stock')
+            if formset.is_valid():
+                instances = formset.save(commit=False)
+                for instance in instances:
+                    instance.warehouse_location = warehouse
+                    instance.save()
+                    stock_report.stock_location_details.add(instance)
+            else:
+                for form in formset:
+                    for error in form.errors:
+                        error_message = f"Something went wrong {form.errors}"
+                        if form.errors[error]:
+                            error_message = f"{error}: {form.errors[error][0]}"
+                        messages.error(request, error_message)
+
+    context = {'report': stock_report, 'warehouse_location_stocks': warehouse_location_stocks}
+
+    return render(request, 'stocks/stock_location_reports.html', context)

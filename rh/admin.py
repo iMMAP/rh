@@ -266,8 +266,11 @@ admin.site.register(WarehouseLocation, WarehouseLocationAdmin)
 ##############################################
 ###### Warehouse Location Model Admin ########
 ##############################################
-# class StockLocationReportAdmin(admin.ModelAdmin):
-#     list_display = ('name', 'province', 'district')
-#     search_fields = ('name', 'province__name')
-#     list_filter = ('name', 'province')
-admin.site.register(StockLocationReport)
+# class StockLocationDetailsAdmin(admin.ModelAdmin):
+#     readonly_fields = ['created_at']
+admin.site.register(StockLocationDetails)
+
+
+class StockReportsAdmin(admin.ModelAdmin):
+    readonly_fields = ['created_at']
+admin.site.register(StockReports, StockReportsAdmin)

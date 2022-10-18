@@ -4,9 +4,6 @@ from django.utils.translation import gettext_lazy as _
 # from django.urls import reverse
 
 from django.contrib import admin
-from django.contrib.auth.admin import UserAdmin
-# from django.apps import apps 
-
 
 from .models import *
 
@@ -29,12 +26,11 @@ def get_app_list(self, request):
 
     # Sort the models customably within each app.
     for app in app_list:
-        if app['app_label'] == 'auth':
-            ordering = {
-                'Users': 1,
-                'Groups': 2
-            }
-            app['models'].sort(key=lambda x: ordering[x['name']])
+        # if app['app_label'] == 'auth':
+        #     ordering = {
+        #         'Users': 1,
+        #         'Groups': 2
+        #     }
         if app['app_label'] == 'rh':
             ordering = {
                 "Currencies": 3,
@@ -51,65 +47,11 @@ def get_app_list(self, request):
                 "WarehouseLocation": 14,
                 "StockLocationReport": 15,
             }
+            app['models'].sort(key=lambda x: ordering[x['name']])
     return app_list
 
 # Override the get_app_list of AdminSite
 admin.AdminSite.get_app_list = get_app_list
-
-
-##############################################
-########## Custom User Model Admin ###########
-##############################################
-class CustomUserAdmin(UserAdmin):
-    """
-    Customize Django User model to add some custom fields 
-    and remove first_name and last_name from the views, 
-    search and filters
-    """
-    fieldsets = (
-        (None, {"fields": ("username", "password")}),
-        (
-            _("Personal info"), {
-                "fields": (
-                    "name", 
-                    "email", 
-                    "organization", 
-                    "cluster", 
-                    "position",
-                    "phone",
-                    "visits",
-                ),
-            },
-        ),
-        (
-            _("Permissions"),
-            {
-                "fields": (
-                    "is_active",
-                    "is_staff",
-                    "is_superuser",
-                    "groups",
-                    "user_permissions",
-                ),
-            },
-        ),
-        (_("Important dates"), {"fields": ("last_login", "date_joined")}),
-    )
-    add_fieldsets = (
-        (
-            None,
-            {
-                "classes": ("wide",),
-                "fields": ("username", "password1", "password2"),
-            },
-        ),
-    )
-    list_display = ("username", "name", "email", "is_staff")
-    list_filter = ("is_staff", "is_superuser", "is_active", "groups")
-    search_fields = ("username", 'name', "email")
-admin.site.register(User, CustomUserAdmin)
-# Move the User model to auth section
-# apps.get_model('rh.User')._meta.app_label = 'auth'
 
 
 #############################################
@@ -232,45 +174,3 @@ class ReportAdmin(admin.ModelAdmin):
     search_fields = ('project__title', 'location__name', 'boys', 'girls', 'men', 'women', 'elderly_men', 'elderly_women', 'households')
     list_filter = ('project', 'activity_plan', 'location')
 admin.site.register(Report, ReportAdmin)
-
-
-#############################################
-########### Stock Types Model Admin #############
-#############################################
-admin.site.register(StockType)
-
-
-#############################################
-########### Stock Units Model Admin #############
-#############################################
-admin.site.register(StockUnit)
-
-
-##############################################
-###### Warehouse Location Model Admin ########
-##############################################
-class WarehouseLocationAdmin(admin.ModelAdmin):
-    list_display = ('name', 'province', 'district')
-    search_fields = ('name', 'province__name')
-    list_filter = ('name', 'province')
-
-    def formfield_for_foreignkey(self, db_field, request, **kwargs):
-        if db_field.name == "province":
-            kwargs["queryset"] = Location.objects.filter(type='Province')
-        if db_field.name == "district":
-            kwargs["queryset"] = Location.objects.filter(type='District')
-        return super().formfield_for_foreignkey(db_field, request, **kwargs)
-admin.site.register(WarehouseLocation, WarehouseLocationAdmin)
-
-
-##############################################
-###### Warehouse Location Model Admin ########
-##############################################
-# class StockLocationDetailsAdmin(admin.ModelAdmin):
-#     readonly_fields = ['created_at']
-admin.site.register(StockLocationDetails)
-
-
-class StockReportsAdmin(admin.ModelAdmin):
-    readonly_fields = ['created_at']
-admin.site.register(StockReports, StockReportsAdmin)

@@ -70,13 +70,16 @@
         const formSetId = parentElement.find('#id_form_set').val()
         const activityFieldsUrl = $(`#id_form-${formSetId}-activity_fields`).attr("activityfields-queries-url");
         const activityId = $(`#id_form-${formSetId}-activity_id`).val();
-        const activityPlanId = $(`#activity_plan_id_${formSetId}`).val();
+        let activityPlanId = $(`#activity_plan_id_${formSetId}`).val();
+        if (activityPlanId == 'None'){
+            activityPlanId = ''
+        }
         $.ajax({
             type: 'GET',
             url: activityFieldsUrl,
             data: {
                 activity: activityId,
-                activity_plan_id: activityPlanId,
+                activity_plan_id: activityPlanId ,
             },
             dataType: 'json',
             success: function(response){

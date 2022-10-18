@@ -52,33 +52,67 @@
                 
             </div>
             
-            <div class="card mt-4">
-                <div class="card-body">
-                    <h3 class="card-title bg-light p-3">
-                        Stock Reports
-                        {% comment %} <a class="btn btn-outline-success float-end" href="#" role="button">Create</a> {% endcomment %}
-                    </h3>
+            {% if stock_reports %}
+                <div class="card mt-4">
+                    <div class="card-body">
+                        <h3 class="card-title bg-light p-3">
+                            Stock Reports Todo
+                            {% comment %} <a class="btn btn-outline-success float-end" href="#" role="button">Create</a> {% endcomment %}
+                        </h3>
 
-                    <ol class="list-group">
-                        {% for report in stock_reports %}
-                            <a href="{% url 'stock_report' report.id %}" class="list-group-item list-group-item-action">
-                                <li class="d-flex justify-content-between align-items-start">
-                                <div class="ms-2 me-auto">
-                                    <div class="fw-bold">{{report.created_at|date:"F, Y"}}</div>
-                                    Monthly Stock Report for {{report.created_at|date:"F, Y"}}
-                                </div>
-                                {% comment %} TODO: Handle Timezones in future {% endcomment %}
-                                {% now "r" as todays_date %}
-                                <span class="badge bg-{% if report.due_date|date:'r' > todays_date %}success {% else %}danger {% endif %}p-2">
-                                    Due Date: {{ report.due_date|date:"d F, Y" }}
-                                </span>
-                                </li>
-                            </a>
-                        {% endfor %}  
-                      </ol>
+                        <ol class="list-group">
+                            {% for report in stock_reports %}
+                                <a href="{% url 'stock_report' report.id %}" class="list-group-item list-group-item-action">
+                                    <li class="d-flex justify-content-between align-items-start">
+                                    <div class="ms-2 me-auto">
+                                        <div class="fw-bold">{{report.created_at|date:"F, Y"}}</div>
+                                        Monthly Stock Report for {{report.created_at|date:"F, Y"}}
+                                    </div>
+                                    {% comment %} TODO: Handle Timezones in future {% endcomment %}
+                                    {% now "r" as todays_date %}
+                                    <span class="badge bg-{% if todays_date > report.due_date|date:'r'  %}warning {% else %}danger {% endif %}p-2">
+                                        Due Date: {{ report.due_date|date:"d F, Y" }}
+                                    </span>
+                                    </li>
+                                </a>
+                            {% endfor %}  
+                        </ol>
+                    </div>
+                    
                 </div>
+            {% endif %}
+            
+            {% if submitted_stock_reports %}
+                <div class="card mt-4">
+                    <div class="card-body">
+                        <h3 class="card-title bg-light p-3">
+                            Stock Reports Completed
+                            {% comment %} <a class="btn btn-outline-success float-end" href="#" role="button">Create</a> {% endcomment %}
+                        </h3>
+
+                        <ol class="list-group">
+                            {% for report in submitted_stock_reports %}
+                                
+                                <a href="{% url 'stock_report' report.id %}" class="list-group-item list-group-item-action">
+                                    <li class="d-flex justify-content-between align-items-start">
+                                    <div class="ms-2 me-auto">
+                                        <div class="fw-bold">{{report.created_at|date:"F, Y"}}</div>
+                                        Monthly Stock Report for {{report.created_at|date:"F, Y"}}
+                                    </div>
+                                    {% comment %} TODO: Handle Timezones in future {% endcomment %}
+                                    {% now "r" as todays_date %}
+                                    <span class="badge bg-success p-2">
+                                        Due Date: {{ report.due_date|date:"d F, Y" }}
+                                    </span>
+                                    </li>
+                                </a>
+                            {% endfor %}  
+                        </ol>
+                    </div>
+                    
+                </div>
+            {% endif %}
                 
-            </div>
 
         </div>
     </div>

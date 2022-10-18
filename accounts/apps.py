@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class UnicornConfig(AppConfig):
+class AccountsConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'unicorn'
+    name = 'accounts'

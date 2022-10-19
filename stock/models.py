@@ -90,7 +90,7 @@ class StockReports(models.Model):
     updated_at = models.DateTimeField(auto_now=True, blank=True, null=True)
     due_date = models.DateTimeField(blank=True, null=True)
     submitted = models.BooleanField(default=False)
-    submitted_at = models.DateTimeField(auto_now=True, blank=True, null=True)
+    submitted_at = models.DateTimeField(blank=True, null=True)
     note = models.TextField(blank=True, null=True)
 
     def __str__(self):

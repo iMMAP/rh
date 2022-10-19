@@ -70,7 +70,7 @@
                                     </div>
                                     {% comment %} TODO: Handle Timezones in future {% endcomment %}
                                     {% now "r" as todays_date %}
-                                    <span class="badge bg-{% if todays_date > report.due_date|date:'r'  %}warning {% else %}danger {% endif %}p-2">
+                                    <span class="badge bg-{% if todays_date >= report.due_date|date:'r'  %}warning {% else %}danger {% endif %}p-2">
                                         Due Date: {{ report.due_date|date:"d F, Y" }}
                                     </span>
                                     </li>
@@ -102,7 +102,7 @@
                                     {% comment %} TODO: Handle Timezones in future {% endcomment %}
                                     {% now "r" as todays_date %}
                                     <span class="badge bg-success p-2">
-                                        Due Date: {{ report.due_date|date:"d F, Y" }}
+                                        Submitted Date: {{ report.submitted_at|date:"d F, Y" }}
                                     </span>
                                     </li>
                                 </a>

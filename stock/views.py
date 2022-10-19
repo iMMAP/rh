@@ -140,5 +140,5 @@ def stock_report_view(request, pk):
 @login_required
 @require_http_methods(['POST'])
 def submit_stock_report_form(request, pk):
-    StockReports.objects.filter(id=pk).update(submitted=True)
+    StockReports.objects.filter(id=pk).update(submitted=True, submitted_at=datetime.datetime.now())
     return redirect('stock_report', pk)

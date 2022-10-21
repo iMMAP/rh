@@ -23,6 +23,8 @@ ALLOWED_HOSTS = ['dev.reporthub.immap.org', '127.0.0.1']
 # Application definition
 INSTALLED_APPS = [
     'rh.apps.RhConfig',
+    'accounts.apps.AccountsConfig',
+    'stock.apps.StockConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -31,7 +33,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'compressor',
     'crispy_forms',
-    'crispy_bootstrap5'
+    'crispy_bootstrap5',
 ]
 
 MIDDLEWARE = [
@@ -107,7 +109,7 @@ PASSWORD_HASHERS = [
     'django.contrib.auth.hashers.BCryptPasswordHasher',
 ]
 
-AUTH_USER_MODEL = 'rh.User'
+AUTH_USER_MODEL = 'accounts.Account'
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/

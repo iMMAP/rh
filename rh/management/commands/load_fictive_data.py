@@ -14,6 +14,8 @@ from django.core.management.base import BaseCommand
 
 from faker import Faker
 from ...models import *
+from accounts.models import *
+from stock.models import *
 
 COUNTRIES = [ 
   {'name': 'Afghanistan', 'code': 'AF'}, 
@@ -45,26 +47,80 @@ DLOCATION = [
     {'parent': 'AF22', 'level': 2, 'name': 'Gosfandi', 'code': 'AF2206', 'original_name': '', 'type': 'District', 'lat': 33.211648, 'long': 66.54342}
 ]
 
-JSON2 = {
+JSON3 = {
    "fields": [
       {
-         "name":"firstname",
+         "name":"Text Input",
          "type":"text"
-      },
+      },      
       {
-         "name":"lastname",
-         "type":"text"
-      },
-      {
-         "name":"smallcv",
+         "name":"Text Area",
          "type":"textarea"
       },
       {
-         "name":"age",
+         "name":"Integer Input",
          "type":"integer"
       },
       {
-         "name":"marital_status",
+         "name":"Radio Select",
+         "type":"radio",
+         "value":[
+            "Radio 1",
+            "Radio 2",
+            "Radio 3",
+            "Radio 4"
+         ]
+      },
+      {
+         "name":"Simple Select",
+         "type":"select",
+         "value":[
+            "Select 1",
+            "Select 2",
+            "Select 3",
+            
+         ]
+      },
+      {
+         "name":"Check Box",
+         "type":"checkbox"
+      },
+      {
+         "name":"Multi Select Example",
+         "type":"multi",
+         "value":[
+            "M Select 1",
+            "M Select 2",
+            "M Select 3",
+            "M Select 4",
+            "M Select 5",
+            "M Select 6",
+            "M Select 7"
+         ]
+      }
+   ],
+}
+
+JSON2 = {
+   "fields": [
+      {
+         "name":"Firstname",
+         "type":"text"
+      },
+      {
+         "name":"Lastname",
+         "type":"text"
+      },
+      {
+         "name":"Smallcv",
+         "type":"textarea"
+      },
+      {
+         "name":"Age",
+         "type":"integer"
+      },
+      {
+         "name":"Merital Status",
          "type":"radio",
          "value":[
             "Married",
@@ -74,8 +130,7 @@ JSON2 = {
          ]
       },
       {
-         "name":"occupation",
-         "label":"Occupation",
+         "name":"Occupation",
          "type":"select",
          "value":[
             "Farmer",
@@ -88,17 +143,17 @@ JSON2 = {
          ]
       },
       {
-         "name":"internet",
+         "name":"Internet",
          "type":"checkbox"
       },
       {
-         "name":"indicator",
+         "name":"Multi Select",
          "type":"multi",
          "value":[
-            "choice 1",
-            "choice 2",
-            "choice 3",
-            "choice 4"
+            "Select 1",
+            "Select 2",
+            "Select 3",
+            "Select 4"
          ]
       }
    ],
@@ -107,36 +162,36 @@ JSON2 = {
 JSON1 = {
     "fields": [
         {
-            "name": "indicator",
+            "name": "Indicator",
             "type": "multi",
             "value": ["choice 1", "choice 2", "choice 3", "choice 4"]
         },
         {
-            "name": "winterization",
+            "name": "Winterization",
             "type": "checkbox"
         },
         {
-            "name": "covid",
+            "name": "Covid",
             "type": "checkbox"
         },
         {
-            "name": "transfer type",
+            "name": "Transfer Type",
             "type": "select",
             "value": ["cash", "hawala", "bank"]
         },
         {
-            "name":"population",
+            "name":"Population",
             "type":"integer"
         },
         {
-         "name":"marital_status",
-         "type":"radio",
-         "value":[
-            "Married",
-            "Single",
-            "Divorced",
-            "Widower"
-         ]
+            "name":"Availability Status",
+            "type":"radio",
+            "value":[
+                "Busy",
+                "Available",
+                "Off",
+                "Do not Disturb"
+            ]
       },
     ]
 }
@@ -165,6 +220,12 @@ class Provider(faker.providers.BaseProvider):
     
     def district_location(self):
         return str(DLOCATION)
+    
+    def stock_types_unique_number(self, records_range):
+        return random.randint(1, records_range)
+
+    def stock_units_unique_number(self, records_range):
+        return random.randint(1, records_range)
 
 
 class Command(BaseCommand):
@@ -189,6 +250,12 @@ class Command(BaseCommand):
         except Exception:
             self.stdout.write(self.style.Danger("Failed to create superuser"))
 
+        self.stdout.write(self.style.SUCCESS(
+            f"""
+        Super User Created Successfully: 
+        Username: {username}
+        Password: {password}
+        """))
 
         # Load Currency
         Currency.objects.all().delete()
@@ -278,7 +345,7 @@ class Command(BaseCommand):
                                         title=f"Activity_{a}", 
                                         description=description,
                                         active=True,
-                                        fields=JSON1 if j==1 else JSON2
+                                        fields=JSON1 if j==1 else (JSON2 if j==2  else JSON3)
                                     )
             for c in Country.objects.order_by('?')[0:fake.unique_number(records_range=2)]:
                 activity.countries.add(c.id)
@@ -334,9 +401,20 @@ class Command(BaseCommand):
         activity_plans_count = ActivityPlan.objects.all().count()
         self.stdout.write(self.style.SUCCESS(f"Number of Activity Plans Created: {activity_plans_count}"))
 
-        self.stdout.write(self.style.SUCCESS(
-            f"""
-        Super User Created Successfully: 
-        Username: {username}
-        Password: {password}
-        """))
+        
+        # Load Clusters
+        StockType.objects.all().delete()
+        for _ in range(4):
+            c = fake.unique.stock_types_unique_number(records_range=20)
+            StockType.objects.create(name=f"Stock Type {c}")
+        stock_types_count = StockType.objects.all().count()
+        self.stdout.write(self.style.SUCCESS(f"Number of Stock Types Created: {stock_types_count}"))
+
+
+        # Load Clusters
+        StockUnit.objects.all().delete()
+        for _ in range(4):
+            c = fake.unique.stock_units_unique_number(records_range=20)
+            StockUnit.objects.create(name=f"Stock Unit {c}")
+        stock_units_count = StockUnit.objects.all().count()
+        self.stdout.write(self.style.SUCCESS(f"Number of Stock Units Created: {stock_units_count}"))

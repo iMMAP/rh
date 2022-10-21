@@ -1,5 +1,4 @@
 from django.db import models
-from django.contrib.auth.models import AbstractUser
 
 
 class Country(models.Model): 
@@ -25,12 +24,22 @@ class Cluster(models.Model):
 
 class Location(models.Model):
     """Locations Model"""
+
+    LOCATION_TYPES = [
+        ('Country', 'Country'),
+        ('Province', 'Province'),
+        ('District', 'District'),
+    ]
     parent = models.ForeignKey("self", default=0, on_delete=models.CASCADE, blank=True, null=True)
     level = models.IntegerField(default=0)
     code = models.CharField(max_length=200)
     name = models.CharField(max_length=200)
     original_name = models.CharField(max_length=200, blank=True, null=True)
-    type = models.CharField(max_length=200, blank=True, null=True)
+    type = models.CharField(
+        max_length=15,
+        choices=LOCATION_TYPES,
+        default='Country', null=True, blank=True
+    )
     lat = models.FloatField(blank=True, null=True)
     long = models.FloatField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
@@ -51,20 +60,6 @@ class Organization(models.Model):
 
     def __str__(self):
         return self.name
-
-
-class User(AbstractUser):
-    """Inherit AbstractUser model and include our custom fields"""
-    first_name = None
-    last_name = None
-
-    organization = models.ForeignKey(Organization, on_delete=models.CASCADE, blank=True, null=True)
-    name = models.CharField(max_length=200, blank=True, null=True)
-    visits = models.IntegerField(blank=True, null=True)
-    cluster = models.ForeignKey(Cluster, on_delete=models.CASCADE, blank=True, null=True)
-    position = models.CharField(max_length=200, blank=True, null=True)
-    phone = models.CharField(max_length=200, blank=True, null=True)
-    pass
 
 
 class Activity(models.Model):
@@ -99,7 +94,7 @@ class Currency(models.Model):
 
 class Project(models.Model):
     """Projects model"""
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey('accounts.Account', on_delete=models.SET_NULL, null=True, blank=True)
     title = models.CharField(max_length=200)
     description = models.TextField(blank=True, null=True)
     clusters = models.ManyToManyField(Cluster)
@@ -108,7 +103,7 @@ class Project(models.Model):
     start_date = models.DateField('start date')
     end_date = models.DateField('end date')
     budget = models.IntegerField()
-    budget_currency = models.ForeignKey('Currency', on_delete=models.SET_NULL, null=True)
+    budget_currency = models.ForeignKey('Currency', on_delete=models.SET_NULL, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, blank=True, null=True)
 
@@ -118,8 +113,8 @@ class Project(models.Model):
 
 class ActivityPlan(models.Model):
     """Activity Plans model"""
-    project = models.ForeignKey(Project, on_delete=models.CASCADE, null=True)
-    activity = models.ForeignKey(Activity, on_delete=models.CASCADE, null=True)
+    project = models.ForeignKey(Project, on_delete=models.SET_NULL, null=True, blank=True)
+    activity = models.ForeignKey(Activity, on_delete=models.SET_NULL, null=True, blank=True)
     boys = models.IntegerField(blank=True, null=True)
     girls = models.IntegerField(blank=True, null=True)
     men = models.IntegerField(blank=True, null=True)
@@ -138,9 +133,9 @@ class ActivityPlan(models.Model):
 
 
 class Report(models.Model):
-    project = models.ForeignKey(Project, on_delete=models.CASCADE)
-    activity_plan = models.ForeignKey(ActivityPlan, on_delete=models.CASCADE)
-    location = models.ForeignKey(Location, on_delete=models.CASCADE)
+    project = models.ForeignKey(Project, on_delete=models.SET_NULL, null=True, blank=True)
+    activity_plan = models.ForeignKey(ActivityPlan, on_delete=models.SET_NULL, null=True, blank=True)
+    location = models.ForeignKey(Location, on_delete=models.SET_NULL, null=True, blank=True)
     boys = models.IntegerField(blank=True, null=True)
     girls = models.IntegerField(blank=True, null=True)
     men = models.IntegerField(blank=True, null=True)

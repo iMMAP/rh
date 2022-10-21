@@ -4,9 +4,6 @@ from django.utils.translation import gettext_lazy as _
 # from django.urls import reverse
 
 from django.contrib import admin
-from django.contrib.auth.admin import UserAdmin
-# from django.apps import apps 
-
 
 from .models import *
 
@@ -29,12 +26,11 @@ def get_app_list(self, request):
 
     # Sort the models customably within each app.
     for app in app_list:
-        if app['app_label'] == 'auth':
-            ordering = {
-                'Users': 1,
-                'Groups': 2
-            }
-            app['models'].sort(key=lambda x: ordering[x['name']])
+        # if app['app_label'] == 'auth':
+        #     ordering = {
+        #         'Users': 1,
+        #         'Groups': 2
+        #     }
         if app['app_label'] == 'rh':
             ordering = {
                 "Currencies": 3,
@@ -46,66 +42,16 @@ def get_app_list(self, request):
                 "Projects": 9,
                 "Activity Plans": 10,
                 "Reports": 11,
+                "StockType": 12,
+                "StockUnit": 13,
+                "WarehouseLocation": 14,
+                "StockLocationReport": 15,
             }
+            app['models'].sort(key=lambda x: ordering[x['name']])
     return app_list
 
 # Override the get_app_list of AdminSite
 admin.AdminSite.get_app_list = get_app_list
-
-
-##############################################
-########## Custom User Model Admin ###########
-##############################################
-class CustomUserAdmin(UserAdmin):
-    """
-    Customize Django User model to add some custom fields 
-    and remove first_name and last_name from the views, 
-    search and filters
-    """
-    fieldsets = (
-        (None, {"fields": ("username", "password")}),
-        (
-            _("Personal info"), {
-                "fields": (
-                    "name", 
-                    "email", 
-                    "organization", 
-                    "cluster", 
-                    "position",
-                    "phone",
-                    "visits",
-                ),
-            },
-        ),
-        (
-            _("Permissions"),
-            {
-                "fields": (
-                    "is_active",
-                    "is_staff",
-                    "is_superuser",
-                    "groups",
-                    "user_permissions",
-                ),
-            },
-        ),
-        (_("Important dates"), {"fields": ("last_login", "date_joined")}),
-    )
-    add_fieldsets = (
-        (
-            None,
-            {
-                "classes": ("wide",),
-                "fields": ("username", "password1", "password2"),
-            },
-        ),
-    )
-    list_display = ("username", "name", "email", "is_staff")
-    list_filter = ("is_staff", "is_superuser", "is_active", "groups")
-    search_fields = ("username", 'name', "email")
-admin.site.register(User, CustomUserAdmin)
-# Move the User model to auth section
-# apps.get_model('rh.User')._meta.app_label = 'auth'
 
 
 #############################################

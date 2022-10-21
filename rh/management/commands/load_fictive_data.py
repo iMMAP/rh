@@ -14,6 +14,8 @@ from django.core.management.base import BaseCommand
 
 from faker import Faker
 from ...models import *
+from accounts.models import *
+from stock.models import *
 
 COUNTRIES = [ 
   {'name': 'Afghanistan', 'code': 'AF'}, 
@@ -84,7 +86,7 @@ JSON3 = {
          "type":"checkbox"
       },
       {
-         "name":"Multi Select",
+         "name":"Multi Select Example",
          "type":"multi",
          "value":[
             "M Select 1",
@@ -218,6 +220,12 @@ class Provider(faker.providers.BaseProvider):
     
     def district_location(self):
         return str(DLOCATION)
+    
+    def stock_types_unique_number(self, records_range):
+        return random.randint(1, records_range)
+
+    def stock_units_unique_number(self, records_range):
+        return random.randint(1, records_range)
 
 
 class Command(BaseCommand):
@@ -242,6 +250,12 @@ class Command(BaseCommand):
         except Exception:
             self.stdout.write(self.style.Danger("Failed to create superuser"))
 
+        self.stdout.write(self.style.SUCCESS(
+            f"""
+        Super User Created Successfully: 
+        Username: {username}
+        Password: {password}
+        """))
 
         # Load Currency
         Currency.objects.all().delete()
@@ -387,9 +401,20 @@ class Command(BaseCommand):
         activity_plans_count = ActivityPlan.objects.all().count()
         self.stdout.write(self.style.SUCCESS(f"Number of Activity Plans Created: {activity_plans_count}"))
 
-        self.stdout.write(self.style.SUCCESS(
-            f"""
-        Super User Created Successfully: 
-        Username: {username}
-        Password: {password}
-        """))
+        
+        # Load Clusters
+        StockType.objects.all().delete()
+        for _ in range(4):
+            c = fake.unique.stock_types_unique_number(records_range=20)
+            StockType.objects.create(name=f"Stock Type {c}")
+        stock_types_count = StockType.objects.all().count()
+        self.stdout.write(self.style.SUCCESS(f"Number of Stock Types Created: {stock_types_count}"))
+
+
+        # Load Clusters
+        StockUnit.objects.all().delete()
+        for _ in range(4):
+            c = fake.unique.stock_units_unique_number(records_range=20)
+            StockUnit.objects.create(name=f"Stock Unit {c}")
+        stock_units_count = StockUnit.objects.all().count()
+        self.stdout.write(self.style.SUCCESS(f"Number of Stock Units Created: {stock_units_count}"))

@@ -70,7 +70,8 @@
                                     </div>
                                     {% comment %} TODO: Handle Timezones in future {% endcomment %}
                                     {% now "r" as todays_date %}
-                                    <span class="badge bg-{% if todays_date >= report.due_date|date:'r'  %}warning {% else %}danger {% endif %}p-2">
+
+                                    <span class="badge bg-{% if todays_date >= report.due_date|date:'r'  %}danger {% else %}warning {% endif %}p-2">
                                         Due Date: {{ report.due_date|date:"d F, Y" }}
                                     </span>
                                     </li>
@@ -92,7 +93,6 @@
 
                         <ol class="list-group">
                             {% for report in submitted_stock_reports %}
-                                
                                 <a href="{% url 'stock_report' report.id %}" class="list-group-item list-group-item-action">
                                     <li class="d-flex justify-content-between align-items-start">
                                     <div class="ms-2 me-auto">

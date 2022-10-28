@@ -71,6 +71,7 @@
                                     {% comment %} TODO: Handle Timezones in future {% endcomment %}
                                     {% now "r" as todays_date %}
 
+                                    {% comment %} TODO: Resolve the issue here {% endcomment %}
                                     <span class="badge bg-{% if todays_date >= report.due_date|date:'r'  %}danger {% else %}warning {% endif %}p-2">
                                         Due Date: {{ report.due_date|date:"d F, Y" }}
                                     </span>

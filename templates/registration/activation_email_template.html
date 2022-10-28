@@ -1,12 +1,13 @@
+{% extends 'email_templates/email_base.html' %}
 
-{% autoescape off %}
+{% block email-body %}
 
-    Hi {{ user.name }},
+    <mj-text align="center" color="#55575d" font-family="Arial, sans-serif" font-size="14px" line-height="28px" padding="0px 25px 0px 25px">
+        Hi {{ user.name }},
+        Please click on the link below to complete your registration:
+    </mj-text>
+    <mj-button background-color="#A72824" align="center" color="#ffffff" font-size="15px" href="{{ protocol }}://{{ domain }}{% url 'activate_account' uidb64=uid token=token %}" width="200px">
+        Verify Email
+    </mj-button>
 
-    Please click on the link below to complete your registration:
-
-    {{ protocol }}://{{ domain }}{% url 'activate_account' uidb64=uid token=token %}
-
-{% endautoescape %}
-
-
+{% endblock email-body %}

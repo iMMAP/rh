@@ -11,7 +11,7 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.utils.encoding import force_bytes, force_str  
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode  
 
-from django.core.mail import EmailMessage  
+from django.core.mail import EmailMessage, EmailMultiAlternatives  
 from django.views.decorators.cache import cache_control
 from django.conf import settings
 
@@ -53,9 +53,11 @@ def send_account_activation_email(request, user, to_email):
         'token': account_activation_token.make_token(user),  
         'protocol': 'https' if request.is_secure() else 'http', 
     })  
-    email = EmailMessage(  
-        mail_subject, message, to=[to_email]  
+
+    email = EmailMultiAlternatives(  
+        mail_subject, 'Testing', to=[to_email]  
     )
+    email.attach_alternative(message, "text/html")
     if email.send():
         template = loader.get_template('registration/activation_email_done.html')
         context = {'user': user, 'to_email': to_email}
@@ -79,17 +81,17 @@ def register_view(request):
             username = form.cleaned_data.get('username')
             email = form.cleaned_data.get('email')
             # Registration with email confirmation step.
-            if settings.DEBUG==True:
-                # If development mode then go ahead and create the user.
-                user = form.save()
-                messages.success(request, f'Account created successfully for {username}.')
-            else:
+            # if settings.DEBUG==True:
+            #     # If development mode then go ahead and create the user.
+            #     user = form.save()
+            #     messages.success(request, f'Account created successfully for {username}.')
+            # else:
                 # If production mode send a verification email to the user for account activation
-                user = form.save(commit=False)
-                user.is_active = False
-                user.save()
-                return send_account_activation_email(request, user, email)  
-            return redirect('login')
+            user = form.save(commit=False)
+            user.is_active = False
+            user.save()
+            return send_account_activation_email(request, user, email)  
+            # return redirect('login')
         else:
             for error in list(form.errors.values()):
                 messages.error(request, error)

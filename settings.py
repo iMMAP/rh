@@ -1,3 +1,4 @@
+import os
 import environ
 from pathlib import Path
 
@@ -34,7 +35,13 @@ INSTALLED_APPS = [
     'compressor',
     'crispy_forms',
     'crispy_bootstrap5',
+    'mjml',
 ]
+
+MJML_BACKEND_MODE = 'cmd'
+MJML_EXEC_CMD = ['./node_modules/.bin/mjml', '--config.minify', 'true', '--config.validationLevel', 'strict']
+MJML_CHECK_CMD_ON_STARTUP = False
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -143,5 +150,12 @@ EMAIL_HOST = env('EMAIL_HOST')  # 'smtp.mailtrap.io'
 EMAIL_HOST_USER = env('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
 EMAIL_PORT = env('EMAIL_PORT')  # 2525
+
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_HOST = env('EMAIL_HOST')  # 'smtp.mailtrap.io'
+# EMAIL_USE_TLS = True
+# EMAIL_HOST_USER = env('EMAIL_HOST_USER')
+# EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
+# EMAIL_PORT = env('EMAIL_PORT')  # 587
 
 PLAY_DB = env("PLAY_DB")

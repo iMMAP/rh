@@ -1,0 +1,99 @@
+{% load mjml %}
+{% load static %}
+
+{% mjml %}
+
+
+<mjml>
+    <mj-head>
+      <mj-title>ReportHub</mj-title>
+      <mj-preview>Pre-header Text</mj-preview>
+      <mj-attributes>
+        <mj-all font-family="'Helvetica Neue', Helvetica, Arial, sans-serif"></mj-all>
+        <mj-text font-weight="400" font-size="16px" color="#000000" line-height="24px" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif"></mj-text>
+      </mj-attributes>
+      <mj-style inline="inline">
+        .body-section {
+        -webkit-box-shadow: 1px 4px 11px 0px rgba(0, 0, 0, 0.15);
+        -moz-box-shadow: 1px 4px 11px 0px rgba(0, 0, 0, 0.15);
+        box-shadow: 1px 4px 11px 0px rgba(0, 0, 0, 0.15);
+        }
+      </mj-style>
+      <mj-style inline="inline">
+        .text-link {
+        color: #5e6ebf
+        }
+      </mj-style>
+      <mj-style inline="inline">
+        .footer-link {
+        color: #888888
+        }
+      </mj-style>
+  
+    </mj-head>
+    <mj-body background-color="#f5f5f5" width="600px">
+      <mj-section full-width="full-width" background-color="#FFFFFF" padding-bottom="0">
+        <mj-column width="100%">
+          <mj-image src="https://drive.google.com/uc?id=1U7llgP1biN-UspMehVupYGc0SkmE5P70" alt="" padding="45px" align="center" width="300px" />
+        </mj-column>
+        <mj-column width="100%" background-color="#A72824">
+          <mj-image src="https://drive.google.com/uc?id=1-N-yjfo-UjE8kXwiKaZSCkB2YpCxdsXN" width="110px" alt="" padding="10px" href="{{ protocol }}://{{ domain }}" />
+        </mj-column>
+      </mj-section>
+      <mj-section background-color="#A72824">
+        <mj-column width="100%">
+          <mj-text color="#FFFFFF" align="center" font-size="24px" padding-top="0" font-weight="bold" letter-spacing="1px" line-height="20px">
+            ReportHub
+          </mj-text>
+          <mj-text color="#FFFFFF" align="center" font-size="10px" padding-top="0" letter-spacing="1px" line-height="20px">
+            Humanitarian Decision Support in Real-Time
+          </mj-text>
+        </mj-column>
+      </mj-section>
+      <mj-wrapper padding-top="0" padding-bottom="0" css-class="body-section">
+        <mj-section background-color="#ffffff" padding-left="15px" padding-right="15px">
+          <mj-column width="100%">
+            
+            {% block email-body %}
+                
+            {% endblock email-body %}
+                
+          </mj-column>
+        </mj-section>
+      </mj-wrapper>
+  
+      <mj-wrapper full-width="full-width">
+        <mj-section>
+          <mj-column width="100%" padding="0">
+            <mj-social font-size="15px" icon-size="30px" mode="horizontal" padding="0" align="center">
+              <mj-social-element name="facebook" href="#" background-color="#A1A0A0">
+              </mj-social-element>
+              <mj-social-element name="google" href="#" background-color="#A1A0A0">
+              </mj-social-element>
+              <mj-social-element name="twitter" href="#" background-color="#A1A0A0">
+              </mj-social-element>
+              <mj-social-element name="linkedin" href="#" background-color="#A1A0A0">
+              </mj-social-element>
+            </mj-social>
+            <mj-text color="#445566" font-size="11px" align="center" line-height="16px">
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus non quam vitae erat consequat fringilla a ac dolor. Curabitur dictum mauris id orci tempus, vitae consequat lacus iaculis. Aliquam ornare non felis quis gravida. Nullam imperdiet pellentesque rhoncus.
+            </mj-text>
+            <mj-text color="#445566" font-size="11px" align="center" line-height="16px">
+              &copy; Copyright 2022. All Rights Reserved.
+            </mj-text>
+            <mj-text color="#445566" font-size="11px" align="center" line-height="16px">
+              Supported by iMMAP.
+            </mj-text>
+            
+          </mj-column>
+        </mj-section>
+      </mj-wrapper>
+  
+    </mj-body>
+  </mjml>
+
+
+
+{% endmjml %}
+
+

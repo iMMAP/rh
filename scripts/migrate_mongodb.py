@@ -272,7 +272,7 @@ class MongoToSqlite():
 
     #     activity_rows = self.build_tmp(connection, table, key_map, activities)
 
-    #     # TODO: Handle relational data like ManyToMany, ForeignKey, etc.
+    #     # TODO: Handle relational data like  ManyToMany, ForeignKey, etc.
         
     #     # Add Clusters
     #     c = connection.cursor()

@@ -5,6 +5,7 @@ class Country(models.Model):
     """Countries Model"""
     name = models.CharField(max_length=200)
     code = models.CharField(max_length=200, blank=True, null=True)
+    code2 = models.CharField(max_length=200, blank=True, null=True)
 
     def __str__(self):
         return self.name
@@ -16,7 +17,8 @@ class Country(models.Model):
 
 class Cluster(models.Model):
     """Clusters Model"""
-    title = models.CharField(max_length=200)
+    code = models.CharField(max_length=200, blank=True, null=True)
+    title = models.CharField(max_length=200, blank=True, null=True)
 
     def __str__(self):
         return self.title
@@ -64,12 +66,14 @@ class Organization(models.Model):
 
 class Activity(models.Model):
     """Activities model"""
-    clusters = models.ManyToManyField(Cluster)
+    active = models.BooleanField(default=True)
+    ocha_code = models.CharField(max_length=200, blank=True, null=True)
     title = models.CharField(max_length=200)
+    clusters = models.ManyToManyField(Cluster)
+    indicator = models.TextField(blank=True, null=True)
     description = models.CharField(max_length=200, blank=True, null=True)
     countries = models.ManyToManyField(Country)
-    fields = models.JSONField(blank=True, null=True)
-    active = models.BooleanField(default=True)
+    fields = models.JSONField(blank=True, null=True, default=dict)
     created_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
     updated_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
 

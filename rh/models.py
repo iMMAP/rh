@@ -84,6 +84,7 @@ class Activity(models.Model):
         verbose_name = 'Activity'
         verbose_name_plural = "Activities"
 
+
 class Currency(models.Model):
     """Currencies model"""
     name = models.CharField(max_length=15, null=True)

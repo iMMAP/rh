@@ -228,14 +228,14 @@ class MongoToSqlite():
             d = json.dumps({'s':1})
             c.execute("""ALTER TABLE tmp_rh_activity ADD fields JSON DEFAULT '{}'""".format(d))
 
-            rh_data = c.execute("""SELECT active,ocha_code,activity_description_name,indicator_name from tmp_rh_activity""")
+            rh_data = c.execute("""SELECT ocha_code,active,activity_description_name,activity_type_name,admin0pcode,cluster,cluster_id,indicator_name from tmp_rh_activity""")
             for record in rh_data.fetchall():
                 ocha_data = c.execute("""SELECT * from tmp_ocha_activity""")
                 record = dict(record)
                 ocha_record = next((item for item in ocha_data.fetchall() if record['ocha_code'] == dict(item)['code']), None)
                 if ocha_record:
                     ocha_ind = dict(ocha_record)['Indicator']
-                c.execute("""insert into rh_activity(active, ocha_code, title, indicator) values (?, ?, ?, ?)""",
+                c.execute(f"""insert into {table}(active, ocha_code, title, indicator) values (?, ?, ?, ?)""",
                         (
                             record['active'],
                             record['ocha_code'],
@@ -243,102 +243,148 @@ class MongoToSqlite():
                             ocha_ind,
                         ),
                 )
-            
+                activity_id = c.lastrowid
+
+                # Add Clusters
+                many2many_cluster_table = 'rh_activity_clusters'
+                related_cluster_table = 'rh_cluster'
+                if self.test:
+                    many2many_cluster_table = 'tmp_activity_clusters'
+                    related_cluster_table = 'tmp_cluster'
+                    query = f"CREATE TABLE IF NOT EXISTS {many2many_cluster_table}(activity_id INTEGER, cluster_id INTEGER)"
+                    try:
+                        c.execute(query)
+                    except Exception as e:
+                        print("***********IMPORT ERROR:************ ", e)
+                        print("***********Rool Backing Please Wait:************ ")
+                        connection.rollback()
+                
+                clusters = [a.strip() for a in record['cluster_id'].split(",")]
+
+                q = f"""INSERT INTO {many2many_cluster_table}(activity_id, cluster_id) VALUES ({activity_id}, (SELECT rowid FROM {related_cluster_table} WHERE code IN (%s)))""" % ','.join('?' for i in clusters)
+                try:
+                    c.execute(q, clusters)
+                except Exception as e:
+                    print("***********IMPORT ERROR:************ ", e)
+                    print("***********Rool Backing Please Wait:************ ")
+                    connection.rollback()
+
+                # Add Countries
+                many2many_country_table = 'rh_activity_countries'
+                related_country_table = 'rh_country'
+                if self.test:
+                    many2many_country_table = 'tmp_activity_countries'
+                    related_country_table = 'tmp_country'
+                    query = f"CREATE TABLE IF NOT EXISTS {many2many_country_table}(activity_id INTEGER, country_id INTEGER)"
+                    try:
+                        c.execute(query)
+                    except Exception as e:
+                        print("***********IMPORT ERROR:************ ", e)
+                        print("***********Rool Backing Please Wait:************ ")
+                        connection.rollback()
+                
+
+                countries = [a.strip() for a in record['admin0pcode'].split(",")]
+                for country in countries:
+                    if country in ["XX", "CB"]:
+                        continue
+                    if country == "UR":
+                        country = "UY"
+                    q = f"""INSERT INTO {many2many_country_table}(activity_id, country_id) VALUES ({activity_id}, (SELECT rowid FROM {related_country_table} WHERE code == '{country}' OR code2 == '{country}'))"""
+                    try:
+                        c.execute(q)
+                    except Exception as e:
+                        print("***********IMPORT ERROR:************ ", e)
+                        print("***********Rool Backing Please Wait:************ ")
+                        connection.rollback()
+
             c.execute("DROP TABLE tmp_rh_activity;")
             c.execute("DROP TABLE tmp_ocha_activity;")
 
-            # connection.commit()
 
     ############ Import Activities from mongoDB with relational data ############
-    # def import_activities(self, connection, mongodb):
-    #     """
-    #     Import activities from MongoDB
-    #     """
-    #     activities = list(mongodb.activities.find(
-    #             {}, 
-    #             {'active': 1, 'indicator_name': 1, 'activity_description_name': 1, 'activity_type_name': 1, 'cluster': 1, 'admin0pcode': 1, 'cluster_id': 1}
-    #         )
-    #     )
-    #     key_map = {
-    #         'activity_type_name': 'title',
-    #         'indicator_name': 'indicator',
-    #         'activity_description_name': 'description',
-    #         'active': 'active',
-    #     }
+    def import_activities(self, connection, mongodb):
+        """
+        Import activities from MongoDB
+        """
+        activities = list(mongodb.activities.find(
+                {}, 
+                {'active': 1, 'indicator_name': 1, 'activity_description_name': 1, 'activity_type_name': 1, 'cluster': 1, 'admin0pcode': 1, 'cluster_id': 1}
+            )
+        )
+        key_map = {
+            'activity_type_name': 'title',
+            'indicator_name': 'indicator',
+            'activity_description_name': 'description',
+            'active': 'active',
+        }
 
-    #     table = "rh_activity"
-    #     if self.test:
-    #         table = 'tmp_activity'
+        table = "rh_activity"
+        if self.test:
+            table = 'tmp_activity'
 
-    #     activity_rows = self.build_tmp(connection, table, key_map, activities)
-
-    #     # TODO: Handle relational data like  ManyToMany, ForeignKey, etc.
+        activity_rows = self.build_tmp(connection, table, key_map, activities)
         
-    #     # Add Clusters
-    #     c = connection.cursor()
-    #     many2many_cluster_table = 'rh_activity_clusters'
-    #     related_cluster_table = 'rh_cluster'
-    #     if self.test:
-    #         many2many_cluster_table = 'tmp_activity_clusters'
-    #         related_cluster_table = 'tmp_cluster'
-    #         query = f"CREATE TABLE IF NOT EXISTS {many2many_cluster_table}(activity_id INTEGER, cluster_id INTEGER)"
-    #         try:
-    #             c.execute(query)
-    #         except Exception as e:
-    #             print("***********IMPORT ERROR:************ ", e)
-    #             print("***********Rool Backing Please Wait:************ ")
-    #             connection.rollback()
+        # Add Clusters
+        c = connection.cursor()
+        many2many_cluster_table = 'rh_activity_clusters'
+        related_cluster_table = 'rh_cluster'
+        if self.test:
+            many2many_cluster_table = 'tmp_activity_clusters'
+            related_cluster_table = 'tmp_cluster'
+            query = f"CREATE TABLE IF NOT EXISTS {many2many_cluster_table}(activity_id INTEGER, cluster_id INTEGER)"
+            try:
+                c.execute(query)
+            except Exception as e:
+                print("***********IMPORT ERROR:************ ", e)
+                print("***********Rool Backing Please Wait:************ ")
+                connection.rollback()
         
         
-    #     for activity in activity_rows:
-    #         activity_dict = next(item for item in activities if str(item['_id']) == activity[list(activity.keys())[0]][0])
-    #         # clusters = tuple(a.strip() for a in activity_dict.get('cluster').split(","))
-    #         clusters = [a.strip() for a in activity_dict.get('cluster_id').split(",")]
+        for activity in activity_rows:
+            activity_dict = next(item for item in activities if str(item['_id']) == activity[list(activity.keys())[0]][0])
+            # clusters = tuple(a.strip() for a in activity_dict.get('cluster').split(","))
+            clusters = [a.strip() for a in activity_dict.get('cluster_id').split(",")]
 
-    #         q = f"""INSERT INTO {many2many_cluster_table}(activity_id, cluster_id) VALUES ({list(activity.keys())[0]}, (SELECT rowid FROM {related_cluster_table} WHERE code IN (%s)))""" % ','.join('?' for i in clusters)
-    #         try:
-    #             c.execute(q, clusters)
-    #         except Exception as e:
-    #             print("***********IMPORT ERROR:************ ", e)
-    #             print("***********Rool Backing Please Wait:************ ")
-    #             connection.rollback()
+            q = f"""INSERT INTO {many2many_cluster_table}(activity_id, cluster_id) VALUES ({list(activity.keys())[0]}, (SELECT rowid FROM {related_cluster_table} WHERE code IN (%s)))""" % ','.join('?' for i in clusters)
+            try:
+                c.execute(q, clusters)
+            except Exception as e:
+                print("***********IMPORT ERROR:************ ", e)
+                print("***********Rool Backing Please Wait:************ ")
+                connection.rollback()
         
-    #     # Add Countries
-    #     many2many_country_table = 'rh_activity_countries'
-    #     related_country_table = 'rh_country'
-    #     if self.test:
-    #         many2many_country_table = 'tmp_activity_countries'
-    #         related_country_table = 'tmp_country'
-    #         query = f"CREATE TABLE IF NOT EXISTS {many2many_country_table}(activity_id INTEGER, country_id INTEGER)"
-    #         try:
-    #             c.execute(query)
-    #         except Exception as e:
-    #             print("***********IMPORT ERROR:************ ", e)
-    #             print("***********Rool Backing Please Wait:************ ")
-    #             connection.rollback()
+        # Add Countries
+        many2many_country_table = 'rh_activity_countries'
+        related_country_table = 'rh_country'
+        if self.test:
+            many2many_country_table = 'tmp_activity_countries'
+            related_country_table = 'tmp_country'
+            query = f"CREATE TABLE IF NOT EXISTS {many2many_country_table}(activity_id INTEGER, country_id INTEGER)"
+            try:
+                c.execute(query)
+            except Exception as e:
+                print("***********IMPORT ERROR:************ ", e)
+                print("***********Rool Backing Please Wait:************ ")
+                connection.rollback()
         
-    #     for activity in activity_rows:
-    #         activity_dict = next(item for item in activities if str(item['_id']) == activity[list(activity.keys())[0]][0])
+        for activity in activity_rows:
+            activity_dict = next(item for item in activities if str(item['_id']) == activity[list(activity.keys())[0]][0])
 
-    #         countries = [a.strip() for a in activity_dict.get('admin0pcode').split(",")]
-    #         for country in countries:
-    #             if country in ["XX", "CB"]:
-    #                 continue
-    #             if country == "UR":
-    #                 country = "UY"
-    #             q = f"""INSERT INTO {many2many_country_table}(activity_id, country_id) VALUES ({list(activity.keys())[0]}, (SELECT rowid FROM {related_country_table} WHERE code == '{country}' OR code2 == '{country}'))"""
-    #             try:
-    #                 c.execute(q)
-    #             except Exception as e:
-    #                 print("***********IMPORT ERROR:************ ", e)
-    #                 print("***********Rool Backing Please Wait:************ ")
-    #                 connection.rollback()
+            countries = [a.strip() for a in activity_dict.get('admin0pcode').split(",")]
+            for country in countries:
+                if country in ["XX", "CB"]:
+                    continue
+                if country == "UR":
+                    country = "UY"
+                q = f"""INSERT INTO {many2many_country_table}(activity_id, country_id) VALUES ({list(activity.keys())[0]}, (SELECT rowid FROM {related_country_table} WHERE code == '{country}' OR code2 == '{country}'))"""
+                try:
+                    c.execute(q)
+                except Exception as e:
+                    print("***********IMPORT ERROR:************ ", e)
+                    print("***********Rool Backing Please Wait:************ ")
+                    connection.rollback()
         
-    #     self.update_indicators()
-
-
-    #     connection.commit()
-
 
 migration = MongoToSqlite(test=TEST)
 
@@ -351,6 +397,7 @@ ngmHealthCluster = mongo_client.ngmHealthCluster
 
 ngmReportHub = mongo_client.ngmReportHub
 
+# Try to import the data from different sources.
 try:
     # Import Countries from CSV file
     migration.import_countries(connection, COUNTRIES_CSV)
@@ -365,11 +412,12 @@ try:
     # migration.import_activities(connection, ngmHealthCluster)
     migration.import_activities_from_csv(connection, ngmHealthCluster)
     connection.commit()
+
 except Exception as e:
     
     print("***********IMPORT ERROR:************ ", e)
     print("***********Traceback:************ ", traceback.format_exc())
-    print("***********Roll Back in progress************ ")
+    print("***********Roll Back The Commits************ ")
     connection.rollback()
 
 connection.close()

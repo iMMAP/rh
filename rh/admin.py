@@ -111,7 +111,7 @@ admin.site.register(Organization, OrganizationAdmin)
 ############ Activity Model Admin ############
 ##############################################
 class ActivityAdmin(admin.ModelAdmin):
-    list_display = ('title', 'show_clusters', 'show_countries', 'active')
+    list_display = ('title', 'show_clusters', 'show_countries', 'indicator', 'active')
     search_fields = ('title', 'countires__name', 'clusters__title', 'active')
     list_filter = ('active', 'clusters', 'countries__name')
 

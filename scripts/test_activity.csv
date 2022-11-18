@@ -1,4 +1,4 @@
-ocha_code,active,activity_description_name,activity_type_name,admin0pcode,cluster,cluster_id,indicator_name,fields
+ocha_code,active,activity_description_name,activity_type_name,admin0pcode,cluster,cluster_id,indicator_name
 O1,1,Accessible classrooms built / adopted for special needs learners.,DISABILITY (ACCESS),"BD, CB",Education,education,# of accessible classrooms built / adopted for special needs learners.
 O2,1,Child friendly space (CFS) established,ACCESS,"ET, IQ, KE, SO, SS, SY, UA, UR",Protection,protection,# of child friendly space (cfs) established
 O3,1,hand washing stations provided in the school / learning centre / space,WASH,"AF, YE",Food Security,fss,# of hand washing stations provided in the school / learning centre / space

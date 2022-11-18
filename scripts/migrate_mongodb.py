@@ -24,6 +24,7 @@ class MongoToSqlite():
         """
         self.test = test
 
+
     def build_tmp(self, con, tbl, key_map, vals):
         """
         Build a table and insert data
@@ -57,19 +58,19 @@ class MongoToSqlite():
         for entity in entities:
             if not self.test:
                 _id = entity.pop(0)
-                str_cols = str_cols.replace('_id,', '')
+                # str_cols = str_cols.replace('_id,', '')
             query = f"INSERT INTO {tbl}({str_cols}) VALUES ({str_sql_val})"
-
-            cursor.execute(query, entity)
+            try:
+                cursor.execute(query, entity)
+            except Exception as e:
+                print(e)
 
             if not self.test:
                 entity.insert(0, _id)
             rows.append({cursor.lastrowid: entity})
 
-        # query = f'INSERT INTO {tbl} ({str_cols}) VALUES ({str_sql_val})'
-        # con.executemany(query, entities)
-        # con.commit()
         return rows
+
 
     def clean_org(self, value): 
         name = value.lower().strip()
@@ -91,17 +92,20 @@ class MongoToSqlite():
 
         return value
 
+
     def get_mongo_client(self):
         """
         Returns a MongoClient instance.
         """
         return MongoClient(self.mongo_host)
     
+
     def get_sqlite_client(self, dbname):
         """
         Returns a SqliteClient instance.
         """
         return sqlite3.connect(dbname)
+
 
     def import_countries(self, connection, countries_csv):
         """
@@ -168,7 +172,22 @@ class MongoToSqlite():
 
             c.execute("DROP TABLE tmp_locs;")
 
-            # connection.commit()
+
+    def import_currencies(self, connection, mongodb):
+        """
+        Import Currencies from MongoDB
+        """
+
+        c = connection.cursor()
+        currencies = list(mongodb.project.distinct("project_budget_currency"))
+        key_map = {
+            'project_budget_currency': 'name',
+        }
+        table = "rh_currency"
+
+        t = list(zip([i+1 for i in range(len(currencies))], [c.upper() for c in currencies]))
+        c.executemany("INSERT INTO {} VALUES (?,?)".format(table), t)
+
 
     def import_clusters(self, connection, mongodb):
         """
@@ -185,6 +204,7 @@ class MongoToSqlite():
 
         self.build_tmp(connection, table, key_map, clusters)
     
+
     def import_organizations(self, connection, mongodb):
         """
         Import organizations from MongoDB
@@ -203,6 +223,103 @@ class MongoToSqlite():
         self.build_tmp(connection, table, key_map, organizations)
 
 
+    ############ Import Users from mongoDB with relational data ############
+    def import_users(self, connection, mongodb):
+        """
+        Import Users from MongoDB
+        """
+        c = connection.cursor()
+        users = list(mongodb.user.find({}, 
+        {'organization': 1, 
+        'cluster_id': 1, 
+        'name': 1, 
+        'username': 1, 
+        'email': 1, 
+        'phone': 1, 
+        'position': 1, 
+        'status': 1, 
+        'password': 1,
+        'createdAt': 1
+        }))
+        key_map = {
+            'username': 'username',
+            'email': 'email',
+            'password': 'password',
+            'is_superuser': 'is_superuser',
+            'is_staff': 'is_staff',
+            'phone': 'phone',
+            'name': 'name',
+            'visits': 'visits',
+            'position': 'position',
+            'status': 'is_active',
+            'createdAt': 'date_joined',
+            'cluster_id': 'cluster_id',
+            'organization': 'organization_id',
+            
+        }
+        table = "accounts_account"
+        usernames = []
+        for index, user in enumerate(users):
+            status = False
+            username = user.get('username', False)
+            cluster_code = user.get('cluster_id', False)
+            organization_code = user.get('organization', False)
+            if username:
+                if username in usernames:
+                    del users[index]
+                    continue
+                else:
+                    usernames.append(username)
+            if user.get('status', False) and user.get('status', False) == 'active':
+                status = True
+
+            user['status'] = status
+            user['is_superuser'] = False
+            user['is_staff'] = False
+            
+        for u in users:
+            if 'is_superuser' not in u:
+                u.update({'is_superuser':  False})
+            if 'is_staff' not in u:
+                u.update({'is_staff':  False})
+            else:
+                u['is_staff'] = False
+            
+            if cluster_code:
+                query = "SELECT rowid FROM rh_cluster WHERE code = '{}'".format(cluster_code)
+                try:
+                    c.execute(query)
+                    cluster_id = c.fetchone()
+                    if 'cluster_id' in u:
+                        u['cluster_id'] = cluster_id[0]
+                    else:
+                        u.update({'cluster_id': cluster_id[0]})
+
+                except Exception as e:
+                    print("***********IMPORT ERROR:************ ", e)
+                    print("***********Rool Backing Please Wait:************ ")
+                    connection.rollback()
+
+            if organization_code:
+                query = "SELECT rowid FROM rh_organization WHERE code = '{}'".format(organization_code)
+                try:
+                    c.execute(query)
+                    organization_id = c.fetchone()
+                    if 'organization' in u:
+                        u['organization'] = organization_id[0]
+                    else:
+                        u.update({'organization': organization_id[0]})
+
+                except Exception as e:
+                    print("***********IMPORT ERROR:************ ", e)
+                    print("***********Rool Backing Please Wait:************ ")
+                    connection.rollback()
+
+            
+        self.build_tmp(connection, table, key_map, users)
+
+
+    ############ Import Activities from CSV with relational data ############
     def import_activities_from_csv(self, connection, mongodb):
         """
         Import countries from CSV file.
@@ -384,7 +501,107 @@ class MongoToSqlite():
                     print("***********IMPORT ERROR:************ ", e)
                     print("***********Rool Backing Please Wait:************ ")
                     connection.rollback()
+    
+
+    ############ Import Projects from mongoDB with relational data ############
+    def import_projects(self, connection, mongodb):
+        """
+        Import projects from MongoDB
+        """
+        pass
+        projects = list(mongodb.projects.find(
+                {}, 
+                {'username': 1, 
+                'project_code': 1, 
+                'project_title': 1, 
+                'project_description': 1, 
+                'project_start_date': 1, 
+                'project_end_date': 1, 
+                'project_budget': 1, 
+                'project_budget_currency': 1,
+                'createdAt': 1,
+                'updatedAt': 1,
+                }
+            )
+        )
+        key_map = {
+            'username': 'user_id',
+            'project_title': 'title',
+            'project_description': 'description',
+            'project_start_date': 'start_date',
+            'project_end_date': 'end_date',
+            'project_budget': 'budget',
+            'project_budget_currency': 'budget_currency',
+            'createdAt': 'created_at',
+            'updatedAt': 'updated_at',
+        }
+
+        table = "rh_activity"
+        if self.test:
+            table = 'tmp_activity'
+
+        activity_rows = self.build_tmp(connection, table, key_map, projects)
         
+        # Add Clusters
+        c = connection.cursor()
+        many2many_cluster_table = 'rh_activity_clusters'
+        related_cluster_table = 'rh_cluster'
+        if self.test:
+            many2many_cluster_table = 'tmp_activity_clusters'
+            related_cluster_table = 'tmp_cluster'
+            query = f"CREATE TABLE IF NOT EXISTS {many2many_cluster_table}(activity_id INTEGER, cluster_id INTEGER)"
+            try:
+                c.execute(query)
+            except Exception as e:
+                print("***********IMPORT ERROR:************ ", e)
+                print("***********Rool Backing Please Wait:************ ")
+                connection.rollback()
+        
+        
+        for activity in activity_rows:
+            activity_dict = next(item for item in projects if str(item['_id']) == activity[list(activity.keys())[0]][0])
+            # clusters = tuple(a.strip() for a in activity_dict.get('cluster').split(","))
+            clusters = [a.strip() for a in activity_dict.get('cluster_id').split(",")]
+
+            q = f"""INSERT INTO {many2many_cluster_table}(activity_id, cluster_id) VALUES ({list(activity.keys())[0]}, (SELECT rowid FROM {related_cluster_table} WHERE code IN (%s)))""" % ','.join('?' for i in clusters)
+            try:
+                c.execute(q, clusters)
+            except Exception as e:
+                print("***********IMPORT ERROR:************ ", e)
+                print("***********Rool Backing Please Wait:************ ")
+                connection.rollback()
+        
+        # Add Countries
+        many2many_country_table = 'rh_activity_countries'
+        related_country_table = 'rh_country'
+        if self.test:
+            many2many_country_table = 'tmp_activity_countries'
+            related_country_table = 'tmp_country'
+            query = f"CREATE TABLE IF NOT EXISTS {many2many_country_table}(activity_id INTEGER, country_id INTEGER)"
+            try:
+                c.execute(query)
+            except Exception as e:
+                print("***********IMPORT ERROR:************ ", e)
+                print("***********Rool Backing Please Wait:************ ")
+                connection.rollback()
+        
+        for activity in activity_rows:
+            activity_dict = next(item for item in projects if str(item['_id']) == activity[list(activity.keys())[0]][0])
+
+            countries = [a.strip() for a in activity_dict.get('admin0pcode').split(",")]
+            for country in countries:
+                if country in ["XX", "CB"]:
+                    continue
+                if country == "UR":
+                    country = "UY"
+                q = f"""INSERT INTO {many2many_country_table}(activity_id, country_id) VALUES ({list(activity.keys())[0]}, (SELECT rowid FROM {related_country_table} WHERE code == '{country}' OR code2 == '{country}'))"""
+                try:
+                    c.execute(q)
+                except Exception as e:
+                    print("***********IMPORT ERROR:************ ", e)
+                    print("***********Rool Backing Please Wait:************ ")
+                    connection.rollback()
+
 
 migration = MongoToSqlite(test=TEST)
 
@@ -405,12 +622,20 @@ try:
     # # Import Locations from CSV file
     migration.import_locations(connection, LOCATIONS_CSV)
 
+    migration.import_currencies(connection, ngmHealthCluster)
+
     migration.import_clusters(connection, ngmHealthCluster)
 
     migration.import_organizations(connection, ngmReportHub)
 
+    migration.import_users(connection, ngmReportHub)
+
     # migration.import_activities(connection, ngmHealthCluster)
+    
     migration.import_activities_from_csv(connection, ngmHealthCluster)
+
+    migration.import_projects(connection, ngmHealthCluster)
+
     connection.commit()
 
 except Exception as e:

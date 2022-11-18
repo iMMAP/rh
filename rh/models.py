@@ -100,6 +100,7 @@ class Currency(models.Model):
 class Project(models.Model):
     """Projects model"""
     user = models.ForeignKey('accounts.Account', on_delete=models.SET_NULL, null=True, blank=True)
+    code = models.CharField(max_length=200)
     title = models.CharField(max_length=200)
     description = models.TextField(blank=True, null=True)
     clusters = models.ManyToManyField(Cluster)

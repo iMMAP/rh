@@ -87,12 +87,14 @@
                 if (activityFormEl){
                     activityFormEl.remove()
                 }
-                var activityFormEl = `
-                    <div id="activity_form" class="mb-3" style="background-color: aliceblue;padding: 10px;">
-                        <h5>Activity</h5>
-                        ${response.form}
-                    </div>`
-                $(`#accordion-body-${formSetId}`).prepend(activityFormEl)
+                if (response.form){
+                    var activityFormEl = `
+                        <div id="activity_form" class="mb-3" style="background-color: aliceblue;padding: 10px;">
+                            <h5>Activity</h5>
+                            ${response.form}
+                        </div>`
+                    $(`#accordion-body-${formSetId}`).prepend(activityFormEl)
+                }
                 //$(`#div_id_form-${formSetId}-activity`).remove()
             }
         })

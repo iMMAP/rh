@@ -142,7 +142,7 @@ admin.site.register(Activity, ActivityAdmin)
 class ProjectAdmin(admin.ModelAdmin):
     list_display = ('code', 'title', 'user', 'show_clusters', 'show_activities', 'show_locations', 'budget', 'budget_currency')
     search_fields = ('title','code', 'clusters__title', 'activities__title', 'locations__name')
-    list_filter = ('clusters')
+    list_filter = ('clusters',)
 
     # To create a clickable link between to models
     # def user_link(self, obj):

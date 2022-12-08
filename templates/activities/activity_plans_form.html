@@ -42,12 +42,14 @@
                 if ($("#activity_form")){
                     $("#activity_form").remove()
                 }
-                var activity_form = `
-                    <div id="activity_form" style="background-color: white;padding: 10px;">
-                        <h5>Activity</h5>
-                        ${response.form}
-                    </div>`
-                $("#div_id_activity").after(activity_form)
+                if (response.form){
+                    var activity_form = `
+                        <div id="activity_form" style="background-color: white;padding: 10px;">
+                            <h5>Activity</h5>
+                            ${response.form}
+                        </div>`
+                    $("#div_id_activity").after(activity_form)
+                }
             }
         })
     }

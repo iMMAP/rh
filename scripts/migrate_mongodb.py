@@ -12,6 +12,7 @@ SQLITEDB_PATH = 'rh/db.sqlite3'
 # SQLITEDB_PATH = 'rh/scripts/testdb.sqlite3'
 COUNTRIES_CSV = 'rh/scripts/countries.csv'
 LOCATIONS_CSV = 'rh/scripts/af_loc.csv'
+CLUSTERS_CSV = 'rh/scripts/updated_clusters.csv'
 
 # Test project id 58e9c5dd97302c316d0f816b
 
@@ -205,6 +206,26 @@ class MongoToSqlite():
             table = 'tmp_cluster'
 
         self.build_tmp(connection, table, key_map, clusters)
+
+    
+    def import_clusters_from_csv(self, connection, clusters_csv):
+        """
+        Import updated clusters from CSV
+        """
+        c = connection.cursor()
+        df = pd.DataFrame()
+        df = pd.read_csv(clusters_csv)
+
+        if len(df)>0:
+            table = "rh_cluster"
+            
+            df.to_sql('tmp_clusters', connection, if_exists='replace', index=False)
+
+            try:
+                c.execute(f"""insert into {table} select rowid, code, title, old_code, old_title from tmp_clusters""")
+                c.execute("DROP TABLE tmp_clusters;")
+            except Exception as e:
+                connection.rollback()
     
 
     def import_organizations(self, connection, mongodb):
@@ -261,7 +282,7 @@ class MongoToSqlite():
                 doner.pop('admin0pcode')
             
             if cluster_id:
-                query = "SELECT rowid FROM rh_cluster WHERE code = '{}'".format(cluster_id)
+                query = "SELECT rowid FROM rh_cluster WHERE old_code = '{}'".format(cluster_id)
                 try:
                     c.execute(query)
                     cluster_id = c.fetchone()
@@ -342,6 +363,7 @@ class MongoToSqlite():
             user['status'] = status
             user['is_superuser'] = False
             user['is_staff'] = False
+            user['password'] = 'bcrypt$' + user['password']
             
         for u in users:
             if 'is_superuser' not in u:
@@ -355,7 +377,7 @@ class MongoToSqlite():
             organization_code = u.get('organization', False)
             
             if cluster_code:
-                query = "SELECT rowid FROM rh_cluster WHERE code = '{}'".format(cluster_code)
+                query = "SELECT rowid FROM rh_cluster WHERE old_code = '{}'".format(cluster_code)
                 try:
                     c.execute(query)
                     cluster_id = c.fetchone()
@@ -453,7 +475,7 @@ class MongoToSqlite():
                 
                 clusters = [a.strip() for a in record['cluster_id'].split(",")]
 
-                q = f"""INSERT INTO {many2many_cluster_table}(activity_id, cluster_id) VALUES ({activity_id}, (SELECT rowid FROM {related_cluster_table} WHERE code IN (%s)))""" % ','.join('?' for i in clusters)
+                q = f"""INSERT INTO {many2many_cluster_table}(activity_id, cluster_id) VALUES ({activity_id}, (SELECT rowid FROM {related_cluster_table} WHERE old_code IN (%s)))""" % ','.join('?' for i in clusters)
                 try:
                     c.execute(q, clusters)
                 except Exception as e:
@@ -500,7 +522,11 @@ class MongoToSqlite():
         Import activities from MongoDB
         """
         activities = list(mongodb.activities.find(
-                {}, 
+                {'start_date': 
+                    {
+                        '$gte': '2020-01-01'
+                    }
+                },
                 {'active': 1, 'indicator_name': 1, 'activity_description_name': 1, 'activity_type_name': 1, 'activity_detail_name': 1, 'cluster': 1, 'admin0pcode': 1, 'cluster_id': 1}
             )
         )
@@ -539,7 +565,7 @@ class MongoToSqlite():
             # clusters = tuple(a.strip() for a in activity_dict.get('cluster').split(","))
             clusters = [a.strip() for a in activity_dict.get('cluster_id').split(",")]
 
-            q = f"""INSERT INTO {many2many_cluster_table}(activity_id, cluster_id) VALUES ({list(activity.keys())[0]}, (SELECT rowid FROM {related_cluster_table} WHERE code IN (%s)))""" % ','.join('?' for i in clusters)
+            q = f"""INSERT INTO {many2many_cluster_table}(activity_id, cluster_id) VALUES ({list(activity.keys())[0]}, (SELECT rowid FROM {related_cluster_table} WHERE old_code IN (%s)))""" % ','.join('?' for i in clusters)
             try:
                 c.execute(q, clusters)
             except Exception as e:
@@ -757,7 +783,9 @@ try:
 
     migration.import_currencies(connection, ngmHealthCluster)
 
-    migration.import_clusters(connection, ngmHealthCluster)
+    # migration.import_clusters(connection, ngmHealthCluster)
+
+    migration.import_clusters_from_csv(connection, CLUSTERS_CSV)
 
     migration.import_organizations(connection, ngmReportHub)
 

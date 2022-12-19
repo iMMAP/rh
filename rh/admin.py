@@ -74,8 +74,9 @@ admin.site.register(Country, CountryAdmin)
 ############ Cluster Model Admin #############
 ##############################################
 class ClusterAdmin(admin.ModelAdmin):
-    list_display = ('code', 'title',)
-    search_fields = ('code', 'title',)
+    list_display = ('old_code', 'code', 'old_title', 'title')
+    search_fields = ('old_code', 'code', 'old_title', 'title',)
+    list_filter = ('code', 'old_code',)
 admin.site.register(Cluster, ClusterAdmin)
 
 
@@ -123,7 +124,7 @@ admin.site.register(Doner, DonerAdmin)
 ##############################################
 class ActivityAdmin(admin.ModelAdmin):
     list_display = ('title', 'detail', 'description', 'show_clusters', 'show_countries', 'indicator', 'active')
-    search_fields = ('title', 'clusters__title', 'active')
+    search_fields = ('title', 'clusters__title', 'active', 'description', 'detail')
     list_filter = ('active', 'clusters', 'countries__name')
 
     def show_clusters(self, obj):

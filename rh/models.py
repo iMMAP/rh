@@ -17,7 +17,10 @@ class Country(models.Model):
 
 class Cluster(models.Model):
     """Clusters Model"""
+
+    old_code = models.CharField(max_length=200, blank=True, null=True)
     code = models.CharField(max_length=200, blank=True, null=True)
+    old_title = models.CharField(max_length=200, blank=True, null=True)
     title = models.CharField(max_length=200, blank=True, null=True)
 
     def __str__(self):
@@ -78,6 +81,12 @@ class Doner(models.Model):
         verbose_name_plural = "Doners"
 
 
+# class ActivityType(models.Model):
+#     """"""
+#     title = models.CharField(max_length=200)
+#     clusters = models.ManyToManyField(Cluster)
+
+
 class Activity(models.Model):
     """Activities model"""
     active = models.BooleanField(default=True)
@@ -98,7 +107,7 @@ class Activity(models.Model):
     class Meta:
         verbose_name = 'Activity'
         verbose_name_plural = "Activities"
-
+    
 
 class Currency(models.Model):
     """Currencies model"""
@@ -119,6 +128,7 @@ class Project(models.Model):
     title = models.CharField(max_length=500)
     description = models.TextField(blank=True, null=True)
     clusters = models.ManyToManyField(Cluster)
+    # activity_type = models.ForeignKey(ActivityType, on_delete=models.SET_NULL)
     activities = models.ManyToManyField(Activity)
     locations = models.ManyToManyField(Location)
     start_date = models.DateTimeField('start date')

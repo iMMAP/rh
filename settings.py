@@ -84,6 +84,8 @@ STATICFILES_FINDERS = ('compressor.finders.CompressorFinder',)
 
 WSGI_APPLICATION = 'wsgi.application'
 
+DATA_UPLOAD_MAX_NUMBER_FIELDS = 50240
+
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 

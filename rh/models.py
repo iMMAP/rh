@@ -5,6 +5,7 @@ class Country(models.Model):
     """Countries Model"""
     name = models.CharField(max_length=200)
     code = models.CharField(max_length=200, blank=True, null=True)
+    code2 = models.CharField(max_length=200, blank=True, null=True)
 
     def __str__(self):
         return self.name
@@ -16,7 +17,11 @@ class Country(models.Model):
 
 class Cluster(models.Model):
     """Clusters Model"""
-    title = models.CharField(max_length=200)
+
+    old_code = models.CharField(max_length=200, blank=True, null=True)
+    code = models.CharField(max_length=200, blank=True, null=True)
+    old_title = models.CharField(max_length=200, blank=True, null=True)
+    title = models.CharField(max_length=200, blank=True, null=True)
 
     def __str__(self):
         return self.title
@@ -62,23 +67,47 @@ class Organization(models.Model):
         return self.name
 
 
+class Doner(models.Model):
+    project_donor_id =  models.CharField(max_length=200, blank=True, null=True)
+    project_donor_name =  models.CharField(max_length=200, blank=True, null=True)
+    country = models.ForeignKey(Country, blank=True, null=True, on_delete=models.SET_NULL,)
+    cluster = models.ForeignKey(Cluster, blank=True, null=True, on_delete=models.SET_NULL,)
+
+    def __str__(self):
+        return self.project_donor_name
+    
+    class Meta:
+        verbose_name = 'Doner'
+        verbose_name_plural = "Doners"
+
+
+# class ActivityType(models.Model):
+#     """"""
+#     title = models.CharField(max_length=200)
+#     clusters = models.ManyToManyField(Cluster)
+
+
 class Activity(models.Model):
     """Activities model"""
-    clusters = models.ManyToManyField(Cluster)
-    title = models.CharField(max_length=200)
-    description = models.CharField(max_length=200, blank=True, null=True)
-    countries = models.ManyToManyField(Country)
-    fields = models.JSONField(blank=True, null=True)
     active = models.BooleanField(default=True)
+    ocha_code = models.CharField(max_length=200, blank=True, null=True)
+    title = models.CharField(max_length=200)
+    clusters = models.ManyToManyField(Cluster)
+    indicator = models.TextField(blank=True, null=True)
+    description = models.CharField(max_length=200, blank=True, null=True)
+    detail = models.CharField(max_length=200, blank=True, null=True)
+    countries = models.ManyToManyField(Country)
+    fields = models.JSONField(blank=True, null=True, default=dict)
     created_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
     updated_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
 
     def __str__(self):
-        return self.title
+        return f"[{self.title}]- {self.detail or self.description}"
     
     class Meta:
         verbose_name = 'Activity'
         verbose_name_plural = "Activities"
+    
 
 class Currency(models.Model):
     """Currencies model"""
@@ -95,17 +124,20 @@ class Currency(models.Model):
 class Project(models.Model):
     """Projects model"""
     user = models.ForeignKey('accounts.Account', on_delete=models.SET_NULL, null=True, blank=True)
-    title = models.CharField(max_length=200)
+    code = models.CharField(max_length=200, null=True, blank=True)
+    title = models.CharField(max_length=500)
     description = models.TextField(blank=True, null=True)
     clusters = models.ManyToManyField(Cluster)
+    # activity_type = models.ForeignKey(ActivityType, on_delete=models.SET_NULL)
     activities = models.ManyToManyField(Activity)
     locations = models.ManyToManyField(Location)
-    start_date = models.DateField('start date')
-    end_date = models.DateField('end date')
-    budget = models.IntegerField()
+    start_date = models.DateTimeField('start date')
+    end_date = models.DateTimeField('end date')
+    budget = models.IntegerField(null=True, blank=True)
     budget_currency = models.ForeignKey('Currency', on_delete=models.SET_NULL, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, blank=True, null=True)
+    active = models.BooleanField(default=True)
 
     def __str__(self):
         return self.title

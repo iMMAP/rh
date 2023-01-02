@@ -70,6 +70,8 @@ class FieldHandler:
 
 
 def get_dynamic_form(json_fields, initial_data=None):
+    if not json_fields:
+        return
     fields_list = json_fields.get('fields', [])
     field_handler = FieldHandler(fields_list, initial_data)
     return type('DynamicForm', (forms.Form,), field_handler.form_fields)

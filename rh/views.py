@@ -134,6 +134,9 @@ def load_activity_json_form(request):
         activity_plan_id = int(request.GET.get('activity_plan_id', ''))
         data = ActivityPlan.objects.get(id=activity_plan_id).activity_fields
     form_class = get_dynamic_form(json_fields, data)
+    if not form_class:
+        return JsonResponse({"form": False})
+        
     form = form_class()
     temp = loader.render_to_string("dynamic_form_fields.html", {'form': form})
     return JsonResponse({"form": temp})
@@ -301,9 +304,10 @@ def create_project_activity_plan(request, project):
                 json_data = {}
                 activity = Activity.objects.get(id=form_data['activity_id'])
                 json_class = get_dynamic_form(activity.fields)
-                json_form = json_class(request.POST)
-                if json_form.is_valid():
-                    json_data = json_form.cleaned_data
+                if json_class:
+                    json_form = json_class(request.POST)
+                    if json_form.is_valid():
+                        json_data = json_form.cleaned_data
 
                 activity_plan = form.save(commit=False)
                 activity_plan.activity = activity

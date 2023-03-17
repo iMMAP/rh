@@ -1,0 +1,273 @@
+_id,admin0pcode,createdAt,organization,organization_name,organization_type,updatedAt
+5c84b3ea4585c9ea024f294a,AF,2019-03-10T06:51:22.535Z,DoPH,Department of Public Health,Government,2022-01-10T09:33:16.238Z
+5c601411cae34eb950c74bc3,AF,2019-02-10T12:07:45.905Z,MAIL,"Ministry of Agriculture, Irrigation and Livestock",Government,2019-02-10T12:07:45.905Z
+59a3b699795abfbf68bb2170,AF,2017-08-28T06:22:17.357Z,MoE,Ministry of Education,Government,2017-08-29T07:17:40.168Z
+581054da92ca5c6e645c93e3,AF,2016-10-26T07:01:46.184Z,MoPH,Ministry of Public Health,Government,2016-10-26T07:01:46.184Z
+58ec47c4f76b7ac5633502ab,AF,2017-04-11T03:04:36.670Z,MRRD,Ministry of Rural Rehabilitation and Development,Government,2021-04-07T04:51:20.113Z
+58e328699da5ef972fbc9865,AF,2017-04-04T05:00:25.705Z,Afghanaid,Afghanaid,International NGO,2022-09-05T09:05:33.081Z
+58ef0a27bca225d55e436ce9,AF,2017-04-13T05:18:31.648Z,ACTED,Agency for Technical Cooperation & Development,International NGO,2022-03-22T06:35:34.041Z
+58e2084c16a5ecf870710713,AF,2017-04-03T08:31:08.016Z,CORDAID,Catholic Organization for Relief and Development Aid,International NGO,2022-04-08T12:26:25.148Z
+59a549cb795abfbf68bb8c84,AF,2017-08-29T11:02:35.245Z,CIC,Children in Crisis,International NGO,2022-09-02T12:49:01.401Z
+58e202c016a5ecf870710705,AF,2017-04-03T08:07:28.058Z,DACAAR,Danish Committee for Aid to Afghan Refugees,International NGO,2022-08-16T12:07:04.299Z
+58e328b29da5ef972fbc9871,AF,2017-04-04T05:01:38.376Z,WHH,Deutsche Welthungerhilfe e. V. (German Agro Action),International NGO,2022-04-07T05:43:04.245Z
+5c59663fb1eee2651e9119be,AF,2019-02-05T10:32:31.657Z,FEWSNET,Famine Early Warning Systems Network,International NGO,2019-02-05T10:32:31.657Z
+58eb1739e59c4ae36e942016,AF,2017-04-10T05:25:13.675Z,GNI,Good Neighbors International,International NGO,2017-04-10T07:36:55.469Z
+5b065be7704f0cf530a1e4cf,AF,2018-05-24T06:29:59.105Z,HAGAR,Hagar Afghanistan,International NGO,2018-05-24T06:29:59.105Z
+57417cb55d2c01113bcf78d3,AF,2016-05-22T09:32:37.447Z,HealthNet TPO,Health Net - Trans cultural Psychosocial Organization,International NGO,2022-06-05T04:11:53.140Z
+581acf4692ca5c6e645c9435,AF,2016-11-03T05:46:46.248Z,IDLO,International Development Law Organisation,International NGO,2016-11-03T05:46:46.248Z
+5c35d9d9808fab063e9ead2a,AF,2019-01-09T11:24:09.408Z,Key Aid Consulting,Key Aid Consulting,International NGO,2019-01-09T11:24:09.408Z
+57034d529d711a054b802850,AF,2016-04-05T05:29:54.198Z,MRCA,Medical Refresher Courses for Afghans,International NGO,2018-01-11T04:32:21.209Z
+58e47bab83d5283b32a7ddbb,AF,2017-04-05T05:07:55.239Z,MADERA,Mission d' Aide au Developpement des Economies Rurales en Afghanistan,International NGO,2018-01-02T07:55:19.188Z
+58e9c42197302c316d0f8168,AF,2017-04-09T05:18:25.817Z,ME,Mission East,International NGO,2022-08-10T11:48:03.048Z
+56fb6802ae4d14a350497e37,AF,2016-03-30T05:45:38.777Z,MWO,MOVE Welfare Organization,International NGO,2021-11-15T06:58:59.664Z
+5930f91409cdfaaa2604edf3,AF,2017-06-02T05:35:16.792Z,NAC,Norwegian Afghanistan Committee,International NGO,2022-08-24T11:02:46.117Z
+58e47f8683d5283b32a7ddd3,AF,2017-04-05T05:24:22.369Z,NEI,Nutrition¬†&¬†Education International,International NGO,2017-04-05T05:24:22.369Z
+57049c9feb3e39094c00d7e3,AF,2016-04-06T05:20:31.412Z,PU-AMI,Premi√®re Urgence-Aide Medicale Internationale,International NGO,2022-09-05T09:22:12.341Z
+58e1ffca16a5ecf8707106fd,AF,2017-04-03T07:54:50.047Z,NPO/RRAA,Rural Rehabilitation Association for Afghanistan,International NGO,2022-08-09T09:55:44.912Z
+58e9c22997302c316d0f8158,AF,2017-04-09T05:10:01.142Z,SFL,Shelter For Life International,International NGO,2017-04-09T07:45:27.720Z
+59a522f5795abfbf68bb8030,AF,2017-08-29T08:16:53.756Z,SCA,Swedish Committee for Afghanistan,International NGO,2022-08-04T04:31:35.835Z
+5bb9d7b1cf0485140da5b742,AF,2018-10-07T09:53:53.992Z,WCC,World Council of Churches,International NGO,2020-08-12T09:23:10.499Z
+58e3290b9da5ef972fbc9878,AF,2017-04-04T05:03:07.714Z,AOAD,Accessibility Organization for Afghan Disabled,National NGO,2020-03-12T05:58:47.454Z
+5cd120bc5e1aec4a257a4a4e,AF,2019-05-07T06:07:56.593Z,AAG,Afghan Assessment Group,National NGO,2019-05-07T06:09:32.748Z
+58e1fd0516a5ecf8707106f7,AF,2017-04-03T07:43:01.153Z,ADA,Afghan Development Association,National NGO,2021-04-29T07:56:45.250Z
+5705ee112d7dec21165668ab,AF,2016-04-07T05:20:17.650Z,AHDS,Afghan Health & Development Services,National NGO,2022-08-01T04:19:58.049Z
+5c7185c2d13e909c689690c1,AF,2019-02-23T17:41:22.633Z,ALO,Afghan Literacy Organization,National NGO,2020-03-09T09:50:06.746Z
+5c5a6322e86f3f1e45bfd46b,AF,2019-02-06T04:31:30.390Z,AOM,Afghan Organization for Migration,National NGO,2019-02-06T04:31:30.390Z
+58e328ab9da5ef972fbc986b,AF,2017-04-04T05:01:31.862Z,APA,Afghan Planning Agency,National NGO,2021-02-10T06:39:48.614Z
+59a2771a795abfbf68bad1cc,AF,2017-08-27T07:39:06.790Z,AWEC,Afghan Women's Education Center,National NGO,2017-09-11T03:44:11.911Z
+57413eadeee38ff5147a7b25,AF,2016-05-22T05:07:57.194Z,ACTD,Afghanistan Center for Training and Development,National NGO,2020-08-12T09:22:11.893Z
+58e2032416a5ecf870710707,AF,2017-04-03T08:09:08.041Z,ADEO,Afghanistan Development and Education Organization,National NGO,2022-05-15T15:26:57.044Z
+5937df83145899fc7e8b9fd9,AF,2017-06-07T11:12:03.078Z,AIESO,Afghanistan Independent Educational & Services Organization,National NGO,2017-06-08T06:02:28.396Z
+58e484b083d5283b32a7de13,AF,2017-04-05T05:46:24.071Z,ANCC,Afghanistan National Re-Construction Coordination,National NGO,2021-01-20T10:27:05.027Z
+596b0159823c138d3011e58a,AF,2017-07-16T06:02:01.638Z,ASCHIANA,Afghanistan's Children - A New Approach,National NGO,2018-09-26T07:21:40.943Z
+596af7af823c138d3011de97,AF,2017-07-16T05:20:47.722Z,ACBAR,Agency Coordinating Body for Afghan Relief,National NGO,2020-08-12T09:22:28.410Z
+57034d899d711a054b802852,AF,2016-04-05T05:30:49.031Z,AADA,Agency for Assistance and Development of Afghanistan,National NGO,2020-08-13T11:11:53.053Z
+5937b07ce323f3a3180b6c6a,AF,2017-06-07T07:51:24.891Z,AHDAA,Agency for Humanitarian Development Assistance for Afghanistan,National NGO,2017-08-23T04:37:33.916Z
+596af75d823c138d3011de93,AF,2017-07-16T05:19:25.603Z,AREA,Agency for Rehabilitation and Energy Conservation in Afghanistan,National NGO,2022-05-29T05:34:51.904Z
+58f60610fa34238327cc3247,AF,2017-04-18T12:26:56.054Z,ARAA,Ansari Rehabilitation Association for Afghanistan,National NGO,2022-02-03T05:03:16.409Z
+5742a4ba5d2c01113bcf78ef,AF,2016-05-23T06:35:38.799Z,CAF,Care of Afghan Families,National NGO,2022-06-04T05:43:09.788Z
+58eb27bce59c4ae36e94223f,AF,2017-04-10T06:35:40.953Z,CAWC,Central Afghanistan Welfare Committee,National NGO,2020-02-19T09:43:25.130Z
+5adb6c0aec394e5736a9bdbc,AF,2018-04-21T16:51:22.814Z,CWSA,Community World Service Asia,National NGO,2022-07-09T09:07:23.058Z
+58e2032c16a5ecf870710709,AF,2017-04-03T08:09:16.016Z,CoAR,Coordination of Afghan Relief,National NGO,2022-07-07T06:47:47.992Z
+56fd04090c68f2c746e3f834,AF,2016-03-31T11:03:37.900Z,CHA,Coordination of Humanitarian Assistance,National NGO,2022-06-08T09:48:31.561Z
+58eb7267e59c4ae36e9427c8,AF,2017-04-10T11:54:15.865Z,CRDSA,Coordination of Rehabilitation and Development Services for Afghanistan,National NGO,2022-08-17T06:59:06.736Z
+57417d745d2c01113bcf78d5,AF,2016-05-22T09:35:48.262Z,DAO,Development and Ability Organization,National NGO,2018-09-26T07:16:37.406Z
+596c51d1823c138d3012338b,AF,2017-07-17T05:57:37.819Z,DHSA,Development and Humanitarian Services for Afghanistan,National NGO,2021-08-08T06:08:29.395Z
+5c173895d752ea3643cb7b42,AF,2018-12-17T05:48:05.698Z,ECW,Empowerment Center for Women,National NGO,2020-07-07T04:18:30.736Z
+58e47c8383d5283b32a7ddc7,AF,2017-04-05T05:11:31.069Z,FRDO,Female Rehabilitation Development Organization,National NGO,2017-04-05T05:11:31.069Z
+596599f0823c138d3010c197,AF,2017-07-12T03:39:28.465Z,FGA,Future Generations Afghanistan,National NGO,2017-10-02T04:54:32.191Z
+5c3c1163a1e8e189397e4026,AF,2019-01-14T04:34:43.738Z,GAALO,Green Afghanistan Agriculture & Livestock Organization,National NGO,2019-01-14T04:34:43.738Z
+5b023f3b704f0cf5309fb799,AF,2018-05-21T03:38:35.882Z,HEWAD,Hewad Reconstruction on Health and Humanitarian Assistance Committee,National NGO,2018-05-21T03:38:35.882Z
+58e4a062a25419ca1118471a,AF,2017-04-05T07:44:34.349Z,HRDA,Human Resource Development Agency,National NGO,2021-11-27T06:55:50.239Z
+5c5969296ee4b3c112d3b62d,AF,2019-02-05T10:44:57.946Z,HAPA,Humanitarian Action for People of Afghanistan,National NGO,2022-02-28T05:16:23.594Z
+596af7a3823c138d3011de95,AF,2017-07-16T05:20:35.695Z,HADAAF,Humanitarian Assistance and Development Association for Afghanistan,National NGO,2022-02-07T13:46:55.293Z
+58e207b516a5ecf870710711,AF,2017-04-03T08:28:37.385Z,NCRO,New Constancy and Relief Organization,National NGO,2021-08-04T13:33:57.962Z
+5a34fbe899155d41122bcbea,AF,2017-12-16T10:56:40.295Z,ORD,Organization for Relief and Development,National NGO,2022-05-10T04:54:55.397Z
+5774a92354e03b883ffa285d,AF,2016-06-30T05:07:47.552Z,ORCD,Organization for Research and Community Development,National NGO,2022-05-25T05:58:11.018Z
+596af6a3823c138d3011de8d,AF,2017-07-16T05:16:19.503Z,OHPM,Organization of Health and Program Management,National NGO,2017-07-16T05:24:30.115Z
+5912b6075573b10a5f4a9390,AF,2017-05-10T06:41:11.265Z,OHW,Organization of Human Welfare,National NGO,2022-08-27T09:17:19.861Z
+5ac9b5d67f21d73d2ddf39cf,AF,2018-04-08T06:25:26.830Z,PRB,Partners in Revitalization and Building,National NGO,2021-04-07T05:51:26.904Z
+58e4793a83d5283b32a7ddac,AF,2017-04-05T04:57:30.490Z,PACO,People's Action for Change Organization,National NGO,2021-11-17T16:31:35.200Z
+596af649823c138d3011de89,AF,2017-07-16T05:14:49.768Z,RAADA,Rehabilitation Association and Agriculture Development for¬†Afghanistan,National NGO,2019-02-10T12:04:00.974Z
+58e2059c16a5ecf87071070f,AF,2017-04-03T08:19:40.284Z,RCDC,Rural Capacity Development Committee,National NGO,2022-04-05T02:04:22.957Z
+5c5bc310e86f3f1e45c044bf,AF,2019-02-07T05:33:04.695Z,SDRO,Samin Development and Rehabilitation Organization,National NGO,2019-02-07T06:21:34.080Z
+59d461435b9412592448e916,AF,2017-10-04T04:19:15.597Z,SDO,Sanayee Development Organization,National NGO,2018-01-10T09:25:15.220Z
+56f8c9b82059bf2e23663e98,AF,2016-03-28T06:05:44.295Z,SHRDO,Serve Health Relief and Development Organization,National NGO,2017-03-19T09:19:55.488Z
+5a5441e6ecb3b9fb0f460ce9,AF,2018-01-09T04:15:34.104Z,SVA,Shanti Volunteer Association,National NGO,2018-05-21T02:58:18.946Z
+595cad7a9705078609221d7e,AF,2017-07-05T09:12:26.703Z,Skateistan,Skateistan,National NGO,2017-07-05T09:12:26.703Z
+596af677823c138d3011de8b,AF,2017-07-16T05:15:35.665Z,SAF,Solidarity for Afghan Families,National NGO,2021-10-11T04:39:25.758Z
+594b607971f6c2a56741e1e0,AF,2017-06-22T06:15:21.152Z,Tabish,Tabish Social Health Education Organisation,National NGO,2018-05-24T06:43:28.107Z
+596af41a823c138d3011de7e,AF,2017-07-16T05:05:30.684Z,TLO,The Liaison Office,National NGO,2017-11-06T05:08:18.981Z
+58e328c79da5ef972fbc9876,AF,2017-04-04T05:01:59.392Z,WSTA,Watan Social and Technical Services Association,National NGO,2022-06-06T05:12:18.404Z
+59a52185795abfbf68bb802e,AF,2017-08-29T08:10:45.521Z,WADAN,Welfare Association for Development of Afghanistan,National NGO,2017-08-29T09:44:09.302Z
+57049cdbeb3e39094c00d7e5,AF,2016-04-06T05:21:31.905Z,YHDO,Youth Health and Development Organization,National NGO,2022-01-05T15:48:49.871Z
+56ff49200c68f2c746e3f83a,AF,2016-04-02T04:22:56.846Z,ARCS,Afghan Red Crescent Society,Red Cross and Red Crescent Movement,2020-03-05T05:33:15.441Z
+5aee9ef7ec394e5736b33ec4,AF,2018-05-06T06:21:43.673Z,UNAMA,United Nations Assistance Mission in Afghanistan,United Nations,2020-08-12T09:23:06.444Z
+5abb977f315352a4735a9676,ALL,2018-03-28T13:24:15.192Z,EC,European Commission,Donor,2018-03-28T13:24:15.192Z
+5afc3ea1704f0cf5309cbbfc,ALL,2018-05-16T14:22:25.490Z,USAID,United States Agency for International Development,Donor,2018-05-16T14:22:25.490Z
+58e204d616a5ecf87071070b,ALL,2017-04-03T08:16:22.035Z,AAH,Action Against Hunger,International NGO,2022-08-23T09:11:03.491Z
+5c59646fb1eee2651e911577,ALL,2019-02-05T10:24:47.342Z,ActionAid,ActionAid,International NGO,2020-12-10T07:12:45.748Z
+59b7b7d23785774e7043a1c9,ALL,2017-09-12T10:32:50.095Z,ADRA,Adventist Development and Relief Agency,International NGO,2022-02-09T07:22:12.020Z
+58e32afb9da5ef972fbc98a4,ALL,2017-04-04T05:11:23.766Z,CARE,Care International,International NGO,2022-06-21T05:33:34.134Z
+5c029dcf3e7ee3a1245bce5b,ALL,2018-12-01T14:42:23.923Z,CARITAS,Caritas International,International NGO,2018-12-01T14:42:23.923Z
+5c29daa7479d531a506a8014,ALL,2018-12-31T09:00:23.482Z,CRS,Catholic Relief Services,International NGO,2022-01-04T06:20:56.446Z
+58e1ff2716a5ecf8707106fb,ALL,2017-04-03T07:52:07.268Z,CAID,Christian Aid,International NGO,2020-02-05T06:51:12.533Z
+58e9c38097302c316d0f8162,ALL,2017-04-09T05:15:44.589Z,CWW,Concern World Wide,International NGO,2022-04-11T15:32:02.966Z
+58e3284c9da5ef972fbc9863,ALL,2017-04-04T04:59:56.354Z,DRC,Danish Refugee Council,International NGO,2022-08-14T08:37:47.001Z
+sidihistoricoorg00006762,ALL,2019-06-11T10:00:00Z,GIZ,Deutsche Gesellschaft f√ºr Internationale Zusammenarbeit,International NGO,2019-06-11T10:00:00Z
+5bfb1dc8686aa9754f979b96,ALL,2018-11-25T22:10:16.489Z,FHI-360,Family Health International 360,International NGO,2018-11-25T22:10:16.489Z
+5742a0e55d2c01113bcf78eb,ALL,2016-05-23T06:19:17.065Z,HI,Handicap International,International NGO,2022-06-09T10:46:49.262Z
+5cc8147258afab79417c84b1,ALL,2019-04-30T09:25:06.771Z,Help Age,Help Age International,International NGO,2019-04-30T09:25:06.771Z
+5c7cc65b5f5820cc0bf70fe4,ALL,2019-03-04T06:31:55.029Z,ICCO,ICCO Cooperation,International NGO,2019-03-04T06:31:55.029Z
+56cd8cde0765b9215e67acb7,ALL,2016-02-24T10:58:38.347Z,iMMAP,iMMAP,International NGO,2022-09-07T07:15:48.538Z
+56fd83370c68f2c746e3f838,ALL,2016-03-31T20:06:15.549Z,IMC,International Medical Corps,International NGO,2022-08-14T07:44:19.407Z
+58e2109b16a5ecf870710761,ALL,2017-04-03T09:06:35.943Z,IRC,International Rescue Committee,International NGO,2022-09-07T01:42:18.324Z
+59a12a0d795abfbf68ba7bfa,ALL,2017-08-26T07:58:05.770Z,INTERSOS,Intersos - Humanitarian Organization for Emergency,International NGO,2022-08-03T18:34:53.482Z
+58e328a99da5ef972fbc9869,ALL,2017-04-04T05:01:29.130Z,IR,Islamic Relief,International NGO,2020-12-06T11:08:33.112Z
+5770f328e9d5aea04e5dff6b,ALL,2016-06-27T09:34:32.156Z,Johanniter,Johanniter International,International NGO,2021-07-18T11:50:25.431Z
+58e4797d83d5283b32a7ddb2,ALL,2017-04-05T04:58:37.835Z,MEDAIR,MEDAIR,International NGO,2022-02-07T07:20:32.259Z
+5cc8140f6796a2ca4bb391f7,ALL,2019-04-30T09:23:27.362Z,MTI,Medical Team International,International NGO,2019-04-30T09:23:27.362Z
+5bb988e9cf0485140da58077,ALL,2018-10-07T04:17:45.597Z,MercyCorps,Mercy Corps,International NGO,2022-09-06T09:14:12.228Z
+5b163a0a704f0cf530aadc59,ALL,2018-06-05T07:21:46.658Z,MHI,Muslim Hands,International NGO,2021-06-16T10:11:32.234Z
+58e9c33997302c316d0f815e,ALL,2017-04-09T05:14:33.152Z,NCA,Norwegian Church Aid,International NGO,2022-08-09T05:31:38.574Z
+58e3283b9da5ef972fbc9861,ALL,2017-04-04T04:59:39.840Z,NRC,Norwegian Refugee Council,International NGO,2021-11-22T17:14:18.891Z
+58eef8af5a1e869d152a4bc9,ALL,2017-04-13T04:03:59.865Z,OXFAM,OXFAM,International NGO,2021-01-27T06:22:44.100Z
+59f190ed43cd76e142ea85ff,ALL,2017-10-26T07:38:21.502Z,PIN,People in Need,International NGO,2020-12-02T08:57:12.930Z
+5cbecb3e9380228d6f1810d9,ALL,2019-04-23T08:22:22.388Z,PLAN,Plan Internacional,International NGO,2019-04-23T08:22:22.388Z
+5c77d0905f5820cc0bf70198,ALL,2019-02-28T12:14:08.902Z,QCH,Qatar Charity,International NGO,2019-02-28T12:14:08.902Z
+58e1fbc316a5ecf8707106f2,ALL,2017-04-03T07:37:39.899Z,RI,Relief International,International NGO,2022-06-28T06:16:28.229Z
+5742a1a95d2c01113bcf78ed,ALL,2016-05-23T06:22:33.309Z,SCI,Save The Children,International NGO,2022-08-07T17:50:46.710Z
+58eb1726e59c4ae36e942014,ALL,2017-04-10T05:24:54.968Z,SI,Solidarites International,International NGO,2022-07-31T09:16:19.360Z
+5bfd67bb4ec62a932b366e8d,ALL,2018-11-27T15:50:19.222Z,Tearfund,Tearfund,International NGO,2018-11-27T15:50:19.222Z
+5742a0995d2c01113bcf78e9,ALL,2016-05-23T06:18:01.276Z,TDH,Terre des Hommes,International NGO,2022-02-07T04:16:53.045Z
+58e329a79da5ef972fbc987a,ALL,2017-04-04T05:05:43.924Z,WC-UK,War Child UK,International NGO,2022-03-30T09:49:42.242Z
+58e204f416a5ecf87071070d,ALL,2017-04-03T08:16:52.553Z,WVI,World Vision International,International NGO,2022-08-07T16:45:27.162Z
+58e2024b16a5ecf870710703,ALL,2017-04-03T08:05:31.076Z,ZOA,ZOA International,International NGO,2021-02-23T05:01:29.534Z
+5c029f3f3e7ee3a1245bce61,ALL,2018-12-01T14:48:31.041Z,BRAC,Building Resources Across Communities,International NGO,2018-12-01T14:48:31.041Z
+5cc8145258afab79417c84ae,ALL,2019-04-30T09:24:34.279Z,CPI,Counter Part International,International NGO,2019-04-30T09:24:34.279Z
+5c02a212c7eb9d9a2410b0a4,ALL,2018-12-01T15:00:34.175Z,DCA,DanChurchAid,International NGO,2018-12-01T15:00:34.175Z
+5cc814606796a2ca4bb39204,ALL,2019-04-30T09:24:48.500Z,FH,Food for the Hungry,International NGO,2019-04-30T09:24:48.500Z
+5cc814f058afab79417c84c4,ALL,2019-04-30T09:27:12.212Z,GK-MI,Gonoshsthaya Kendra - Malteser International,International NGO,2019-04-30T09:27:12.212Z
+5cbecf7037208bca7c6628ce,ALL,2019-04-23T08:40:16.883Z,HEKS/EPER,Heks Eper,International NGO,2019-04-23T08:40:16.883Z
+5c029d7ec7eb9d9a2410b0a1,ALL,2018-12-01T14:41:02.485Z,HELVETAS,"Helvetas, Swiss Association for International Cooperation",International NGO,2018-12-01T14:41:02.485Z
+5cc813fd58afab79417c84ab,ALL,2019-04-30T09:23:09.661Z,Hope Foundation,Hope Foundation,International NGO,2019-04-30T09:23:09.661Z
+5ca49c0bbbe169c817be5977,ALL,2019-04-03T11:42:03.195Z,MA,Medica Afghanistan,National NGO,2019-04-16T10:50:25.910Z
+5ad83f339683744d5dae1339,ALL,2018-04-19T07:03:15.012Z,PAC,Physicians Across Continents (PAC),National NGO,2018-04-19T07:03:15.012Z
+5c6a6051886b24487b558b9c,ALL,2019-02-18T07:35:45.865Z,IFRC,International Federation of Red Cross and Red Crescent Societies,Red Cross and Red Crescent Movement,2020-07-07T07:57:55.572Z
+5b3333ac6ddc8c27127426ad,ALL,2018-06-27T06:50:20.459Z,QRCS,Qatar Red Crescent Society,Red Cross and Red Crescent Movement,2022-08-16T06:02:30.375Z
+5afc91df704f0cf5309ce808,ALL,2018-05-16T20:17:35.702Z,UNHABITAT,United Nations Human Settlements Programme,United Nations,2020-08-12T09:23:05.792Z
+58e47a2383d5283b32a7ddb6,ALL,2017-04-05T05:01:23.745Z,FAO,Food and Agriculture Organization,United Nations,2021-06-03T07:38:51.562Z
+58e9d4e997302c316d0f8496,ALL,2017-04-09T06:30:01.675Z,IOM,International Organization for Migration,United Nations,2022-08-11T04:55:37.594Z
+56d31c078c873467027e1d59,ALL,2016-02-28T16:10:47.672Z,OCHA,Office for the Coordination of Humanitarian Affairs,United Nations,2016-08-02T10:55:43.779Z
+5b3aca1a8e703fe74c21af07,ALL,2018-07-03T00:58:02.613Z,WB,The World Bank,United Nations,2018-07-03T00:58:02.613Z
+58e1f9d816a5ecf8707106f0,ALL,2017-04-03T07:29:28.220Z,UNICEF,United Nations Children's Fund,United Nations,2022-06-08T06:08:11.736Z
+5bc2ebd935709a9e34b5cf0c,ALL,2018-10-14T07:10:17.096Z,UNDP,United Nations Development Programme,United Nations,2018-10-14T07:10:17.096Z
+58e1fff316a5ecf8707106ff,ALL,2017-04-03T07:55:31.727Z,UNHCR,United Nations High Commissioner for Refugees,United Nations,2022-09-04T08:48:21.707Z
+58e331b39da5ef972fbc98c2,ALL,2017-04-04T05:40:03.177Z,UNMAS,United Nations Mine Action Service,United Nations,2017-10-09T10:38:08.262Z
+5a519a0aecb3b9fb0f44ff49,ALL,2018-01-07T03:54:50.819Z,UNOPS,United Nations Office for Project Services,United Nations,2018-01-07T03:54:50.819Z
+56f762932059bf2e23663e96,ALL,2016-03-27T04:33:23.095Z,UNFPA,United Nations Population Fund,United Nations,2020-08-12T09:22:54.527Z
+58eddc7e1fff36e81ec95dcb,ALL,2017-04-12T07:51:26.969Z,WFP,World Food Programme,United Nations,2020-05-05T07:02:14.756Z
+56cdc7318c873467027e1d48,ALL,2016-02-24T15:07:29.801Z,WHO,World Health Organization,United Nations,2021-11-11T06:20:50.234Z
+5c029d12c7eb9d9a2410b09e,ALL,2018-12-01T14:39:14.862Z,UNWOMEN,United Nations Entity for Gender Equality and the Empowerment of Women,United Nations,2018-12-01T14:39:14.862Z
+5be10f40460eb32d3be75919,CB,2018-11-06T03:49:20.320Z,ISCG,Inter Sector Coordination Group,International NGO,2018-11-06T03:49:20.320Z
+5c90b2b91e71a6df2edd6bd3,CB,2019-03-19T09:13:29.509Z,CIMMYT,International Maize and Wheat Improvement Center (CIMMYT),International NGO,2019-03-19T09:13:29.509Z
+5cc814ac6796a2ca4bb39209,CB,2019-04-30T09:26:04.114Z,MFH,Malaysian Field Hospital,International NGO,2019-04-30T09:26:04.114Z
+5cc814a058afab79417c84b7,CB,2019-04-30T09:25:52.047Z,PWJ,Peace Winds Japan,International NGO,2021-03-08T08:14:22.270Z
+5cc81e6358afab79417c84e5,CB,2019-04-30T10:07:31.261Z,AGRAJATTRA,Agrajattra Samaj Unnayan Sangstha,National NGO,2019-04-30T10:07:31.261Z
+5cc8155258afab79417c84d0,CB,2019-04-30T09:28:50.999Z,Friendship,Friendship,National NGO,2019-04-30T09:28:50.999Z
+5cc8180d58afab79417c84db,CB,2019-04-30T09:40:29.757Z,HMBD-Foundation,HMBD Foundation,National NGO,2020-02-16T11:54:19.869Z
+5cc817356796a2ca4bb39acb,CB,2019-04-30T09:36:53.490Z,Hope Foundation for Women and Children,Hope Foundation for Women and Children of Bangladesh,National NGO,2019-04-30T09:36:53.490Z
+5c7778eb5d8f0ad60bbe243a,CB,2019-02-28T06:00:11.707Z,MUKTI,Mukti,National NGO,2019-02-28T06:00:11.707Z
+5cc814126796a2ca4bb391fa,CB,2019-04-30T09:23:30.846Z,RTMI,Research Training and Management International,National NGO,2019-04-30T09:23:30.846Z
+5c7e6aef5d8f0ad60bbe41b5,CB,2019-03-05T12:26:23.957Z,RIC,Resource Integration Centre,National NGO,2019-03-05T12:26:23.957Z
+5cc814ef58afab79417c84c1,CB,2019-04-30T09:27:11.147Z,SWISS-RC,Swiss Red Cresent,Red Cross and Red Crescent Movement,2019-04-30T09:27:11.147Z
+sidihistoricoorg00002372,COL,2019-06-11T10:00:00Z,DANE,Departamento Administrativo Nacional de Estad√≠stica,Government,2019-06-11T10:00:00Z
+nuevocolombiaorg00000008,COL,2019-05-20T19:50:30.126+0005,hospital nuestra se√±ora del perpetuo socorro,Hospital nuestra se√±ora del perpetuo socorro,Government,2019-06-06T19:24:41.759+0005
+5cd0f64e7057142c220d2f80,COL,2019-06-11T10:00:00Z,MINSALUD,Ministerio de Salud y Protecci√≥n Social,Government,2019-06-11T10:00:00Z
+sidihistoricoorg00006719,COL,2019-06-11T10:00:00Z,UARIV,Unidad de Atencion y Reparaci√≥n Integral A V√≠ctimas,Government,2019-06-11T10:00:00Z
+sidihistoricoorg00007889,COL,2019-05-20T19:50:26.759+0000,ACH,Acci√≥n contra el Hambre,International NGO,2019-05-21T21:12:18.922+0000
+sidihistoricoorg00005736,COL,2019-06-11T10:00:00Z,AISC,Aldeas Infantiles Sos Colombia Bogot√°,International NGO,2019-06-11T10:00:00Z
+sidihistoricoorg00004337,COL,2019-06-11T10:00:00Z,APS,Alianza Por La Solidaridad Nari√±o,International NGO,2019-06-11T10:00:00Z
+sidihistoricoorg00000689,COL,2019-06-11T10:00:00Z,AF,Americares Foundation,International NGO,2019-06-11T10:00:00Z
+sidihistoricoorg00002483,COL,2019-06-11T10:00:00Z,NPAID,Ayuda Popular Noruega,International NGO,2019-06-11T10:00:00Z
+sidihistoricoorg00007986,COL,2019-05-20T19:50:30.126+0000,CEPAL,Comisi√≥n Econ√≥mica para Am√©rica Latina y el Caribe,International NGO,2019-06-06T19:24:41.759+0000
+sidihistoricoorg00007821,COL,2019-05-10T16:39:03.926+0000,DDG,Danish Demining Group,International NGO,2019-05-10T16:39:03.935+0000
+sidihistoricoorg00000038,COL,2019-06-11T10:00:00Z,Diakonie Katastrophenhilfe,Diakonie Katastrophenhilfe,International NGO,2019-06-11T10:00:00Z
+sidihistoricoorg00007328,COL,2019-06-11T10:00:00Z,FLM,Federaci√≥n Luterana Mundial,International NGO,2019-06-11T10:00:00Z
+sidihistoricoorg00000041,COL,2019-06-11T10:00:00Z,FUPAD,Fundaci√≥n Panamericana para el Desarrollo,International NGO,2019-06-11T10:00:00Z
+sidihistoricoorg00000051,COL,2019-06-11T10:00:00Z,FSC,Fundaci√≥n Save The Children,International NGO,2019-06-11T10:00:00Z
+nuevocolombiaorg00000024,COL,2019-07-22T15:57:49.417Z,Fundaci√≥n Terre des Hommes,Fundaci√≥n Terre des Hommes,International NGO,2019-07-24T20:01:35.027Z
+sidihistoricoorg00005554,COL,2019-06-11T10:00:00Z,Fundaci√≥n Plan,Fundacion Plan,International NGO,2019-06-11T10:00:00Z
+sidihistoricoorg00008439,COL,2019-08-21T19:22:47.242Z,HT,Halo Trust,International NGO,2019-08-21T19:22:47.242Z
+sidihistoricoorg00006756,COL,2019-06-11T10:00:00Z,H.A.I Choc√≥,Heartland Alliance For Human Needs And Human Rights Choc√≥,International NGO,2019-06-11T10:00:00Z
+sidihistoricoorg00007820,COL,"ISODate(""2019-03-28T15:22:43.178+0000"")",PERIGEO,PERIGEO,International NGO,"ISODate(""2019-06-15T05:46:48.926+0000"")"
+sidihistoricoorg00005708,COL,2019-06-11T10:00:00Z,ACCCM,Asociaci√≥n Campa√±a Colombiana Contra Minas,National NGO,2019-06-11T10:00:00Z
+nuevocolombiaorg00000012,COL,2019-05-20T19:50:30.126+0009,APOYAR,Asociaci√≥n de apoyo al desarrollo,National NGO,2019-06-06T19:24:41.759+0009
+nuevocolombiaorg00000022,COL,2019-05-20T19:50:30.126+0019,Asociaci√≥n Cabildos Indigenas de Zona Norte del Cauca,Asociacion de Cabildos Indigenas de Zona Norte del Cauca,National NGO,2019-06-06T19:24:41.759+0019
+nuevocolombiaorg00000016,COL,2019-05-20T19:50:30.126+0013,Asociacion de la Red Interetnica de Parteras y Parteros del Departamento del Choc√≥,Asociacion de la Red Interetnica de Parteras y Parteros del Departamento del Choc√≥o,National NGO,2019-06-06T19:24:41.759+0013
+nuevocolombiaorg00000018,COL,2019-05-20T19:50:30.126+0015,Corporaci√≥n centro de estudios de derecho justicia y sociedad,Corporaci√≥n centro de estudios de derecho justicia y sociedad,National NGO,2019-06-06T19:24:41.759+0015
+nuevocolombiaorg00000011,COL,2019-05-20T19:50:30.126+0008,Corporaci√≥n juntos construyendo futuro,Corporaci√≥n juntos construyendo futuro,National NGO,2019-06-06T19:24:41.759+0008
+nuevocolombiaorg00000002,COL,"ISODate(""2019-07-11T13:22:43.703+0000"")",Corporaci√≥n paz y democracia,Corporaci√≥n paz y democracia,National NGO,"ISODate(""2019-07-11T13:22:43.703+0000"")"
+nuevocolombiaorg00000003,COL,2019-05-20T19:50:30.126+0000,corporaci√≥n region,Corporaci√≥n region,National NGO,2019-06-06T19:24:41.759+0000
+nuevocolombiaorg00000009,COL,2019-05-20T19:50:30.126+0006,corporacion mixta para la investiga y desarrollo de la educacion,Corporacion mixta para la investigaci√≥n y desarrollo de la educacion,National NGO,2019-06-06T19:24:41.759+0006
+nuevocolombiaorg00000013,COL,2019-05-20T19:50:30.126+0010,Diocesis de florencia,Diocesis de florencia,National NGO,2019-06-06T19:24:41.759+0010
+nuevocolombiaorg00000021,COL,2019-05-20T19:50:30.126+0018,Fundaci√≥n Alianza por los Derechos Igualdad y Solidaridad Internacional,Fundaci√≥n alianza por los derechos igualdad y la solidaridad internacional,National NGO,2019-06-06T19:24:41.759+0018
+sidihistoricoorg00005697,COL,2019-06-11T10:00:00Z,FAMF,Fundaci√≥n de Atenci√≥n Al Migrante Famig,National NGO,2019-06-11T10:00:00Z
+nuevocolombiaorg00000001,COL,2019-05-29T21:05:57.843+0003,Fundaci√≥n escuela nueva volvamos a la gente,Fundaci√≥n escuela nueva volvamos a la gente,National NGO,2019-05-29T21:05:57.849+0003
+nuevocolombiaorg00000004,COL,2019-05-20T19:50:30.126+0001,Fundaci√≥n renacer,Fundaci√≥n renacer,National NGO,2019-06-06T19:24:41.759+0001
+nuevocolombiaorg00000017,COL,2019-05-20T19:50:30.126+0014,Fundaci√≥n significarte,Fundaci√≥n significarte,National NGO,2019-06-06T19:24:41.759+0014
+nuevocolombiaorg00000020,COL,2019-05-20T19:50:30.126+0017,fundacion cultural y social 5ta con crew,fundacion cultural y social 5ta con crew,National NGO,2019-06-06T19:24:41.759+0017
+nuevocolombiaorg00000007,COL,2019-05-20T19:50:30.126+0004,Fundamor,Fundacion dar amor,National NGO,2019-06-06T19:24:41.759+0004
+nuevocolombiaorg00000005,COL,2019-05-20T19:50:30.126+0002,fundacion de promocion integral y trabajo comunitario corazon de maria,fundacion de promocion integral y trabajo comunitario corazon de maria,National NGO,2019-06-06T19:24:41.759+0002
+nuevocolombiaorg00000019,COL,2019-05-20T19:50:30.126+0016,Fundaci√≥n Guajira Naciente,Fundacion La Guajira naciente,National NGO,2019-06-06T19:24:41.759+0016
+sidihistoricoorg00005505,COL,2019-06-11T10:00:00Z,FTDP,Fundacion Tierra de Paz,National NGO,2019-06-11T10:00:00Z
+nuevocolombiaorg00000015,COL,2019-05-20T19:50:30.126+0012,LIMPAL,Liga internacional de mujeres por la libertad limpal colombia,National NGO,2019-06-06T19:24:41.759+0012
+nuevocolombiaorg00000010,COL,2019-05-20T19:50:30.126+0007,resguardo ind√≠gena awa el gran saba,Resguardo ind√≠gena awa el gran saba,National NGO,2019-06-06T19:24:41.759+0007
+sidihistoricoorg00000524,COL,2019-06-11T10:00:00Z,SJR,Servicio Jesuita A Refugiados,National NGO,2019-06-11T10:00:00Z
+nuevocolombiaorg00000006,COL,2019-05-20T19:50:30.126+0003,Uoafroc,Unidad de organizaciones afrocaucanas,National NGO,2019-06-06T19:24:41.759+0003
+sidihistoricoorg00000019,COL,2019-06-11T10:00:00Z,CRC,Cruz Roja Colombiana,Red Cross and Red Crescent Movement,2019-06-11T10:00:00Z
+5c519b6a13b8c4724f72eca3,ET,2019-01-30T12:41:14.224Z,NDRMC,National Disaster Risk Management Commission,Government,2019-01-30T13:12:15.739Z
+5af14245ec394e5736b48053,ET,2018-05-08T06:23:01.445Z,ChildFund,ChildFund,International NGO,2018-05-08T06:23:01.445Z
+5a3a0e0967c87c2e4306e97f,ET,2017-12-20T07:15:21.493Z,CCM,Comitato Collaborazione Medica,International NGO,2021-06-02T07:04:24.207Z
+5a8fbae825d353777c706c43,ET,2018-02-23T06:55:36.406Z,GOAL,GOAL,International NGO,2021-06-03T07:42:14.112Z
+59faf25ddf5edb7a6c4ca50b,ET,2017-11-02T10:24:29.137Z,MCMDO,Mothers and Children Multisectoral Development Organisation,International NGO,2017-11-02T10:24:29.137Z
+5a3a066f67c87c2e4306e8cf,ET,2017-12-20T06:42:55.251Z,WAHA,Women And Health Alliance International,International NGO,2018-02-07T15:01:06.474Z
+5b28feff704f0cf530b50a6d,ET,2018-06-19T13:02:55.627Z,ASAARO,Afghan Social and Agriculture Affairs Rehabilitation Organization,National NGO,2018-06-19T13:04:23.548Z
+5a0e7b5822347b4b5044d4a1,ET,2017-11-17T06:02:00.001Z,BWHO,Badakhshan Women Help Organization,National NGO,2017-11-17T06:02:00.001Z
+5a38ef7a99155d41122d45c7,ET,2017-12-19T10:52:42.948Z,OWDA,Organization for Welfare and Development in Action,National NGO,2017-12-19T10:52:42.948Z
+5bfd2ee84ec62a932b36554b,ET,2018-11-27T11:47:52.916Z,ERCS,Ethiopian Red Cross Society,Red Cross and Red Crescent Movement,2019-02-08T12:11:57.360Z
+5bfb17159114c97f4fe93a45,NG,2018-11-25T21:41:41.532Z,CIDAR,Center for Integrated Development and Research,International NGO,2018-11-25T21:41:41.532Z
+5ca8a2ece13008320ae511eb,NG,2019-04-06T13:00:28.103Z,FREE,Foundation for Refugee Economic Empowerment,International NGO,2019-04-06T13:00:28.103Z
+5bfaceec686aa9754f97775d,NG,2018-11-25T16:33:48.875Z,LETSAI,Learning Through Skills Acquisition Initiative,International NGO,2018-11-25T16:33:48.875Z
+5bfd4f1d961f01513743427d,NG,2018-11-27T14:05:17.124Z,LINDII,Lindii Peace Foundation,International NGO,2018-11-27T14:05:17.124Z
+5bfd84694ec62a932b367aa4,NG,2018-11-27T17:52:41.161Z,MAL,Malteser International,International NGO,2018-11-27T17:52:41.161Z
+5ca991f4e7af5b4527776ccb,NG,2019-04-07T06:00:20.257Z,GREENCODE,Green Concern for Development,National NGO,2019-04-07T06:00:20.257Z
+5c5c2c955338f1a7262597d4,NG,2019-02-07T13:03:17.484Z,KABHUDA,Kanem Borno Human Development Association,National NGO,2019-02-07T13:03:17.484Z
+5c6621da0412ff78675a6af4,NG,2019-02-15T02:20:10.665Z,PALRI,Peacebuilding and Livelihood Restoration Initiative,National NGO,2019-02-15T02:20:10.665Z
+5c7ffdc45d8f0ad60bbe4428,NG,2019-03-06T17:05:08.847Z,SAF,Sheriff Aid Foundation,National NGO,2019-03-06T17:05:08.847Z
+5bfd76074ec62a932b367295,NG,2018-11-27T16:51:19.319Z,YIPDI,Youth Integrated For Positive Development Initiative,National NGO,2018-11-27T16:51:19.319Z
+5c03a5ecc7eb9d9a2411012d,SO,2018-12-02T09:29:16.413Z,ADRO,Agricultural Development and Relief Organisation,International NGO,2018-12-02T09:29:16.413Z
+5b8e1b62b9ff65d576693505,SO,2018-09-04T05:42:58.302Z,CISP,Comitato Internazionale per lo Sviluppo dei Popoli,International NGO,2018-12-30T07:04:20.739Z
+5b8f80f6447f5d6f29df7ced,SO,2018-09-05T07:08:38.995Z,CESVI,Cooperazione e Sviluppo Fondazione Onlus,International NGO,2018-09-05T07:08:38.995Z
+5ca9c035250d2f8b5dcef144,SO,2019-04-07T09:17:41.212Z,DIRECT AID,Direct Aid,International NGO,2019-04-07T09:17:41.212Z
+5bfd807e961f015137434e98,SO,2018-11-27T17:35:58.252Z,HIJRA,Humanitarian Initiative Just Relief Aid,International NGO,2018-11-27T17:35:58.252Z
+5c6502130412ff78675a10f6,SO,2019-02-14T05:52:19.186Z,MSF,M√©decins Sans Fronti√®res (Doctors Without Borders),International NGO,2019-02-14T05:52:19.186Z
+5bc81c23fa02b94362cc3d79,SO,2018-10-18T05:37:39.250Z,MDM,Medecins du Monde,International NGO,2018-10-18T05:37:39.250Z
+5cc61412d78921a502d34982,SO,2019-04-28T20:58:58.332Z,Mercy-USA,Mercy-USA for Aid and Development,International NGO,2019-04-28T20:58:58.332Z
+5c99fd2f25861c797521f183,SO,2019-03-26T10:21:35.452Z,MAUK-SO,Muslim Aid UK -Somalia,International NGO,2019-03-26T10:21:35.452Z
+5bcad3d14fa13f1617f077f3,SO,2018-10-20T07:05:53.583Z,NWO,New Ways Organisation,International NGO,2018-10-20T07:05:53.583Z
+5c459314a1e8e1893981360e,SO,2019-01-21T09:38:28.241Z,SAF-UK,Skills Active Forward United Kingdom,International NGO,2019-01-21T09:38:28.241Z
+5b9f55e5e292fb823c11f28b,SO,2018-09-17T07:21:09.360Z,SK,Swisso-Kalmo,International NGO,2018-09-17T07:21:09.360Z
+5c63cdae2484fcaf42d2849c,SO,2019-02-13T07:56:30.209Z,Trocaire,Trocaire,International NGO,2022-07-18T08:43:23.597Z
+5c06521a329e9b79310e9c3b,SO,2018-12-04T10:08:26.398Z,AADS,Agency for Assistance and Development of Somalia,National NGO,2018-12-04T10:08:26.398Z
+5bc58e1efd4c272657162328,SO,2018-10-16T07:07:10.511Z,ARC,America Refugees Committee,National NGO,2019-03-06T11:52:39.094Z
+5bcd8f20fa02b94362cdcc2a,SO,2018-10-22T08:49:36.348Z,AYUUB,AYUUB,National NGO,2019-04-02T09:09:57.087Z
+5b8d5b5eb9ff65d57668c2c2,SO,2018-09-03T16:03:42.461Z,BTSC,Burhakaba Town Section Committee,National NGO,2019-08-10T10:55:21.765Z
+5bfd07ef961f01513743292c,SO,2018-11-27T09:01:35.923Z,CPD,Centre for Peace and Democracy,National NGO,2018-11-27T09:01:35.923Z
+5c98ab8425861c797521f0a8,SO,2019-03-25T10:20:52.264Z,DMO,Deeg-Roor Medical Organization,National NGO,2019-03-25T10:20:52.264Z
+5c10d6117ff138ac2083b62d,SO,2018-12-12T09:34:09.642Z,DEH,DEH Relief International,National NGO,2018-12-12T09:34:09.642Z
+5caca081b7dc5bb861606888,SO,2019-04-09T13:39:13.856Z,GMF,Galkayo Medical Foundation,National NGO,2019-04-22T11:09:00.075Z
+5c33a5248767ca7776da314e,SO,2019-01-07T19:14:44.883Z,GREDO,Gargaar Relief and Development organization,National NGO,2019-01-07T19:14:44.883Z
+5c4ad491aca6817b0a43be00,SO,2019-01-25T09:19:13.885Z,GEWDO,Gedo Women Development Organization,National NGO,2019-01-25T09:19:13.885Z
+5c515b6913b8c4724f72b7d5,SO,2019-01-30T08:08:09.595Z,HIMILO,Himilo Relief and Development Association,National NGO,2021-06-05T11:21:15.154Z
+5c9c76930c4f666f75255a4a,SO,2019-03-28T07:24:03.400Z,HIRDO,Horn International Relief and Development Organization,National NGO,2019-03-28T07:24:03.400Z
+5c9c77d70c4f666f75255a4e,SO,2019-03-28T07:29:27.181Z,HDC,Human Development Concern,National NGO,2020-01-01T13:52:06.858Z
+5ca6445b9b7a9ce2321c7448,SO,2019-04-04T17:52:27.120Z,LRDO,Livelihood Relief & Development Organization,National NGO,2020-03-01T15:46:54.134Z
+5c8001205f5820cc0bf71d9e,SO,2019-03-06T17:19:28.567Z,MARDO,Mandher Relief and Development Organization,National NGO,2021-02-10T06:03:57.839Z
+5c51586613b8c4724f72b7ce,SO,2019-01-30T07:55:18.593Z,NASDO,Nolol Awareness and Social Development Organization,National NGO,2019-01-30T07:55:18.593Z
+5c514bec13b8c4724f72af21,SO,2019-01-30T07:02:04.099Z,OSPAD,Organization For Somalis' Protection And Development,National NGO,2019-01-30T07:02:04.099Z
+5c973d220c4f666f752545c2,SO,2019-03-24T08:17:38.104Z,PMWDO,Puntland Minority Women Development Organization,National NGO,2019-04-08T20:22:23.962Z
+5ca4b59a574d08ab5944f5cd,SO,2019-04-03T13:31:06.868Z,RDA,Regional Development Association,National NGO,2019-04-03T13:31:06.868Z
+5c7d01445f5820cc0bf714cf,SO,2019-03-04T10:43:16.476Z,READO,Rural Education and Agriculture Development Organization,National NGO,2019-03-04T10:43:16.476Z
+5cc461a28dc95aab022dd969,SO,2019-04-27T14:05:22.846Z,SAMA,Salama Medical Agency,National NGO,2021-11-01T07:16:18.284Z
+5c067732047bcdff0b09bfaf,SO,2018-12-04T12:46:42.393Z,SHARDO,Shabelle Relief and Development Organization,National NGO,2018-12-04T12:46:42.393Z
+5bfd05c74ec62a932b363ff6,SO,2018-11-27T08:52:23.729Z,SomaliAID,Somali Aid,National NGO,2018-11-27T08:52:23.729Z
+5c9a92ec0c4f666f752548db,SO,2019-03-26T21:00:28.761Z,SOVA,Somali Vulnerable Actors,National NGO,2019-03-26T22:31:16.171Z
+5c6ba9011669e26b7edd0f9d,SO,2019-02-19T06:58:09.302Z,SOYDA,Somali Young Doctors Association,National NGO,2019-02-19T06:58:09.302Z
+5c45914ca1e8e189398131e1,SO,2019-01-21T09:30:52.348Z,SCO,Somalia Conservation Organization,National NGO,2019-05-15T09:54:03.037Z
+5c4b4609aca6817b0a43db50,SO,2019-01-25T17:23:21.807Z,SODAS,Somalia Development Association in the South,National NGO,2019-01-25T17:23:21.807Z
+5c51564513b8c4724f72b7cb,SO,2019-01-30T07:46:13.077Z,SOS-CV,SOS Children's Village Somalia,National NGO,2020-10-25T06:37:47.408Z
+5cc1c278b69a73734978545c,SO,2019-04-25T14:21:44.557Z,TASS,Tadamun Social Society,National NGO,2019-04-25T14:21:44.557Z
+5ca1a3821091b3db08910cac,SO,2019-04-01T05:37:06.802Z,WRRS,Wamo Relief and Rehabilitation Service,National NGO,2019-04-01T05:37:06.802Z
+5c471474a1e8e18939819aaa,SO,2019-01-22T13:02:44.844Z,WARDI,Wardi Relief and Development Initiatives,National NGO,2019-01-22T13:02:44.844Z
+5c078c1d92846f5a54f879bb,SO,2018-12-05T08:28:13.891Z,ZAM,Zamzam,National NGO,2018-12-05T08:28:13.891Z

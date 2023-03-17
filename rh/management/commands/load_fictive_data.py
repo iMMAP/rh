@@ -270,13 +270,13 @@ class Command(BaseCommand):
 
 
         # Load Countries
-        Country.objects.all().delete()
-        for _ in range(2):
-            c = fake.unique.countries()
-            c = ast.literal_eval(c)
-            Country.objects.create(code=c['code'], name=c['name'])
-        countries_count = Country.objects.all().count()
-        self.stdout.write(self.style.SUCCESS(f"Number of Countries Created: {countries_count}"))
+        # Country.objects.all().delete()
+        # for _ in range(2):
+        #     c = fake.unique.countries()
+        #     c = ast.literal_eval(c)
+        #     Country.objects.create(code=c['code'], name=c['name'])
+        # countries_count = Country.objects.all().count()
+        # self.stdout.write(self.style.SUCCESS(f"Number of Countries Created: {countries_count}"))
 
         
         # Load Clusters
@@ -331,7 +331,7 @@ class Command(BaseCommand):
                                         code=code, type=type
                                     )
             for c in Country.objects.order_by('?')[0:fake.unique_number(records_range=3)]:
-                organization.countires.add(c.id)
+                organization.countries.add(c.id)
         organizations_count = Organization.objects.all().count()
         self.stdout.write(self.style.SUCCESS(f"Number of Organizations Created: {organizations_count}"))
         

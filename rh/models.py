@@ -1,36 +1,14 @@
 from django.db import models
 
-
-class Country(models.Model): 
-    """Countries Model"""
-    name = models.CharField(max_length=200)
-    code = models.CharField(max_length=200, blank=True, null=True)
-    code2 = models.CharField(max_length=200, blank=True, null=True)
-
-    def __str__(self):
-        return self.name
-    
-    class Meta:
-        verbose_name = 'Country'
-        verbose_name_plural = "Countries"
-    
-
-class Cluster(models.Model):
-    """Clusters Model"""
-
-    old_code = models.CharField(max_length=200, blank=True, null=True)
-    code = models.CharField(max_length=200, blank=True, null=True)
-    old_title = models.CharField(max_length=200, blank=True, null=True)
-    title = models.CharField(max_length=200, blank=True, null=True)
-
-    def __str__(self):
-        return self.title
+NAME_MAX_LENGTH = 300
+DESCRIPTION_MAX_LENGTH = 600
 
 
 class Location(models.Model):
     """Locations Model"""
 
     LOCATION_TYPES = [
+        ('All', 'ALL'),
         ('Country', 'Country'),
         ('Province', 'Province'),
         ('District', 'District'),
@@ -53,61 +31,151 @@ class Location(models.Model):
     def __str__(self):
         return self.name
 
+# class Location(models.Model):
+#     """Locations Model"""
+
+#     LOCATION_TYPES = [
+#         ('Country', 'Country'),
+#         ('Province', 'Province'),
+#         ('District', 'District'),
+#     ]
+#     admin0_pcode = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
+#     admin0_na_en = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
+#     admin0_translation = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
+
+#     admin1_pcode = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
+#     admin1_na_en = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
+#     admin1_translation = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
+
+#     admin2_pcode = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
+#     admin2_na_en = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
+#     admin2_translation = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
+
+#     admin2_lat = models.FloatField(blank=True, null=True)
+#     admin2_long = models.FloatField(blank=True, null=True)
+
+#     admin3_pcode = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
+#     admin3_na_en = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
+#     admin3_translation = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
+
+#     admin4_pcode = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
+#     admin4_na_en = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
+#     admin4_translation = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
+    
+#     type = models.CharField(
+#         max_length=15,
+#         choices=LOCATION_TYPES,
+#         default='Country', null=True, blank=True
+#     )
+
+#     def __str__(self):
+#         name = self.admin0_na_en
+#         if self.admin4_na_en:
+#             name = self.admin4_na_en
+#         elif self.admin3_na_en:
+#             name = self.admin3_na_en
+#         elif self.admin2_na_en:
+#             name = self.admin2_na_en
+#         elif self.admin1_na_en:
+#             name = self.admin1_na_en
+
+#         return name
+    
+
+class Cluster(models.Model):
+    """Clusters Model"""
+
+    old_code = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
+    code = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
+    old_title = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
+    title = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
+    ocha_code = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
+
+    def __str__(self):
+        return self.title
+
+
+class BeneficiaryType(models.Model):
+    """Beneficiary Types Model"""
+    name = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
+    code = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
+    location = models.ForeignKey(Location, blank=True, null=True, on_delete=models.SET_NULL,)
+    description = models.CharField(max_length=DESCRIPTION_MAX_LENGTH, blank=True, null=True)
+    start_date = models.DateTimeField(blank=True, null=True)
+    end_date = models.DateTimeField(blank=True, null=True)
+    old_id =  models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
+
+    def __str__(self):
+        return self.name
+    
+    class Meta:
+        verbose_name = 'Beneficiary Type'
+        verbose_name_plural = "Beneficiary Types"
+
 
 class Organization(models.Model):
     """Organizations Model"""
-    countires = models.ManyToManyField(Country)
-    name = models.CharField(max_length=200)
-    code = models.CharField(max_length=200)
-    type = models.CharField(max_length=200)
+    location = models.ForeignKey(Location, blank=True, null=True, on_delete=models.SET_NULL,)
+    name = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
+    code = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
+    type = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
     updated_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
+    old_id =  models.CharField("Old ID", max_length=NAME_MAX_LENGTH, blank=True, null=True)
 
     def __str__(self):
         return self.name
 
 
-class Doner(models.Model):
-    project_donor_id =  models.CharField(max_length=200, blank=True, null=True)
-    project_donor_name =  models.CharField(max_length=200, blank=True, null=True)
-    country = models.ForeignKey(Country, blank=True, null=True, on_delete=models.SET_NULL,)
+class Donor(models.Model):
+    code =  models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
+    name =  models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
+    location = models.ForeignKey(Location, blank=True, null=True, on_delete=models.SET_NULL,)
     cluster = models.ForeignKey(Cluster, blank=True, null=True, on_delete=models.SET_NULL,)
+    start_date = models.DateTimeField(blank=True, null=True)
+    end_date = models.DateTimeField(blank=True, null=True)
+    old_id =  models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
 
     def __str__(self):
-        return self.project_donor_name
+        return self.name
     
     class Meta:
-        verbose_name = 'Doner'
-        verbose_name_plural = "Doners"
+        verbose_name = 'Donor'
+        verbose_name_plural = "Donors"
 
 
-# class ActivityType(models.Model):
-#     """"""
-#     title = models.CharField(max_length=200)
-#     clusters = models.ManyToManyField(Cluster)
-
-
-class Activity(models.Model):
-    """Activities model"""
-    active = models.BooleanField(default=True)
-    ocha_code = models.CharField(max_length=200, blank=True, null=True)
-    title = models.CharField(max_length=200)
-    clusters = models.ManyToManyField(Cluster)
-    indicator = models.TextField(blank=True, null=True)
-    description = models.CharField(max_length=200, blank=True, null=True)
-    detail = models.CharField(max_length=200, blank=True, null=True)
-    countries = models.ManyToManyField(Country)
-    fields = models.JSONField(blank=True, null=True, default=dict)
-    created_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
-    updated_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
+class StrategicObjective(models.Model):
+    """Objectives"""
+    strategic_objective_name = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
+    strategic_objective_description = models.CharField(max_length=DESCRIPTION_MAX_LENGTH, blank=True, null=True)
+    output_objective_name = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
+    sector_objective_name = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
+    sector_objective_description = models.CharField(max_length=DESCRIPTION_MAX_LENGTH, blank=True, null=True)
+    denominator = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
 
     def __str__(self):
-        return f"[{self.title}]- {self.detail or self.description}"
+        return self.name
     
     class Meta:
-        verbose_name = 'Activity'
-        verbose_name_plural = "Activities"
+        verbose_name = 'Objective'
+        verbose_name_plural = "Objectives"
+
+
+class Indicator(models.Model):
+    """Indicators"""
+    code = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
+    name = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
+    numerator = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
+    denominator = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
+    description = models.CharField(max_length=DESCRIPTION_MAX_LENGTH, blank=True, null=True)
+
+    def __str__(self):
+        return self.name
     
+    class Meta:
+        verbose_name = 'Indicator'
+        verbose_name_plural = "Indicators"
+
 
 class Currency(models.Model):
     """Currencies model"""
@@ -121,14 +189,41 @@ class Currency(models.Model):
         verbose_name_plural = "Currencies"
 
 
+class Activity(models.Model):
+    """Activities model"""
+    active = models.BooleanField(default=True)
+    activity_date = models.DateTimeField(auto_now_add=True, blank=True, null=True)
+    hrp_code = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
+    code_indicator = models.BooleanField(default=False, blank=True, null=True)
+    code = models.CharField(max_length=DESCRIPTION_MAX_LENGTH, blank=True, null=True)
+    name = models.CharField(max_length=DESCRIPTION_MAX_LENGTH, blank=True, null=True)
+    subdomain_code = models.CharField(max_length=DESCRIPTION_MAX_LENGTH, blank=True, null=True)
+    subdomain_name = models.CharField(max_length=DESCRIPTION_MAX_LENGTH, blank=True, null=True)
+    locations = models.ManyToManyField(Location)
+    clusters = models.ManyToManyField(Cluster)
+    indicator = models.ForeignKey(Indicator, on_delete=models.SET_NULL, blank=True, null=True)
+    objective_id = models.ForeignKey(StrategicObjective, on_delete=models.SET_NULL, blank=True, null=True)
+    start_date = models.DateTimeField(auto_now_add=True, blank=True, null=True)
+    end_date = models.DateTimeField(auto_now_add=True, blank=True, null=True)
+    fields = models.JSONField(blank=True, null=True, default=dict)
+    old_id =  models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
+    ocha_code = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
+
+    def __str__(self):
+        return f"[{self.name}]- {self.subdomain_name}"
+    
+    class Meta:
+        verbose_name = 'Activity'
+        verbose_name_plural = "Activities"
+    
+
 class Project(models.Model):
     """Projects model"""
     user = models.ForeignKey('accounts.Account', on_delete=models.SET_NULL, null=True, blank=True)
-    code = models.CharField(max_length=200, null=True, blank=True)
-    title = models.CharField(max_length=500)
+    code = models.CharField(max_length=NAME_MAX_LENGTH, null=True, blank=True)
+    title = models.CharField(max_length=NAME_MAX_LENGTH)
     description = models.TextField(blank=True, null=True)
     clusters = models.ManyToManyField(Cluster)
-    # activity_type = models.ForeignKey(ActivityType, on_delete=models.SET_NULL)
     activities = models.ManyToManyField(Activity)
     locations = models.ManyToManyField(Location)
     start_date = models.DateTimeField('start date')

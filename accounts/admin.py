@@ -82,9 +82,9 @@ class AccountAdmin(UserAdmin):
             },
         ),
     )
-    list_display = ("username", "name", "email", "is_staff", "visits")
+    list_display = ("username", "name", "email", "is_staff", "visits", "last_login")
     list_filter = ("is_staff", "is_superuser", "is_active", "groups", "cluster")
-    search_fields = ("username", 'name', "email", "cluster", "organization")
+    search_fields = ("username", 'name', "email", "cluster__title", "organization__name")
 admin.site.register(Account, AccountAdmin)
 # Move the User model to auth section
 # apps.get_model('rh.User')._meta.app_label = 'auth'

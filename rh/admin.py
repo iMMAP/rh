@@ -1,5 +1,6 @@
 from django.utils.translation import gettext_lazy as _
 # from django.utils.safestring import mark_safe    
+from django.contrib.admin import SimpleListFilter
 
 # from django.urls import reverse
 
@@ -37,7 +38,7 @@ def get_app_list(self, request):
                 "Countries": 4,
                 "Clusters": 5,
                 "Locations": 6,
-                "Doners": 7,
+                "Donors": 7,
                 "Organizations": 8,
                 "Activities": 9,
                 "Projects": 10,
@@ -64,17 +65,18 @@ admin.site.register(Currency)
 ##############################################
 ############ Country Model Admin #############
 ##############################################
-class CountryAdmin(admin.ModelAdmin):
-    list_display = ('name', 'code')
-    search_fields = ('name', 'code')
-admin.site.register(Country, CountryAdmin)
+# class CountryAdmin(admin.ModelAdmin):
+#     list_display = ('name', 'code')
+#     search_fields = ('name', 'code')
+# admin.site.register(Country, CountryAdmin)
 
 
 ##############################################
 ############ Cluster Model Admin #############
 ##############################################
+
 class ClusterAdmin(admin.ModelAdmin):
-    list_display = ('old_code', 'code', 'old_title', 'title')
+    list_display = ('code', 'title', 'old_code', 'old_title')
     search_fields = ('old_code', 'code', 'old_title', 'title',)
     list_filter = ('code', 'old_code',)
 admin.site.register(Cluster, ClusterAdmin)
@@ -86,54 +88,70 @@ admin.site.register(Cluster, ClusterAdmin)
 class LocationAdmin(admin.ModelAdmin):
     list_display = ('name', 'parent', 'code', 'level', 'original_name', 'type')
     list_filter = ('level', 'type')
-    search_fields = ('name', 'parent', 'level', 'type')
+    search_fields = ('name', 'parent__name', 'level', 'type')
 admin.site.register(Location, LocationAdmin)
 
 
 ##############################################
 ######### Organization Model Admin ###########
 ##############################################
-class OrganizationAdmin(admin.ModelAdmin):
-    list_display = ('name', 'code', 'type', 'show_countries')
-    search_fields = ('name', 'countires__name', 'type')
-    list_filter = ('type', 'countires')
+# class CountryFilter(SimpleListFilter):
+#     title = 'Country' # or use _('country') for translated title
+#     parameter_name = 'Country'
 
-    def show_countries(self, obj):
+#     def lookups(self, request, model_admin):
+#         countries = set([c.locations.filter(type='Country') for c in model_admin.model.objects.all()])
+#         return [(c.id, c.name) for c in countries] + [
+#           ('AFRICA', 'AFRICA - ALL')]
+
+#     def queryset(self, request, queryset):
+#         if self.value() == 'AFRICA':
+#             return queryset.filter(country__continent='Africa')
+#         if self.value():
+#             return queryset.filter(country__id__exact=self.value())
+
+class OrganizationAdmin(admin.ModelAdmin):
+    list_display = ('name', 'code', 'type', 'location')
+    search_fields = ('name', 'location', 'type')
+    list_filter = ('type', 'location')
+    # list_filter = ('type', CountryFilter)
+
+    def show_locations(self, obj):
         """
-        Show countries as Manytomany fields can't be 
+        Show locations as Manytomany fields can't be 
         placed directly in list view or search
         """
-        return ",\n".join([a.name for a in obj.countires.all()])
-    show_countries.short_description = 'Countries'
+        return ",\n".join([a.name for a in obj.locations.all()])
+    show_locations.short_description = 'Locations'
 
 admin.site.register(Organization, OrganizationAdmin)
 
 
 ##############################################
-######### Doner Model Admin ###########
+######### Donor Model Admin ###########
 ##############################################
-class DonerAdmin(admin.ModelAdmin):
-    list_display = ('project_donor_name', 'project_donor_id', 'country', 'cluster')
-    search_fields = ('project_donor_id', 'project_donor_name', 'cluster__title', 'country__name')
-    list_filter = ('cluster', 'country')
-admin.site.register(Doner, DonerAdmin)
+class DonorAdmin(admin.ModelAdmin):
+    list_display = ('name', 'location', 'cluster')
+    search_fields = ('project_donor_id', 'name', 'cluster__title')
+    list_filter = ('cluster', 'location')
+admin.site.register(Donor, DonorAdmin)
 
 
 ##############################################
 ############ Activity Model Admin ############
 ##############################################
 class ActivityAdmin(admin.ModelAdmin):
-    list_display = ('title', 'detail', 'description', 'show_clusters', 'show_countries', 'indicator', 'active')
-    search_fields = ('title', 'clusters__title', 'active', 'description', 'detail')
-    list_filter = ('active', 'clusters', 'countries__name')
+    list_display = ('name', 'subdomain_name', 'show_clusters', 'show_locations', 'active')
+    search_fields = ('name', 'clusters__title', 'active', 'description', 'subdomain_code')
+    list_filter = ('active', 'clusters', 'locations__name')
 
     def show_clusters(self, obj):
         return ",\n".join([a.title for a in obj.clusters.all()])
     show_clusters.short_description = 'Clusters'
 
-    def show_countries(self, obj):
-        return ",\n".join([a.name for a in obj.countries.all()])
-    show_countries.short_description = 'Countries'
+    def show_locations(self, obj):
+        return ",\n".join([a.name for a in obj.locations.all()])
+    show_locations.short_description = 'Locations'
 admin.site.register(Activity, ActivityAdmin)
 
 

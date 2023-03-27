@@ -3,7 +3,11 @@ from datetime import datetime
 import sqlite3
 import pandas as pd
 import traceback
-import json
+import psycopg2
+import sqlalchemy
+
+
+
 
 
 # from myapp.models import MyModel
@@ -112,6 +116,16 @@ class DataImporter():
         Returns a SqliteClient instance.
         """
         return sqlite3.connect(dbname)
+    
+    
+    def get_postgres_client(self, dbname):
+
+
+        engine = sqlalchemy.create_engine('postgresql://postgres:f4d11447@localhost/rhtest')
+
+        # engine = sqlalchemy.create_engine('impala://', creator=conn)
+        return engine
+
 
 
     def import_currencies_from_csv(self, connection, currencies_csv):
@@ -320,74 +334,101 @@ class DataImporter():
         df = pd.read_csv(users_csv)
 
         if len(df)>0:
-            table = "accounts_account"
+            table = "auth_user"
             
             df.to_sql('tmp_accounts', connection, if_exists='replace', index=False)
 
             try:
-                c.execute("select _id,admin0pcode,cluster_id,createdAt,email,last_logged_in,name,organization_id,password,phone,position,skype,status,username,visits from tmp_accounts")
+                c.execute("select admin0pcode,cluster_id,name,organization_id,phone,position,username,skype,visits from tmp_accounts")
+                profile_info = c.fetchall()
+                c.execute("select createdAt,email,last_logged_in,password,status,username from tmp_accounts")
                 users = c.fetchall()
-                for user in users:
-                    user = list(user)
-                    status = user[-3]
-
-                    skype = user[11]
+                profiles_list = []
+                for profile in profile_info:
+                    profile = list(profile)
+                    skype = profile[-2]
                     if not skype:
-                        user[11] = None
-
-                    if status == 'active':
-                        user[-3] = True
-
-                    if not user[-2]:
-                        continue
-
-                    location = user[1]
-                    cluster = user[2]
-                    organization = user[7]
-                    password = user[8]
-                    if password:
-                        user[8] = 'bcrypt$' + password
-
-                    user.append(False)
-                    user.append(False)
-
-
+                        profile[-2] = None
+                    location = profile[0]
+                    cluster = profile[1]
+                    organization = profile[3]
                     if location:
                         c.execute(f"select id from rh_location where code='{location}'")
                         location_id = c.fetchone()
                         if location_id:
-                            user[1] = location_id[0]
+                            profile[0] = location_id[0]
                         else:
-                            user[1] = None
+                            profile[0] = None
 
 
                     if cluster:
                         c.execute(f"select id from rh_cluster where code='{cluster}' or old_code='{cluster}'")
                         cluster_id = c.fetchone()
                         if cluster_id:
-                            user[2] = cluster_id[0]
+                            profile[1] = cluster_id[0]
                         else:
-                            user[2] = None
+                            profile[1] = None
 
                     
                     if organization:
                         c.execute(f"select id from rh_organization where old_id='{organization}'")
                         organization_id = c.fetchone()
                         if organization_id:
-                            user[7] = organization_id[0]
+                            profile[3] = organization_id[0]
                         else:
-                            user[7] = None
-                            
+                            profile[3] = None
+                    profile = tuple(profile)
+                    profiles_list.append(profile)
+                
+                for user in users:
+                    user = list(user)
+                    status = user[-2]
+                    user.append(False)
+                    user.append(False)
+                    user.append('a')
+                    user.append('b')
 
+                    if status == 'active':
+                        user[-2] = True
+
+                    if not user[5]:
+                        continue
+                    
+                    password = user[3]
+                    if password:
+                        user[3] = 'bcrypt$' + password
+
+
+                        
                     # user = ['NULL' if a==None else a for a in user]
                     user = tuple(user)
                     aquery = f"""
                             insert into 
-                            {table}(old_id, location_id, cluster_id, date_joined, email, last_login, name, organization_id, password, phone, position, skype, is_active, username, visits, is_superuser, is_staff) 
-                            values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                            {table}(date_joined, email, last_login, password, is_active, username, is_superuser, is_staff, last_name, first_name) 
+                            values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                         """
     
                     c.execute(aquery, user)
+                    user_id = c.lastrowid
+
+
+                    c.execute(f"select username from {table} where id={user_id}")
+                    db_user = c.fetchone()
+                    print("USER: ", db_user)
+
+                    u_profile = next(item for item in profiles_list if db_user[0] in item)
+                    if u_profile:
+                        u_profile = list(u_profile)
+                        u_profile.pop(-3)
+                        u_profile.insert(0, user_id)
+                        u_profile = tuple(u_profile)
+                    pquery = f"""
+                            insert into 
+                            users_profile(user_id,location_id,organization_id,name,visits,cluster_id,phone,position,skype) 
+                            values (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                        """
+                    c.execute(pquery, u_profile)
+
 
                 c.execute("DROP TABLE tmp_accounts;")
             except Exception as e:
@@ -478,6 +519,7 @@ importer = DataImporter(test=TEST)
 # mongo_client = importer.get_mongo_client()
 
 connection = importer.get_sqlite_client(SQLITEDB_PATH)
+# connection = importer.get_postgres_client(SQLITEDB_PATH)
 
 # Use Collections for import
 # ngmHealthCluster = mongo_client.ngmHealthCluster

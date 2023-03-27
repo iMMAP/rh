@@ -1,61 +1,237 @@
 <!-- templates/_base.html -->
-
-{% load compress %}
 {% load static %}
 
 <!DOCTYPE html>
 <html lang="en">
   <head>
-      <meta charset="UTF-8">
-      <meta http-equiv="X-UA-Compatible" content="IE=edge">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>ReportHub</title>
+    <meta charset="utf-8" />
+    <title>Immap</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0 " />
+    <meta name="description" content=" " />
+    <meta name="keywords" content=" " />
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Open+Sans&display=swap" rel="stylesheet" />
+    <link rel="apple-touch-icon" sizes="180x180" src="{% static 'rh/images/favicon/apple-touch-icon.png' %}" />
+    <link rel="icon" type="image/png" sizes="32x32" src="{% static 'rh/images/favicon/favicon-32x32.png' %}"/>
+    <link rel="icon" type="image/png" sizes="16x16" src="{% static 'rh/images/favicon/favicon-16x16.png' %}"/>
+    <link rel="manifest" src="{% static 'rh/images/favicon/site.webmanifest' %}" />
+    <link rel="mask-icon" src="{% static 'rh/images/favicon/safari-pinned-tab.svg' %}" color="#5bbad5"/>
 
-      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
-      <script src="https://kit.fontawesome.com/13b141ad00.js" crossorigin="anonymous"></script>
-      <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-      <script src="https://code.jquery.com/jquery-3.6.1.slim.min.js" integrity="sha256-w8CvhFs7iHNVUtnSP0YKEg00p9Ih13rlL9zGqvLdePA=" crossorigin="anonymous"></script>
+    <meta name="msapplication-TileColor" content="#da532c" />
+    <meta name="theme-color" content="#ffffff" />
+    
+    <noscript>
+      <style>
+        /**  * Reinstate scrolling for non-JS clients  */
+        .simplebar-content-wrapper {
+          scrollbar-width: auto;
+          -ms-overflow-style: auto;
+        }
+
+        .simplebar-content-wrapper::-webkit-scrollbar,
+        .simplebar-hide-scrollbar::-webkit-scrollbar {
+          display: initial;
+          width: initial;
+          height: initial;
+        }
+      </style>
+    </noscript>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <link rel="stylesheet" href="{% static 'rh/css/style.css' %}">
   </head>
 
-  <body style="background-color: #f6f1f1">
-    <nav class="navbar navbar-expand-lg bg-light">
-      <div class="container-fluid">
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <a class="navbar-brand" href="/">
-          <i class="fa-solid fa-arrows-spin" style="color: #002B5B;"></i>&nbsp;
-          ReportHub
-        </a>
-        <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
-          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+  <body class="">
+    <div class="wrapper" id="wrapper">
+      <div class="wrapper-inner">
+        
+        <header class="header logged-in" id="header">
+          <div class="container">
+            <div class="logo-holder">
+              <strong class="logo">
+                <a href="{% url 'index' %}">
+                  <img src="{% static 'rh/images/immap-logo.svg' %}" alt="IMMAP" />
+                </a>
+              </strong>
+              <strong class="logo-text">ReportHub</strong>
+            </div>
             
-          </ul>
-          <ul class="navbar-nav">
-              {% if user.is_superuser %}
-                <a class="nav-link" href="{% url 'admin:index' %}"><i class="fa-solid fa-screwdriver-wrench"></i>&nbsp;Admin</a>
-              {% endif %}
-              {% if user.is_authenticated %}
-              <li>
-                <a class="nav-link" href="{% url 'profile' %}"><i class="fa-solid fa-user"></i>&nbsp;Profile</a>
-              </li>
-              <li>
-                <a class="nav-link" href="{% url 'logout' %}"><i class="fa-solid fa-power-off"></i>&nbsp;Sign out</a>
-              </li>
-              {% else %}
-              <li>
-                <a class="nav-link" href="{% url 'login' %}"><i class="fa-solid fa-user"></i>&nbsp;Login</a>
-              </li>
-              {% endif %}
-          </ul>
-          
-        </div>
-      </div>
-    </nav>
-    {% block content %}
-    {% endblock content %}
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa" crossorigin="anonymous"></script>
-    {% csrf_token %}
-  </body>
+            
+            {% if user.is_authenticated %}
+            <button type="button" class="mobile-menu-opener">
+              <span class="bar bar1"></span>
+              <span class="bar bar2"></span>
+              <span class="bar bar3"></span>
+              <span class="bar bar4"></span>
+            </button>
 
+            <div class="mobile-menu-holder">
+              <ul class="main-nav">
+                <li class="main-nav-item current">
+                  <a class="main-nav-link" href="#"> My Projects </a>
+                </li>
+      
+                <li class="main-nav-item">
+                  <a class="main-nav-link" href="#"> My Stock </a>
+                </li>
+      
+                <li class="main-nav-item">
+                  <a class="main-nav-link" href="#"> Admin Dashboard </a>
+                </li>
+      
+                <li class="main-nav-item">
+                  <a class="main-nav-link" href="#"> Account </a>
+      
+                  <div class="inner-drop">
+                    <ul class="inner-nav">
+                      <li class="inner-nav-item">
+                        <a class="inner-nav-link" href="{% url 'profile' %}"> My Profile </a>
+                      </li>
+      
+                      <li class="inner-nav-item">
+                        <a class="inner-nav-link" href="#"> My Cluster/Org </a>
+                      </li>
+      
+                      <li class="inner-nav-item">
+                        <a href="{% url 'logout' %}" class="inner-nav-link logout-link"> Logout </a>
+                      </li>
+                    </ul>
+                  </div>
+                </li>
+              </ul>
+            </div>
+              
+            {% else %}
+            <div class="header-options-wrapper">
+              <a href="{% url 'login' %}" class="btn btn-red">Login</a>
+        
+              <a href="{% url 'register' %}" class="btn btn-gray-outline">Register</a>
+        
+            </div>
+            {% endif %}
+              
+              
+          </div>
+        </header>
+        
+        <main id="main" class="main">
+        {% block content %}
+        
+        {% endblock content %}
+        </main>
+
+        <footer class="footer">
+          <div class="container">
+            <div class="footer-inner">
+              <div class="logo-holder">
+                <strong class="logo">
+                  <a href="#">
+                    <img src="{% static 'rh/images/immap-logo.svg' %}" alt="image description" />
+                  </a>
+                </strong>
+                <strong class="logo-text">ReportHub</strong>
+              </div>
+              
+              {% if user.is_authenticated %}
+              <div class="footer-row">
+                <div class="footer-col">
+                  <span class="col-label">Contact us</span>
+
+                  <ul class="footer-list">
+                    <li>
+                      <a
+                        href="mailto:&#110;&#103;&#109;&#082;&#101;&#112;&#111;&#114;&#116;&#072;&#117;&#098;&#064;&#103;&#109;&#097;&#105;&#108;&#046;&#099;&#111;&#109;"
+                        style="text-decoration: none"
+                        >&#110;&#103;&#109;&#082;&#101;&#112;&#111;&#114;&#116;&#072;&#117;&#098;&#064;&#103;&#109;&#097;&#105;&#108;&#046;&#099;&#111;&#109;</a
+                      >
+                    </li>
+                  </ul>
+                </div>
+
+                <div class="footer-col">
+                  <span class="col-label">Help Desk</span>
+
+                  <ul class="footer-list">
+                    <li>
+                      <a href="#">Reporthub Service Desk</a>
+                    </li>
+                  </ul>
+                </div>
+
+                <div class="footer-col">
+                  <span class="col-label">Sources</span>
+
+                  <ul class="footer-list">
+                    <li>
+                      <a href="#">User Guides</a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              {% else %}
+              <div class="footer-row alt">
+                <div class="footer-col">
+                  <ul class="footer-list">
+                    <li>
+                      <span class="col-text">Meeting the Requirements of Humanitarian Reporting</span>
+                    </li>
+                  </ul>
+                </div>
+
+                <div class="footer-col">
+                  <div class="footer-info">
+                    <div class="block-top">
+                      <span class="block-label">Funded by:</span>
+
+                      <ul class="logos-list">
+                        <li>
+                          <a href="#">
+                            <img src="{% static 'rh/images/usaid.svg' %}" alt="image description" />
+                          </a>
+                        </li>
+                      </ul>
+                    </div>
+
+                    <div class="block-text">
+                      <p>
+                        ReportHub services is provided through the generous support of the American people, and is funded by United States Agency for International Development
+                        (USAID)
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="footer-col">
+                  <ul class="social-list">
+                    <li>
+                      <a href="#" target="_blank">
+                        <span class="icon-facebook"></span>
+                      </a>
+                    </li>
+
+                    <li>
+                      <a href="#" target="_blank">
+                        <span class="icon-twitter"></span>
+                      </a>
+                    </li>
+
+                    <li>
+                      <a href="#" target="_blank">
+                        <span class="icon-linkedin"></span>
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              {% endif %}
+              
+            </div>
+          </div>
+        </footer>
+      </div>
+    </div>
+    <script defer src="{% static 'rh/js/app.js' %}"></script>
+  </body>
 </html>

@@ -1,52 +1,71 @@
 {% extends '_base.html' %}
+{% load static %}
 
 {% block content %}
 
+<div class="login-section base-section">
+    <div class="decor-holder">
+    <img src="{% static 'rh/images/login-decor.png' %}" alt="Login" />
+    </div>
 
-<div class="container px-4 px-lg-5 h-100">
-    <div class="row h-100 align-items-center justify-content-center text-center">
-        <div class="col-lg-4 align-self-end">
-            <h1 class="m-5">Report Hub</h1>
-            
-            {% if messages %}
-                {% for message in messages %}
-                    {% if message.tags in 'info,warning,success' %}
-                        <div class="alert alert-{{ message.tags }}" role="alert">{{ message }}</div>
-                    {% elif message.tags == 'error' %}
-                        <div class="alert alert-danger" role="alert">{{ message }}</div>
-                    {% else %}
-                        <div class="alert alert-warning" role="alert">{{ message }}</div>
-                    {% endif %}
-                {% endfor %}
-            {% endif %}
-                
-            <p>Humanitarian Decision Support in Real-Time</p>
-            <p>Sign into your account</p>
-            <form method="POST" action="">
-                {% csrf_token %}
-                
-                {% if request.GET.next %}
-                    <input type="hidden" name="next" id="rh_next" value="{{ request.GET.next }}"/>
-                {% endif %}
-                    
-                <div class="mb-3">
-                    <input type="text" name="username" id="id_username" class="form-control" placeholder="Username"/>
-                </div>
-                <div class="mb-3">
-                    <input type="password" class="form-control" name="password" id="id_password" placeholder="Password"/>
-                </div>
-                <div class="mb-3 d-grid">
-                    <input type="submit" class="btn btn-outline-dark" value="Sign in"/>
-                </div>
-            </form>
-            <p class="text-muted mb-0">
-                <a href="{% url 'password_reset' %}" class="mb-0">Forgot password?</a>
-            </p> 
-            <p class="mb-0">
-                Don't have an account?
-                <a href="{% url 'register' %}" class="mb-0">Register</a>
+    <div class="container">
+    <div class="section-heading">
+        <h1 class="title">Login</h1>
+
+        <div class="description">
+        <div class="text">
+            <p>
+            Welcome to ReportHub, please LOGIN or REGISTER to continue
             </p>
         </div>
+        </div>
+    </div>
+    {% if messages %}
+        {% for message in messages %}
+        <div class="section-message-alert">
+            <div class="description">
+                <div class="text">
+                    <p class="error-message">{{ message }}</div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    {% endif %}
+    <form method="POST" action="#" class="login-form">
+        <div class="form-holder">
+            {% csrf_token %}
+                
+            {% if request.GET.next %}
+                <input type="hidden" name="next" id="rh_next" value="{{ request.GET.next }}"/>
+            {% endif %}
+
+            <div class="input-field is-required">
+                <label for="id_username">Username</label>
+                <div class="input-holder">
+                    <input type="text" name="username" id="id_username" class="form-control" placeholder="Username" required/>
+                </div>
+            </div>
+            <div class="input-field is-required">
+                <label for="id_password">Password</label>
+                <div class="input-holder">
+                    <input type="password" class="form-control" name="password" id="id_password" placeholder="Password" required/>
+                </div>
+            </div>
+
+            <div class="form-link-holder">
+                <a href="{% url 'password_reset' %}" class="form-link">Forgot password?</a>
+            </div>
+
+            <div class="btn-holder">
+                <button type="submit" class="btn btn-red">Login</button>
+            </div>
+            
+            <div class="form-link-holder text-center">
+                <a href="{% url 'register' %}" class="form-link">Don’t have an account? Register</a>
+            </div>
+        
+        </div>
+    </form>
     </div>
 </div>
 

@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 NAME_MAX_LENGTH = 300
 DESCRIPTION_MAX_LENGTH = 600
@@ -219,7 +220,8 @@ class Activity(models.Model):
 
 class Project(models.Model):
     """Projects model"""
-    user = models.ForeignKey('accounts.Account', on_delete=models.SET_NULL, null=True, blank=True)
+    
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
     code = models.CharField(max_length=NAME_MAX_LENGTH, null=True, blank=True)
     title = models.CharField(max_length=NAME_MAX_LENGTH)
     description = models.TextField(blank=True, null=True)

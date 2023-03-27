@@ -1,4 +1,3 @@
-import os
 import environ
 from pathlib import Path
 
@@ -14,7 +13,7 @@ environ.Env.read_env()
 SECRET_KEY = env("SECRET_KEY", default="unsafe-secret-key")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = env("DEBUG", default=True)
+DEBUG=True #env("DEBUG", default=True)
 
 # For Testing the registration email confirmation, make debug=True
 # DEBUG = False
@@ -24,7 +23,7 @@ ALLOWED_HOSTS = ['dev.reporthub.immap.org', '127.0.0.1']
 # Application definition
 INSTALLED_APPS = [
     'rh.apps.RhConfig',
-    'accounts.apps.AccountsConfig',
+    'users.apps.UsersConfig',
     'stock.apps.StockConfig',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -32,16 +31,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'compressor',
-    'crispy_forms',
-    'crispy_bootstrap5',
-    'mjml',
 ]
-
-MJML_BACKEND_MODE = 'cmd'
-MJML_EXEC_CMD = ['./node_modules/.bin/mjml', '--config.minify', 'true', '--config.validationLevel', 'strict']
-MJML_CHECK_CMD_ON_STARTUP = False
-
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -72,16 +62,6 @@ TEMPLATES = [
     },
 ]
 
-CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
-CRISPY_TEMPLATE_PACK = "bootstrap5"
-
-
-COMPRESS_ROOT = BASE_DIR / 'static'
-
-COMPRESS_ENABLED = True
-
-STATICFILES_FINDERS = ('compressor.finders.CompressorFinder',)
-
 WSGI_APPLICATION = 'wsgi.application'
 
 DATA_UPLOAD_MAX_NUMBER_FIELDS = 50240
@@ -95,6 +75,17 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#         'NAME': env("DB_NAME"),
+#         'USER': env("DB_USER"),
+#         'PASSWORD': env("DB_PASSWORD"),
+#         'HOST': env("DB_HOST"),
+#         'PORT': env("DB_PORT"),
+#     }
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
@@ -118,8 +109,6 @@ PASSWORD_HASHERS = [
     'django.contrib.auth.hashers.BCryptPasswordHasher',
 ]
 
-AUTH_USER_MODEL = 'accounts.Account'
-
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
 
@@ -135,7 +124,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
 STATIC_URL = 'static/'
-STATIC_ROOT = BASE_DIR / 'static/'
+STATIC_ROOT = BASE_DIR / 'static-cdn'
+STATICFILES_DIRS = [
+   BASE_DIR / "static",
+]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
@@ -159,5 +151,3 @@ EMAIL_PORT = env('EMAIL_PORT')  # 2525
 # EMAIL_HOST_USER = env('EMAIL_HOST_USER')
 # EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
 # EMAIL_PORT = env('EMAIL_PORT')  # 587
-
-PLAY_DB = env("PLAY_DB")

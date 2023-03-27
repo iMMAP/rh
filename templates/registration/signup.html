@@ -1,79 +1,82 @@
 {% extends '_base.html' %}
+{% load static %}
+
 
 {% block content %}
 
-
-<div class="container px-4 px-lg-5 h-100">
-    <div class="row h-100 align-items-center justify-content-center text-center">
-        <div class="col-lg-4 align-self-end">
-            <h1 class="m-5">Report Hub</h1>
-            
-            {% if messages %}
-                {% for message in messages %}
-                    {% if message.tags in 'info,warning,success' %}
-                        <div class="alert alert-{{ message.tags }}" role="alert">{{ message }}</div>
-                    {% elif message.tags == 'error' %}
-                        <div class="alert alert-danger" role="alert">{{ message }}</div>
-                    {% else %}
-                        <div class="alert alert-warning" role="alert">{{ message }}</div>
-                    {% endif %}
-                {% endfor %}
-            {% endif %}
-
-            <p>Humanitarian Decision Support in Real-Time</p>
-            <p>Create your account</p>
-            <form method="post" action="{% url 'register' %}">
-                {% csrf_token %}
-                <div class="mb-3">
-                    <input type="text" name="{{ form.name.html_name }}" id="{{ form.name.id_for_label }}" class="form-control" placeholder="Full Name" required>
-                </div>
-                <div class="mb-3">
-                    <input type="text" name="{{ form.username.html_name }}" id="{{ form.username.id_for_label }}" class="form-control" placeholder="Username" required/>
-                </div>
-                <div class="mb-3">
-                    <input type="text" name="{{ form.email.html_name }}" id="{{ form.email.id_for_label }}" class="form-control" placeholder="Email" required/>
-                </div>
-                <div class="mb-3">
-                    <input type="password" class="form-control" name="{{ form.password1.html_name }}" id="{{ form.password1.id_for_label }}" placeholder="Password" required/>
-                </div>
-                <div class="mb-3">
-                    <input type="password" class="form-control" name="{{ form.password2.html_name }}" id="{{ form.password2.id_for_label }}" placeholder="Confirm Password" required/>
-                    <span id='message'></span>
-                </div>
-                <div class="mb-3">
-                    <select class="form-select" aria-label="Select Organization" name="{{ form.organization.html_name }}" id="{{ form.organization.id_for_label}}" required>
-                        <option selected value=''>Select Organization</option>
-                        {% for organization in organizations %}
-                            <option value="{{ organization.id }}">{{organization.name}}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-                {% comment %} TODO: Add the other custom user details input here in future {% endcomment %}
-                <div class="mb-3 d-grid">
-                    <input type="submit" class="btn btn-outline-dark" value="Sign Up"/>
-                </div>
-            </form>
-            <p class="mb-0">
-                Already have an account?
-                <a href="{% url 'login' %}">Login</a>
-            </p>
-        </div>
+<div class="login-section sign-up base-section">
+    <div class="decor-holder">
+      <img src="{% static 'rh/images/login-decor.png' %}" alt="image description" />
     </div>
-</div>
 
-<script>
-    /* Check Password Validity */
-    var password = document.getElementById("id_password1");
-    var confirm_password = document.getElementById("id_password2");
-    function validatePassword(){  
-        if(password.value != confirm_password.value) {
-            confirm_password.setCustomValidity("Passwords Don't Match");
-        } else {
-            confirm_password.setCustomValidity('');
-        }
-    }
-    password.onchange = validatePassword;
-    confirm_password.onkeyup = validatePassword;
-</script>
+    <div class="container">
+      <div class="section-heading">
+        <h1 class="title">Create Account</h1>
+
+        <div class="description">
+          <div class="text">
+            <p>
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut non magna vel quam aliquet luctus. Duis imperdiet vel urna eu hendrerit. Suspendisse tristique
+              odio ac quam porta, at pulvinar enim varius.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {% if messages %}
+        {% for message in messages %}
+        <div class="section-message-alert">
+            <div class="description">
+                <div class="text">
+                    <p class="error-message">{{ message }}</div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    {% endif %}
+
+      <form action="#" method="POST" class="login-form">
+        {% csrf_token %}
+        <div class="form-holder">
+
+          {% for field in u_form %}
+            <div class="input-field">
+              {{ field.label_tag}}
+              <div class="input-holder">
+                  {{ field }}
+              </div>
+            </div>
+          {% endfor %}
+            {% for field in p_form %}
+            <div class="input-field">
+              {{ field.label_tag}}
+              <div class="input-holder">
+                  {{ field }}
+              </div>
+            </div>
+
+          {% endfor %}
+
+          <div class="input-check-holder">
+            <input type="checkbox" id="check1" required />
+            <label for="check1">
+              <span class="input"></span>
+              <span class="text"
+                >I accept the
+                <a href="#" class="terms-link">Terms and Conditions</a>
+              </span>
+            </label>
+          </div>
+          <div class="btn-holder">
+            <button type="submit" class="btn btn-red">Sign Up</button>
+          </div>
+          <div class="form-link-holder text-center">
+            <a href="{% url 'login' %}" class="form-link">Already have account? Log In</a>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
 
 {% endblock %}

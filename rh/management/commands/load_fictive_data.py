@@ -14,7 +14,7 @@ from django.core.management.base import BaseCommand
 
 from faker import Faker
 from ...models import *
-from accounts.models import *
+from users.models import *
 from stock.models import *
 
 COUNTRIES = [ 

@@ -112,7 +112,7 @@ admin.site.register(Location, LocationAdmin)
 
 class OrganizationAdmin(admin.ModelAdmin):
     list_display = ('name', 'code', 'type', 'location')
-    search_fields = ('name', 'location', 'type')
+    search_fields = ('name', 'location__name', 'type')
     list_filter = ('type', 'location')
     # list_filter = ('type', CountryFilter)
 
@@ -132,7 +132,7 @@ admin.site.register(Organization, OrganizationAdmin)
 ##############################################
 class DonorAdmin(admin.ModelAdmin):
     list_display = ('name', 'location', 'cluster')
-    search_fields = ('project_donor_id', 'name', 'cluster__title')
+    search_fields = ('code', 'name', 'cluster__title')
     list_filter = ('cluster', 'location')
 admin.site.register(Donor, DonorAdmin)
 
@@ -176,7 +176,7 @@ class ProjectAdmin(admin.ModelAdmin):
     show_clusters.short_description = 'Clusters'
 
     def show_activities(self, obj):
-        return ",\n".join([a.title for a in obj.activities.all()])
+        return ",\n".join([a.name for a in obj.activities.all()])
     show_activities.short_description = 'Activities'
     
     def show_locations(self, obj):

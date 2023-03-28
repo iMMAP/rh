@@ -1,20 +1,29 @@
 {% extends '_base.html' %}
+{% load static %}
 
 {% block content %}
 
-<div class="container px-4 px-lg-5 h-100">
-    <div class="row h-100 align-items-center justify-content-center text-center">
-        <div class="col-lg-4 align-self-end">
-            <h1 class="m-5">Report Hub</h1>
-            <h3>Activattion Email Sent</h3>
-            <p>Dear <b>{{ user.name }}</b>, <br/>
-                please go to your email <b>{{ user.email }}</b> 
-                inbox and click on the activation link to confirm and complete your registration. 
-                <br/><b>Note: </b>Check your spam folder if email not found in inbox.
-            </p>
-            <br class="clear">
+<div class="login-section base-section">
+    <div class="decor-holder">
+    <img src="{% static 'rh/images/login-decor.png' %}" alt="Login" />
+    </div>
 
+    <div class="container">
+        <div class="section-heading">
+            <h1 class="title">Activation Email Sent</h1>
+            <div class="description">
+                <div class="text">
+                    <p>Dear <b>{{ user.profile.name }}</b>, <br/>
+                        please go to your email <b><a href="mailto:{{user.email}}">{{ user.email }}</a></b> 
+                        inbox and click on the activation link to confirm and complete your registration. 
+                        <br/><b>Note: </b>Check your spam folder if email not found in inbox.
+                    </p>
+                </div>
+            </div>
         </div>
+    </div>
+    <div class="form-link-holder text-center">
+        <a href="{% url 'login' %}" class="btn btn-red">Login</a>
     </div>
 </div>
 {% endblock %}

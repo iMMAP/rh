@@ -414,7 +414,6 @@ class DataImporter():
 
                     c.execute(f"select username from {table} where id={user_id}")
                     db_user = c.fetchone()
-                    print("USER: ", db_user)
 
                     u_profile = next(item for item in profiles_list if db_user[0] in item)
                     if u_profile:
@@ -455,7 +454,7 @@ class DataImporter():
             df.to_sql('tmp_activity', connection, if_exists='replace', index=False)
 
             try:
-                c.execute("select active, activity_date, HRP_Code, Core_Indicator_Yes_No, code, name, subdomain_code, subdomain_name, start_date, end_date, _id, admin0pcode, cluster_id, indicator_id, fields from tmp_activity")
+                c.execute("select active, activity_date, HRP_Code, Core_Indicator_Yes_No, code, name, subdomain_code, subdomain_name, start_date, end_date, _id, admin0pcode, cluster_id, indicator_id from tmp_activity")
                 activities = c.fetchall()
                 for activity in activities:
                     activity = list(activity)
@@ -475,8 +474,8 @@ class DataImporter():
 
                     aquery = f"""
                             insert into 
-                            {table}(active, activity_date, hrp_code, code_indicator, code, name, subdomain_code, subdomain_name, start_date, end_date, old_id, indicator_id, fields) 
-                            values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                            {table}(active, activity_date, hrp_code, code_indicator, code, name, subdomain_code, subdomain_name, start_date, end_date, old_id, indicator_id) 
+                            values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                         """
     
                     c.execute(aquery, activity)

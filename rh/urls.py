@@ -13,6 +13,7 @@ urlpatterns = [
 
      # Projects routes
      path('projects/', user_views.projects_view, name='projects'),
+     path('project/view/<str:pk>', user_views.completed_project_view, name='view_project'),
      path('project/create/', user_views.create_project_view, name='create_project'),
      path('project/update/<str:pk>/', user_views.update_project_view, name='update_project'),
      path('project/activity_plan/create/?project=<str:project>/', user_views.create_project_activity_plan, name='create_project_activity_plan'),

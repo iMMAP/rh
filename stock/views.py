@@ -21,7 +21,7 @@ from .forms import *
 @login_required
 def stock_index_view(request):
     """Stock Views"""
-    WarehouseLocationFormset = modelformset_factory(WarehouseLocation, fields='__all__', form=WarehouseLocationForm)
+    WarehouseLocationFormset = modelformset_factory(WarehouseLocation, form=WarehouseLocationForm)
     if request.method == 'POST':
         enurl = urllib.parse.urlencode(request.POST)  # To convert POST into a string
         delete_btn = re.search(r'delete_(.*?)_warehouse', enurl)  # To match for e.g. delete_<num>_warehouse

@@ -6,7 +6,11 @@ from django import forms
 class WarehouseLocationForm(forms.ModelForm):
     class Meta:
         model = WarehouseLocation
-        fields = "__all__"
+        fields = ('province', 'district', 'name')
+        labels = {
+            'name': ('Warehouse Name'),
+        }
+        # exclude = ['id']
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

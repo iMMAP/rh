@@ -226,14 +226,15 @@ class Project(models.Model):
     title = models.CharField(max_length=NAME_MAX_LENGTH)
     description = models.TextField(blank=True, null=True)
     clusters = models.ManyToManyField(Cluster)
+    # donors = models.ManyToManyField(Donor)
     activities = models.ManyToManyField(Activity)
     locations = models.ManyToManyField(Location)
     start_date = models.DateTimeField('start date')
     end_date = models.DateTimeField('end date')
     budget = models.IntegerField(null=True, blank=True)
     budget_currency = models.ForeignKey('Currency', on_delete=models.SET_NULL, null=True, blank=True)
-    created_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
-    updated_at = models.DateTimeField(auto_now=True, blank=True, null=True)
+    created_at = models.DateField(auto_now_add=True, blank=True, null=True)
+    updated_at = models.DateField(auto_now=True, blank=True, null=True)
     active = models.BooleanField(default=True)
 
     def __str__(self):

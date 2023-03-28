@@ -6023,3 +6023,13 @@ body.filter-active {
     font-size: 12px
   }
 }
+
+
+/* Custom CSS */
+.text-decoration-none {
+  text-decoration: none;
+}
+
+.save-warehouse {
+  float: right;
+}

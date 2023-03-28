@@ -180,8 +180,23 @@ def load_locations_details(request):
 @login_required
 def projects_view(request):
     """Projects Plans"""
-    projects = Project.objects.all()
-    return render(request, 'projects/projects.html', {'projects': projects})
+    active_projects = Project.objects.filter(active=True)
+    completed_projects = Project.objects.filter(active=False)
+    context = {
+        'active_projects': active_projects,
+        'completed_projects': completed_projects
+    }
+    return render(request, 'projects/projects.html', context)
+
+@cache_control(no_store=True)
+@login_required
+def completed_project_view(request, pk):
+    """Projects Plans"""
+    project = Project.objects.filter(id=pk)
+    context = {
+        'project': project,
+    }
+    return render(request, 'projects/completed_project.html', context)
 
 
 @cache_control(no_store=True)

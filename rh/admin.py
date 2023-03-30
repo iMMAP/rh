@@ -62,6 +62,12 @@ admin.AdminSite.get_app_list = get_app_list
 admin.site.register(Currency)
 
 
+#############################################
+########### Location Types #############
+#############################################
+admin.site.register(LocationType)
+
+
 ##############################################
 ############ Country Model Admin #############
 ##############################################
@@ -138,11 +144,21 @@ admin.site.register(Donor, DonorAdmin)
 
 
 ##############################################
+######### BeneficiaryType Model Admin ###########
+##############################################
+class BeneficiaryTypeAdmin(admin.ModelAdmin):
+    list_display = ('name', 'code', 'location')
+    search_fields = ('code', 'name', 'location__name')
+    list_filter = ('location',)
+admin.site.register(BeneficiaryType, BeneficiaryTypeAdmin)
+
+
+##############################################
 ############ Activity Model Admin ############
 ##############################################
 class ActivityAdmin(admin.ModelAdmin):
     list_display = ('name', 'subdomain_name', 'show_clusters', 'show_locations', 'active')
-    search_fields = ('name', 'clusters__title', 'active', 'description', 'subdomain_code')
+    search_fields = ('name', 'clusters__title', 'active', 'subdomain_code')
     list_filter = ('active', 'clusters', 'locations__name')
 
     def show_clusters(self, obj):
@@ -159,8 +175,8 @@ admin.site.register(Activity, ActivityAdmin)
 ############ Project Model Admin #############
 ##############################################
 class ProjectAdmin(admin.ModelAdmin):
-    list_display = ('code', 'title', 'user', 'show_clusters', 'show_activities', 'show_locations', 'budget', 'budget_currency')
-    search_fields = ('title','code', 'clusters__title', 'activities__title', 'locations__name')
+    list_display = ('title', 'code', 'user', 'show_clusters', 'show_activities', 'programme_partner', 'budget', 'budget_currency')
+    search_fields = ('title','code', 'clusters__title', 'activities__title', 'implementing_partner', 'programme_partner')
     list_filter = ('clusters',)
 
     # To create a clickable link between to models
@@ -179,9 +195,9 @@ class ProjectAdmin(admin.ModelAdmin):
         return ",\n".join([a.name for a in obj.activities.all()])
     show_activities.short_description = 'Activities'
     
-    def show_locations(self, obj):
-        return ",\n".join([a.name for a in obj.locations.all()])
-    show_locations.short_description = 'Locations'
+    # def show_locations(self, obj):
+    #     return ",\n".join([a.name for a in obj.locations.all()])
+    # show_locations.short_description = 'Locations'
 admin.site.register(Project, ProjectAdmin)
 
 
@@ -189,10 +205,20 @@ admin.site.register(Project, ProjectAdmin)
 ######### Activity Plan Model Admin ##########
 ##############################################
 class ActivityPlanAdmin(admin.ModelAdmin):
-    list_display = ('project', 'activity', 'boys', 'girls', 'men', 'women', 'elderly_men', 'elderly_women', 'households')
-    search_fields = ('project__title', 'activity__title', 'boys', 'girls', 'men', 'women', 'elderly_men', 'elderly_women', 'households')
+    list_display = ('project', 'activity',  'households', 'beneficiary', 'beneficiary_category')
+    search_fields = ('project__title', 'activity__name', 'households')
     list_filter = ('project', 'activity')
 admin.site.register(ActivityPlan, ActivityPlanAdmin)
+
+
+##############################################
+######### Target Locations Model Admin ##########
+##############################################
+class TargetLocationAdmin(admin.ModelAdmin):
+    list_display = ('site_name', 'project', 'country', 'province', 'district')
+    # search_fields = ('project__title', 'activity__title', 'households')
+    # list_filter = ('project', 'activity')
+admin.site.register(TargetLocation, TargetLocationAdmin)
 
 
 ##############################################

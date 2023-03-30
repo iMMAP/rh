@@ -75,9 +75,9 @@ def send_account_activation_email(request, user, to_email):
 def register_view(request):
     """Registration view for creating new signing up"""
     template = loader.get_template('registration/signup.html')
-    organizations = Organization.objects.all()
-    clusters = Cluster.objects.all()
-    locations = Location.objects.all()
+    organizations = Organization.objects.all().order_by('code').values()
+    clusters = Cluster.objects.all().order_by('title').values()
+    locations = Location.objects.all().order_by('name').values()
 
     if request.method == 'POST':
         u_form = UserRegisterForm(request.POST)
@@ -86,22 +86,22 @@ def register_view(request):
             username = u_form.cleaned_data.get('username')
             email = u_form.cleaned_data.get('email')
             # Registration with email confirmation step.
-            # if settings.DEBUG:
-            #     # If development mode then go ahead and create the user.
-            #     user = u_form.save()
-            #     user_profile = p_form.save(commit=False)
-            #     user_profile.user = user
-            #     user_profile.save()
-            #     messages.success(request, f'Account created successfully for {username}.')
-            # else:
+            if settings.DEBUG:
+                # If development mode then go ahead and create the user.
+                user = u_form.save()
+                user_profile = p_form.save(commit=False)
+                user_profile.user = user
+                user_profile.save()
+                messages.success(request, f'Account created successfully for {username}.')
+            else:
                 # If production mode send a verification email to the user for account activation
-            user = u_form.save(commit=False)
-            user_profile = p_form.save(commit=False)
-            user.is_active = False
-            user.save()
-            user_profile.user = user
-            user_profile.save()
-            return send_account_activation_email(request, user, email)  
+                user = u_form.save(commit=False)
+                user.is_active = False
+                user.save()
+                user_profile = p_form.save(commit=False)
+                user_profile.user = user
+                user_profile.save()
+                return send_account_activation_email(request, user, email)  
             # return redirect('login')
         else:
             for error in list(u_form.errors.values()):

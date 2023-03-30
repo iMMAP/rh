@@ -78,13 +78,14 @@ def get_dynamic_form(json_fields, initial_data=None):
 
 
 class ActivityPlanForm(forms.ModelForm):
-    activity_plan = forms.CharField(widget=forms.HiddenInput(), required=False)
+    # activity_plan = forms.CharField(widget=forms.HiddenInput(), required=False)
     activity_id = forms.CharField(widget=forms.HiddenInput(), required=False)
     class Meta:
         model = ActivityPlan
         fields = "__all__"
         widgets = {
-            'activity_fields': forms.Textarea(attrs={'class': 'ajax-activity-fields-class', 'readonly':True, 'activityfields-queries-url': reverse_lazy('ajax-load-activityfields')}),
+            # 'activity_fields': forms.Textarea(attrs={'class': 'ajax-activity-fields-class', 'readonly':True, 'activityfields-queries-url': reverse_lazy('ajax-load-activityfields')}),
+            'activity': forms.Select(attrs={'disabled': ''}),
         }
 
     def clean_activity_fields(self):
@@ -92,6 +93,28 @@ class ActivityPlanForm(forms.ModelForm):
             return self.instance.activity_fields
         else: 
             return self.fields['activity_fields']
+        
+
+class TargetLocationForm(forms.ModelForm):
+    country_id = forms.CharField(widget=forms.HiddenInput(), required=False)
+    province_id = forms.CharField(widget=forms.HiddenInput(), required=False)
+    district_id = forms.CharField(widget=forms.HiddenInput(), required=False)
+
+    class Meta:
+        model = TargetLocation
+        fields = "__all__"
+        widgets = {
+            'country': forms.Select(attrs={'disabled': ''}),
+            'province': forms.Select(attrs={'disabled': ''}),
+            'district': forms.Select(attrs={'disabled': ''}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super(TargetLocationForm, self).__init__(*args, **kwargs)
+        self.fields['country'].queryset = self.fields['country'].queryset.filter(type='Country')
+        self.fields['province'].queryset = self.fields['province'].queryset.filter(type='Province')
+        self.fields['district'].queryset = self.fields['district'].queryset.filter(type='District')
+
 
 
 class ProjectForm(forms.ModelForm):
@@ -102,9 +125,22 @@ class ProjectForm(forms.ModelForm):
         widgets = {
             'locations': forms.SelectMultiple(attrs={'class': 'js-example-basic-multiple', 'locations-queries-url': reverse_lazy('ajax-load-locations')}),
             'clusters': forms.SelectMultiple(attrs={'class': 'js-example-basic-multiple'}),
+            'donors': forms.SelectMultiple(attrs={'class': 'js-example-basic-multiple'}),
             'activities': forms.SelectMultiple(attrs={'activities-queries-url': reverse_lazy('ajax-load-activities'),
                                             'class': 'js-example-basic-multiple'
                                             }),
-            'start_date': forms.widgets.DateInput(attrs={'type': 'date'}),
-            'end_date': forms.widgets.DateInput(attrs={'type': 'date'}),
+            'start_date': forms.widgets.DateInput(attrs={'type': 'date', 'onfocus': "(this.type='date')", 'onblur':"(this.type='text')"}),
+            'end_date': forms.widgets.DateInput(attrs={'type': 'date', 'onfocus': "(this.type='date')", 'onblur':"(this.type='text')"}),
+            'active': forms.widgets.HiddenInput(),
         }    
+
+    def __init__(self, *args, **kargs):
+        super().__init__(*args, **kargs)
+        self.fields['locations'].queryset = Location.objects.order_by('name')
+        self.fields['clusters'].queryset = Cluster.objects.order_by('title')
+        self.fields['donors'].queryset = Donor.objects.order_by('name')
+        self.fields['activities'].queryset = Activity.objects.order_by('name')
+        self.fields['budget_currency'].queryset = Currency.objects.order_by('name')
+        self.fields['implementing_partner'].queryset = Organization.objects.order_by('name')
+        self.fields['programme_partner'].queryset = Organization.objects.order_by('name')
+        self.fields['user'].queryset = User.objects.order_by('username')

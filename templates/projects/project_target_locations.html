@@ -1,0 +1,206 @@
+{% extends '_base.html' %}
+
+{% block content %}
+
+<div class="base-section">
+    <div class="container">
+        <div class="page-navigation-panel">
+            <div class="holder">
+                <div class="link-holder">
+                    <a href="#" class="btn-back">Back to All Projects</a>
+                </div>
+
+                <div class="tabs-nav-holder">
+                    <ul class="tabs-nav">
+                        <li class="active">
+                            <a href="#">Project plan</a>
+                        </li>
+
+                        <li class="">
+                            <a href="#">financial reports</a>
+                        </li>
+
+                        <li class="">
+                            <a href="#">monthly progress</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="two-cols-layout">
+            <div class="breadcrumbs-nav-panel">
+                <div class="holder">
+                    <ul class="breadcrumbs">
+                        <li>
+                            <a href="#">Home</a>
+                        </li>
+
+                        <li>
+                            <a href="#">Active projects</a>
+                        </li>
+
+                        <li class="current">Activity plan</li>
+                    </ul>
+                </div>
+            </div>
+            <aside class="sidebar">
+                <div class="sidebar-nav-holder">
+                    <ul class="sidebar-nav">
+                        <li>
+                            <a href="#">Project Plan</a>
+                        </li>
+
+                        <li>
+                            <a href="#">Activity Planning</a>
+                        </li>
+
+                        <li class="current">
+                            <a href="#">Target Locations</a>
+                        </li>
+
+                        <li>
+                            <a href="#">Review</a>
+                        </li>
+                    </ul>
+                </div>
+            </aside>
+            <div class="project-title-holder">
+                <h2 class="plan-title">{{ project.title}}</h2>
+            </div>
+            <div class="main-content">
+                <div class="target-location create-location">
+                    <div class="main-heading">
+                        <h2 class="plan-title">Target Locations</h2>
+                    </div>
+
+                    <div class="main-activity-holder">
+                        <div class="top-activity-block">
+                            <span class="activity-title">Targeted Locations</span>
+
+                            <div class="btn-holder">
+                                <a href="#" class="btn btn-red">Add Location</a>
+                                <a href="#" class="btn btn-gray">
+                                    <span class="btn-text">Import Locations</span>
+                                    <span class="icon-upload"></span>
+                                </a>
+                            </div>
+                        </div>
+                        {% comment %}
+                        <div class="options-holder">
+                            <div class="input-check-holder">
+                                <input type="radio" name="targetOption" id="targetOption011"/>
+                                <label for="targetOption011">
+                                    <span class="input"></span>
+                                    <span class="text">Group target locations by province</span>
+                                </label>
+                            </div>
+                            <div class="input-check-holder">
+                                <input type="radio" name="targetOption" id="targetOption021" checked/>
+                                <label for="targetOption021">
+                                    <span class="input"></span>
+                                    <span class="text">Group target locations by district</span>
+                                </label>
+                            </div>
+                            <div class="input-check-holder">
+                                <input type="radio" name="targetOption" id="targetOption031"/>
+                                <label for="targetOption031">
+                                    <span class="input"></span>
+                                    <span class="text">Group target locations custom</span>
+                                </label>
+                            </div>
+                        </div>
+                        {% endcomment %}
+                    </div>
+                    <form method="POST" enctype="multipart/form-data">
+                        {{ formset.management_form }}
+                        {% csrf_token %}
+                        {% for form in formset %}
+                        {{form.id}}
+                        
+                        {{ form.country_id }}
+                        {{ form.province_id }}
+                        {{ form.district_id }}
+
+                        <div class="location-block-holder">
+                            <div class="inner-holder">
+                                <div class="block-top">
+                                    <span class="title">
+                                        {% if form.initial.location.parent.parent %}
+                                            {{ form.initial.location.parent.parent }}, 
+                                        {% endif %}
+                                        {% if form.initial.location.parent %}
+                                            {{ form.initial.location.parent }},
+                                        {% endif %}
+                                        {{ form.initial.location }}
+                                    </span>
+                                            
+                                    {% comment %} <span class="title">Badakhshan, Tagab</span> {% endcomment %}
+                                    
+                                    <div class="block-location-activity">
+                                        <a href="#" class="btn btn-gray-outline">
+                                            <span class="icon-trashbin"></span>
+                                            <span class="btn-text">Delete</span>
+                                        </a>
+                                    </div>
+
+                                    {% comment %} <span class="subtitle">{{ form.location_type.value|default_if_none:"" }}: {{ form.site_name.value|default_if_none:"" }}</span> {% endcomment %}
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="multiple-fields-row three-items">
+                                            <div class="field-col">
+                                                <div class="select-field is-required">
+                                                    <label>Country</label>
+                                                    {{ form.country }}
+                                                </div>
+                                            </div>
+                                            <div class="field-col">
+                                                <div class="select-field is-required">
+                                                    <label>Province</label>
+                                                    {{ form.province }}
+                                                </div>
+                                            </div>
+                                            <div class="field-col">
+                                                <div class="select-field is-required">
+                                                    <label>District</label>
+                                                    {{ form.district }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="multiple-fields-row two-items">
+                                            <div class="field-col">
+                                                <div class="select-field is-required">
+                                                    <label>Location Type</label>
+                                                    {{ form.location_type }}
+                                                </div>
+                                            </div>
+                                            <div class="field-col">
+                                                <div class="input-field">
+                                                    <label>Site name</label>
+                                                    <div class="input-holder">
+                                                        {{ form.site_name }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                        <div class="plan-submit-holder">
+                            <a href="#" class="btn btn-gray-outline">Back</a>
+                            <button type="submit" class="btn btn-red">Save and Review</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -339,16 +339,16 @@ class DataImporter():
             df.to_sql('tmp_accounts', connection, if_exists='replace', index=False)
 
             try:
-                c.execute("select admin0pcode,cluster_id,name,organization_id,phone,position,username,skype,visits from tmp_accounts")
+                c.execute("select admin0pcode,cluster_id,name,organization_id,phone,position,skype,visits,username from tmp_accounts")
                 profile_info = c.fetchall()
                 c.execute("select createdAt,email,last_logged_in,password,status,username from tmp_accounts")
                 users = c.fetchall()
                 profiles_list = []
                 for profile in profile_info:
                     profile = list(profile)
-                    skype = profile[-2]
+                    skype = profile[7]
                     if not skype:
-                        profile[-2] = None
+                        profile[7] = None
                     location = profile[0]
                     cluster = profile[1]
                     organization = profile[3]
@@ -377,19 +377,20 @@ class DataImporter():
                             profile[3] = organization_id[0]
                         else:
                             profile[3] = None
+
                     profile = tuple(profile)
                     profiles_list.append(profile)
                 
                 for user in users:
                     user = list(user)
-                    status = user[-2]
+                    status = user[4]
                     user.append(False)
                     user.append(False)
                     user.append('a')
                     user.append('b')
 
                     if status == 'active':
-                        user[-2] = True
+                        user[4] = True
 
                     if not user[5]:
                         continue
@@ -418,12 +419,12 @@ class DataImporter():
                     u_profile = next(item for item in profiles_list if db_user[0] in item)
                     if u_profile:
                         u_profile = list(u_profile)
-                        u_profile.pop(-3)
-                        u_profile.insert(0, user_id)
+                        u_profile.pop(-1)
+                        u_profile.append(user_id)
                         u_profile = tuple(u_profile)
                     pquery = f"""
                             insert into 
-                            users_profile(user_id,location_id,organization_id,name,visits,cluster_id,phone,position,skype) 
+                            users_profile(location_id,cluster_id,name,organization_id,phone,position,skype,visits,user_id) 
                             values (?, ?, ?, ?, ?, ?, ?, ?, ?)
                         """
                     c.execute(pquery, u_profile)
@@ -461,14 +462,16 @@ class DataImporter():
                     active = activity[0]
                     if active == None:
                         activity[0] = True
-                    if activity[-2]:
-                        c.execute(f"select id from rh_indicator where code='{activity[-2]}'")
+
+                    indicator = activity[-1]
+                    if indicator:
+                        c.execute(f"select id from rh_indicator where code='{indicator}'")
                         indicator = c.fetchone()
                         if indicator:
-                            activity[-2] = indicator[0]
-                    # activity = ['NULL' if a==None else a for a in activity]
-                    cluster = activity.pop(-3)
-                    location = activity.pop(-4)
+                            activity[-1] = indicator[0]
+
+                    cluster = activity.pop(-2)
+                    location = activity.pop(-2)
                     activity = tuple(activity)
                     
 

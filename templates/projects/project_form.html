@@ -1,12 +1,11 @@
 {% extends '_base.html' %}
-{% load crispy_forms_tags %}
 
 
 {% block content %}
 
 <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
 
-<div class="container px-4 px-lg-5 h-100">
+{% comment %} <div class="container px-4 px-lg-5 h-100">
     <div class="row h-100 align-items-center justify-content-center text-left">
         <div class="col-lg-9 align-self-end">
             <h1 class="m-5">Report Hub</h1>
@@ -15,7 +14,7 @@
             <form method="POST">
                 {% csrf_token %}
                 <input type="hidden" name="next" id="project_id" value="{{ project }}"/>
-                {{ form|crispy }}
+                {{ form }}
                 <div class="mb-3 mt-3 d-grid">
                     <input type="submit" class="btn btn-outline-dark" value="Submit"/>
                 </div>
@@ -23,14 +22,227 @@
 
         </div>
     </div>
-</div>
+</div> {% endcomment %}
+<div class="base-section">
+    <div class="container">
+      <div class="page-navigation-panel">
+        <div class="holder">
+          <div class="link-holder">
+            <a href="#" class="btn-back">Back to All Projects</a>
+          </div>
+
+          <div class="tabs-nav-holder">
+            <ul class="tabs-nav">
+              <li class="active">
+                <a href="#">Project plan</a>
+              </li>
+
+              <li class="">
+                <a href="#">financial reports</a>
+              </li>
+
+              <li class="">
+                <a href="#">monthly progress</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="two-cols-layout">
+        <div class="breadcrumbs-nav-panel">
+          <div class="holder">
+            <ul class="breadcrumbs">
+              <li>
+                <a href="#">Home</a>
+              </li>
+
+              <li>
+                <a href="#">Active projects</a>
+              </li>
+
+              <li class="current">Activity plan</li>
+            </ul>
+          </div>
+        </div>
+        <aside class="sidebar">
+          <div class="sidebar-nav-holder">
+            <ul class="sidebar-nav">
+              <li class="current">
+                <a href="#">Project Plan</a>
+              </li>
+
+              <li>
+                <a href="#">Activity Planning</a>
+              </li>
+
+              <li>
+                <a href="#">Target Locations</a>
+              </li>
+
+              <li>
+                <a href="#">Review</a>
+              </li>
+            </ul>
+          </div>
+        </aside>
+        <div class="main-content">
+          <div class="project-plan create-plan">
+            <div class="main-heading">
+              <h2 class="plan-title">Create project plan</h2>
+            </div>
+            <form method="POST">
+                {% csrf_token %}
+                {{ form.active }}
+                <div class="row">
+                    <div class="col">
+                        <div class="input-field is-required">
+                            <label for="prTitle">Project Title</label>
+                            <div class="input-holder">
+                                {{ form.title }}
+                            </div>
+                        </div>
+                        <div class="input-field">
+                            <label for="prCode">Project Code</label>
+                            <div class="input-holder">
+                                {{ form.code }}
+                            </div>
+                        </div>
+                        <div class="input-field">
+                          <label for="oPrCode">OCCD Project Code</label>
+                          <div class="input-holder">
+                              <input type="text" id="oPrCode" placeholder="OCCD project code" value="" />
+                          </div>
+                      </div>
+
+                        <div class="select-field is-required">
+                          <label for="locationSelect">Locations</label>
+                          <div class="input-holder">
+                              {{ form.locations }}
+                          </div>
+                      </div>
+                        
+                        <div class="select-field is-required">
+                            <label for="clusterSelect">Clusters</label>
+                            <div class="input-holder">
+                                {{ form.clusters }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col col-sm">
+                        <div class="date-picker-field">
+                            <div class="date start">
+                                <label for="{{ form.start_date.id_for_label }}">Start Date</label>
+                                {{form.start_date}}
+                                {% comment %} <input type="text" name="{{ form.start_date.html_name }}" id="{{ form.start_date.id_for_label }}" onfocus="(this.type='date')" onblur="(this.type='text')" value="" /> {% endcomment %}
+                              </div>
+                              <div class="date end">
+                                <label for="{{ form.end_date.id_for_label }}">End Date</label>
+                                {{form.end_date}}
+                                {% comment %} <input type="text" name="{{ form.end_date.html_name }}" id="{{ form.end_date.id_for_label }}" onfocus="(this.type='date')" onblur="(this.type='text')" value="" /> {% endcomment %}
+                            </div>
+                        </div>
+                        <div class="multiple-fields-row">
+                            <div class="field-col">
+                                <div class="input-field">
+                                    <label for="prBudget">Project Budget</label>
+                                    <div class="input-holder">
+                                        {{ form.budget }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="field-col">
+                                <label for="prBudgetCurrency">Budget Currency</label>
+                                
+                                <div class="select-field is-required">
+                                  {{ form.budget_currency }}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="input-check-holder">
+                            <input type="checkbox" id="prHRP" />
+                            <label for="prHRP">
+                                <span class="input"></span>
+                                <span class="text">HRP Project</span>
+                            </label>
+                        </div>
+                        <div class="input-field" id='prHrpCode'>
+                            <label for="prCodeMain">HRP Project Code</label>
+                            <div class="input-holder">
+                            <input type="text" id="prCodeMain" placeholder="HRP project code" value="" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col col-lg">
+                        <div class="select-field is-required">
+                            <label for="{{ form.activities.html_name }}">Activity Domain</label>
+                            <div class="input-holder">
+                                {{ form.activities }}
+                            </div>
+                        </div>
+                        <div class="select-field is-required">
+                            <label for="donorSelect">Project Donor</label>
+                            <div class="input-holder">
+                                {{ form.donors }}
+                            </div>
+                        </div>
+                        <div class="multiple-fields-row two-items">
+                          <div class="field-col">
+                              <div class="select-field is-required">
+                                  <label>Implementing Partner</label>
+                                  {{ form.implementing_partner }}
+                              </div>
+                          </div>
+                          <div class="field-col">
+                              <div class="select-field is-required">
+                                  <label>Programme Partner</label>
+                                  {{ form.programme_partner }}
+                              </div>
+                          </div>
+                      </div>
+                        <div class="select-field">
+                            <label for="focalSelect">Focal Point</label>
+                            {{ form.user }}
+                        </div>
+                        <div class="input-field is-required">
+                            <label for="prDecs">Project Description &amp; Objectives</label>
+                            <div class="input-holder">
+                                <textarea name="prDecs" id="prDecs" cols="30" rows="10" placeholder="Project description &amp; objectives"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="plan-submit-holder">
+                  <button type="submit" class="btn btn-red">Save and Next</button>
+                </div>
+            </form>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
 
 <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
-<script>
+{% comment %} <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script> {% endcomment %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js" integrity="sha512-2ImtlRlf2VVmiGZsjm9bEyhjGW4dU7B6TNwh/hx/iSByxNENtj3WVE6o/9Lj4TJeVXPi4bnOIMXFIJJAeufa0A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+ <script>
 
     $(document).ready(function() {
         $('.js-example-basic-multiple').select2();
+    });
+
+
+    $("#prHrpCode").hide();
+    $("#prHRP").change(function(){
+        if($(this).is(":checked")) {
+            $("#prHrpCode").show(300);
+        } else {
+            $("#prHrpCode").hide(200);
+        }
     });
 
     function get_activities(){
@@ -65,9 +277,9 @@
         });
     };
 
-    $('#id_locations').ready(function () {
+    /*$('#id_locations').ready(function () {
         get_locations()
-    });
+    });*/
 
     $('#id_activities').ready(function () {
         get_activities()

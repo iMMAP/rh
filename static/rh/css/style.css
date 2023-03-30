@@ -4191,7 +4191,7 @@ body.filter-active {
 }
 
 .activity-planning .activity-block-holder .inner-holder:after,
-.activity-planning .activity-block-holder .inner-holder:before {
+/* .activity-planning .activity-block-holder .inner-holder:before {
   content: "";
   position: absolute;
   display: block;
@@ -4199,7 +4199,7 @@ body.filter-active {
   width: 33.1%;
   background-color: #be2126;
   z-index: 1
-}
+} */
 
 .activity-planning .activity-block-holder .inner-holder:before {
   top: -2px;
@@ -5323,7 +5323,7 @@ body.filter-active {
   }
 
   .project-plan.create-plan .col-sm .input-check-holder {
-    padding: 35px 0 16px 7px !important
+    padding: 10px 0 16px 0px !important
   }
 
   .project-plan .col {
@@ -6032,4 +6032,9 @@ body.filter-active {
 
 .save-warehouse {
   float: right;
+}
+
+.activity-planning .activity-block-holder .top-activity-block {
+  padding: 0 0 10px;
+  border-bottom: 2px solid #be2126;
 }

@@ -162,7 +162,7 @@
         </div>
         <ul class="buttons-list-inline">
           <li>
-            <a href="#" class="btn btn-red add-btn">Add new project</a>
+            <a href="{% url 'create_project' %}" class="btn btn-red add-btn">Add new project</a>
           </li>
         </ul>
       </div>
@@ -260,7 +260,7 @@
                   </div>
                 </td>
 
-                <td class="organisation-col">United Nations Human Settlements Programme</td>
+                <td class="organisation-col">{{ project.implementing_partner }}</td>
 
                 <td class="title-col">{{ project.title }}</td>
 
@@ -268,7 +268,7 @@
 
                 <td class="location-col">
                   {% for location in project.locations.all %}
-                        {{ location.name }}
+                        {{ location.name }},
                     {% endfor %}
                 </td>
 
@@ -423,7 +423,7 @@
                   </div>
                 </td>
 
-                <td class="organisation-col">United Nations Human Settlements Programme</td>
+                <td class="organisation-col">{{ project.implementing_partner }}</td>
 
                 <td class="title-col">{{ project.title }}</td>
 
@@ -431,7 +431,7 @@
 
                 <td class="location-col">
                   {% for location in project.locations.all %}
-                        {{ location.name }}
+                        {{ location.name }},
                     {% endfor %}
                 </td>
 

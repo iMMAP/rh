@@ -125,7 +125,7 @@ class Organization(models.Model):
     old_id =  models.CharField("Old ID", max_length=NAME_MAX_LENGTH, blank=True, null=True)
 
     def __str__(self):
-        return self.name
+        return self.code
 
 
 class Donor(models.Model):
@@ -190,6 +190,18 @@ class Currency(models.Model):
         verbose_name_plural = "Currencies"
 
 
+class LocationType(models.Model):
+    """Locations Types model"""
+    name = models.CharField(max_length=15, null=True)
+
+    def __str__(self):
+        return self.name
+    
+    class Meta:
+        verbose_name = 'Location Type'
+        verbose_name_plural = "Location Types"
+
+
 class Activity(models.Model):
     """Activities model"""
     active = models.BooleanField(default=True)
@@ -211,7 +223,7 @@ class Activity(models.Model):
     ocha_code = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
 
     def __str__(self):
-        return f"[{self.name}]- {self.subdomain_name}"
+        return f"{self.name} - [{self.subdomain_name}]"
     
     class Meta:
         verbose_name = 'Activity'
@@ -221,13 +233,15 @@ class Activity(models.Model):
 class Project(models.Model):
     """Projects model"""
     
-    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
-    code = models.CharField(max_length=NAME_MAX_LENGTH, null=True, blank=True)
     title = models.CharField(max_length=NAME_MAX_LENGTH)
-    description = models.TextField(blank=True, null=True)
+    code = models.CharField(max_length=NAME_MAX_LENGTH, null=True, blank=True)
+    #TODO: Calculated field for default cluster based on user cluster
+    # cluster = models.ForeignKey(Cluster, on_delete=models.SET_NULL, null=True, blank=True)
     clusters = models.ManyToManyField(Cluster)
-    # donors = models.ManyToManyField(Donor)
     activities = models.ManyToManyField(Activity)
+    donors = models.ManyToManyField(Donor)
+    implementing_partner = models.ForeignKey(Organization, related_name="implementing_partner", on_delete=models.SET_NULL, null=True, blank=True)
+    programme_partner = models.ForeignKey(Organization, related_name="programme_partner", on_delete=models.SET_NULL, null=True, blank=True)
     locations = models.ManyToManyField(Location)
     start_date = models.DateTimeField('start date')
     end_date = models.DateTimeField('end date')
@@ -236,6 +250,8 @@ class Project(models.Model):
     created_at = models.DateField(auto_now_add=True, blank=True, null=True)
     updated_at = models.DateField(auto_now=True, blank=True, null=True)
     active = models.BooleanField(default=True)
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+    description = models.TextField(blank=True, null=True)
 
     def __str__(self):
         return self.title
@@ -243,23 +259,75 @@ class Project(models.Model):
 
 class ActivityPlan(models.Model):
     """Activity Plans model"""
+    CATEGORY_TYPES = [
+        ('disabled', 'Persons with Disabilities'),
+        ('non-disabled', 'Non-Disabled'),
+    ]
     project = models.ForeignKey(Project, on_delete=models.SET_NULL, null=True, blank=True)
     activity = models.ForeignKey(Activity, on_delete=models.SET_NULL, null=True, blank=True)
-    boys = models.IntegerField(blank=True, null=True)
-    girls = models.IntegerField(blank=True, null=True)
-    men = models.IntegerField(blank=True, null=True)
-    women = models.IntegerField(blank=True, null=True)
-    elderly_men = models.IntegerField(blank=True, null=True)
-    elderly_women = models.IntegerField(blank=True, null=True)
+    beneficiary = models.ForeignKey(BeneficiaryType, on_delete=models.SET_NULL, null=True, blank=True)
+    beneficiary_category = models.CharField(
+        max_length=15,
+        choices=CATEGORY_TYPES,
+        default=False, null=True, blank=True
+    )
+    
+    female_0_5 = models.IntegerField(blank=True, null=True)
+    female_6_12 = models.IntegerField(blank=True, null=True)
+    female_12_17 = models.IntegerField(blank=True, null=True)
+    female_18 = models.IntegerField(blank=True, null=True)
+    female_total = models.IntegerField(blank=True, null=True)
+    
+    male_0_5 = models.IntegerField(blank=True, null=True)
+    male_6_12 = models.IntegerField(blank=True, null=True)
+    male_12_17 = models.IntegerField(blank=True, null=True)
+    male_18 = models.IntegerField(blank=True, null=True)
+    male_total = models.IntegerField(blank=True, null=True)
+
+    other_0_5 = models.IntegerField(blank=True, null=True)
+    other_6_12 = models.IntegerField(blank=True, null=True)
+    other_12_17 = models.IntegerField(blank=True, null=True)
+    other_18 = models.IntegerField(blank=True, null=True)
+    other_total = models.IntegerField(blank=True, null=True)
+
+    total_0_5 = models.IntegerField(blank=True, null=True)
+    total_6_12 = models.IntegerField(blank=True, null=True)
+    total_12_17 = models.IntegerField(blank=True, null=True)
+    total_18 = models.IntegerField(blank=True, null=True)
+
+    total = models.IntegerField(blank=True, null=True)
+
     households = models.IntegerField(blank=True, null=True)
     activity_fields = models.JSONField(blank=True, null=True)
+    description = models.TextField(blank=True, null=True)
+
+    def beneficiary_category_verbose(self):
+        return dict(ActivityPlan.CATEGORY_TYPES)[self.beneficiary_category]
 
     def __str__(self):
-        return f"{self.project.title}, {self.activity.title}"
+        return f"{self.project.title}"
 
     class Meta:
         verbose_name = 'Activity Plan'
         verbose_name_plural = "Activity Plans"
+
+
+class TargetLocation(models.Model):
+    """Target Locations model"""
+    
+    project = models.ForeignKey(Project, on_delete=models.SET_NULL, null=True, blank=True)
+    country = models.ForeignKey(Location, related_name='target_country', on_delete=models.SET_NULL, null=True, blank=True)
+    province = models.ForeignKey(Location, related_name='target_province', on_delete=models.SET_NULL, null=True, blank=True)
+    district = models.ForeignKey(Location, related_name='target_district', on_delete=models.SET_NULL, null=True, blank=True)
+    location_type = models.ForeignKey(LocationType, on_delete=models.SET_NULL, null=True, blank=True)
+    site_name = models.CharField(max_length=255, blank=True, null=True)
+
+    def __str__(self):
+        return f"{self.project.title}, {self.province}, {self.district}"
+
+    class Meta:
+        verbose_name = 'Target Location'
+        verbose_name_plural = "Target Locations"
 
 
 class Report(models.Model):

@@ -232,11 +232,21 @@ class Activity(models.Model):
 
 class Project(models.Model):
     """Projects model"""
-    
+
+    PROJECT_STATES = [
+        ('draft', 'Draft'),
+        ('in-progress', 'In Progress'),
+        ('done', 'Completed'),
+        ('archive', 'Archived'),
+    ]
+    state = models.CharField(
+        max_length=15,
+        choices=PROJECT_STATES,
+        default='draft', null=True, blank=True
+    )
+    active = models.BooleanField(default=True)
     title = models.CharField(max_length=NAME_MAX_LENGTH)
     code = models.CharField(max_length=NAME_MAX_LENGTH, null=True, blank=True)
-    #TODO: Calculated field for default cluster based on user cluster
-    # cluster = models.ForeignKey(Cluster, on_delete=models.SET_NULL, null=True, blank=True)
     clusters = models.ManyToManyField(Cluster)
     activities = models.ManyToManyField(Activity)
     donors = models.ManyToManyField(Donor)
@@ -249,7 +259,7 @@ class Project(models.Model):
     budget_currency = models.ForeignKey('Currency', on_delete=models.SET_NULL, null=True, blank=True)
     created_at = models.DateField(auto_now_add=True, blank=True, null=True)
     updated_at = models.DateField(auto_now=True, blank=True, null=True)
-    active = models.BooleanField(default=True)
+    
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
     description = models.TextField(blank=True, null=True)
 
@@ -263,6 +273,19 @@ class ActivityPlan(models.Model):
         ('disabled', 'Persons with Disabilities'),
         ('non-disabled', 'Non-Disabled'),
     ]
+    ACTIVITY_PLAN_STATES = [
+        ('draft', 'Draft'),
+        ('in-progress', 'In Progress'),
+        ('done', 'Completed'),
+        ('archive', 'Archived'),
+    ]
+
+    state = models.CharField(
+        max_length=15,
+        choices=ACTIVITY_PLAN_STATES,
+        default='draft', null=True, blank=True
+    )
+    active = models.BooleanField(default=True)
     project = models.ForeignKey(Project, on_delete=models.SET_NULL, null=True, blank=True)
     activity = models.ForeignKey(Activity, on_delete=models.SET_NULL, null=True, blank=True)
     beneficiary = models.ForeignKey(BeneficiaryType, on_delete=models.SET_NULL, null=True, blank=True)
@@ -314,7 +337,19 @@ class ActivityPlan(models.Model):
 
 class TargetLocation(models.Model):
     """Target Locations model"""
-    
+
+    TARGET_LOCATIONS_STATES = [
+        ('draft', 'Draft'),
+        ('in-progress', 'In Progress'),
+        ('done', 'Completed'),
+        ('archive', 'Archived'),
+    ]
+    state = models.CharField(
+        max_length=15,
+        choices=TARGET_LOCATIONS_STATES,
+        default='draft', null=True, blank=True
+    )
+    active = models.BooleanField(default=True)
     project = models.ForeignKey(Project, on_delete=models.SET_NULL, null=True, blank=True)
     country = models.ForeignKey(Location, related_name='target_country', on_delete=models.SET_NULL, null=True, blank=True)
     province = models.ForeignKey(Location, related_name='target_province', on_delete=models.SET_NULL, null=True, blank=True)

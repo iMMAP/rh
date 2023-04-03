@@ -86,6 +86,7 @@ class ActivityPlanForm(forms.ModelForm):
         widgets = {
             # 'activity_fields': forms.Textarea(attrs={'class': 'ajax-activity-fields-class', 'readonly':True, 'activityfields-queries-url': reverse_lazy('ajax-load-activityfields')}),
             'activity': forms.Select(attrs={'disabled': ''}),
+            'active': forms.widgets.HiddenInput(),
         }
 
     def clean_activity_fields(self):
@@ -107,6 +108,8 @@ class TargetLocationForm(forms.ModelForm):
             'country': forms.Select(attrs={'disabled': ''}),
             'province': forms.Select(attrs={'disabled': ''}),
             'district': forms.Select(attrs={'disabled': ''}),
+            'active': forms.widgets.HiddenInput(),
+            
         }
 
     def __init__(self, *args, **kwargs):

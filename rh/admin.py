@@ -175,9 +175,9 @@ admin.site.register(Activity, ActivityAdmin)
 ############ Project Model Admin #############
 ##############################################
 class ProjectAdmin(admin.ModelAdmin):
-    list_display = ('title', 'code', 'user', 'show_clusters', 'show_activities', 'programme_partner', 'budget', 'budget_currency')
-    search_fields = ('title','code', 'clusters__title', 'activities__title', 'implementing_partner', 'programme_partner')
-    list_filter = ('clusters',)
+    list_display = ('title', 'code', 'user', 'show_clusters', 'programme_partner', 'budget', 'budget_currency', 'state', 'active')
+    search_fields = ('title','code', 'clusters__title', 'activities__title', 'implementing_partner', 'programme_partner', 'state')
+    list_filter = ('state', 'active', 'clusters')
 
     # To create a clickable link between to models
     # def user_link(self, obj):
@@ -205,9 +205,9 @@ admin.site.register(Project, ProjectAdmin)
 ######### Activity Plan Model Admin ##########
 ##############################################
 class ActivityPlanAdmin(admin.ModelAdmin):
-    list_display = ('project', 'activity',  'households', 'beneficiary', 'beneficiary_category')
-    search_fields = ('project__title', 'activity__name', 'households')
-    list_filter = ('project', 'activity')
+    list_display = ('project', 'activity',  'households', 'beneficiary', 'beneficiary_category', 'state', 'active')
+    search_fields = ('state', 'active', 'project__title', 'activity__name', 'households')
+    list_filter = ('state', 'active', 'project__code')
 admin.site.register(ActivityPlan, ActivityPlanAdmin)
 
 
@@ -215,9 +215,9 @@ admin.site.register(ActivityPlan, ActivityPlanAdmin)
 ######### Target Locations Model Admin ##########
 ##############################################
 class TargetLocationAdmin(admin.ModelAdmin):
-    list_display = ('site_name', 'project', 'country', 'province', 'district')
-    # search_fields = ('project__title', 'activity__title', 'households')
-    # list_filter = ('project', 'activity')
+    list_display = ('site_name', 'project', 'country', 'province', 'district', 'state', 'active')
+    search_fields = ('project__title', 'state', 'active')
+    list_filter = ('state', 'active', 'project__code')
 admin.site.register(TargetLocation, TargetLocationAdmin)
 
 

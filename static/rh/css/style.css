@@ -6038,3 +6038,7 @@ body.filter-active {
   padding: 0 0 10px;
   border-bottom: 2px solid #be2126;
 }
+
+.disabled-link {
+  pointer-events: none
+}

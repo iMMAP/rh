@@ -5,7 +5,7 @@
 
 <div class="login-section base-section">
     <div class="decor-holder">
-    <img src="{% static 'rh/images/login-decor.png' %}" alt="Login" />
+        <img src="{% static 'rh/images/login-decor.png' %}" alt="Login"/>
     </div>
 
     <div class="container">
@@ -14,8 +14,8 @@
             <div class="description">
                 <div class="text">
                     <p>Dear <b>{{ user.profile.name }}</b>, <br/>
-                        please go to your email <b><a href="mailto:{{user.email}}">{{ user.email }}</a></b> 
-                        inbox and click on the activation link to confirm and complete your registration. 
+                        please go to your email <b><a href="mailto:{{user.email}}">{{ user.email }}</a></b>
+                        inbox and click on the activation link to confirm and complete your registration.
                         <br/><b>Note: </b>Check your spam folder if email not found in inbox.
                     </p>
                 </div>

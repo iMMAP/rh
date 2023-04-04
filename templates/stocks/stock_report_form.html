@@ -1,5 +1,5 @@
 {% extends '_base.html' %}
-{% load crispy_forms_tags %}
+{% load static %}
 
 
 {% block content %}
@@ -55,19 +55,19 @@
                                                 <div class="accordion-body" id="accordion_body_{{warehouse_location.id}}_{{forloop.counter0}}">
                                                     <div class="row">
                                                         <div class="col">
-                                                        {{ form.cluster|as_crispy_field}}
-                                                        {{ form.stock_type|as_crispy_field}}
-                                                        {{ form.qty_in_stock|as_crispy_field}}
+                                                        {{ form.cluster}}
+                                                        {{ form.stock_type}}
+                                                        {{ form.qty_in_stock}}
                                                         </div>
                                                         <div class="col">
-                                                        {{ form.stock_purpose|as_crispy_field}}
-                                                        {{ form.status|as_crispy_field}}
-                                                        {{ form.qty_in_pipeline|as_crispy_field}}
+                                                        {{ form.stock_purpose}}
+                                                        {{ form.status}}
+                                                        {{ form.qty_in_pipeline}}
                                                         </div>
                                                         <div class="col">
-                                                        {{ form.targeted_groups|as_crispy_field}}
-                                                        {{ form.stock_unit|as_crispy_field}}
-                                                        {{ form.beneficiary_coverage|as_crispy_field}}
+                                                        {{ form.targeted_groups}}
+                                                        {{ form.stock_unit}}
+                                                        {{ form.beneficiary_coverage}}
                                                         </div>
                                                     </div>
                                                     
@@ -88,7 +88,7 @@
                         <h4 class="card-title bg-light p-3">
                             Monthly Notes & Comments
                         </h4>
-                        {{report_form|crispy}}
+                        {{report_form}}
                         <div class="mb-3 mt-3 d-grid">
                             <input type="submit" class="btn btn-outline-dark" name="report_form_save" value="Save"/>
                         </div>

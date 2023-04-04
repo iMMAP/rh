@@ -1,30 +1,20 @@
 import re
-import pandas as pd
-import datetime
-import sqlite3
-import json
-
-
-from django.shortcuts import render, redirect, get_object_or_404
-
-# TODO: Add is_safe_url to redirects
-# from django.utils.http import is_safe_url
-
-
-from django.http import HttpResponse, JsonResponse
-from django.template import loader
-
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.views.decorators.cache import cache_control
-from django.conf import settings
-from django.forms import modelformset_factory
 from django.core.paginator import Paginator
+from django.forms import modelformset_factory
+from django.http import HttpResponse, JsonResponse
+from django.shortcuts import render, redirect
+from django.template import loader
+from django.views.decorators.cache import cache_control
 
-from .models import *
-from .forms import *
 from .filters import *
+from .forms import *
+
+
+# TODO: Add is_safe_url to redirects
+# from django.utils.http import is_safe_url
 
 
 #############################################
@@ -38,8 +28,8 @@ def index(request):
     locations_count = Location.objects.all().count()
     reports_count = Report.objects.all().count()
     context = {
-        'users': users_count, 
-        'locations': locations_count, 
+        'users': users_count,
+        'locations': locations_count,
         'reports': reports_count
     }
     return HttpResponse(template.render(context, request))
@@ -54,8 +44,8 @@ def home(request):
     locations_count = Location.objects.all().count()
     reports_count = Report.objects.all().count()
     context = {
-        'users': users_count, 
-        'locations': locations_count, 
+        'users': users_count,
+        'locations': locations_count,
         'reports': reports_count
     }
     return HttpResponse(template.render(context, request))
@@ -77,14 +67,14 @@ def load_activity_json_form(request):
         else:
             activity_plan = int(request.GET.get('activity_plan_id', ''))
             json_fields = ActivityPlan.objects.get(pk=activity_plan).activity.fields
-        
+
     if request.GET.get('activity_plan_id') != '':
         activity_plan_id = int(request.GET.get('activity_plan_id', ''))
         data = ActivityPlan.objects.get(pk=activity_plan_id).activity_fields
     form_class = get_dynamic_form(json_fields, data)
     if not form_class:
         return JsonResponse({"form": False})
-        
+
     form = form_class()
     temp = loader.render_to_string("dynamic_form_fields.html", {'form': form})
     return JsonResponse({"form": temp})
@@ -145,7 +135,6 @@ def update_activity_plan(request, pk):
     return render(request, 'activities/activity_plans_form.html', context)
 
 
-
 #############################################
 ############## Project Views ################
 #############################################
@@ -163,7 +152,7 @@ def load_activities_details(request):
         option = f"""
         <option value="{activity.pk}">{activity}</option>
         """
-        activities_options+=option
+        activities_options += option
     return HttpResponse(activities_options)
 
 
@@ -184,7 +173,7 @@ def load_locations_details(request):
                 <option value="{district.pk}">
                     {district.name}
                 </option>"""
-            
+
             province_group += f"""
             <optgroup label="{province.name}">
                 <option value="{province.pk}">{province.name} ({province.type})</option>
@@ -212,8 +201,7 @@ def projects_view(request):
     p = Paginator(active_projects, 3)
     page = request.GET.get('page')
     p_active_projects = p.get_page(page)
-    total_pages = 'a'*p_active_projects.paginator.num_pages
-
+    total_pages = 'a' * p_active_projects.paginator.num_pages
 
     # Setup Filter
     project_filter = ProjectsFilter(request.GET, queryset=active_projects)
@@ -223,8 +211,8 @@ def projects_view(request):
         'draft_projects': draft_projects,
         'active_projects': p_active_projects,
         'completed_projects': completed_projects,
-        'project_filter':project_filter,
-        'total_pages':total_pages,
+        'project_filter': project_filter,
+        'total_pages': total_pages,
     }
     return render(request, 'projects/projects.html', context)
 
@@ -235,7 +223,7 @@ def completed_project_view(request, pk):
     """Projects Plans"""
     project = Project.objects.get(pk=pk)
 
-    activity_plans  = ActivityPlan.objects.filter(project__id=project.pk)
+    activity_plans = ActivityPlan.objects.filter(project__id=project.pk)
     target_locations = TargetLocation.objects.filter(project__id=project.pk)
 
     context = {
@@ -243,7 +231,6 @@ def completed_project_view(request, pk):
         'activity_plans': activity_plans,
         'target_locations': target_locations,
         'project_review': True,
-        'activity_plans': activity_plans,
         'locations': target_locations
     }
     return render(request, 'projects/completed_project.html', context)
@@ -275,14 +262,13 @@ def update_project_view(request, pk):
         if form.is_valid():
             project_id = form.save()
             return redirect('update_project_activity_plan', project=project_id.pk)
-        
+
     activity_plans = ActivityPlan.objects.filter(project__id=project.pk)
     plans = list(activity_plans.values_list('pk', flat=True))
     target_locations = TargetLocation.objects.filter(project__id=project.pk)
     locations = list(target_locations.values_list('pk', flat=True))
 
-
-    context = {'form': form, 'project': project, 'project_planning': True, 'plans':plans, 'locations': locations}
+    context = {'form': form, 'project': project, 'project_planning': True, 'plans': plans, 'locations': locations}
     return render(request, 'projects/project_form.html', context)
 
 
@@ -291,10 +277,12 @@ def update_project_view(request, pk):
 def create_project_activity_plan(request, project):
     project = Project.objects.get(pk=project)
     activities = project.activities.all()
-    activity_plans = ActivityPlan.objects.filter(project__id=project.pk, activity__in=[a.pk for a in project.activities.all()])
+    activity_plans = ActivityPlan.objects.filter(project__id=project.pk,
+                                                 activity__in=[a.pk for a in project.activities.all()])
     if activity_plans:
         return redirect('update_project_activity_plan', project=project.pk)
-    ActivityPlanFormSet = modelformset_factory(ActivityPlan, exclude=['project'], form=ActivityPlanForm, extra=len(activities))
+    ActivityPlanFormSet = modelformset_factory(ActivityPlan, exclude=['project'], form=ActivityPlanForm,
+                                               extra=len(activities))
     if request.method == 'POST':
         formset = ActivityPlanFormSet(request.POST)
         if formset.is_valid():
@@ -323,7 +311,8 @@ def create_project_activity_plan(request, project):
 @login_required
 def update_project_activity_plan(request, project):
     project = Project.objects.get(pk=project)
-    activity_plans = ActivityPlan.objects.filter(project__id=project.pk, activity__in=[a.pk for a in project.activities.all()])
+    activity_plans = ActivityPlan.objects.filter(project__id=project.pk,
+                                                 activity__in=[a.pk for a in project.activities.all()])
     if not activity_plans:
         return redirect('create_project_activity_plan', project=project.pk)
     activities = project.activities.all()
@@ -350,7 +339,7 @@ def update_project_activity_plan(request, project):
                 # json_class = get_dynamic_form(activity.fields)
                 # json_form = json_class(request.POST)
                 # if json_form.is_valid():
-                    # json_data = json_form.cleaned_data
+                # json_data = json_form.cleaned_data
                 # activity_plan.activity_fields = json_data
 
                 activity_plan = form.save(commit=False)
@@ -368,10 +357,10 @@ def update_project_activity_plan(request, project):
                         error_message = f"{error}: {form.errors[error][0]}"
                     messages.error(request, error_message)
 
-
     target_locations = TargetLocation.objects.filter(project__id=project.pk)
     locations = list(target_locations.values_list('pk', flat=True))
-    context = {'project': project, 'formset': formset, 'activity_planning': True, 'plans': kwarg_vals['plans'], 'locations':locations}
+    context = {'project': project, 'formset': formset, 'activity_planning': True, 'plans': kwarg_vals['plans'],
+               'locations': locations}
 
     return render(request, "projects/project_activity_plan_form.html", context)
 
@@ -379,12 +368,12 @@ def update_project_activity_plan(request, project):
 @cache_control(no_store=True)
 @login_required
 def create_project_target_location(request, project, **kwargs):
-
     activity_plan_ids = [int(s) for s in re.findall(r'\d+', kwargs['plans'])]
     project = Project.objects.get(pk=project)
 
     locations = project.locations.all()
-    TargetLocationsFormSet = modelformset_factory(TargetLocation, exclude=['project'], form=TargetLocationForm, extra=len(locations))
+    TargetLocationsFormSet = modelformset_factory(TargetLocation, exclude=['project'], form=TargetLocationForm,
+                                                  extra=len(locations))
 
     target_locations = TargetLocation.objects.filter(project__id=project.pk)
     if target_locations:
@@ -394,7 +383,7 @@ def create_project_target_location(request, project, **kwargs):
     if request.method == 'POST':
         formset = TargetLocationsFormSet(request.POST)
         if formset.is_valid():
-            kwarg_vals = {'plans': activity_plan_ids, 'locations': [],}
+            kwarg_vals = {'plans': activity_plan_ids, 'locations': [], }
             for form in formset:
                 form_data = form.cleaned_data
 
@@ -406,7 +395,7 @@ def create_project_target_location(request, project, **kwargs):
                     country_id = Location.objects.get(pk=form_data['country_id'])
                 if form_data['province_id'] != 'False':
                     province_id = Location.objects.get(pk=form_data['province_id'])
-                if form_data['district_id'] != 'False': 
+                if form_data['district_id'] != 'False':
                     district_id = Location.objects.get(pk=form_data['district_id'])
 
                 target_location = form.save(commit=False)
@@ -441,13 +430,15 @@ def create_project_target_location(request, project, **kwargs):
                     country_id = location.parent.pk
             else:
                 district_id = location.pk
-                initials_dict.update({'district': location, 'province': location.parent, 'country': location.parent.parent})
+                initials_dict.update(
+                    {'district': location, 'province': location.parent, 'country': location.parent.parent})
                 if location.parent:
                     province_id = location.parent.pk
                 if location.parent and location.parent.parent:
                     country_id = location.parent.parent.pk
 
-            initials_dict.update({'country_id': country_id, 'province_id': province_id, 'district_id': district_id, 'location':location})
+            initials_dict.update({'country_id': country_id, 'province_id': province_id, 'district_id': district_id,
+                                  'location': location})
 
             initials.append(initials_dict)
         formset = TargetLocationsFormSet(queryset=TargetLocation.objects.none(), initial=initials)
@@ -460,15 +451,16 @@ def create_project_target_location(request, project, **kwargs):
 def update_project_target_location(request, project, **kwargs):
     activity_plan_ids = [int(s) for s in re.findall(r'\d+', kwargs['plans'])]
     project = Project.objects.get(pk=project)
-    
+
     target_locations = TargetLocation.objects.filter(project__id=project.pk)
     if not target_locations:
         return redirect('create_project_target_location', project=project.pk, **kwargs)
-    
+
     locations = project.locations.all()
     extras = len(project.locations.all()) - len(target_locations)
-    TargetLocationsFormSet = modelformset_factory(TargetLocation, exclude=['project'], form=TargetLocationForm, extra=extras)
-    
+    TargetLocationsFormSet = modelformset_factory(TargetLocation, exclude=['project'], form=TargetLocationForm,
+                                                  extra=extras)
+
     initials = []
     for location in locations:
         country_id = False
@@ -495,10 +487,10 @@ def update_project_target_location(request, project, **kwargs):
         initials_dict.update({'country_id': country_id, 'province_id': province_id, 'district_id': district_id})
 
         initials.append(initials_dict)
-    
+
     formset = TargetLocationsFormSet(request.POST or None, initial=initials, queryset=target_locations)
-    
-    kwarg_vals = {'plans': activity_plan_ids, 'locations': list(target_locations.values_list('pk', flat=True)),}
+
+    kwarg_vals = {'plans': activity_plan_ids, 'locations': list(target_locations.values_list('pk', flat=True)), }
     if request.method == 'POST':
         formset = TargetLocationsFormSet(request.POST)
         if formset.is_valid():
@@ -513,9 +505,9 @@ def update_project_target_location(request, project, **kwargs):
                     country_id = Location.objects.get(pk=form_data['country_id'])
                 if form_data.get('province_id', False) and form_data.get('province_id', False) != 'False':
                     province_id = Location.objects.get(pk=form_data['province_id'])
-                if form_data.get('district_id', False) and form_data.get('district_id', False) != 'False': 
+                if form_data.get('district_id', False) and form_data.get('district_id', False) != 'False':
                     district_id = Location.objects.get(pk=form_data['district_id'])
-                
+
                 if form_data.get('id', False):
                     country_id = form_data['id'].country
                     province_id = form_data['id'].province
@@ -537,7 +529,8 @@ def update_project_target_location(request, project, **kwargs):
             return redirect('project_plan_review', project=project.pk, **kwarg_vals)
             # return redirect('projects')
 
-    context = {'project': project, 'formset': formset, 'locations_planning': True, 'plans': kwarg_vals['plans'], 'locations': kwarg_vals['locations']}
+    context = {'project': project, 'formset': formset, 'locations_planning': True, 'plans': kwarg_vals['plans'],
+               'locations': kwarg_vals['locations']}
     return render(request, "projects/project_target_locations.html", context)
 
 
@@ -550,7 +543,7 @@ def project_planning_review(request, **kwargs):
     project = Project.objects.get(pk=project_id)
 
     activity_plan_ids = [int(p) for p in re.findall(r'\d+', kwargs['plans'])]
-    activity_plans  = ActivityPlan.objects.filter(pk__in=activity_plan_ids)
+    activity_plans = ActivityPlan.objects.filter(pk__in=activity_plan_ids)
 
     target_locations_ids = [int(p) for p in re.findall(r'\d+', kwargs['locations'])]
     target_locations = TargetLocation.objects.filter(pk__in=target_locations_ids)
@@ -591,7 +584,7 @@ def delete_project(request, pk):
             plan.state = 'archive'
             plan.active = False
             plan.save()
-        
+
         for location in target_locations:
             location.state = 'archive'
             location.active = False
@@ -602,6 +595,7 @@ def delete_project(request, pk):
         project.save()
 
     return redirect('projects')
+
 
 @cache_control(no_store=True)
 @login_required
@@ -635,7 +629,7 @@ def copy_project(request, pk):
                 new_plan.description = 'COPY'
                 new_plan.save()
                 # new_plan.save()
-            
+
             for location in target_locations:
                 new_location = TargetLocation.objects.get(pk=location.pk)
                 new_plan.pk = None
@@ -650,4 +644,3 @@ def copy_project(request, pk):
         new_project.save()
 
     return redirect('projects')
-    

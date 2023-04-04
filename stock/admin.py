@@ -1,5 +1,8 @@
 from django.contrib import admin
+
 from .models import *
+
+
 # Register your models here.
 
 def get_app_list(self, request):
@@ -30,6 +33,7 @@ def get_app_list(self, request):
             }
     return app_list
 
+
 # Override the get_app_list of AdminSite
 admin.AdminSite.get_app_list = get_app_list
 
@@ -37,7 +41,6 @@ admin.AdminSite.get_app_list = get_app_list
 ########### Stock Types Model Admin #############
 #############################################
 admin.site.register(StockType)
-
 
 #############################################
 ########### Stock Units Model Admin #############
@@ -59,8 +62,9 @@ class WarehouseLocationAdmin(admin.ModelAdmin):
         if db_field.name == "district":
             kwargs["queryset"] = Location.objects.filter(type='District')
         return super().formfield_for_foreignkey(db_field, request, **kwargs)
-admin.site.register(WarehouseLocation, WarehouseLocationAdmin)
 
+
+admin.site.register(WarehouseLocation, WarehouseLocationAdmin)
 
 ##############################################
 ###### Warehouse Location Model Admin ########
@@ -68,7 +72,6 @@ admin.site.register(WarehouseLocation, WarehouseLocationAdmin)
 # class StockLocationDetailsAdmin(admin.ModelAdmin):
 #     readonly_fields = ['created_at']
 admin.site.register(StockLocationDetails)
-
 
 # class StockReportsAdmin(admin.ModelAdmin):
 admin.site.register(StockReports)

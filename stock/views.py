@@ -1,20 +1,16 @@
 import datetime
-import re, urllib
+import re
+import urllib
+
 from dateutil.relativedelta import relativedelta
-
-
-from django.shortcuts import render, redirect
-
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-
-from django.views.decorators.http import require_http_methods
-from django.views.decorators.cache import cache_control
 from django.forms import modelformset_factory
+from django.shortcuts import render, redirect
+from django.views.decorators.cache import cache_control
+from django.views.decorators.http import require_http_methods
 
-from .models import *
 from .forms import *
-
 
 
 @cache_control(no_store=True)
@@ -33,7 +29,7 @@ def stock_index_view(request):
                 warehouse_location_id = None
             if warehouse_location_id:
                 warehouse_location_id.delete()
-            
+
             formset = WarehouseLocationFormset(request.POST, request.FILES)
             if formset.is_valid():
                 formset.save()
@@ -42,7 +38,7 @@ def stock_index_view(request):
         if formset.is_valid():
             instances = formset.save()
             for instance in instances:
-                now =  datetime.datetime.now(datetime.timezone.utc)
+                now = datetime.datetime.now(datetime.timezone.utc)
                 due_date = now + relativedelta(day=31)
 
                 stock_report = StockReports.objects.filter(created_at__month=now.month)
@@ -71,7 +67,6 @@ def stock_report_view(request, pk):
     stock_report = StockReports.objects.get(id=pk)
     stock_location_details = stock_report.stock_location_details.all()
 
-
     warehouse_locations = WarehouseLocation.objects.all()
     warehouse_location_stocks = {}
 
@@ -79,7 +74,7 @@ def stock_report_view(request, pk):
 
         for warehouse in warehouse_locations:
             warehouse_stock_details = stock_location_details.filter(warehouse_location__id=warehouse.id)
-            warehouse_location_stocks.update({ warehouse: warehouse_stock_details })
+            warehouse_location_stocks.update({warehouse: warehouse_stock_details})
 
         context = {'report': stock_report, 'warehouse_location_stocks': warehouse_location_stocks}
         return render(request, 'stocks/stock_report_view.html', context)
@@ -88,11 +83,13 @@ def stock_report_view(request, pk):
 
     # Warehouse based stock details formset
     for warehouse in warehouse_locations:
-        StockLocationDetailsFormSet = modelformset_factory(StockLocationDetails, exclude=['warehouse_location'], form=StockLocationDetailsForm, extra=1)
+        StockLocationDetailsFormSet = modelformset_factory(StockLocationDetails, exclude=['warehouse_location'],
+                                                           form=StockLocationDetailsForm, extra=1)
         warehouse_stock_details = stock_location_details.filter(warehouse_location__id=warehouse.id)
 
-        formset = StockLocationDetailsFormSet(queryset=warehouse_stock_details, prefix=f'warehouse-{warehouse.id}-stock')
-        warehouse_location_stocks.update({ warehouse: formset })
+        formset = StockLocationDetailsFormSet(queryset=warehouse_stock_details,
+                                              prefix=f'warehouse-{warehouse.id}-stock')
+        warehouse_location_stocks.update({warehouse: formset})
 
         if request.method == 'POST':
             enurl = urllib.parse.urlencode(request.POST)  # To convert POST into a string
@@ -107,8 +104,9 @@ def stock_report_view(request, pk):
                 if stock_location_id:
                     stock_location_id.delete()
                     return redirect('stock_report', pk=pk)
-        
-            formset = StockLocationDetailsFormSet(request.POST, queryset=warehouse_stock_details, prefix=f'warehouse-{warehouse.id}-stock')
+
+            formset = StockLocationDetailsFormSet(request.POST, queryset=warehouse_stock_details,
+                                                  prefix=f'warehouse-{warehouse.id}-stock')
             if formset.is_valid():
                 instances = formset.save(commit=False)
                 for instance in instances:

@@ -1,5 +1,5 @@
-from django.db import models
 from django.contrib.auth.models import User
+from django.db import models
 
 NAME_MAX_LENGTH = 300
 DESCRIPTION_MAX_LENGTH = 600
@@ -32,6 +32,7 @@ class Location(models.Model):
     def __str__(self):
         return self.name
 
+
 # class Location(models.Model):
 #     """Locations Model"""
 
@@ -62,7 +63,7 @@ class Location(models.Model):
 #     admin4_pcode = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
 #     admin4_na_en = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
 #     admin4_translation = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
-    
+
 #     type = models.CharField(
 #         max_length=15,
 #         choices=LOCATION_TYPES,
@@ -81,7 +82,7 @@ class Location(models.Model):
 #             name = self.admin1_na_en
 
 #         return name
-    
+
 
 class Cluster(models.Model):
     """Clusters Model"""
@@ -100,15 +101,15 @@ class BeneficiaryType(models.Model):
     """Beneficiary Types Model"""
     name = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
     code = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
-    location = models.ForeignKey(Location, blank=True, null=True, on_delete=models.SET_NULL,)
+    location = models.ForeignKey(Location, blank=True, null=True, on_delete=models.SET_NULL, )
     description = models.CharField(max_length=DESCRIPTION_MAX_LENGTH, blank=True, null=True)
     start_date = models.DateTimeField(blank=True, null=True)
     end_date = models.DateTimeField(blank=True, null=True)
-    old_id =  models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
+    old_id = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
 
     def __str__(self):
         return self.name
-    
+
     class Meta:
         verbose_name = 'Beneficiary Type'
         verbose_name_plural = "Beneficiary Types"
@@ -116,30 +117,30 @@ class BeneficiaryType(models.Model):
 
 class Organization(models.Model):
     """Organizations Model"""
-    location = models.ForeignKey(Location, blank=True, null=True, on_delete=models.SET_NULL,)
+    location = models.ForeignKey(Location, blank=True, null=True, on_delete=models.SET_NULL, )
     name = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
     code = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
     type = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
     updated_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
-    old_id =  models.CharField("Old ID", max_length=NAME_MAX_LENGTH, blank=True, null=True)
+    old_id = models.CharField("Old ID", max_length=NAME_MAX_LENGTH, blank=True, null=True)
 
     def __str__(self):
         return self.code
 
 
 class Donor(models.Model):
-    code =  models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
-    name =  models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
-    location = models.ForeignKey(Location, blank=True, null=True, on_delete=models.SET_NULL,)
-    cluster = models.ForeignKey(Cluster, blank=True, null=True, on_delete=models.SET_NULL,)
+    code = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
+    name = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
+    location = models.ForeignKey(Location, blank=True, null=True, on_delete=models.SET_NULL, )
+    cluster = models.ForeignKey(Cluster, blank=True, null=True, on_delete=models.SET_NULL, )
     start_date = models.DateTimeField(blank=True, null=True)
     end_date = models.DateTimeField(blank=True, null=True)
-    old_id =  models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
+    old_id = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
 
     def __str__(self):
         return self.name
-    
+
     class Meta:
         verbose_name = 'Donor'
         verbose_name_plural = "Donors"
@@ -155,8 +156,8 @@ class StrategicObjective(models.Model):
     denominator = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
 
     def __str__(self):
-        return self.name
-    
+        return self.strategic_objective_name
+
     class Meta:
         verbose_name = 'Objective'
         verbose_name_plural = "Objectives"
@@ -172,7 +173,7 @@ class Indicator(models.Model):
 
     def __str__(self):
         return self.name
-    
+
     class Meta:
         verbose_name = 'Indicator'
         verbose_name_plural = "Indicators"
@@ -184,7 +185,7 @@ class Currency(models.Model):
 
     def __str__(self):
         return self.name
-    
+
     class Meta:
         verbose_name = 'Currency'
         verbose_name_plural = "Currencies"
@@ -196,7 +197,7 @@ class LocationType(models.Model):
 
     def __str__(self):
         return self.name
-    
+
     class Meta:
         verbose_name = 'Location Type'
         verbose_name_plural = "Location Types"
@@ -219,16 +220,16 @@ class Activity(models.Model):
     start_date = models.DateTimeField(auto_now_add=True, blank=True, null=True)
     end_date = models.DateTimeField(auto_now_add=True, blank=True, null=True)
     fields = models.JSONField(blank=True, null=True, default=dict)
-    old_id =  models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
+    old_id = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
     ocha_code = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
 
     def __str__(self):
         return f"{self.name} - [{self.subdomain_name}]"
-    
+
     class Meta:
         verbose_name = 'Activity'
         verbose_name_plural = "Activities"
-    
+
 
 class Project(models.Model):
     """Projects model"""
@@ -259,7 +260,7 @@ class Project(models.Model):
     budget_currency = models.ForeignKey('Currency', on_delete=models.SET_NULL, null=True, blank=True)
     created_at = models.DateField(auto_now_add=True, blank=True, null=True)
     updated_at = models.DateField(auto_now=True, blank=True, null=True)
-    
+
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
     description = models.TextField(blank=True, null=True)
 
@@ -295,13 +296,13 @@ class ActivityPlan(models.Model):
         choices=CATEGORY_TYPES,
         default=False, null=True, blank=True
     )
-    
+
     female_0_5 = models.IntegerField(blank=True, null=True)
     female_6_12 = models.IntegerField(blank=True, null=True)
     female_12_17 = models.IntegerField(blank=True, null=True)
     female_18 = models.IntegerField(blank=True, null=True)
     female_total = models.IntegerField(blank=True, null=True)
-    
+
     male_0_5 = models.IntegerField(blank=True, null=True)
     male_6_12 = models.IntegerField(blank=True, null=True)
     male_12_17 = models.IntegerField(blank=True, null=True)
@@ -324,9 +325,6 @@ class ActivityPlan(models.Model):
     households = models.IntegerField(blank=True, null=True)
     activity_fields = models.JSONField(blank=True, null=True)
     description = models.TextField(blank=True, null=True)
-
-    def beneficiary_category_verbose(self):
-        return dict(ActivityPlan.CATEGORY_TYPES)[self.beneficiary_category]
 
     def __str__(self):
         return f"{self.project.title}"
@@ -352,9 +350,12 @@ class TargetLocation(models.Model):
     )
     active = models.BooleanField(default=True)
     project = models.ForeignKey(Project, on_delete=models.SET_NULL, null=True, blank=True)
-    country = models.ForeignKey(Location, related_name='target_country', on_delete=models.SET_NULL, null=True, blank=True)
-    province = models.ForeignKey(Location, related_name='target_province', on_delete=models.SET_NULL, null=True, blank=True)
-    district = models.ForeignKey(Location, related_name='target_district', on_delete=models.SET_NULL, null=True, blank=True)
+    country = models.ForeignKey(Location, related_name='target_country', on_delete=models.SET_NULL, null=True,
+                                blank=True)
+    province = models.ForeignKey(Location, related_name='target_province', on_delete=models.SET_NULL, null=True,
+                                 blank=True)
+    district = models.ForeignKey(Location, related_name='target_district', on_delete=models.SET_NULL, null=True,
+                                 blank=True)
     location_type = models.ForeignKey(LocationType, on_delete=models.SET_NULL, null=True, blank=True)
     site_name = models.CharField(max_length=255, blank=True, null=True)
 
@@ -377,6 +378,6 @@ class Report(models.Model):
     elderly_men = models.IntegerField(blank=True, null=True)
     elderly_women = models.IntegerField(blank=True, null=True)
     households = models.IntegerField(blank=True, null=True)
-    notes =  models.TextField(blank=True, null=True)
+    notes = models.TextField(blank=True, null=True)
     submitted_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)

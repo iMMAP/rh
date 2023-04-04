@@ -1,26 +1,19 @@
-import datetime
-
-from django.shortcuts import render, redirect
-from django.http import HttpResponse
-from django.template import loader
-
-
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import get_user_model, login, logout, authenticate
 from django.contrib.auth.decorators import login_required
-from django.contrib.sites.shortcuts import get_current_site  
-
-from django.utils.encoding import force_bytes, force_str  
-from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode  
-
-from django.core.mail import EmailMessage, EmailMultiAlternatives  
+from django.contrib.sites.shortcuts import get_current_site
+from django.core.mail import EmailMultiAlternatives
+from django.http import HttpResponse
+from django.shortcuts import redirect
+from django.template import loader
+from django.utils.encoding import force_bytes, force_str
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.views.decorators.cache import cache_control
-from django.conf import settings
 
-from .models import *
-from .forms import *
 from .decorators import unauthenticated_user
-from .tokens import account_activation_token 
+from .forms import *
+from .tokens import account_activation_token
 
 
 #############################################
@@ -46,18 +39,18 @@ def activate_account(request, uidb64, token):
 
 def send_account_activation_email(request, user, to_email):
     """Email verification for resigtration """
-    current_site = get_current_site(request)  
-    mail_subject = 'Email Activation link'  
-    message = loader.render_to_string('registration/activation_email_template.html', {  
-        'user': user,  
-        'domain': current_site.domain,  
-        'uid': urlsafe_base64_encode(force_bytes(user.pk)),  
-        'token': account_activation_token.make_token(user),  
-        'protocol': 'https' if request.is_secure() else 'http', 
-    })  
+    current_site = get_current_site(request)
+    mail_subject = 'Email Activation link'
+    message = loader.render_to_string('registration/activation_email_template.html', {
+        'user': user,
+        'domain': current_site.domain,
+        'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+        'token': account_activation_token.make_token(user),
+        'protocol': 'https' if request.is_secure() else 'http',
+    })
 
-    email = EmailMultiAlternatives(  
-        mail_subject, 'Testing', to=[to_email]  
+    email = EmailMultiAlternatives(
+        mail_subject, 'Testing', to=[to_email]
     )
     email.attach_alternative(message, "text/html")
     if email.send():
@@ -65,9 +58,9 @@ def send_account_activation_email(request, user, to_email):
         context = {'user': user, 'to_email': to_email}
         return HttpResponse(template.render(context, request))
     else:
-        messages.error(request, 
-            f"""Problem sending email to <b>{to_email}</b>m check if you typed it correctly."""
-        )
+        messages.error(request,
+                       f"""Problem sending email to <b>{to_email}</b>m check if you typed it correctly."""
+                       )
 
 
 @cache_control(no_store=True)
@@ -101,8 +94,8 @@ def register_view(request):
                 user_profile = p_form.save(commit=False)
                 user_profile.user = user
                 user_profile.save()
-                return send_account_activation_email(request, user, email)  
-            # return redirect('login')
+                return send_account_activation_email(request, user, email)
+                # return redirect('login')
         else:
             for error in list(u_form.errors.values()):
                 messages.error(request, error)
@@ -113,9 +106,9 @@ def register_view(request):
         p_form = ProfileCreateForm()
 
     context = {
-        'u_form': u_form, 
-        'p_form': p_form, 
-        'organizations': organizations, 
+        'u_form': u_form,
+        'p_form': p_form,
+        'organizations': organizations,
         'clusters': clusters,
         'locations': locations
     }
@@ -157,12 +150,12 @@ def logout_view(request):
 @login_required
 def profile(request):
     template = loader.get_template('profile.html')
-    user = request.user 
-    
+    user = request.user
+
     if request.method == 'POST':
         u_form = UserUpdateForm(request.POST, instance=user)
         p_form = ProfileUpdateForm(request.POST, instance=user.profile)
-        
+
         if u_form.is_valid() and p_form.is_valid():
             u_form.save()
             p_form.save()
@@ -175,10 +168,10 @@ def profile(request):
     else:
         u_form = UserUpdateForm(instance=user)
         p_form = ProfileUpdateForm(instance=user.profile)
-        
+
     context = {
         'user': user,
-        'u_form': u_form, 
-        'p_form': p_form, 
+        'u_form': u_form,
+        'p_form': p_form,
     }
     return HttpResponse(template.render(context, request))

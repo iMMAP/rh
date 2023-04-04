@@ -1,19 +1,17 @@
-from .models import *
-
 from django import forms
+from django.contrib.auth import password_validation
 from django.contrib.auth.forms import UserCreationForm, PasswordResetForm, SetPasswordForm, PasswordChangeForm
-from django.contrib.auth import get_user_model, password_validation
 from django.contrib.auth.models import User
-from django.urls import reverse_lazy
+
+from .models import *
 
 
 class UserRegisterForm(UserCreationForm):
     """Subclass User Registration form"""
-   
+
     class Meta:
         model = User
         fields = ['username', 'email', 'password1', 'password2']
-        
 
     def clean_username(self):
         """check if username already exists"""
@@ -35,35 +33,33 @@ class UserRegisterForm(UserCreationForm):
             )
         return email
 
+
 class ProfileCreateForm(forms.ModelForm):
     """Profile Create form"""
-   
+
     class Meta:
         model = Profile
         fields = ['name', 'position', 'organization', 'cluster', 'location']
         labels = {
             'name': ('Full Name'),
         }
-    
+
 
 class UserUpdateForm(forms.ModelForm):
-
     class Meta:
         model = User
         fields = ['username', 'email']
 
 
-
 class ProfileUpdateForm(forms.ModelForm):
     """Profile Update form"""
-   
+
     class Meta:
         model = Profile
         fields = ['name', 'position', 'phone', 'skype', 'organization', 'cluster', 'location']
         labels = {
             'name': ('Full Name'),
         }
-
 
 
 class UserPasswordChangeForm(PasswordChangeForm):
@@ -163,4 +159,3 @@ class UserPasswordResetForm(PasswordResetForm):
                                  }
                              ),
                              )
-

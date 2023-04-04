@@ -1,6 +1,4 @@
-from django.utils.translation import gettext_lazy as _
-# from django.utils.safestring import mark_safe    
-from django.contrib.admin import SimpleListFilter
+# from django.utils.safestring import mark_safe
 
 # from django.urls import reverse
 
@@ -52,15 +50,14 @@ def get_app_list(self, request):
             app['models'].sort(key=lambda x: ordering[x['name']])
     return app_list
 
+
 # Override the get_app_list of AdminSite
 admin.AdminSite.get_app_list = get_app_list
-
 
 #############################################
 ########### Currency Model Admin #############
 #############################################
 admin.site.register(Currency)
-
 
 #############################################
 ########### Location Types #############
@@ -85,6 +82,8 @@ class ClusterAdmin(admin.ModelAdmin):
     list_display = ('code', 'title', 'old_code', 'old_title')
     search_fields = ('old_code', 'code', 'old_title', 'title',)
     list_filter = ('code', 'old_code',)
+
+
 admin.site.register(Cluster, ClusterAdmin)
 
 
@@ -95,6 +94,8 @@ class LocationAdmin(admin.ModelAdmin):
     list_display = ('name', 'parent', 'code', 'level', 'original_name', 'type')
     list_filter = ('level', 'type')
     search_fields = ('name', 'parent__name', 'level', 'type')
+
+
 admin.site.register(Location, LocationAdmin)
 
 
@@ -120,6 +121,7 @@ class OrganizationAdmin(admin.ModelAdmin):
     list_display = ('name', 'code', 'type', 'location')
     search_fields = ('name', 'location__name', 'type')
     list_filter = ('type', 'location')
+
     # list_filter = ('type', CountryFilter)
 
     def show_locations(self, obj):
@@ -128,7 +130,9 @@ class OrganizationAdmin(admin.ModelAdmin):
         placed directly in list view or search
         """
         return ",\n".join([a.name for a in obj.locations.all()])
+
     show_locations.short_description = 'Locations'
+
 
 admin.site.register(Organization, OrganizationAdmin)
 
@@ -140,6 +144,8 @@ class DonorAdmin(admin.ModelAdmin):
     list_display = ('name', 'location', 'cluster')
     search_fields = ('code', 'name', 'cluster__title')
     list_filter = ('cluster', 'location')
+
+
 admin.site.register(Donor, DonorAdmin)
 
 
@@ -150,6 +156,8 @@ class BeneficiaryTypeAdmin(admin.ModelAdmin):
     list_display = ('name', 'code', 'location')
     search_fields = ('code', 'name', 'location__name')
     list_filter = ('location',)
+
+
 admin.site.register(BeneficiaryType, BeneficiaryTypeAdmin)
 
 
@@ -163,11 +171,15 @@ class ActivityAdmin(admin.ModelAdmin):
 
     def show_clusters(self, obj):
         return ",\n".join([a.title for a in obj.clusters.all()])
+
     show_clusters.short_description = 'Clusters'
 
     def show_locations(self, obj):
         return ",\n".join([a.name for a in obj.locations.all()])
+
     show_locations.short_description = 'Locations'
+
+
 admin.site.register(Activity, ActivityAdmin)
 
 
@@ -176,7 +188,10 @@ admin.site.register(Activity, ActivityAdmin)
 ##############################################
 class ProjectAdmin(admin.ModelAdmin):
     list_display = ('title', 'code', 'user', 'show_clusters', 'budget', 'budget_currency', 'state', 'active')
-    search_fields = ('title','code', 'clusters__title', 'activities__title', 'implementing_partners__code', 'programme_partners__code', 'state')
+    search_fields = (
+        'title', 'code', 'clusters__title', 'activities__title', 'implementing_partners__code',
+        'programme_partners__code',
+        'state')
     list_filter = ('state', 'active', 'clusters')
 
     # To create a clickable link between to models
@@ -189,15 +204,19 @@ class ProjectAdmin(admin.ModelAdmin):
 
     def show_clusters(self, obj):
         return ",\n".join([a.title for a in obj.clusters.all()])
+
     show_clusters.short_description = 'Clusters'
 
     def show_activities(self, obj):
         return ",\n".join([a.name for a in obj.activities.all()])
+
     show_activities.short_description = 'Activities'
-    
+
     # def show_locations(self, obj):
     #     return ",\n".join([a.name for a in obj.locations.all()])
     # show_locations.short_description = 'Locations'
+
+
 admin.site.register(Project, ProjectAdmin)
 
 
@@ -205,9 +224,11 @@ admin.site.register(Project, ProjectAdmin)
 ######### Activity Plan Model Admin ##########
 ##############################################
 class ActivityPlanAdmin(admin.ModelAdmin):
-    list_display = ('project', 'activity',  'households', 'beneficiary', 'beneficiary_category', 'state', 'active')
+    list_display = ('project', 'activity', 'households', 'beneficiary', 'beneficiary_category', 'state', 'active')
     search_fields = ('state', 'active', 'project__title', 'activity__name', 'households')
     list_filter = ('state', 'active', 'project__code')
+
+
 admin.site.register(ActivityPlan, ActivityPlanAdmin)
 
 
@@ -218,6 +239,8 @@ class TargetLocationAdmin(admin.ModelAdmin):
     list_display = ('site_name', 'project', 'country', 'province', 'district', 'state', 'active')
     search_fields = ('project__title', 'state', 'active')
     list_filter = ('state', 'active', 'project__code')
+
+
 admin.site.register(TargetLocation, TargetLocationAdmin)
 
 
@@ -225,7 +248,13 @@ admin.site.register(TargetLocation, TargetLocationAdmin)
 ######### Report Model Admin ##########
 ##############################################
 class ReportAdmin(admin.ModelAdmin):
-    list_display = ('project', 'activity_plan', 'location', 'boys', 'girls', 'men', 'women', 'elderly_men', 'elderly_women', 'households')
-    search_fields = ('project__title', 'location__name', 'boys', 'girls', 'men', 'women', 'elderly_men', 'elderly_women', 'households')
+    list_display = (
+        'project', 'activity_plan', 'location', 'boys', 'girls', 'men', 'women', 'elderly_men', 'elderly_women',
+        'households')
+    search_fields = (
+        'project__title', 'location__name', 'boys', 'girls', 'men', 'women', 'elderly_men', 'elderly_women',
+        'households')
     list_filter = ('project', 'activity_plan', 'location')
+
+
 admin.site.register(Report, ReportAdmin)

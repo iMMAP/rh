@@ -205,11 +205,11 @@ def load_locations_details(request):
 def projects_view(request):
     """Projects Plans"""
     draft_projects = Project.objects.filter(state='draft')
-    active_projects = Project.objects.filter(state='in-progress')
+    active_projects = Project.objects.filter(state='in-progress').order_by('-id')
     completed_projects = Project.objects.filter(state='done')
 
     # Setup Pagination
-    p = Paginator(active_projects, 8)
+    p = Paginator(active_projects, 3)
     page = request.GET.get('page')
     p_active_projects = p.get_page(page)
     total_pages = 'a'*p_active_projects.paginator.num_pages
@@ -606,33 +606,38 @@ def delete_project(request, pk):
 @cache_control(no_store=True)
 @login_required
 def copy_project(request, pk):
-    pass
+    # pass
     project = Project.objects.get(pk=pk)
+
     if project:
-        new_project = project
+        new_project = Project.objects.get(pk=pk)
         new_project.pk = None
         new_project.save()
         new_project.clusters.set(project.clusters.all())
         new_project.locations.set(project.locations.all())
         new_project.activities.set(project.activities.all())
         new_project.donors.set(project.donors.all())
-        new_project.title = 'COPY'
+        new_project.programme_partners.set(project.programme_partners.all())
+        new_project.implementing_partners.set(project.implementing_partners.all())
+        new_project.title = f"{project.title} - COPY"
+
         if new_project:
-            activity_plans = ActivityPlan.objects.filter(project__id=project.pk)
-            target_locations = TargetLocation.objects.filter(project__id=project.pk)
+            activity_plans = ActivityPlan.objects.filter(project__pk=project.pk)
+            target_locations = TargetLocation.objects.filter(project__pk=project.pk)
 
             for plan in activity_plans:
-                new_plan = plan
+                new_plan = ActivityPlan.objects.get(pk=plan.pk)
                 new_plan.pk = None
                 new_plan.save()
                 new_plan.project = new_project
                 new_plan.active = True
                 new_plan.state = 'in-progress'
                 new_plan.description = 'COPY'
+                new_plan.save()
                 # new_plan.save()
             
             for location in target_locations:
-                new_location = location
+                new_location = TargetLocation.objects.get(pk=location.pk)
                 new_plan.pk = None
                 new_location.save()
                 new_location.project = new_project
@@ -640,8 +645,9 @@ def copy_project(request, pk):
                 new_location.state = 'in-progress'
                 new_location.site_name = 'COPY'
                 # new_location.save()
+                new_location.save()
 
-        # new_project_id.save()
+        new_project.save()
 
     return redirect('projects')
     

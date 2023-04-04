@@ -129,6 +129,8 @@ class ProjectForm(forms.ModelForm):
             'locations': forms.SelectMultiple(attrs={'class': 'js-example-basic-multiple', 'locations-queries-url': reverse_lazy('ajax-load-locations')}),
             'clusters': forms.SelectMultiple(attrs={'class': 'js-example-basic-multiple'}),
             'donors': forms.SelectMultiple(attrs={'class': 'js-example-basic-multiple'}),
+            'implementing_partners': forms.SelectMultiple(attrs={'class': 'js-example-basic-multiple'}),
+            'programme_partners': forms.SelectMultiple(attrs={'class': 'js-example-basic-multiple'}),
             'activities': forms.SelectMultiple(attrs={'activities-queries-url': reverse_lazy('ajax-load-activities'),
                                             'class': 'js-example-basic-multiple'
                                             }),
@@ -144,6 +146,6 @@ class ProjectForm(forms.ModelForm):
         self.fields['donors'].queryset = Donor.objects.order_by('name')
         self.fields['activities'].queryset = Activity.objects.order_by('name')
         self.fields['budget_currency'].queryset = Currency.objects.order_by('name')
-        self.fields['implementing_partner'].queryset = Organization.objects.order_by('name')
-        self.fields['programme_partner'].queryset = Organization.objects.order_by('name')
+        self.fields['implementing_partners'].queryset = Organization.objects.order_by('name')
+        self.fields['programme_partners'].queryset = Organization.objects.order_by('name')
         self.fields['user'].queryset = User.objects.order_by('username')

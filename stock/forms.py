@@ -1,6 +1,6 @@
-from .models import *
-
 from django import forms
+
+from .models import *
 
 
 class WarehouseLocationForm(forms.ModelForm):
@@ -11,7 +11,7 @@ class WarehouseLocationForm(forms.ModelForm):
             'name': ('Warehouse Name'),
         }
         # exclude = ['id']
-    
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['province'].queryset = Location.objects.filter(type='Province')

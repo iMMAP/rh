@@ -249,8 +249,12 @@
                             </td>
 
                             <td class="title-col">{{ project.title }}</td>
-                            
-                            <td class="organisation-col">{{ project.implementing_partner }}</td>
+
+                            <td class="organisation-col">
+                                {% for partner in project.implementing_partners.all %}
+                                    {{ partner.code }}
+                                {% endfor %}
+                            </td>
 
                             <td class="update-date-col">{{ project.updated_at }}</td>
 

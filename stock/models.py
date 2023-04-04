@@ -1,4 +1,3 @@
-from django.db import models
 from rh.models import *
 
 
@@ -7,7 +6,7 @@ class StockType(models.Model):
 
     def __str__(self):
         return self.name
-    
+
     class Meta:
         verbose_name = 'Stock Type'
         verbose_name_plural = "Stock Types"
@@ -18,21 +17,20 @@ class StockUnit(models.Model):
 
     def __str__(self):
         return self.name
-    
+
     class Meta:
         verbose_name = 'Stock Unit'
         verbose_name_plural = "Stock Units"
-    
+
 
 class WarehouseLocation(models.Model):
-    
     province = models.ForeignKey(Location, related_name='province', on_delete=models.SET_NULL, null=True, blank=True)
     district = models.ForeignKey(Location, related_name='district', on_delete=models.SET_NULL, null=True, blank=True)
     name = models.CharField(max_length=255, blank=True, null=True)
-    
+
     def __str__(self):
         return self.name
-    
+
     class Meta:
         verbose_name = 'Warehouse Location Plan'
         verbose_name_plural = "Warehouse Locations"
@@ -78,7 +76,7 @@ class StockLocationDetails(models.Model):
 
     def __str__(self):
         return f"{self.warehouse_location} Stock Details"
-    
+
     class Meta:
         verbose_name = 'Stock Detail'
         verbose_name_plural = "Stock Details"
@@ -95,7 +93,7 @@ class StockReports(models.Model):
 
     def __str__(self):
         return self.created_at.strftime("%B, %Y")
-    
+
     class Meta:
         verbose_name = 'Stock Report'
         verbose_name_plural = "Stock Reports"

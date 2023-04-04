@@ -1,9 +1,8 @@
 from django.contrib import admin
+
 from .models import *
 
-
 admin.site.register(Profile)
-
 
 # def get_app_list(self, request):
 #     """
@@ -89,4 +88,3 @@ admin.site.register(Profile)
 # admin.site.register(Account, AccountAdmin)
 # Move the User model to auth section
 # apps.get_model('rh.User')._meta.app_label = 'auth'
-

@@ -175,8 +175,8 @@ admin.site.register(Activity, ActivityAdmin)
 ############ Project Model Admin #############
 ##############################################
 class ProjectAdmin(admin.ModelAdmin):
-    list_display = ('title', 'code', 'user', 'show_clusters', 'programme_partner', 'budget', 'budget_currency', 'state', 'active')
-    search_fields = ('title','code', 'clusters__title', 'activities__title', 'implementing_partner', 'programme_partner', 'state')
+    list_display = ('title', 'code', 'user', 'show_clusters', 'budget', 'budget_currency', 'state', 'active')
+    search_fields = ('title','code', 'clusters__title', 'activities__title', 'implementing_partners__code', 'programme_partners__code', 'state')
     list_filter = ('state', 'active', 'clusters')
 
     # To create a clickable link between to models

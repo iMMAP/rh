@@ -127,7 +127,6 @@ class DataImporter():
         return engine
 
 
-
     def import_currencies_from_csv(self, connection, currencies_csv):
         """
         Import Currencies from CSV

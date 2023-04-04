@@ -250,8 +250,8 @@ class Project(models.Model):
     clusters = models.ManyToManyField(Cluster)
     activities = models.ManyToManyField(Activity)
     donors = models.ManyToManyField(Donor)
-    implementing_partner = models.ForeignKey(Organization, related_name="implementing_partner", on_delete=models.SET_NULL, null=True, blank=True)
-    programme_partner = models.ForeignKey(Organization, related_name="programme_partner", on_delete=models.SET_NULL, null=True, blank=True)
+    implementing_partners = models.ManyToManyField(Organization, related_name="implementing_partners")
+    programme_partners = models.ManyToManyField(Organization, related_name="programme_partners")
     locations = models.ManyToManyField(Location)
     start_date = models.DateTimeField('start date')
     end_date = models.DateTimeField('end date')
@@ -269,6 +269,7 @@ class Project(models.Model):
 
 class ActivityPlan(models.Model):
     """Activity Plans model"""
+
     CATEGORY_TYPES = [
         ('disabled', 'Persons with Disabilities'),
         ('non-disabled', 'Non-Disabled'),

@@ -27,12 +27,6 @@
                                 {{ form.code }}
                             </div>
                         </div>
-                        <div class="input-field">
-                            <label for="oPrCode">OCCD Project Code</label>
-                            <div class="input-holder">
-                                <input type="text" id="oPrCode" placeholder="OCCD project code" value=""/>
-                            </div>
-                        </div>
 
                         <div class="select-field is-required">
                             <label for="locationSelect">Locations</label>
@@ -115,14 +109,14 @@
                         <div class="multiple-fields-row two-items">
                             <div class="field-col">
                                 <div class="select-field is-required">
-                                    <label>Implementing Partner</label>
-                                    {{ form.implementing_partner }}
+                                    <label for={{form.implementing_partners.html_name}}>Implementing Partners</label>
+                                    {{ form.implementing_partners }}
                                 </div>
                             </div>
                             <div class="field-col">
                                 <div class="select-field is-required">
-                                    <label>Programme Partner</label>
-                                    {{ form.programme_partner }}
+                                    <label for={{form.programme_partners.html_name}}>Programme Partners</label>
+                                    {{ form.programme_partners }}
                                 </div>
                             </div>
                         </div>

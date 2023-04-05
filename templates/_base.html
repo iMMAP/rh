@@ -1,11 +1,15 @@
 <!-- templates/_base.html -->
 {% load static %}
-
 <!DOCTYPE html>
 <html lang="en">
     <head>
         <meta charset="utf-8"/>
-        <title>Immap</title>
+
+        <title>
+            {% block page_title %}
+            {% endblock page_title %}
+        </title>
+
         <meta name="viewport" content="width=device-width, initial-scale=1.0 "/>
         <meta name="description" content=" "/>
         <meta name="keywords" content=" "/>
@@ -69,7 +73,7 @@
                             </button>
                             <div class="mobile-menu-holder">
                                 <ul class="main-nav">
-                                    <li class="main-nav-item current">
+                                    <li class="main-nav-item">
                                         <a class="main-nav-link" href="{% url 'projects' %}"> Projects </a>
                                     </li>
             

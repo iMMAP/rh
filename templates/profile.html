@@ -12,7 +12,7 @@
                         <h1>{{ user.profile.name }}</h1>
                         <strong class="user-position">{{ user.profile.position }}</strong>
                         <address>
-                            {{ user.profile.cluster }}, {{ user.profile.location }}<br/>
+                            {{ user.profile.cluster }}, {{ user.profile.country }}<br/>
                             <a href="mailto:{{user.email}}">{{ user.email }}</a>,
                             <a href="tel:{{user.profile.phone}}">{{ user.profile.phone }}</a>
                         </address>
@@ -31,6 +31,11 @@
                             </li>
 
                             <li>
+                                <strong class="title">Whatsapp</strong>
+                                {{ user.profile.whatsapp }}
+                            </li>
+
+                            <li>
                                 <strong class="title">Skype ID</strong>
                                 <a href="skype:{{user.profile.skype}}?userinfo">{{ user.profile.skype }}</a>
 
@@ -42,8 +47,13 @@
                             </li>
 
                             <li>
-                                <strong class="title">Cluster contact</strong>
-                                Yes
+                                <strong class="title">Cluster Contact</strong>
+                                {% if user.profile.is_cluster_contact%}
+                                    Yes
+                                {% else %}
+                                    No
+                                {% endif %}
+
                             </li>
                         </ul>
                     </div>

@@ -38,6 +38,6 @@ urlpatterns = [
     path('project/project_plan/copy/<str:pk>/', user_views.copy_project, name='copy_project'),
 
     path('ajax/load-activities-details/', user_views.load_activities_details, name='ajax-load-activities'),
-    path('ajax/load-locations-details/', user_views.load_locations_details, name='ajax-load-locations'),
+    path('ajax/load-districts-details/', user_views.load_locations_details, name='ajax-load-districts'),
 
 ]

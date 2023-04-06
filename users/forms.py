@@ -39,16 +39,22 @@ class ProfileCreateForm(forms.ModelForm):
 
     class Meta:
         model = Profile
-        fields = ['name', 'position', 'organization', 'cluster', 'location']
-        labels = {
-            'name': ('Full Name'),
-        }
+        fields = ['name', 'position', 'organization', 'clusters', 'country']
+        labels = {'name': 'Full Name', 'clusters': 'Clusters / Sectors'}
+
+        # widgets = {
+        #     'clusters': forms.SelectMultiple(attrs={'class': 'custom-select', 'multiple': ''}),
+        # }
+
+    def __init__(self, *args, **kwargs):
+        super(ProfileCreateForm, self).__init__(*args, **kwargs)
+        self.fields['country'].queryset = self.fields['country'].queryset.filter(type='Country')
 
 
 class UserUpdateForm(forms.ModelForm):
     class Meta:
         model = User
-        fields = ['username', 'email']
+        fields = ['username', 'email', 'first_name', 'last_name']
 
 
 class ProfileUpdateForm(forms.ModelForm):
@@ -56,10 +62,16 @@ class ProfileUpdateForm(forms.ModelForm):
 
     class Meta:
         model = Profile
-        fields = ['name', 'position', 'phone', 'skype', 'organization', 'cluster', 'location']
-        labels = {
-            'name': ('Full Name'),
-        }
+        fields = '__all__'
+        labels = {'name': 'Full Name', 'clusters': 'Clusters / Sectors'}
+
+        # widgets = {
+        #     'clusters': forms.SelectMultiple(attrs={'class': 'custom-select', 'multiple': ''}),
+        # }
+
+    def __init__(self, *args, **kwargs):
+        super(ProfileUpdateForm, self).__init__(*args, **kwargs)
+        self.fields['country'].queryset = self.fields['country'].queryset.filter(type='Country')
 
 
 class UserPasswordChangeForm(PasswordChangeForm):

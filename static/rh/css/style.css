@@ -1695,8 +1695,8 @@ label.col-label {
 }
 
 .input-check-holder {
-  margin-bottom: 16px;
-  line-height: 1
+  margin-bottom: 51px;
+  padding-top: 23px;
 }
 
 .input-check-holder label {
@@ -4442,7 +4442,7 @@ body.filter-active {
 
 .target-location .main-heading {
   border-top: 2px solid #be2126;
-  border-bottom: 2px solid #e6e7e8;
+  /*border-bottom: 2px solid #e6e7e8;*/
   padding: 9px 0;
   margin: 0 0 9px
 }
@@ -5318,13 +5318,9 @@ body.filter-active {
     flex: 0 0 auto
   }
 
-  .project-plan.create-plan .col-sm {
-    padding-top: 20px
-  }
-
-  .project-plan.create-plan .col-sm .input-check-holder {
+  /*.project-plan.create-plan .col-sm .input-check-holder {
     padding: 10px 0 16px 0px !important
-  }
+  }*/
 
   .project-plan .col {
     width: auto
@@ -5335,9 +5331,9 @@ body.filter-active {
     width: 326px
   }
 
-  .project-plan .col.col-sm .input-check-holder {
+/*  .project-plan .col.col-sm .input-check-holder {
     padding: 4px 0 6px 4px
-  }
+  }*/
 
   .plan-submit-holder {
     justify-content: flex-end;

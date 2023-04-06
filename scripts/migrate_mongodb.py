@@ -25,18 +25,18 @@ from pymongo import MongoClient
 TEST = False  # set to False if working with test database and provide sqlite3 database
 
 # SET THE FILE PATHS
-SQLITEDB_PATH = 'rh/db.sqlite3'
+SQLITEDB_PATH = '../db.sqlite3'
 
 # CSV DATA FILES
-CURRENCIES_CSV = 'rh/data/currencies.csv'
-LOCATIONS_CSV = 'rh/data/af_loc.csv'
-CLUSTERS_CSV = 'rh/data/updated_clusters.csv'
-ORGANIZATIONS_CSV = 'rh/data/organizations.csv'
-BENEFICIARY_TYPES_CSV = 'rh/data/beneficiarytypes.csv'
-DONORS_CSV = 'rh/data/donors.csv'
-INDICATORS_CSV = 'rh/data/Indicators.csv'
-ACTIVITIES_CSV = 'rh/data/activities.csv'
-USERS_CSV = 'rh/data/user.csv'
+CURRENCIES_CSV = '../data/currencies.csv'
+LOCATIONS_CSV = '../data/af_loc.csv'
+CLUSTERS_CSV = '../data/updated_clusters.csv'
+ORGANIZATIONS_CSV = '../data/organizations.csv'
+BENEFICIARY_TYPES_CSV = '../data/beneficiarytypes.csv'
+DONORS_CSV = '../data/donors.csv'
+INDICATORS_CSV = '../data/Indicators.csv'
+ACTIVITIES_CSV = '../data/activities.csv'
+USERS_CSV = '../data/user.csv'
 
 
 class DataImporter():
@@ -330,11 +330,11 @@ class DataImporter():
                     skype = profile[7]
                     if not skype:
                         profile[7] = None
-                    location = profile[0]
+                    country = profile[0]
                     cluster = profile[1]
                     organization = profile[3]
-                    if location:
-                        c.execute(f"select id from rh_location where code='{location}'")
+                    if country:
+                        c.execute(f"select id from rh_location where code='{country}'")
                         location_id = c.fetchone()
                         if location_id:
                             profile[0] = location_id[0]
@@ -365,8 +365,8 @@ class DataImporter():
                     status = user[4]
                     user.append(False)
                     user.append(False)
-                    user.append('a')
-                    user.append('b')
+                    user.append('')
+                    user.append('')
 
                     if status == 'active':
                         user[4] = True
@@ -393,17 +393,28 @@ class DataImporter():
                     db_user = c.fetchone()
 
                     u_profile = next(item for item in profiles_list if db_user[0] in item)
+                    profile_cluster_id = False
                     if u_profile:
                         u_profile = list(u_profile)
                         u_profile.pop(-1)
+                        profile_cluster_id = u_profile.pop(1)
                         u_profile.append(user_id)
                         u_profile = tuple(u_profile)
                     pquery = f"""
                             insert into 
-                            users_profile(location_id,cluster_id,name,organization_id,phone,position,skype,visits,user_id) 
-                            values (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                            users_profile(country_id,name,organization_id,phone,position,skype,visits,user_id) 
+                            values (?, ?, ?, ?, ?, ?, ?, ?)
                         """
                     c.execute(pquery, u_profile)
+                    last_profile_id = c.lastrowid
+
+                    if last_profile_id and profile_cluster_id:
+                        alquery = f"""
+                                    insert into 
+                                    users_profile_clusters(profile_id, cluster_id) 
+                                    values({last_profile_id}, {profile_cluster_id})
+                                """
+                        c.execute(alquery)
 
                 c.execute("DROP TABLE tmp_accounts;")
             except Exception as e:

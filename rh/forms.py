@@ -77,6 +77,47 @@ def get_dynamic_form(json_fields, initial_data=None):
     return type('DynamicForm', (forms.Form,), field_handler.form_fields)
 
 
+class ProjectForm(forms.ModelForm):
+    class Meta:
+        model = Project
+        fields = "__all__"
+
+        widgets = {
+            'provinces': forms.SelectMultiple(attrs={'class': 'js_multiselect'}),
+            'districts': forms.SelectMultiple(attrs={'class': 'js_multiselect', 'districts-queries-url': reverse_lazy('ajax-load-districts')}),
+            'clusters': forms.SelectMultiple(attrs={'class': 'js_multiselect'}),
+            'donors': forms.SelectMultiple(attrs={'class': 'js_multiselect'}),
+            'implementing_partners': forms.SelectMultiple(attrs={'class': 'js_multiselect'}),
+            'programme_partners': forms.SelectMultiple(attrs={'class': 'js_multiselect'}),
+            'activities': forms.SelectMultiple(attrs={'activities-queries-url': reverse_lazy('ajax-load-activities'),
+                                                      'class': 'js_multiselect'
+                                                      }),
+            'start_date': forms.widgets.DateInput(
+                attrs={'type': 'date', 'onfocus': "(this.type='date')", 'onblur': "(this.type='text')"}),
+            'end_date': forms.widgets.DateInput(
+                attrs={'type': 'date', 'onfocus': "(this.type='date')", 'onblur': "(this.type='text')"}),
+            'active': forms.widgets.HiddenInput(),
+            'country': forms.widgets.HiddenInput(),
+        }
+
+    def __init__(self, *args, **kargs):
+        super().__init__(*args, **kargs)
+
+        if self.initial.get('country', False):
+            self.fields['provinces'].queryset = Location.objects.filter(parent__pk=self.initial.get('country'))
+        else:
+            self.fields['provinces'].queryset = self.fields['provinces'].queryset.filter(type='Province')
+
+        self.fields['districts'].queryset = self.fields['districts'].queryset.filter(type='District')
+        self.fields['clusters'].queryset = Cluster.objects.order_by('title')
+        self.fields['donors'].queryset = Donor.objects.order_by('name')
+        self.fields['activities'].queryset = Activity.objects.order_by('name')
+        self.fields['budget_currency'].queryset = Currency.objects.order_by('name')
+        self.fields['implementing_partners'].queryset = Organization.objects.order_by('name')
+        self.fields['programme_partners'].queryset = Organization.objects.order_by('name')
+        self.fields['user'].queryset = User.objects.order_by('username')
+
+
 class ActivityPlanForm(forms.ModelForm):
     # activity_plan = forms.CharField(widget=forms.HiddenInput(), required=False)
     activity_id = forms.CharField(widget=forms.HiddenInput(), required=False)
@@ -118,37 +159,3 @@ class TargetLocationForm(forms.ModelForm):
         self.fields['country'].queryset = self.fields['country'].queryset.filter(type='Country')
         self.fields['province'].queryset = self.fields['province'].queryset.filter(type='Province')
         self.fields['district'].queryset = self.fields['district'].queryset.filter(type='District')
-
-
-class ProjectForm(forms.ModelForm):
-    class Meta:
-        model = Project
-        fields = "__all__"
-
-        widgets = {
-            'locations': forms.SelectMultiple(attrs={'class': 'js-example-basic-multiple',
-                                                     'locations-queries-url': reverse_lazy('ajax-load-locations')}),
-            'clusters': forms.SelectMultiple(attrs={'class': 'js-example-basic-multiple'}),
-            'donors': forms.SelectMultiple(attrs={'class': 'js-example-basic-multiple'}),
-            'implementing_partners': forms.SelectMultiple(attrs={'class': 'js-example-basic-multiple'}),
-            'programme_partners': forms.SelectMultiple(attrs={'class': 'js-example-basic-multiple'}),
-            'activities': forms.SelectMultiple(attrs={'activities-queries-url': reverse_lazy('ajax-load-activities'),
-                                                      'class': 'js-example-basic-multiple'
-                                                      }),
-            'start_date': forms.widgets.DateInput(
-                attrs={'type': 'date', 'onfocus': "(this.type='date')", 'onblur': "(this.type='text')"}),
-            'end_date': forms.widgets.DateInput(
-                attrs={'type': 'date', 'onfocus': "(this.type='date')", 'onblur': "(this.type='text')"}),
-            'active': forms.widgets.HiddenInput(),
-        }
-
-    def __init__(self, *args, **kargs):
-        super().__init__(*args, **kargs)
-        self.fields['locations'].queryset = Location.objects.order_by('name')
-        self.fields['clusters'].queryset = Cluster.objects.order_by('title')
-        self.fields['donors'].queryset = Donor.objects.order_by('name')
-        self.fields['activities'].queryset = Activity.objects.order_by('name')
-        self.fields['budget_currency'].queryset = Currency.objects.order_by('name')
-        self.fields['implementing_partners'].queryset = Organization.objects.order_by('name')
-        self.fields['programme_partners'].queryset = Organization.objects.order_by('name')
-        self.fields['user'].queryset = User.objects.order_by('username')

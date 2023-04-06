@@ -94,7 +94,7 @@ class Cluster(models.Model):
     ocha_code = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
 
     def __str__(self):
-        return self.title
+        return f"[{self.code}] - {self.title}"
 
 
 class BeneficiaryType(models.Model):
@@ -165,11 +165,11 @@ class StrategicObjective(models.Model):
 
 class Indicator(models.Model):
     """Indicators"""
-    code = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
-    name = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
+    code = models.CharField(max_length=600, blank=True, null=True)
+    name = models.CharField(max_length=600, blank=True, null=True)
     numerator = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
     denominator = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
-    description = models.CharField(max_length=DESCRIPTION_MAX_LENGTH, blank=True, null=True)
+    description = models.CharField(max_length=1200, blank=True, null=True)
 
     def __str__(self):
         return self.name
@@ -248,12 +248,28 @@ class Project(models.Model):
     active = models.BooleanField(default=True)
     title = models.CharField(max_length=NAME_MAX_LENGTH)
     code = models.CharField(max_length=NAME_MAX_LENGTH, null=True, blank=True)
+    is_hrp_project = models.BooleanField(default=False)
+    has_hrp_code = models.BooleanField(default=False)
+    hrp_code = models.CharField(max_length=NAME_MAX_LENGTH, null=True, blank=True)
     clusters = models.ManyToManyField(Cluster)
     activities = models.ManyToManyField(Activity)
+
+    # Facility Monitoring
+    facility_monitoring = models.BooleanField(default=False)
+    facility_name = models.CharField(max_length=NAME_MAX_LENGTH, blank=False)
+    facility_id = models.CharField(max_length=NAME_MAX_LENGTH,  blank=False)
+    facility_lat = models.CharField(max_length=NAME_MAX_LENGTH,  null=True, blank=True)
+    facility_long = models.CharField(max_length=NAME_MAX_LENGTH,  null=True, blank=True)
+
     donors = models.ManyToManyField(Donor)
     implementing_partners = models.ManyToManyField(Organization, related_name="implementing_partners")
     programme_partners = models.ManyToManyField(Organization, related_name="programme_partners")
-    locations = models.ManyToManyField(Location)
+
+    # locations = models.ManyToManyField(Location)
+    country = models.ForeignKey(Location, on_delete=models.SET_NULL, null=True, blank=True)
+    provinces = models.ManyToManyField(Location, related_name="provinces")
+    districts = models.ManyToManyField(Location, related_name="districts")
+
     start_date = models.DateTimeField('start date')
     end_date = models.DateTimeField('end date')
     budget = models.IntegerField(null=True, blank=True)

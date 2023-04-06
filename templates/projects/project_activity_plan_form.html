@@ -10,10 +10,11 @@
     <h2 class="plan-title">{{ project.title }}</h2>
 </div>
 <div class="main-content">
-    <div class="activity-planning create-activity">
-        <div class="main-heading">
-            <div class="subtitle-holder">
-                <span class="subtitle">Activity Planning</span>
+    <div class="target-location create-activity">
+        <div class="main-heading"></div>
+        <div class="main-activity-holder">
+            <div class="top-activity-block">
+                <span class="activity-title">Targeted Population</span>
             </div>
         </div>
 
@@ -21,11 +22,11 @@
             {{ formset.management_form }}
             {% csrf_token %}
             {% for form in formset %}
-            <div class="activity-block-holder">
+            <div class="location-block-holder">
                 {{ form.id }}
                 {{ form.activity_id }}
                 {{ form.active }}
-                {% comment %} {{form.instance.activity_id}} {% endcomment %}
+                <!--{% comment %} {{form.instance.activity_id}} {% endcomment %}-->
                 <input type="hidden" name="form_set_id" id="id_form_set" value="{{ forloop.counter0 }}"/>
                 <div class="inner-holder">
                     <div class="block-top">
@@ -80,9 +81,9 @@
                                         <th>6-12</th>
                                         <th>12-17</th>
                                         <th>18+</th>
-                                        {% comment %}
+                                        <!--{% comment %}
                                         <th>Total</th>
-                                        {% endcomment %}
+                                        {% endcomment %}-->
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -115,11 +116,11 @@
                                         <td> 
                                             {{form.male_18 }}
                                         </td>
-                                        {% comment %}
+                                        <!--{% comment %}
                                         <td><input type="number" name="{{ form.male_total.html_name }}"
                                                    class="total" id="{{ form.male_total.id_for_label }}"
                                                    step="1" placeholder="-" value=""/></td>
-                                        {% endcomment %}
+                                        {% endcomment %}-->
                                     </tr>
                                     <tr class="ageRow">
                                         <td class="other">Other/Unknown</td>
@@ -135,13 +136,13 @@
                                         <td>
                                             {{ form.other_18 }}
                                         </td>
-                                        {% comment %}
+                                        <!--{% comment %}
                                         <td><input type="number" name="{{ form.other_total.html_name }}"
                                                    class="total" id="{{ form.other_total.id_for_label }}"
                                                    step="1" placeholder="-" value=""/></td>
-                                        {% endcomment %}
+                                        {% endcomment %}-->
                                     </tr>
-                                    {% comment %}
+                                    <!--{% comment %}
                                     <tr>
                                         <td>Total</td>
                                         <td><input type="number" name="{{ form.total_0_5.html_name }}"
@@ -159,7 +160,7 @@
                                         <td><input type="number" name="{{ form.total.html_name }}" id="sum"
                                                    step="1" placeholder="-" value=""/></td>
                                     </tr>
-                                    {% endcomment %}
+                                    {% endcomment %}-->
                                     </tbody>
                                 </table>
                             </div>
@@ -306,8 +307,6 @@
         rowElement.addEventListener("change", calculate);
 
     }*/
-
-
 
     /*function get_activity_form(event){
         if (event.target == undefined){

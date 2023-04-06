@@ -1,22 +1,27 @@
 {% extends "projects/project_form_base.html" %}
+{% load static %}
 
 {% block header %}
 <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet"/>
 {% endblock header %}
 
 {% block project_contents %}
+<div class="project-title-holder">
+    <h2 class="plan-title">{{ project.title }}</h2>
+</div>
 <div class="main-content">
     <div class="project-plan create-plan">
         <div class="main-heading">
             {% if project %}
-                <h2 class="plan-title">Update project plan</h2>
+            <h2 class="plan-title">Update project plan</h2>
             {% else %}
-                <h2 class="plan-title">Create project plan</h2>
+            <h2 class="plan-title">Create project plan</h2>
             {% endif %}
         </div>
         <form method="POST">
             {% csrf_token %}
             {{ form.active }}
+            {{ form.country }}
             <div class="row">
                 <div class="col">
                     <div class="input-field is-required">
@@ -33,18 +38,24 @@
                     </div>
 
                     <div class="select-field is-required">
-                        <label for="{{ form.locations.html_name }}">Locations</label>
-                        <div class="input-holder">
-                            {{ form.locations }}
-                        </div>
-                    </div>
-
-                    <div class="select-field is-required">
                         <label for="{{ form.clusters.html_name }}">Clusters</label>
                         <div class="input-holder">
                             {{ form.clusters }}
                         </div>
                     </div>
+                    <div class="input-check-holder">
+                        {{ form.facility_monitoring }}
+                        <label for="{{ form.facility_monitoring.id_for_label }}">
+                            <span class="input"></span>
+                            <span class="text">Facility / Site Monitoring?</span>
+                        </label>
+                    </div>
+                    <!--<div class="select-field is-required">
+                        <label for="{{ form.provinces.html_name }}">Provinces / States [Hint - Select Multiple]</label>
+                        <div class="input-holder">
+                            {{ form.provinces }}
+                        </div>
+                    </div>-->
                 </div>
                 <div class="col col-sm">
                     <div class="date-picker-field">
@@ -82,22 +93,92 @@
                             </div>
                         </div>
                     </div>
-
-                    <div class="input-check-holder">
-                        <input type="checkbox" id="prHRP"/>
-                        <label for="prHRP">
-                            <span class="input"></span>
-                            <span class="text">HRP Project</span>
-                        </label>
-                    </div>
-                    <div class="input-field" id='prHrpCode'>
-                        <label for="prCodeMain">HRP Project Code</label>
-                        <div class="input-holder">
-                            <input type="text" id="prCodeMain" placeholder="HRP project code" value=""/>
+                    <div class="multiple-fields-row">
+                        <div class="field-col">
+                            <div class="input-check-holder">
+                                {{ form.is_hrp_project }}
+                                <label for="{{ form.is_hrp_project.id_for_label }}">
+                                    <span class="input"></span>
+                                    <span class="text">HRP Project</span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="field-col">
+                            <div class="input-check-holder" id="prHasHRPCodeEl">
+                                {{ form.has_hrp_code }}
+                                <label for="{{ form.has_hrp_code.id_for_label }}">
+                                    <span class="input"></span>
+                                    <span class="text">HRP Code?</span>
+                                </label>
+                            </div>
                         </div>
                     </div>
+                    <div class="input-field" id='prHrpCode'>
+                        <label for="{{ form.hrp_code.id_for_label }}">HRP Project Code</label>
+                        <div class="input-holder">
+                            {{ form.hrp_code }}
+                        </div>
+                    </div>
+
                 </div>
                 <div class="col col-lg">
+
+                    <div class="multiple-fields-row two-items" id="facility_details_1">
+                        <div class="field-col">
+                            <div class="input-field" id="facility_name">
+                                <label for="{{ form.facility_name.id_for_label }}">Facility / Site Name</label>
+                                <div class="input-holder">
+                                    {{ form.facility_name }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="field-col">
+                            <div class="input-field" id="facility_id">
+                                <label for="{{ form.facility_id.id_for_label }}">Facility / Site ID</label>
+                                <div class="input-holder">
+                                    {{ form.facility_id }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="multiple-fields-row two-items" id="facility_details_2">
+                        <div class="field-col">
+                            <div class="input-field">
+                                <label for="{{ form.facility_lat.id_for_label }}">Facility / Site Latitude</label>
+                                <div class="input-holder">
+                                    {{ form.facility_lat }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="field-col">
+                            <div class="input-field">
+                                <label for="{{ form.facility_long.id_for_label }}">Facility / Site Longitude</label>
+                                <div class="input-holder">
+                                    {{ form.facility_long }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="multiple-fields-row two-items">
+                        <div class="field-col">
+                            <div class="select-field is-required">
+                                <label for="{{ form.provinces.html_name }}">Provinces / States [Hint - Select
+                                    Multiple]</label>
+                                <div class="input-holder">
+                                    {{ form.provinces }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="field-col">
+                            <div class="select-field is-required" id="prDistricts">
+                                <label for="{{ form.districts.html_name }}">Districts</label>
+                                <div class="input-holder">
+                                    {{ form.districts }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <div class="select-field is-required">
                         <label for="{{ form.activities.html_name }}">Activity Domain</label>
                         <div class="input-holder">
@@ -155,64 +236,152 @@
         integrity="sha512-2ImtlRlf2VVmiGZsjm9bEyhjGW4dU7B6TNwh/hx/iSByxNENtj3WVE6o/9Lj4TJeVXPi4bnOIMXFIJJAeufa0A=="
         crossorigin="anonymous" referrerpolicy="no-referrer">
 </script>
-
-<script>
+<script defer src="{% static 'rh/js/project_planning.js' %}"></script>
+<!--<script>
         $(document).ready(function() {
+
             $('.js-example-basic-multiple').select2();
-        });
 
-
-        $("#prHrpCode").hide();
-
-        $("#prHRP").change(function(){
-            if($(this).is(":checked")) {
-                $("#prHrpCode").show(300);
-            } else {
-                $("#prHrpCode").hide(200);
+            if (!$("#{{form.is_hrp_project.id_for_label}}").is(":checked")){
+                $("#prHasHRPCodeEl").hide();
             }
-        });
 
-        function get_activities(){
-            const activities_url = $("#id_activities").attr("activities-queries-url");
-            const activityIds = $("select#id_activities option").map(function() {return $(this).val();}).get();
-            const clusterIds = $("#id_clusters").val();    
-            const selected_activities = $("select#id_activities").val() 
-            $.ajax({    
-                type: 'GET',
-                url: activities_url,
-                data: {
-                    clusters: clusterIds,
-                    listed_activities: activityIds,
-                },
-                success: function (data) {  
-                    $("#id_activities").html(data); 
-                    $("select#id_activities").val(selected_activities); 
+            $("#{{form.is_hrp_project.id_for_label}}").change(function(){
+                if($(this).is(":checked")) {
+                    $("#prHasHRPCodeEl").show(300);
+                } else {
+
+                    $("#prHrpCode").hide(200);
+                    $("#{{form.hrp_code.id_for_label}}").val('');
+
+                    $("#prHasHRPCodeEl").hide(200);
+                    $("#{{form.has_hrp_code.id_for_label}}").prop('checked', false);
                 }
             });
-        }
 
-        function get_locations(){
-            const locations_url = $("#id_locations").attr("locations-queries-url");
-            const selected_locations = $("select#id_locations").val()
-            $.ajax({    
-                type: 'GET',
-                url: locations_url,
-                success: function (data) {  
-                    $("#id_locations").html(data); 
-                    $("select#id_locations").val(selected_locations); 
-                    
+            if (!$("#{{form.has_hrp_code.id_for_label}}").is(":checked")){
+                $("#prHrpCode").hide();
+
+            }else {
+                $("#{{form.hrp_code.id_for_label}}").prop('required', true)
+                $("#prHrpCode").addClass("is-required");
+            }
+            $("#{{form.has_hrp_code.id_for_label}}").change(function(){
+                if($(this).is(":checked")) {
+                    $("#prHrpCode").show(300);
+                    $("#prHrpCode").prop('required',true)
+                    $("#prHrpCode").addClass("is-required");
+                } else {
+                    $("#prHrpCode").hide(200);
+                    $("#{{form.hrp_code.id_for_label}}").val('');
                 }
             });
-        };
 
-        $('#id_activities').ready(function () {
-            get_activities()
+            if (!$("#{{form.facility_monitoring.id_for_label}}").is(":checked")){
+                $("#facility_details_1").hide();
+                $("#facility_details_2").hide();
+
+
+                $("#{{form.facility_name.id_for_label}}").prop('required', true)
+                $("#{{form.facility_id.id_for_label}}").prop('required', true)
+                $("#facility_name").removeClass("is-required");
+                $("#facility_id").removeClass("is-required");
+            }else {
+                $("#{{form.facility_name.id_for_label}}").prop('required', false)
+                $("#{{form.facility_id.id_for_label}}").prop('required', false)
+                $("#facility_name").addClass("is-required");
+                $("#facility_id").addClass("is-required");
+            }
+
+            $("#{{form.facility_monitoring.id_for_label}}").change(function(){
+                if($(this).is(":checked")) {
+                    $("#facility_details_1").show(300);
+                    $("#facility_details_2").show(300);
+
+                    $("#{{form.facility_name.id_for_label}}").prop('required', true)
+                    $("#{{form.facility_id.id_for_label}}").prop('required', true)
+                    $("#facility_name").addClass("is-required");
+                    $("#facility_id").addClass("is-required");
+                } else {
+                    $("#facility_details_1").hide(200);
+                    $("#facility_details_2").hide(200);
+                    $("#{{form.facility_name.id_for_label}}").val('');
+                    $("#{{form.facility_id.id_for_label}}").val('');
+                    $("#{{form.facility_lat.id_for_label}}").val('');
+                    $("#{{form.facility_long.id_for_label}}").val('');
+
+                    $("#{{form.facility_name.id_for_label}}").prop('required', false)
+                    $("#{{form.facility_id.id_for_label}}").prop('required', false)
+                    $("#facility_name").removeClass("is-required");
+                    $("#facility_id").removeClass("is-required");
+                }
+            });
+
+            /*$("#prDistricts").hide();
+            $("#pr_has_districts").change(function(){
+                if($(this).is(":checked")) {
+                    $("#prDistricts").show(300);
+                } else {
+                    $("#prDistricts").hide(200);
+                    $("#{{form.districts.id_for_label}}").val('');
+                }
+            });*/
+
+            function get_activities(){
+                const activities_url = $("#id_activities").attr("activities-queries-url");
+                const activityIds = $("select#id_activities option").map(function() {return $(this).val();}).get();
+                const clusterIds = $("#id_clusters").val();
+                const selected_activities = $("select#id_activities").val()
+                $.ajax({
+                    type: 'GET',
+                    url: activities_url,
+                    data: {
+                        clusters: clusterIds,
+                        listed_activities: activityIds,
+                    },
+                    success: function (data) {
+                        $("#id_activities").html(data);
+                        $("select#id_activities").val(selected_activities);
+                    }
+                });
+            }
+
+            function get_districts(){
+                const districts_url = $("#{{ form.districts.id_for_label }}").attr("districts-queries-url");
+                const districtIds = $("select#{{ form.districts.id_for_label }} option").map(function() {return $(this).val();}).get();
+                const provinceIds = $("#{{ form.provinces.id_for_label }}").val();
+                const selected_districts = $("select#{{ form.districts.id_for_label }}").val()
+                $.ajax({
+                    type: 'GET',
+                    url: districts_url,
+                    data: {
+                        provinces: provinceIds,
+                        listed_districts: districtIds,
+                    },
+                    success: function (data) {
+                        $("#{{ form.districts.id_for_label }}").html(data);
+                        $("select#{{ form.districts.id_for_label }}").val(selected_districts);
+                    }
+                });
+            };
+
+            $('#{{ form.districts.id_for_label }}').ready(function () {
+                get_districts()
+            });
+            $("#{{ form.provinces.id_for_label }}").change(function () {
+                get_districts()
+            });
+
+            $('#id_activities').ready(function () {
+                get_activities()
+            });
+
+            $("#{{ form.clusters.id_for_label }}").change(function () {
+                get_activities()
+            });
         });
 
-        $("#id_clusters").change(function () {
-            get_activities()
-        });
 
-</script>
+</script>-->
 
 {% endblock scripts %}

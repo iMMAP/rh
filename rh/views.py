@@ -8,6 +8,7 @@ from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
 from django.template import loader
 from django.views.decorators.cache import cache_control
+from django.db.models import Q
 
 from .filters import *
 from .forms import *
@@ -145,48 +146,48 @@ def load_activities_details(request):
     cluster_ids = dict(request.GET.lists()).get('clusters[]', [])
     listed_activity_ids = dict(request.GET.lists()).get('listed_activities[]', [])
     cluster_ids = list(map(int, cluster_ids))
+    clusters = Cluster.objects.filter(pk__in=cluster_ids)
     listed_activity_ids = list(map(int, listed_activity_ids))
     activities = Activity.objects.filter(clusters__in=cluster_ids).order_by('name')
-    activities_options = """"""
-    for activity in activities:
-        option = f"""
-        <option value="{activity.pk}">{activity}</option>
-        """
-        activities_options += option
-    return HttpResponse(activities_options)
+    clusters_group = """"""
+    for cluster in clusters:
+        activities_options = """"""
+        for activity in activities:
+            option = f"""
+            <option value="{activity.pk}">{activity}</option>
+            """
+            activities_options += option
+        clusters_group += f"""
+        <optgroup label="{cluster}">
+            {activities_options}
+        </optgroup>"""
+    return HttpResponse(clusters_group)
 
 
 @cache_control(no_store=True)
 @login_required
 def load_locations_details(request):
     """Load Locations with group info"""
-    countries = Location.objects.filter(type='Country')
-    provinces = Location.objects.filter(type='Province').order_by('name')
-    country_group = """"""
+    province_ids = dict(request.GET.lists()).get('provinces[]', [])
+    listed_district_ids = dict(request.GET.lists()).get('listed_districts[]', [])
+    province_ids = list(map(int, province_ids))
+    provinces = Location.objects.filter(pk__in=province_ids)
+    listed_district_ids = list(map(int, listed_district_ids))
     province_group = """"""
-    for country in countries:
-        for province in provinces:
-            district_options = """"""
-            districts = Location.objects.filter(parent=province)
-            for district in districts:
-                district_options += f"""
-                <option value="{district.pk}">
-                    {district.name}
-                </option>"""
+    for province in provinces:
+        districts_options = """"""
+        districts = Location.objects.filter(parent__pk=province.pk).order_by('name')
+        for district in districts:
+            option = f"""
+            <option value="{district.pk}">{district}</option>
+            """
+            districts_options += option
 
-            province_group += f"""
-            <optgroup label="{province.name}">
-                <option value="{province.pk}">{province.name} ({province.type})</option>
-                {district_options}
-            </optgroup>"""
-
-        country_group += f"""
-        <optgroup label="{country.name}">
-            <option value="{country.pk}">{country.name}</option>
-        </optgroup>
-        {province_group}
-        """
-    return HttpResponse(country_group)
+        province_group += f"""
+        <optgroup label="{province.name}">
+            {districts_options}
+        </optgroup>"""
+    return HttpResponse(province_group)
 
 
 @cache_control(no_store=True)
@@ -246,7 +247,11 @@ def create_project_view(request):
             project_id = form.save()
             return redirect('create_project_activity_plan', project=project_id.pk)
     else:
-        form = ProjectForm(initial={'user': request.user})
+        country = False
+        if request.user:
+            if request.user.profile and request.user.profile.country:
+                country = request.user.profile.country
+        form = ProjectForm(initial={'user': request.user, 'country': country})
     context = {'form': form, 'project_planning': True}
     return render(request, 'projects/project_form.html', context)
 
@@ -371,13 +376,20 @@ def create_project_target_location(request, project, **kwargs):
     activity_plan_ids = [int(s) for s in re.findall(r'\d+', kwargs['plans'])]
     project = Project.objects.get(pk=project)
 
-    locations = project.locations.all()
+    # All the districts locations will create a target location but for provinces
+    # we will filter those whose children(districts) are not selected means
+    # those target locations will be on the province level.
+    districts = project.districts.all()
+    provinces = project.provinces.filter(~Q(pk__in=list(districts.values_list('parent', flat=True))))
+
+    locations = districts | provinces
+
     TargetLocationsFormSet = modelformset_factory(TargetLocation, exclude=['project'], form=TargetLocationForm,
                                                   extra=len(locations))
 
     target_locations = TargetLocation.objects.filter(project__id=project.pk)
     if target_locations:
-        kwargs['lcoation', list(activity_plans.values_list('pk', flat=True))]
+        kwargs['location': list(activity_plans.values_list('pk', flat=True))]
         return redirect('update_project_target_location', project=project.pk, **kwargs)
 
     if request.method == 'POST':
@@ -456,8 +468,15 @@ def update_project_target_location(request, project, **kwargs):
     if not target_locations:
         return redirect('create_project_target_location', project=project.pk, **kwargs)
 
-    locations = project.locations.all()
-    extras = len(project.locations.all()) - len(target_locations)
+    # All the districts locations will create a target location but for provinces
+    # we will filter those whose children(districts) are not selected means
+    # these target locations will be on the province level.
+    districts = project.districts.all()
+    provinces = project.provinces.filter(~Q(pk__in=list(districts.values_list('parent', flat=True))))
+
+    locations = districts | provinces
+
+    extras = len(locations) - len(target_locations)
     TargetLocationsFormSet = modelformset_factory(TargetLocation, exclude=['project'], form=TargetLocationForm,
                                                   extra=extras)
 
@@ -600,7 +619,7 @@ def delete_project(request, pk):
 @cache_control(no_store=True)
 @login_required
 def copy_project(request, pk):
-    # pass
+    pass
     project = Project.objects.get(pk=pk)
 
     if project:
@@ -632,7 +651,7 @@ def copy_project(request, pk):
 
             for location in target_locations:
                 new_location = TargetLocation.objects.get(pk=location.pk)
-                new_plan.pk = None
+                new_location.pk = None
                 new_location.save()
                 new_location.project = new_project
                 new_location.active = True

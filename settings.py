@@ -13,7 +13,7 @@ environ.Env.read_env()
 SECRET_KEY = env("SECRET_KEY", default="unsafe-secret-key")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG=True #env("DEBUG", default=True)
+DEBUG=env("DEBUG", default=True)
 
 # For Testing the registration email confirmation, make debug=True
 # DEBUG = False

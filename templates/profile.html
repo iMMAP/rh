@@ -12,7 +12,10 @@
                         <h1>{{ user.profile.name }}</h1>
                         <strong class="user-position">{{ user.profile.position }}</strong>
                         <address>
-                            {{ user.profile.cluster }}, {{ user.profile.country }}<br/>
+                            {% for cluster in user.profile.clusters.all %}
+                                {{ cluster.title }},
+                            {% endfor %}
+                            {{ user.profile.country }}<br/>
                             <a href="mailto:{{user.email}}">{{ user.email }}</a>,
                             <a href="tel:{{user.profile.phone}}">{{ user.profile.phone }}</a>
                         </address>

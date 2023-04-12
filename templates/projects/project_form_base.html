@@ -11,9 +11,9 @@
     <div class="container">
         <div class="page-navigation-panel">
             <div class="holder">
-                <div class="link-holder">
+                <!--<div class="link-holder">
                     <a href="{% url 'projects' %}" class="btn-back">Back to All Projects</a>
-                </div>
+                </div>-->
 
                 <div class="tabs-nav-holder">
                     <ul class="tabs-nav">
@@ -70,15 +70,15 @@
                         </li>
 
                         <li class="{% if activity_planning %}current{% endif %}">
-                            <a class="{% if not project %}disabled-link{% endif %}" href="{% if project %}{% url 'update_project_activity_plan' project.pk %}{% else %}#{% endif %}">Activity Planning</a>
+                            <a class="{% if not project %}disabled-link{% endif %}" href="{% if project %}{% url 'create_project_activity_plan' project.pk %}{% else %}#{% endif %}">Activity Planning</a>
                         </li>
 
                         <li class="{% if locations_planning %}current{% endif %}">
-                            <a class="{% if not plans %}disabled-link{% endif %}" href="{% if project and plans %}{% url 'update_project_target_location' project.pk plans %}{% else %}#{% endif %}">Target Locations</a>
+                            <a class="{% if not plans %}disabled-link{% endif %}" href="{% if project %}{% url 'create_project_target_location' project.pk %}{% else %}#{% endif %}">Target Locations</a>
                         </li>
 
                         <li class="{% if project_review %}current{% endif %}">
-                            <a class="{% if not locations %}  disabled-link{% endif %}"href="{% if project and plans and locations %}{% url 'project_plan_review' project.pk plans locations %}{% else %}#{% endif %}">Review</a>
+                            <a class="{% if not locations %}disabled-link{% endif %}"href="{% if project and plans and locations %}{% url 'project_plan_review' project.pk %}{% else %}#{% endif %}">Review</a>
                         </li>
                     </ul>
                 </div>

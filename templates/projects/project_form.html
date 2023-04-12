@@ -18,6 +18,17 @@
             <h2 class="plan-title">Create project plan</h2>
             {% endif %}
         </div>
+        {% if messages %}
+            {% for message in messages %}
+            <div class="section-message-alert">
+                <div class="description">
+                    <div class="text">
+                        <p class="error-message">{{ message }}</p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        {% endif %}
         <form method="POST">
             {% csrf_token %}
             {{ form.active }}
@@ -38,42 +49,23 @@
                     </div>
 
                     <div class="select-field is-required">
-                        <label for="{{ form.clusters.html_name }}">Clusters</label>
+                        <label for="{{ form.clusters.html_name }}">
+                            Clusters / Sectors
+                        </label>
                         <div class="input-holder">
                             {{ form.clusters }}
                         </div>
                     </div>
-                    <div class="input-check-holder">
-                        {{ form.facility_monitoring }}
-                        <label for="{{ form.facility_monitoring.id_for_label }}">
-                            <span class="input"></span>
-                            <span class="text">Facility / Site Monitoring?</span>
-                        </label>
-                    </div>
-                    <!--<div class="select-field is-required">
-                        <label for="{{ form.provinces.html_name }}">Provinces / States [Hint - Select Multiple]</label>
-                        <div class="input-holder">
-                            {{ form.provinces }}
-                        </div>
-                    </div>-->
                 </div>
                 <div class="col col-sm">
                     <div class="date-picker-field">
                         <div class="date start">
                             <label for="{{ form.start_date.id_for_label }}">Start Date</label>
                             {{form.start_date}}
-                            {% comment %} <input type="text" name="{{ form.start_date.html_name }}"
-                                                 id="{{ form.start_date.id_for_label }}"
-                                                 onfocus="(this.type='date')" onblur="(this.type='text')"
-                                                 value=""/> {% endcomment %}
                         </div>
                         <div class="date end">
                             <label for="{{ form.end_date.id_for_label }}">End Date</label>
                             {{form.end_date}}
-                            {% comment %} <input type="text" name="{{ form.end_date.html_name }}"
-                                                 id="{{ form.end_date.id_for_label }}"
-                                                 onfocus="(this.type='date')" onblur="(this.type='text')"
-                                                 value=""/> {% endcomment %}
                         </div>
                     </div>
                     <div class="multiple-fields-row">
@@ -93,7 +85,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="multiple-fields-row">
+                    <div class="multiple-fields-row two-items">
                         <div class="field-col">
                             <div class="input-check-holder">
                                 {{ form.is_hrp_project }}
@@ -123,43 +115,6 @@
                 </div>
                 <div class="col col-lg">
 
-                    <div class="multiple-fields-row two-items" id="facility_details_1">
-                        <div class="field-col">
-                            <div class="input-field" id="facility_name">
-                                <label for="{{ form.facility_name.id_for_label }}">Facility / Site Name</label>
-                                <div class="input-holder">
-                                    {{ form.facility_name }}
-                                </div>
-                            </div>
-                        </div>
-                        <div class="field-col">
-                            <div class="input-field" id="facility_id">
-                                <label for="{{ form.facility_id.id_for_label }}">Facility / Site ID</label>
-                                <div class="input-holder">
-                                    {{ form.facility_id }}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="multiple-fields-row two-items" id="facility_details_2">
-                        <div class="field-col">
-                            <div class="input-field">
-                                <label for="{{ form.facility_lat.id_for_label }}">Facility / Site Latitude</label>
-                                <div class="input-holder">
-                                    {{ form.facility_lat }}
-                                </div>
-                            </div>
-                        </div>
-                        <div class="field-col">
-                            <div class="input-field">
-                                <label for="{{ form.facility_long.id_for_label }}">Facility / Site Longitude</label>
-                                <div class="input-holder">
-                                    {{ form.facility_long }}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
                     <div class="multiple-fields-row two-items">
                         <div class="field-col">
                             <div class="select-field is-required">
@@ -179,18 +134,25 @@
                             </div>
                         </div>
                     </div>
-                    <div class="select-field is-required">
-                        <label for="{{ form.activities.html_name }}">Activity Domain</label>
-                        <div class="input-holder">
-                            {{ form.activities }}
+                    <div class="multiple-fields-row two-items">
+                        <div class="field-col">
+                            <div class="select-field is-required">
+                                <label for="{{ form.activity_domains.html_name }}">Activity Domains</label>
+                                <div class="input-holder">
+                                    {{ form.activity_domains }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="field-col">
+                            <div class="select-field is-required">
+                                <label for="{{ form.donors.html_name }}">Project Donor</label>
+                                <div class="input-holder">
+                                    {{ form.donors }}
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div class="select-field is-required">
-                        <label for="{{ form.donors.html_name }}">Project Donor</label>
-                        <div class="input-holder">
-                            {{ form.donors }}
-                        </div>
-                    </div>
+
                     <div class="multiple-fields-row two-items">
                         <div class="field-col">
                             <div class="select-field is-required">
@@ -237,151 +199,5 @@
         crossorigin="anonymous" referrerpolicy="no-referrer">
 </script>
 <script defer src="{% static 'rh/js/project_planning.js' %}"></script>
-<!--<script>
-        $(document).ready(function() {
-
-            $('.js-example-basic-multiple').select2();
-
-            if (!$("#{{form.is_hrp_project.id_for_label}}").is(":checked")){
-                $("#prHasHRPCodeEl").hide();
-            }
-
-            $("#{{form.is_hrp_project.id_for_label}}").change(function(){
-                if($(this).is(":checked")) {
-                    $("#prHasHRPCodeEl").show(300);
-                } else {
-
-                    $("#prHrpCode").hide(200);
-                    $("#{{form.hrp_code.id_for_label}}").val('');
-
-                    $("#prHasHRPCodeEl").hide(200);
-                    $("#{{form.has_hrp_code.id_for_label}}").prop('checked', false);
-                }
-            });
-
-            if (!$("#{{form.has_hrp_code.id_for_label}}").is(":checked")){
-                $("#prHrpCode").hide();
-
-            }else {
-                $("#{{form.hrp_code.id_for_label}}").prop('required', true)
-                $("#prHrpCode").addClass("is-required");
-            }
-            $("#{{form.has_hrp_code.id_for_label}}").change(function(){
-                if($(this).is(":checked")) {
-                    $("#prHrpCode").show(300);
-                    $("#prHrpCode").prop('required',true)
-                    $("#prHrpCode").addClass("is-required");
-                } else {
-                    $("#prHrpCode").hide(200);
-                    $("#{{form.hrp_code.id_for_label}}").val('');
-                }
-            });
-
-            if (!$("#{{form.facility_monitoring.id_for_label}}").is(":checked")){
-                $("#facility_details_1").hide();
-                $("#facility_details_2").hide();
-
-
-                $("#{{form.facility_name.id_for_label}}").prop('required', true)
-                $("#{{form.facility_id.id_for_label}}").prop('required', true)
-                $("#facility_name").removeClass("is-required");
-                $("#facility_id").removeClass("is-required");
-            }else {
-                $("#{{form.facility_name.id_for_label}}").prop('required', false)
-                $("#{{form.facility_id.id_for_label}}").prop('required', false)
-                $("#facility_name").addClass("is-required");
-                $("#facility_id").addClass("is-required");
-            }
-
-            $("#{{form.facility_monitoring.id_for_label}}").change(function(){
-                if($(this).is(":checked")) {
-                    $("#facility_details_1").show(300);
-                    $("#facility_details_2").show(300);
-
-                    $("#{{form.facility_name.id_for_label}}").prop('required', true)
-                    $("#{{form.facility_id.id_for_label}}").prop('required', true)
-                    $("#facility_name").addClass("is-required");
-                    $("#facility_id").addClass("is-required");
-                } else {
-                    $("#facility_details_1").hide(200);
-                    $("#facility_details_2").hide(200);
-                    $("#{{form.facility_name.id_for_label}}").val('');
-                    $("#{{form.facility_id.id_for_label}}").val('');
-                    $("#{{form.facility_lat.id_for_label}}").val('');
-                    $("#{{form.facility_long.id_for_label}}").val('');
-
-                    $("#{{form.facility_name.id_for_label}}").prop('required', false)
-                    $("#{{form.facility_id.id_for_label}}").prop('required', false)
-                    $("#facility_name").removeClass("is-required");
-                    $("#facility_id").removeClass("is-required");
-                }
-            });
-
-            /*$("#prDistricts").hide();
-            $("#pr_has_districts").change(function(){
-                if($(this).is(":checked")) {
-                    $("#prDistricts").show(300);
-                } else {
-                    $("#prDistricts").hide(200);
-                    $("#{{form.districts.id_for_label}}").val('');
-                }
-            });*/
-
-            function get_activities(){
-                const activities_url = $("#id_activities").attr("activities-queries-url");
-                const activityIds = $("select#id_activities option").map(function() {return $(this).val();}).get();
-                const clusterIds = $("#id_clusters").val();
-                const selected_activities = $("select#id_activities").val()
-                $.ajax({
-                    type: 'GET',
-                    url: activities_url,
-                    data: {
-                        clusters: clusterIds,
-                        listed_activities: activityIds,
-                    },
-                    success: function (data) {
-                        $("#id_activities").html(data);
-                        $("select#id_activities").val(selected_activities);
-                    }
-                });
-            }
-
-            function get_districts(){
-                const districts_url = $("#{{ form.districts.id_for_label }}").attr("districts-queries-url");
-                const districtIds = $("select#{{ form.districts.id_for_label }} option").map(function() {return $(this).val();}).get();
-                const provinceIds = $("#{{ form.provinces.id_for_label }}").val();
-                const selected_districts = $("select#{{ form.districts.id_for_label }}").val()
-                $.ajax({
-                    type: 'GET',
-                    url: districts_url,
-                    data: {
-                        provinces: provinceIds,
-                        listed_districts: districtIds,
-                    },
-                    success: function (data) {
-                        $("#{{ form.districts.id_for_label }}").html(data);
-                        $("select#{{ form.districts.id_for_label }}").val(selected_districts);
-                    }
-                });
-            };
-
-            $('#{{ form.districts.id_for_label }}').ready(function () {
-                get_districts()
-            });
-            $("#{{ form.provinces.id_for_label }}").change(function () {
-                get_districts()
-            });
-
-            $('#id_activities').ready(function () {
-                get_activities()
-            });
-
-            $("#{{ form.clusters.id_for_label }}").change(function () {
-                get_activities()
-            });
-        });
-
-
-</script>-->
 
 {% endblock scripts %}

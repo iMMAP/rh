@@ -4258,7 +4258,7 @@ body.filter-active {
   display: flex;
   width: 100%;
   align-items: center;
-  justify-content: flex-end
+  justify-content: flex-end;
 }
 
 .block-activity .people {
@@ -4285,6 +4285,14 @@ body.filter-active {
   padding: 4px 6px;
   min-width: 71px;
   color: #6b6d70
+}
+.block-activity .btn.btn-red.save {
+  margin: 0 8px 0 0;
+  font-size: 12px;
+  line-height: 1.2;
+  padding: 4px 6px;
+  min-width: 71px;
+  color: #fff
 }
 
 .block-activity .btn:last-child {
@@ -5360,7 +5368,7 @@ body.filter-active {
   }
 
   .activity-planning .block-top .title {
-    margin: 0 10px 0 0
+    margin: 10px 10px 0 0
   }
 
   .block-activity,
@@ -6037,4 +6045,128 @@ body.filter-active {
 
 .disabled-link {
   pointer-events: none
+}
+
+.location-inner-holder .options-holder{
+    padding: 15px 0px 15px 0px;
+}
+.location-inner-holder .input-check-holder{
+    margin-bottom: 16px;
+    line-height: 1;
+    padding-top: 0;
+
+}
+
+/*Confirmation Popup*/
+body.confirmation-active {
+  overflow: hidden
+}
+
+.confirmation-popup-holder {
+  position: relative;
+  z-index: 2
+}
+
+.confirmation-popup-holder:after {
+  transition: opacity .35s cubic-bezier(.3, .86, .36, .95), visibility .35s cubic-bezier(.3, .86, .36, .95);
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(53, 53, 55, .35);
+  opacity: 0;
+  visibility: hidden;
+  z-index: -1
+}
+
+.confirmation-popup-holder.confirmation-active {
+  z-index: 9999
+}
+
+.confirmation-popup-holder.confirmation-active:after {
+  opacity: 1;
+  visibility: visible;
+  z-index: 1
+}
+.confirmation-popup-holder.confirmation-active .confirmation-options {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(110);
+  z-index: 2
+}
+
+.confirmation-options {
+  transition: all .5s ease-in-out;
+  max-width: 500px;
+  width: 100%;
+  display: flex !important;
+  flex-direction: column;
+  align-items: stretch;
+  position: fixed;
+  top: 0;
+  right: 30%;
+  bottom: 0;
+  padding: 32px;
+  background: #fff;
+  box-shadow: 0 0 18px 0 rgba(53, 53, 55, .75);
+  height: 25%;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(110%);
+  z-index: 1
+}
+
+.confirmation-options::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, .3);
+  background-color: #d1d3d4
+}
+
+.confirmation-options::-webkit-scrollbar {
+  width: 4px;
+  background-color: #be2126
+}
+
+.confirmation-options::-webkit-scrollbar-thumb {
+  background-color: #000
+}
+
+.confirmation-options .block-top {
+  width: 100%;
+  padding-right: 30px;
+  flex: 0 0 auto
+}
+
+.confirmation-options .block-body {
+  width: calc(100% + 10px);
+  flex: 1 auto;
+  max-height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding-right: 10px
+}
+
+
+
+.confirmation-options .block-footer .btn-wrapper {
+  display: flex;
+  align-items: baseline
+}
+
+.confirmation-options .block-footer .btn {
+  margin-right: 24px;
+  width: 50%
+}
+
+.confirmation-options .block-footer .btn:last-child {
+  margin: 0
+}
+
+.confirmation-options .title {
+  display: block;
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 1.2;
+  color: #353537
 }

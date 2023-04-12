@@ -1,4 +1,4 @@
-{% extends "projects/project_form_base.html" %}  
+{% extends "projects/project_form_base.html" %}
 
 {% block header %}
 
@@ -10,51 +10,34 @@
 </div>
 <div class="main-content">
     <div class="target-location create-location">
-        <div class="main-heading"></div>
-        <div class="main-activity-holder">
-            <div class="top-activity-block">
-                <span class="activity-title">Targeted Locations</span>
-            </div>
+        <div class="main-heading">
+<!--            <h2 class="plan-title">Target Locations</h2>-->
         </div>
+
+
         <form method="POST" enctype="multipart/form-data">
+            <div class="main-activity-holder main-target">
+                <div class="top-activity-block">
+                    <span class="activity-title">Targeted Locations</span>
+
+                    <div class="btn-holder">
+                        <input type="submit" class="btn btn-red" value="Add Location"/>
+                        <a href="#" class="btn btn-gray">
+                            <span class="btn-text">Import Locations</span>
+                            <span class="icon-upload"></span>
+                        </a>
+                    </div>
+                </div>
+            </div>
             {{ formset.management_form }}
             {% csrf_token %}
-            {% for form in formset %}
-            
-            {{ form.id }}
-            {{ form.country_id }}
-            {{ form.province_id }}
-            {{ form.district_id }} 
-            {{ form.active }}
-
-            <div class="location-block-holder">
-                <div class="inner-holder">
+            {% for form in formset reversed %}
+                {{ form.id }}
+                {{ form.active }}
+                <div class="location-block-holder">
+                <div class="inner-holder location-inner-holder">
                     <div class="block-top">
-                        <span class="title">
-                            {% if form.instance %}
-
-                                {% if form.instance.country %}
-                                    {{ form.instance.country }}, 
-                                {% else %}
-                                    {{ form.initial.country }}, 
-                                {% endif %}
-
-                                {% if form.instance.province %}
-                                    {{ form.instance.province }},
-                                {% else %}
-                                    {{ form.initial.province }},
-                                {% endif %}
-                                
-                                {% if form.instance.district %}
-                                    {{ form.instance.district }}
-                                {% else %}
-                                    {{ form.initial.district }}
-                                {% endif %}
-
-                            {% endif %}
-                        </span>
-
-                        {% comment %} <span class="title">Badakhshan, Tagab</span> {% endcomment %}
+                        <span class="title">Badakhshan, Tagab</span>
 
                         <div class="block-location-activity">
                             <a href="#" class="btn btn-gray-outline">
@@ -63,26 +46,49 @@
                             </a>
                         </div>
 
-                        {% comment %} <span class="subtitle">{{ form.location_type.value|default_if_none:"" }}: {{ form.site_name.value|default_if_none:"" }}</span>
-                        {% endcomment %}
+                        <span class="subtitle">FATP: Tagab BHC</span>
+                    </div>
+                    <div class="options-holder">
+                        <div class="input-check-holder">
+                            <input type="checkbox" name="{{ form.group_by_province.name }}" id="{{ form.group_by_province.id_for_label }}"/>
+                            <label for="{{ form.group_by_province.id_for_label }}">
+                                <span class="input"></span>
+                                <span class="text">Group target locations by province</span>
+                            </label>
+                        </div>
+
+                        <div class="input-check-holder">
+                            <input type="checkbox" name="{{ form.group_by_district.name }}" id="{{ form.group_by_district.id_for_label }}"/>
+                            <label for="{{ form.group_by_district.id_for_label }}">
+                                <span class="input"></span>
+                                <span class="text">Group target locations by district</span>
+                            </label>
+                        </div>
+                        <div class="input-check-holder">
+                            <input type="checkbox" name="{{ form.group_by_custom.name }}" id="{{ form.group_by_custom.id_for_label }}"/>
+                            <label for="{{ form.group_by_custom.id_for_label }}">
+                                <span class="input"></span>
+                                <span class="text">Group target locations custom</span>
+                            </label>
+                        </div>
                     </div>
                     <div class="row">
                         <div class="col">
-                            <div class="multiple-fields-row three-items">
-                                <div class="field-col">
+                            <div class="multiple-fields-row two-items">
+                                <!--<div class="field-col">
                                     <div class="select-field is-required">
                                         <label>Country</label>
                                         {{ form.country }}
                                     </div>
-                                </div>
+                                </div>-->
                                 <div class="field-col">
-                                    <div class="select-field is-required">
-                                        <label>Province</label>
+                                    <div class="select-field">
+                                        <label>Province / State *</label>
                                         {{ form.province }}
                                     </div>
                                 </div>
                                 <div class="field-col">
-                                    <div class="select-field is-required">
+                                    <div class="input-field">
                                         <label>District</label>
                                         {{ form.district }}
                                     </div>
@@ -90,13 +96,7 @@
                             </div>
                         </div>
                         <div class="col">
-                            <div class="multiple-fields-row two-items">
-                                <div class="field-col">
-                                    <div class="select-field is-required">
-                                        <label>Location Type</label>
-                                        {{ form.location_type }}
-                                    </div>
-                                </div>
+                            <div class="multiple-fields-row three-items">
                                 <div class="field-col">
                                     <div class="input-field">
                                         <label>Site name</label>
@@ -105,22 +105,79 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="field-col">
+                                    <div class="input-field">
+                                        <label>Site Latitude</label>
+                                        <div class="input-holder">
+                                            {{ form.site_lat }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="field-col">
+                                    <div class="input-field">
+                                        <label>Site Longitude</label>
+                                        <div class="input-holder">
+                                            {{ form.site_long }}
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
+
             </div>
             {% endfor %}
-            <div class="plan-submit-holder">
-                <a href="{% url 'update_project_activity_plan' project.pk %}" class="btn btn-gray-outline">Back</a>
-                <button type="submit" class="btn btn-red">Save and Review</button>
-            </div>
         </form>
+        <div class="plan-submit-holder">
+            <a href="{% url 'create_project_activity_plan' project.pk %}" class="btn btn-gray-outline">Back</a>
+            <a href="{% url 'project_plan_review' project.pk %}" class="btn btn-red">Review</a>
+        </div>
+
     </div>
 </div>
 
 {% endblock project_contents %}
 
 {% block scripts %}
+<script src="https://code.jquery.com/jquery-3.6.1.min.js"
+        integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"
+        integrity="sha512-2ImtlRlf2VVmiGZsjm9bEyhjGW4dU7B6TNwh/hx/iSByxNENtj3WVE6o/9Lj4TJeVXPi4bnOIMXFIJJAeufa0A=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<script>
+
+    function get_districts(){
+        const districts_url = $("#id_form-0-district").attr("districts-queries-url");
+        const districtIds = $("select#id_form-0-district option").map(function() {return $(this).val();}).get();
+        const provinceId = [$("#id_form-0-province").val()];
+        const selected_districts = $("select#id_form-0-district").val()
+        $.ajax({
+            type: 'GET',
+            url: districts_url,
+            data: {
+                provinces: provinceId,
+                listed_districts: districtIds,
+            },
+            success: function (data) {
+                $("#id_form-0-district").html(data);
+                $("select#id_form-0-district").val(selected_districts);
+            }
+        });
+    };
+
+    $('#id_form-0-district').ready(function () {
+        get_districts()
+    });
+
+    $("#id_form-0-province").change(function () {
+        get_districts()
+    });
+
+
+</script>
 
 {% endblock scripts %}

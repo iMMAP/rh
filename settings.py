@@ -32,7 +32,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_filters',
+    'smart_selects',
+    'widget_tweaks',
 ]
+USE_DJANGO_JQUERY = True
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

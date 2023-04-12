@@ -7,10 +7,10 @@ urlpatterns = [
     path('home', user_views.home, name='home'),
 
     # Activities routes
-    path('activity_plans/', user_views.activity_plans, name='activity_plan'),
-    path('activity_plan/create/', user_views.create_activity_plan, name='create_activity_plan'),
-    path('activity_plan/update/<str:pk>/', user_views.update_activity_plan, name='update_activity_plan'),
-    path('ajax/activity_plan/activity_form/', user_views.load_activity_json_form, name='ajax-load-activityfields'),
+    # path('activity_plans/', user_views.activity_plans, name='activity_plan'),
+    # path('activity_plan/create/', user_views.create_activity_plan, name='create_activity_plan'),
+    # path('activity_plan/update/<str:pk>/', user_views.update_activity_plan, name='update_activity_plan'),
+    # path('ajax/activity_plan/activity_form/', user_views.load_activity_json_form, name='ajax-load-activityfields'),
 
     # Projects routes
     path('projects/', user_views.projects_view, name='projects'),
@@ -20,24 +20,21 @@ urlpatterns = [
 
     path('project/activity_plan/create/?project=<str:project>/', user_views.create_project_activity_plan,
          name='create_project_activity_plan'),
-    path('project/activity_plan/update/?project=<str:project>/', user_views.update_project_activity_plan,
-         name='update_project_activity_plan'),
 
-    path('project/target_location/create/?project=<str:project>/?activity_plans=<str:plans>/',
+    path('project/target_location/create/?project=<str:project>/',
          user_views.create_project_target_location, name='create_project_target_location'),
-    path('project/target_location/update/?project=<str:project>/?activity_plans=<str:plans>/',
-         user_views.update_project_target_location, name='update_project_target_location'),
 
-    path(
-        'project/project_plan/review/?project=<str:project>/?activity_plans=<str:plans>/?target_locations=<str:locations>/',
-        user_views.project_planning_review, name='project_plan_review'),
+    path('project/project_plan/review/?project=<str:project>/', user_views.project_planning_review, name='project_plan_review'),
 
     path('project/project_plan/submit/<str:pk>/', user_views.submit_project, name='project_submit'),
 
     path('project/project_plan/delete/<str:pk>/', user_views.delete_project, name='delete_project'),
     path('project/project_plan/copy/<str:pk>/', user_views.copy_project, name='copy_project'),
 
-    path('ajax/load-activities-details/', user_views.load_activities_details, name='ajax-load-activities'),
+    # path('ajax/load-activities-details/', user_views.load_activities_details, name='ajax-load-activities'),
+    # path('ajax/load-other-activity-domains/', user_views.load_other_activity_domains, name='ajax-load-other-activity-domains'),
     path('ajax/load-districts-details/', user_views.load_locations_details, name='ajax-load-districts'),
+
+    # path('get_activity_domains/<int:project_id>/', user_views.get_activity_domains, name='get_activity_domains'),
 
 ]

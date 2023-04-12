@@ -6,21 +6,6 @@ import pandas as pd
 import sqlalchemy
 from pymongo import MongoClient
 
-# from myapp.models import MyModel
-
-# class Command(BaseCommand):
-#     def handle(self, *args, **options):
-#         # Read CSV file
-#         data = pd.read_csv('data.csv')
-
-#         # Convert CSV data to JSON
-#         json_data = json.loads(data.to_json(orient='records'))
-
-#         # Iterate over JSON data and create MyModel objects
-#         for item in json_data:
-#             mymodel = MyModel(json_field=item)
-#             mymodel.save()
-
 
 TEST = False  # set to False if working with test database and provide sqlite3 database
 
@@ -30,13 +15,26 @@ SQLITEDB_PATH = '../db.sqlite3'
 # CSV DATA FILES
 CURRENCIES_CSV = '../data/currencies.csv'
 LOCATIONS_CSV = '../data/af_loc.csv'
-CLUSTERS_CSV = '../data/updated_clusters.csv'
+# CLUSTERS_CSV = '../data/updated_clusters.csv'
 ORGANIZATIONS_CSV = '../data/organizations.csv'
 BENEFICIARY_TYPES_CSV = '../data/beneficiarytypes.csv'
 DONORS_CSV = '../data/donors.csv'
 INDICATORS_CSV = '../data/Indicators.csv'
 ACTIVITIES_CSV = '../data/activities.csv'
 USERS_CSV = '../data/user.csv'
+
+# OLD DB DATA
+# CLUSTERS_CSV_OLD_DB = '../data/old_db/updated_clusters.csv'
+# ACTIVITY_DOMAIN_CSV = '../data/old_db/activity_types.csv'
+# ACTIVITY_DESCRIPTION_CSV = '../data/old_db/activity_description_with_indicators.csv'
+# ACTIVITY_DETAIL_CSV = '../data/old_db/activity_details.csv'
+# INDICATORS_CSV_OLD_DB = '../data/old_db/indicators.csv'
+
+CLUSTERS_CSV_OLD_DB = '../data/new_db/clusters.csv'
+ACTIVITY_DOMAIN_CSV = '../data/new_db/activity_domains.csv'
+ACTIVITY_DESCRIPTION_CSV = '../data/new_db/activity_types.csv'
+ACTIVITY_DETAIL_CSV = '../data/new_db/activity_details.csv'
+INDICATORS_CSV_OLD_DB = '../data/new_db/indicators.csv'
 
 
 class DataImporter():
@@ -120,7 +118,6 @@ class DataImporter():
         Import Currencies from CSV
         """
         c = connection.cursor()
-        df = pd.DataFrame()
         df = pd.read_csv(currencies_csv)
 
         if len(df) > 0:
@@ -183,7 +180,6 @@ class DataImporter():
         Import updated clusters from CSV
         """
         c = connection.cursor()
-        df = pd.DataFrame()
         df = pd.read_csv(clusters_csv)
 
         if len(df) > 0:
@@ -193,8 +189,251 @@ class DataImporter():
 
             try:
                 c.execute(
-                    f"""insert into {table}(old_code, code, old_title, title) select old_code, code, old_title, title from tmp_clusters""")
+                    f"""insert into {table}(title, code, name) select title, code, name from tmp_clusters""")
                 c.execute("DROP TABLE tmp_clusters;")
+            except Exception as e:
+                connection.rollback()
+
+    def import_indicators_from_csv(self, connection, indicators_csv):
+        """
+        Import Indicators from CSV
+        """
+        c = connection.cursor()
+        df = pd.read_csv(indicators_csv)
+
+        if len(df) > 0:
+            table = "rh_indicator"
+
+            df.to_sql('tmp_indicator', connection, if_exists='replace', index=False)
+            try:
+                c.execute("select activity_description_id,indicator_id,indicator_name from tmp_indicator")
+                indicators = c.fetchall()
+                for indicator in indicators:
+                    indicator = list(indicator)
+                    activity_type = indicator[0]
+
+                    if activity_type:
+                        c.execute(f"select id from rh_activitytype where code='{activity_type}'")
+                        activity_type_id = c.fetchone()
+                        if activity_type_id:
+                            activity_type = activity_type_id[0]
+                        else:
+                            activity_type = None
+
+                    indicator.pop(0)
+                    indicator.append(None)
+                    indicator.append(None)
+                    indicator.append(None)
+
+                    aquery = f"""insert into {table}(code, name, numerator, denominator, description) values (?, ?, ?, ?, ?)
+                    """
+                    c.execute(aquery, indicator)
+                    last_indicator_id = c.lastrowid
+
+                    if last_indicator_id and activity_type:
+                        aquery = f"""
+                            insert into 
+                            rh_indicator_activity_types(indicator_id, activitytype_id) 
+                            values({last_indicator_id}, {activity_type})
+                        """
+                        c.execute(aquery)
+
+
+                c.execute("DROP TABLE tmp_indicator;")
+            except Exception as e:
+                connection.rollback()
+
+    def import_activity_domains_from_csv(self, connection, activity_domain_csv):
+        """
+        Import updated clusters from CSV
+        """
+        c = connection.cursor()
+        df = pd.read_csv(activity_domain_csv)
+
+        if len(df) > 0:
+            table = "rh_activitydomain"
+
+            df.to_sql('tmp_activitydomain', connection, if_exists='replace', index=False)
+
+            try:
+                c.execute(
+                    "select activity_type_id,activity_type_name,cluster_id from tmp_activitydomain")
+                activity_domains = c.fetchall()
+                m2m_records = []
+                for domain in activity_domains:
+                    domain = list(domain)
+                    cluster = domain[2]
+                    country = 'AF'
+
+                    if country:
+                        c.execute(f"select id from rh_location where code='{country}'")
+                        location_id = c.fetchone()
+                        if location_id:
+                            country = location_id[0]
+                        else:
+                            country = None
+
+                    if cluster:
+                        c.execute(f"select id from rh_cluster where code='{cluster}'")
+                        cluster_id = c.fetchone()
+                        if cluster_id:
+                            cluster = cluster_id[0]
+                        else:
+                            cluster = None
+
+                    domain.append(True)
+                    # m2m_records.append({'cluster': cluster, 'country': country})
+                    domain.pop(2)
+
+                    aquery = f"""insert into {table}(code, name, active) values (?, ?, ?)
+                    """
+                    c.execute(aquery, domain)
+                    last_domain_id = c.lastrowid
+
+                    if last_domain_id and country:
+                        coquery = f"""
+                            insert into 
+                            rh_activitydomain_countries(activitydomain_id, location_id) 
+                            values({last_domain_id}, {country})
+                        """
+                        c.execute(coquery)
+                    if last_domain_id and cluster:
+                        clquery = f"""
+                               insert into 
+                               rh_activitydomain_clusters(activitydomain_id, cluster_id) 
+                               values({last_domain_id}, {cluster})
+                           """
+                        c.execute(clquery)
+
+            except Exception as e:
+                connection.rollback()
+
+    def import_activity_descriptions_from_csv(self, connection, activity_description_csv):
+
+        c = connection.cursor()
+        df = pd.read_csv(activity_description_csv)
+
+        if len(df) > 0:
+            table = "rh_activitytype"
+
+            df.to_sql('tmp_activitytype', connection, if_exists='replace', index=False)
+
+            try:
+                c.execute(
+                    """select activity_description_id,activity_description_name,activity_type_id,cluster_id from tmp_activitytype
+                """)
+                activity_types = c.fetchall()
+                for activity_type in activity_types:
+                    activity_type = list(activity_type)
+                    activity_domain = activity_type[2]
+                    cluster = activity_type[3]
+                    country = 'AF'
+
+                    if activity_domain:
+                        c.execute(f"select id from rh_activitydomain where code='{activity_domain}'")
+                        activity_domain_id = c.fetchone()
+                        if activity_domain_id:
+                            activity_domain = activity_domain_id[0]
+                        else:
+                            activity_domain = None
+
+                    if cluster:
+                        c.execute(f"select id from rh_cluster where code='{cluster}'")
+                        cluster_id = c.fetchone()
+                        if cluster_id:
+                            cluster = cluster_id[0]
+                        else:
+                            cluster = None
+
+                    if country:
+                        c.execute(f"select id from rh_location where code='{country}'")
+                        location_id = c.fetchone()
+                        if location_id:
+                            country = location_id[0]
+                        else:
+                            country = None
+
+                    activity_type.append(True)
+                    activity_type.pop(3)
+
+                    activity_type[2] = activity_domain
+                    activity_type.append(None)
+                    activity_type.append(None)
+                    activity_type.append(None)
+                    activity_type.append(None)
+                    activity_type.append(None)
+                    activity_type.append(None)
+                    activity_type.append(None)
+
+                    # activity_type[4] = indicator
+
+                    aquery = f"""insert into {table}(code,name,activity_domain_id,active,activity_date,hrp_code,code_indicator,start_date,end_date,ocha_code,objective_id) 
+                        values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    """
+                    c.execute(aquery, activity_type)
+                    last_activity_type_id = c.lastrowid
+
+                    if last_activity_type_id and country:
+                        coquery = f"""
+                            insert into 
+                            rh_activitytype_countries(activitytype_id, location_id) 
+                            values({last_activity_type_id}, {country})
+                        """
+                        c.execute(coquery)
+                    if last_activity_type_id and cluster:
+                        clquery = f"""
+                            insert into 
+                            rh_activitytype_clusters(activitytype_id, cluster_id) 
+                            values({last_activity_type_id}, {cluster})
+                        """
+                        c.execute(clquery)
+                    # if last_activity_type_id and indicator:
+                    #     inquery = f"""
+                    #         insert into
+                    #         rh_activitytype_indicators(activitytype_id, indicator_id)
+                    #         values({last_activity_type_id}, {indicator})
+                    #     """
+                    #     c.execute(inquery)
+
+            except Exception as e:
+                connection.rollback()
+
+    def import_activity_details_from_csv(self, connection, activity_details_csv):
+        """
+        Import updated clusters from CSV
+        """
+        c = connection.cursor()
+        df = pd.read_csv(activity_details_csv)
+
+        if len(df) > 0:
+            table = "rh_activitydetail"
+
+            df.to_sql('tmp_activitydetail', connection, if_exists='replace', index=False)
+
+            try:
+                c.execute(
+                    "select activity_description_id,activity_detail_id,activity_detail_name from tmp_activitydetail")
+                activity_details = c.fetchall()
+                m2m_records = []
+                for activity_detail in activity_details:
+                    activity_detail = list(activity_detail)
+                    activity_type = activity_detail[0]
+                    # country = 'AF'
+
+                    if activity_type:
+                        c.execute(f"select id from rh_activitytype where code='{activity_type}'")
+                        activity_type_id = c.fetchone()
+                        if activity_type_id:
+                            activity_type = activity_type_id[0]
+                        else:
+                            activity_type = None
+
+                    activity_detail[0] = activity_type
+
+                    aquery = f"""insert into {table}(activity_type_id, code, name) values (?, ?, ?)
+                    """
+                    c.execute(aquery, activity_detail)
+
             except Exception as e:
                 connection.rollback()
 
@@ -203,7 +442,6 @@ class DataImporter():
         Import beneficiary types from CSV
         """
         c = connection.cursor()
-        df = pd.DataFrame()
         df = pd.read_csv(beneficiary_type_csv)
 
         if len(df) > 0:
@@ -215,9 +453,9 @@ class DataImporter():
                 c.execute(
                     f"""
                         insert into 
-                        {table}(name, code, description, start_date, end_date, old_id, location_id) 
+                        {table}(name, code, description, start_date, end_date, country_id) 
                         select 
-                        beneficiary_type_name, beneficiary_type_id, description, start_date, end_date, _id, (select id from rh_location where code = tmp_beneficiarytype.admin0pcode)
+                        beneficiary_type_name, beneficiary_type_id, description, start_date, end_date, (select id from rh_location where code = tmp_beneficiarytype.admin0pcode)
                         from tmp_beneficiarytype""")
                 c.execute("DROP TABLE tmp_beneficiarytype;")
             except Exception as e:
@@ -242,7 +480,7 @@ class DataImporter():
                 c.execute(
                     f"""
                         insert into 
-                        {table}(name, code, type, created_at, updated_at, old_id, location_id) 
+                        {table}(name, code, type, created_at, updated_at, old_id, country_id) 
                         select 
                         organization_name, organization, organization_type, createdAt, updatedAt, _id , (select id from rh_location where code = tmp_organization.admin0pcode)
                         from tmp_organization
@@ -269,38 +507,12 @@ class DataImporter():
                 c.execute(
                     f"""
                         insert into 
-                        {table}(code, name, start_date, end_date, old_id, location_id) 
+                        {table}(code, name, start_date, end_date, old_id, country_id) 
                         select 
                         project_donor_id, project_donor_name, start_date, end_date, _id, (select id from rh_location where code = tmp_donor.admin0pcode)
                         from tmp_donor
                     """)
                 c.execute("DROP TABLE tmp_donor;")
-            except Exception as e:
-                connection.rollback()
-
-    def import_indicators_from_csv(self, connection, indicators_csv):
-        """
-        Import Indicators from CSV
-        """
-        c = connection.cursor()
-        df = pd.DataFrame()
-        df = pd.read_csv(indicators_csv)
-
-        if len(df) > 0:
-            table = "rh_indicator"
-
-            df.to_sql('tmp_indicator', connection, if_exists='replace', index=False)
-
-            try:
-                c.execute(
-                    f"""
-                        insert into 
-                        {table}(code, name, numerator, denominator, description) 
-                        select 
-                        indicator_id, indicator_name, Numerator, Denominator, Description
-                        from tmp_indicator
-                    """)
-                c.execute("DROP TABLE tmp_indicator;")
             except Exception as e:
                 connection.rollback()
 
@@ -342,7 +554,13 @@ class DataImporter():
                             profile[0] = None
 
                     if cluster:
-                        c.execute(f"select id from rh_cluster where code='{cluster}' or old_code='{cluster}'")
+                        if cluster in ['coordination', 'smsd']:
+                            cluster = 'cccm'
+                        if cluster == 'agriculture':
+                            cluster = 'fsac'
+                        if cluster == 'rnr_chapter':
+                            cluster = 'protection'
+                        c.execute(f"select id from rh_cluster where code='{cluster}' or title='{cluster}' or name='{cluster}'")
                         cluster_id = c.fetchone()
                         if cluster_id:
                             profile[1] = cluster_id[0]
@@ -399,11 +617,12 @@ class DataImporter():
                         u_profile.pop(-1)
                         profile_cluster_id = u_profile.pop(1)
                         u_profile.append(user_id)
+                        u_profile.append(False)
                         u_profile = tuple(u_profile)
                     pquery = f"""
                             insert into 
-                            users_profile(country_id,name,organization_id,phone,position,skype,visits,user_id) 
-                            values (?, ?, ?, ?, ?, ?, ?, ?)
+                            users_profile(country_id,name,organization_id,phone,position,skype,visits,user_id,is_cluster_contact) 
+                            values (?, ?, ?, ?, ?, ?, ?, ?, ?)
                         """
                     c.execute(pquery, u_profile)
                     last_profile_id = c.lastrowid
@@ -481,7 +700,7 @@ class DataImporter():
                         """
                         c.execute(alquery)
 
-                    cquery = f"""select id from rh_cluster where code='{cluster}' or old_code='{cluster}'"""
+                    cquery = f"""select id from rh_cluster where code='{cluster}' or title='{cluster}' or name='{cluster}'"""
                     c.execute(cquery)
 
                     cluster_id = c.fetchone()
@@ -516,17 +735,27 @@ try:
 
     importer.import_locations(connection, LOCATIONS_CSV)
 
-    importer.import_clusters_from_csv(connection, CLUSTERS_CSV)
+    # importer.import_clusters_from_csv(connection, CLUSTERS_CSV)
 
-    importer.import_beneficiary_types_from_csv(connection, BENEFICIARY_TYPES_CSV)
+    importer.import_clusters_from_csv(connection, CLUSTERS_CSV_OLD_DB)
+
+    importer.import_activity_domains_from_csv(connection, ACTIVITY_DOMAIN_CSV)
+
+    importer.import_activity_descriptions_from_csv(connection, ACTIVITY_DESCRIPTION_CSV)
+
+    importer.import_activity_details_from_csv(connection, ACTIVITY_DETAIL_CSV)
+
+    # importer.import_beneficiary_types_from_csv(connection, BENEFICIARY_TYPES_CSV)
 
     importer.import_organizations_from_csv(connection, ORGANIZATIONS_CSV)
 
     importer.import_donors_from_csv(connection, DONORS_CSV)
 
-    importer.import_indicators_from_csv(connection, INDICATORS_CSV)
+    importer.import_indicators_from_csv(connection, INDICATORS_CSV_OLD_DB)
 
-    importer.import_activities_from_csv(connection, ACTIVITIES_CSV)
+    # importer.import_indicators_from_csv(connection, INDICATORS_CSV)
+
+    # importer.import_activities_from_csv(connection, ACTIVITIES_CSV)
 
     importer.import_users_from_csv(connection, USERS_CSV)
 

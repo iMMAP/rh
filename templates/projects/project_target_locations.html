@@ -11,7 +11,6 @@
 <div class="main-content">
     <div class="target-location create-location">
         <div class="main-heading">
-            <!--            <h2 class="plan-title">Target Locations</h2>-->
         </div>
 
 
@@ -22,7 +21,6 @@
                         <span class="activity-title">Targeted Locations</span>
                     </div>
                     <div class="btn-holder">
-                        <!--<input type="submit" class="btn btn-red" value="Add Location"/>-->
                         <a href="#" class="btn btn-gray">
                             <span class="btn-text">Import Locations</span>
                             <span class="icon-upload"></span>
@@ -42,6 +40,7 @@
             {% for form in formset reversed %}
             {{ form.id }}
             {{ form.active }}
+            {{ form.save }}
             <input type="hidden" name="project_id" id="project_id" value="{{ project.id }}">
             <div class="location-block-holder js-collapse-expand" data-form-id="{{ form.prefix }}">
                 <div class="inner-holder location-inner-holder">
@@ -68,9 +67,7 @@
                                     <span class="icon-trashbin"></span>
                                     <span class="btn-text">Delete</span>
                                 </a>
-                                <button type="submit" class="btn btn-red save" name="submit_type"
-                                        value="without_next_step">Save
-                                </button>
+                                <button type="submit" class="btn btn-red save" value="true" name="{{ form.prefix }}-save">Save</button>
                             </div>
                             <a href="#" class="btn btn-gray-outline collapse-details">
                                 <span class="icon-chevron-up up" id="{{form.prefix}}-up"></span>
@@ -170,7 +167,8 @@
             {% endfor %}
             <div class="plan-submit-holder">
                 <a href="{% url 'create_project_activity_plan' project.pk %}" class="btn btn-gray-outline">Back</a>
-                <a href="{% url 'project_plan_review' project.pk %}" class="btn btn-red">Review</a>
+                <button type="submit" class="btn btn-red" name="submit_type" value="next_step">Save and Review
+                </button>
             </div>
         </form>
 

@@ -178,7 +178,6 @@ function updateTitle(formPrefix, inputElementId) {
 
     for (const [key, value] of Object.entries(titleElements)) {
         if (inputElementId.includes(key)) {
-            debugger
             if(key === 'activity_detail'){
                 value.text(selectedValue ? selectedText : '');
             }else{

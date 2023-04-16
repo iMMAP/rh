@@ -211,25 +211,29 @@ def create_project_activity_plan(request, project):
     """
     project = get_object_or_404(Project, pk=project)
     activity_plans = project.activityplan_set.all()
-    ActivityPlanFormSet = modelformset_factory(ActivityPlan, form=ActivityPlanForm, extra=1)
+    ActivityPlanFormSet = modelformset_factory(ActivityPlan, form=ActivityPlanForm, can_delete=True, extra=1)
     formset = ActivityPlanFormSet(request.POST or None, queryset=activity_plans, form_kwargs={'project': project})
 
     if request.method == 'POST':
         submit_type = request.POST.get('submit_type')
         if formset.is_valid():
-            for form in formset:
-                if form.cleaned_data.get('activity_domain') and form.cleaned_data.get('activity_type'):
-                    activity = form.save(commit=False)
-                    activity.project = project
-                    activity.active = True
-                    activity.save()
-                    form.save_m2m()
-            # messages.success(request, 'Activity plans have been saved successfully.')
-            if submit_type == 'without_next_step':
-                return redirect('create_project_activity_plan', project=project.pk)
-            else:
+            if submit_type == 'next_step':
+                for form in formset:
+                    if form.cleaned_data.get('activity_domain') and form.cleaned_data.get('activity_type'):
+                        activity = form.save(commit=False)
+                        activity.project = project
+                        activity.active = True
+                        activity.save()
+                        form.save_m2m()
                 return redirect('create_project_target_location', project=project.pk)
-
+            else:
+                for form in formset:
+                    if form.cleaned_data.get('save'):
+                        if form.cleaned_data.get('activity_domain') and form.cleaned_data.get('activity_type'):
+                            form.save(commit=False).project = project
+                            form.save()
+                            form.save_m2m()
+                        return redirect('create_project_activity_plan', project=project.pk)
         else:
             for form in formset:
                 for error in form.errors:
@@ -247,19 +251,30 @@ def create_project_activity_plan(request, project):
 @login_required
 def create_project_target_location(request, project):
     project = get_object_or_404(Project, pk=project)
+
     activity_plans = project.activityplan_set.all()
     target_locations = project.targetlocation_set.all()
+
     TargetLocationsFormSet = modelformset_factory(TargetLocation, form=TargetLocationForm, extra=1)
     formset = TargetLocationsFormSet(request.POST or None, queryset=target_locations, form_kwargs={'project': project})
 
     if request.method == 'POST':
+        submit_type = request.POST.get('submit_type')
+
         if formset.is_valid():
-            for form in formset:
-                if form.cleaned_data.get('province') and form.cleaned_data.get('district'):
+            if submit_type == 'next_step':
+                for form in formset:
                     form.save(commit=False).project = project
                     form.save()
                     form.save_m2m()
-            return redirect('create_project_target_location', project=project.pk)
+                return redirect('project_plan_review', project=project.pk)
+            else:
+                for form in formset:
+                    if form.cleaned_data.get('save'):
+                        form.save(commit=False).project = project
+                        form.save()
+                        form.save_m2m()
+                        return redirect('create_project_target_location', project=project.pk)
         else:
             for form in formset:
                 for error in form.errors:

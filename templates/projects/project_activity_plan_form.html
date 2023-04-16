@@ -48,6 +48,7 @@
             <div id="activity-forms">
                 {% for form in formset reversed %}
                 {{form.id}}
+                {{ form.save }}
                 <input type="hidden" name="project_id" id="project_id" value="{{ project.id }}">
                 <div class="activity-block-holder js-collapse-expand" data-form-id="{{ form.prefix }}">
                     <div class="inner-holder">
@@ -66,9 +67,7 @@
                                     <span class="icon-trashbin"></span>
                                     <span class="btn-text">Delete</span>
                                 </a>
-                                <button type="submit" class="btn btn-red save" name="submit_type"
-                                        value="without_next_step">Save
-                                </button>
+                                <button type="submit" class="btn btn-red save" value="true" name="{{ form.prefix }}-save">Save</button>
 
                             </div>
                             <a href="#" class="btn btn-gray-outline collapse-details">

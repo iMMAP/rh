@@ -144,6 +144,8 @@ class ActivityPlanForm(forms.ModelForm):
         activity_domains = list(activity_domains.all().values_list('pk', flat=True))
         cluster_ids = list(clusters.values_list('pk', flat=True))
 
+        self.fields['save'] = forms.BooleanField(required=False, initial=False,
+                                                 widget=forms.HiddenInput(attrs={'name': self.prefix + '-save'}))
         self.fields['activity_domain'].queryset = self.fields['activity_domain'].queryset.filter(
             pk__in=activity_domains)
         self.fields['activity_domain'].widget.attrs.update({'data-form-prefix': f"{kwargs.get('prefix')}",
@@ -175,6 +177,7 @@ class TargetLocationForm(forms.ModelForm):
         implementing_partners = project.implementing_partners.all()
         implementing_partner_ids = list(implementing_partners.values_list('pk', flat=True))
 
+        self.fields['save'] = forms.BooleanField(required=False, initial=False, widget=forms.HiddenInput(attrs={'name': self.prefix + '-save'}))
         self.fields['province'].queryset = self.fields['province'].queryset.filter(type='Province')
         self.fields['district'].queryset = self.fields['district'].queryset.filter(type='District')
         self.fields['implementing_partner'].queryset = self.fields['implementing_partner'].queryset.filter(

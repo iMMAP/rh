@@ -1695,8 +1695,8 @@ label.col-label {
 }
 
 .input-check-holder {
-  margin-bottom: 51px;
-  padding-top: 23px;
+  margin-bottom: 30px;
+  padding-top: 10px;
 }
 
 .input-check-holder label {
@@ -4158,16 +4158,22 @@ body.filter-active {
 }
 
 .activity-planning .main-heading {
-  border-top: 2px solid #be2126
+    border-top: 2px solid #be2126;
+    padding: 9px 0;
 }
 
+.main-activity-holder.main-target{
+    margin-top: 30px !important;
+}
+
+.main-activity-holder .subtitle-holder .subtitle {
+    color: #be2126;
+}
 .activity-planning .subtitle-holder {
   padding: 7px 0;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-bottom: 2px solid #e6e7e8;
-  margin: 0 0 4px
 }
 
 .activity-planning .subtitle {
@@ -4232,7 +4238,7 @@ body.filter-active {
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  margin: 0 0 10px
+  margin: 25px 0 10px
 }
 
 .activity-planning .block-top .title {
@@ -4287,6 +4293,15 @@ body.filter-active {
   color: #6b6d70
 }
 .block-activity .btn.btn-red.save {
+  margin: 0 8px 0 0;
+  font-size: 12px;
+  line-height: 1.2;
+  padding: 4px 6px;
+  min-width: 71px;
+  color: #fff
+}
+
+.block-location-activity .btn.btn-red.save {
   margin: 0 8px 0 0;
   font-size: 12px;
   line-height: 1.2;
@@ -6147,8 +6162,6 @@ body.confirmation-active {
   padding-right: 10px
 }
 
-
-
 .confirmation-options .block-footer .btn-wrapper {
   display: flex;
   align-items: baseline
@@ -6169,4 +6182,18 @@ body.confirmation-active {
   font-weight: 600;
   line-height: 1.2;
   color: #353537
+}
+
+.block-activity .btn [class^=icon-chevron] {
+    font-size: 9.5px;
+}
+
+.block-location-activity .btn [class^=icon-chevron]{
+    font-size: 9.5px;
+}
+
+#fold-unfold-all [class^=icon-chevron] {
+    display: inline-block;
+    margin-right: 7px;
+    font-size: 9.5px;
 }

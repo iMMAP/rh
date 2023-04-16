@@ -3,6 +3,8 @@
 
 {% block content %}
 
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet"/>
+
 <div class="base-section">
     <div class="container">
         <div class="profile-layout">
@@ -13,7 +15,7 @@
                         <strong class="user-position">{{ user.profile.position }}</strong>
                         <address>
                             {% for cluster in user.profile.clusters.all %}
-                                {{ cluster.title }},
+                            {{ cluster.title }},
                             {% endfor %}
                             {{ user.profile.country }}<br/>
                             <a href="mailto:{{user.email}}">{{ user.email }}</a>,
@@ -23,9 +25,7 @@
                     <div class="profile-info-block">
                         <div class="subtitle-block">
                             <strong class="subtitle">Contact information</strong>
-                            {% comment %}
-                            <button class="edit-btn" type="button"><span class="icon-pen"></span></button>
-                            {% endcomment %}
+                            <!--<button class="edit-btn" type="button"><span class="icon-pen"></span></button>-->
                         </div>
                         <ul class="user-profile-contacts">
                             <li>
@@ -52,9 +52,9 @@
                             <li>
                                 <strong class="title">Cluster Contact</strong>
                                 {% if user.profile.is_cluster_contact%}
-                                    Yes
+                                Yes
                                 {% else %}
-                                    No
+                                No
                                 {% endif %}
 
                             </li>
@@ -68,23 +68,31 @@
                         {% csrf_token %}
                         <div class="form-holder">
 
-                            {% for field in u_form %}
-                                <div class="input-field">
-                                    {{ field.label_tag}}
-                                    <div class="input-holder">
-                                        {{ field }}
+                            <div class="row">
+                                <div class="col col-sm">
+                                    {% for field in u_form %}
+                                    <div class="input-field">
+                                        {{ field.label_tag}}
+                                        <div class="input-holder">
+                                            {{ field }}
+                                        </div>
                                     </div>
+                                    {% endfor %}
                                 </div>
-                            {% endfor %}
+                                <div class="col">
+                                    {% for field in p_form %}
+                                    <div class="input-field">
+                                        {{ field.label_tag}}
+                                        <div class="input-holder">
+                                            {{ field }}
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                </div>
 
-                            {% for field in p_form %}
-                                <div class="input-field">
-                                    {{ field.label_tag}}
-                                    <div class="input-holder">
-                                        {{ field }}
-                                    </div>
-                                </div>
-                            {% endfor %}
+                            </div>
+
+
                         </div>
                         <div class="btn-holder">
                             <button type="submit" class="btn btn-red">Update</button>
@@ -95,5 +103,23 @@
         </div>
     </div>
 </div>
-</div>
+
+<script src="https://code.jquery.com/jquery-3.6.1.min.js"
+        integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"
+        integrity="sha512-2ImtlRlf2VVmiGZsjm9bEyhjGW4dU7B6TNwh/hx/iSByxNENtj3WVE6o/9Lj4TJeVXPi4bnOIMXFIJJAeufa0A=="
+        crossorigin="anonymous" referrerpolicy="no-referrer">
+</script>
+
+<script>
+    $(document).ready(function() {
+        $('.js_multiselect').select2();
+    });
+
+
+
+
+
+</script>
 {% endblock %}

@@ -54,7 +54,7 @@ class ProfileCreateForm(forms.ModelForm):
 class UserUpdateForm(forms.ModelForm):
     class Meta:
         model = User
-        fields = ['username', 'email', 'first_name', 'last_name']
+        fields = ['first_name', 'last_name', 'email']
 
 
 class ProfileUpdateForm(forms.ModelForm):
@@ -63,11 +63,12 @@ class ProfileUpdateForm(forms.ModelForm):
     class Meta:
         model = Profile
         fields = '__all__'
+        exclude = ('old_id', 'is_cluster_contact', 'visits', 'name', 'user')
         labels = {'name': 'Full Name', 'clusters': 'Clusters / Sectors'}
 
-        # widgets = {
-        #     'clusters': forms.SelectMultiple(attrs={'class': 'custom-select', 'multiple': ''}),
-        # }
+        widgets = {
+            'clusters': forms.SelectMultiple(attrs={'class': 'js_multiselect'}),
+        }
 
     def __init__(self, *args, **kwargs):
         super(ProfileUpdateForm, self).__init__(*args, **kwargs)

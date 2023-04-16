@@ -54,6 +54,23 @@ $(document).ready(function() {
     isHrpProject.change(toggleHrpCode);
     hasHrpCode.change(toggleRequired);
 
+    // Define a function to calculate the budget gap
+    function calculateBudgetGap() {
+        // Get the values of the budget and budget received fields
+        var budget = parseFloat($("#id_budget").val());
+        var budgetReceived = parseFloat($("#id_budget_received").val());
+
+        // Calculate the budget gap
+        var budgetGap = budget - budgetReceived;
+
+        // Set the value of the budget gap field
+        $("#id_budget_gap").val(budgetGap.toFixed(0));
+    }
+
+    // Attach the function to the change event of the budget and budget received fields
+    $("#id_budget, #id_budget_received").on("input", calculateBudgetGap);
+
+
 
     /**
     * Retrieves activities based on selected clusters and listed activities

@@ -350,6 +350,8 @@ class Project(models.Model):
     start_date = models.DateTimeField('start date')
     end_date = models.DateTimeField('end date')
     budget = models.IntegerField(null=True, blank=True)
+    budget_received = models.IntegerField(null=True, blank=True)
+    budget_gap = models.IntegerField(null=True, blank=True)
     budget_currency = models.ForeignKey('Currency', on_delete=models.SET_NULL, null=True, blank=True)
     created_at = models.DateField(auto_now_add=True, blank=True, null=True)
     updated_at = models.DateField(auto_now=True, blank=True, null=True)
@@ -424,6 +426,7 @@ class ActivityPlan(models.Model):
     facility_lat = models.CharField(max_length=NAME_MAX_LENGTH, null=True, blank=True)
     facility_long = models.CharField(max_length=NAME_MAX_LENGTH, null=True, blank=True)
 
+    age_desegregation = models.BooleanField(default=False)
     female_0_5 = models.IntegerField(blank=True, null=True)
     female_6_12 = models.IntegerField(blank=True, null=True)
     female_12_17 = models.IntegerField(blank=True, null=True)
@@ -447,7 +450,7 @@ class ActivityPlan(models.Model):
     total_12_17 = models.IntegerField(blank=True, null=True)
     total_18 = models.IntegerField(blank=True, null=True)
 
-    total = models.IntegerField(blank=True, null=True)
+    total = models.IntegerField(default=0, blank=True, null=True)
 
     households = models.IntegerField(blank=True, null=True)
     description = models.TextField(blank=True, null=True)
@@ -481,6 +484,7 @@ class TargetLocation(models.Model):
         choices=TARGET_LOCATIONS_STATES,
         default='draft', null=True, blank=True
     )
+    title = models.CharField(max_length=NAME_MAX_LENGTH,null=True, blank=True)
     locations_group_by = models.CharField(
         max_length=15,
         choices=LOCATIONS_GROUP,

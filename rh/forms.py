@@ -128,7 +128,8 @@ class ProjectForm(forms.ModelForm):
         self.fields['implementing_partners'].queryset = Organization.objects.order_by('name')
         self.fields['programme_partners'].queryset = Organization.objects.order_by('name')
         self.fields['user'].queryset = User.objects.order_by('username')
-        self.fields['activity_domains'].queryset = self.fields['activity_domains'].queryset.filter(clusters__in=user_clusters)
+        self.fields['activity_domains'].queryset = self.fields['activity_domains'].queryset.filter(
+            clusters__in=user_clusters)
 
 
 class ActivityPlanForm(forms.ModelForm):
@@ -136,33 +137,24 @@ class ActivityPlanForm(forms.ModelForm):
         model = ActivityPlan
         fields = "__all__"
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, project, **kwargs):
         super().__init__(*args, **kwargs)
-        activity_domains = []
-        cluster_ids = []
-        if self.initial.get('project', False):
-            if isinstance(self.initial.get('project'), int):
-                project = Project.objects.get(pk=self.initial.get('project'))
-            else:
-                project = Project.objects.get(pk=self.initial.get('project').pk)
+        clusters = project.clusters.all()
+        activity_domains = project.activity_domains.all()
+        activity_domains = list(activity_domains.all().values_list('pk', flat=True))
+        cluster_ids = list(clusters.values_list('pk', flat=True))
 
-            clusters = project.clusters.all()
-            activity_domains = project.activity_domains.all()
-            activity_domains = list(activity_domains.all().values_list('pk', flat=True))
-            cluster_ids = list(clusters.values_list('pk', flat=True))
-
-        self.fields['activity_domain'].queryset = self.fields['activity_domain'].queryset.filter(pk__in=activity_domains)
-        self.fields['activity_domain'].widget.attrs.update({'onchange': f"updateTitle('{kwargs.get('prefix')}', 'id_{kwargs.get('prefix')}-activity_domain');"})
-        self.fields['activity_type'].widget.attrs.update({'onchange': f"updateTitle('{kwargs.get('prefix')}', 'id_{kwargs.get('prefix')}-activity_type');"})
-        self.fields['activity_detail'].widget.attrs.update({'onchange': f"updateTitle('{kwargs.get('prefix')}', 'id_{kwargs.get('prefix')}-activity_detail');"})
+        self.fields['activity_domain'].queryset = self.fields['activity_domain'].queryset.filter(
+            pk__in=activity_domains)
+        self.fields['activity_domain'].widget.attrs.update({'data-form-prefix': f"{kwargs.get('prefix')}",
+                                                            'onchange': f"updateTitle('{kwargs.get('prefix')}', 'id_{kwargs.get('prefix')}-activity_domain');",
+                                                            })
+        self.fields['activity_type'].widget.attrs.update(
+            {'onchange': f"updateTitle('{kwargs.get('prefix')}', 'id_{kwargs.get('prefix')}-activity_type');"})
+        self.fields['activity_detail'].widget.attrs.update(
+            {'onchange': f"updateTitle('{kwargs.get('prefix')}', 'id_{kwargs.get('prefix')}-activity_detail');"})
         self.fields['indicators'].widget.attrs.update({'style': 'height: 128px;'})
         self.fields['facility_type'].queryset = self.fields['facility_type'].queryset.filter(cluster__in=cluster_ids)
-
-    def clean_activity_fields(self):
-        if self.instance:
-            return self.instance.activity_fields
-        else:
-            return self.fields['activity_fields']
 
 
 class TargetLocationForm(forms.ModelForm):
@@ -172,23 +164,25 @@ class TargetLocationForm(forms.ModelForm):
         widgets = {
             'country': forms.Select(attrs={'disabled': ''}),
             'active': forms.widgets.HiddenInput(),
+            # 'title': forms.widgets.HiddenInput(),
             'locations_group_by': forms.widgets.RadioSelect(),
             'district': forms.Select(
                 attrs={'districts-queries-url': reverse_lazy('ajax-load-districts')}),
         }
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, project, **kwargs):
         super().__init__(*args, **kwargs)
-        implementing_partner_ids = []
-        if self.initial.get('project', False):
-            if isinstance(self.initial.get('project'), int):
-                project = Project.objects.get(pk=self.initial.get('project'))
-            else:
-                project = Project.objects.get(pk=self.initial.get('project').pk)
-
-            implementing_partners = project.implementing_partners.all()
-            implementing_partner_ids = list(implementing_partners.values_list('pk', flat=True))
+        implementing_partners = project.implementing_partners.all()
+        implementing_partner_ids = list(implementing_partners.values_list('pk', flat=True))
 
         self.fields['province'].queryset = self.fields['province'].queryset.filter(type='Province')
         self.fields['district'].queryset = self.fields['district'].queryset.filter(type='District')
-        self.fields['implementing_partner'].queryset = self.fields['implementing_partner'].queryset.filter(pk__in=implementing_partner_ids)
+        self.fields['implementing_partner'].queryset = self.fields['implementing_partner'].queryset.filter(
+            pk__in=implementing_partner_ids)
+        self.fields['province'].widget.attrs.update({'data-form-prefix': f"{kwargs.get('prefix')}",
+                                                     'onchange': f"updateTitle('{kwargs.get('prefix')}', 'id_{kwargs.get('prefix')}-province');",
+                                                     })
+        self.fields['district'].widget.attrs.update(
+            {'onchange': f"updateTitle('{kwargs.get('prefix')}', 'id_{kwargs.get('prefix')}-district');"})
+        self.fields['site_name'].widget.attrs.update(
+            {'onchange': f"updateTitle('{kwargs.get('prefix')}', 'id_{kwargs.get('prefix')}-site_name');"})

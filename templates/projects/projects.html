@@ -142,7 +142,7 @@
         <div class="projects-options-panel">
             <div class="holder">
                 <div class="input-holder">
-                    {% comment %} <input type="text" placeholder="Placeholder"/> {% endcomment %}
+                    <!--<input type="text" placeholder="Placeholder"/>-->
                 </div>
                 <ul class="buttons-list-inline">
                     <li>
@@ -151,10 +151,11 @@
                 </ul>
             </div>
         </div>
-        {% comment %} <form method="GET">
+        <!--<form method="GET">
             {{project_filter.form}}
             <button class="btn btn-red" type="submit"> Search</button>
-        </form> {% endcomment %}
+        </form>-->
+        {% if active_projects %}
         <div class="content-block top-border bottom-border bottom-decor">
             <div id="tab-1">
                 <div class="table-wrapper-scrollable">
@@ -328,7 +329,7 @@
                     </table>
                 </div>
             </div>
-            {% comment %} <div id="tab-2">
+            <!--<div id="tab-2">
                 <div class="table-wrapper-scrollable">
                     <table class="table all-projects-table js-collapsible-table">
                         <thead>
@@ -496,7 +497,7 @@
                         </tbody>
                     </table>
                 </div>
-            </div> {% endcomment %}
+            </div>-->
         </div>
         <div class="pagination-holder">
             <div class="select-field view-options">
@@ -522,6 +523,7 @@
                 </ul>
             </div>
         </div>
+        {% endif %}
     </div>
 </div>
 

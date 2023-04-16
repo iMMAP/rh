@@ -1,9 +1,10 @@
 {% extends '_base.html' %}
+{% load static %}
 
 {% block page_title %}ReportHub - Projects{% endblock page_title %}
 {% block content %}
 
-{% comment %} Header code goes here e.g. stylesheet links specific to page etc. {% endcomment %}
+<!--Header code goes here e.g. stylesheet links specific to page etc.-->
 {% block header %}
 {% endblock header %}
 
@@ -90,6 +91,7 @@
     </div>
 </div>
 
+<script defer src="{% static 'rh/js/fold_unfold_component.js' %}"></script>
 {% block scripts %}
 {% endblock scripts %}
 

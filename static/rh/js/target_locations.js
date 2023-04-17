@@ -1,17 +1,47 @@
-
 $(document).ready(function() {
 
-    let $locationBlockHolder = $('.location-block-holder');
+    async function get_districts(formIndex){
+        const districts_url = $(`#id_form-${formIndex}-district`).attr("districts-queries-url");
+        const districtIds = $(`select#id_form-${formIndex}-district option`).map(function() {return $(this).val();}).get();
+        const provinceId = [$(`#id_form-${formIndex}-province`).val()];
+        const selected_districts = $(`select#id_form-${formIndex}-district`).val()
+        try{
+             const response = await $.ajax({
+                type: 'GET',
+                url: districts_url,
+                data: {
+                    provinces: provinceId,
+                    listed_districts: districtIds,
+                }
+             });
+
+            $(`#id_form-${formIndex}-district`).html(response);
+            $(`select#id_form-${formIndex}-district`).val(selected_districts);
+        } catch (error) {
+            console.error(`Error fetching districts: ${error}`);
+        }
+    };
+
+    function updateLocationBlockTitles(formIndex) {
+        updateTitle(`form-${formIndex}`, `id_form-${formIndex}-province`);
+        updateTitle(`form-${formIndex}`, `id_form-${formIndex}-district`);
+        updateTitle(`form-${formIndex}`, `id_form-${formIndex}-site_name`);
+    }
+
+    const $locationBlockHolder = $('.location-block-holder');
+
     $locationBlockHolder.each(function (formIndex, formElement) {
 
         // Call updateTitle for activity_domain manually as on page load as it is not triggered for
         // activity_domain
-        updateTitle(`form-${formIndex}`, `id_form-${formIndex}-province`);
-        updateTitle(`form-${formIndex}`, `id_form-${formIndex}-district`);
-        updateTitle(`form-${formIndex}`, `id_form-${formIndex}-site_name`);
+        updateLocationBlockTitles(formIndex);
+        get_districts(formIndex)
+
+        $(`#id_form-${formIndex}-province`).change(function () {
+            get_districts(formIndex)
+        });
 
     });
-
 })
 
 

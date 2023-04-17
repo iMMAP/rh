@@ -8,6 +8,32 @@ $(document).ready(function() {
     * @param {number} currentFormCount - The number of facility monitoring forms currently displayed on the page.
     * @returns {void}
     */
+
+    async function get_facility_sites(formIndex){
+        const facilitySiteUrl = $(`#id_form-${formIndex}-facility_type`).attr("facility-sites-queries-url");
+        debugger
+        const facilityIds = $(`select#id_form-${formIndex}-facility_type option`).map(function() {return $(this).val();}).get();
+        const clusterIds = $("#clusters").data("clusters");
+        const selected_facilities = $(`select#id_form-${formIndex}-facility_type`).val()
+        try{
+             const response = await $.ajax({
+                type: 'GET',
+                url: facilitySiteUrl,
+                data: {
+                    clusters: clusterIds,
+                    listed_facilities: facilityIds,
+                }
+             });
+
+            $(`#id_form-${formIndex}-facility_type`).html(response);
+            $(`select#id_form-${formIndex}-facility_type`).val(selected_facilities);
+        } catch (error) {
+            console.error(`Error fetching Facilities: ${error}`);
+        }
+    };
+
+
+
     $.fn.reverse = [].reverse;
     let $activityBlockHolder = $('.activity-block-holder');
     $activityBlockHolder.reverse().each(function (formIndex, formElement) {
@@ -22,6 +48,8 @@ $(document).ready(function() {
         // Call
         handleAgeDesegregation(formElement, formIndex);
 
+        // Call get_facility_sites and fetch the facility sites types.
+        get_facility_sites(formIndex)
 
     });
 
@@ -40,8 +68,8 @@ $(document).ready(function() {
             let $facilityDetails2 = $formElement.find(`#form-${formIndex}_facility_details_2`);
 
             if (!$facilityMonitoring.is(":checked")) {
-                $facilityDetails1.hide();
-                $facilityDetails2.hide();
+                $facilityDetails1.hide(TOGGLE_DURATION);
+                $facilityDetails2.hide(TOGGLE_DURATION);
                 $facilityName.prop('required', false).removeClass("is-required");
                 $facilityId.prop('required', false).removeClass("is-required");
             } else {
@@ -57,7 +85,7 @@ $(document).ready(function() {
             let $ageDesegregation = $formElement.find(`#id_form-${formIndex}-age_desegregation`);
             let $statisticTable= $formElement.find(`#form-${formIndex}-statistic-holder`);
             if (!$ageDesegregation.is(":checked")) {
-                $statisticTable.hide();
+                $statisticTable.hide(TOGGLE_DURATION);
             }else {
                 $statisticTable.show(TOGGLE_DURATION);
             }

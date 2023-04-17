@@ -1,6 +1,5 @@
 from django import forms
 from django.urls import reverse_lazy
-from django.db.models import Q
 
 from .models import *
 
@@ -84,9 +83,6 @@ class ProjectForm(forms.ModelForm):
         fields = "__all__"
 
         widgets = {
-            'provinces': forms.SelectMultiple(attrs={'class': 'js_multiselect'}),
-            'districts': forms.SelectMultiple(
-                attrs={'class': 'js_multiselect', 'districts-queries-url': reverse_lazy('ajax-load-districts')}),
             'clusters': forms.SelectMultiple(attrs={'class': 'js_multiselect'}),
             'donors': forms.SelectMultiple(attrs={'class': 'js_multiselect'}),
             'implementing_partners': forms.SelectMultiple(attrs={'class': 'js_multiselect'}),
@@ -97,7 +93,6 @@ class ProjectForm(forms.ModelForm):
             'end_date': forms.widgets.DateInput(
                 attrs={'type': 'date', 'onfocus': "(this.type='date')", 'onblur': "(this.type='text')"}),
             'active': forms.widgets.HiddenInput(),
-            'country': forms.widgets.HiddenInput(),
         }
 
     def __init__(self, *args, **kargs):
@@ -112,17 +107,6 @@ class ProjectForm(forms.ModelForm):
         if args and args[0].get('user', False):
             user_profile = User.objects.get(pk=args[0].get('user')).profile
         user_clusters = list(user_profile.clusters.all().values_list('pk', flat=True))
-
-        if self.initial.get('country', False):
-            if isinstance(self.initial.get('country'), int):
-                self.fields['provinces'].queryset = Location.objects.filter(parent__pk=self.initial.get('country'))
-            else:
-                self.fields['provinces'].queryset = Location.objects.filter(parent__pk=self.initial.get('country').pk)
-        else:
-            self.fields['provinces'].queryset = self.fields['provinces'].queryset.filter(type='Province')
-
-        self.fields['districts'].queryset = self.fields['districts'].queryset.filter(type='District')
-        self.fields['clusters'].queryset = Cluster.objects.filter(pk__in=user_clusters).order_by('title')
         self.fields['donors'].queryset = Donor.objects.order_by('name')
         self.fields['budget_currency'].queryset = Currency.objects.order_by('name')
         self.fields['implementing_partners'].queryset = Organization.objects.order_by('name')
@@ -136,6 +120,10 @@ class ActivityPlanForm(forms.ModelForm):
     class Meta:
         model = ActivityPlan
         fields = "__all__"
+        widgets = {
+            'facility_type': forms.Select(
+                attrs={'facility-sites-queries-url': reverse_lazy('ajax-load-facility_sites')}),
+        }
 
     def __init__(self, *args, project, **kwargs):
         super().__init__(*args, **kwargs)
@@ -164,7 +152,7 @@ class TargetLocationForm(forms.ModelForm):
         model = TargetLocation
         fields = "__all__"
         widgets = {
-            'country': forms.Select(attrs={'disabled': ''}),
+            'country': forms.widgets.HiddenInput(),
             'active': forms.widgets.HiddenInput(),
             # 'title': forms.widgets.HiddenInput(),
             'locations_group_by': forms.widgets.RadioSelect(),
@@ -177,7 +165,8 @@ class TargetLocationForm(forms.ModelForm):
         implementing_partners = project.implementing_partners.all()
         implementing_partner_ids = list(implementing_partners.values_list('pk', flat=True))
 
-        self.fields['save'] = forms.BooleanField(required=False, initial=False, widget=forms.HiddenInput(attrs={'name': self.prefix + '-save'}))
+        self.fields['save'] = forms.BooleanField(required=False, initial=False,
+                                                 widget=forms.HiddenInput(attrs={'name': self.prefix + '-save'}))
         self.fields['province'].queryset = self.fields['province'].queryset.filter(type='Province')
         self.fields['district'].queryset = self.fields['district'].queryset.filter(type='District')
         self.fields['implementing_partner'].queryset = self.fields['implementing_partner'].queryset.filter(
@@ -186,6 +175,7 @@ class TargetLocationForm(forms.ModelForm):
                                                      'onchange': f"updateTitle('{kwargs.get('prefix')}', 'id_{kwargs.get('prefix')}-province');",
                                                      })
         self.fields['district'].widget.attrs.update(
-            {'onchange': f"updateTitle('{kwargs.get('prefix')}', 'id_{kwargs.get('prefix')}-district');"})
+            {'onchange': f"updateTitle('{kwargs.get('prefix')}', 'id_{kwargs.get('prefix')}-district');",
+             'districts-queries-url': reverse_lazy('ajax-load-districts')})
         self.fields['site_name'].widget.attrs.update(
             {'onchange': f"updateTitle('{kwargs.get('prefix')}', 'id_{kwargs.get('prefix')}-site_name');"})

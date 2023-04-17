@@ -6,9 +6,9 @@
 
 {% block project_contents %}
 
-<div class="project-title-holder">
+<!--<div class="project-title-holder">
     <h2 class="plan-title">{{ project.title }}</h2>
-</div>
+</div>-->
 <div class="main-content">
     <div class="activity-planning create-activity">
         {% if messages %}
@@ -67,7 +67,9 @@
                                     <span class="icon-trashbin"></span>
                                     <span class="btn-text">Delete</span>
                                 </a>
-                                <button type="submit" class="btn btn-red save" value="true" name="{{ form.prefix }}-save">Save</button>
+                                <button type="submit" class="btn btn-red save" value="true"
+                                        name="{{ form.prefix }}-save">Save
+                                </button>
 
                             </div>
                             <a href="#" class="btn btn-gray-outline collapse-details">
@@ -181,10 +183,11 @@
                                 <div class="col col-lg">
                                     <div class="multiple-fields-row two-items" id="{{form.prefix}}_facility_details_1">
                                         <div class="field-col">
+                                            <div id="clusters" data-clusters="{{ clusters }}"></div>
                                             <div class="input-field">
-                                                <label for="{{ form.facility_id.id_for_label }}">Facility / Site
-                                                    Type</label>
-                                                <div class="input-holder">
+                                                <div class="select-field">
+                                                    <label for="{{ form.facility_id.id_for_label }}">Facility / Site
+                                                        Type</label>
                                                     {{ form.facility_type }}
                                                 </div>
                                             </div>

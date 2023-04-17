@@ -343,9 +343,9 @@ class Project(models.Model):
     programme_partners = models.ManyToManyField(Organization, related_name="programme_partners")
 
     # locations = models.ManyToManyField(Location)
-    country = models.ForeignKey(Location, on_delete=models.SET_NULL, null=True, blank=True)
-    provinces = models.ManyToManyField(Location, related_name="provinces")
-    districts = models.ManyToManyField(Location, related_name="districts")
+    # country = models.ForeignKey(Location, on_delete=models.SET_NULL, null=True, blank=True)
+    # provinces = models.ManyToManyField(Location, related_name="provinces")
+    # districts = models.ManyToManyField(Location, related_name="districts")
 
     start_date = models.DateTimeField('start date')
     end_date = models.DateTimeField('end date')
@@ -385,6 +385,7 @@ class ActivityPlan(models.Model):
         choices=ACTIVITY_PLAN_STATES,
         null=True, blank=True, default='draft'
     )
+    title = models.CharField(max_length=800, null=True, blank=True)
 
     activity_domain = models.ForeignKey(ActivityDomain, on_delete=models.SET_NULL, null=True, blank=True)
     activity_type = ChainedForeignKey(
@@ -427,32 +428,32 @@ class ActivityPlan(models.Model):
     facility_long = models.CharField(max_length=NAME_MAX_LENGTH, null=True, blank=True)
 
     age_desegregation = models.BooleanField(default=False)
-    female_0_5 = models.IntegerField(blank=True, null=True)
-    female_6_12 = models.IntegerField(blank=True, null=True)
-    female_12_17 = models.IntegerField(blank=True, null=True)
-    female_18 = models.IntegerField(blank=True, null=True)
+    female_0_5 = models.IntegerField(default=0, blank=True, null=True)
+    female_6_12 = models.IntegerField(default=0, blank=True, null=True)
+    female_12_17 = models.IntegerField(default=0, blank=True, null=True)
+    female_18 = models.IntegerField(default=0, blank=True, null=True)
     female_total = models.IntegerField(default=0, blank=True, null=True)
 
-    male_0_5 = models.IntegerField(blank=True, null=True)
-    male_6_12 = models.IntegerField(blank=True, null=True)
-    male_12_17 = models.IntegerField(blank=True, null=True)
-    male_18 = models.IntegerField(blank=True, null=True)
+    male_0_5 = models.IntegerField(default=0, blank=True, null=True)
+    male_6_12 = models.IntegerField(default=0, blank=True, null=True)
+    male_12_17 = models.IntegerField(default=0, blank=True, null=True)
+    male_18 = models.IntegerField(default=0, blank=True, null=True)
     male_total = models.IntegerField(default=0, blank=True, null=True)
 
-    other_0_5 = models.IntegerField(blank=True, null=True)
-    other_6_12 = models.IntegerField(blank=True, null=True)
-    other_12_17 = models.IntegerField(blank=True, null=True)
-    other_18 = models.IntegerField(blank=True, null=True)
+    other_0_5 = models.IntegerField(default=0, blank=True, null=True)
+    other_6_12 = models.IntegerField(default=0, blank=True, null=True)
+    other_12_17 = models.IntegerField(default=0, blank=True, null=True)
+    other_18 = models.IntegerField(default=0, blank=True, null=True)
     other_total = models.IntegerField(default=0, blank=True, null=True)
 
-    total_0_5 = models.IntegerField(blank=True, null=True)
-    total_6_12 = models.IntegerField(blank=True, null=True)
-    total_12_17 = models.IntegerField(blank=True, null=True)
+    total_0_5 = models.IntegerField(default=0, blank=True, null=True)
+    total_6_12 = models.IntegerField(default=0, blank=True, null=True)
+    total_12_17 = models.IntegerField(default=0, blank=True, null=True)
     total_18 = models.IntegerField(blank=True, null=True)
 
     total = models.IntegerField(default=0, blank=True, null=True)
 
-    households = models.IntegerField(blank=True, null=True)
+    households = models.IntegerField(default=0, blank=True, null=True)
     description = models.TextField(blank=True, null=True)
     old_id = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
 

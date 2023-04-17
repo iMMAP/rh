@@ -133,7 +133,7 @@
                 </div>
                 <div class="col col-lg">
 
-                    <div class="multiple-fields-row two-items">
+                    <!--<div class="multiple-fields-row two-items">
                         <div class="field-col">
                             <div class="select-field is-required">
                                 <label for="{{ form.provinces.html_name }}">Provinces / States [Hint - Select
@@ -151,7 +151,7 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div>-->
                     <div class="multiple-fields-row two-items">
                         <div class="field-col">
                             <div class="select-field is-required">
@@ -192,8 +192,9 @@
                     <div class="input-field is-required">
                         <label for="prDecs">Project Description &amp; Objectives</label>
                         <div class="input-holder">
-                                <textarea name="prDecs" id="prDecs" cols="30" rows="10"
-                                          placeholder="Project description &amp; objectives"></textarea>
+                            {{form.description}}
+                                <!--<textarea name="prDecs" id="prDecs" cols="30" rows="10"
+                                          placeholder="Project description &amp; objectives"></textarea>-->
                         </div>
                     </div>
                 </div>

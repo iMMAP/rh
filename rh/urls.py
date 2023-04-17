@@ -35,6 +35,8 @@ urlpatterns = [
     # path('ajax/load-other-activity-domains/', user_views.load_other_activity_domains, name='ajax-load-other-activity-domains'),
     path('ajax/load-districts-details/', user_views.load_locations_details, name='ajax-load-districts'),
 
+    path('ajax/load-facility_sites/', user_views.load_facility_sites, name='ajax-load-facility_sites'),
+
     # path('get_activity_domains/<int:project_id>/', user_views.get_activity_domains, name='get_activity_domains'),
 
 ]

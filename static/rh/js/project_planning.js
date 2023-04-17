@@ -136,9 +136,7 @@ $(document).ready(function() {
         });
     }
 
-    $(document).ready(function() {
-      get_districts();
-    });
+    get_districts();
 
     $("#id_provinces").change(function() {
       get_districts();

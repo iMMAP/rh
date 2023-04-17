@@ -1,4 +1,4 @@
-{% extends "projects/project_form_base.html" %}  
+{% extends "projects/project_form_base.html" %}
 
 {% block header %}
 
@@ -8,11 +8,6 @@
 <div class="main-content">
     <div class="project-options-panel">
         <div class="top-block">
-            <ul class="project-breadcrumbs">
-                <li>Health sector</li>
-                <li>Afghanistan</li>
-                <li>WASH</li>
-            </ul>
         </div>
         <div class="bottom-block">
             <div class="actions-panel">
@@ -112,16 +107,32 @@
                         {% endfor %}
                     </span>
                 </div>
+                <div class="select-field is-required">
+                    <label>Implementing Partners</label>
+                    <span class="text-read-only">
+                        {% for implementing_partner in project.implementing_partners.all %}
+                            <span class="btn btn-red"> {{ implementing_partner.code }}</span>
+                        {% endfor %}
+                    </span>
+                </div>
+                <div class="select-field is-required">
+                    <label>Programme Partners</label>
+                    <span class="text-read-only">
+                        {% for programme_partner in project.programme_partners.all %}
+                            <span class="btn btn-red"> {{ programme_partner.code }}</span>
+                        {% endfor %}
+                    </span>
+                </div>
             </div>
             <div class="col col-sm">
                 <div class="date-picker-field">
                     <div class="date start">
                         <label>Start Date</label>
-                        <span class="text-read-only">{{ project.start_date }}</span>
+                        <span class="text-read-only">{{ project.start_date | date:'d M, Y' }}</span>
                     </div>
                     <div class="date end">
                         <label>End Date</label>
-                        <span class="text-read-only">{{ project.end_date }}</span>
+                        <span class="text-read-only">{{ project.end_date | date:'d M, Y' }}</span>
                     </div>
                 </div>
                 <div class="multiple-fields-row">
@@ -140,39 +151,84 @@
                         </div>
                     </div>
                 </div>
-                <div class="input-check-holder">
-                    <input type="checkbox" id="prHRP" disabled checked/>
-                    <label for="prHRP">
-                        <span class="input"></span>
-                        <span class="text">HRP project</span>
-                    </label>
+                <div class="multiple-fields-row">
+                    <div class="field-col">
+                        <div class="input-field">
+                            <label>Budget Received</label>
+                            <div class="input-holder">
+                                <span class="text-read-only">{{ project.budget_received }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="field-col">
+                        <div class="input-field">
+                            <label>Budget Gap</label>
+                            <div class="input-holder">
+                                <span class="text-read-only">{{ project.budget_gap }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="multiple-fields-row">
+                    <div class="field-col">
+                        <div class="input-check-holder">
+                            {% if project.is_hrp_project %}
+                            <input type="checkbox" disabled checked/>
+                            {% else %}
+                            <input type="checkbox" disabled/>
+                            {% endif %}
+                            <label>
+                                <span class="input"></span>
+                                <span class="text">HRP project?</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="field-col">
+                        <div class="input-check-holder">
+                            {% if project.has_hrp_code %}
+                            <input type="checkbox" disabled checked/>
+                            {% else %}
+                            <input type="checkbox" disabled/>
+                            {% endif %}
+                            <label>
+                                <span class="input"></span>
+                                <span class="text">HRP Code?</span>
+                            </label>
+                        </div>
+                    </div>
                 </div>
                 <div class="input-field">
                     <label>HRP project code</label>
                     <div class="input-holder">
-                        <span class="text-read-only">AFG-HRP-2023-ESNFI-1673249980</span>
+                        <span class="text-read-only">{{project.hrp_code}}</span>
                     </div>
                 </div>
             </div>
             <div class="col col-lg">
                 <div class="select-field is-required">
-                    <label>Activity type</label>
+                    <label>Activity Domains</label>
                     <span class="text-read-only">
-                        {% for activity in project.activities.all %}
-                            <span class="btn btn-red"> {{ activity.name }}</span>
+                        {% for activity_domain in project.activity_domains.all %}
+                            <span class="btn btn-red"> {{ activity_domain.name }}</span>
                         {% endfor %}
                     </span>
                 </div>
                 <div class="select-field">
                     <label>Focal point</label>
                     <div class="input-holder">
-                        <span class="text-read-only">{{ project.user.profile.name }}</span>
+                        <span class="text-read-only">
+                            {% if project.user.first_name %} {{ project.user.first_name}} {% endif %}
+                            {% if project.user.last_name %} {{ project.user.last_name }} {% endif %}
+                            {% if project.user.username %} | {{ project.user.username }} {% endif %}
+                            {% if project.user.profile.position %} | {{ project.user.profile.position }} {% endif %}
+                            {% if project.user.profile.phone %} | {{ project.user.profile.phone }} {% endif %}
+                            {% if project.user.email %} | {{ project.user.email }} {% endif %}
+                        </span>
                     </div>
                 </div>
                 <div class="input-field is-required">
                     <label>Project description &amp; objectives</label>
-                    <div class="input-holder">
-                        <span class="text-read-only">{{ project.description }}</span>
+                    <div class="input-holder">{{ project.description | linebreaksbr }}
                     </div>
                 </div>
             </div>
@@ -185,6 +241,11 @@
             <div class="top-activity-block">
                 <span class="activity-title">Activity Planning</span>
             </div>
+            <div class="review-subtitle-holder">
+                <div>
+                    <span class="subtitle">Target Populations</span>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -192,48 +253,64 @@
     <div class="activity-planning read-only">
         <div class="activity-block-holder">
             <div class="inner-holder">
-                <div class="block-top">
-                    <span class="title">{{activity_plan.activity}}</span>
+                <div class="review-block-top">
+                    <span class="title">
+                        {{activity_plan.activity_domain}},
+                        {{activity_plan.activity_type}},
+                        {{activity_plan.activity_detail}}
+                    </span>
                     <div class="block-activity">
-              <span class="people">
-                <span class="icon-group"></span>
-                1657
-              </span>
+                      <span class="people">
+                        <span class="icon-group"></span>
+                        {{activity_plan.total}}
+                      </span>
                     </div>
-                    <span class="subtitle">{{activity_plan.beneficiary}}</span>
                 </div>
+                <!--<span class="subtitle">{{activity_plan.beneficiary}}</span>-->
                 <div class="row">
-                    <div class="col col-sm">
-                        <div class="select-field">
-                            <label>Activity Domain</label>
-
-                            <span class="text-read-only">{{activity_plan.activity}}</span>
-                        </div>
-                        <div class="select-field">
-                            <label>Beneficiary Category</label>
-
-                            <span class="text-read-only">{{activity_plan.beneficiary_category}}</span>
-                        </div>
-                    </div>
                     <div class="col">
-                        <div class="select-field">
-                            <label>Beneficiary Type</label>
-
-                            <span class="text-read-only">{{ activity_plan.beneficiary }}</span>
-                        </div>
-                        <div class="multiple-fields-row">
+                        <div class="multiple-fields-row two-items">
                             <div class="field-col">
                                 <div class="select-field">
-                                    <label>Activity Measurement Unit</label>
-
-                                    <span class="text-read-only">Individuals</span>
+                                    <label>Activity Domain</label>
+                                    <span class="text-read-only">{{activity_plan.activity_domain}}</span>
                                 </div>
                             </div>
                             <div class="field-col">
                                 <div class="select-field">
-                                    <label>HRP Status</label>
+                                    <label>Activity Type</label>
+                                    <span class="text-read-only">{{activity_plan.activity_type}}</span>
+                                </div>
+                            </div>
+                        </div>
+                        {% if activity_plan.activity_detail %}
+                        <div class="select-field">
+                            <label>Activity Details</label>
+                            <span class="text-read-only">{{activity_plan.activity_detail}}</span>
+                        </div>
+                        {% endif %}
+                        <div class="select-field">
+                            <label>Indicators</label>
+                            {% for indicator in activity_plan.indicators.all %}
+                            <span class="text-read-only">
+                                {{ indicator.name }} <br>
+                            </span>
+                            {% endfor %}
+                        </div>
+                    </div>
 
-                                    <span class="text-read-only">HRP beneficiary</span>
+                    <div class="col">
+                        <div class="multiple-fields-row">
+                            <div class="field-col">
+                                <div class="select-field">
+                                    <label>Beneficiary</label>
+                                    <span class="text-read-only">{{ activity_plan.beneficiary }}</span>
+                                </div>
+                            </div>
+                            <div class="field-col">
+                                <div class="select-field">
+                                    <label>Beneficiary Category</label>
+                                    <span class="text-read-only">{{ activity_plan.beneficiary_category }}</span>
                                 </div>
                             </div>
                         </div>
@@ -242,15 +319,178 @@
                         <div class="input-field is-required">
                             <label>Activity Description</label>
                             <div class="input-holder">
-                                <span class="text-read-only">{{activity_plan.description}}</span>
+                                <span class="text-read-only">{{activity_plan.description | linebreaksbr}}</span>
                             </div>
                         </div>
 
-                        <div class="input-field">
+                        <div class="multiple-fields-row">
+                            <div class="field-col">
+                                <div class="input-check-holder">
+                                    {% if activity_plan.facility_monitoring %}
+                                    <input type="checkbox" disabled checked/>
+                                    {% else %}
+                                    <input type="checkbox" disabled/>
+                                    {% endif %}
+                                    <label>
+                                        <span class="input"></span>
+                                        <span class="text">Facility / Site Monitoring?</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="field-col">
+                                <div class="input-check-holder">
+                                    {% if activity_plan.age_desegregation %}
+                                    <input type="checkbox" disabled checked/>
+                                    {% else %}
+                                    <input type="checkbox" disabled/>
+                                    {% endif %}
+                                    <label>
+                                        <span class="input"></span>
+                                        <span class="text">Gender / Age Desegregation?</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!--<div class="input-field">
                             <label>Gender/Age</label>
                             <span class="text-read-only">Female 6-12: 6,798; Female 18+: 76,345; Male 0-5: 6,537; Male: 12-17: 87,649</span>
+                        </div>-->
+                    </div>
+                    {% if activity_plan.facility_monitoring %}
+                    <div class="col col-lg">
+                        <div class="multiple-fields-row two-items">
+                            <div class="field-col">
+                                <div class="input-field">
+                                    <div class="select-field">
+                                        <label>Facility / Site Type</label>
+                                        <span class="text-read-only">{{ activity_plan.facility_type }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="field-col">
+                                <div class="input-field">
+                                    <label>Facility / Site Name</label>
+                                    <span class="text-read-only">{{ activity_plan.facility_name }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="multiple-fields-row three-items"
+                             id="{{form.prefix}}_facility_details_2">
+                            <div class="field-col">
+                                <div class="input-field">
+                                    <label>Facility / Site ID</label>
+                                    <span class="text-read-only">{{ activity_plan.facility_id }}</span>
+                                </div>
+                            </div>
+                            <div class="field-col">
+                                <div class="input-field">
+                                    <label>Facility / Site Latitude</label>
+                                    <span class="text-read-only">{{ activity_plan.facility_lat }}</span>
+                                </div>
+                            </div>
+                            <div class="field-col">
+                                <div class="input-field">
+                                    <label>Facility / Site Longitude</label>
+                                    <span class="text-read-only">{{ activity_plan.facility_long }}</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
+                    {% endif %}
+                    {% if activity_plan.age_desegregation %}
+                    <div class="col col-lg">
+                        <div class="statistic-table-holder">
+                            <table class="statistic-table">
+                                <thead>
+                                    <tr>
+                                        <th>Gender / Age</th>
+                                        <th>0-5</th>
+                                        <th>6-12</th>
+                                        <th>12-17</th>
+                                        <th>18+</th>
+                                        <th>Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Female</td>
+                                        <td>
+                                            <span class="text-read-only text-center">{{ activity_plan.female_0_5 }}</span>
+                                        </td>
+                                        <td>
+                                            <span class="text-read-only text-center">{{ activity_plan.female_6_12 }}</span>
+                                        </td>
+                                        <td>
+                                            <span class="text-read-only text-center">{{ activity_plan.female_12_17 }}</span>
+                                        </td>
+                                        <td>
+                                            <span class="text-read-only text-center">{{ activity_plan.female_18 }}</span>
+                                        </td>
+                                        <td>
+                                            <span class="text-read-only text-center">{{ activity_plan.female_total }}</span>
+                                        </td>
+
+                                    </tr>
+                                    <tr>
+                                        <td>Male</td>
+                                        <td>
+                                            <span class="text-read-only text-center">{{ activity_plan.male_0_5 }}</span>
+                                        </td>
+                                        <td>
+                                            <span class="text-read-only text-center">{{ activity_plan.male_6_12 }}</span>
+                                        </td>
+                                        <td>
+                                            <span class="text-read-only text-center">{{ activity_plan.male_12_17 }}</span>
+                                        </td>
+                                        <td>
+                                            <span class="text-read-only text-center">{{ activity_plan.male_18 }}</span>
+                                        </td>
+                                        <td>
+                                            <span class="text-read-only text-center">{{ activity_plan.male_total }}</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="other">Other/Unknown</td>
+                                        <td>
+                                            <span class="text-read-only text-center">{{ activity_plan.other_0_5 }}</span>
+                                        </td>
+                                        <td>
+                                            <span class="text-read-only text-center">{{ activity_plan.other_6_12 }}</span>
+                                        </td>
+                                        <td>
+                                            <span class="text-read-only text-center">{{ activity_plan.other_12_17 }}</span>
+                                        </td>
+                                        <td>
+                                            <span class="text-read-only text-center">{{ activity_plan.other_18 }}</span>
+                                        </td>
+                                        <td>
+                                            <span class="text-read-only text-center">{{ activity_plan.other_total }}</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Total</td>
+                                        <td>
+                                            <span class="text-read-only text-center">{{ activity_plan.total_0_5 }}</span>
+                                        </td>
+                                        <td>
+                                            <span class="text-read-only text-center">{{ activity_plan.total_6_12 }}</span>
+                                        </td>
+                                        <td>
+                                            <span class="text-read-only text-center">{{ activity_plan.total_12_17 }}</span>
+                                        </td>
+                                        <td>
+                                            <span class="text-read-only text-center">{{ activity_plan.total_18 }}</span>
+                                        </td>
+                                        <td>
+                                            <span class="text-read-only text-center">{{ activity_plan.total }}</span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -269,26 +509,17 @@
             <div class="inner-holder">
                 <div class="block-top">
                         <span class="title">
-                          {% if target_location.country %}
-                              {{ target_location.country }}, 
-                          {% endif %}
                           {% if target_location.province %}
                               {{ target_location.province }},
                           {% endif %}
                           {{ target_location.district }}
                         </span>
 
-                    <span class="subtitle">{{ target_location.location_type }}: {{target_location.site_name}}</span>
+                    <span class="subtitle">{{target_location.site_name}}</span>
                 </div>
                 <div class="row">
                     <div class="col">
                         <div class="multiple-fields-row three-items">
-                            <div class="field-col">
-                                <div class="select-field is-required">
-                                    <label>Country</label>
-                                    <span class="text-read-only">{{ target_location.country }}</span>
-                                </div>
-                            </div>
                             <div class="field-col">
                                 <div class="select-field is-required">
                                     <label>Province</label>
@@ -303,21 +534,35 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="field-col">
+                                <div class="select-field ">
+                                    <label>Location Type</label>
+                                    <span class="text-read-only">{{ target_location.location_type }}</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="col">
                         <div class="multiple-fields-row three-items">
                             <div class="field-col">
                                 <div class="select-field">
-                                    <label>Type</label>
-                                    <span class="text-read-only">{{ target_location.location_type }}</span>
+                                    <label>Site Name</label>
+                                    <span class="text-read-only">{{ target_location.site_name }}</span>
                                 </div>
                             </div>
                             <div class="field-col">
                                 <div class="input-field">
-                                    <label>Site name</label>
+                                    <label>Site Latitude</label>
                                     <div class="input-holder">
-                                        <span class="text-read-only">{{ target_location.site_name }}</span>
+                                        <span class="text-read-only">{{ target_location.site_lat }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="field-col">
+                                <div class="input-field">
+                                    <label>Site Longitude</label>
+                                    <div class="input-holder">
+                                        <span class="text-read-only">{{ target_location.site_long }}</span>
                                     </div>
                                 </div>
                             </div>

@@ -1558,7 +1558,7 @@ textarea:disabled::placeholder {
 .textarea,
 textarea {
   resize: none;
-  height: 84px;
+  height: 200px;
   padding: 5px 8px;
   font-size: 14px
 }
@@ -4184,6 +4184,14 @@ body.filter-active {
   color: #353537
 }
 
+.activity-planning .review-subtitle-holder {
+  padding: 7px 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 2px solid #e6e7e8;
+}
+
 .activity-planning .activity-block-holder {
   padding: 20px 0
 }
@@ -4197,7 +4205,7 @@ body.filter-active {
 }
 
 .activity-planning .activity-block-holder .inner-holder:after,
-/* .activity-planning .activity-block-holder .inner-holder:before {
+ .activity-planning .activity-block-holder .inner-holder:before {
   content: "";
   position: absolute;
   display: block;
@@ -4205,7 +4213,7 @@ body.filter-active {
   width: 33.1%;
   background-color: #be2126;
   z-index: 1
-} */
+}
 
 .activity-planning .activity-block-holder .inner-holder:before {
   top: -2px;
@@ -4241,7 +4249,24 @@ body.filter-active {
   margin: 25px 0 10px
 }
 
+.activity-planning .review-block-top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0 0 25px
+}
+
 .activity-planning .block-top .title {
+  display: block;
+  margin: 0 10px 14px 0;
+  color: #be2126;
+  font-size: 16px;
+  line-height: 1.2;
+  font-weight: 600
+}
+
+.activity-planning .review-block-top .title {
   display: block;
   margin: 0 10px 14px 0;
   color: #be2126;
@@ -5384,6 +5409,11 @@ body.filter-active {
 
   .activity-planning .block-top .title {
     margin: 10px 10px 0 0
+  }
+
+   .activity-planning .review-block-top .title {
+    margin: 10px 10px 0 0;
+    width: 90%
   }
 
   .block-activity,

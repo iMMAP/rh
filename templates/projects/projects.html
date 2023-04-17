@@ -4,6 +4,8 @@
 {% block page_title %}ReportHub - Projects{% endblock page_title %}
 {% block content %}
 
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet"/>
+
 <div class="base-section">
     <div class="container">
         <div class="page-top-panel">
@@ -23,33 +25,42 @@
                 <div class="filter-holder">
                     <a href="#" class="btn btn-red filter-open">Filter</a>
                     <form action="#" class="filter-form">
-                        
+
                         <div class="filter-options">
                             <div class="block-top">
                                 <span class="title">Filter</span>
                                 <a class="filter-close" href="#"></a>
                             </div>
                             <div class="block-body" data-simplebar>
-                                <div class="select-field">
-                                    <label>Location</label>
-                                    {{project_filter.form.locations}}
-                                </div>
 
                                 <div class="select-field">
                                     <label>Donors</label>
                                     {{project_filter.form.donors}}
                                 </div>
-                                
-                                <div class="select-field">
+
+                                <!--<div class="select-field">
                                     <label>Cluster/Sector</label>
                                     {{project_filter.form.clusters}}
+                                </div>-->
+                                <div class="select-field ">
+                                    <label for="{{ project_filter.form.clusters.html_name }}">
+                                        Clusters / Sectors
+                                    </label>
+                                    <!--<select name="{{ project_filter.form.clusters.name }}" class="js_multiselect" id="{{ form.clusters.id_for_label }}"
+                                            multiple>
+                                        {% for cluster in project_filter.form.clusters.field.queryset %}
+                                        <option value="{{ cluster.pk }}">{{ cluster }}
+                                        </option>
+                                        {% endfor %}
+                                    </select>-->
+                                    {{ project_filter.form.clusters }}
                                 </div>
-                                
+
                                 <div class="select-field">
                                     <label>Activity Domain</label>
                                     {{project_filter.form.activities}}
                                 </div>
-                                
+
                                 <div class="date-picker-field">
                                     <div class="date start">
                                         <label>Start Date</label>
@@ -79,7 +90,9 @@
                             <div class="block-footer">
                                 <div class="btn-wrapper">
                                     <a class="btn btn-gray-outline" href="{% url 'projects' %}">Reset</a>
-                                    {% comment %} <button type="button" class="btn btn-gray-outline">Reset</button> {% endcomment %}
+                                    {% comment %}
+                                    <button type="button" class="btn btn-gray-outline">Reset</button>
+                                    {% endcomment %}
                                     <button type="submit" class="btn btn-red">Apply</button>
                                 </div>
                             </div>
@@ -136,7 +149,7 @@
                             </li>
                         </ul>
                     </div>
-                </div>                    
+                </div>
             </div>
         </div>
         <div class="projects-options-panel">
@@ -184,7 +197,7 @@
                             <th class="title-col">
                                 <div class="table-flex-holder">
                                     <strong class="table-title">Project title</strong>
-                                    
+
                                     <div class="table-sort-buttons">
                                         <button type="button"><span class="icon-chevron-up"></span></button>
                                         <button type="button"><span class="icon-chevron-down"></span></button>
@@ -254,7 +267,7 @@
 
                             <td class="organisation-col">
                                 {% for partner in project.implementing_partners.all %}
-                                    {{ partner.code }}
+                                {{ partner.code }}
                                 {% endfor %}
                             </td>
 
@@ -279,11 +292,13 @@
                                                     class="icon-pen"></span></a></button>
                                         </li>
                                         <li>
-                                            <button><a href="{% url 'delete_project' project.pk %}" class="text-decoration-none"><span
+                                            <button><a href="{% url 'delete_project' project.pk %}"
+                                                       class="text-decoration-none"><span
                                                     class="icon-trashbin"></span></a></button>
                                         </li>
                                         <li>
-                                            <button><a href="{% url 'copy_project' project.pk %}" class="text-decoration-none"><span
+                                            <button><a href="{% url 'copy_project' project.pk %}"
+                                                       class="text-decoration-none"><span
                                                     class="icon-copy"></span></a></button>
                                         </li>
                                     </ul>
@@ -504,21 +519,25 @@
             </div>
             <div class="pagination-wrapper">
                 <ul class="pagination">
-                    
+
                     {% if active_projects.has_previous %}
-                        <li class="page-item prev"><a class="page-link" href="?page={{active_projects.previous_page_number}}">Previous</a></li>
+                    <li class="page-item prev"><a class="page-link"
+                                                  href="?page={{active_projects.previous_page_number}}">Previous</a>
+                    </li>
                     {% else %}
-                        <li class="page-item prev disabled"><a class="page-link" href="#">Previous</a></li>
+                    <li class="page-item prev disabled"><a class="page-link" href="#">Previous</a></li>
                     {% endif %}
-                        
+
                     {% for i in total_pages %}
-                        <li class="page-item {% if active_projects.number == forloop.counter %}current-page{% endif %}"><a class="page-link" href="?page={{forloop.counter}}">{{forloop.counter}}</a></li>
+                    <li class="page-item {% if active_projects.number == forloop.counter %}current-page{% endif %}"><a
+                            class="page-link" href="?page={{forloop.counter}}">{{forloop.counter}}</a></li>
                     {% endfor %}
-                        
+
                     {% if active_projects.has_next %}
-                        <li class="page-item next"><a class="page-link" href="?page={{active_projects.next_page_number}}">Next</a></li>
+                    <li class="page-item next"><a class="page-link" href="?page={{active_projects.next_page_number}}">Next</a>
+                    </li>
                     {% else %}
-                        <li class="page-item next disabled"><a class="page-link" href="#">Next</a></li>
+                    <li class="page-item next disabled"><a class="page-link" href="#">Next</a></li>
                     {% endif %}
                 </ul>
             </div>
@@ -527,17 +546,20 @@
     </div>
 </div>
 
-<script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
-    
+<script src="https://code.jquery.com/jquery-3.6.1.min.js"
+        integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"
-    integrity="sha512-2ImtlRlf2VVmiGZsjm9bEyhjGW4dU7B6TNwh/hx/iSByxNENtj3WVE6o/9Lj4TJeVXPi4bnOIMXFIJJAeufa0A=="
-    crossorigin="anonymous" referrerpolicy="no-referrer">
+        integrity="sha512-2ImtlRlf2VVmiGZsjm9bEyhjGW4dU7B6TNwh/hx/iSByxNENtj3WVE6o/9Lj4TJeVXPi4bnOIMXFIJJAeufa0A=="
+        crossorigin="anonymous" referrerpolicy="no-referrer">
 </script>
 
 <script>
     $(document).ready(function() {
-        $('.js-example-basic-multiple').select2();
+        $('.js_multiselect').select2();
     });
+
+
 </script>
 
 {% endblock %}

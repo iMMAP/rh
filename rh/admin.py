@@ -96,15 +96,15 @@ admin.site.register(Project, ProjectAdmin)
 
 
 class ActivityPlanAdmin(admin.ModelAdmin):
-    list_display = ('project', 'households', 'beneficiary', 'beneficiary_category', 'state', 'active')
-    search_fields = ('state', 'active', 'project__title', 'households')
+    list_display = ('title', 'project', 'households', 'beneficiary', 'beneficiary_category', 'state', 'active')
+    search_fields = ('title', 'state', 'active', 'project__title', 'households')
     list_filter = ('state', 'active', 'project__code')
 admin.site.register(ActivityPlan, ActivityPlanAdmin)
 
 
 class TargetLocationAdmin(admin.ModelAdmin):
-    list_display = ('site_name', 'project', 'country', 'province', 'district', 'state', 'active')
-    search_fields = ('project__title', 'state', 'active')
+    list_display = ('title', 'site_name', 'project', 'country', 'province', 'district', 'state', 'active')
+    search_fields = ('title', 'project__title', 'state', 'active')
     list_filter = ('state', 'active', 'project__code')
 
 

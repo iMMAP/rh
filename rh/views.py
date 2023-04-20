@@ -183,6 +183,27 @@ def completed_project_view(request, pk):
 
 @cache_control(no_store=True)
 @login_required
+def open_project_view(request, pk):
+    """View for creating a project."""
+
+    project = get_object_or_404(Project, pk=pk)
+    activity_plans = project.activityplan_set.all()
+    target_locations = project.targetlocation_set.all()
+    plans = list(activity_plans.values_list('pk', flat=True))
+    locations = list(target_locations.values_list('pk', flat=True))
+
+    context = {
+        'project': project,
+        'activity_plans': activity_plans,
+        'target_locations': target_locations,
+        'plans': plans,
+        'locations': locations
+    }
+    return render(request, 'projects/project_view.html', context)
+
+
+@cache_control(no_store=True)
+@login_required
 def create_project_view(request):
     """View for creating a project."""
 
@@ -223,9 +244,9 @@ def update_project_view(request, pk):
     else:
         form = ProjectForm(instance=project)
 
-    activity_plans = ActivityPlan.objects.filter(project=project)
+    activity_plans = project.activityplan_set.all()
     plans = list(activity_plans.values_list('pk', flat=True))
-    target_locations = TargetLocation.objects.filter(project=project)
+    target_locations = project.targetlocation_set.all()
     locations = list(target_locations.values_list('pk', flat=True))
 
     context = {
@@ -335,10 +356,10 @@ def create_project_target_location(request, project):
 def project_planning_review(request, **kwargs):
     """Projects Plans"""
 
-    project_id = int(kwargs['project'])
-    project = Project.objects.get(pk=project_id)
-    activity_plans = ActivityPlan.objects.filter(project__pk=project.pk)
-    target_locations = TargetLocation.objects.filter(project__pk=project.pk)
+    pk = int(kwargs['project'])
+    project = get_object_or_404(Project, pk=pk)
+    activity_plans = project.activityplan_set.all()
+    target_locations = project.targetlocation_set.all()
     plans = list(activity_plans.values_list('pk', flat=True))
     locations = list(target_locations.values_list('pk', flat=True))
 
@@ -403,7 +424,6 @@ def delete_project(request, pk):
 @login_required
 def copy_project(request, pk):
     project = get_object_or_404(Project, pk=pk)
-
     if project:
         new_project = get_object_or_404(Project, pk=pk)
         new_project.pk = None

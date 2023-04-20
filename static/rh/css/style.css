@@ -4129,7 +4129,6 @@ body.filter-active {
 }
 
 .activity-title {
-  display: block;
   color: #be2126
 }
 
@@ -6227,3 +6226,8 @@ body.confirmation-active {
     margin-right: 7px;
     font-size: 9.5px;
 }
+
+.project-view-fold-unfold-buttons{
+    float: right
+}
+

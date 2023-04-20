@@ -5,7 +5,16 @@
 {% block content %}
 
 <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet"/>
-
+<style>
+    tbody tr:hover {
+       background: #f5f5f5;
+       color: #af4745;
+       cursor: pointer;
+    }
+	td a {
+	   display: block;
+	}
+</style>
 <div class="base-section">
     <div class="container">
         <div class="page-top-panel">
@@ -248,7 +257,7 @@
                         </thead>
                         <tbody>
                         {% for project in active_projects %}
-                        <tr>
+                        <tr onclick="window.location.href='{% url 'view_project' project.id %}'">
                             <td class="cluster-col">
                                 <div class="table-flex-holder">
                                     <div class="input-check-holder">
@@ -558,6 +567,7 @@
     $(document).ready(function() {
         $('.js_multiselect').select2();
     });
+
 
 
 </script>

@@ -97,7 +97,6 @@ class ProjectForm(forms.ModelForm):
 
     def __init__(self, *args, **kargs):
         super().__init__(*args, **kargs)
-        user_clusters = []
         user_profile = False
         if self.initial.get('user', False):
             if isinstance(self.initial.get('user'), int):
@@ -106,7 +105,9 @@ class ProjectForm(forms.ModelForm):
                 user_profile = User.objects.get(pk=self.initial.get('user').pk).profile
         if args and args[0].get('user', False):
             user_profile = User.objects.get(pk=args[0].get('user')).profile
+
         user_clusters = list(user_profile.clusters.all().values_list('pk', flat=True))
+
         self.fields['donors'].queryset = Donor.objects.order_by('name')
         self.fields['budget_currency'].queryset = Currency.objects.order_by('name')
         self.fields['implementing_partners'].queryset = Organization.objects.order_by('name')

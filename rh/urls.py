@@ -14,9 +14,10 @@ urlpatterns = [
 
     # Projects routes
     path('projects/', user_views.projects_view, name='projects'),
-    path('project/view/<str:pk>/', user_views.completed_project_view, name='view_project'),
     path('project/create/', user_views.create_project_view, name='create_project'),
     path('project/update/<str:pk>/', user_views.update_project_view, name='update_project'),
+    path('project/project_plan/view_complete/<str:pk>/', user_views.completed_project_view, name='completed_project'),
+    path('project/project_plan/view_project/<str:pk>/', user_views.open_project_view, name='view_project'),
 
     path('project/activity_plan/create/?project=<str:project>/', user_views.create_project_activity_plan,
          name='create_project_activity_plan'),
@@ -25,7 +26,6 @@ urlpatterns = [
          user_views.create_project_target_location, name='create_project_target_location'),
 
     path('project/project_plan/review/?project=<str:project>/', user_views.project_planning_review, name='project_plan_review'),
-
     path('project/project_plan/submit/<str:pk>/', user_views.submit_project, name='project_submit'),
 
     path('project/project_plan/delete/<str:pk>/', user_views.delete_project, name='delete_project'),

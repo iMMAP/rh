@@ -4,6 +4,7 @@ from .models import *
 
 
 class ProjectsFilter(django_filters.FilterSet):
+    # FIXME: Fix the options issue
     clusters = django_filters.ModelMultipleChoiceFilter(
         queryset=Cluster.objects.all(),
         widget=forms.SelectMultiple(attrs={'class': 'js_multiselect'}),

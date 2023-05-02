@@ -4157,17 +4157,18 @@ body.filter-active {
 }
 
 .activity-planning .main-heading {
-    border-top: 2px solid #be2126;
-    padding: 9px 0;
+  border-top: 2px solid #be2126;
+  padding: 9px 0;
 }
 
-.main-activity-holder.main-target{
-    margin-top: 30px !important;
+.main-activity-holder.main-target {
+  margin-top: 30px !important;
 }
 
 .main-activity-holder .subtitle-holder .subtitle {
-    color: #be2126;
+  color: #be2126;
 }
+
 .activity-planning .subtitle-holder {
   padding: 7px 0;
   display: flex;
@@ -4192,7 +4193,8 @@ body.filter-active {
 }
 
 .activity-planning .activity-block-holder {
-  padding: 20px 0
+  padding: 20px 0;
+
 }
 
 .activity-planning .activity-block-holder .inner-holder {
@@ -4204,7 +4206,7 @@ body.filter-active {
 }
 
 .activity-planning .activity-block-holder .inner-holder:after,
- .activity-planning .activity-block-holder .inner-holder:before {
+.activity-planning .activity-block-holder .inner-holder:before {
   content: "";
   position: absolute;
   display: block;
@@ -4309,13 +4311,13 @@ body.filter-active {
 }
 
 .block-activity .btn {
-  margin: 0 8px 0 0;
   font-size: 12px;
   line-height: 1.2;
   padding: 4px 6px;
   min-width: 71px;
   color: #6b6d70
 }
+
 .block-activity .btn.btn-red.save {
   margin: 0 8px 0 0;
   font-size: 12px;
@@ -4352,7 +4354,6 @@ body.filter-active {
 }
 
 .block-location-activity .btn {
-  margin: 0 8px 0 0;
   font-size: 12px;
   line-height: 1.2;
   padding: 4px 6px;
@@ -5378,7 +5379,7 @@ body.filter-active {
     width: 326px
   }
 
-/*  .project-plan .col.col-sm .input-check-holder {
+  /*  .project-plan .col.col-sm .input-check-holder {
     padding: 4px 0 6px 4px
   }*/
 
@@ -5410,7 +5411,7 @@ body.filter-active {
     margin: 10px 10px 0 0
   }
 
-   .activity-planning .review-block-top .title {
+  .activity-planning .review-block-top .title {
     margin: 10px 10px 0 0;
     width: 90%
   }
@@ -6091,13 +6092,14 @@ body.filter-active {
   pointer-events: none
 }
 
-.location-inner-holder .options-holder{
-    padding: 15px 0px 15px 0px;
+.location-inner-holder .options-holder {
+  padding: 15px 0px 15px 0px;
 }
-.location-inner-holder .input-check-holder{
-    margin-bottom: 16px;
-    line-height: 1;
-    padding-top: 0;
+
+.location-inner-holder .input-check-holder {
+  margin-bottom: 16px;
+  line-height: 1;
+  padding-top: 0;
 
 }
 
@@ -6134,6 +6136,7 @@ body.confirmation-active {
   visibility: visible;
   z-index: 1
 }
+
 .confirmation-popup-holder.confirmation-active .confirmation-options {
   opacity: 1;
   visibility: visible;
@@ -6214,20 +6217,59 @@ body.confirmation-active {
 }
 
 .block-activity .btn [class^=icon-chevron] {
-    font-size: 9.5px;
+  font-size: 9.5px;
 }
 
-.block-location-activity .btn [class^=icon-chevron]{
-    font-size: 9.5px;
+.block-location-activity .btn [class^=icon-chevron] {
+  font-size: 9.5px;
 }
 
 #fold-unfold-all [class^=icon-chevron] {
-    display: inline-block;
-    margin-right: 7px;
-    font-size: 9.5px;
+  display: inline-block;
+  margin-right: 7px;
+  font-size: 9.5px;
 }
 
-.project-view-fold-unfold-buttons{
-    float: right
+.project-view-fold-unfold-buttons {
+  float: right
 }
 
+.m2m-badges {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.m2m-badges>* {
+  margin-right: 8px;
+  margin-bottom: 8px;
+
+}
+
+.view_nocontent {
+  position: absolute;
+  top: 250px;
+  left: 0;
+  bottom: 120px;
+  right: 0;
+  pointer-events: none;
+  z-index: var(--o-view-nocontent-zindex, 1);
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-image: radial-gradient(at 50% 50%, white 0px, rgba(255, 255, 255, 0.5) 100%);
+}
+
+.nocontent_help{
+  text-align: center;
+}
+
+@media (max-width: 767.98px) {
+
+  .view_nocontent {
+    top: 37%;
+    bottom: 34%;
+  }
+}

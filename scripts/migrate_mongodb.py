@@ -175,7 +175,6 @@ def import_activity_domains_from_csv(conn, activity_domain_csv):
             c.execute(
                 "select activity_type_id,activity_type_name,cluster_id from tmp_activitydomain")
             activity_domains = c.fetchall()
-            m2m_records = []
             for domain in activity_domains:
                 domain = list(domain)
                 cluster = domain[2]
@@ -587,7 +586,7 @@ def import_activities_from_csv(conn, activities_csv):
             for activity in activities:
                 activity = list(activity)
                 active = activity[0]
-                if active == None:
+                if active is None:
                     activity[0] = True
 
                 indicator = activity[-1]

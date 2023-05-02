@@ -9,6 +9,10 @@ class ProjectsFilter(django_filters.FilterSet):
         queryset=Cluster.objects.all(),
         widget=forms.SelectMultiple(attrs={'class': 'js_multiselect'}),
     )
+    implementing_partners = django_filters.ModelMultipleChoiceFilter(
+        queryset=Organization.objects.all(),
+        widget=forms.SelectMultiple(attrs={'class': 'js_multiselect'}),
+    )
 
     class Meta:
         model = Project

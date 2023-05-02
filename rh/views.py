@@ -1,11 +1,15 @@
+RECORDS_PER_PAGE = 3
+
 from django.contrib import messages
+from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.forms import modelformset_factory
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.template import loader
 from django.views.decorators.cache import cache_control
+from django.db.models import Q
 
 from .filters import *
 from .forms import *
@@ -132,33 +136,101 @@ def load_facility_sites(request):
     return HttpResponse(response)
 
 
+# TODO: Project View Structure can be improved.
 @cache_control(no_store=True)
 @login_required
-def projects_view(request):
-    """Projects Plans"""
+def draft_projects_view(request):
+    """Projects"""
 
-    draft_projects = Project.objects.filter(state='draft')
-    active_projects = Project.objects.filter(state='in-progress').order_by('-id')
-    completed_projects = Project.objects.filter(state='done')
-
-    # Setup Pagination
-    p = Paginator(active_projects, 3)
-    page = request.GET.get('page')
-    p_active_projects = p.get_page(page)
-    total_pages = 'a' * p_active_projects.paginator.num_pages
+    all_projects = Project.objects.filter(~Q(state='archive'))
+    draft_projects = all_projects.filter(state='draft').order_by('-id')
+    draft_projects_count = draft_projects.count()
+    active_projects = all_projects.filter(state='in-progress')
+    completed_projects = all_projects.filter(state='done')
 
     # Setup Filter
-    project_filter = ProjectsFilter(request.GET, queryset=active_projects)
-    active_projects = project_filter.qs
+    project_filter = ProjectsFilter(request.GET, queryset=draft_projects)
+    draft_projects = project_filter.qs
+
+    # Setup Pagination
+    p = Paginator(draft_projects, RECORDS_PER_PAGE)
+    page = request.GET.get('page')
+    p_draft_projects = p.get_page(page)
+    total_pages = 'a' * p_draft_projects.paginator.num_pages
 
     context = {
-        'draft_projects': draft_projects,
-        'active_projects': p_active_projects,
+        'draft_projects_count': draft_projects_count,
+        'draft_projects': p_draft_projects,
+        'active_projects': active_projects,
         'completed_projects': completed_projects,
         'project_filter': project_filter,
         'total_pages': total_pages,
     }
-    return render(request, 'projects/projects.html', context)
+    return render(request, 'projects/views/draft_projects.html', context)
+
+
+@cache_control(no_store=True)
+@login_required
+def active_projects_view(request):
+    """Projects"""
+
+    all_projects = Project.objects.filter(~Q(state='archive'))
+    active_projects = all_projects.filter(state='in-progress').order_by('-id')
+    active_projects_count = active_projects.count()
+    draft_projects = all_projects.filter(state='draft')
+    completed_projects = all_projects.filter(state='done')
+    
+    # Setup Filter
+    project_filter = ProjectsFilter(request.GET, queryset=active_projects)
+    active_projects = project_filter.qs
+
+    # Setup Pagination
+    p = Paginator(active_projects, RECORDS_PER_PAGE)
+    page = request.GET.get('page')
+    p_active_projects = p.get_page(page)
+    total_pages = 'a' * p_active_projects.paginator.num_pages
+
+    context = {
+        'active_projects_count': active_projects_count,
+        'active_projects': p_active_projects,
+        'draft_projects': draft_projects,
+        'completed_projects': completed_projects,
+        'project_filter': project_filter,
+        'total_pages': total_pages,
+    }
+    return render(request, 'projects/views/active_projects.html', context)
+
+
+@cache_control(no_store=True)
+@login_required
+def completed_projects_view(request):
+    """Projects"""
+
+    all_projects = Project.objects.filter(~Q(state='archive'))
+    completed_projects = all_projects.filter(state='done').order_by('-id')
+    completed_projects_count = completed_projects.count()
+    draft_projects = all_projects.filter(state='draft')
+    active_projects = all_projects.filter(state='in-progress')
+
+    # Setup Filter
+    project_filter = ProjectsFilter(request.GET, queryset=completed_projects)
+    completed_projects = project_filter.qs
+
+    # Setup Pagination
+    p = Paginator(completed_projects, RECORDS_PER_PAGE)
+    page = request.GET.get('page')
+    p_completed_projects = p.get_page(page)
+    total_pages = 'a' * p_completed_projects.paginator.num_pages
+
+    context = {
+        'completed_projects_count': completed_projects_count,
+        'completed_projects': p_completed_projects,
+        'draft_projects': draft_projects,
+        'active_projects': active_projects,
+        'project_filter': project_filter,
+        'total_pages': total_pages,
+    }
+    return render(request, 'projects/views/completed_projects.html', context)
 
 
 @cache_control(no_store=True)
@@ -178,7 +250,7 @@ def completed_project_view(request, pk):
         'project_review': True,
         'locations': target_locations
     }
-    return render(request, 'projects/completed_project.html', context)
+    return render(request, 'projects/views/completed_project.html', context)
 
 
 @cache_control(no_store=True)
@@ -191,15 +263,22 @@ def open_project_view(request, pk):
     target_locations = project.targetlocation_set.all()
     plans = list(activity_plans.values_list('pk', flat=True))
     locations = list(target_locations.values_list('pk', flat=True))
+    project_state = project.state
+    parent_page = {
+        'in-progress': 'active_projects',
+        'draft': 'draft_projects',
+        'done': 'completed_projects'
+    }.get(project_state, None)
 
     context = {
         'project': project,
         'activity_plans': activity_plans,
         'target_locations': target_locations,
         'plans': plans,
-        'locations': locations
+        'locations': locations,
+        'parent_page': parent_page
     }
-    return render(request, 'projects/project_view.html', context)
+    return render(request, 'projects/views/project_view.html', context)
 
 
 @cache_control(no_store=True)
@@ -225,8 +304,11 @@ def create_project_view(request):
         else:
             form = ProjectForm()
 
-    context = {'form': form, 'project_planning': True}
-    return render(request, 'projects/project_form.html', context)
+    context = {
+        'form': form, 
+        'project_planning': True, 
+    }
+    return render(request, 'projects/forms/project_form.html', context)
 
 
 @cache_control(no_store=True)
@@ -248,15 +330,22 @@ def update_project_view(request, pk):
     plans = list(activity_plans.values_list('pk', flat=True))
     target_locations = project.targetlocation_set.all()
     locations = list(target_locations.values_list('pk', flat=True))
+    project_state = project.state
+    parent_page = {
+        'in-progress': 'active_projects',
+        'draft': 'draft_projects',
+        'done': 'completed_projects'
+    }.get(project_state, None)
 
     context = {
         'form': form,
         'project': project,
         'project_planning': True,
         'plans': plans,
-        'locations': locations
+        'locations': locations,
+        'parent_page': parent_page
     }
-    return render(request, 'projects/project_form.html', context)
+    return render(request, 'projects/forms/project_form.html', context)
 
 
 @cache_control(no_store=True)
@@ -302,9 +391,23 @@ def create_project_activity_plan(request, project):
     plans = list(activity_plans.values_list('pk', flat=True))
     clusters = project.clusters.all()
     cluster_ids = list(clusters.values_list('pk', flat=True))
-    context = {'project': project, 'formset': formset, 'clusters': cluster_ids, 'activity_planning': True,
-               'plans': plans}
-    return render(request, 'projects/project_activity_plan_form.html', context)
+
+    project_state = project.state
+    parent_page = {
+        'in-progress': 'active_projects',
+        'draft': 'draft_projects',
+        'done': 'completed_projects'
+    }.get(project_state, None)
+
+    context = {
+        'project': project, 
+        'formset': formset, 
+        'clusters': cluster_ids, 
+        'activity_planning': True,
+        'plans': plans,
+        'parent_page':parent_page
+        }
+    return render(request, 'projects/forms/project_activity_plan_form.html', context)
 
 
 @cache_control(no_store=True)
@@ -346,9 +449,22 @@ def create_project_target_location(request, project):
 
     plans = list(activity_plans.values_list('pk', flat=True))
     locations = list(target_locations.values_list('pk', flat=True))
-    context = {'project': project, 'formset': formset, 'locations_planning': True, 'plans': plans,
-               'locations': locations}
-    return render(request, "projects/project_target_locations.html", context)
+    project_state = project.state
+    parent_page = {
+        'in-progress': 'active_projects',
+        'draft': 'draft_projects',
+        'done': 'completed_projects'
+    }.get(project_state, None)
+
+    context = {
+        'project': project,
+        'formset': formset, 
+        'locations_planning': True, 
+        'plans': plans,
+        'locations': locations,
+        'parent_page':parent_page
+    }
+    return render(request, "projects/forms/project_target_locations.html", context)
 
 
 @cache_control(no_store=True)
@@ -362,6 +478,12 @@ def project_planning_review(request, **kwargs):
     target_locations = project.targetlocation_set.all()
     plans = list(activity_plans.values_list('pk', flat=True))
     locations = list(target_locations.values_list('pk', flat=True))
+    project_state = project.state
+    parent_page = {
+        'in-progress': 'active_projects',
+        'draft': 'draft_projects',
+        'done': 'completed_projects'
+    }.get(project_state, None)
 
     context = {
         'project': project,
@@ -369,9 +491,10 @@ def project_planning_review(request, **kwargs):
         'target_locations': target_locations,
         'project_review': True,
         'plans': plans,
-        'locations': locations
+        'locations': locations,
+        'parent_page': parent_page
     }
-    return render(request, 'projects/project_review.html', context)
+    return render(request, 'projects/forms/project_review.html', context)
 
 
 @cache_control(no_store=True)
@@ -392,7 +515,7 @@ def submit_project(request, pk):
         target.state = 'in-progress'
         target.save()
 
-    return redirect('projects')
+    return redirect('active_projects')
 
 
 @cache_control(no_store=True)
@@ -417,7 +540,7 @@ def delete_project(request, pk):
         project.active = False
         project.save()
 
-    return redirect('projects')
+    return JsonResponse({ 'success': True})
 
 
 @cache_control(no_store=True)
@@ -434,6 +557,7 @@ def copy_project(request, pk):
         new_project.programme_partners.set(project.programme_partners.all())
         new_project.implementing_partners.set(project.implementing_partners.all())
         new_project.title = f"[COPY] - {project.title}"
+        new_project.code = f"[COPY] - {project.code}"
         new_project.state = 'draft'
 
         if new_project:
@@ -448,7 +572,7 @@ def copy_project(request, pk):
 
         new_project.save()
 
-    return redirect('projects')
+    return redirect('draft_projects')
 
 
 def copy_activity_plan(project, plan):

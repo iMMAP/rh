@@ -8,7 +8,7 @@ class WarehouseLocationForm(forms.ModelForm):
         model = WarehouseLocation
         fields = ('province', 'district', 'name')
         labels = {
-            'name': ('Warehouse Name'),
+            'name': 'Warehouse Name',
         }
         # exclude = ['id']
 

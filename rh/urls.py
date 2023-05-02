@@ -6,18 +6,14 @@ urlpatterns = [
     path('', user_views.index, name='index'),
     path('home', user_views.home, name='home'),
 
-    # Activities routes
-    # path('activity_plans/', user_views.activity_plans, name='activity_plan'),
-    # path('activity_plan/create/', user_views.create_activity_plan, name='create_activity_plan'),
-    # path('activity_plan/update/<str:pk>/', user_views.update_activity_plan, name='update_activity_plan'),
-    # path('ajax/activity_plan/activity_form/', user_views.load_activity_json_form, name='ajax-load-activityfields'),
-
     # Projects routes
-    path('projects/', user_views.projects_view, name='projects'),
+    path('projects/draft/', user_views.draft_projects_view, name='draft_projects'),
+    path('projects/active/', user_views.active_projects_view, name='active_projects'),
+    path('projects/completed/', user_views.completed_projects_view, name='completed_projects'),
     path('project/create/', user_views.create_project_view, name='create_project'),
-    path('project/update/<str:pk>/', user_views.update_project_view, name='update_project'),
-    path('project/project_plan/view_complete/<str:pk>/', user_views.completed_project_view, name='completed_project'),
-    path('project/project_plan/view_project/<str:pk>/', user_views.open_project_view, name='view_project'),
+    path('project/project_plan/<str:pk>/', user_views.update_project_view, name='update_project'),
+#     path('project/project_plan/view_complete/<str:pk>/', user_views.completed_project_view, name='completed_project'),
+    path('project/view_project/<str:pk>/', user_views.open_project_view, name='view_project'),
 
     path('project/activity_plan/create/?project=<str:project>/', user_views.create_project_activity_plan,
          name='create_project_activity_plan'),
@@ -31,12 +27,8 @@ urlpatterns = [
     path('project/project_plan/delete/<str:pk>/', user_views.delete_project, name='delete_project'),
     path('project/project_plan/copy/<str:pk>/', user_views.copy_project, name='copy_project'),
 
-    # path('ajax/load-activities-details/', user_views.load_activities_details, name='ajax-load-activities'),
-    # path('ajax/load-other-activity-domains/', user_views.load_other_activity_domains, name='ajax-load-other-activity-domains'),
     path('ajax/load-districts-details/', user_views.load_locations_details, name='ajax-load-districts'),
-
     path('ajax/load-facility_sites/', user_views.load_facility_sites, name='ajax-load-facility_sites'),
 
-    # path('get_activity_domains/<int:project_id>/', user_views.get_activity_domains, name='get_activity_domains'),
 
 ]

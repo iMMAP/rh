@@ -485,7 +485,7 @@ class TargetLocation(models.Model):
         choices=TARGET_LOCATIONS_STATES,
         default='draft', null=True, blank=True
     )
-    title = models.CharField(max_length=NAME_MAX_LENGTH,null=True, blank=True)
+    title = models.CharField(max_length=NAME_MAX_LENGTH, null=True, blank=True)
     locations_group_by = models.CharField(
         max_length=15,
         choices=LOCATIONS_GROUP,

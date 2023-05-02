@@ -1,0 +1,464 @@
+{% extends "projects/forms/project_form_base.html" %}
+{% load static %}
+{% block header %}
+{% endblock header %}
+{% block project_contents %}
+    <div class="main-content">
+        <div class="activity-planning create-activity">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="section-message-alert">
+                        <div class="description">
+                            <div class="text">
+                                <p class="error-message">{{ message }}</p>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% endif %}
+            <form method="post" enctype="multipart/form-data">
+                <div class="main-heading">
+                    <div class="main-activity-holder main-target">
+                        <div class="subtitle-holder">
+                            <div>
+                                <span class="subtitle">Target Population</span>
+                            </div>
+                            <div>
+                                <button type="button"
+                                        id="fold-unfold-all"
+                                        class="btn btn-gray-outline fold-unfold-all-details">
+                                    <span class="icon-chevron-up up hidden" id="fold-icon-up"></span>
+                                    <span class="icon-chevron-down down" id="fold-icon-down"></span>
+                                    <span class="btn-text hidden" id="all-fold">Collapse All</span>
+                                    <span class="btn-text" id="all-unfold">Expand All</span>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="main-heading"></div>
+                    </div>
+                </div>
+                {{ formset.management_form }} {% csrf_token %}
+                <div id="activity-forms">
+                    {% for form in formset reversed %}
+                        {{ form.id }} {{ form.save }}
+                        <input type="hidden"
+                               name="project_id"
+                               id="project_id"
+                               value="{{ project.id }}" />
+                        <div class="activity-block-holder js-collapse-expand"
+                             data-form-id="{{ form.prefix }}">
+                            <div class="inner-holder">
+                                <div class="block-activity mb-3">
+                                    <div id="{{ form.prefix }}-actions">
+                                        <button href="#" class="btn btn-gray-outline">
+                                            <span class="icon-copy"></span>
+                                            <span class="btn-text">Duplicate</span>
+                                        </button>
+                                        <button href="#"
+                                                class="btn btn-gray-outline"
+                                                type="submit"
+                                                value="true"
+                                                name="{{ form.prefix }}-delete">
+                                            <span class="icon-trashbin"></span>
+                                            <span class="btn-text">Delete</span>
+                                        </button>
+                                        <button type="submit"
+                                                class="btn btn-red save"
+                                                value="true"
+                                                name="{{ form.prefix }}-save">Save</button>
+                                    </div>
+                                    <a href="#" class="btn btn-gray-outline collapse-details">
+                                        <span class="icon-chevron-up up" id="{{ form.prefix }}-up"></span>
+                                        <span class="icon-chevron-down down hidden" id="{{ form.prefix }}-down"></span>
+                                        <span class="btn-text" id="{{ form.prefix }}-fold">Collapse</span>
+                                        <span class="btn-text hidden" id="{{ form.prefix }}-unfold">Expand</span>
+                                    </a>
+                                </div>
+                                <div class="block-top">
+                                    <span class="title">
+                                        {% if form.total.value %}
+                                            <span class="people">
+                                                <span class="icon-group"></span>
+                                                <span id="{{ form.prefix }}-people-count">{{ form.total.value }}</span>
+                                                -
+                                            </span>
+                                        {% endif %}
+                                        {% if not form.id.value %}
+                                            <span>Add New Beneficiary</span>
+                                            <br />
+                                        {% endif %}
+                                        <span id="title-domain-{{ form.prefix }}"></span>
+                                        <span id="title-type-{{ form.prefix }}"></span>
+                                        <span id="title-detail-{{ form.prefix }}"></span>
+                                    </span>
+                                    <span class="subtitle"></span>
+                                </div>
+                                <div id="{{ form.prefix }}-details">
+                                    <div class="row">
+                                        <div class="col">
+                                            <div class="multiple-fields-row three-items">
+                                                <div class="field-col">
+                                                    <div class="select-field is-required">
+                                                        <label>Activity Domain</label>
+                                                        {{ form.activity_domain }}
+                                                    </div>
+                                                </div>
+                                                <div class="field-col">
+                                                    <div class="select-field is-required">
+                                                        <label>Activity Type</label>
+                                                        {{ form.activity_type }}
+                                                    </div>
+                                                </div>
+                                                <div class="field-col">
+                                                    <div class="select-field">
+                                                        <label>Activity Detail</label>
+                                                        {{ form.activity_detail }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col">
+                                            <div class="select-field">
+                                                <label>
+                                                    Indicators [Hold Control/Command button to select
+                                                    multiple]
+                                                </label>
+                                                {{ form.indicators }}
+                                            </div>
+                                            <div class="multiple-fields-row">
+                                                <div class="field-col">
+                                                    <div class="select-field">
+                                                        <label>Beneficiary</label>
+                                                        {{ form.beneficiary }}
+                                                    </div>
+                                                </div>
+                                                <div class="field-col">
+                                                    <div class="select-field">
+                                                        <label>Beneficiary Category</label>
+                                                        {{ form.beneficiary_category }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="multiple-fields-row three-items">
+                                                <div class="field-col">
+                                                    <div class="input-check-holder">
+                                                        {{ form.facility_monitoring }}
+                                                        <label for="{{ form.facility_monitoring.id_for_label }}">
+                                                            <span class="input"></span>
+                                                            <span class="text">Facility / Site Monitoring?</span>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="field-col">
+                                                    <div class="input-check-holder">
+                                                        {{ form.age_desegregation }}
+                                                        <label for="{{ form.age_desegregation.id_for_label }}">
+                                                            <span class="input"></span>
+                                                            <span class="text">Gender / Age Desegregation?</span>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="field-col"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col col-lg">
+                                            <div class="multiple-fields-row two-items"
+                                                 id="{{ form.prefix }}_facility_details_1">
+                                                <div class="field-col">
+                                                    <div id="clusters" data-clusters="{{ clusters }}"></div>
+                                                    <div class="input-field">
+                                                        <div class="select-field">
+                                                            <label for="{{ form.facility_id.id_for_label }}">
+                                                                Facility / Site
+                                                                Type
+                                                            </label>
+                                                            {{ form.facility_type }}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="field-col">
+                                                    <div class="input-field">
+                                                        <label for="{{ form.facility_name.id_for_label }}">
+                                                            Facility / Site
+                                                            Name
+                                                        </label>
+                                                        <div class="input-holder">{{ form.facility_name }}</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="multiple-fields-row three-items"
+                                                 id="{{ form.prefix }}_facility_details_2">
+                                                <div class="field-col">
+                                                    <div class="input-field">
+                                                        <label for="{{ form.facility_id.id_for_label }}">
+                                                            Facility / Site
+                                                            ID
+                                                        </label>
+                                                        <div class="input-holder">{{ form.facility_id }}</div>
+                                                    </div>
+                                                </div>
+                                                <div class="field-col">
+                                                    <div class="input-field">
+                                                        <label for="{{ form.facility_lat.id_for_label }}">
+                                                            Facility / Site
+                                                            Latitude
+                                                        </label>
+                                                        <div class="input-holder">{{ form.facility_lat }}</div>
+                                                    </div>
+                                                </div>
+                                                <div class="field-col">
+                                                    <div class="input-field">
+                                                        <label for="{{ form.facility_long.id_for_label }}">
+                                                            Facility / Site
+                                                            Longitude
+                                                        </label>
+                                                        <div class="input-holder">{{ form.facility_long }}</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col col-lg">
+                                            <div class="statistic-table-holder"
+                                                 id="{{ form.prefix }}-statistic-holder">
+                                                <table class="statistic-table" id="{{ form.prefix }}-table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Gender / Age</th>
+                                                            <th>0-5</th>
+                                                            <th>6-12</th>
+                                                            <th>12-17</th>
+                                                            <th>18+</th>
+                                                            <th>Total</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td>Female</td>
+                                                            <td>
+                                                                <input type="number"
+                                                                       id="{{ form.female_0_5.id_for_label }}"
+                                                                       name="{{ form.female_0_5.html_name }}"
+                                                                       value="{{ form.female_0_5.value }}"
+                                                                       step="1"
+                                                                       placeholder="-" />
+                                                            </td>
+                                                            <td>
+                                                                <input type="number"
+                                                                       id="{{ form.female_6_12.id_for_label }}"
+                                                                       name="{{ form.female_6_12.html_name }}"
+                                                                       value="{{ form.female_6_12.value }}"
+                                                                       step="1"
+                                                                       placeholder="-" />
+                                                            </td>
+                                                            <td>
+                                                                <input type="number"
+                                                                       id="{{ form.female_12_17.id_for_label }}"
+                                                                       name="{{ form.female_12_17.html_name }}"
+                                                                       value="{{ form.female_12_17.value }}"
+                                                                       step="1"
+                                                                       placeholder="-" />
+                                                            </td>
+                                                            <td>
+                                                                <input type="number"
+                                                                       id="{{ form.female_18.id_for_label }}"
+                                                                       name="{{ form.female_18.html_name }}"
+                                                                       value="{{ form.female_18.value }}"
+                                                                       step="1"
+                                                                       placeholder="-" />
+                                                            </td>
+                                                            <td>
+                                                                <input style="background: #f5f5f5;
+                                                                              border: 0"
+                                                                       id="{{ form.female_total.id_for_label }}"
+                                                                       name="{{ form.female_total.html_name }}"
+                                                                       value="{{ form.female_total.value }}"
+                                                                       class="total-row"
+                                                                       readonly=""
+                                                                       data-row-total-value="" />
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Male</td>
+                                                            <td>
+                                                                <input type="number"
+                                                                       id="{{ form.male_0_5.id_for_label }}"
+                                                                       name="{{ form.male_0_5.html_name }}"
+                                                                       value="{{ form.male_0_5.value }}"
+                                                                       step="1"
+                                                                       placeholder="-" />
+                                                            </td>
+                                                            <td>
+                                                                <input type="number"
+                                                                       id="{{ form.male_6_12.id_for_label }}"
+                                                                       name="{{ form.male_6_12.html_name }}"
+                                                                       value="{{ form.male_6_12.value }}"
+                                                                       step="1"
+                                                                       placeholder="-" />
+                                                            </td>
+                                                            <td>
+                                                                <input type="number"
+                                                                       id="{{ form.male_12_17.id_for_label }}"
+                                                                       name="{{ form.male_12_17.html_name }}"
+                                                                       value="{{ form.male_12_17.value }}"
+                                                                       step="1"
+                                                                       placeholder="-" />
+                                                            </td>
+                                                            <td>
+                                                                <input type="number"
+                                                                       id="{{ form.male_18.id_for_label }}"
+                                                                       name="{{ form.male_18.html_name }}"
+                                                                       value="{{ form.male_18.value }}"
+                                                                       step="1"
+                                                                       placeholder="-" />
+                                                            </td>
+                                                            <td>
+                                                                <input style="background: #f5f5f5;
+                                                                              border: 0"
+                                                                       id="{{ form.male_total.id_for_label }}"
+                                                                       name="{{ form.male_total.html_name }}"
+                                                                       value="{{ form.male_total.value }}"
+                                                                       class="total-row"
+                                                                       readonly=""
+                                                                       data-row-total-value="" />
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="other">Other/Unknown</td>
+                                                            <td>
+                                                                <input type="number"
+                                                                       id="{{ form.other_0_5.id_for_label }}"
+                                                                       name="{{ form.other_0_5.html_name }}"
+                                                                       value="{{ form.other_0_5.value }}"
+                                                                       step="1"
+                                                                       placeholder="-" />
+                                                            </td>
+                                                            <td>
+                                                                <input type="number"
+                                                                       id="{{ form.other_6_12.id_for_label }}"
+                                                                       name="{{ form.other_6_12.html_name }}"
+                                                                       value="{{ form.other_6_12.value }}"
+                                                                       step="1"
+                                                                       placeholder="-" />
+                                                            </td>
+                                                            <td>
+                                                                <input type="number"
+                                                                       id="{{ form.other_12_17.id_for_label }}"
+                                                                       name="{{ form.other_12_17.html_name }}"
+                                                                       value="{{ form.other_12_17.value }}"
+                                                                       step="1"
+                                                                       placeholder="-" />
+                                                            </td>
+                                                            <td>
+                                                                <input type="number"
+                                                                       id="{{ form.other_18.id_for_label }}"
+                                                                       name="{{ form.other_18.html_name }}"
+                                                                       value="{{ form.other_18.value }}"
+                                                                       step="1"
+                                                                       placeholder="-" />
+                                                            </td>
+                                                            <td>
+                                                                <input style="background: #f5f5f5;
+                                                                              border: 0"
+                                                                       id="{{ form.other_total.id_for_label }}"
+                                                                       name="{{ form.other_total.html_name }}"
+                                                                       value="{{ form.other_total.value }}"
+                                                                       class="total-row"
+                                                                       readonly=""
+                                                                       data-row-total-value="" />
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Total</td>
+                                                            <td>
+                                                                <input type="number"
+                                                                       id="{{ form.total_0_5.id_for_label }}"
+                                                                       name="{{ form.total_0_5.html_name }}"
+                                                                       value="{{ form.total_0_5.value }}"
+                                                                       class="{{ form.prefix }}-total-col"
+                                                                       data-col-total-value=""
+                                                                       readonly="" />
+                                                            </td>
+                                                            <td>
+                                                                <input type="number"
+                                                                       id="{{ form.total_6_12.id_for_label }}"
+                                                                       name="{{ form.total_6_12.html_name }}"
+                                                                       value="{{ form.total_6_12.value }}"
+                                                                       class="{{ form.prefix }}-total-col"
+                                                                       data-col-total-value=""
+                                                                       readonly="" />
+                                                            </td>
+                                                            <td>
+                                                                <input type="number"
+                                                                       id="{{ form.total_12_17.id_for_label }}"
+                                                                       name="{{ form.total_12_17.html_name }}"
+                                                                       value="{{ form.total_12_17.value }}"
+                                                                       class="{{ form.prefix }}-total-col"
+                                                                       data-col-total-value=""
+                                                                       readonly="" />
+                                                            </td>
+                                                            <td>
+                                                                <input type="number"
+                                                                       id="{{ form.total_18.id_for_label }}"
+                                                                       name="{{ form.total_18.html_name }}"
+                                                                       value="{{ form.total_18.value }}"
+                                                                       class="{{ form.prefix }}-total-col"
+                                                                       data-col-total-value=""
+                                                                       readonly="" />
+                                                            </td>
+                                                            <td>
+                                                                <input style="background: #f5f5f5;
+                                                                              border: 0"
+                                                                       id="{{ form.total.id_for_label }}"
+                                                                       name="{{ form.total.html_name }}"
+                                                                       value="{{ form.total.value }}"
+                                                                       class="all-rows-total"
+                                                                       readonly=""
+                                                                       data-row-total-value="" />
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                    <div class="plan-submit-holder">
+                        <a href="{% url 'update_project' project.pk %}"
+                           class="btn btn-gray-outline">Back</a>
+                        <button type="submit"
+                                class="btn btn-red"
+                                name="submit_type"
+                                value="next_step">Save and Next</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!--Confirmation Popup-->
+    <div class="overlay">
+        <div class="confirmation-options">
+            <div class="block-top">
+                <span class="title">Activity Planning Confirmation</span>
+            </div>
+            <div class="block-body" data-simplebar>Are you sure you want to move to the next step?</div>
+            <div class="block-footer">
+                <div class="btn-wrapper">
+                    <a class="btn btn-red"
+                       href="{% url 'create_project_target_location' project.pk %}">Confirm</a>
+                    <a class="btn btn-gray-outline confirmation-close" href="#">Cancel</a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock project_contents %}
+{% block scripts %}
+    {{ formset.media.js }}
+    <script defer src="{% static 'rh/js/activity_planning.js' %}"></script>
+{% endblock scripts %}

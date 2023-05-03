@@ -50,15 +50,21 @@
                             <div class="inner-holder">
                                 <div class="block-activity mb-3">
                                     <div id="{{ form.prefix }}-actions">
-                                        <button href="#" class="btn btn-gray-outline">
+                                        <button href="#"
+                                                data-url="{% url 'copy_plan' project=project.pk plan=form.instance.pk %}"
+                                                data-return-url="{% url 'create_project_activity_plan' project=project.pk %}"
+                                                data-type="copy"
+                                                data-project="{{ form.instance.pk }}"
+                                                class="btn btn-gray-outline show_confirm">
                                             <span class="icon-copy"></span>
                                             <span class="btn-text">Duplicate</span>
                                         </button>
                                         <button href="#"
-                                                class="btn btn-gray-outline"
-                                                type="submit"
-                                                value="true"
-                                                name="{{ form.prefix }}-delete">
+                                                data-url="{% url 'delete_plan' form.instance.pk %}"
+                                                data-return-url="{% url 'create_project_activity_plan' project=project.pk %}"
+                                                data-type="delete"
+                                                data-project="{{ form.instance.pk }}"
+                                                class="btn btn-gray-outline show_confirm">
                                             <span class="icon-trashbin"></span>
                                             <span class="btn-text">Delete</span>
                                         </button>
@@ -439,22 +445,6 @@
                     </div>
                 </div>
             </form>
-        </div>
-    </div>
-    <!--Confirmation Popup-->
-    <div class="overlay">
-        <div class="confirmation-options">
-            <div class="block-top">
-                <span class="title">Activity Planning Confirmation</span>
-            </div>
-            <div class="block-body" data-simplebar>Are you sure you want to move to the next step?</div>
-            <div class="block-footer">
-                <div class="btn-wrapper">
-                    <a class="btn btn-red"
-                       href="{% url 'create_project_target_location' project.pk %}">Confirm</a>
-                    <a class="btn btn-gray-outline confirmation-close" href="#">Cancel</a>
-                </div>
-            </div>
         </div>
     </div>
 {% endblock project_contents %}

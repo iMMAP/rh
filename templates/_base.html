@@ -221,6 +221,7 @@
                 crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js" integrity="sha512-2ImtlRlf2VVmiGZsjm9bEyhjGW4dU7B6TNwh/hx/iSByxNENtj3WVE6o/9Lj4TJeVXPi4bnOIMXFIJJAeufa0A==" crossorigin="anonymous" referrerpolicy="no-referrer">
         </script>
+        <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
         {% compress js %}
             <script defer src="{% static 'rh/js/app.js' %}"></script>
             <script defer src="{% static 'rh/js/fold_unfold_component.js' %}"></script>
@@ -229,9 +230,90 @@
             <script>
                 $(document).ready(function () {
                     $('.js_multiselect').select2();
+                    
+                    $('tr[data-url]').click(function() {
+                        window.location.href = $(this).data('url');
+                    });
                 });
+                function showConfirmModal(event) {
+                    // Prevent the default behavior of the click event
+                    event.preventDefault();
+                    event.stopPropagation();
+                
+                    // Get the relevant data attributes from the clicked element
+                    var dataURL = event.currentTarget.dataset.url;
+                    var returnURL = event.currentTarget.dataset.returnUrl;
+                    var name = event.currentTarget.dataset.project;
+                    var popupType = event.currentTarget.dataset.type;
+                
+                    // Initialize variables to be used in the SweetAlert2 modal
+                    var title, text, icon, dangerMode, successMessage;
+                
+                    // Set the modal variables based on the type of popup requested
+                    if (popupType === 'copy') {
+                        title = `Are you sure you want to copy ${name}?`;
+                        text = '';
+                        icon = 'warning';
+                        dangerMode = false;
+                        successMessage = `Done! Project ${name} has been copied successfully!`;
+                    } else if (popupType === 'delete') {
+                        title = `Are you sure you want to delete ${name}?`;
+                        text = "Once deleted, you will not be able to recover this project!";
+                        icon = 'warning';
+                        dangerMode = true;
+                        successMessage = `Done! Project ${name} has been deleted successfully!`;
+                    } else if (popupType === 'archive') {
+                        title = `Are you sure you want to archive ${name}?`;
+                        text = "Archiving the selected project will deactivate it and make it unavailable to users. Please contact the administrator if you need to access the archived project in the future!";
+                        icon = 'warning';
+                        dangerMode = true;
+                        successMessage = `Done! Project ${name} has been archived successfully!`;
+                    }
+                
+                    debugger
+                    // Display the SweetAlert2 modal with the appropriate variables
+                    swal({
+                        title: title,
+                        text: text,
+                        icon: icon,
+                        buttons: true,
+                        dangerMode: dangerMode,
+                    })
+                    .then((willDelete) => {
+                        debugger
+                        // If the user confirms the action in the modal, send an AJAX request
+                        if (willDelete) {
+                            $.ajax({
+                                method: 'GET',
+                                url: dataURL,
+                                success: function (data) {
+                                    // If the AJAX request is successful, display a success message and redirect
+                                    if (data.success) {
+                                        swal(successMessage, {
+                                            icon: "success",
+                                        }).then(() => {
+                                            if (popupType === 'copy'){
+                                                if (data.returnURL){
+                                                    returnURL = data.returnURL
+                                                }
+                                            }
+                                            window.location.href = returnURL;
+                                        });
+                                    }
+                                },
+                                error: function (error_data) {
+                                    debugger
+                                    // If the AJAX request fails, display an error message
+                                    swal(`Something went wrong! ${error_data}`);
+                                }
+                            });
+                        }
+                    });
+                }
+                
+                // Attach the click event listener to all elements with class "show_confirm"
+                $('.show_confirm').click(showConfirmModal);                
             </script>
         {% endcompress %}
-        {% comment %} <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script> {% endcomment %}
     </body>
 </html>

@@ -55,14 +55,24 @@
                                 <div class="block-location-activity">
                                     <div id="{{ form.prefix }}-actions">
                                         <!--FIXME: Fix the mobile view-->
-                                        <a href="#" class="btn btn-gray-outline">
+                                        <button href="#"
+                                                data-url="{% url 'copy_location' project=project.pk location=form.instance.pk %}"
+                                                data-return-url="{% url 'create_project_target_location' project=project.pk %}"
+                                                data-type="copy"
+                                                data-project="{{ form.instance.pk }}"
+                                                class="btn btn-gray-outline show_confirm">
                                             <span class="icon-copy"></span>
                                             <span class="btn-text">Duplicate</span>
-                                        </a>
-                                        <a href="#" class="btn btn-gray-outline">
+                                        </button>
+                                        <button href="#"
+                                                data-url="{% url 'delete_location' form.instance.pk %}"
+                                                data-return-url="{% url 'create_project_target_location' project=project.pk %}"
+                                                data-type="delete"
+                                                data-project="{{ form.instance.pk }}"
+                                                class="btn btn-gray-outline show_confirm">
                                             <span class="icon-trashbin"></span>
                                             <span class="btn-text">Delete</span>
-                                        </a>
+                                        </button>
                                         <button type="submit"
                                                 class="btn btn-red save"
                                                 value="true"

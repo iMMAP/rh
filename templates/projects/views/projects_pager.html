@@ -1,0 +1,39 @@
+{% if projects %}
+    <div class="pagination-holder">
+        <div class="select-field view-options"></div>
+        <div class="pagination-wrapper">
+            <ul class="pagination">
+                {% if projects.has_previous %}
+                    <li class="page-item prev">
+                        <a class="page-link" href="?page={{ projects.previous_page_number }}">Previous</a>
+                    </li>
+                {% else %}
+                    <li class="page-item prev disabled">
+                        <a class="page-link" href="#">Previous</a>
+                    </li>
+                {% endif %}
+                {% for i in total_pages %}
+                    <li class="page-item {% if projects.number == forloop.counter %}current-page{% endif %}">
+                        <a class="page-link" href="?page={{ forloop.counter }}">{{ forloop.counter }}</a>
+                    </li>
+                {% endfor %}
+                {% if projects.has_next %}
+                    <li class="page-item next">
+                        <a class="page-link" href="?page={{ projects.next_page_number }}">Next</a>
+                    </li>
+                {% else %}
+                    <li class="page-item next disabled">
+                        <a class="page-link" href="#">Next</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+{% else %}
+    <div class="view_nocontent">
+        <div class="nocontent_help">
+            <h4>No projects found. Let's create one!</h4>
+            <p>Click on Add New Project and start planning your new project.</p>
+        </div>
+    </div>
+{% endif %}

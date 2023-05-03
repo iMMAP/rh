@@ -160,7 +160,7 @@ def draft_projects_view(request):
 
     context = {
         'draft_projects_count': draft_projects_count,
-        'draft_projects': p_draft_projects,
+        'projects': p_draft_projects,
         'active_projects': active_projects,
         'completed_projects': completed_projects,
         'project_filter': project_filter,
@@ -192,7 +192,7 @@ def active_projects_view(request):
 
     context = {
         'active_projects_count': active_projects_count,
-        'active_projects': p_active_projects,
+        'projects': p_active_projects,
         'draft_projects': draft_projects,
         'completed_projects': completed_projects,
         'project_filter': project_filter,
@@ -224,7 +224,7 @@ def completed_projects_view(request):
 
     context = {
         'completed_projects_count': completed_projects_count,
-        'completed_projects': p_completed_projects,
+        'projects': p_completed_projects,
         'draft_projects': draft_projects,
         'active_projects': active_projects,
         'project_filter': project_filter,
@@ -520,7 +520,7 @@ def submit_project(request, pk):
 
 @cache_control(no_store=True)
 @login_required
-def delete_project(request, pk):
+def archive_project(request, pk):
     project = get_object_or_404(Project, pk=pk)
     if project:
         activity_plans = project.activityplan_set.all()
@@ -540,6 +540,16 @@ def delete_project(request, pk):
         project.active = False
         project.save()
 
+    return JsonResponse({ 'success': True})
+
+
+@cache_control(no_store=True)
+@login_required
+def delete_project(request, pk):
+    """Delete Project View"""
+    project = get_object_or_404(Project, pk=pk)
+    if project:
+        project.delete()
     return JsonResponse({ 'success': True})
 
 
@@ -565,17 +575,17 @@ def copy_project(request, pk):
             target_locations = project.targetlocation_set.all()
 
             for plan in activity_plans:
-                copy_activity_plan(new_project, plan)
+                copy_project_activity_plan(new_project, plan)
 
             for location in target_locations:
-                copy_target_location(new_project, location)
+                copy_project_target_location(new_project, location)
 
         new_project.save()
 
-    return redirect('draft_projects')
+    return JsonResponse({ 'success': True, 'returnURL': reverse('view_project', args=[new_project.pk])})
 
 
-def copy_activity_plan(project, plan):
+def copy_project_activity_plan(project, plan):
     try:
         new_plan = get_object_or_404(ActivityPlan, pk=plan.pk)
         new_plan.pk = None
@@ -591,7 +601,7 @@ def copy_activity_plan(project, plan):
         return False
 
 
-def copy_target_location(project, location):
+def copy_project_target_location(project, location):
     try:
         new_location = get_object_or_404(TargetLocation, pk=location.pk)
         new_location.pk = None
@@ -604,3 +614,58 @@ def copy_target_location(project, location):
         return True
     except Exception as e:
         return False
+    
+
+@cache_control(no_store=True)
+@login_required
+def copy_activity_plan(request, project, plan):
+    project = get_object_or_404(Project, pk=project)
+    activity_plan = get_object_or_404(ActivityPlan, pk=plan)
+    new_plan = get_object_or_404(ActivityPlan, pk=activity_plan.pk)
+    if new_plan:
+        new_plan.pk = None
+        new_plan.save()
+        new_plan.project = project
+        new_plan.active = True
+        new_plan.state = 'draft'
+        new_plan.title = f'[COPY] - {activity_plan.title}'
+        new_plan.indicators.set(activity_plan.indicators.all())
+        new_plan.save()
+    return JsonResponse({ 'success': True})
+
+
+@cache_control(no_store=True)
+@login_required
+def delete_activity_plan(request, pk):
+    activity_plan = get_object_or_404(ActivityPlan, pk=pk)
+    project = activity_plan.project
+    if activity_plan:
+        activity_plan.delete()
+    return JsonResponse({ 'success': True})
+
+
+@cache_control(no_store=True)
+@login_required
+def copy_target_location(request, project, location):
+    project = get_object_or_404(Project, pk=project)
+    target_location = get_object_or_404(TargetLocation, pk=location)
+    new_location = get_object_or_404(TargetLocation, pk=target_location.pk)
+    if new_location:
+        new_location.pk = None
+        new_location.save()
+        new_location.project = project
+        new_location.active = True
+        new_location.state = 'draft'
+        new_location.title = f'[COPY] - {target_location.title}'
+        new_location.save()
+    return JsonResponse({ 'success': True})
+
+
+@cache_control(no_store=True)
+@login_required
+def delete_target_location(request, pk):
+    target_location = get_object_or_404(TargetLocation, pk=pk)
+    project = target_location.project
+    if target_location:
+        target_location.delete()
+    return JsonResponse({ 'success': True})

@@ -1696,7 +1696,6 @@ label.col-label {
 
 .input-check-holder {
   margin-bottom: 30px;
-  padding-top: 10px;
 }
 
 .input-check-holder label {
@@ -6262,7 +6261,7 @@ body.confirmation-active {
   background-image: radial-gradient(at 50% 50%, white 0px, rgba(255, 255, 255, 0.5) 100%);
 }
 
-.nocontent_help{
+.nocontent_help {
   text-align: center;
 }
 
@@ -6272,4 +6271,41 @@ body.confirmation-active {
     top: 37%;
     bottom: 34%;
   }
+}
+
+
+.project-detail.icon-trashbin-outline,
+.project-detail.icon-trashbin,
+.project-detail.icon-copy,
+.project-detail.icon-pen {
+  font-size: medium;
+}
+
+.archive-icon {
+  padding-top: 2px;
+}
+
+svg.project-view.feather.feather-archive {
+  height: 14px;
+  color: #6d6e71;
+
+}
+
+
+/* SWAL CSS Override */
+
+.swal-title {
+  font-size: 18px;
+}
+
+.swal-text {
+  text-align: center !important;
+}
+
+.swal-button--danger {
+  background-color: #af4745;
+}
+
+.swal-button--danger:not([disabled]):hover {
+  background-color: #a52824;
 }

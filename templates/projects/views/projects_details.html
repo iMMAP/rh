@@ -1,0 +1,118 @@
+<tr data-url="{% url 'view_project' project.id %}">
+    <td class="cluster-col">
+        <div class="table-flex-holder">
+            <div class="input-check-holder">
+                <input type="checkbox" id="table-check-11" name="table-check11" />
+                <label for="table-check-11">
+                    <span class="input"></span>
+                </label>
+            </div>
+            {% for cluster in project.clusters.all %}{{ cluster.title }},{% endfor %}
+        </div>
+    </td>
+    <td class="title-col">{{ project.title }}</td>
+    <td class="organisation-col">
+        {% for partner in project.implementing_partners.all %}{{ partner.code }}{% endfor %}
+    </td>
+    <td class="update-date-col">{{ project.updated_at }}</td>
+    <td class="location-col">
+        {% for location in project.locations.all %}{{ location.name }},{% endfor %}
+    </td>
+    <td class="description-col">{{ project.description }}</td>
+    <td class="action-col">
+        <div class="table-flex-holder">
+            <ul class="table-options-buttons ">
+                <li>
+                    <button>
+                        <a href="#"
+                           data-url="{% url 'archive_project' project.pk %}"
+                           data-return-url="{% url 'draft_projects' %}"
+                           data-type="archive"
+                           data-project="{{ project.code }}"
+                           class="text-decoration-none show_confirm"
+                           title="Archive this project!">
+                            <?xml version="1.0" ?>
+                            <svg class="feather feather-archive"
+                                 fill="none"
+                                 height="20"
+                                 stroke="currentColor"
+                                 stroke-linecap="round"
+                                 stroke-linejoin="round"
+                                 stroke-width="2"
+                                 viewBox="0 0 24 24"
+                                 width="22"
+                                 xmlns="http://www.w3.org/2000/svg">
+                                <polyline points="16 8 16 21 3 21 3 8"></polyline><rect height="4" width="17" x="1" y="3"></rect><line x1="8" x2="11" y1="11" y2="11"></line>
+                            </svg>
+                        </a>
+                    </button>
+                </li>
+                <li>
+                    <button>
+                        <a href="#"
+                           data-url="{% url 'copy_project' project.pk %}"
+                           data-return-url="{% url 'draft_projects' %}"
+                           data-type="copy"
+                           data-project="{{ project.code }}"
+                           class="text-decoration-none show_confirm"
+                           title="Copy this project!">
+                            <span class="project-detail icon-copy"></span>
+                        </a>
+                    </button>
+                </li>
+                <li>
+                    <button>
+                        <a href="#"
+                           data-url="{% url 'delete_project' project.pk %}"
+                           data-return-url="{% url 'draft_projects' %}"
+                           data-type="delete"
+                           data-project="{{ project.code }}"
+                           class="text-decoration-none show_confirm"
+                           title="Delete this project!"><span class="project-detail icon-trashbin"></span></a>
+                    </button>
+                </li>
+            </ul>
+            <a href="table-slide-{{ forloop.counter0 }}"
+               class="table-slide-opener"
+               onclick="event.stopPropagation();">
+                <span class="icon-chevron-down"></span>
+            </a>
+        </div>
+    </td>
+    <td class="project-details-col" id="table-slide-{{ forloop.counter0 }}">
+        <div class="table-flex-holder">
+            <div class="col">
+                <strong class="title">Number of people targeting:</strong>
+                <dl>
+                    <dt>Female:</dt>
+                    <dd>
+                        1000
+                    </dd>
+                </dl>
+                <dl>
+                    <dt>Male:</dt>
+                    <dd>
+                        12,765
+                    </dd>
+                </dl>
+            </div>
+            <div class="col">
+                <div class="input-check-holder">
+                    <input type="checkbox" id="table-check-18" checked />
+                    <label for="table-check-18">
+                        <span class="input"></span>
+                        <span class="text">HRP project</span>
+                    </label>
+                </div>
+            </div>
+            <div class="col">
+                <dl>
+                    <dt>Activity types:</dt>
+                    <dd>
+                        Flood
+                    </dd>
+                </dl>
+            </div>
+        </div>
+    </td>
+</tr>

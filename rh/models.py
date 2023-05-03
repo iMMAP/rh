@@ -378,7 +378,7 @@ class ActivityPlan(models.Model):
         ('archive', 'Archived'),
     ]
 
-    project = models.ForeignKey(Project, on_delete=models.SET_NULL, null=True, blank=True)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, null=True, blank=True)
     active = models.BooleanField(default=True)
     state = models.CharField(
         max_length=15,
@@ -478,7 +478,7 @@ class TargetLocation(models.Model):
         ('province', 'Province/State'),
         ('district', 'District'),
     ]
-    project = models.ForeignKey(Project, on_delete=models.SET_NULL, null=True, blank=True)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, null=True, blank=True)
     active = models.BooleanField(default=True)
     state = models.CharField(
         max_length=15,

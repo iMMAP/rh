@@ -112,6 +112,18 @@ admin.site.register(TargetLocation, TargetLocationAdmin)
 
 
 ##############################################
+######### Project Financial Report ###########
+##############################################
+
+class BudgetProgressAdmin(admin.ModelAdmin):
+    list_display = (
+        'project', 'donor', 'title', 'activity_domain', 'grant', 'amount_recieved', 'budget_currency', 'received_date', 'country')
+    search_fields = (
+        'project', 'donor', 'activity_domain', 'country')
+    list_filter = ('project', 'donor', 'country')
+admin.site.register(BudgetProgress, BudgetProgressAdmin)
+
+##############################################
 ######### Reporting Model Admins ##########
 ##############################################
 

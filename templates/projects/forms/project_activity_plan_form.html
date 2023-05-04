@@ -3,6 +3,9 @@
 {% block header %}
 {% endblock header %}
 {% block project_contents %}
+    <div class="project-title-holder">
+        <h2 class="plan-title">{{ project.title }}</h2>
+    </div>
     <div class="main-content">
         <div class="activity-planning create-activity">
             {% if messages %}
@@ -54,7 +57,7 @@
                                                 data-url="{% url 'copy_plan' project=project.pk plan=form.instance.pk %}"
                                                 data-return-url="{% url 'create_project_activity_plan' project=project.pk %}"
                                                 data-type="copy"
-                                                data-project="{{ form.instance.pk }}"
+                                                data-project=""
                                                 class="btn btn-gray-outline show_confirm">
                                             <span class="icon-copy"></span>
                                             <span class="btn-text">Duplicate</span>
@@ -63,7 +66,7 @@
                                                 data-url="{% url 'delete_plan' form.instance.pk %}"
                                                 data-return-url="{% url 'create_project_activity_plan' project=project.pk %}"
                                                 data-type="delete"
-                                                data-project="{{ form.instance.pk }}"
+                                                data-project=""
                                                 class="btn btn-gray-outline show_confirm">
                                             <span class="icon-trashbin"></span>
                                             <span class="btn-text">Delete</span>

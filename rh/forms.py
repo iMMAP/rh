@@ -180,3 +180,31 @@ class TargetLocationForm(forms.ModelForm):
              'districts-queries-url': reverse_lazy('ajax-load-districts')})
         self.fields['site_name'].widget.attrs.update(
             {'onchange': f"updateTitle('{kwargs.get('prefix')}', 'id_{kwargs.get('prefix')}-site_name');"})
+
+
+class BudgetProgressForm(forms.ModelForm):
+    class Meta:
+        model = BudgetProgress
+        fields = "__all__"
+        widgets = {
+            'country': forms.widgets.HiddenInput(),
+        }
+
+    def __init__(self, *args, project, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        activity_domains = project.activity_domains.all()
+        budget_currency = project.budget_currency
+
+        activity_domains = list(activity_domains.all().values_list('pk', flat=True))
+
+        donors = project.donors.all()
+        donor_ids = list(donors.values_list('pk', flat=True))
+
+        self.fields['activity_domain'].queryset = self.fields['activity_domain'].queryset.filter(
+            pk__in=activity_domains)
+        self.fields['donor'].queryset = self.fields['donor'].queryset.filter(
+            pk__in=donor_ids)
+        self.fields['budget_currency'].queryset = self.fields['budget_currency'].queryset.filter(
+            pk=budget_currency.pk)
+

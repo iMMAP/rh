@@ -518,9 +518,28 @@ class TargetLocation(models.Model):
 
 
 # ##############################################
-# ############## Reporting ##############
+# ########### Budget Progress Report ###########
 # ##############################################
 
+class BudgetProgress(models.Model):
+    project = models.ForeignKey(Project, on_delete=models.SET_NULL, null=True, blank=True)
+    donor = models.ForeignKey(Donor, on_delete=models.SET_NULL, null=True, blank=True)
+    title = models.CharField(max_length=NAME_MAX_LENGTH, null=True, blank=True)
+    activity_domain = models.ForeignKey(ActivityDomain, on_delete=models.SET_NULL, null=True, blank=True)
+    grant = models.CharField(max_length=NAME_MAX_LENGTH, null=True, blank=True)
+    amount_recieved = models.IntegerField(default=0, blank=True, null=True)
+    budget_currency = models.ForeignKey(Currency, on_delete=models.SET_NULL, null=True, blank=True)
+    received_date = models.DateField(auto_now_add=True, blank=True, null=True)
+    country = models.ForeignKey(Location, blank=True, null=True, on_delete=models.SET_NULL, )
+
+    def __str__(self):
+        return f"{self.donor}, {self.activity_domain}"
+
+    class Meta:
+        verbose_name = 'Budget Progress'
+        verbose_name_plural = "Budget Progress"
+
+    
 
 class Report(models.Model):
     project = models.ForeignKey(Project, on_delete=models.SET_NULL, null=True, blank=True)

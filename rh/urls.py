@@ -10,10 +10,12 @@ urlpatterns = [
      path('projects/draft/', user_views.draft_projects_view, name='draft_projects'),
      path('projects/active/', user_views.active_projects_view, name='active_projects'),
      path('projects/completed/', user_views.completed_projects_view, name='completed_projects'),
+     path('projects/archived/', user_views.archived_projects_view, name='archived_projects'),
      path('project/create/', user_views.create_project_view, name='create_project'),
      path('project/project_plan/<str:pk>/', user_views.update_project_view, name='update_project'),
 
      path('project/project_plan/archive/<str:pk>/', user_views.archive_project, name='archive_project'),
+     path('project/project_plan/unarchive/<str:pk>/', user_views.unarchive_project, name='unarchive_project'),
      path('project/project_plan/delete/<str:pk>/', user_views.delete_project, name='delete_project'),
      path('project/project_plan/copy/<str:pk>/', user_views.copy_project, name='copy_project'),
 
@@ -30,6 +32,9 @@ urlpatterns = [
      path('project/target_location/delete/<str:pk>/', user_views.delete_target_location, name='delete_location'),
      path('project/target_location/create/?project=<str:project>/',
          user_views.create_project_target_location, name='create_project_target_location'),
+
+    path('project/financials/budget_progress/?project=<str:project>/',
+         user_views.create_project_budget_progress_view, name='create_project_budget_progress'),
 
      path('project/project_plan/review/?project=<str:project>/', user_views.project_planning_review, name='project_plan_review'),
      path('project/project_plan/submit/<str:pk>/', user_views.submit_project, name='project_submit'),

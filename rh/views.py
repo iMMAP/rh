@@ -142,11 +142,12 @@ def load_facility_sites(request):
 def draft_projects_view(request):
     """Projects"""
 
-    all_projects = Project.objects.filter(~Q(state='archive'))
+    all_projects = Project.objects.all()
     draft_projects = all_projects.filter(state='draft').order_by('-id')
     draft_projects_count = draft_projects.count()
     active_projects = all_projects.filter(state='in-progress')
     completed_projects = all_projects.filter(state='done')
+    archived_projects = all_projects.filter(state='archive')
 
     # Setup Filter
     project_filter = ProjectsFilter(request.GET, queryset=draft_projects)
@@ -159,10 +160,12 @@ def draft_projects_view(request):
     total_pages = 'a' * p_draft_projects.paginator.num_pages
 
     context = {
+        'draft_view': True,
         'draft_projects_count': draft_projects_count,
         'projects': p_draft_projects,
         'active_projects': active_projects,
         'completed_projects': completed_projects,
+        'archived_projects': archived_projects,
         'project_filter': project_filter,
         'total_pages': total_pages,
     }
@@ -174,11 +177,12 @@ def draft_projects_view(request):
 def active_projects_view(request):
     """Projects"""
 
-    all_projects = Project.objects.filter(~Q(state='archive'))
+    all_projects = Project.objects.all()
     active_projects = all_projects.filter(state='in-progress').order_by('-id')
     active_projects_count = active_projects.count()
     draft_projects = all_projects.filter(state='draft')
     completed_projects = all_projects.filter(state='done')
+    archived_projects = all_projects.filter(state='archive')
     
     # Setup Filter
     project_filter = ProjectsFilter(request.GET, queryset=active_projects)
@@ -191,10 +195,12 @@ def active_projects_view(request):
     total_pages = 'a' * p_active_projects.paginator.num_pages
 
     context = {
+        'active_view': True,
         'active_projects_count': active_projects_count,
         'projects': p_active_projects,
         'draft_projects': draft_projects,
         'completed_projects': completed_projects,
+        'archived_projects': archived_projects,
         'project_filter': project_filter,
         'total_pages': total_pages,
     }
@@ -206,11 +212,12 @@ def active_projects_view(request):
 def completed_projects_view(request):
     """Projects"""
 
-    all_projects = Project.objects.filter(~Q(state='archive'))
+    all_projects = Project.objects.all()
     completed_projects = all_projects.filter(state='done').order_by('-id')
     completed_projects_count = completed_projects.count()
     draft_projects = all_projects.filter(state='draft')
     active_projects = all_projects.filter(state='in-progress')
+    archived_projects = all_projects.filter(state='archive')
 
     # Setup Filter
     project_filter = ProjectsFilter(request.GET, queryset=completed_projects)
@@ -223,14 +230,51 @@ def completed_projects_view(request):
     total_pages = 'a' * p_completed_projects.paginator.num_pages
 
     context = {
+        'completed_view': True,
         'completed_projects_count': completed_projects_count,
         'projects': p_completed_projects,
         'draft_projects': draft_projects,
         'active_projects': active_projects,
+        'archived_projects': archived_projects,
         'project_filter': project_filter,
         'total_pages': total_pages,
     }
     return render(request, 'projects/views/completed_projects.html', context)
+
+
+@cache_control(no_store=True)
+@login_required
+def archived_projects_view(request):
+    """Projects"""
+
+    all_projects = Project.objects.all()
+    archived_projects = all_projects.filter(state='archive').order_by('-id')
+    archived_projects_count = archived_projects.count()
+    completed_projects = all_projects.filter(state='done')
+    draft_projects = all_projects.filter(state='draft')
+    active_projects = all_projects.filter(state='in-progress')
+
+    # Setup Filter
+    project_filter = ProjectsFilter(request.GET, queryset=archived_projects)
+    archived_projects = project_filter.qs
+
+    # Setup Pagination
+    p = Paginator(archived_projects, RECORDS_PER_PAGE)
+    page = request.GET.get('page')
+    p_archived_projects = p.get_page(page)
+    total_pages = 'a' * p_archived_projects.paginator.num_pages
+
+    context = {
+        'archived_view': True,
+        'archived_projects_count': archived_projects_count,
+        'projects': p_archived_projects,
+        'draft_projects': draft_projects,
+        'active_projects': active_projects,
+        'completed_projects': completed_projects,
+        'project_filter': project_filter,
+        'total_pages': total_pages,
+    }
+    return render(request, 'projects/views/archived_projects.html', context)
 
 
 @cache_control(no_store=True)
@@ -267,7 +311,8 @@ def open_project_view(request, pk):
     parent_page = {
         'in-progress': 'active_projects',
         'draft': 'draft_projects',
-        'done': 'completed_projects'
+        'done': 'completed_projects',
+        'archive': 'archived_projects'
     }.get(project_state, None)
 
     context = {
@@ -396,7 +441,8 @@ def create_project_activity_plan(request, project):
     parent_page = {
         'in-progress': 'active_projects',
         'draft': 'draft_projects',
-        'done': 'completed_projects'
+        'done': 'completed_projects',
+        'archive': 'archived_projects'
     }.get(project_state, None)
 
     context = {
@@ -453,7 +499,8 @@ def create_project_target_location(request, project):
     parent_page = {
         'in-progress': 'active_projects',
         'draft': 'draft_projects',
-        'done': 'completed_projects'
+        'done': 'completed_projects',
+        'archive': 'archived_projects'
     }.get(project_state, None)
 
     context = {
@@ -482,7 +529,8 @@ def project_planning_review(request, **kwargs):
     parent_page = {
         'in-progress': 'active_projects',
         'draft': 'draft_projects',
-        'done': 'completed_projects'
+        'done': 'completed_projects',
+        'archive': 'archived_projects'
     }.get(project_state, None)
 
     context = {
@@ -538,6 +586,31 @@ def archive_project(request, pk):
 
         project.state = 'archive'
         project.active = False
+        project.save()
+
+    return JsonResponse({ 'success': True})
+
+
+@cache_control(no_store=True)
+@login_required
+def unarchive_project(request, pk):
+    project = get_object_or_404(Project, pk=pk)
+    if project:
+        activity_plans = project.activityplan_set.all()
+        target_locations = project.targetlocation_set.all()
+
+        for plan in activity_plans:
+            plan.state = 'draft'
+            plan.active = True
+            plan.save()
+
+        for location in target_locations:
+            location.state = 'draft'
+            location.active = True
+            location.save()
+
+        project.state = 'draft'
+        project.active = True
         project.save()
 
     return JsonResponse({ 'success': True})
@@ -669,3 +742,56 @@ def delete_target_location(request, pk):
     if target_location:
         target_location.delete()
     return JsonResponse({ 'success': True})
+
+
+#############################################
+########## Budget Progress Views ############
+#############################################
+
+@cache_control(no_store=True)
+@login_required
+def create_project_budget_progress_view(request, project):
+    project = get_object_or_404(Project, pk=project)
+
+    budget_progress = project.budgetprogress_set.all()
+
+    BudgetProgressFormSet = modelformset_factory(BudgetProgress, form=BudgetProgressForm, extra=1)
+    formset = BudgetProgressFormSet(request.POST or None, queryset=budget_progress, form_kwargs={'project': project})
+
+    if request.method == 'POST':
+        country = request.POST.get('country')
+
+        if formset.is_valid():
+            for form in formset:
+                if form.cleaned_data.get('save'):
+                    if form.cleaned_data.get('activity_domain') and form.cleaned_data.get('donor'):
+                        budget_progress = form.save(commit=False)
+                        budget_progress.project = project
+                        budget_progress.country_id = country
+                        budget_progress.title = f"{budget_progress.province.name}, {budget_progress.district.name}, {budget_progress.site_name if budget_progress.site_name else ''}"
+                        budget_progress.active = True
+                        budget_progress.save()
+            return redirect('create_project_target_location', project=project.pk)
+        else:
+            for form in formset:
+                for error in form.errors:
+                    error_message = f"Something went wrong {formset.errors}"
+                    if form.errors[error]:
+                        error_message = f"{error}: {form.errors[error][0]}"
+                    messages.error(request, error_message)
+
+    progress = list(budget_progress.values_list('pk', flat=True))
+    project_state = project.state
+    parent_page = {
+        'in-progress': 'active_projects',
+        'draft': 'draft_projects',
+        'done': 'completed_projects',
+        'archive': 'archived_projects'
+    }.get(project_state, None)
+
+    context = {
+        'project': project,
+        'formset': formset,
+        'parent_page': parent_page,
+    }
+    return render(request, "projects/financials/project_budget_progress.html", context)

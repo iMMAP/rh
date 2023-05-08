@@ -1,5 +1,6 @@
 {% extends "projects/forms/project_form_base.html" %}
 {% load static %}
+{% load compress %}
 {% block project_contents %}
     <div class="project-title-holder">
         <h2 class="plan-title">{{ project.title }}</h2>
@@ -156,5 +157,5 @@
 {% block scripts %}
     {% compress js %}
         <script defer src="{% static 'rh/js/project_planning.js' %}"></script>
-    {% endcompress %}
+    {% endcompress js %}
 {% endblock scripts %}

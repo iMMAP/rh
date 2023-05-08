@@ -1587,6 +1587,7 @@ input[type=search]::-webkit-search-cancel-button {
 }
 
 .date-picker-field,
+.report-date-picker-field,
 .input-field,
 .select-field {
   position: relative;
@@ -1594,7 +1595,9 @@ input[type=search]::-webkit-search-cancel-button {
 }
 
 .date-picker-field.is-required .label:after,
+.report-date-picker-field.is-required .label:after,
 .date-picker-field.is-required label:after,
+.report-date-picker-field.is-required label:after,
 .input-field.is-required .label:after,
 .input-field.is-required label:after,
 .select-field.is-required .label:after,
@@ -1913,6 +1916,7 @@ select option[value=placeholder] {
   display: none
 }
 
+.report-date-picker-field,
 .date-picker-field {
   margin-left: -6px;
   margin-right: -6px;
@@ -1925,6 +1929,12 @@ select option[value=placeholder] {
   padding: 0 6px
 }
 
+.report-date-picker-field .date {
+  width: 100%;
+  padding: 0 6px
+}
+
+.report-date-picker-field input,
 .date-picker-field input {
   font-weight: 500;
   color: #353537;
@@ -1936,22 +1946,27 @@ select option[value=placeholder] {
   background-position-y: 50%
 }
 
+.report-date-picker-field input:hover::-moz-placeholder,
 .date-picker-field input:hover::-moz-placeholder {
   color: #353537
 }
 
+.report-date-picker-field input:hover::placeholder,
 .date-picker-field input:hover::placeholder {
   color: #353537
 }
 
+.report-date-picker-field input::-moz-placeholder,
 .date-picker-field input::-moz-placeholder {
   color: #353537
 }
 
+.report-date-picker-field input::placeholder,
 .date-picker-field input::placeholder {
   color: #353537
 }
 
+.report-date-picker-field input[type=date]::-webkit-calendar-picker-indicator,
 .date-picker-field input[type=date]::-webkit-calendar-picker-indicator {
   background: transparent;
   bottom: 0;
@@ -2887,7 +2902,7 @@ select option[value=placeholder] {
 .breadcrumbs li {
   display: flex;
   align-items: center;
-  padding-top: 10px
+  /* padding-top: 10px */
 }
 
 .breadcrumbs li:after {
@@ -5305,7 +5320,7 @@ body.filter-active {
   .page-navigation-panel .holder {
     display: grid;
     align-items: center;
-    grid-template-columns: 25% 50% 25%
+    grid-template-columns: 30% 50% 15%
   }
 
   .page-navigation-panel .tabs-nav {

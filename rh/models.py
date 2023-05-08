@@ -529,8 +529,9 @@ class BudgetProgress(models.Model):
     grant = models.CharField(max_length=NAME_MAX_LENGTH, null=True, blank=True)
     amount_recieved = models.IntegerField(default=0, blank=True, null=True)
     budget_currency = models.ForeignKey(Currency, on_delete=models.SET_NULL, null=True, blank=True)
-    received_date = models.DateField(auto_now_add=True, blank=True, null=True)
+    received_date = models.DateField(blank=True, null=True)
     country = models.ForeignKey(Location, blank=True, null=True, on_delete=models.SET_NULL, )
+    description = models.TextField(blank=True, null=True)
 
     def __str__(self):
         return f"{self.donor}, {self.activity_domain}"

@@ -131,5 +131,10 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
-db.sqlite3
 .idea/
+
+# IDE stuff
+
+.prettierignore
+node_modules
+static-cdn

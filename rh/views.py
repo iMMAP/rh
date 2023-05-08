@@ -1,13 +1,15 @@
-import re
+RECORDS_PER_PAGE = 3
 
 from django.contrib import messages
+from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.forms import modelformset_factory
 from django.http import HttpResponse, JsonResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.template import loader
 from django.views.decorators.cache import cache_control
+from django.db.models import Q
 
 from .filters import *
 from .forms import *
@@ -20,6 +22,8 @@ from .forms import *
 #############################################
 ############### Index Views #################
 #############################################
+
+
 @cache_control(no_store=True)
 def index(request):
     template = loader.get_template('index.html')
@@ -52,175 +56,232 @@ def home(request):
 
 
 #############################################
-############# Activities Views ##############
-#############################################
-@cache_control(no_store=True)
-@login_required
-def load_activity_json_form(request):
-    """Create form elements and return JsonResponse to template"""
-    data = None
-    json_fields = {}
-    if request.GET.get('activity', '') or request.GET.get('activity_plan_id'):
-        if request.GET.get('activity'):
-            activity_id = int(request.GET.get('activity', ''))
-            json_fields = Activity.objects.get(pk=activity_id).fields
-        else:
-            activity_plan = int(request.GET.get('activity_plan_id', ''))
-            json_fields = ActivityPlan.objects.get(pk=activity_plan).activity.fields
-
-    if request.GET.get('activity_plan_id') != '':
-        activity_plan_id = int(request.GET.get('activity_plan_id', ''))
-        data = ActivityPlan.objects.get(pk=activity_plan_id).activity_fields
-    form_class = get_dynamic_form(json_fields, data)
-    if not form_class:
-        return JsonResponse({"form": False})
-
-    form = form_class()
-    temp = loader.render_to_string("dynamic_form_fields.html", {'form': form})
-    return JsonResponse({"form": temp})
-
-
-@cache_control(no_store=True)
-@login_required
-def activity_plans(request):
-    """Activity Plans"""
-    activity_plans = ActivityPlan.objects.all()
-    return render(request, 'activities/activity_plans.html', {'activity_plans': activity_plans})
-
-
-@cache_control(no_store=True)
-@login_required
-def create_activity_plan(request):
-    """Create Activity Plans"""
-    if request.method == 'POST':
-        form = ActivityPlanForm(request.POST)
-        if form.is_valid():
-            json_data = {}
-            activity = Activity.objects.get(pk=request.POST.get('activity'))
-            json_class = get_dynamic_form(activity.fields)
-            json_form = json_class(request.POST)
-            if json_form.is_valid():
-                json_data = json_form.cleaned_data
-            activity_plan = form.save(commit=False)
-            activity_plan.activity_fields = json_data
-            form.save()
-            return redirect('/activity_plans')
-    else:
-        form = ActivityPlanForm()
-    return render(request, 'activities/activity_plans_form.html', {'form': form})
-
-
-@cache_control(no_store=True)
-@login_required
-def update_activity_plan(request, pk):
-    """Update Activity"""
-    activity_plan = ActivityPlan.objects.get(pk=pk)
-    form = ActivityPlanForm(instance=activity_plan)
-    json_class = get_dynamic_form(activity_plan.activity.fields, initial_data=activity_plan.activity_fields)
-    json_form = json_class()
-    if request.method == 'POST':
-        form = ActivityPlanForm(request.POST, instance=activity_plan)
-        if form.is_valid():
-            json_data = {}
-            activity = Activity.objects.get(pk=request.POST.get('activity'))
-            json_class = get_dynamic_form(activity.fields)
-            json_form = json_class(request.POST)
-            if json_form.is_valid():
-                json_data = json_form.cleaned_data
-            activity_plan = form.save(commit=False)
-            activity_plan.activity_fields = json_data
-            form.save()
-            return redirect('/activity_plans')
-    context = {'form': form, 'activity_plan': activity_plan.pk}
-    return render(request, 'activities/activity_plans_form.html', context)
-
-
-#############################################
 ############## Project Views ################
 #############################################
-@cache_control(no_store=True)
-@login_required
-def load_activities_details(request):
-    """Load activities related to a cluster"""
-    cluster_ids = dict(request.GET.lists()).get('clusters[]', [])
-    listed_activity_ids = dict(request.GET.lists()).get('listed_activities[]', [])
-    cluster_ids = list(map(int, cluster_ids))
-    listed_activity_ids = list(map(int, listed_activity_ids))
-    activities = Activity.objects.filter(clusters__in=cluster_ids).order_by('name')
-    activities_options = """"""
-    for activity in activities:
-        option = f"""
-        <option value="{activity.pk}">{activity}</option>
-        """
-        activities_options += option
-    return HttpResponse(activities_options)
 
 
 @cache_control(no_store=True)
 @login_required
 def load_locations_details(request):
-    """Load Locations with group info"""
-    countries = Location.objects.filter(type='Country')
-    provinces = Location.objects.filter(type='Province').order_by('name')
-    country_group = """"""
-    province_group = """"""
-    for country in countries:
-        for province in provinces:
-            district_options = """"""
-            districts = Location.objects.filter(parent=province)
-            for district in districts:
-                district_options += f"""
-                <option value="{district.pk}">
-                    {district.name}
-                </option>"""
+    """
+    View function to load Locations with group info.
 
-            province_group += f"""
-            <optgroup label="{province.name}">
-                <option value="{province.pk}">{province.name} ({province.type})</option>
-                {district_options}
-            </optgroup>"""
+    This function accepts GET requests with the following parameters:
+    - provinces[]: a list of Location primary keys for provinces to filter by
+    - listed_districts[]: a list of Location primary keys for districts to include in the response
 
-        country_group += f"""
-        <optgroup label="{country.name}">
-            <option value="{country.pk}">{country.name}</option>
-        </optgroup>
-        {province_group}
-        """
-    return HttpResponse(country_group)
+    If only one province is specified, the function returns a list of district options for that province.
+    Otherwise, it returns an HTML string containing optgroup labels for each specified province, with
+    option tags for each district belonging to the province.
+
+    The function is decorated with cache_control and login_required to ensure reliable and secure access.
+    """
+    province_ids = request.GET.getlist('provinces[]')
+    province_ids = [int(i) for i in province_ids if i]
+    listed_district_ids = request.GET.getlist('listed_districts[]')
+    listed_district_ids = [int(i) for i in listed_district_ids if i]
+
+    provinces = Location.objects.filter(pk__in=province_ids).select_related('parent')
+    province_group = []
+    for province in provinces:
+        districts = Location.objects.filter(parent__pk=province.pk).order_by('name')
+        districts_options = [f'<option value="{district.pk}">{district}</option>' for district in districts]
+        district_group = ''.join(districts_options)
+        province_group.append(f'<optgroup label="{province.name}">{district_group}</optgroup>')
+    response = ''.join(province_group)
+
+    if len(province_ids) == 1:
+        districts = Location.objects.filter(parent__pk=province_ids[0]).order_by('name')
+        districts_options = [f'<option value="{district.pk}">{district}</option>' for district in districts]
+        response = ''.join(districts_options)
+
+    return HttpResponse(response)
 
 
 @cache_control(no_store=True)
 @login_required
-def projects_view(request):
-    """Projects Plans"""
-    draft_projects = Project.objects.filter(state='draft')
-    active_projects = Project.objects.filter(state='in-progress').order_by('-id')
-    completed_projects = Project.objects.filter(state='done')
+def load_facility_sites(request):
+    """
+    View function to load Locations with group info.
+
+    This function accepts GET requests with the following parameters:
+    - provinces[]: a list of Location primary keys for provinces to filter by
+    - listed_districts[]: a list of Location primary keys for districts to include in the response
+
+    If only one province is specified, the function returns a list of district options for that province.
+    Otherwise, it returns an HTML string containing optgroup labels for each specified province, with
+    option tags for each district belonging to the province.
+
+    The function is decorated with cache_control and login_required to ensure reliable and secure access.
+    """
+    cluster_ids = request.GET.getlist('clusters[]')
+    cluster_ids = [int(i) for i in cluster_ids if i]
+    listed_facilities_ids = request.GET.getlist('listed_facilities[]')
+    listed_facilities_ids = [int(i) for i in listed_facilities_ids if i]
+
+    clusters = Cluster.objects.filter(pk__in=cluster_ids)
+    cluster_group = []
+    for cluster in clusters:
+        facilities = FacilitySiteType.objects.filter(cluster__pk=cluster.pk).order_by('name')
+        facility_options = [f'<option value="{facility.pk}">{facility}</option>' for facility in facilities]
+        facility_group = ''.join(facility_options)
+        cluster_group.append(f'<optgroup label="{cluster.name}">{facility_group}</optgroup>')
+        response = ''.join(cluster_group)
+
+    if len(cluster_ids) == 1:
+        facilities = FacilitySiteType.objects.filter(cluster__pk=cluster_ids[0]).order_by('name')
+        facilities_options = [f'<option value="{facility.pk}">{facility}</option>' for facility in facilities]
+        response = ''.join(facilities_options)
+
+    return HttpResponse(response)
+
+
+# TODO: Project View Structure can be improved.
+@cache_control(no_store=True)
+@login_required
+def draft_projects_view(request):
+    """Projects"""
+
+    all_projects = Project.objects.all()
+    draft_projects = all_projects.filter(state='draft').order_by('-id')
+    draft_projects_count = draft_projects.count()
+    active_projects = all_projects.filter(state='in-progress')
+    completed_projects = all_projects.filter(state='done')
+    archived_projects = all_projects.filter(state='archive')
+
+    # Setup Filter
+    project_filter = ProjectsFilter(request.GET, queryset=draft_projects)
+    draft_projects = project_filter.qs
 
     # Setup Pagination
-    p = Paginator(active_projects, 3)
+    p = Paginator(draft_projects, RECORDS_PER_PAGE)
     page = request.GET.get('page')
-    p_active_projects = p.get_page(page)
-    total_pages = 'a' * p_active_projects.paginator.num_pages
+    p_draft_projects = p.get_page(page)
+    total_pages = 'a' * p_draft_projects.paginator.num_pages
 
+    context = {
+        'draft_view': True,
+        'draft_projects_count': draft_projects_count,
+        'projects': p_draft_projects,
+        'active_projects': active_projects,
+        'completed_projects': completed_projects,
+        'archived_projects': archived_projects,
+        'project_filter': project_filter,
+        'total_pages': total_pages,
+    }
+    return render(request, 'projects/views/draft_projects.html', context)
+
+
+@cache_control(no_store=True)
+@login_required
+def active_projects_view(request):
+    """Projects"""
+
+    all_projects = Project.objects.all()
+    active_projects = all_projects.filter(state='in-progress').order_by('-id')
+    active_projects_count = active_projects.count()
+    draft_projects = all_projects.filter(state='draft')
+    completed_projects = all_projects.filter(state='done')
+    archived_projects = all_projects.filter(state='archive')
+    
     # Setup Filter
     project_filter = ProjectsFilter(request.GET, queryset=active_projects)
     active_projects = project_filter.qs
 
+    # Setup Pagination
+    p = Paginator(active_projects, RECORDS_PER_PAGE)
+    page = request.GET.get('page')
+    p_active_projects = p.get_page(page)
+    total_pages = 'a' * p_active_projects.paginator.num_pages
+
     context = {
+        'active_view': True,
+        'active_projects_count': active_projects_count,
+        'projects': p_active_projects,
         'draft_projects': draft_projects,
-        'active_projects': p_active_projects,
+        'completed_projects': completed_projects,
+        'archived_projects': archived_projects,
+        'project_filter': project_filter,
+        'total_pages': total_pages,
+    }
+    return render(request, 'projects/views/active_projects.html', context)
+
+
+@cache_control(no_store=True)
+@login_required
+def completed_projects_view(request):
+    """Projects"""
+
+    all_projects = Project.objects.all()
+    completed_projects = all_projects.filter(state='done').order_by('-id')
+    completed_projects_count = completed_projects.count()
+    draft_projects = all_projects.filter(state='draft')
+    active_projects = all_projects.filter(state='in-progress')
+    archived_projects = all_projects.filter(state='archive')
+
+    # Setup Filter
+    project_filter = ProjectsFilter(request.GET, queryset=completed_projects)
+    completed_projects = project_filter.qs
+
+    # Setup Pagination
+    p = Paginator(completed_projects, RECORDS_PER_PAGE)
+    page = request.GET.get('page')
+    p_completed_projects = p.get_page(page)
+    total_pages = 'a' * p_completed_projects.paginator.num_pages
+
+    context = {
+        'completed_view': True,
+        'completed_projects_count': completed_projects_count,
+        'projects': p_completed_projects,
+        'draft_projects': draft_projects,
+        'active_projects': active_projects,
+        'archived_projects': archived_projects,
+        'project_filter': project_filter,
+        'total_pages': total_pages,
+    }
+    return render(request, 'projects/views/completed_projects.html', context)
+
+
+@cache_control(no_store=True)
+@login_required
+def archived_projects_view(request):
+    """Projects"""
+
+    all_projects = Project.objects.all()
+    archived_projects = all_projects.filter(state='archive').order_by('-id')
+    archived_projects_count = archived_projects.count()
+    completed_projects = all_projects.filter(state='done')
+    draft_projects = all_projects.filter(state='draft')
+    active_projects = all_projects.filter(state='in-progress')
+
+    # Setup Filter
+    project_filter = ProjectsFilter(request.GET, queryset=archived_projects)
+    archived_projects = project_filter.qs
+
+    # Setup Pagination
+    p = Paginator(archived_projects, RECORDS_PER_PAGE)
+    page = request.GET.get('page')
+    p_archived_projects = p.get_page(page)
+    total_pages = 'a' * p_archived_projects.paginator.num_pages
+
+    context = {
+        'archived_view': True,
+        'archived_projects_count': archived_projects_count,
+        'projects': p_archived_projects,
+        'draft_projects': draft_projects,
+        'active_projects': active_projects,
         'completed_projects': completed_projects,
         'project_filter': project_filter,
         'total_pages': total_pages,
     }
-    return render(request, 'projects/projects.html', context)
+    return render(request, 'projects/views/archived_projects.html', context)
 
 
 @cache_control(no_store=True)
 @login_required
 def completed_project_view(request, pk):
     """Projects Plans"""
+
     project = Project.objects.get(pk=pk)
 
     activity_plans = ActivityPlan.objects.filter(project__id=project.pk)
@@ -233,305 +294,224 @@ def completed_project_view(request, pk):
         'project_review': True,
         'locations': target_locations
     }
-    return render(request, 'projects/completed_project.html', context)
+    return render(request, 'projects/views/completed_project.html', context)
+
+
+@cache_control(no_store=True)
+@login_required
+def open_project_view(request, pk):
+    """View for creating a project."""
+
+    project = get_object_or_404(Project, pk=pk)
+    activity_plans = project.activityplan_set.all()
+    target_locations = project.targetlocation_set.all()
+    plans = list(activity_plans.values_list('pk', flat=True))
+    locations = list(target_locations.values_list('pk', flat=True))
+    project_state = project.state
+    parent_page = {
+        'in-progress': 'active_projects',
+        'draft': 'draft_projects',
+        'done': 'completed_projects',
+        'archive': 'archived_projects'
+    }.get(project_state, None)
+
+    context = {
+        'project': project,
+        'activity_plans': activity_plans,
+        'target_locations': target_locations,
+        'plans': plans,
+        'locations': locations,
+        'parent_page': parent_page
+    }
+    return render(request, 'projects/views/project_view.html', context)
 
 
 @cache_control(no_store=True)
 @login_required
 def create_project_view(request):
-    """Create Project"""
+    """View for creating a project."""
+
     if request.method == 'POST':
         form = ProjectForm(request.POST)
         if form.is_valid():
-            project_id = form.save()
-            return redirect('create_project_activity_plan', project=project_id.pk)
+            project = form.save()
+            return redirect('create_project_activity_plan', project=project.pk)
+
+        # Form is not valid
+        error_message = 'Something went wrong. Please fix the errors below.'
+        messages.error(request, error_message)
     else:
-        form = ProjectForm(initial={'user': request.user})
-    context = {'form': form, 'project_planning': True}
-    return render(request, 'projects/project_form.html', context)
+        # Use user's country and clusters as default values if available
+        if request.user.is_authenticated and request.user.profile and request.user.profile.country:
+            country = request.user.profile.country
+            clusters = request.user.profile.clusters.all()
+            form = ProjectForm(initial={'user': request.user, 'country': country, 'clusters': clusters})
+        else:
+            form = ProjectForm()
+
+    context = {
+        'form': form, 
+        'project_planning': True, 
+    }
+    return render(request, 'projects/forms/project_form.html', context)
 
 
 @cache_control(no_store=True)
 @login_required
 def update_project_view(request, pk):
-    """Update Project view"""
-    project = Project.objects.get(pk=pk)
-    form = ProjectForm(instance=project)
+    """View for updating a project."""
+
+    project = get_object_or_404(Project, pk=pk)
+
     if request.method == 'POST':
         form = ProjectForm(request.POST, instance=project)
         if form.is_valid():
-            project_id = form.save()
-            return redirect('update_project_activity_plan', project=project_id.pk)
+            project = form.save()
+            return redirect('create_project_activity_plan', project=project.pk)
+    else:
+        form = ProjectForm(instance=project)
 
-    activity_plans = ActivityPlan.objects.filter(project__id=project.pk)
+    activity_plans = project.activityplan_set.all()
     plans = list(activity_plans.values_list('pk', flat=True))
-    target_locations = TargetLocation.objects.filter(project__id=project.pk)
+    target_locations = project.targetlocation_set.all()
     locations = list(target_locations.values_list('pk', flat=True))
+    project_state = project.state
+    parent_page = {
+        'in-progress': 'active_projects',
+        'draft': 'draft_projects',
+        'done': 'completed_projects'
+    }.get(project_state, None)
 
-    context = {'form': form, 'project': project, 'project_planning': True, 'plans': plans, 'locations': locations}
-    return render(request, 'projects/project_form.html', context)
+    context = {
+        'form': form,
+        'project': project,
+        'project_planning': True,
+        'plans': plans,
+        'locations': locations,
+        'parent_page': parent_page
+    }
+    return render(request, 'projects/forms/project_form.html', context)
 
 
 @cache_control(no_store=True)
 @login_required
 def create_project_activity_plan(request, project):
-    project = Project.objects.get(pk=project)
-    activities = project.activities.all()
-    activity_plans = ActivityPlan.objects.filter(project__id=project.pk,
-                                                 activity__in=[a.pk for a in project.activities.all()])
-    if activity_plans:
-        return redirect('update_project_activity_plan', project=project.pk)
-    ActivityPlanFormSet = modelformset_factory(ActivityPlan, exclude=['project'], form=ActivityPlanForm,
-                                               extra=len(activities))
+    """
+    View for creating or updating activity plans for a project.
+    """
+    project = get_object_or_404(Project, pk=project)
+    activity_plans = project.activityplan_set.all()
+    ActivityPlanFormSet = modelformset_factory(ActivityPlan, form=ActivityPlanForm, can_delete=True, extra=1)
+    formset = ActivityPlanFormSet(request.POST or None, queryset=activity_plans, form_kwargs={'project': project})
+
     if request.method == 'POST':
-        formset = ActivityPlanFormSet(request.POST)
-        if formset.is_valid():
-            activity_plans = {'plans': []}
-            for form in formset:
-                form_data = form.cleaned_data
-
-                activity = Activity.objects.get(pk=form_data['activity_id'])
-                activity_plan = form.save(commit=False)
-                activity_plan.activity = activity
-                activity_plan.project = project
-                activity_plan.save()
-
-                activity_plans['plans'].append(activity_plan.pk)
-            return redirect('create_project_target_location', project=project.pk, **activity_plans)
-    else:
-        initials = []
-        for activity in activities:
-            initials.append({'project': project, 'activity': activity, 'activity_id': activity.pk})
-        formset = ActivityPlanFormSet(queryset=ActivityPlan.objects.none(), initial=initials)
-    context = {'project': project, 'formset': formset, 'activity_planning': True, 'plans': False}
-    return render(request, "projects/project_activity_plan_form.html", context)
-
-
-@cache_control(no_store=True)
-@login_required
-def update_project_activity_plan(request, project):
-    project = Project.objects.get(pk=project)
-    activity_plans = ActivityPlan.objects.filter(project__id=project.pk,
-                                                 activity__in=[a.pk for a in project.activities.all()])
-    if not activity_plans:
-        return redirect('create_project_activity_plan', project=project.pk)
-    activities = project.activities.all()
-    extras = len(project.activities.all()) - len(activity_plans)
-    ActivityPlanFormSet = modelformset_factory(ActivityPlan, exclude=['project'], form=ActivityPlanForm, extra=extras)
-    initials = []
-    for activity in activities:
-        # if activity.pk not in [a.activity.pk for a in activity_plans]:
-        initials.append({'project': project, 'activity': activity, 'activity_id': activity.pk})
-
-    kwarg_vals = {'plans': list(activity_plans.values_list('pk', flat=True))}
-    formset = ActivityPlanFormSet(request.POST or None, initial=initials, queryset=activity_plans)
-    if request.method == "POST":
+        submit_type = request.POST.get('submit_type')
         if formset.is_valid():
             for form in formset:
-                form_data = form.cleaned_data
-
-                if form_data.get('id', False):
-                    activity = ActivityPlan.objects.get(pk=form_data.get('id', False).pk).activity
-                if form_data.get('activity_id', False):
-                    activity = Activity.objects.get(pk=form_data.get('activity_id', False))
-
-                # json_data = {}
-                # json_class = get_dynamic_form(activity.fields)
-                # json_form = json_class(request.POST)
-                # if json_form.is_valid():
-                # json_data = json_form.cleaned_data
-                # activity_plan.activity_fields = json_data
-
-                activity_plan = form.save(commit=False)
-                activity_plan.activity = activity
-                activity_plan.project = project
-                activity_plan.save()
-                kwarg_vals['plans'].append(activity_plan.pk)
-
-            return redirect('update_project_target_location', project=project.pk, **kwarg_vals)
+                if form.cleaned_data.get('save') or submit_type == 'next_step':
+                    if form.cleaned_data.get('activity_domain') and form.cleaned_data.get('activity_type'):
+                        activity = form.save(commit=False)
+                        activity.project = project
+                        activity.title = f"{activity.activity_domain.name}, {activity.activity_type.name},  {activity.activity_detail.name if activity.activity_detail else ''}"
+                        activity.active = True
+                        activity.total_0_5 = activity.female_0_5 + activity.male_0_5 + activity.other_0_5
+                        activity.total_6_12 = activity.female_6_12 + activity.male_6_12 + activity.other_6_12
+                        activity.total_12_17 = activity.female_12_17 + activity.male_12_17 + activity.other_12_17
+                        activity.total_18 = activity.female_18 + activity.male_18 + activity.other_18
+                        activity.total = activity.female_total + activity.male_total + activity.other_total
+                        activity.save()
+                        form.save_m2m()
+            if submit_type == 'next_step':
+                return redirect('create_project_target_location', project=project.pk)
+            else:
+                return redirect('create_project_activity_plan', project=project.pk)
         else:
             for form in formset:
                 for error in form.errors:
-                    error_message = f"Something went wrong {form.errors}"
+                    error_message = f"Something went wrong {formset.errors}"
                     if form.errors[error]:
                         error_message = f"{error}: {form.errors[error][0]}"
                     messages.error(request, error_message)
 
-    target_locations = TargetLocation.objects.filter(project__id=project.pk)
-    locations = list(target_locations.values_list('pk', flat=True))
-    context = {'project': project, 'formset': formset, 'activity_planning': True, 'plans': kwarg_vals['plans'],
-               'locations': locations}
+    plans = list(activity_plans.values_list('pk', flat=True))
+    clusters = project.clusters.all()
+    cluster_ids = list(clusters.values_list('pk', flat=True))
 
-    return render(request, "projects/project_activity_plan_form.html", context)
+    project_state = project.state
+    parent_page = {
+        'in-progress': 'active_projects',
+        'draft': 'draft_projects',
+        'done': 'completed_projects',
+        'archive': 'archived_projects'
+    }.get(project_state, None)
+
+    context = {
+        'project': project, 
+        'formset': formset, 
+        'clusters': cluster_ids, 
+        'activity_planning': True,
+        'plans': plans,
+        'parent_page':parent_page
+        }
+    return render(request, 'projects/forms/project_activity_plan_form.html', context)
 
 
 @cache_control(no_store=True)
 @login_required
-def create_project_target_location(request, project, **kwargs):
-    activity_plan_ids = [int(s) for s in re.findall(r'\d+', kwargs['plans'])]
-    project = Project.objects.get(pk=project)
+def create_project_target_location(request, project):
+    project = get_object_or_404(Project, pk=project)
 
-    locations = project.locations.all()
-    TargetLocationsFormSet = modelformset_factory(TargetLocation, exclude=['project'], form=TargetLocationForm,
-                                                  extra=len(locations))
+    activity_plans = project.activityplan_set.all()
+    target_locations = project.targetlocation_set.all()
 
-    target_locations = TargetLocation.objects.filter(project__id=project.pk)
-    if target_locations:
-        kwargs['lcoation', list(activity_plans.values_list('pk', flat=True))]
-        return redirect('update_project_target_location', project=project.pk, **kwargs)
+    TargetLocationsFormSet = modelformset_factory(TargetLocation, form=TargetLocationForm, extra=1)
+    formset = TargetLocationsFormSet(request.POST or None, queryset=target_locations, form_kwargs={'project': project})
 
     if request.method == 'POST':
-        formset = TargetLocationsFormSet(request.POST)
+        submit_type = request.POST.get('submit_type')
+        country = request.POST.get('country')
+
         if formset.is_valid():
-            kwarg_vals = {'plans': activity_plan_ids, 'locations': [], }
             for form in formset:
-                form_data = form.cleaned_data
-
-                country_id = None
-                province_id = None
-                district_id = None
-
-                if form_data['country_id'] != 'False':
-                    country_id = Location.objects.get(pk=form_data['country_id'])
-                if form_data['province_id'] != 'False':
-                    province_id = Location.objects.get(pk=form_data['province_id'])
-                if form_data['district_id'] != 'False':
-                    district_id = Location.objects.get(pk=form_data['district_id'])
-
-                target_location = form.save(commit=False)
-
-                target_location.country = country_id
-                target_location.province = province_id
-                target_location.district = district_id
-
-                target_location.project = project
-                target_location.save()
-
-                kwarg_vals['locations'].append(target_location.pk)
-
-            # kwarg_vals = {'target_locations':str(locations)}
-            return redirect('project_plan_review', project=project.pk, **kwarg_vals)
-            # return redirect('projects')
-    else:
-        initials = []
-        for location in locations:
-            country_id = False
-            province_id = False
-            district_id = False
-            initials_dict = {'project': project}
-
-            if location.type == 'Country':
-                country_id = location.pk
-                initials_dict.update({'country': location})
-            elif location.type == 'Province':
-                province_id = location.pk
-                initials_dict.update({'project': project.pk, 'province': location, 'country': location.parent})
-                if location.parent:
-                    country_id = location.parent.pk
+                if form.cleaned_data.get('save') or submit_type == 'next_step':
+                    if form.cleaned_data.get('province') and form.cleaned_data.get('district'):
+                        target_location = form.save(commit=False)
+                        target_location.project = project
+                        target_location.country_id = country
+                        target_location.title = f"{target_location.province.name}, {target_location.district.name}, {target_location.site_name if target_location.site_name else ''}"
+                        target_location.active = True
+                        target_location.save()
+            if submit_type == 'next_step':
+                return redirect('project_plan_review', project=project.pk)
             else:
-                district_id = location.pk
-                initials_dict.update(
-                    {'district': location, 'province': location.parent, 'country': location.parent.parent})
-                if location.parent:
-                    province_id = location.parent.pk
-                if location.parent and location.parent.parent:
-                    country_id = location.parent.parent.pk
-
-            initials_dict.update({'country_id': country_id, 'province_id': province_id, 'district_id': district_id,
-                                  'location': location})
-
-            initials.append(initials_dict)
-        formset = TargetLocationsFormSet(queryset=TargetLocation.objects.none(), initial=initials)
-    context = {'project': project, 'formset': formset, 'locations_planning': True, 'plans': False, 'locations': False}
-    return render(request, "projects/project_target_locations.html", context)
-
-
-@cache_control(no_store=True)
-@login_required
-def update_project_target_location(request, project, **kwargs):
-    activity_plan_ids = [int(s) for s in re.findall(r'\d+', kwargs['plans'])]
-    project = Project.objects.get(pk=project)
-
-    target_locations = TargetLocation.objects.filter(project__id=project.pk)
-    if not target_locations:
-        return redirect('create_project_target_location', project=project.pk, **kwargs)
-
-    locations = project.locations.all()
-    extras = len(project.locations.all()) - len(target_locations)
-    TargetLocationsFormSet = modelformset_factory(TargetLocation, exclude=['project'], form=TargetLocationForm,
-                                                  extra=extras)
-
-    initials = []
-    for location in locations:
-        country_id = False
-        province_id = False
-        district_id = False
-        initials_dict = {'project': project}
-
-        if location.type == 'Country':
-            country_id = location.pk
-            initials_dict.update({'country': location})
-        elif location.type == 'Province':
-            province_id = location.pk
-            initials_dict.update({'project': project.pk, 'province': location, 'country': location.parent})
-            if location.parent:
-                country_id = location.parent.pk
+                return redirect('create_project_target_location', project=project.pk)
         else:
-            district_id = location.pk
-            initials_dict.update({'district': location, 'province': location.parent, 'country': location.parent.parent})
-            if location.parent:
-                province_id = location.parent.pk
-            if location.parent and location.parent.parent:
-                country_id = location.parent.parent.pk
-
-        initials_dict.update({'country_id': country_id, 'province_id': province_id, 'district_id': district_id})
-
-        initials.append(initials_dict)
-
-    formset = TargetLocationsFormSet(request.POST or None, initial=initials, queryset=target_locations)
-
-    kwarg_vals = {'plans': activity_plan_ids, 'locations': list(target_locations.values_list('pk', flat=True)), }
-    if request.method == 'POST':
-        formset = TargetLocationsFormSet(request.POST)
-        if formset.is_valid():
             for form in formset:
-                form_data = form.cleaned_data
+                for error in form.errors:
+                    error_message = f"Something went wrong {formset.errors}"
+                    if form.errors[error]:
+                        error_message = f"{error}: {form.errors[error][0]}"
+                    messages.error(request, error_message)
 
-                country_id = None
-                province_id = None
-                district_id = None
+    plans = list(activity_plans.values_list('pk', flat=True))
+    locations = list(target_locations.values_list('pk', flat=True))
+    project_state = project.state
+    parent_page = {
+        'in-progress': 'active_projects',
+        'draft': 'draft_projects',
+        'done': 'completed_projects',
+        'archive': 'archived_projects'
+    }.get(project_state, None)
 
-                if form_data.get('country_id', False) and form_data.get('country_id', False) != 'False':
-                    country_id = Location.objects.get(pk=form_data['country_id'])
-                if form_data.get('province_id', False) and form_data.get('province_id', False) != 'False':
-                    province_id = Location.objects.get(pk=form_data['province_id'])
-                if form_data.get('district_id', False) and form_data.get('district_id', False) != 'False':
-                    district_id = Location.objects.get(pk=form_data['district_id'])
-
-                if form_data.get('id', False):
-                    country_id = form_data['id'].country
-                    province_id = form_data['id'].province
-                    district_id = form_data['id'].district
-
-                target_location = form.save(commit=False)
-
-                target_location.country = country_id
-                target_location.province = province_id
-                target_location.district = district_id
-
-                target_location.project = project
-                target_location.save()
-                kwarg_vals['locations'].append(target_location.pk)
-
-                # kwarg_vals['locations'].append(target_location.pk)
-
-            # kwarg_vals = {'target_locations':str(locations)}
-            return redirect('project_plan_review', project=project.pk, **kwarg_vals)
-            # return redirect('projects')
-
-    context = {'project': project, 'formset': formset, 'locations_planning': True, 'plans': kwarg_vals['plans'],
-               'locations': kwarg_vals['locations']}
-    return render(request, "projects/project_target_locations.html", context)
+    context = {
+        'project': project,
+        'formset': formset, 
+        'locations_planning': True, 
+        'plans': plans,
+        'locations': locations,
+        'parent_page':parent_page
+    }
+    return render(request, "projects/forms/project_target_locations.html", context)
 
 
 @cache_control(no_store=True)
@@ -539,17 +519,19 @@ def update_project_target_location(request, project, **kwargs):
 def project_planning_review(request, **kwargs):
     """Projects Plans"""
 
-    project_id = int(kwargs['project'])
-    project = Project.objects.get(pk=project_id)
-
-    activity_plan_ids = [int(p) for p in re.findall(r'\d+', kwargs['plans'])]
-    activity_plans = ActivityPlan.objects.filter(pk__in=activity_plan_ids)
-
-    target_locations_ids = [int(p) for p in re.findall(r'\d+', kwargs['locations'])]
-    target_locations = TargetLocation.objects.filter(pk__in=target_locations_ids)
-
+    pk = int(kwargs['project'])
+    project = get_object_or_404(Project, pk=pk)
+    activity_plans = project.activityplan_set.all()
+    target_locations = project.targetlocation_set.all()
     plans = list(activity_plans.values_list('pk', flat=True))
     locations = list(target_locations.values_list('pk', flat=True))
+    project_state = project.state
+    parent_page = {
+        'in-progress': 'active_projects',
+        'draft': 'draft_projects',
+        'done': 'completed_projects',
+        'archive': 'archived_projects'
+    }.get(project_state, None)
 
     context = {
         'project': project,
@@ -557,28 +539,40 @@ def project_planning_review(request, **kwargs):
         'target_locations': target_locations,
         'project_review': True,
         'plans': plans,
-        'locations': locations
+        'locations': locations,
+        'parent_page': parent_page
     }
-    return render(request, 'projects/project_review.html', context)
+    return render(request, 'projects/forms/project_review.html', context)
 
 
 @cache_control(no_store=True)
 @login_required
 def submit_project(request, pk):
-    project_id = Project.objects.get(pk=pk)
-    if project_id:
-        project_id.state = 'in-progress'
-        project_id.save()
-    return redirect('projects')
+    project = get_object_or_404(Project, pk=pk)
+    activity_plans = project.activityplan_set.all()
+    target_locations = project.targetlocation_set.all()
+    if project:
+        project.state = 'in-progress'
+        project.save()
+
+    for plan in activity_plans:
+        plan.state = 'in-progress'
+        plan.save()
+
+    for target in target_locations:
+        target.state = 'in-progress'
+        target.save()
+
+    return redirect('active_projects')
 
 
 @cache_control(no_store=True)
 @login_required
-def delete_project(request, pk):
-    project = Project.objects.get(pk=pk)
+def archive_project(request, pk):
+    project = get_object_or_404(Project, pk=pk)
     if project:
-        activity_plans = ActivityPlan.objects.filter(project__id=project.pk)
-        target_locations = TargetLocation.objects.filter(project__id=project.pk)
+        activity_plans = project.activityplan_set.all()
+        target_locations = project.targetlocation_set.all()
 
         for plan in activity_plans:
             plan.state = 'archive'
@@ -594,53 +588,236 @@ def delete_project(request, pk):
         project.active = False
         project.save()
 
-    return redirect('projects')
+    return JsonResponse({ 'success': True})
+
+
+@cache_control(no_store=True)
+@login_required
+def unarchive_project(request, pk):
+    project = get_object_or_404(Project, pk=pk)
+    if project:
+        activity_plans = project.activityplan_set.all()
+        target_locations = project.targetlocation_set.all()
+
+        for plan in activity_plans:
+            plan.state = 'draft'
+            plan.active = True
+            plan.save()
+
+        for location in target_locations:
+            location.state = 'draft'
+            location.active = True
+            location.save()
+
+        project.state = 'draft'
+        project.active = True
+        project.save()
+
+    return JsonResponse({ 'success': True})
+
+
+@cache_control(no_store=True)
+@login_required
+def delete_project(request, pk):
+    """Delete Project View"""
+    project = get_object_or_404(Project, pk=pk)
+    if project:
+        project.delete()
+    return JsonResponse({ 'success': True})
 
 
 @cache_control(no_store=True)
 @login_required
 def copy_project(request, pk):
-    # pass
-    project = Project.objects.get(pk=pk)
-
+    project = get_object_or_404(Project, pk=pk)
     if project:
-        new_project = Project.objects.get(pk=pk)
+        new_project = get_object_or_404(Project, pk=pk)
         new_project.pk = None
         new_project.save()
         new_project.clusters.set(project.clusters.all())
-        new_project.locations.set(project.locations.all())
-        new_project.activities.set(project.activities.all())
+        new_project.activity_domains.set(project.activity_domains.all())
         new_project.donors.set(project.donors.all())
         new_project.programme_partners.set(project.programme_partners.all())
         new_project.implementing_partners.set(project.implementing_partners.all())
-        new_project.title = f"{project.title} - COPY"
+        new_project.title = f"[COPY] - {project.title}"
+        new_project.code = f"[COPY] - {project.code}"
+        new_project.state = 'draft'
 
         if new_project:
-            activity_plans = ActivityPlan.objects.filter(project__pk=project.pk)
-            target_locations = TargetLocation.objects.filter(project__pk=project.pk)
+            activity_plans = project.activityplan_set.all()
+            target_locations = project.targetlocation_set.all()
 
             for plan in activity_plans:
-                new_plan = ActivityPlan.objects.get(pk=plan.pk)
-                new_plan.pk = None
-                new_plan.save()
-                new_plan.project = new_project
-                new_plan.active = True
-                new_plan.state = 'in-progress'
-                new_plan.description = 'COPY'
-                new_plan.save()
-                # new_plan.save()
+                copy_project_activity_plan(new_project, plan)
 
             for location in target_locations:
-                new_location = TargetLocation.objects.get(pk=location.pk)
-                new_plan.pk = None
-                new_location.save()
-                new_location.project = new_project
-                new_location.active = True
-                new_location.state = 'in-progress'
-                new_location.site_name = 'COPY'
-                # new_location.save()
-                new_location.save()
+                copy_project_target_location(new_project, location)
 
         new_project.save()
 
-    return redirect('projects')
+    return JsonResponse({ 'success': True, 'returnURL': reverse('view_project', args=[new_project.pk])})
+
+
+def copy_project_activity_plan(project, plan):
+    try:
+        new_plan = get_object_or_404(ActivityPlan, pk=plan.pk)
+        new_plan.pk = None
+        new_plan.save()
+        new_plan.project = project
+        new_plan.active = True
+        new_plan.state = 'draft'
+        new_plan.title = f'[COPY] - {plan.title}'
+        new_plan.indicators.set(plan.indicators.all())
+        new_plan.save()
+        return True
+    except Exception as e:
+        return False
+
+
+def copy_project_target_location(project, location):
+    try:
+        new_location = get_object_or_404(TargetLocation, pk=location.pk)
+        new_location.pk = None
+        new_location.save()
+        new_location.project = project
+        new_location.active = True
+        new_location.state = 'draft'
+        new_location.title = f'[COPY] - {location.title}'
+        new_location.save()
+        return True
+    except Exception as e:
+        return False
+    
+
+@cache_control(no_store=True)
+@login_required
+def copy_activity_plan(request, project, plan):
+    project = get_object_or_404(Project, pk=project)
+    activity_plan = get_object_or_404(ActivityPlan, pk=plan)
+    new_plan = get_object_or_404(ActivityPlan, pk=activity_plan.pk)
+    if new_plan:
+        new_plan.pk = None
+        new_plan.save()
+        new_plan.project = project
+        new_plan.active = True
+        new_plan.state = 'draft'
+        new_plan.title = f'[COPY] - {activity_plan.title}'
+        new_plan.indicators.set(activity_plan.indicators.all())
+        new_plan.save()
+    return JsonResponse({ 'success': True})
+
+
+@cache_control(no_store=True)
+@login_required
+def delete_activity_plan(request, pk):
+    activity_plan = get_object_or_404(ActivityPlan, pk=pk)
+    project = activity_plan.project
+    if activity_plan:
+        activity_plan.delete()
+    return JsonResponse({ 'success': True})
+
+
+@cache_control(no_store=True)
+@login_required
+def copy_target_location(request, project, location):
+    project = get_object_or_404(Project, pk=project)
+    target_location = get_object_or_404(TargetLocation, pk=location)
+    new_location = get_object_or_404(TargetLocation, pk=target_location.pk)
+    if new_location:
+        new_location.pk = None
+        new_location.save()
+        new_location.project = project
+        new_location.active = True
+        new_location.state = 'draft'
+        new_location.title = f'[COPY] - {target_location.title}'
+        new_location.save()
+    return JsonResponse({ 'success': True})
+
+
+@cache_control(no_store=True)
+@login_required
+def delete_target_location(request, pk):
+    target_location = get_object_or_404(TargetLocation, pk=pk)
+    project = target_location.project
+    if target_location:
+        target_location.delete()
+    return JsonResponse({ 'success': True})
+
+
+#############################################
+########## Budget Progress Views ############
+#############################################
+
+@cache_control(no_store=True)
+@login_required
+def create_project_budget_progress_view(request, project):
+    project = get_object_or_404(Project, pk=project)
+
+    budget_progress = project.budgetprogress_set.all()
+
+    BudgetProgressFormSet = modelformset_factory(BudgetProgress, form=BudgetProgressForm, extra=1)
+    formset = BudgetProgressFormSet(request.POST or None, queryset=budget_progress, form_kwargs={'project': project})
+
+    if request.method == 'POST':
+        country = request.POST.get('country')
+
+        if formset.is_valid():
+            for form in formset:
+                if form.cleaned_data.get('save'):
+                    if form.cleaned_data.get('activity_domain') and form.cleaned_data.get('donor'):
+                        budget_progress = form.save(commit=False)
+                        budget_progress.project = project
+                        budget_progress.country_id = country
+                        budget_progress.title = f"{budget_progress.donor}: {budget_progress.activity_domain}"
+                        budget_progress.save()
+            return redirect('create_project_budget_progress', project=project.pk)
+        else:
+            for form in formset:
+                for error in form.errors:
+                    error_message = f"Something went wrong {formset.errors}"
+                    if form.errors[error]:
+                        error_message = f"{error}: {form.errors[error][0]}"
+                    messages.error(request, error_message)
+
+    progress = list(budget_progress.values_list('pk', flat=True))
+    project_state = project.state
+    parent_page = {
+        'in-progress': 'active_projects',
+        'draft': 'draft_projects',
+        'done': 'completed_projects',
+        'archive': 'archived_projects'
+    }.get(project_state, None)
+
+    context = {
+        'project': project,
+        'formset': formset,
+        'parent_page': parent_page,
+    }
+    return render(request, "projects/financials/project_budget_progress.html", context)
+
+
+@cache_control(no_store=True)
+@login_required
+def copy_budget_progress(request, project, budget):
+    project = get_object_or_404(Project, pk=project)
+    budget_progress = get_object_or_404(BudgetProgress, pk=budget)
+    new_budget_progress = get_object_or_404(BudgetProgress, pk=budget_progress.pk)
+    if new_budget_progress:
+        new_budget_progress.pk = None
+        new_budget_progress.save()
+        new_budget_progress.project = project
+        new_budget_progress.active = True
+        new_budget_progress.state = 'draft'
+        new_budget_progress.title = f'[COPY] - {budget_progress.title}'
+        new_budget_progress.save()
+    return JsonResponse({ 'success': True})
+
+
+@cache_control(no_store=True)
+@login_required
+def delete_budget_progress(request, pk):
+    budget_progress = get_object_or_404(BudgetProgress, pk=pk)
+    project = budget_progress.project
+    if budget_progress:
+        budget_progress.delete()
+    return JsonResponse({ 'success': True})

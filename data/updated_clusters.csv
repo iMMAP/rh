@@ -21,5 +21,5 @@ protection,PRO-P,Protection,Protection - General Protection
 rnr_chapter,PRO-P,R&R Chapter,Protection - General Protection
 education,EDU,Education,Education
 wash,WASH,WASH,"Water, Sanitation and Hygiene "
-,PRO-HLP,,"Protection - Housing, Land and Property"
-,PRO-MA,,Protection - Mine Action
+pro-hlp,PRO-HLP,,"Protection - Housing, Land and Property"
+pro-ma,PRO-MA,,Protection - Mine Action

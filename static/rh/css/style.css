@@ -1558,7 +1558,7 @@ textarea:disabled::placeholder {
 .textarea,
 textarea {
   resize: none;
-  height: 84px;
+  height: 200px;
   padding: 5px 8px;
   font-size: 14px
 }
@@ -1587,6 +1587,7 @@ input[type=search]::-webkit-search-cancel-button {
 }
 
 .date-picker-field,
+.report-date-picker-field,
 .input-field,
 .select-field {
   position: relative;
@@ -1594,7 +1595,9 @@ input[type=search]::-webkit-search-cancel-button {
 }
 
 .date-picker-field.is-required .label:after,
+.report-date-picker-field.is-required .label:after,
 .date-picker-field.is-required label:after,
+.report-date-picker-field.is-required label:after,
 .input-field.is-required .label:after,
 .input-field.is-required label:after,
 .select-field.is-required .label:after,
@@ -1695,8 +1698,7 @@ label.col-label {
 }
 
 .input-check-holder {
-  margin-bottom: 16px;
-  line-height: 1
+  margin-bottom: 30px;
 }
 
 .input-check-holder label {
@@ -1914,6 +1916,7 @@ select option[value=placeholder] {
   display: none
 }
 
+.report-date-picker-field,
 .date-picker-field {
   margin-left: -6px;
   margin-right: -6px;
@@ -1926,6 +1929,12 @@ select option[value=placeholder] {
   padding: 0 6px
 }
 
+.report-date-picker-field .date {
+  width: 100%;
+  padding: 0 6px
+}
+
+.report-date-picker-field input,
 .date-picker-field input {
   font-weight: 500;
   color: #353537;
@@ -1937,22 +1946,27 @@ select option[value=placeholder] {
   background-position-y: 50%
 }
 
+.report-date-picker-field input:hover::-moz-placeholder,
 .date-picker-field input:hover::-moz-placeholder {
   color: #353537
 }
 
+.report-date-picker-field input:hover::placeholder,
 .date-picker-field input:hover::placeholder {
   color: #353537
 }
 
+.report-date-picker-field input::-moz-placeholder,
 .date-picker-field input::-moz-placeholder {
   color: #353537
 }
 
+.report-date-picker-field input::placeholder,
 .date-picker-field input::placeholder {
   color: #353537
 }
 
+.report-date-picker-field input[type=date]::-webkit-calendar-picker-indicator,
 .date-picker-field input[type=date]::-webkit-calendar-picker-indicator {
   background: transparent;
   bottom: 0;
@@ -2858,9 +2872,7 @@ select option[value=placeholder] {
   margin-bottom: 8px
 }
 
-.breadcrumbs-nav-panel {
-  padding: 10px 0
-}
+
 
 .breadcrumbs-nav-panel .breadcrumbs {
   margin-bottom: 10px
@@ -2889,7 +2901,8 @@ select option[value=placeholder] {
 .breadcrumbs,
 .breadcrumbs li {
   display: flex;
-  align-items: center
+  align-items: center;
+  /* padding-top: 10px */
 }
 
 .breadcrumbs li:after {
@@ -3002,7 +3015,7 @@ select option[value=placeholder] {
 
 .tabs-nav .active a:after {
   font-weight: 600;
-  background-color: #be2126
+  background-color: #e6e7e8
 }
 
 .page-navigation-panel .tabs-nav a {
@@ -4129,7 +4142,6 @@ body.filter-active {
 }
 
 .activity-title {
-  display: block;
   color: #be2126
 }
 
@@ -4158,7 +4170,13 @@ body.filter-active {
 }
 
 .activity-planning .main-heading {
-  border-top: 2px solid #be2126
+  border-top: 2px solid #be2126;
+  padding: 9px 0;
+}
+
+
+.main-activity-holder .subtitle-holder .subtitle {
+  color: #be2126;
 }
 
 .activity-planning .subtitle-holder {
@@ -4166,8 +4184,6 @@ body.filter-active {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-bottom: 2px solid #e6e7e8;
-  margin: 0 0 4px
 }
 
 .activity-planning .subtitle {
@@ -4178,20 +4194,29 @@ body.filter-active {
   color: #353537
 }
 
+.activity-planning .review-subtitle-holder {
+  padding: 7px 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 2px solid #e6e7e8;
+}
+
 .activity-planning .activity-block-holder {
-  padding: 20px 0
+  padding: 20px 0;
+
 }
 
 .activity-planning .activity-block-holder .inner-holder {
   position: relative;
-  padding: 24px 16px 26px;
+  padding: 16px 16px 16px;
   border: 2px solid #e6e7e8;
   border-width: 2px 0;
   background-color: #fafafa
 }
 
 .activity-planning .activity-block-holder .inner-holder:after,
-/* .activity-planning .activity-block-holder .inner-holder:before {
+.activity-planning .activity-block-holder .inner-holder:before {
   content: "";
   position: absolute;
   display: block;
@@ -4199,7 +4224,7 @@ body.filter-active {
   width: 33.1%;
   background-color: #be2126;
   z-index: 1
-} */
+}
 
 .activity-planning .activity-block-holder .inner-holder:before {
   top: -2px;
@@ -4232,10 +4257,27 @@ body.filter-active {
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  margin: 0 0 10px
+  margin: 25px 0 10px
+}
+
+.activity-planning .review-block-top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0 0 25px
 }
 
 .activity-planning .block-top .title {
+  display: block;
+  margin: 0 10px 14px 0;
+  color: #be2126;
+  font-size: 16px;
+  line-height: 1.2;
+  font-weight: 600
+}
+
+.activity-planning .review-block-top .title {
   display: block;
   margin: 0 10px 14px 0;
   color: #be2126;
@@ -4258,7 +4300,7 @@ body.filter-active {
   display: flex;
   width: 100%;
   align-items: center;
-  justify-content: flex-end
+  justify-content: flex-end;
 }
 
 .block-activity .people {
@@ -4279,12 +4321,29 @@ body.filter-active {
 }
 
 .block-activity .btn {
-  margin: 0 8px 0 0;
   font-size: 12px;
   line-height: 1.2;
   padding: 4px 6px;
   min-width: 71px;
   color: #6b6d70
+}
+
+.block-activity .btn.btn-red.save {
+  margin: 0 8px 0 0;
+  font-size: 12px;
+  line-height: 1.2;
+  padding: 4px 6px;
+  min-width: 71px;
+  color: #fff
+}
+
+.block-location-activity .btn.btn-red.save {
+  margin: 0 8px 0 0;
+  font-size: 12px;
+  line-height: 1.2;
+  padding: 4px 6px;
+  min-width: 71px;
+  color: #fff
 }
 
 .block-activity .btn:last-child {
@@ -4305,7 +4364,6 @@ body.filter-active {
 }
 
 .block-location-activity .btn {
-  margin: 0 8px 0 0;
   font-size: 12px;
   line-height: 1.2;
   padding: 4px 6px;
@@ -4442,14 +4500,10 @@ body.filter-active {
 
 .target-location .main-heading {
   border-top: 2px solid #be2126;
-  border-bottom: 2px solid #e6e7e8;
   padding: 9px 0;
-  margin: 0 0 9px
 }
 
-.target-location .main-activity-holder {
-  padding: 16px 0 4px
-}
+
 
 .target-location .main-activity-holder .title-holder,
 .target-location .main-activity-holder .top-activity-block {
@@ -5176,7 +5230,7 @@ body.filter-active {
 
   .breadcrumbs-nav-panel .holder {
     display: flex;
-    align-items: center;
+    align-items: baseline;
     justify-content: space-between;
     min-height: 25px
   }
@@ -5266,7 +5320,7 @@ body.filter-active {
   .page-navigation-panel .holder {
     display: grid;
     align-items: center;
-    grid-template-columns: 25% 50% 25%
+    grid-template-columns: 30% 50% 15%
   }
 
   .page-navigation-panel .tabs-nav {
@@ -5318,13 +5372,9 @@ body.filter-active {
     flex: 0 0 auto
   }
 
-  .project-plan.create-plan .col-sm {
-    padding-top: 20px
-  }
-
-  .project-plan.create-plan .col-sm .input-check-holder {
+  /*.project-plan.create-plan .col-sm .input-check-holder {
     padding: 10px 0 16px 0px !important
-  }
+  }*/
 
   .project-plan .col {
     width: auto
@@ -5335,9 +5385,9 @@ body.filter-active {
     width: 326px
   }
 
-  .project-plan .col.col-sm .input-check-holder {
+  /*  .project-plan .col.col-sm .input-check-holder {
     padding: 4px 0 6px 4px
-  }
+  }*/
 
   .plan-submit-holder {
     justify-content: flex-end;
@@ -5364,7 +5414,12 @@ body.filter-active {
   }
 
   .activity-planning .block-top .title {
-    margin: 0 10px 0 0
+    margin: 10px 10px 0 0
+  }
+
+  .activity-planning .review-block-top .title {
+    margin: 10px 10px 0 0;
+    width: 90%
   }
 
   .block-activity,
@@ -6025,7 +6080,20 @@ body.filter-active {
 }
 
 
-/* Custom CSS */
+/* ************************ */
+/* ************************ */
+/* ****** Custom CSS ****** */
+/* ************************ */
+/* ************************ */
+
+.breadcrumbs-nav-panel .tabs-nav a {
+  font-weight: 600;
+}
+
+.link-holder {
+  padding-bottom: 10px;
+}
+
 .text-decoration-none {
   text-decoration: none;
 }
@@ -6041,4 +6109,247 @@ body.filter-active {
 
 .disabled-link {
   pointer-events: none
+}
+
+.location-inner-holder .options-holder {
+  padding: 15px 0px 15px 0px;
+}
+
+.location-inner-holder .input-check-holder {
+  margin-bottom: 16px;
+  line-height: 1;
+  padding-top: 0;
+
+}
+
+/*Confirmation Popup*/
+body.confirmation-active {
+  overflow: hidden
+}
+
+.confirmation-popup-holder {
+  position: relative;
+  z-index: 2
+}
+
+.confirmation-popup-holder:after {
+  transition: opacity .35s cubic-bezier(.3, .86, .36, .95), visibility .35s cubic-bezier(.3, .86, .36, .95);
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(53, 53, 55, .35);
+  opacity: 0;
+  visibility: hidden;
+  z-index: -1
+}
+
+.confirmation-popup-holder.confirmation-active {
+  z-index: 9999
+}
+
+.confirmation-popup-holder.confirmation-active:after {
+  opacity: 1;
+  visibility: visible;
+  z-index: 1
+}
+
+.confirmation-popup-holder.confirmation-active .confirmation-options {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(110);
+  z-index: 2
+}
+
+.confirmation-options {
+  transition: all .5s ease-in-out;
+  max-width: 500px;
+  width: 100%;
+  display: flex !important;
+  flex-direction: column;
+  align-items: stretch;
+  position: fixed;
+  top: 0;
+  right: 30%;
+  bottom: 0;
+  padding: 32px;
+  background: #fff;
+  box-shadow: 0 0 18px 0 rgba(53, 53, 55, .75);
+  height: 25%;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(110%);
+  z-index: 1
+}
+
+.confirmation-options::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, .3);
+  background-color: #d1d3d4
+}
+
+.confirmation-options::-webkit-scrollbar {
+  width: 4px;
+  background-color: #be2126
+}
+
+.confirmation-options::-webkit-scrollbar-thumb {
+  background-color: #000
+}
+
+.confirmation-options .block-top {
+  width: 100%;
+  padding-right: 30px;
+  flex: 0 0 auto
+}
+
+.confirmation-options .block-body {
+  width: calc(100% + 10px);
+  flex: 1 auto;
+  max-height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding-right: 10px
+}
+
+.confirmation-options .block-footer .btn-wrapper {
+  display: flex;
+  align-items: baseline
+}
+
+.confirmation-options .block-footer .btn {
+  margin-right: 24px;
+  width: 50%
+}
+
+.confirmation-options .block-footer .btn:last-child {
+  margin: 0
+}
+
+.confirmation-options .title {
+  display: block;
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 1.2;
+  color: #353537
+}
+
+.block-activity .btn [class^=icon-chevron] {
+  font-size: 9.5px;
+}
+
+.block-location-activity .btn [class^=icon-chevron] {
+  font-size: 9.5px;
+}
+
+#fold-unfold-all [class^=icon-chevron] {
+  display: inline-block;
+  margin-right: 7px;
+  font-size: 9.5px;
+}
+
+.project-view-fold-unfold-buttons {
+  float: right
+}
+
+.m2m-badges {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.m2m-badges>* {
+  margin-right: 8px;
+  margin-bottom: 8px;
+
+}
+
+.view_nocontent {
+  position: absolute;
+  top: 250px;
+  left: 0;
+  bottom: 120px;
+  right: 0;
+  pointer-events: none;
+  z-index: var(--o-view-nocontent-zindex, 1);
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-image: radial-gradient(at 50% 50%, white 0px, rgba(255, 255, 255, 0.5) 100%);
+}
+
+.nocontent_help {
+  text-align: center;
+}
+
+@media (max-width: 767.98px) {
+
+  .view_nocontent {
+    top: 37%;
+    bottom: 34%;
+  }
+}
+
+
+.project-detail.icon-trashbin-outline,
+.project-detail.icon-trashbin,
+.project-detail.icon-copy,
+.project-detail.icon-pen {
+  font-size: medium;
+}
+
+.archive-icon {
+  margin-top: 2px;
+}
+
+svg.project-view-icon,
+svg.project-view.archive-icon {
+  color: #6d6e71;
+  margin-left: 3px;
+}
+
+
+/* SWAL CSS Override */
+
+.swal-title {
+  font-size: 18px;
+}
+
+.swal-text {
+  text-align: center !important;
+}
+
+.swal-button--danger {
+  background-color: #af4745;
+}
+
+.swal-button--danger:not([disabled]):hover {
+  background-color: #a52824;
+}
+
+button.swal-button.swal-button--confirm {
+  background-color: #af4745;
+}
+
+button.swal-button.swal-button--confirm:not([disabled]):hover {
+  background-color: #a52824;
+}
+
+
+/* Budget Progress Pages */
+
+.budget-progress .bottom-block {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 11px 0;
+  border-bottom: 2px solid #be2126
+}
+
+.budget-progress .main-heading {
+  border-top: 2px solid #be2126;
+  padding: 9px 0;
 }

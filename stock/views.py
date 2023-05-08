@@ -25,7 +25,7 @@ def stock_index_view(request):
             warehouse_id = delete_btn.group(1)
             try:
                 warehouse_location_id = WarehouseLocation.objects.get(pk=warehouse_id)
-            except:
+            except Exception as e:
                 warehouse_location_id = None
             if warehouse_location_id:
                 warehouse_location_id.delete()
@@ -98,7 +98,7 @@ def stock_report_view(request, pk):
                 stock_detail_id = delete_btn.group(1)
                 try:
                     stock_location_id = StockLocationDetails.objects.get(pk=stock_detail_id)
-                except:
+                except Exception as e:
                     stock_location_id = None
 
                 if stock_location_id:

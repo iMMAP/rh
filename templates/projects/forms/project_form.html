@@ -1,0 +1,158 @@
+{% extends "projects/forms/project_form_base.html" %}
+{% load static %}
+{% block project_contents %}
+    <div class="project-title-holder">
+        <h2 class="plan-title">{{ project.title }}</h2>
+    </div>
+    <div class="main-content">
+        <div class="project-plan create-plan">
+            <div class="main-heading">
+                {% if project %}
+                    <h2 class="plan-title">Update Project Plan</h2>
+                {% else %}
+                    <h2 class="plan-title">Create Project Plan</h2>
+                {% endif %}
+            </div>
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="section-message-alert">
+                        <div class="description">
+                            <div class="text">
+                                <p class="error-message">{{ message }}</p>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% endif %}
+            <form method="post">
+                {% csrf_token %}
+                {{ form.active }}
+                {{ form.country }}
+                <div class="row">
+                    <div class="col">
+                        <div class="input-field is-required">
+                            <label for="{{ form.title.html_name }}">Project Title</label>
+                            <div class="input-holder">{{ form.title }}</div>
+                        </div>
+                        <div class="input-field">
+                            <label for="{{ form.code.html_name }}">Project Code</label>
+                            <div class="input-holder">{{ form.code }}</div>
+                        </div>
+                        <div class="select-field is-required">
+                            <label for="{{ form.clusters.html_name }}">Clusters / Sectors</label>
+                            <div class="input-holder">{{ form.clusters }}</div>
+                        </div>
+                    </div>
+                    <div class="col col-sm">
+                        <div class="date-picker-field">
+                            <div class="date start">
+                                <label for="{{ form.start_date.id_for_label }}">Start Date</label>
+                                {{ form.start_date }}
+                            </div>
+                            <div class="date end">
+                                <label for="{{ form.end_date.id_for_label }}">End Date</label>
+                                {{ form.end_date }}
+                            </div>
+                        </div>
+                        <div class="multiple-fields-row">
+                            <div class="field-col">
+                                <div class="input-field">
+                                    <label for="{{ form.budget.html_name }}">Project Budget</label>
+                                    <div class="input-holder">{{ form.budget }}</div>
+                                </div>
+                            </div>
+                            <div class="field-col">
+                                <label for="{{ form.budget_currency.html_name }}">Budget Currency</label>
+                                <div class="select-field is-required">{{ form.budget_currency }}</div>
+                            </div>
+                        </div>
+                        <div class="multiple-fields-row">
+                            <div class="field-col">
+                                <div class="input-field">
+                                    <label for="{{ form.budget_received.html_name }}">Project Received</label>
+                                    <div class="input-holder">{{ form.budget_received }}</div>
+                                </div>
+                            </div>
+                            <div class="field-col">
+                                <div class="input-field">
+                                    <label for="{{ form.budget_gap.html_name }}">Project Gap</label>
+                                    <div class="input-holder">{{ form.budget_gap }}</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="multiple-fields-row two-items">
+                            <div class="field-col">
+                                <div class="input-check-holder">
+                                    {{ form.is_hrp_project }}
+                                    <label for="{{ form.is_hrp_project.id_for_label }}">
+                                        <span class="input"></span>
+                                        <span class="text">HRP Project</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="field-col">
+                                <div class="input-check-holder" id="prHasHRPCodeEl">
+                                    {{ form.has_hrp_code }}
+                                    <label for="{{ form.has_hrp_code.id_for_label }}">
+                                        <span class="input"></span>
+                                        <span class="text">HRP Code?</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="input-field" id="prHrpCode">
+                            <label for="{{ form.hrp_code.id_for_label }}">HRP Project Code</label>
+                            <div class="input-holder">{{ form.hrp_code }}</div>
+                        </div>
+                    </div>
+                    <div class="col col-lg">
+                        <div class="multiple-fields-row two-items">
+                            <div class="field-col">
+                                <div class="select-field is-required">
+                                    <label for="{{ form.activity_domains.html_name }}">Activity Domains</label>
+                                    <div class="input-holder">{{ form.activity_domains }}</div>
+                                </div>
+                            </div>
+                            <div class="field-col">
+                                <div class="select-field is-required">
+                                    <label for="{{ form.donors.html_name }}">Project Donor</label>
+                                    <div class="input-holder">{{ form.donors }}</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="multiple-fields-row two-items">
+                            <div class="field-col">
+                                <div class="select-field is-required">
+                                    <label for={{ form.implementing_partners.html_name }}>Implementing Partners
+                                    </label>
+                                    {{ form.implementing_partners }}
+                                </div>
+                            </div>
+                            <div class="field-col">
+                                <div class="select-field is-required">
+                                    <label for={{ form.programme_partners.html_name }}>Programme Partners
+                                    </label>
+                                    {{ form.programme_partners }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="select-field">
+                            <label for="{{ form.user.html_name }}">Focal Point</label>
+                            {{ form.user }}
+                        </div>
+                        <div class="input-field is-required">
+                            <label for="prDecs">Project Description &amp; Objectives</label>
+                            <div class="input-holder">{{ form.description }}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="plan-submit-holder">
+                    <button type="submit" class="btn btn-red">Save and Next</button>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock project_contents %}
+{% block scripts %}
+    <script defer src="{% static 'rh/js/project_planning.js' %}"></script>
+{% endblock scripts %}

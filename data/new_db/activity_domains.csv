@@ -1,0 +1,126 @@
+activity_type_id,activity_type_name,cluster_id
+water,Water,wash
+sanitation,Sanitation,wash
+hygiene,Hygiene,wash
+assessment,WASH Assessment,wash
+evaluation,WASH Evaluation,wash
+cash_voucher,Cash and/or Voucher Activities,wash
+wash_gbv_mitigation,WASH for GBV Mitigation,wash
+accountability_quality_assurance,Accountability and Quality Assurance,wash
+affected_population_accountability,Accountability to Affected Population (AAP),wash
+protection_interventions,Protection Interventions,rnr_chapter
+essential_services,Essential Services,rnr_chapter
+immediate_needs,Immediate Needs,rnr_chapter
+cpie,CPiE,protection
+gbv,GBV,protection
+gp,GP,protection
+hlp,HLP,protection
+ma,MA,protection
+acute_malnutrition,Acute Malnutrition,nutrition
+nutrition_programmes,Nutrition Programmes,nutrition
+nutrition_education_training,Nutrition Training,nutrition
+nutrition_emergency,Nutrition Emergency,nutrition
+primary_health_care,Primary Health Care,health
+trauma_care,Trauma Care,health
+mch,Mother & Child Health Care (MCH),health
+vaccination,Vaccination/Immunization,health
+infectious_diseases,Infectious Diseases,health
+health_education_training,"Health Education, Training & Awareness",health
+covid_19,COVID-19,health
+emergency_shelter_kit,Emergency Shelter Kit,esnfi
+emergency_shelter,Emergency Shelter (Localised Solution),esnfi
+standard_emergency_shelter_kit,Standard Emergency Shelter Kit,esnfi
+rental_support,Rental Support,esnfi
+shelter_repair_upgrade,Upgrade/Repair of Shelters,esnfi
+standard_emergency_nfi_kit,Standard Emergency NFI Kit,esnfi
+emergency_shelter_self_construction_repair_toolkit,Emergency Shelter Self Construction / Repair Toolkit,esnfi
+nfi_package,NFI Package,esnfi
+transitional_shelter,Transitional Shelter,esnfi
+permanent_shelter,Permanent Shelter,esnfi
+standard_winterization_package,Standard Winterization Package,esnfi
+standard_winter_clothing_kit,Standard Winter Clothing Kit,esnfi
+winterization_package,Winterization Package,esnfi
+esnfi_education_training,Capacity Building/Technical Support,esnfi
+shelter_support_health_facilities,Shelter Support to Health Facilities,esnfi
+risk_communication,Risk Communication,esnfi
+rental_support_3_month,Rental Support for 3 Month,esnfi
+existing_shelter_upgrade,Upgrade of Existing Shelter,esnfi
+emergency_shelter_kit_2tarps_1tent,Emergency Shelter Kit (2 Tarpaulin + 1 Tent),esnfi
+damaged_destroyed_shelter_assessment,Assessment of Damaged/Destroyed  Shelter,esnfi
+school_establishment,Formal & Non-Formal School Establishment,eiewg
+teaching_learning_supplies,Teaching & Learning Materials Supplies,eiewg
+capacity_building,Capacity Building,eiewg
+wash_in_school,WASH in School,eiewg
+quick_fix_repair_of_schools,Quick Fixing/Repairing of Schools,eiewg
+protection_activities,Protection Activities,eiewg
+education_awareness,Education Awareness,eiewg
+teaching_learning_supplies,Teaching & Learning Materials Supplies,education
+education_awareness,Education Awareness,education
+teacher_training,Teacher Training,education
+cvwg_multi_purpose_cash,Multi-Purpose Cash,cvwg
+school_establishment,Formal & Non-Formal School Establishment,education
+food_assistance,Food Assistance,fsac
+livelihood_support,Livelihood Support,fsac
+agriculture_livelihood_support,Agriculture Based Livelihood Support,fsac
+non_agriculture_livelihood_support,Non-Agriculture Based Livelihood Support,fsac
+livestock_support,Livestock Based Support,fsac
+affected_population_accountability,Accountability to Affected Population,fsac
+fsac_assessments,FSAC Assessment,fsac
+standard_winterization_packages_blankets_clothing_heating,Standard Winterization Packages (blankets/clothing/heating),esnfi
+wash_supplies,WASH Supplies,wash
+wash_psea,WASH PSEA,wash
+standard_emergency_shelter_assistance,Standard Emergency Shelter Assistance,esnfi
+standard_winterization_assistance,Standard Winterization Assistance,esnfi
+primary_health_care_services,Primary Health Care Services,health
+health_training,Training,health
+sexual_violence,Sexual violence,health
+mental_health_psychosocial_support,Mental Health and Psychosocial Support (MHPSS),health
+maternal_newborn_child_health,"Maternal, Newborn and Child Health (MNCH)",health
+health_promotion_risk_communication,Health Promotion and Risk Communication,health
+surveillance,Surveillance,health
+essential_supplies,Essential Supplies,health
+cccm_mechanisms,CCCM Mechanisms,cccm
+cccm_service_coordination,CCCM Service Coordination,cccm
+cccm_referral_mechanism,CCCM Referral Mechanism,cccm
+cccm_training_capacity_building_activites,CCCM Training/Capacity Building Activites,cccm
+population_information_management,Population Information Management,cccm
+mobile_site_management,Mobile Site Management,cccm
+feedback_mechanisms,Feedback Mechanisms,cccm
+service_monitoring,Service Monitoring,cccm
+service_provision,Service Provision,cccm
+participation,Participation,cccm
+return_relocation_integration,Return/ Relocation/ Integration,cccm
+sharing_information,Sharing Information,cccm
+site_care_and_maintenance,Site Care and Maintenance,cccm
+hrp-2023-cccm-mechanisms,(HRP 2023) CCCM Mechanisms,coordination
+hrp-2023-coordination-and-common-services-,(HRP 2023) Coordination and Common Services ,coordination
+hrp-2023-curricula,(HRP 2023) Curricula,education
+hrp-2023-equal-access,(HRP 2023) Equal Access,education
+hrp-2023-recruitment-and-selection,(HRP 2023) Recruitment and Selection,education
+hrp-2023-winterization,(HRP 2023) Winterization,education
+hrp-2023-cccm-assistance,(HRP 2023) CCCM Assistance,esnfi
+hrp-2023-nfi-assistance,(HRP 2023) NFI Assistance,esnfi
+hrp-2023-shelter-assistance,(HRP 2023) Shelter Assistance,esnfi
+hrp-2023-winterization-assistance,(HRP 2023) Winterization Assistance,esnfi
+hrp-2023-agriculture-based-livelihood-support,(HRP 2023) Agriculture Based Livelihood Support,fsac
+hrp-2023-food-assistance,(HRP 2023) Food Assistance,fsac
+hrp-2023-livelihood-support,(HRP 2023) Livelihood Support,fsac
+hrp-2023-livestock-based-support,(HRP 2023) Livestock Based Support,fsac
+hrp-2023-non-agriculture-based-livelihood-support,(HRP 2023) Non-Agriculture Based Livelihood Support,fsac
+hrp-2023-infant-and-young-child-feeding,(HRP 2023) Infant and Young Child Feeding,nutrition
+hrp-2023-prevention-and-control-of-micronutrients-deficiencies,(HRP 2023) Prevention and Control of Micronutrients Deficiencies,nutrition
+hrp-2023-prevention-and-management-of-acute-malnutrition,(HRP 2023) Prevention and Management of Acute Malnutrition,nutrition
+primary_health_care_services,1. Primary health care services,health
+secondary-health-care-services,2. Secondary health care services,health
+health_training,3. Training,health
+mental_health_psychosocial_support,4. Mental Health and Psychosocial Support (MHPSS),health
+maternal_newborn_child_health,"5. Maternal, Newborn and Child Health (MNCH)",health
+trauma_care,6. Trauma care,health
+vaccination,7. Vaccination/Immunization,health
+essential_supplies,8. Essential  supplies,health
+health_promotion_risk_communication,9. Health promotion & risk communication,health
+wash-consultations,WASH Consultations,wash
+water,Water Activities,wash
+hygiene,Hygiene Activities,wash
+sanitation,Sanitation Activities,wash
+capacity-building,Capacity Building,wash

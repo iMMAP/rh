@@ -1,55 +1,66 @@
 <!-- templates/_base.html -->
 {% load static %}
+{% load compress %}
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <meta charset="utf-8"/>
-
+        <meta charset="utf-8" />
         <title>
             {% block page_title %}
             {% endblock page_title %}
         </title>
-
-        <meta name="viewport" content="width=device-width, initial-scale=1.0 "/>
-        <meta name="description" content=" "/>
-        <meta name="keywords" content=" "/>
-    
-        <link rel="preconnect" href="https://fonts.googleapis.com"/>
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0 " />
+        <meta name="description" content=" " />
+        <meta name="keywords" content=" " />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
         <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Open+Sans&display=swap"
-              rel="stylesheet"/>
-        <link rel="apple-touch-icon" sizes="180x180" src="{% static 'rh/images/favicon/apple-touch-icon.png' %}"/>
-        <link rel="icon" type="image/png" sizes="32x32" src="{% static 'rh/images/favicon/favicon-32x32.png' %}"/>
-        <link rel="icon" type="image/png" sizes="16x16" src="{% static 'rh/images/favicon/favicon-16x16.png' %}"/>
-        <link rel="manifest" src="{% static 'rh/images/favicon/site.webmanifest' %}"/>
-        <link rel="mask-icon" src="{% static 'rh/images/favicon/safari-pinned-tab.svg' %}" color="#5bbad5"/>
-    
-        <meta name="msapplication-TileColor" content="#da532c"/>
-        <meta name="theme-color" content="#ffffff"/>
-    
+              rel="stylesheet" />
+        <link rel="apple-touch-icon"
+              sizes="180x180"
+              href="{% static 'rh/images/favicon/apple-touch-icon.png' %}" />
+        <link rel="icon"
+              type="image/x-icon"
+              sizes="32x32"
+              href="{% static 'rh/images/favicon/favicon-32x32.png' %}" />
+        <link rel="icon"
+              type="image/x-icon"
+              sizes="16x16"
+              href="{% static 'rh/images/favicon/favicon-16x16.png' %}" />
+        <link rel="manifest"
+              href="{% static 'rh/images/favicon/site.webmanifest' %}" />
+        <link rel="mask-icon"
+              href="{% static 'rh/images/favicon/safari-pinned-tab.svg' %}"
+              color="#5bbad5" />
+        <meta name="msapplication-TileColor" content="#da532c" />
+        <meta name="theme-color" content="#ffffff" />
         <noscript>
             <style>
             /**  * Reinstate scrolling for non-JS clients  */
             .simplebar-content-wrapper {
-              scrollbar-width: auto;
-              -ms-overflow-style: auto;
+                scrollbar-width: auto;
+                -ms-overflow-style: auto;
             }
-    
+
             .simplebar-content-wrapper::-webkit-scrollbar,
             .simplebar-hide-scrollbar::-webkit-scrollbar {
-              display: initial;
-              width: initial;
-              height: initial;
+                display: initial;
+                width: initial;
+                height: initial;
             }
-          
             </style>
         </noscript>
-    
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
-        <link rel="stylesheet" href="{% static 'rh/css/style.css' %}">
+        <meta name="viewport"
+              content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        {% compress css inline %}
+            <link rel="stylesheet"
+                  type="text/css"
+                  href="{% static 'rh/css/style.css' %}">
+        {% endcompress %}
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css"
+              rel="stylesheet" />
     </head>
-    
-    <body class="">
+    <body>
         <div class="wrapper" id="wrapper">
             <div class="wrapper-inner">
                 <header class="header logged-in" id="header">
@@ -57,13 +68,11 @@
                         <div class="logo-holder">
                             <strong class="logo">
                                 <a href="{% url 'index' %}">
-                                    <img src="{% static 'rh/images/immap-logo.svg' %}" alt="IMMAP"/>
+                                    <img src="{% static 'rh/images/immap-logo.svg' %}" alt="IMMAP" />
                                 </a>
                             </strong>
                             <strong class="logo-text">ReportHub</strong>
                         </div>
-        
-        
                         {% if user.is_authenticated %}
                             <button type="button" class="mobile-menu-opener">
                                 <span class="bar bar1"></span>
@@ -74,32 +83,26 @@
                             <div class="mobile-menu-holder">
                                 <ul class="main-nav">
                                     <li class="main-nav-item">
-                                        <a class="main-nav-link" href="{% url 'projects' %}"> Projects </a>
+                                        <a class="main-nav-link" href="{% url 'active_projects' %}">Projects</a>
                                     </li>
-            
                                     <li class="main-nav-item">
-                                        <a class="main-nav-link" href="{% url 'stocks' %}"> Stocks </a>
+                                        <a class="main-nav-link" href="{% url 'stocks' %}">Stocks</a>
                                     </li>
-            
                                     <li class="main-nav-item">
-                                        <a class="main-nav-link" href="#"> Admin Dashboard </a>
+                                        <a class="main-nav-link" href="#">Admin Dashboard</a>
                                     </li>
-            
                                     <li class="main-nav-item">
-                                        <a class="main-nav-link" href="#"> Account </a>
-            
+                                        <a class="main-nav-link" href="#">Account</a>
                                         <div class="inner-drop">
                                             <ul class="inner-nav">
                                                 <li class="inner-nav-item">
-                                                    <a class="inner-nav-link" href="{% url 'profile' %}"> My Profile </a>
+                                                    <a class="inner-nav-link" href="{% url 'profile' %}">My Profile</a>
                                                 </li>
-            
                                                 <li class="inner-nav-item">
-                                                    <a class="inner-nav-link" href="#"> My Cluster/Org </a>
+                                                    <a class="inner-nav-link" href="#">My Cluster/Org</a>
                                                 </li>
-            
                                                 <li class="inner-nav-item">
-                                                    <a href="{% url 'logout' %}" class="inner-nav-link logout-link"> Logout </a>
+                                                    <a href="{% url 'logout' %}" class="inner-nav-link logout-link">Logout</a>
                                                 </li>
                                             </ul>
                                         </div>
@@ -114,54 +117,44 @@
                         {% endif %}
                     </div>
                 </header>
-        
                 <main id="main" class="main">
-                    {% block content %}
-        
-                    {% endblock content %}
+                    <div class="base-section">
+                        {% block content %}
+                        {% endblock content %}
+                    </div>
                 </main>
-        
                 <footer class="footer">
                     <div class="container">
                         <div class="footer-inner">
                             <div class="logo-holder">
                                 <strong class="logo">
                                     <a href="#">
-                                        <img src="{% static 'rh/images/immap-logo.svg' %}" alt="image description"/>
+                                        <img src="{% static 'rh/images/immap-logo.svg' %}" alt="image description" />
                                     </a>
                                 </strong>
                                 <strong class="logo-text">ReportHub</strong>
                             </div>
-        
                             {% if user.is_authenticated %}
                                 <div class="footer-row">
                                     <div class="footer-col">
                                         <span class="col-label">Contact us</span>
-            
                                         <ul class="footer-list">
                                             <li>
-                                                <a
-                                                        href="mailto:&#110;&#103;&#109;&#082;&#101;&#112;&#111;&#114;&#116;&#072;&#117;&#098;&#064;&#103;&#109;&#097;&#105;&#108;&#046;&#099;&#111;&#109;"
-                                                        style="text-decoration: none"
-                                                >&#110;&#103;&#109;&#082;&#101;&#112;&#111;&#114;&#116;&#072;&#117;&#098;&#064;&#103;&#109;&#097;&#105;&#108;&#046;&#099;&#111;&#109;</a
-                                                >
+                                                <a href="mailto:&#110;&#103;&#109;&#082;&#101;&#112;&#111;&#114;&#116;&#072;&#117;&#098;&#064;&#103;&#109;&#097;&#105;&#108;&#046;&#099;&#111;&#109;"
+                                                   style="text-decoration: none">&#110;&#103;&#109;&#082;&#101;&#112;&#111;&#114;&#116;&#072;&#117;&#098;&#064;&#103;&#109;&#097;&#105;&#108;&#046;&#099;&#111;&#109;</a>
                                             </li>
                                         </ul>
                                     </div>
-            
                                     <div class="footer-col">
                                         <span class="col-label">Help Desk</span>
-            
                                         <ul class="footer-list">
                                             <li>
                                                 <a href="#">Reporthub Service Desk</a>
                                             </li>
                                         </ul>
                                     </div>
-            
                                     <div class="footer-col">
                                         <span class="col-label">Sources</span>
-            
                                         <ul class="footer-list">
                                             <li>
                                                 <a href="#">User Guides</a>
@@ -178,21 +171,18 @@
                                             </li>
                                         </ul>
                                     </div>
-            
                                     <div class="footer-col">
                                         <div class="footer-info">
                                             <div class="block-top">
                                                 <span class="block-label">Funded by:</span>
-            
                                                 <ul class="logos-list">
                                                     <li>
                                                         <a href="#">
-                                                            <img src="{% static 'rh/images/usaid.svg' %}" alt="image description"/>
+                                                            <img src="{% static 'rh/images/usaid.svg' %}" alt="image description" />
                                                         </a>
                                                     </li>
                                                 </ul>
                                             </div>
-            
                                             <div class="block-text">
                                                 <p>
                                                     ReportHub services is provided through the generous support of the American
@@ -202,7 +192,6 @@
                                             </div>
                                         </div>
                                     </div>
-            
                                     <div class="footer-col">
                                         <ul class="social-list">
                                             <li>
@@ -210,13 +199,11 @@
                                                     <span class="icon-facebook"></span>
                                                 </a>
                                             </li>
-            
                                             <li>
                                                 <a href="#" target="_blank">
                                                     <span class="icon-twitter"></span>
                                                 </a>
                                             </li>
-            
                                             <li>
                                                 <a href="#" target="_blank">
                                                     <span class="icon-linkedin"></span>
@@ -231,6 +218,107 @@
                 </footer>
             </div>
         </div>
-        <script defer src="{% static 'rh/js/app.js' %}"></script>
+        <script src="https://code.jquery.com/jquery-3.6.1.min.js"
+                integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ="
+                crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js" integrity="sha512-2ImtlRlf2VVmiGZsjm9bEyhjGW4dU7B6TNwh/hx/iSByxNENtj3WVE6o/9Lj4TJeVXPi4bnOIMXFIJJAeufa0A==" crossorigin="anonymous" referrerpolicy="no-referrer">
+        </script>
+        <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+        {% compress js %}
+            <script defer src="{% static 'rh/js/app.js' %}"></script>
+            <script defer src="{% static 'rh/js/fold_unfold_component.js' %}"></script>
+            {% comment %} FIXME: FIX "caught SyntaxError: Cannot use import statement outside a module" {% endcomment %}
+            {% comment %} <script defer src="{% static 'rh/js/delete_popup.js' %}"></script> {% endcomment %}
+            <script>
+                $(document).ready(function () {
+                    $('.js_multiselect').select2();
+                    
+                    $('tr[data-url]').click(function() {
+                        window.location.href = $(this).data('url');
+                    });
+                    function showConfirmModal(event) {
+                        // Prevent the default behavior of the click event
+                        event.preventDefault();
+                        event.stopPropagation();
+                    
+                        // Get the relevant data attributes from the clicked element
+                        var dataURL = event.currentTarget.dataset.url;
+                        var returnURL = event.currentTarget.dataset.returnUrl;
+                        var name = event.currentTarget.dataset.project;
+                        var popupType = event.currentTarget.dataset.type;
+                    
+                        // Initialize variables to be used in the SweetAlert2 modal
+                        var title, text, icon, dangerMode, successMessage;
+                    
+                        // Set the modal variables based on the type of popup requested
+                        if (popupType === 'copy') {
+                            title = `Are you sure you want to duplicate ${name}?`;
+                            text = '';
+                            icon = 'warning';
+                            dangerMode = true;
+                            successMessage = `Done! Record ${name} has been duplicated successfully!`;
+                        } else if (popupType === 'delete') {
+                            title = `Are you sure you want to delete ${name}?`;
+                            text = "Once deleted, you will not be able to recover this record!";
+                            icon = 'warning';
+                            dangerMode = true;
+                            successMessage = `Done! Record ${name} has been deleted successfully!`;
+                        } else if (popupType === 'archive') {
+                            title = `Are you sure you want to archive ${name}?`;
+                            text = "Archiving the selected record will deactivate it and make it unavailable to users. Please contact the administrator if you need to access the archived records in the future!";
+                            icon = 'warning';
+                            dangerMode = true;
+                            successMessage = `Done! Record ${name} has been archived successfully!`;
+                        } else if (popupType === 'unarchive') {
+                            title = `Are you sure you want to unarchive ${name}?`;
+                            text = "Unarchiving the selected record will be reactivate in draft state.";
+                            icon = 'warning';
+                            dangerMode = true;
+                            successMessage = `Done! Record ${name} has been unarchived successfully!`;
+                        }
+                    
+                        // Display the SweetAlert2 modal with the appropriate variables
+                        swal({
+                            title: title,
+                            text: text,
+                            icon: icon,
+                            buttons: true,
+                            dangerMode: dangerMode,
+                        })
+                        .then((willDelete) => {
+                            // If the user confirms the action in the modal, send an AJAX request
+                            if (willDelete) {
+                                $.ajax({
+                                    method: 'GET',
+                                    url: dataURL,
+                                    success: function (data) {
+                                        // If the AJAX request is successful, display a success message and redirect
+                                        if (data.success) {
+                                            swal(successMessage, {
+                                                icon: "success",
+                                            }).then(() => {
+                                                if (popupType === 'copy'){
+                                                    if (data.returnURL){
+                                                        returnURL = data.returnURL
+                                                    }
+                                                }
+                                                window.location.href = returnURL;
+                                            });
+                                        }
+                                    },
+                                    error: function (error_data) {
+                                        // If the AJAX request fails, display an error message
+                                        swal(`Something went wrong! ${error_data}`);
+                                    }
+                                });
+                            }
+                        });
+                    }
+                    // Attach the click event listener to all elements with class "show_confirm"
+                    $('.show_confirm').click(showConfirmModal);                
+                });
+                
+            </script>
+        {% endcompress %}
     </body>
 </html>

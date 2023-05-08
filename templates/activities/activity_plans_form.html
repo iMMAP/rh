@@ -13,23 +13,24 @@
 
             <form method="POST">
                 {% csrf_token %}
-                <input type="hidden" name="next" id="activity_plan_id" value="{{ activity_plan }}"/>
+                <input type="hidden" name="next" id="activity_plan_id" value="{{ activity_plan }}" />
                 {{ form|crispy }}
                 <div class="mb-3 mt-3 d-grid">
-                    <input type="submit" class="btn btn-outline-dark" value="Submit"/>
+                    <input type="submit" class="btn btn-outline-dark" value="Submit" />
                 </div>
             </form>
         </div>
     </div>
 </div>
 
-<script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.6.1.min.js"
+    integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
 <script>
-    function get_activity_form(){
+    function get_activity_form() {
         const activityFieldsUrl = $("#id_activity_fields").attr("activityfields-queries-url");
         const activityId = $("#id_activity").val();
         const activityPlanId = $("#activity_plan_id").val();
-        
+
         $.ajax({
             type: 'GET',
             url: activityFieldsUrl,
@@ -38,11 +39,11 @@
                 activity_plan_id: activityPlanId,
             },
             dataType: 'json',
-            success: function(response){
-                if ($("#activity_form")){
+            success: function (response) {
+                if ($("#activity_form")) {
                     $("#activity_form").remove()
                 }
-                if (response.form){
+                if (response.form) {
                     var activity_form = `
                         <div id="activity_form" style="background-color: white;padding: 10px;">
                             <h5>Activity</h5>
@@ -57,9 +58,8 @@
         get_activity_form()
     });
 
-    $('#id_activity').change(function(){
+    $('#id_activity').change(function () {
         get_activity_form()
     })
-    
 </script>
 {% endblock %}

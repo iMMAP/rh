@@ -1,41 +1,42 @@
 {% extends '_base.html' %}
-
 {% block content %}
 
 <div class="container px-4 px-lg-5 h-100">
-    <div class="row h-100 align-items-center justify-content-center text-left">
-        <div class="col-lg-4 align-self-end">
-            <h1 class="m-5">Report Hub</h1>
-            <h3>
-                Activity Plans/Projects
-                <a class="btn btn-outline-success float-end" href="{% url 'create_activity_plan' %}" role="button">Create</a>
-                
-            </h3>
-            <table class="table table-striped">
-                <thead>
-                  <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Activity Plan</th>
-                    <th scope="col"></th>
-                    <th scope="col"></th>
-                  </tr>
-                </thead>
-                <tbody>
-                    
-                    {% for plan in activity_plans %}
-                    <tr>
-                      <th scope="row">{{plan.id}}</th>
-                      <td>{{plan}}</td>
-                      <td><a class="btn btn-outline-primary float-end" href="{% url 'update_activity_plan' plan.id %}" role="button">Update</a></td>
-                      <td><a class="btn btn-outline-danger float-end" href="#" role="button">Delete</a></td>
-                    </tr>
-                    {% endfor %}
-                        
-                
-                </tbody>
-              </table>
-        </div>
-    </div>
+	<div class="row h-100 align-items-center justify-content-center text-left">
+		<div class="col-lg-4 align-self-end">
+			<h1 class="m-5">Report Hub</h1>
+			<h3>
+				Activity Plans/Projects
+				<a class="btn btn-outline-success float-end" href="{% url 'create_activity_plan' %}"
+					role="button">Create</a>
+			</h3>
+			<table class="table table-striped">
+				<thead>
+					<tr>
+						<th scope="col">#</th>
+						<th scope="col">Activity Plan</th>
+						<th scope="col"></th>
+						<th scope="col"></th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for plan in activity_plans %}
+					<tr>
+						<th scope="row">{{plan.id}}</th>
+						<td>{{plan}}</td>
+						<td>
+							<a class="btn btn-outline-primary float-end" href="{% url 'update_activity_plan' plan.id %}"
+								role="button">Update</a>
+						</td>
+						<td>
+							<a class="btn btn-outline-danger float-end" href="#" role="button">Delete</a>
+						</td>
+					</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</div>
 </div>
 
 {% endblock %}

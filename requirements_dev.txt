@@ -12,17 +12,14 @@ Django==4.0.6
 django-appconf==1.0.5
 django-compressor==4.0
 django-cors-headers==3.13.0
-django-crispy-forms==1.14.0
 django-entangled==0.5.3
 django-environ==0.9.0
 django-filter==23.1
 django-jsonform==2.12.0
 django-jsonforms==1.1.2
-django-mjml==1.0
 django-select2==7.10.1
 django-smart-selects==1.6.0
 djangorestframework==3.13.1
-Faker==14.2.1
 greenlet==2.0.2
 idna==3.3
 isort==5.10.1

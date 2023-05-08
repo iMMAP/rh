@@ -177,5 +177,7 @@
     </div>
 {% endblock project_contents %}
 {% block scripts %}
-    <script defer src="{% static 'rh/js/target_locations.js' %}"></script>
+    {% compress js %}
+        <script defer src="{% static 'rh/js/target_locations.js' %}"></script>
+    {% endcompress %}
 {% endblock scripts %}

@@ -1,5 +1,6 @@
 {% extends "projects/forms/project_form_base.html" %}
 {% load static %}
+{% load compress %}
 {% block header %}
 {% endblock header %}
 {% block project_contents %}
@@ -452,6 +453,8 @@
     </div>
 {% endblock project_contents %}
 {% block scripts %}
-    {{ formset.media.js }}
-    <script defer src="{% static 'rh/js/activity_planning.js' %}"></script>
+    {% compress js %}
+        {{ formset.media.js }}
+        <script defer src="{% static 'rh/js/activity_planning.js' %}"></script>
+    {% endcompress %}
 {% endblock scripts %}

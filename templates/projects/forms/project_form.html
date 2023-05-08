@@ -154,5 +154,7 @@
     </div>
 {% endblock project_contents %}
 {% block scripts %}
-    <script defer src="{% static 'rh/js/project_planning.js' %}"></script>
+    {% compress js %}
+        <script defer src="{% static 'rh/js/project_planning.js' %}"></script>
+    {% endcompress %}
 {% endblock scripts %}

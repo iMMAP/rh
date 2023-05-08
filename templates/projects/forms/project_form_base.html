@@ -7,47 +7,15 @@
     {% comment %} Header code goes here e.g. stylesheet links specific to page etc. {% endcomment %}
     {% block header %}
     {% endblock header %}
-    <div class="base-section">
-        <div class="container">
-            <div class="page-navigation-panel">
-                <div class="holder">
-                    <div class="link-holder">
-                        <a href="{% url parent_page %}" class="btn-back">
-                            {% if project.state == 'in-progress' %}
-                                Back To Active Projects
-                            {% elif project.state == 'draft' %}
-                                Back To Draft Projects
-                            {% else %}
-                                Back To Completed Projects
-                            {% endif %}
-                        </a>
-                    </div>
-                    <div class="tabs-nav-holder">
-                        <ul class="tabs-nav">
-                            <li class="active">
-                                <a href="{% if project %}{% url 'update_project' project.pk %}{% else %}{% url 'create_project' %}{% endif %}">Project
-                                plan</a>
-                            </li>
-                            <li>
-                                <a href="#">Financial Reports</a>
-                            </li>
-                            <li>
-                                <a href="#">Monthly Progress</a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            <div class="two-cols-layout">
-                <div class="breadcrumbs-nav-panel">
-                    {% comment %} <div class="holder">
-                        <h2 class="plan-title">{{ project.title }}</h2>
-                    </div> {% endcomment %}
+    <div class="container">
+        <div class="page-navigation-panel">
+            <div class="holder">
+                <div>
                     <ul class="breadcrumbs">
-                        <li>
-                            <a href="{% url 'home' %}">Home</a>
-                            <!-- <a href="{% url 'active_projects' %}">All Projects</a> -->
-                        </li>
+                        {% comment %} <li>
+                                <a href="{% url 'home' %}">Home</a>
+                                <!-- <a href="{% url 'active_projects' %}">All Projects</a> -->
+                        </li> {% endcomment %}
                         {% if project %}
                             <li>
                                 <a href="{% url parent_page %}">
@@ -76,35 +44,65 @@
                             {% if project_review %}Project Review{% endif %}
                         </li>
                     </ul>
+                    {% comment %} <a href="{% url parent_page %}" class="btn-back">
+                            {% if project.state == 'in-progress' %}
+                                Back To Active Projects
+                            {% elif project.state == 'draft' %}
+                                Back To Draft Projects
+                            {% else %}
+                                Back To Completed Projects
+                            {% endif %}
+                    </a> {% endcomment %}
                 </div>
-                <aside class="sidebar">
-                    <div class="sidebar-nav-holder">
-                        <ul class="sidebar-nav">
-                            <li class="{% if project_planning %}current{% endif %}">
-                                <a href="{% if project %}{% url 'update_project' project.pk %}{% else %}{% url 'create_project' %}{% endif %}">
-                                    Project Planning
-                                </a>
-                            </li>
-                            <li class="{% if activity_planning %}current{% endif %}">
-                                <a class="{% if not project %}disabled-link{% endif %}"
-                                   href="{% if project %}{% url 'create_project_activity_plan' project.pk %}{% else %}#{% endif %}">Activity
-                                Planning</a>
-                            </li>
-                            <li class="{% if locations_planning %}current{% endif %}">
-                                <a class="{% if not plans %}disabled-link{% endif %}"
-                                   href="{% if project %}{% url 'create_project_target_location' project.pk %}{% else %}#{% endif %}">Target
-                                Locations</a>
-                            </li>
-                            <li class="{% if project_review %}current{% endif %}">
-                                <a class="{% if not locations %}disabled-link{% endif %}"
-                                   href="{% if project and plans and locations %}{% url 'project_plan_review' project.pk %}{% else %}#{% endif %}">Review</a>
-                            </li>
-                        </ul>
-                    </div>
-                </aside>
-                {% block project_contents %}
-                {% endblock project_contents %}
+                <div class="tabs-nav-holder">
+                    <ul class="tabs-nav">
+                        <li class="active">
+                            <a href="{% if project %}{% url 'update_project' project.pk %}{% else %}{% url 'create_project' %}{% endif %}">Project
+                            plan</a>
+                        </li>
+                        <li>
+                            <a href="{% if project %}{% url 'create_project_budget_progress' project.pk %}{% else %}#{% endif %}">Financial Reports</a>
+                        </li>
+                        <li>
+                            <a href="#">Monthly Progress</a>
+                        </li>
+                    </ul>
+                </div>
             </div>
+        </div>
+        <div class="two-cols-layout">
+            <div class="breadcrumbs-nav-panel">
+                {% comment %} <div class="holder">
+                        <h2 class="plan-title">{{ project.title }}</h2>
+                </div> {% endcomment %}
+            </div>
+            <aside class="sidebar">
+                <div class="sidebar-nav-holder">
+                    <ul class="sidebar-nav">
+                        <li class="{% if project_planning %}current{% endif %}">
+                            <a href="{% if project %}{% url 'update_project' project.pk %}{% else %}{% url 'create_project' %}{% endif %}">
+                                Project Planning
+                            </a>
+                        </li>
+                        <li class="{% if activity_planning %}current{% endif %}">
+                            <a class="{% if not project %}disabled-link{% endif %}"
+                               href="{% if project %}{% url 'create_project_activity_plan' project.pk %}{% else %}#{% endif %}">Activity
+                            Planning</a>
+                        </li>
+                        <li class="{% if locations_planning %}current{% endif %}">
+                            <a class="{% if not plans %}disabled-link{% endif %}"
+                               href="{% if project %}{% url 'create_project_target_location' project.pk %}{% else %}#{% endif %}">Target
+                            Locations</a>
+                        </li>
+                        <li class="{% if project_review %}current{% endif %}">
+                            <a class="{% if not locations %}disabled-link{% endif %}"
+                               href="{% if project and plans and locations %}{% url 'project_plan_review' project.pk %}{% else %}#{% endif %}">Review</a>
+                        </li>
+                    </ul>
+                </div>
+            </aside>
+            {% block project_contents %}
+            {% endblock project_contents %}
         </div>
     </div>
     {% block scripts %}

@@ -188,6 +188,8 @@ class BudgetProgressForm(forms.ModelForm):
         fields = "__all__"
         widgets = {
             'country': forms.widgets.HiddenInput(),
+            'received_date': forms.widgets.DateInput(
+                attrs={'type': 'date', 'onfocus': "(this.type='date')", 'onblur': "(this.type='text')"}),
         }
 
     def __init__(self, *args, project, **kwargs):
@@ -201,6 +203,8 @@ class BudgetProgressForm(forms.ModelForm):
         donors = project.donors.all()
         donor_ids = list(donors.values_list('pk', flat=True))
 
+        self.fields['save'] = forms.BooleanField(required=False, initial=False,
+                                                 widget=forms.HiddenInput(attrs={'name': self.prefix + '-save'}))
         self.fields['activity_domain'].queryset = self.fields['activity_domain'].queryset.filter(
             pk__in=activity_domains)
         self.fields['donor'].queryset = self.fields['donor'].queryset.filter(

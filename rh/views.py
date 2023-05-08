@@ -768,10 +768,9 @@ def create_project_budget_progress_view(request, project):
                         budget_progress = form.save(commit=False)
                         budget_progress.project = project
                         budget_progress.country_id = country
-                        budget_progress.title = f"{budget_progress.province.name}, {budget_progress.district.name}, {budget_progress.site_name if budget_progress.site_name else ''}"
-                        budget_progress.active = True
+                        budget_progress.title = f"{budget_progress.donor}: {budget_progress.activity_domain}"
                         budget_progress.save()
-            return redirect('create_project_target_location', project=project.pk)
+            return redirect('create_project_budget_progress', project=project.pk)
         else:
             for form in formset:
                 for error in form.errors:
@@ -795,3 +794,30 @@ def create_project_budget_progress_view(request, project):
         'parent_page': parent_page,
     }
     return render(request, "projects/financials/project_budget_progress.html", context)
+
+
+@cache_control(no_store=True)
+@login_required
+def copy_budget_progress(request, project, budget):
+    project = get_object_or_404(Project, pk=project)
+    budget_progress = get_object_or_404(BudgetProgress, pk=budget)
+    new_budget_progress = get_object_or_404(BudgetProgress, pk=budget_progress.pk)
+    if new_budget_progress:
+        new_budget_progress.pk = None
+        new_budget_progress.save()
+        new_budget_progress.project = project
+        new_budget_progress.active = True
+        new_budget_progress.state = 'draft'
+        new_budget_progress.title = f'[COPY] - {budget_progress.title}'
+        new_budget_progress.save()
+    return JsonResponse({ 'success': True})
+
+
+@cache_control(no_store=True)
+@login_required
+def delete_budget_progress(request, pk):
+    budget_progress = get_object_or_404(BudgetProgress, pk=pk)
+    project = budget_progress.project
+    if budget_progress:
+        budget_progress.delete()
+    return JsonResponse({ 'success': True})

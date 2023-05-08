@@ -24,8 +24,12 @@
                                 {% endif %}
                             </a>
                         </li>
-                        {% if project %}<li>{{ project.code }}</li>{% endif %}
-                        <li class="current">Budget Progress</li>
+                        {% if project %}
+                            <li>
+                                <a href="{% url 'view_project' project.pk %}">{{ project.code }}</a>
+                            </li>
+                        {% endif %}
+                        <li class="current">Financial Report</li>
                     </ul>
                 </div>
                 <div class="tabs-nav-holder">
@@ -53,7 +57,15 @@
                         <h2 class="plan-title">{{ project.title }}</h2>
                     </div>
                     <div class="actions-panel">
-                        <a href="#" class="btn btn-gray"><span class="btn-text">Import From File</span><span class="icon-download"></span></a>
+                        <a href="#" class="btn btn-gray"><span class="btn-text">Import</span><span class="icon-download"></span></a>
+                        <button type="button"
+                                id="fold-unfold-all"
+                                class="btn btn-gray-outline fold-unfold-all-details">
+                            <span class="icon-chevron-up up hidden" id="fold-icon-up"></span>
+                            <span class="icon-chevron-down down " id="fold-icon-down"></span>
+                            <span class="btn-text hidden" id="all-fold">Collapse All</span>
+                            <span class="btn-text " id="all-unfold">Expand All</span>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -78,15 +90,27 @@
                                         {% if not form.id.value %}
                                             <span>Add Budget Progress</span>
                                             <br>
+                                        {% else %}
+                                            {{ form.instance.title }}
                                         {% endif %}
                                     </span>
                                     <div class="block-location-activity">
                                         <div id="{{ form.prefix }}-actions">
-                                            <button href="#" class="btn btn-gray-outline">
+                                            <button href="#"
+                                                    data-url="{% url 'copy_budget' project=project.pk budget=form.instance.pk %}"
+                                                    data-return-url="{% url 'create_project_budget_progress' project=project.pk %}"
+                                                    data-type="copy"
+                                                    data-project=""
+                                                    class="btn btn-gray-outline show_confirm">
                                                 <span class="icon-copy"></span>
                                                 <span class="btn-text">Duplicate</span>
                                             </button>
-                                            <button href="#" class="btn btn-gray-outline">
+                                            <button href="#"
+                                                    data-url="{% url 'delete_budget' form.instance.pk %}"
+                                                    data-return-url="{% url 'create_project_budget_progress' project=project.pk %}"
+                                                    data-type="delete"
+                                                    data-project=""
+                                                    class="btn btn-gray-outline show_confirm">
                                                 <span class="icon-trashbin"></span>
                                                 <span class="btn-text">Delete</span>
                                             </button>
@@ -106,10 +130,10 @@
                                 <div id="{{ form.prefix }}-details">
                                     <div class="row">
                                         <div class="col">
-                                            <div class="multiple-fields-row two-items">
+                                            <div class="multiple-fields-row three-items">
                                                 <div class="field-col">
                                                     <div class="select-field">
-                                                        <label>Donor *</label>
+                                                        <label>Donor</label>
                                                         {{ form.donor }}
                                                     </div>
                                                 </div>
@@ -119,9 +143,43 @@
                                                         {{ form.activity_domain }}
                                                     </div>
                                                 </div>
+                                                <div class="field-col">
+                                                    <div class="input-field">
+                                                        <label>Grant ID</label>
+                                                        {{ form.grant }}
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                         <div class="col">
+                                            <div class="multiple-fields-row three-items">
+                                                <div class="field-col">
+                                                    <div class="select-field">
+                                                        <label>Amount</label>
+                                                        {{ form.amount_recieved }}
+                                                    </div>
+                                                </div>
+                                                <div class="field-col">
+                                                    <div class="input-field">
+                                                        <label>Currency</label>
+                                                        {{ form.budget_currency }}
+                                                    </div>
+                                                </div>
+                                                <div class="field-col">
+                                                    <div class="report-date-picker-field">
+                                                        <div class="date start">
+                                                            <label for="{{ form.received_date.id_for_label }}">Received Date</label>
+                                                            {{ form.received_date }}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col">
+                                            <div class="input-field is-required">
+                                                <label for="prDecs">Notes</label>
+                                                <div class="input-holder">{{ form.description }}</div>
+                                            </div>
                                             {% comment %} <div class="multiple-fields-row three-items">
                                                 <div class="field-col">
                                                     <div class="input-field">

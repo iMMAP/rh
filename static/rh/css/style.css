@@ -3015,7 +3015,7 @@ select option[value=placeholder] {
 
 .tabs-nav .active a:after {
   font-weight: 600;
-  background-color: #e6e7e8
+  background-color: #af4745
 }
 
 .page-navigation-panel .tabs-nav a {

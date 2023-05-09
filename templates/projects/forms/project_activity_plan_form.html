@@ -453,8 +453,8 @@
     </div>
 {% endblock project_contents %}
 {% block scripts %}
+    {{ formset.media.js }}
     {% compress js %}
-        {{ formset.media.js }}
         <script defer src="{% static 'rh/js/activity_planning.js' %}"></script>
     {% endcompress js %}
 {% endblock scripts %}

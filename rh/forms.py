@@ -108,6 +108,8 @@ class ProjectForm(forms.ModelForm):
 
         user_clusters = list(user_profile.clusters.all().values_list('pk', flat=True))
 
+        self.fields['clusters'].queryset = self.fields['clusters'].queryset.filter(
+            id__in=user_clusters)
         self.fields['donors'].queryset = Donor.objects.order_by('name')
         self.fields['budget_currency'].queryset = Currency.objects.order_by('name')
         self.fields['implementing_partners'].queryset = Organization.objects.order_by('name')

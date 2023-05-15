@@ -41,7 +41,8 @@ class Location(models.Model):
 
 class Cluster(models.Model):
     """Clusters Model"""
-
+    # Clusters can be active in many countries
+    # ! create a many to many relationship to location(country)
     name = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
     code = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
     title = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
@@ -55,10 +56,17 @@ class BeneficiaryType(models.Model):
     """Beneficiary Types Model"""
     name = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
     code = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
+
+    # ! Change the relationship to many-to-many
     country = models.ForeignKey(Location, blank=True, null=True, on_delete=models.SET_NULL, )
+
+    # ! Change the relationship to many-to-many
     clusters = models.ManyToManyField(Cluster)
+
+    # ! Only one field is sufficient
     is_hrp_beneficiary = models.BooleanField(default=False)
     is_regular_beneficiary = models.BooleanField(default=False)
+
     start_date = models.DateTimeField(blank=True, null=True)
     end_date = models.DateTimeField(blank=True, null=True)
     description = models.CharField(max_length=DESCRIPTION_MAX_LENGTH, blank=True, null=True)
@@ -72,13 +80,18 @@ class BeneficiaryType(models.Model):
 
 
 class Organization(models.Model):
-    """Organizations Model"""
+
+    # Organizations can be working in multiple countries
+    # ! Change the relationship to many-to-many
     country = models.ForeignKey(Location, blank=True, null=True, on_delete=models.SET_NULL, )
+
     name = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
     code = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
     type = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
+
     created_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
     updated_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
+
     old_id = models.CharField("Old ID", max_length=NAME_MAX_LENGTH, blank=True, null=True)
 
     def __str__(self):
@@ -88,10 +101,19 @@ class Organization(models.Model):
 class Donor(models.Model):
     code = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
     name = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
+
+    # Donors can be active in several countries
+    # ! Change the relationship to many-to-many
     country = models.ForeignKey(Location, blank=True, null=True, on_delete=models.SET_NULL, )
+
+    # Donors can be active in several clusters
+    # ! Change the relationship to many-to-many
     cluster = models.ForeignKey(Cluster, blank=True, null=True, on_delete=models.SET_NULL, )
+
     start_date = models.DateTimeField(blank=True, null=True)
     end_date = models.DateTimeField(blank=True, null=True)
+
+    # ? Unnecessary field
     old_id = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
 
     def __str__(self):
@@ -102,6 +124,8 @@ class Donor(models.Model):
         verbose_name_plural = "Donors"
 
 
+# ? No one is using this in the current RH
+# ? We should delete this for now
 class StrategicObjective(models.Model):
     """Objectives"""
     strategic_objective_name = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
@@ -119,6 +143,7 @@ class StrategicObjective(models.Model):
         verbose_name_plural = "Objectives"
 
 
+# ? Not necessary to have a separate table
 class Currency(models.Model):
     """Currencies model"""
     name = models.CharField(max_length=15, null=True)
@@ -131,6 +156,7 @@ class Currency(models.Model):
         verbose_name_plural = "Currencies"
 
 
+# ? What is its purpose ?
 class LocationType(models.Model):
     """Locations Types model"""
     name = models.CharField(max_length=15, null=True)
@@ -156,6 +182,9 @@ class FacilitySiteType(models.Model):
 
 
 class ImplementationModalityType(models.Model):
+
+    # ! These is related to cluster, activity and indicator
+
     code = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
     name = models.fields.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
 
@@ -168,6 +197,9 @@ class ImplementationModalityType(models.Model):
 
 
 class TransferMechanismType(models.Model):
+
+    # ! These is related to cluster, activity and indicator
+
     modality_id = models.ForeignKey(ImplementationModalityType, on_delete=models.SET_NULL, blank=True, null=True)
     code = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
     name = models.fields.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
@@ -181,6 +213,9 @@ class TransferMechanismType(models.Model):
 
 
 class PackageType(models.Model):
+
+    # ! These is related to cluster, activity and indicator
+
     code = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
     name = models.fields.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
 
@@ -193,6 +228,9 @@ class PackageType(models.Model):
 
 
 class TransferCategory(models.Model):
+
+    # ! These is related to cluster, activity and indicator
+
     code = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
     name = models.fields.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
 
@@ -205,6 +243,9 @@ class TransferCategory(models.Model):
 
 
 class GrantType(models.Model):
+
+    # ! These is related to cluster, activity and indicator
+
     code = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
     name = models.fields.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
 
@@ -217,6 +258,9 @@ class GrantType(models.Model):
 
 
 class UnitType(models.Model):
+
+    # ! These is related to cluster, activity and indicator
+
     code = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
     name = models.fields.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
 
@@ -228,6 +272,7 @@ class UnitType(models.Model):
         verbose_name_plural = "Unit Types"
 
 
+# ? What is this table used for ?
 class ReportType(models.Model):
     code = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
     name = models.fields.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
@@ -255,6 +300,7 @@ class ActivityDomain(models.Model):
         verbose_name_plural = "Activity Domains"
 
 
+# ? Should it be only 'Activity'
 class ActivityType(models.Model):
     activity_domain = models.ForeignKey(ActivityDomain, on_delete=models.SET_NULL, blank=True, null=True)
     active = models.BooleanField(default=True)
@@ -279,6 +325,7 @@ class ActivityType(models.Model):
         verbose_name_plural = "Activity Types"
 
 
+# ? Is it necessary to have a separate table ?
 class ActivityDetail(models.Model):
     activity_type = models.ForeignKey(ActivityType, on_delete=models.SET_NULL, blank=True, null=True)
     code = models.CharField(max_length=DESCRIPTION_MAX_LENGTH, blank=True, null=True)
@@ -294,6 +341,7 @@ class ActivityDetail(models.Model):
 
 class Indicator(models.Model):
     """Indicators"""
+
     activity_types = models.ManyToManyField(ActivityType)
     code = models.CharField(max_length=600, blank=True, null=True)
     name = models.CharField(max_length=600, blank=True, null=True)
@@ -332,6 +380,8 @@ class Project(models.Model):
     code = models.CharField(max_length=NAME_MAX_LENGTH, null=True, blank=True)
 
     is_hrp_project = models.BooleanField(default=False)
+
+    # ! Keep only one of the two fields
     has_hrp_code = models.BooleanField(default=False)
     hrp_code = models.CharField(max_length=NAME_MAX_LENGTH, null=True, blank=True)
 
@@ -340,6 +390,8 @@ class Project(models.Model):
 
     donors = models.ManyToManyField(Donor)
     implementing_partners = models.ManyToManyField(Organization, related_name="implementing_partners")
+
+    # ? No one is using this feature now
     programme_partners = models.ManyToManyField(Organization, related_name="programme_partners")
 
     # locations = models.ManyToManyField(Location)
@@ -428,6 +480,8 @@ class ActivityPlan(models.Model):
     facility_long = models.CharField(max_length=NAME_MAX_LENGTH, null=True, blank=True)
 
     age_desegregation = models.BooleanField(default=False)
+
+    # ! make this dynamic in a separeate table called 'Disaggregation'
     female_0_5 = models.IntegerField(default=0, blank=True, null=True)
     female_6_12 = models.IntegerField(default=0, blank=True, null=True)
     female_12_17 = models.IntegerField(default=0, blank=True, null=True)
@@ -450,10 +504,10 @@ class ActivityPlan(models.Model):
     total_6_12 = models.IntegerField(default=0, blank=True, null=True)
     total_12_17 = models.IntegerField(default=0, blank=True, null=True)
     total_18 = models.IntegerField(blank=True, null=True)
-
     total = models.IntegerField(default=0, blank=True, null=True)
-
     households = models.IntegerField(default=0, blank=True, null=True)
+    # ! 
+
     description = models.TextField(blank=True, null=True)
     old_id = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
 
@@ -541,11 +595,12 @@ class BudgetProgress(models.Model):
         verbose_name_plural = "Budget Progress"
 
     
-
 class Report(models.Model):
     project = models.ForeignKey(Project, on_delete=models.SET_NULL, null=True, blank=True)
     activity_plan = models.ForeignKey(ActivityPlan, on_delete=models.SET_NULL, null=True, blank=True)
     location = models.ForeignKey(Location, on_delete=models.SET_NULL, null=True, blank=True)
+
+    # ! These should be collected in a separate table ex called 'disaggregation_report'
     boys = models.IntegerField(blank=True, null=True)
     girls = models.IntegerField(blank=True, null=True)
     men = models.IntegerField(blank=True, null=True)
@@ -553,6 +608,8 @@ class Report(models.Model):
     elderly_men = models.IntegerField(blank=True, null=True)
     elderly_women = models.IntegerField(blank=True, null=True)
     households = models.IntegerField(blank=True, null=True)
+
+
     notes = models.TextField(blank=True, null=True)
     submitted_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)

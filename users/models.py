@@ -10,14 +10,21 @@ class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, blank=True, null=True)
     name = models.CharField(max_length=200, blank=True, null=True)
     country = models.ForeignKey(Location, blank=False, null=True, on_delete=models.SET_NULL)
+
+    # ! Take this from the user organization
+    # ! Delete this field
     clusters = models.ManyToManyField(Cluster)
+
     organization = models.ForeignKey(Organization, on_delete=models.SET_NULL, blank=True, null=True)
+
     position = models.CharField(max_length=200, blank=True, null=True)
     phone = models.CharField(max_length=200, blank=True, null=True)
     whatsapp = models.CharField(max_length=200, blank=True, null=True)
     skype = models.CharField(max_length=200, blank=True, null=True)
     old_id = models.CharField(max_length=200, blank=True, null=True)
     is_cluster_contact = models.BooleanField(default=False)
+
+    # ! Delete this - we can collect this data in a separate table
     visits = models.IntegerField(blank=True, null=True)
 
     def __str__(self):

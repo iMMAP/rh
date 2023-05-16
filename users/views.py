@@ -121,10 +121,11 @@ def login_view(request):
     """User Login View """
     template = loader.get_template('registration/login.html')
     if request.method == 'POST':
+        # ! use email to authenticate instead of username
         username = request.POST.get('username')
         password = request.POST.get('password')
         user = authenticate(request, username=username, password=password)
-
+        
         if user is not None:
             login(request, user)
             if 'next' in request.POST:

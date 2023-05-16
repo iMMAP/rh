@@ -183,7 +183,7 @@ class FacilitySiteType(models.Model):
 
 class ImplementationModalityType(models.Model):
 
-    # ! These is related to cluster, activity and indicator
+    # ! ImplementationModalityType is related to cluster, activity and indicator
 
     code = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
     name = models.fields.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
@@ -198,7 +198,7 @@ class ImplementationModalityType(models.Model):
 
 class TransferMechanismType(models.Model):
 
-    # ! These is related to cluster, activity and indicator
+    # ! TransferMechanismType is related to cluster, activity and indicator
 
     modality_id = models.ForeignKey(ImplementationModalityType, on_delete=models.SET_NULL, blank=True, null=True)
     code = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
@@ -214,7 +214,7 @@ class TransferMechanismType(models.Model):
 
 class PackageType(models.Model):
 
-    # ! These is related to cluster, activity and indicator
+    # ! PackageType is related to cluster, activity and indicator
 
     code = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
     name = models.fields.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
@@ -229,7 +229,7 @@ class PackageType(models.Model):
 
 class TransferCategory(models.Model):
 
-    # ! These is related to cluster, activity and indicator
+    # ! TransferCategory is related to cluster, activity and indicator
 
     code = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
     name = models.fields.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
@@ -244,7 +244,7 @@ class TransferCategory(models.Model):
 
 class GrantType(models.Model):
 
-    # ! These is related to cluster, activity and indicator
+    # ! GrantType is related to cluster, activity and indicator
 
     code = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
     name = models.fields.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
@@ -259,7 +259,7 @@ class GrantType(models.Model):
 
 class UnitType(models.Model):
 
-    # ! These is related to cluster, activity and indicator
+    # ! UnitTypes are related to cluster, activity and indicator
 
     code = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
     name = models.fields.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
@@ -608,6 +608,7 @@ class Report(models.Model):
     elderly_men = models.IntegerField(blank=True, null=True)
     elderly_women = models.IntegerField(blank=True, null=True)
     households = models.IntegerField(blank=True, null=True)
+    # !
 
 
     notes = models.TextField(blank=True, null=True)

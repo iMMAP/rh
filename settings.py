@@ -22,18 +22,26 @@ ALLOWED_HOSTS = ['dev.reporthub.immap.org', '127.0.0.1']
 
 # Application definition
 INSTALLED_APPS = [
-    'rh.apps.RhConfig',
-    'users.apps.UsersConfig',
-    'stock.apps.StockConfig',
+    # Default django apps
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    # Installed packages apps
     'django_filters',
     'smart_selects',
+    'compressor',
+    'compressor_toolkit',
+
+    # our apps
+    'rh.apps.RhConfig',
+    'users.apps.UsersConfig',
+    'stock.apps.StockConfig',
 ]
+
 USE_DJANGO_JQUERY = True
 
 MIDDLEWARE = [
@@ -138,10 +146,7 @@ STATICFILES_DIRS = [
    BASE_DIR / "static",
 ]
 
-INSTALLED_APPS += (
-    'compressor',
-    'compressor_toolkit',
-)
+
 
 STATICFILES_FINDERS += (
     'compressor.finders.CompressorFinder',

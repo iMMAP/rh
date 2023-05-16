@@ -8,7 +8,13 @@ class Profile(models.Model):
     """Inherit AbstractUser model and include our custom fields"""
 
     user = models.OneToOneField(User, on_delete=models.CASCADE, blank=True, null=True)
+
+    # ! divide the name to first_name and last_name
     name = models.CharField(max_length=200, blank=True, null=True)
+
+    # first_name = models.CharField(max_length=200, blank=True, null=True)
+    # last_name = models.CharField(max_length=200, blank=True, null=True)
+
     country = models.ForeignKey(Location, blank=False, null=True, on_delete=models.SET_NULL)
 
     # ! Take the user clusers from the user organization
@@ -26,7 +32,7 @@ class Profile(models.Model):
     is_cluster_contact = models.BooleanField(default=False)
 
     # ! Delete this - we can collect this data in a separate table
-    visits = models.IntegerField(blank=True, null=True)
+    # visits = models.IntegerField(blank=True, null=True)
 
     def __str__(self):
-        return f"{self.name}'s Profile"
+        return f"{self.first_name} {self.last_name} 's Profile"

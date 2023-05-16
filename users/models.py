@@ -35,4 +35,4 @@ class Profile(models.Model):
     # visits = models.IntegerField(blank=True, null=True)
 
     def __str__(self):
-        return f"{self.first_name} {self.last_name} 's Profile"
+        return f"{self.name}  's Profile"

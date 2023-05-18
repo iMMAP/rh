@@ -38,7 +38,7 @@
                             <a href="{% if project %}{% url 'update_project' project.pk %}{% else %}{% url 'create_project' %}{% endif %}">Project
                             plan</a>
                         </li>
-                        <li>
+                        <li class="active">
                             <a href="{% if project %}{% url 'create_project_budget_progress' project.pk %}{% else %}#{% endif %}">Financial Reports</a>
                         </li>
                         <li>

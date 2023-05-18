@@ -518,7 +518,7 @@ class TargetLocation(models.Model):
 
 
 # ##############################################
-# ########### Budget Progress Report ###########
+# ##### Project Budget Progress Reporting ######
 # ##############################################
 
 class BudgetProgress(models.Model):
@@ -541,6 +541,9 @@ class BudgetProgress(models.Model):
         verbose_name_plural = "Budget Progress"
 
     
+# ##############################################
+# ############# Project Reporting ##############
+# ##############################################
 
 class Report(models.Model):
     project = models.ForeignKey(Project, on_delete=models.SET_NULL, null=True, blank=True)

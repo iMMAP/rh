@@ -7,17 +7,28 @@
                     <span class="input"></span>
                 </label>
             </div>
-            {% for cluster in project.clusters.all %}{{ cluster.title }},{% endfor %}
+            {{ project.title }}
         </div>
     </td>
-    <td class="title-col">{{ project.title }}</td>
+    <td class="title-col">
+        {% for cluster in project.clusters.all %}
+            {{ cluster.title }}
+            {% if not forloop.last %},{% endif %}
+        {% endfor %}
+    </td>
     <td class="organisation-col">
-        {% for partner in project.implementing_partners.all %}{{ partner.code }}{% endfor %}
+        {% for partner in project.implementing_partners.all %}
+            {{ partner.code }}
+            {% if not forloop.last %},{% endif %}
+        {% endfor %}
     </td>
-    <td class="update-date-col">{{ project.updated_at }}</td>
     <td class="location-col">
-        {% for location in project.locations.all %}{{ location.name }},{% endfor %}
+        {% for p_partner in project.programme_partners.all %}
+            {{ p_partner.code }}
+            {% if not forloop.last %},{% endif %}
+        {% endfor %}
     </td>
+    {% comment %} <td class="update-date-col">{{ project.updated_at }}</td> {% endcomment %}
     <td class="description-col">{{ project.description }}</td>
     <td class="action-col">
         <div class="table-flex-holder">

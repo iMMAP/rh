@@ -11,7 +11,7 @@ class UserRegisterForm(UserCreationForm):
 
     class Meta:
         model = User
-        fields = ['username', 'email', 'password1', 'password2']
+        fields = ['username', 'first_name', 'last_name', 'email', 'password1', 'password2']
 
     def clean_username(self):
         """check if username already exists"""
@@ -39,15 +39,15 @@ class ProfileCreateForm(forms.ModelForm):
 
     class Meta:
         model = Profile
-        fields = ['name', 'position', 'organization', 'clusters', 'country']
-        labels = {'name': 'Full Name', 'clusters': 'Clusters / Sectors'}
+        fields = ['position', 'organization', 'clusters', 'country']
+        labels = {'clusters': 'Clusters / Sectors'}
 
-        # widgets = {
-        #     'clusters': forms.SelectMultiple(attrs={'class': 'custom-select', 'multiple': ''}),
-        # }
+        widgets = {
+            'clusters': forms.SelectMultiple(attrs={'class': 'js_multiselect', 'multiple': ''}),
+        }
 
     def __init__(self, *args, **kwargs):
-        super(ProfileCreateForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.fields['country'].queryset = self.fields['country'].queryset.filter(type='Country')
 
 
@@ -71,7 +71,7 @@ class ProfileUpdateForm(forms.ModelForm):
         }
 
     def __init__(self, *args, **kwargs):
-        super(ProfileUpdateForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.fields['country'].queryset = self.fields['country'].queryset.filter(type='Country')
 
 
@@ -80,7 +80,7 @@ class UserPasswordChangeForm(PasswordChangeForm):
 
     def __init__(self, *args, **kwargs):
         """Call super"""
-        super(UserPasswordChangeForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     old_password = forms.CharField(
         label='Current Password',
@@ -128,7 +128,7 @@ class UserSetPasswordForm(SetPasswordForm):
 
     def __init__(self, *args, **kwargs):
         """Call super"""
-        super(UserSetPasswordForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     new_password1 = forms.CharField(label='',
                                     help_text=password_validation.password_validators_help_text_html(),
@@ -160,7 +160,7 @@ class UserPasswordResetForm(PasswordResetForm):
 
     def __init__(self, *args, **kwargs):
         """Call super"""
-        super(UserPasswordResetForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     email = forms.EmailField(label='',
                              widget=forms.EmailInput(

@@ -42,6 +42,8 @@ class Location(models.Model):
 class Cluster(models.Model):
     """Clusters Model"""
 
+    countries = models.ManyToManyField(Location, blank=True, null=True)
+
     name = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
     code = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
     title = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
@@ -73,7 +75,9 @@ class BeneficiaryType(models.Model):
 
 class Organization(models.Model):
     """Organizations Model"""
-    country = models.ForeignKey(Location, blank=True, null=True, on_delete=models.SET_NULL, )
+    countries = models.ManyToManyField(Location, blank=True, null=True)
+    clusters = models.ManyToManyField(Cluster, blank=True, null=True)
+
     name = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
     code = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
     type = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
@@ -88,11 +92,14 @@ class Organization(models.Model):
 class Donor(models.Model):
     code = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
     name = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
-    country = models.ForeignKey(Location, blank=True, null=True, on_delete=models.SET_NULL, )
-    cluster = models.ForeignKey(Cluster, blank=True, null=True, on_delete=models.SET_NULL, )
-    start_date = models.DateTimeField(blank=True, null=True)
-    end_date = models.DateTimeField(blank=True, null=True)
+
+    countries = models.ManyToManyField(Location, blank=True, null=True)
+    clusters = models.ManyToManyField(Cluster, blank=True, null=True)
+
     old_id = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
+
+    updated = models.DateTimeField(auto_now=True)
+    created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.name
@@ -308,6 +315,19 @@ class Indicator(models.Model):
         verbose_name = 'Indicator'
         verbose_name_plural = "Indicators"
 
+
+class Disaggregation(models.Model):
+    clusters = models.ManyToManyField(Cluster);
+    indicators = models.ManyToManyField(Indicator);
+
+    name = models.CharField(max_length=NAME_MAX_LENGTH)
+    type = models.CharField(max_length=NAME_MAX_LENGTH)
+
+    updated = models.DateTimeField(auto_now=True)
+    created = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.name
 
 # ##############################################
 # ############## Project Planning ##############

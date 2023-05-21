@@ -1,0 +1,281 @@
+{% extends "../../../_base.html" %}
+{% load static %}
+{% block page_title %}
+    ReportHub - Projects
+{% endblock page_title %}
+{% block content %}
+    <style>
+    tbody tr:hover {
+        background: #f5f5f5;
+        color: #af4745;
+        cursor: pointer;
+    }
+
+    td a {
+        display: block;
+    }
+    </style>
+    <div class="base-section">
+        <div class="container">
+            <div class="page-top-panel">
+                <div class="tabs-nav-holder">
+                    <ul class="tabs-nav">
+                        <li class=" {% if active_view %}active{% endif %}">
+                            <a href="{% url 'active_projects' %}">Active Projects
+                                (
+                                {% if active_projects_count %}
+                                    {{ active_projects_count }}
+                                {% else %}
+                                    {{ active_projects | length }}
+                                {% endif %}
+                                )
+                            </a>
+                        </li>
+                        <li class=" {% if draft_view %}active{% endif %}">
+                            <a href="{% url 'draft_projects' %}">Draft Projects
+                                (
+                                {% if draft_projects_count %}
+                                    {{ draft_projects_count }}
+                                {% else %}
+                                    {{ draft_projects | length }}
+                                {% endif %}
+                                )
+                            </a>
+                        </li>
+                        {% if completed_projects_count or completed_projects %}
+                            <li class=" {% if completed_view %}active{% endif %}">
+                                <a href="{% url 'completed_projects' %}">Completed Projects
+                                    (
+                                    {% if completed_projects_count %}
+                                        {{ completed_projects_count }}
+                                    {% else %}
+                                        {{ completed_projects | length }}
+                                    {% endif %}
+                                    )
+                                </a>
+                            </li>
+                        {% endif %}
+                        {% if archived_projects_count or archived_projects %}
+                            <li class=" {% if archived_view %}active{% endif %}">
+                                <a href="{% url 'archived_projects' %}">Archived Projects
+                                    (
+                                    {% if archived_projects_count %}
+                                        {{ archived_projects_count }}
+                                    {% else %}
+                                        {{ archived_projects | length }}
+                                    {% endif %}
+                                    )
+                                </a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </div>
+                <div class="actions-panel">
+                    <div class="filter-holder">
+                        <a href="#" class="btn btn-red filter-open">Filter</a>
+                        <!-- FIXME: FIX the filter selections -->
+                        <form action="#" class="filter-form">
+                            <div class="filter-options">
+                                <div class="block-top">
+                                    <span class="title">Filter</span>
+                                    <a class="filter-close" href="#"></a>
+                                </div>
+                                <div class="block-body" data-simplebar>
+                                    <div class="select-field">
+                                        <label>Donors</label>
+                                        {{ project_filter.form.donors }}
+                                    </div>
+                                    <div class="select-field ">
+                                        <label for="{{ project_filter.form.clusters.html_name }}">Clusters / Sectors</label>
+                                        {{ project_filter.form.clusters }}
+                                    </div>
+                                    <div class="select-field">
+                                        <label>Activity Domain</label>
+                                        {{ project_filter.form.activities }}
+                                    </div>
+                                    <div class="date-picker-field">
+                                        <div class="date start">
+                                            <label>Start Date</label>
+                                            {{ project_filter.form.start_date }}
+                                        </div>
+                                        <div class="date end">
+                                            <label>End Date</label>
+                                            {{ project_filter.form.end_date }}
+                                        </div>
+                                    </div>
+                                    <div class="select-field">
+                                        <label>Implementing Partner</label>
+                                        {{ project_filter.form.implementing_partners }}
+                                    </div>
+                                    <div class="select-field">
+                                        <label>Programme Partner</label>
+                                        {{ project_filter.form.programme_partners }}
+                                    </div>
+                                    <div class="select-field">
+                                        <label>Focal Person</label>
+                                        {{ project_filter.form.user }}
+                                    </div>
+                                </div>
+                                <div class="block-footer">
+                                    <div class="btn-wrapper">
+                                        <a class="btn btn-gray-outline"
+                                           href="{% if active_projects_count %} {% url 'active_projects' %} {% elif draft_projects_count %} {% url 'draft_projects' %} {% elif completed_projects_count %} {% url 'completed_projects' %} {% else %} {% endif %}">Reset</a>
+                                        <button type="submit" class="btn btn-red">Apply</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="export-formats-holder">
+                        <a href="#" class="btn btn-gray export-open">
+                            <span class="btn-text">Export</span>
+                            <span class="icon-download"></span>
+                        </a>
+                        <div class="export-formats">
+                            <span class="title">File format</span>
+                            <ul class="formats-list">
+                                <li>
+                                    <div class="input-check-holder">
+                                        <input type="radio" id="radio1" name="exportFormat" />
+                                        <label for="radio1">
+                                            <span class="input"></span>
+                                            <span class="text">Docs</span>
+                                        </label>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="input-check-holder">
+                                        <input type="radio" id="radio2" name="exportFormat" />
+                                        <label for="radio2">
+                                            <span class="input"></span>
+                                            <span class="text">CVS</span>
+                                        </label>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="input-check-holder">
+                                        <input type="radio" id="radio3" name="exportFormat" />
+                                        <label for="radio3">
+                                            <span class="input"></span>
+                                            <span class="text">Excel</span>
+                                        </label>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="input-check-holder">
+                                        <input type="radio" id="radio4" name="exportFormat" />
+                                        <label for="radio4">
+                                            <span class="input"></span>
+                                            <span class="text">PDF</span>
+                                        </label>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="projects-options-panel">
+                <div class="holder">
+                    <div class="input-holder"></div>
+                    <ul class="buttons-list-inline">
+                        <li>
+                            <a href="{% url 'create_project' %}" class="btn btn-red add-btn">Add New Project</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="content-block top-border bottom-border bottom-decor">
+                <div id="tab-1">
+                    <div class="table-wrapper-scrollable">
+                        <table class="table all-projects-table js-collapsible-table">
+                            <thead>
+                                <tr>
+                                    <th class="cluster-col">
+                                        <div class="table-flex-holder">
+                                            <div class="input-check-holder">
+                                                <input type="checkbox"
+                                                       id="table-head-check-01"
+                                                       data-check-pattern="[name^='table-check']" />
+                                                <label for="table-head-check-01">
+                                                    <span class="input"></span>
+                                                </label>
+                                            </div>
+                                            <strong class="table-title">Project title</strong>
+                                            <div class="table-sort-buttons">
+                                                <button type="button">
+                                                    <span class="icon-chevron-up"></span>
+                                                </button>
+                                                <button type="button">
+                                                    <span class="icon-chevron-down"></span>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </th>
+                                    <th class="title-col">
+                                        <div class="table-flex-holder">
+                                            <strong class="table-title">Cluster/Sector</strong>
+                                            <div class="table-sort-buttons">
+                                                <button type="button">
+                                                    <span class="icon-chevron-up"></span>
+                                                </button>
+                                                <button type="button">
+                                                    <span class="icon-chevron-down"></span>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </th>
+                                    <th class="organisation-col">
+                                        <div class="table-flex-holder">
+                                            <strong class="table-title">Implementing Partners</strong>
+                                            <div class="table-sort-buttons">
+                                                <button type="button">
+                                                    <span class="icon-chevron-up"></span>
+                                                </button>
+                                                <button type="button">
+                                                    <span class="icon-chevron-down"></span>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </th>
+                                    <th class="location-col">
+                                        <div class="table-flex-holder">
+                                            <strong class="table-title">Programme Partners</strong>
+                                        </div>
+                                    </th>
+                                    {% comment %} <th class="update-date-col">
+                                        <div class="table-flex-holder">
+                                            <strong class="table-title">Updated on</strong>
+                                            <div class="table-sort-buttons">
+                                                <button type="button">
+                                                    <span class="icon-chevron-up"></span>
+                                                </button>
+                                                <button type="button">
+                                                    <span class="icon-chevron-down"></span>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </th> {% endcomment %}
+                                    <th class="description-col">
+                                        <div class="table-flex-holder">
+                                            <strong class="table-title">Description</strong>
+                                        </div>
+                                    </th>
+                                    <th class="action-col">
+                                        <div class="table-flex-holder">
+                                            <strong class="table-title">Action</strong>
+                                        </div>
+                                    </th>
+                                </tr>
+                            </thead>
+                            {% block table_body %}
+                            {% endblock table_body %}
+                        </table>
+                    </div>
+                </div>
+            </div>
+            {% block pager %}
+            {% endblock pager %}
+        </div>
+    </div>
+{% endblock content %}

@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.db.models import Count
 
 from .models import *
 
@@ -15,9 +16,25 @@ admin.site.register(ReportType)
 
 
 class ClusterAdmin(admin.ModelAdmin):
-    list_display = ('name', 'code', 'title')
+    list_display = ('name', 'code', 'title','countries_count','donors_count')
     search_fields = ('code', 'name')
     list_filter = ('code',)
+
+    # get the count of a many to many relationship with Donor model
+    def get_queryset(self, request):
+        queryset = super().get_queryset(request)
+        queryset = queryset.annotate(
+            donors_count=Count('donor'),
+            countries_count=Count('countries')
+        )
+        return queryset
+
+    def donors_count(self, obj):
+        return obj.donors_count
+
+    def countries_count(self, obj):
+        return obj.countries_count
+    
 admin.site.register(Cluster, ClusterAdmin)
 
 
@@ -29,16 +46,29 @@ admin.site.register(Location, LocationAdmin)
 
 
 class OrganizationAdmin(admin.ModelAdmin):
-    list_display = ('name', 'code', 'type', 'country')
-    search_fields = ('name', 'country__name', 'type')
-    list_filter = ('type', 'country')
+    list_display = ('name', 'code', 'type', 'countries_count','clusters_count')
+    search_fields = ('name', 'type')
+    list_filter = ('type', )
+
+    def countries_count(self, obj):
+        return obj.countries.count()
+    
+    def clusters_count(self, obj):
+        return obj.clusters.count()
 admin.site.register(Organization, OrganizationAdmin)
 
 
 class DonorAdmin(admin.ModelAdmin):
-    list_display = ('name', 'country', 'cluster')
-    search_fields = ('code', 'name', 'cluster__title')
-    list_filter = ('cluster', 'country')
+    list_display = ('name','countries_count','clusters_count')
+    search_fields = ('code', 'name',)
+    # list_filter = ('cluster', 'country')
+    
+    def countries_count(self, obj):
+        return obj.countries.count()
+    
+    def clusters_count(self, obj):
+        return obj.clusters.count()
+   
 admin.site.register(Donor, DonorAdmin)
 
 
@@ -49,10 +79,18 @@ class BeneficiaryTypeAdmin(admin.ModelAdmin):
 admin.site.register(BeneficiaryType, BeneficiaryTypeAdmin)
 
 
+
+
+class DisaggregationInline(admin.TabularInline):
+    model = Disaggregation.indicators.through
+
 class IndicatorAdmin(admin.ModelAdmin):
     list_display = ('name', 'code',)
     search_fields = ('activity_types__name', 'name', 'code')
     # list_filter = ('activity_type',)
+    inlines = [
+        DisaggregationInline,
+    ]
 admin.site.register(Indicator, IndicatorAdmin)
 
 
@@ -136,3 +174,19 @@ class ReportAdmin(admin.ModelAdmin):
         'households')
     list_filter = ('project', 'activity_plan', 'location')
 admin.site.register(Report, ReportAdmin)
+
+
+
+
+class DisaggregationAdmin(admin.ModelAdmin):
+    list_display = ('name','indicators_count','clusters_count')
+    search_fields = ('code', 'name',)
+    # list_filter = ('cluster', 'country')
+    
+    def indicators_count(self, obj):
+        return obj.indicators.count()
+    
+    def clusters_count(self, obj):
+        return obj.clusters.count()
+   
+admin.site.register(Disaggregation, DisaggregationAdmin)

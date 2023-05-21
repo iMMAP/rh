@@ -169,7 +169,7 @@ def draft_projects_view(request):
         'project_filter': project_filter,
         'total_pages': total_pages,
     }
-    return render(request, 'projects/views/draft_projects.html', context)
+    return render(request, 'rh/projects/views/draft_projects.html', context)
 
 
 @cache_control(no_store=True)
@@ -204,7 +204,7 @@ def active_projects_view(request):
         'project_filter': project_filter,
         'total_pages': total_pages,
     }
-    return render(request, 'projects/views/active_projects.html', context)
+    return render(request, 'rh/projects/views/active_projects.html', context)
 
 
 @cache_control(no_store=True)
@@ -239,7 +239,7 @@ def completed_projects_view(request):
         'project_filter': project_filter,
         'total_pages': total_pages,
     }
-    return render(request, 'projects/views/completed_projects.html', context)
+    return render(request, 'rh/projects/views/completed_projects.html', context)
 
 
 @cache_control(no_store=True)
@@ -274,7 +274,7 @@ def archived_projects_view(request):
         'project_filter': project_filter,
         'total_pages': total_pages,
     }
-    return render(request, 'projects/views/archived_projects.html', context)
+    return render(request, 'rh/projects/views/archived_projects.html', context)
 
 
 @cache_control(no_store=True)
@@ -294,7 +294,7 @@ def completed_project_view(request, pk):
         'project_review': True,
         'locations': target_locations
     }
-    return render(request, 'projects/views/completed_project.html', context)
+    return render(request, 'rh/projects/views/completed_project.html', context)
 
 
 @cache_control(no_store=True)
@@ -323,7 +323,7 @@ def open_project_view(request, pk):
         'locations': locations,
         'parent_page': parent_page
     }
-    return render(request, 'projects/views/project_view.html', context)
+    return render(request, 'rh/projects/views/project_view.html', context)
 
 
 @cache_control(no_store=True)
@@ -353,7 +353,7 @@ def create_project_view(request):
         'form': form, 
         'project_planning': True, 
     }
-    return render(request, 'projects/forms/project_form.html', context)
+    return render(request, 'rh/projects/forms/project_form.html', context)
 
 
 @cache_control(no_store=True)
@@ -379,7 +379,8 @@ def update_project_view(request, pk):
     parent_page = {
         'in-progress': 'active_projects',
         'draft': 'draft_projects',
-        'done': 'completed_projects'
+        'done': 'completed_projects',
+        'archive': 'archived_projects'
     }.get(project_state, None)
 
     context = {
@@ -390,7 +391,7 @@ def update_project_view(request, pk):
         'locations': locations,
         'parent_page': parent_page
     }
-    return render(request, 'projects/forms/project_form.html', context)
+    return render(request, 'rh/projects/forms/project_form.html', context)
 
 
 @cache_control(no_store=True)
@@ -453,7 +454,7 @@ def create_project_activity_plan(request, project):
         'plans': plans,
         'parent_page':parent_page
         }
-    return render(request, 'projects/forms/project_activity_plan_form.html', context)
+    return render(request, 'rh/projects/forms/project_activity_plan_form.html', context)
 
 
 @cache_control(no_store=True)
@@ -511,7 +512,7 @@ def create_project_target_location(request, project):
         'locations': locations,
         'parent_page':parent_page
     }
-    return render(request, "projects/forms/project_target_locations.html", context)
+    return render(request, "rh/projects/forms/project_target_locations.html", context)
 
 
 @cache_control(no_store=True)
@@ -542,7 +543,7 @@ def project_planning_review(request, **kwargs):
         'locations': locations,
         'parent_page': parent_page
     }
-    return render(request, 'projects/forms/project_review.html', context)
+    return render(request, 'rh/projects/forms/project_review.html', context)
 
 
 @cache_control(no_store=True)
@@ -793,7 +794,7 @@ def create_project_budget_progress_view(request, project):
         'formset': formset,
         'parent_page': parent_page,
     }
-    return render(request, "projects/financials/project_budget_progress.html", context)
+    return render(request, "rh/projects/financials/project_budget_progress.html", context)
 
 
 @cache_control(no_store=True)

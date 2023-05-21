@@ -30,7 +30,7 @@
                     </div>
                 {% endfor %}
             {% endif %}
-            <form action="#" method="post" class="login-form">
+            <form method="post" class="login-form">
                 {% csrf_token %}
                 <div class="form-holder">
                     {% for field in u_form %}

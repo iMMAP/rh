@@ -13,6 +13,18 @@ class ProjectsFilter(django_filters.FilterSet):
         queryset=Organization.objects.all(),
         widget=forms.SelectMultiple(attrs={'class': 'js_multiselect'}),
     )
+    donors = django_filters.ModelMultipleChoiceFilter(
+        queryset=Donor.objects.all(),
+        widget=forms.SelectMultiple(attrs={'class': 'js_multiselect'}),
+    )
+    programme_partners = django_filters.ModelMultipleChoiceFilter(
+        queryset=Organization.objects.all(),
+        widget=forms.SelectMultiple(attrs={'class': 'js_multiselect'}),
+    )
+    activity_domains = django_filters.ModelMultipleChoiceFilter(
+        queryset=ActivityDomain.objects.all(),
+        widget=forms.SelectMultiple(attrs={'class': 'js_multiselect'}),
+    )
 
     class Meta:
         model = Project

@@ -3091,23 +3091,23 @@ select option[value=placeholder] {
 }
 
 .all-projects-table .cluster-col {
-  width: 16.5%
+  width: 15%
 }
 
 .all-projects-table .organisation-col {
-  width: 13.5%
+  width: 20%
 }
 
 .all-projects-table .title-col {
-  width: 14%
+  width: 15%
 }
 
 .all-projects-table .update-date-col {
-  width: 13%
+  width: 15%
 }
 
 .all-projects-table .location-col {
-  width: 9.2%
+  width: 15%
 }
 
 .all-projects-table .description-col {
@@ -3115,7 +3115,7 @@ select option[value=placeholder] {
 }
 
 .all-projects-table .action-col {
-  width: 13.8%;
+  width: 15%;
   vertical-align: middle;
   display: flex
 }
@@ -5914,9 +5914,6 @@ body.filter-active {
     width: 13.4%
   }
 
-  .all-projects-table .description-col {
-    width: 23.3%
-  }
 
   .all-projects-table .action-col {
     width: 12%
@@ -6350,6 +6347,10 @@ button.swal-button.swal-button--confirm:not([disabled]):hover {
 }
 
 .budget-progress .main-heading {
-  border-top: 2px solid #be2126;
+  border-top: 2px solid #e6e7e8;
   padding: 9px 0;
+}
+
+span.select2-container.select2-container--default.select2-container--open {
+  z-index: 9999 !important;
 }

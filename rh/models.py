@@ -317,8 +317,8 @@ class Indicator(models.Model):
 
 
 class Disaggregation(models.Model):
-    clusters = models.ManyToManyField(Cluster);
-    indicators = models.ManyToManyField(Indicator);
+    clusters = models.ManyToManyField(Cluster)
+    indicators = models.ManyToManyField(Indicator)
 
     name = models.CharField(max_length=NAME_MAX_LENGTH)
     type = models.CharField(max_length=NAME_MAX_LENGTH)

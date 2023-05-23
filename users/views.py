@@ -41,7 +41,7 @@ def send_account_activation_email(request, user, to_email):
     """Email verification for resigtration """
     current_site = get_current_site(request)
     mail_subject = 'Email Activation link'
-    message = loader.render_to_string('registration/activation_email_template.html', {
+    message = loader.render_to_string('users/registration/activation_email_template.html', {
         'user': user,
         'domain': current_site.domain,
         'uid': urlsafe_base64_encode(force_bytes(user.pk)),
@@ -54,7 +54,7 @@ def send_account_activation_email(request, user, to_email):
     )
     email.attach_alternative(message, "text/html")
     if email.send():
-        template = loader.get_template('registration/activation_email_done.html')
+        template = loader.get_template('users/registration/activation_email_done.html')
         context = {'user': user, 'to_email': to_email}
         return HttpResponse(template.render(context, request))
     else:
@@ -67,7 +67,7 @@ def send_account_activation_email(request, user, to_email):
 @unauthenticated_user
 def register_view(request):
     """Registration view for creating new signing up"""
-    template = loader.get_template('registration/signup.html')
+    template = loader.get_template('users/registration/signup.html')
     organizations = Organization.objects.all().order_by('code').values()
     clusters = Cluster.objects.all().order_by('title').values()
     locations = Location.objects.all().order_by('name').values()
@@ -123,21 +123,22 @@ def register_view(request):
 @unauthenticated_user
 def login_view(request):
     """User Login View """
-    template = loader.get_template('registration/login.html')
+    template = loader.get_template('users/registration/login.html')
     if request.method == 'POST':
-        username = request.POST.get('username')
+        email = request.POST['email']
         password = request.POST.get('password')
-        user = authenticate(request, username=username, password=password)
+        user = authenticate(request, email=email, password=password)
 
         if user is not None:
             login(request, user)
-            user.profile.visits = user.profile.visits + 1
-            user.profile.save()
+            if user.profile.visits:
+                user.profile.visits = user.profile.visits + 1
+                user.profile.save()
             if 'next' in request.POST:
                 return redirect(request.POST.get('next'))
             return redirect('index')
         else:
-            messages.error(request, f'Enter correct username and password.')
+            messages.error(request, f'Enter correct email and password.')
     context = {}
     return HttpResponse(template.render(context, request))
 
@@ -155,7 +156,7 @@ def logout_view(request):
 @cache_control(no_store=True)
 @login_required
 def profile(request):
-    template = loader.get_template('profile.html')
+    template = loader.get_template('users/profile.html')
     user = request.user
 
     if request.method == 'POST':

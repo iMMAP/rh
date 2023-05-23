@@ -58,7 +58,7 @@ def stock_index_view(request):
         'submitted_stock_reports': submitted_stock_reports
     }
 
-    return render(request, 'stocks/stocks_index.html', context)
+    return render(request, 'stock/stocks_index.html', context)
 
 
 @cache_control(no_store=True)

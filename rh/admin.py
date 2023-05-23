@@ -3,7 +3,6 @@ from django.db.models import Count
 
 from .models import *
 
-admin.site.register(Currency)
 admin.site.register(LocationType)
 admin.site.register(FacilitySiteType)
 admin.site.register(ImplementationModalityType)

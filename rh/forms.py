@@ -111,7 +111,7 @@ class ProjectForm(forms.ModelForm):
         self.fields['clusters'].queryset = self.fields['clusters'].queryset.filter(
             id__in=user_clusters)
         self.fields['donors'].queryset = Donor.objects.order_by('name')
-        self.fields['budget_currency'].queryset = Currency.objects.order_by('name')
+        # self.fields['budget_currency'].queryset = Currency.objects.order_by('name')
         self.fields['implementing_partners'].queryset = Organization.objects.order_by('name')
         self.fields['programme_partners'].queryset = Organization.objects.order_by('name')
         self.fields['user'].queryset = User.objects.order_by('username')
@@ -211,6 +211,5 @@ class BudgetProgressForm(forms.ModelForm):
             pk__in=activity_domains)
         self.fields['donor'].queryset = self.fields['donor'].queryset.filter(
             pk__in=donor_ids)
-        self.fields['budget_currency'].queryset = self.fields['budget_currency'].queryset.filter(
-            pk=budget_currency.pk)
+        self.fields['budget_currency'].queryset = budget_currency
 

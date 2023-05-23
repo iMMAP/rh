@@ -1,0 +1,12 @@
+{% extends "rh/projects/views/projects_view_base.html" %}
+{% block table_body %}
+    <tbody>
+        <!--Include The Active Projects Details Here -->
+        {% for project in projects %}
+            {% include "rh/projects/views/projects_details.html" %}
+        {% endfor %}
+    </tbody>
+{% endblock table_body %}
+{% block pager %}
+    {% include "rh/projects/views/projects_pager.html" %}
+{% endblock pager %}

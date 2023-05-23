@@ -78,7 +78,17 @@ class BeneficiaryTypeAdmin(admin.ModelAdmin):
     list_filter = ('country',)
 admin.site.register(BeneficiaryType, BeneficiaryTypeAdmin)
 
-
+class DisaggregationAdmin(admin.ModelAdmin):
+    list_display = ('name','indicators_count','clusters_count')
+    search_fields = ('code', 'name',)
+    # list_filter = ('cluster', 'country')
+    
+    def indicators_count(self, obj):
+        return obj.indicators.count()
+    
+    def clusters_count(self, obj):
+        return obj.clusters.count()
+admin.site.register(Disaggregation, DisaggregationAdmin)
 
 
 class DisaggregationInline(admin.TabularInline):
@@ -174,19 +184,3 @@ class ReportAdmin(admin.ModelAdmin):
         'households')
     list_filter = ('project', 'activity_plan', 'location')
 admin.site.register(Report, ReportAdmin)
-
-
-
-
-class DisaggregationAdmin(admin.ModelAdmin):
-    list_display = ('name','indicators_count','clusters_count')
-    search_fields = ('code', 'name',)
-    # list_filter = ('cluster', 'country')
-    
-    def indicators_count(self, obj):
-        return obj.indicators.count()
-    
-    def clusters_count(self, obj):
-        return obj.clusters.count()
-   
-admin.site.register(Disaggregation, DisaggregationAdmin)

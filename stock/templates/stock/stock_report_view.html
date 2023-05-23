@@ -1,0 +1,135 @@
+{% extends "../_base.html" %}
+
+{% block content %}
+
+<div class="container px-4 px-lg-5 h-100">
+    <div class="row h-100 align-items-center justify-content-center text-left">
+        <div class="col-lg-9 align-self-end">
+            <h1 class="mb-4 mt-4">Report Hub</h1>
+            <div class="card">
+                <div class="card-body">
+                    <h3 class="card-title bg-light p-3">
+                        <i class="fa fa-calendar" aria-hidden="true"></i> &nbsp; {{report.created_at|date:"F, Y"}}
+                    </h3>
+                    <h5 class="p-3">
+                        Selected Locations
+                        <span class="badge bg-success">
+                            {{ warehouse_location_stocks|length }}
+                        </span>
+                    </h5>
+
+                    {% for warehouse_location, stocks in warehouse_location_stocks.items %}
+                    <h5 class="p-2" style="background-color: aliceblue;">
+                        <i class="fa fa-map-marker" aria-hidden="true"></i> &nbsp;{{ warehouse_location.province.name }},
+                        {{ warehouse_location.district.name }}, {{ warehouse_location.name }}
+                    </h5>
+                    {% for stock in stocks %}
+                    <div class="accordion mb-3" id="stock_details_{{ warehouse_location.id }}_{{ forloop.counter0 }}">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header"
+                                id="stock_details_header_{{ warehouse_location.id }}_{{ forloop.counter0 }}">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#collapse_{{ warehouse_location.id }}_{{ forloop.counter0 }}"
+                                    aria-expanded="false"
+                                    aria-controls="collapse_{{ warehouse_location.id }}_{{ forloop.counter0 }}">
+                                    <i class="fa fa-list" aria-hidden="true"></i> &nbsp;
+                                    {{ stock.stock_type }}, {{ stock.targeted_groups }}
+                                </button>
+                            </h2>
+                            <div id="collapse_{{ warehouse_location.id }}_{{ forloop.counter0 }}"
+                                class="accordion-collapse collapse show"
+                                aria-labelledby="stock_details_header_{{ warehouse_location.id }}_{{ forloop.counter0 }}"
+                                data-bs-parent="#stock_details_{{ warehouse_location.id }}_{{ forloop.counter0 }}">
+                                <div class="accordion-body"
+                                    id="accordion_body_{{ warehouse_location.id }}_{{ forloop.counter0 }}">
+                                    <div class="row">
+                                        <div class="col-sm">
+                                            <b>
+                                                Cluster
+                                            </b> <br />
+                                            {{ stock.cluster }}
+                                            <br /><br />
+                                        </div>
+                                        <div class="col-sm">
+                                            <b>
+                                                Stock purpose
+                                            </b> <br />
+                                            {{ stock.stock_purpose }}
+                                            <br /><br />
+                                        </div>
+                                        <div class="col-sm">
+                                            <b>
+                                                Targeted groups
+                                            </b> <br />
+                                            {{ stock.targeted_groups }}
+                                            <br /><br />
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm">
+                                            <b>
+                                                Stock type
+                                            </b> <br />
+                                            {{ stock.stock_type }}
+                                            <br /><br />
+                                        </div>
+                                        <div class="col-sm">
+                                            <b>
+                                                Status
+                                            </b> <br />
+                                            {{ stock.status }}
+                                            <br /><br />
+                                        </div>
+                                        <div class="col-sm">
+                                            <b>
+                                                Units
+                                            </b> <br />
+                                            {{ stock.stock_unit }}
+                                            <br /><br />
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm">
+                                            <b>
+                                                Qty in Stock
+                                            </b> <br />
+                                            {{ stock.qty_in_stock }}
+                                            <br /><br />
+                                        </div>
+                                        <div class="col-sm">
+                                            <b>
+                                                Qty in Pipeline
+                                            </b> <br />
+                                            {{ stock.qty_in_pipeline }}
+                                            <br /><br />
+                                        </div>
+                                        <div class="col-sm">
+                                            <b>
+                                                Beneficiary coverage
+                                            </b> <br />
+                                            {{ stock.beneficiary_coverage }}
+                                            <br /><br />
+                                            <br />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                    <br />
+                    {% endfor %}
+
+                    <h4 class="card-title bg-light p-3">
+                        Monthly Notes & Comments
+                    </h4>
+                    <p class="p-3">
+                        {{ report.note }}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

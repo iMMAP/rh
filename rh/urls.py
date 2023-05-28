@@ -33,10 +33,10 @@ urlpatterns = [
      path('project/target_location/create/?project=<str:project>/',
          user_views.create_project_target_location, name='create_project_target_location'),
 
-    path('project/financials/budget_progress/?project=<str:project>/',
+     path('project/financials/budget_progress/?project=<str:project>/',
          user_views.create_project_budget_progress_view, name='create_project_budget_progress'),
          
-    path('project/budget_progress/copy/<str:project>/<str:budget>/', user_views.copy_budget_progress, name='copy_budget'),
+     path('project/budget_progress/copy/<str:project>/<str:budget>/', user_views.copy_budget_progress, name='copy_budget'),
      path('project/budget_progress/delete/<str:pk>/', user_views.delete_budget_progress, name='delete_budget'),
 
      path('project/project_plan/review/?project=<str:project>/', user_views.project_planning_review, name='project_plan_review'),

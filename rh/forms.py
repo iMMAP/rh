@@ -87,7 +87,7 @@ class ProjectForm(forms.ModelForm):
             'donors': forms.SelectMultiple(attrs={'class': 'js_multiselect'}),
             'implementing_partners': forms.SelectMultiple(attrs={'class': 'js_multiselect'}),
             'programme_partners': forms.SelectMultiple(attrs={'class': 'js_multiselect'}),
-            'activity_domains': forms.SelectMultiple(attrs={'class': 'js_multiselect'}),
+            'activity_domains': forms.SelectMultiple(attrs={'class': 'js_multiselect', 'activity-domains-queries-url': reverse_lazy('ajax-load-activity_domains')}),
             'start_date': forms.widgets.DateInput(
                 attrs={'type': 'date', 'onfocus': "(this.type='date')", 'onblur': "(this.type='text')"}),
             'end_date': forms.widgets.DateInput(
@@ -115,8 +115,6 @@ class ProjectForm(forms.ModelForm):
         self.fields['implementing_partners'].queryset = Organization.objects.order_by('name')
         self.fields['programme_partners'].queryset = Organization.objects.order_by('name')
         self.fields['user'].queryset = User.objects.order_by('username')
-        self.fields['activity_domains'].queryset = self.fields['activity_domains'].queryset.filter(
-            clusters__in=user_clusters)
 
 
 class ActivityPlanForm(forms.ModelForm):

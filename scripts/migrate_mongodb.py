@@ -7,6 +7,7 @@ import pandas as pd
 SQLITE_DB_PATH = '../db.sqlite3'
 
 # CSV DATA FILES
+CURRENCIES_CSV = '../data/currencies.csv'
 LOCATIONS_CSV = '../data/af_loc.csv'
 ORGANIZATIONS_CSV = '../data/organizations.csv'
 BENEFICIARY_TYPES_CSV = '../data/beneficiary_types.csv'
@@ -28,6 +29,25 @@ def get_sqlite_client(dbname):
     Returns a SqliteClient instance.
     """
     return sqlite3.connect(dbname)
+
+
+def import_currencies_from_csv(conn, currencies_csv):
+    """
+    Import Currencies from CSV
+    """
+    c = conn.cursor()
+    df = pd.read_csv(currencies_csv)
+
+    if len(df) > 0:
+        table = "rh_currency"
+
+        df.to_sql('tmp_currency', conn, if_exists='replace', index=False)
+
+        try:
+            c.execute(f"""insert into {table}(name) select name from tmp_currency""")
+            c.execute("DROP TABLE tmp_currency;")
+        except Exception as exception:
+            conn.rollback()
 
 
 def import_locations(conn, locations_csv):
@@ -660,6 +680,8 @@ connection = get_sqlite_client(SQLITE_DB_PATH)
 
 # Try to import the data from different sources.
 try:
+    import_currencies_from_csv(connection, CURRENCIES_CSV)
+
     import_locations(connection, LOCATIONS_CSV)
 
     import_clusters_from_csv(connection, CLUSTERS)

@@ -1,5 +1,6 @@
 import sqlite3
 import traceback
+from datetime import datetime
 
 import pandas as pd
 
@@ -383,29 +384,50 @@ def import_organizations_from_csv(conn, organizations_csv):
     """
     Import organizations from CSV
     """
+    print("1")
     c = conn.cursor()
     df = pd.DataFrame()
     df = pd.read_csv(organizations_csv)
+    print("2")
 
     if len(df) > 0:
+        print("3")
         table = "rh_organization"
 
         df.to_sql('tmp_organization', conn, if_exists='replace', index=False)
 
+        print("4")
         try:
-            # TODO: Handle the Locations
+            c.execute("select _id, createdAt, organization, organization_name, organization_type, updatedAt, admin0pcode from tmp_organization")
+            print("5")
+            organizations = c.fetchall()
+            print(organizations)
+            for organization in organizations:
+                organization = list(organization)
+                country = organization.pop()
+                organization = tuple(organization)
+                oquery = f"""
+                        insert into 
+                        {table}(old_id, created_at, code, name, type, updated_at) 
+                        values (?, ?, ?, ?, ?, ?)
+                    """
+                c.execute(oquery, organization)
+                last_org_id = c.lastrowid
+                
+                lquery = f"""select id from rh_location where code='{country}'"""
+                c.execute(lquery)
+                country_id = c.fetchone()
 
-            c.execute(
-                f"""
-                    insert into 
-                    {table}(name, code, type, created_at, updated_at, old_id, country_id) 
-                    select 
-                    organization_name, organization, organization_type, createdAt, updatedAt, _id , (select id from rh_location where code = tmp_organization.admin0pcode)
-                    from tmp_organization
-
-                """)
+                if last_org_id and country_id:
+                    olquery = f"""
+                                insert into 
+                                rh_organization_countries(organization_id, location_id) 
+                                values({last_org_id}, {country_id[0]})
+                            """
+                    c.execute(olquery)
             c.execute("DROP TABLE tmp_organization;")
         except Exception as exception:
+            print('exception: ', exception)
             conn.rollback()
 
 
@@ -422,16 +444,42 @@ def import_donors_from_csv(conn, donors_csv):
 
         df.to_sql('tmp_donor', conn, if_exists='replace', index=False)
 
-        try:
-            c.execute(
-                f"""
-                    insert into 
-                    {table}(code, name, start_date, end_date, old_id, country_id) 
-                    select 
-                    project_donor_id, project_donor_name, start_date, end_date, _id, (select id from rh_location where code = tmp_donor.admin0pcode)
-                    from tmp_donor
-                """)
+        try:    
+            c.execute("select _id, end_date, project_donor_id, project_donor_name, start_date, admin0pcode from tmp_donor")
+            print("5")
+            donors = c.fetchall()
+            print(donors)
+            for donor in donors:
+                donor = list(donor)
+                country = donor.pop()
+                if not donor[1]:
+                    donor[1] = datetime.now()
+                if not donor[-1]:
+                    donor[-1] = datetime.now()
+                
+                donor = tuple(donor)
+                dquery = f"""
+                        insert into 
+                        {table}(old_id, updated, code, name, created) 
+                        values (?, ?, ?, ?, ?)
+                    """
+                c.execute(dquery, donor)
+                last_donor_id = c.lastrowid
+                
+                lquery = f"""select id from rh_location where code='{country}'"""
+                c.execute(lquery)
+                country_id = c.fetchone()
+
+                if last_donor_id and country_id:
+                    olquery = f"""
+                                insert into 
+                                rh_donor_countries(donor_id, location_id) 
+                                values({last_donor_id}, {country_id[0]})
+                            """
+                    c.execute(olquery)
+                # TODO: Add the clusters as well
             c.execute("DROP TABLE tmp_donor;")
+
         except Exception as exception:
             conn.rollback()
 

@@ -130,6 +130,18 @@ class StrategicObjective(models.Model):
         verbose_name_plural = "Objectives"
 
 
+class Currency(models.Model):
+    """Currencies model"""
+    name = models.CharField(max_length=15, null=True)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = 'Currency'
+        verbose_name_plural = "Currencies"
+
+
 class LocationType(models.Model):
     """Locations Types model"""
     name = models.CharField(max_length=15, null=True)

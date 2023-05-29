@@ -8,7 +8,6 @@ class Profile(models.Model):
     """Inherit AbstractUser model and include our custom fields"""
 
     user = models.OneToOneField(User, on_delete=models.CASCADE, blank=True, null=True)
-    name = models.CharField(max_length=200, blank=True, null=True)
     country = models.ForeignKey(Location, blank=False, null=True, on_delete=models.SET_NULL)
     clusters = models.ManyToManyField(Cluster)
     organization = models.ForeignKey(Organization, on_delete=models.SET_NULL, blank=True, null=True)
@@ -18,7 +17,11 @@ class Profile(models.Model):
     skype = models.CharField(max_length=200, blank=True, null=True)
     old_id = models.CharField(max_length=200, blank=True, null=True)
     is_cluster_contact = models.BooleanField(default=False)
-    visits = models.IntegerField(blank=True, null=True)
+
+    @property
+    def name(self):
+        "Returns the person's full name."
+        return f"{self.user.first_name} {self.user.last_name}"
 
     def __str__(self):
         return f"{self.name}'s Profile"

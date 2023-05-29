@@ -39,12 +39,12 @@ class ProfileCreateForm(forms.ModelForm):
 
     class Meta:
         model = Profile
-        fields = ['position', 'organization', 'clusters', 'country']
-        labels = {'clusters': 'Clusters / Sectors'}
+        fields = ['position', 'organization', 'country']
+        # labels = {'clusters': 'Clusters / Sectors'}
 
-        widgets = {
-            'clusters': forms.SelectMultiple(attrs={'class': 'js_multiselect', 'multiple': ''}),
-        }
+        # widgets = {
+        #     'clusters': forms.SelectMultiple(attrs={'class': 'js_multiselect', 'multiple': ''}),
+        # }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -63,12 +63,8 @@ class ProfileUpdateForm(forms.ModelForm):
     class Meta:
         model = Profile
         fields = '__all__'
-        exclude = ('old_id', 'is_cluster_contact', 'visits', 'name', 'user')
-        labels = {'name': 'Full Name', 'clusters': 'Clusters / Sectors'}
-
-        widgets = {
-            'clusters': forms.SelectMultiple(attrs={'class': 'js_multiselect'}),
-        }
+        exclude = ('old_id', 'is_cluster_contact', 'name', 'user')
+        labels = {'name': 'Full Name'}
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

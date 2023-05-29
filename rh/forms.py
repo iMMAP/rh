@@ -106,7 +106,7 @@ class ProjectForm(forms.ModelForm):
         if args and args[0].get('user', False):
             user_profile = User.objects.get(pk=args[0].get('user')).profile
 
-        user_clusters = list(user_profile.clusters.all().values_list('pk', flat=True))
+        user_clusters = list(user_profile.organization.clusters.all().values_list('pk', flat=True))
 
         self.fields['clusters'].queryset = self.fields['clusters'].queryset.filter(
             id__in=user_clusters)

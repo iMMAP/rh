@@ -344,7 +344,7 @@ def create_project_view(request):
         # Use user's country and clusters as default values if available
         if request.user.is_authenticated and request.user.profile and request.user.profile.country:
             country = request.user.profile.country
-            clusters = request.user.profile.clusters.all()
+            clusters = request.user.profile.organization.clusters.all()
             form = ProjectForm(initial={'user': request.user, 'country': country, 'clusters': clusters})
         else:
             form = ProjectForm()

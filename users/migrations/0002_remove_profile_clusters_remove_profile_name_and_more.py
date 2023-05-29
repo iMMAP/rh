@@ -14,12 +14,5 @@ class Migration(migrations.Migration):
             model_name='profile',
             name='clusters',
         ),
-        migrations.RemoveField(
-            model_name='profile',
-            name='name',
-        ),
-        migrations.RemoveField(
-            model_name='profile',
-            name='visits',
-        ),
+  
     ]

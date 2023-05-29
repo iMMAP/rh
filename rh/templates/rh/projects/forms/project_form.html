@@ -32,15 +32,15 @@
                 <div class="row">
                     <div class="col">
                         <div class="input-field is-required">
-                            <label for="{{ form.title.html_name }}">Project Title</label>
+                            <label for="{{ form.title.id_for_label }}">Project Title</label>
                             <div class="input-holder">{{ form.title }}</div>
                         </div>
                         <div class="input-field">
-                            <label for="{{ form.code.html_name }}">Project Code</label>
+                            <label for="{{ form.code.id_for_label }}">Project Code</label>
                             <div class="input-holder">{{ form.code }}</div>
                         </div>
                         <div class="select-field is-required">
-                            <label for="{{ form.clusters.html_name }}">Clusters / Sectors</label>
+                            <label for="{{ form.clusters.id_for_label }}">Clusters / Sectors</label>
                             <div class="input-holder">{{ form.clusters }}</div>
                         </div>
                     </div>
@@ -58,25 +58,25 @@
                         <div class="multiple-fields-row">
                             <div class="field-col">
                                 <div class="input-field">
-                                    <label for="{{ form.budget.html_name }}">Project Budget</label>
+                                    <label for="{{ form.budget.id_for_label }}">Project Budget</label>
                                     <div class="input-holder">{{ form.budget }}</div>
                                 </div>
                             </div>
                             <div class="field-col">
-                                <label for="{{ form.budget_currency.html_name }}">Budget Currency</label>
+                                <label for="{{ form.budget_currency.id_for_label }}">Budget Currency</label>
                                 <div class="select-field is-required">{{ form.budget_currency }}</div>
                             </div>
                         </div>
                         <div class="multiple-fields-row">
                             <div class="field-col">
                                 <div class="input-field">
-                                    <label for="{{ form.budget_received.html_name }}">Project Received</label>
+                                    <label for="{{ form.budget_received.id_for_label }}">Project Received</label>
                                     <div class="input-holder">{{ form.budget_received }}</div>
                                 </div>
                             </div>
                             <div class="field-col">
                                 <div class="input-field">
-                                    <label for="{{ form.budget_gap.html_name }}">Project Gap</label>
+                                    <label for="{{ form.budget_gap.id_for_label }}">Project Gap</label>
                                     <div class="input-holder">{{ form.budget_gap }}</div>
                                 </div>
                             </div>
@@ -110,13 +110,13 @@
                         <div class="multiple-fields-row two-items">
                             <div class="field-col">
                                 <div class="select-field is-required">
-                                    <label for="{{ form.activity_domains.html_name }}">Activity Domains</label>
+                                    <label for="{{ form.activity_domains.id_for_label }}">Activity Domains</label>
                                     <div class="input-holder">{{ form.activity_domains }}</div>
                                 </div>
                             </div>
                             <div class="field-col">
                                 <div class="select-field is-required">
-                                    <label for="{{ form.donors.html_name }}">Project Donor</label>
+                                    <label for="{{ form.donors.id_for_label }}">Project Donor</label>
                                     <div class="input-holder">{{ form.donors }}</div>
                                 </div>
                             </div>
@@ -124,25 +124,25 @@
                         <div class="multiple-fields-row two-items">
                             <div class="field-col">
                                 <div class="select-field is-required">
-                                    <label for={{ form.implementing_partners.html_name }}>Implementing Partners
+                                    <label for="{{ form.implementing_partners.id_for_label }}">Implementing Partners
                                     </label>
                                     {{ form.implementing_partners }}
                                 </div>
                             </div>
                             <div class="field-col">
                                 <div class="select-field is-required">
-                                    <label for={{ form.programme_partners.html_name }}>Programme Partners
+                                    <label for="{{ form.programme_partners.id_for_label }}">Programme Partners
                                     </label>
                                     {{ form.programme_partners }}
                                 </div>
                             </div>
                         </div>
                         <div class="select-field">
-                            <label for="{{ form.user.html_name }}">Focal Point</label>
+                            <label for="{{ form.user.id_for_label }}">Focal Point</label>
                             {{ form.user }}
                         </div>
                         <div class="input-field is-required">
-                            <label for="prDecs">Project Description &amp; Objectives</label>
+                            <label for="{{ form.description.id_for_label}}">Project Description &amp; Objectives</label>
                             <div class="input-holder">{{ form.description }}</div>
                         </div>
                     </div>

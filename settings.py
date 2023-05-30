@@ -18,21 +18,26 @@ DEBUG = env("DEBUG", default=True)
 # For Testing the registration email confirmation, make debug=True
 # DEBUG = False
 
-ALLOWED_HOSTS = ['dev.reporthub.immap.org', '127.0.0.1']
+ALLOWED_HOSTS = ['dev.reporthub.immap.org', '127.0.0.1','localhost']
 
 # Application definition
 INSTALLED_APPS = [
-    'rh.apps.RhConfig',
-    'users.apps.UsersConfig',
-    'stock.apps.StockConfig',
+    # Default django apps
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    
+    # Installed packages apps
     'django_filters',
     'smart_selects',
+
+    # RH apps
+    'rh.apps.RhConfig',
+    'users.apps.UsersConfig',
+    'stock.apps.StockConfig',
 ]
 USE_DJANGO_JQUERY = True
 

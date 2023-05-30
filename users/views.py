@@ -131,9 +131,6 @@ def login_view(request):
 
         if user is not None:
             login(request, user)
-            if user.profile.visits:
-                user.profile.visits = user.profile.visits + 1
-                user.profile.save()
             if 'next' in request.POST:
                 return redirect(request.POST.get('next'))
             return redirect('index')

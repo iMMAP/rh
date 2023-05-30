@@ -40,7 +40,8 @@
                             <div class="input-holder">{{ form.code }}</div>
                         </div>
                         <div class="select-field is-required">
-                            <label for="{{ form.clusters.id_for_label }}">Clusters / Sectors</label>
+                            <label for="{{ form.clusters.id_for_label }}">Clusters / Sectors [Hold Control/Command button to select
+                                multiple]</label>
                             <div class="input-holder">{{ form.clusters }}</div>
                         </div>
                     </div>
@@ -70,13 +71,13 @@
                         <div class="multiple-fields-row">
                             <div class="field-col">
                                 <div class="input-field">
-                                    <label for="{{ form.budget_received.id_for_label }}">Project Received</label>
+                                    <label for="{{ form.budget_received.id_for_label }}">Budget Received</label>
                                     <div class="input-holder">{{ form.budget_received }}</div>
                                 </div>
                             </div>
                             <div class="field-col">
                                 <div class="input-field">
-                                    <label for="{{ form.budget_gap.id_for_label }}">Project Gap</label>
+                                    <label for="{{ form.budget_gap.id_for_label }}">Budget Gap</label>
                                     <div class="input-holder">{{ form.budget_gap }}</div>
                                 </div>
                             </div>
@@ -96,7 +97,7 @@
                                     {{ form.has_hrp_code }}
                                     <label for="{{ form.has_hrp_code.id_for_label }}">
                                         <span class="input"></span>
-                                        <span class="text">HRP Code?</span>
+                                        <span class="text">HRP Code</span>
                                     </label>
                                 </div>
                             </div>
@@ -110,13 +111,15 @@
                         <div class="multiple-fields-row two-items">
                             <div class="field-col">
                                 <div class="select-field is-required">
-                                    <label for="{{ form.activity_domains.id_for_label }}">Activity Domains</label>
+                                    <label for="{{ form.activity_domains.id_for_label }}">Activity Domains [Hold Control/Command button to select
+                                        multiple]</label>
                                     <div class="input-holder">{{ form.activity_domains }}</div>
                                 </div>
                             </div>
                             <div class="field-col">
                                 <div class="select-field is-required">
-                                    <label for="{{ form.donors.id_for_label }}">Project Donor</label>
+                                    <label for="{{ form.donors.id_for_label }}">Project Donor [Hold Control/Command button to select
+                                        multiple]</label>
                                     <div class="input-holder">{{ form.donors }}</div>
                                 </div>
                             </div>
@@ -124,16 +127,18 @@
                         <div class="multiple-fields-row two-items">
                             <div class="field-col">
                                 <div class="select-field is-required">
-                                    <label for="{{ form.implementing_partners.id_for_label }}">Implementing Partners
+                                    <label for="{{ form.programme_partners.id_for_label }}">Programme Partners [Hold Control/Command button to select
+                                        multiple]
                                     </label>
-                                    {{ form.implementing_partners }}
+                                    {{ form.programme_partners }}
                                 </div>
                             </div>
                             <div class="field-col">
                                 <div class="select-field is-required">
-                                    <label for="{{ form.programme_partners.id_for_label }}">Programme Partners
+                                    <label for="{{ form.implementing_partners.id_for_label }}">Implementing Partners [Hold Control/Command button to select
+                                        multiple]
                                     </label>
-                                    {{ form.programme_partners }}
+                                    {{ form.implementing_partners }}
                                 </div>
                             </div>
                         </div>

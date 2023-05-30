@@ -4,10 +4,6 @@ from smart_selects.db_fields import ChainedForeignKey, ChainedManyToManyField
 
 NAME_MAX_LENGTH = 200
 DESCRIPTION_MAX_LENGTH = 600
-CURRENCIES = [
-    ('USD', 'USD'),
-    ('AFN', 'AFN'),
-]
 
 
 # ##############################################
@@ -128,6 +124,18 @@ class StrategicObjective(models.Model):
     class Meta:
         verbose_name = 'Objective'
         verbose_name_plural = "Objectives"
+
+
+class Currency(models.Model):
+    """Currencies model"""
+    name = models.CharField(max_length=15, null=True)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = 'Currency'
+        verbose_name_plural = "Currencies"
 
 
 class LocationType(models.Model):
@@ -364,11 +372,7 @@ class Project(models.Model):
     budget = models.IntegerField(null=True, blank=True)
     budget_received = models.IntegerField(null=True, blank=True)
     budget_gap = models.IntegerField(null=True, blank=True)
-    budget_currency = models.CharField(
-        max_length=15,
-        choices=CURRENCIES,
-        null=True, blank=True
-    )
+    budget_currency = models.ForeignKey('Currency', on_delete=models.SET_NULL, null=True, blank=True)
     created_at = models.DateField(auto_now_add=True, blank=True, null=True)
     updated_at = models.DateField(auto_now=True, blank=True, null=True)
 
@@ -544,11 +548,7 @@ class BudgetProgress(models.Model):
     activity_domain = models.ForeignKey(ActivityDomain, on_delete=models.SET_NULL, null=True, blank=True)
     grant = models.CharField(max_length=NAME_MAX_LENGTH, null=True, blank=True)
     amount_recieved = models.IntegerField(default=0, blank=True, null=True)
-    budget_currency = models.CharField(
-        max_length=15,
-        choices=CURRENCIES,
-        null=True, blank=True
-    )
+    budget_currency = models.ForeignKey(Currency, on_delete=models.SET_NULL, null=True, blank=True)
     received_date = models.DateField(blank=True, null=True)
     country = models.ForeignKey(Location, blank=True, null=True, on_delete=models.SET_NULL, )
     description = models.TextField(blank=True, null=True)

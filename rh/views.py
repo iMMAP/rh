@@ -59,81 +59,55 @@ def home(request):
 ############## Project Views ################
 #############################################
 
+@cache_control(no_store=True)
+@login_required
+def load_activity_domains(request):
+    # FIXME: Fix the long url, by post request?
+    cluster_ids = [int(i) for i in request.GET.getlist('clusters[]') if i]
+    clusters = Cluster.objects.filter(pk__in=cluster_ids).prefetch_related('activitydomain_set')
+
+    response = ''.join([
+        f'<optgroup label="{cluster.title}">' +
+        ''.join([f'<option value="{domain.pk}">{domain}</option>' for domain in cluster.activitydomain_set.order_by('name')]) +
+        '</optgroup>'
+        for cluster in clusters
+    ])
+
+    return JsonResponse(response, safe=False)
+
 
 @cache_control(no_store=True)
 @login_required
 def load_locations_details(request):
-    """
-    View function to load Locations with group info.
-
-    This function accepts GET requests with the following parameters:
-    - provinces[]: a list of Location primary keys for provinces to filter by
-    - listed_districts[]: a list of Location primary keys for districts to include in the response
-
-    If only one province is specified, the function returns a list of district options for that province.
-    Otherwise, it returns an HTML string containing optgroup labels for each specified province, with
-    option tags for each district belonging to the province.
-
-    The function is decorated with cache_control and login_required to ensure reliable and secure access.
-    """
-    province_ids = request.GET.getlist('provinces[]')
-    province_ids = [int(i) for i in province_ids if i]
-    listed_district_ids = request.GET.getlist('listed_districts[]')
-    listed_district_ids = [int(i) for i in listed_district_ids if i]
-
+    # FIXME: Fix the long url, by post request?
+    province_ids = [int(i) for i in request.GET.getlist('provinces[]') if i]
     provinces = Location.objects.filter(pk__in=province_ids).select_related('parent')
-    province_group = []
-    for province in provinces:
-        districts = Location.objects.filter(parent__pk=province.pk).order_by('name')
-        districts_options = [f'<option value="{district.pk}">{district}</option>' for district in districts]
-        district_group = ''.join(districts_options)
-        province_group.append(f'<optgroup label="{province.name}">{district_group}</optgroup>')
-    response = ''.join(province_group)
 
-    if len(province_ids) == 1:
-        districts = Location.objects.filter(parent__pk=province_ids[0]).order_by('name')
-        districts_options = [f'<option value="{district.pk}">{district}</option>' for district in districts]
-        response = ''.join(districts_options)
+    response = ''.join([
+        f'<optgroup label="{province.name}">' +
+        ''.join([f'<option value="{district.pk}">{district}</option>' for district in province.location_set.order_by('name')]) +
+        '</optgroup>'
+        for province in provinces
+    ])
 
-    return HttpResponse(response)
+    return JsonResponse(response, safe=False)
 
 
 @cache_control(no_store=True)
 @login_required
 def load_facility_sites(request):
-    """
-    View function to load Locations with group info.
-
-    This function accepts GET requests with the following parameters:
-    - provinces[]: a list of Location primary keys for provinces to filter by
-    - listed_districts[]: a list of Location primary keys for districts to include in the response
-
-    If only one province is specified, the function returns a list of district options for that province.
-    Otherwise, it returns an HTML string containing optgroup labels for each specified province, with
-    option tags for each district belonging to the province.
-
-    The function is decorated with cache_control and login_required to ensure reliable and secure access.
-    """
-    cluster_ids = request.GET.getlist('clusters[]')
-    cluster_ids = [int(i) for i in cluster_ids if i]
-    listed_facilities_ids = request.GET.getlist('listed_facilities[]')
-    listed_facilities_ids = [int(i) for i in listed_facilities_ids if i]
-
+    # FIXME: Fix the long url, by post request?
+    cluster_ids = [int(i) for i in request.GET.getlist('clusters[]') if i]
     clusters = Cluster.objects.filter(pk__in=cluster_ids)
-    cluster_group = []
-    for cluster in clusters:
-        facilities = FacilitySiteType.objects.filter(cluster__pk=cluster.pk).order_by('name')
-        facility_options = [f'<option value="{facility.pk}">{facility}</option>' for facility in facilities]
-        facility_group = ''.join(facility_options)
-        cluster_group.append(f'<optgroup label="{cluster.name}">{facility_group}</optgroup>')
-        response = ''.join(cluster_group)
 
-    if len(cluster_ids) == 1:
-        facilities = FacilitySiteType.objects.filter(cluster__pk=cluster_ids[0]).order_by('name')
-        facilities_options = [f'<option value="{facility.pk}">{facility}</option>' for facility in facilities]
-        response = ''.join(facilities_options)
+    response = ''.join([
+        f'<optgroup label="{cluster.title}">' +
+        ''.join([f'<option value="{facility.pk}">{facility}</option>' for facility in cluster.facilitysitetype_set.order_by('name')]) +
+        '</optgroup>'
+        for cluster in clusters
+    ])
 
-    return HttpResponse(response)
+    return JsonResponse(response, safe=False)
 
 
 # TODO: Project View Structure can be improved.
@@ -344,8 +318,8 @@ def create_project_view(request):
         # Use user's country and clusters as default values if available
         if request.user.is_authenticated and request.user.profile and request.user.profile.country:
             country = request.user.profile.country
-            clusters = request.user.profile.clusters.all()
-            form = ProjectForm(initial={'user': request.user, 'country': country, 'clusters': clusters})
+            # clusters = request.user.profile.clusters.all()
+            form = ProjectForm(initial={'user': request.user, 'country': country})
         else:
             form = ProjectForm()
 

@@ -22,14 +22,17 @@ $(document).ready(function () {
 		const selected_facilities = $(
 			`select#id_form-${formIndex}-facility_type`
 		).val();
+
+		requestData = {
+			clusters: clusterIds,
+			listed_facilities: facilityIds,
+		}
+
 		try {
 			const response = await $.ajax({
 				type: "GET",
 				url: facilitySiteUrl,
-				data: {
-					clusters: clusterIds,
-					listed_facilities: facilityIds,
-				},
+				data: requestData,
 			});
 
 			$(`#id_form-${formIndex}-facility_type`).html(response);

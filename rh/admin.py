@@ -93,6 +93,7 @@ admin.site.register(Disaggregation, DisaggregationAdmin)
 
 class DisaggregationInline(admin.TabularInline):
     model = Disaggregation.indicators.through
+    extra = 1
 
 class IndicatorAdmin(admin.ModelAdmin):
     list_display = ('name', 'code',)

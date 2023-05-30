@@ -63,44 +63,7 @@ $(document).ready(function () {
 
 	// Attach the function to the change event of the budget and budget received fields
 	$("#id_budget, #id_budget_received").on("input", calculateBudgetGap);
-
-	/**
-	 * Retrieves activities based on selected clusters and listed activities
-	 */
-	function getActivities() {
-		// Retrieve the URL for the AJAX request
-		const activitiesUrl = $("#id_activities").attr("activities-queries-url");
-
-		// Retrieve the IDs of all listed activities
-		const activityIds = $("select#id_activities option")
-			.map(function () {
-				return $(this).val();
-			})
-			.get();
-
-		// Retrieve the IDs of all selected clusters
-		const clusterIds = $("#id_clusters").val();
-
-		// Retrieve the currently selected activities
-		const selectedActivities = $("select#id_activities").val();
-
-		// Send an AJAX request to the server to retrieve the activities
-		$.ajax({
-			type: "GET",
-			url: activitiesUrl,
-			data: {
-				clusters: clusterIds,
-				listed_activities: activityIds,
-			},
-			success: function (data) {
-				// Replace the contents of the activities select box with the retrieved data
-				$("#id_activities").html(data);
-
-				// Set the selected activities back to their original values
-				$("select#id_activities").val(selectedActivities);
-			},
-		});
-	}
+	
 
 	/**
 	 * Retrieves districts based on selected and listed provinces
@@ -115,14 +78,14 @@ $(document).ready(function () {
 
 		const provinceIds = $("#id_provinces").val();
 		const selectedDistricts = $("#id_districts").val();
-
+		const requestData = {
+			provinces: provinceIds,
+			listed_districts: districtIds,
+		}
 		$.ajax({
 			type: "GET",
 			url: districtsUrl,
-			data: {
-				provinces: provinceIds,
-				listed_districts: districtIds,
-			},
+			data: requestData,
 			success: function (data) {
 				const $districts = $("#id_districts");
 				$districts.html(data);
@@ -131,9 +94,42 @@ $(document).ready(function () {
 		});
 	}
 
+	function get_activity_domains() {
+		const domainsUrl = $("#id_activity_domains").attr("activity-domains-queries-url");
+		const domainsIds = $("#id_activity_domains option")
+			.map(function () {
+				return $(this).val();
+			})
+			.get();
+
+		const clusterIds = $("#id_clusters").val();
+		const selectedDomains = $("#id_activity_domains").val();
+
+		const requestData = {
+			clusters: clusterIds,
+			listed_domains: domainsIds,
+		};
+
+		$.ajax({
+			type: "GET",
+			url: domainsUrl,
+			data: requestData,
+			success: function (data) {
+				const $domains = $("#id_activity_domains");
+				$domains.html(data);
+				$domains.val(selectedDomains);
+			},
+		});
+	}
+
 	get_districts();
+	get_activity_domains();
 
 	$("#id_provinces").change(function () {
 		get_districts();
+	});
+
+	$("#id_clusters").change(function () {
+		get_activity_domains();
 	});
 });

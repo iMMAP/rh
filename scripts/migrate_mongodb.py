@@ -8,6 +8,7 @@ import pandas as pd
 SQLITE_DB_PATH = '../db.sqlite3'
 
 # CSV DATA FILES
+CURRENCIES_CSV = '../data/currencies.csv'
 LOCATIONS_CSV = '../data/af_loc.csv'
 ORGANIZATIONS_CSV = '../data/organizations.csv'
 BENEFICIARY_TYPES_CSV = '../data/beneficiary_types.csv'
@@ -29,6 +30,25 @@ def get_sqlite_client(dbname):
     Returns a SqliteClient instance.
     """
     return sqlite3.connect(dbname)
+
+
+def import_currencies_from_csv(conn, currencies_csv):
+    """
+    Import Currencies from CSV
+    """
+    c = conn.cursor()
+    df = pd.read_csv(currencies_csv)
+
+    if len(df) > 0:
+        table = "rh_currency"
+
+        df.to_sql('tmp_currency', conn, if_exists='replace', index=False)
+
+        try:
+            c.execute(f"""insert into {table}(name) select name from tmp_currency""")
+            c.execute("DROP TABLE tmp_currency;")
+        except Exception as exception:
+            conn.rollback()
 
 
 def import_locations(conn, locations_csv):
@@ -364,24 +384,17 @@ def import_organizations_from_csv(conn, organizations_csv):
     """
     Import organizations from CSV
     """
-    print("1")
     c = conn.cursor()
     df = pd.DataFrame()
     df = pd.read_csv(organizations_csv)
-    print("2")
 
     if len(df) > 0:
-        print("3")
         table = "rh_organization"
 
         df.to_sql('tmp_organization', conn, if_exists='replace', index=False)
-
-        print("4")
         try:
             c.execute("select _id, createdAt, organization, organization_name, organization_type, updatedAt, admin0pcode from tmp_organization")
-            print("5")
             organizations = c.fetchall()
-            print(organizations)
             for organization in organizations:
                 organization = list(organization)
                 country = organization.pop()
@@ -426,9 +439,7 @@ def import_donors_from_csv(conn, donors_csv):
 
         try:    
             c.execute("select _id, end_date, project_donor_id, project_donor_name, start_date, admin0pcode from tmp_donor")
-            print("5")
             donors = c.fetchall()
-            print(donors)
             for donor in donors:
                 donor = list(donor)
                 country = donor.pop()
@@ -708,6 +719,8 @@ connection = get_sqlite_client(SQLITE_DB_PATH)
 
 # Try to import the data from different sources.
 try:
+    import_currencies_from_csv(connection, CURRENCIES_CSV)
+
     import_locations(connection, LOCATIONS_CSV)
 
     import_clusters_from_csv(connection, CLUSTERS)

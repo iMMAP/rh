@@ -82,19 +82,19 @@
         <div class="row">
             <div class="col">
                 <div class="input-field">
-                    <label>Project title</label>
+                    <span class="label">Project title</span>
                     <div class="input-holder">
-                        <span class="text-read-only">{{ project.title }}</span>
+                        <span id="title" class="text-read-only">{{ project.title }}</span>
                     </div>
                 </div>
                 <div class="input-field">
-                    <label>Project code</label>
+                    <span class="label">Project code</span>
                     <div class="input-holder">
                         <span class="text-read-only">{{ project.code }}</span>
                     </div>
                 </div>
                 <div class="select-field is-required">
-                    <label>Clusters</label>
+                    <span class="label">Clusters</span>
                     <span class="text-read-only m2m-badges">
                         {% for cluster in project.clusters.all %}
                         <span class="btn btn-red"> {{ cluster.title }}</span>
@@ -102,7 +102,7 @@
                     </span>
                 </div>
                 <div class="select-field is-required">
-                    <label>Project donor</label>
+                    <span class="label">Project donor</span>
                     <span class="text-read-only m2m-badges">
                         {% for donor in project.donors.all %}
                         <span class="btn btn-red"> {{ donor.name }}</span>
@@ -110,7 +110,7 @@
                     </span>
                 </div>
                 <div class="select-field is-required">
-                    <label>Implementing Partners</label>
+                    <span class="label">Implementing Partners</span>
                     <span class="text-read-only m2m-badges">
                         {% for implementing_partner in project.implementing_partners.all %}
                         <span class="btn btn-red"> {{ implementing_partner.code }}</span>
@@ -118,7 +118,7 @@
                     </span>
                 </div>
                 <div class="select-field is-required">
-                    <label>Programme Partners</label>
+                    <span class="label">Programme Partners</span>
                     <span class="text-read-only m2m-badges">
                         {% for programme_partner in project.programme_partners.all %}
                         <span class="btn btn-red"> {{ programme_partner.code }}</span>
@@ -129,25 +129,25 @@
             <div class="col col-sm">
                 <div class="date-picker-field">
                     <div class="date start">
-                        <label>Start Date</label>
+                        <span class="label">Start Date</span>
                         <span class="text-read-only">{{ project.start_date | date:'d M, Y' }}</span>
                     </div>
                     <div class="date end">
-                        <label>End Date</label>
+                        <span class="label">End Date</span>
                         <span class="text-read-only">{{ project.end_date | date:'d M, Y' }}</span>
                     </div>
                 </div>
                 <div class="multiple-fields-row">
                     <div class="field-col">
                         <div class="input-field">
-                            <label>Project budget</label>
+                            <span class="label">Project budget</span>
                             <div class="input-holder">
                                 <span class="text-read-only">{{ project.budget }}</span>
                             </div>
                         </div>
                     </div>
                     <div class="field-col">
-                        <label>Currency</label>
+                        <span class="label">Currency</span>
                         <div class="select-field is-required">
                             <span class="text-read-only">{{ project.budget_currency }}</span>
                         </div>
@@ -156,7 +156,7 @@
                 <div class="multiple-fields-row">
                     <div class="field-col">
                         <div class="input-field">
-                            <label>Budget Received</label>
+                            <span class="label">Budget Received</span>
                             <div class="input-holder">
                                 <span class="text-read-only">{{ project.budget_received }}</span>
                             </div>
@@ -164,7 +164,7 @@
                     </div>
                     <div class="field-col">
                         <div class="input-field">
-                            <label>Budget Gap</label>
+                            <span class="label">Budget Gap</span>
                             <div class="input-holder">
                                 <span class="text-read-only">{{ project.budget_gap }}</span>
                             </div>
@@ -179,10 +179,10 @@
                             {% else %}
                             <input type="checkbox" disabled />
                             {% endif %}
-                            <label>
+                            <span class="label">
                                 <span class="input"></span>
                                 <span class="text">HRP project?</span>
-                            </label>
+                            </span>
                         </div>
                     </div>
                     <div class="field-col">
@@ -192,15 +192,15 @@
                             {% else %}
                             <input type="checkbox" disabled />
                             {% endif %}
-                            <label>
+                            <span class="label">
                                 <span class="input"></span>
                                 <span class="text">HRP Code?</span>
-                            </label>
+                            </span>
                         </div>
                     </div>
                 </div>
                 <div class="input-field">
-                    <label>HRP project code</label>
+                    <span class="label">HRP project code</span>
                     <div class="input-holder">
                         <span class="text-read-only">{{ project.hrp_code }}</span>
                     </div>
@@ -208,7 +208,7 @@
             </div>
             <div class="col col-lg">
                 <div class="select-field is-required">
-                    <label>Activity Domains</label>
+                    <span class="label">Activity Domains</span>
                     <span class="text-read-only m2m-badges">
                         {% for activity_domain in project.activity_domains.all %}
                         <span class="btn btn-red"> {{ activity_domain.name }}</span>
@@ -216,7 +216,7 @@
                     </span>
                 </div>
                 <div class="select-field">
-                    <label>Focal point</label>
+                    <span class="label">Focal point</span>
                     <div class="input-holder">
                         <span class="text-read-only">
                             {% if project.user.first_name %} {{ project.user.first_name }} {% endif %}
@@ -229,7 +229,7 @@
                     </div>
                 </div>
                 <div class="input-field is-required">
-                    <label>Project description &amp; objectives</label>
+                    <span class="label">Project description &amp; objectives</span>
                     <div class="input-holder">{{ project.description | linebreaksbr }}
                     </div>
                 </div>
@@ -272,25 +272,25 @@
                         <div class="multiple-fields-row two-items">
                             <div class="field-col">
                                 <div class="select-field">
-                                    <label>Activity Domain</label>
+                                    <span class="label">Activity Domain</span>
                                     <span class="text-read-only">{{ activity_plan.activity_domain }}</span>
                                 </div>
                             </div>
                             <div class="field-col">
                                 <div class="select-field">
-                                    <label>Activity Type</label>
+                                    <span class="label">Activity Type</span>
                                     <span class="text-read-only">{{ activity_plan.activity_type }}</span>
                                 </div>
                             </div>
                         </div>
                         {% if activity_plan.activity_detail %}
                         <div class="select-field">
-                            <label>Activity Details</label>
+                            <span class="label">Activity Details</span>
                             <span class="text-read-only">{{ activity_plan.activity_detail }}</span>
                         </div>
                         {% endif %}
                         <div class="select-field">
-                            <label>Indicators</label>
+                            <span class="label">Indicators</span>
                             {% for indicator in activity_plan.indicators.all %}
                             <span class="text-read-only">
                                 {{ indicator.name }} <br>
@@ -303,13 +303,13 @@
                         <div class="multiple-fields-row">
                             <div class="field-col">
                                 <div class="select-field">
-                                    <label>Beneficiary</label>
+                                    <span class="label">Beneficiary</span>
                                     <span class="text-read-only">{{ activity_plan.beneficiary }}</span>
                                 </div>
                             </div>
                             <div class="field-col">
                                 <div class="select-field">
-                                    <label>Beneficiary Category</label>
+                                    <span class="label">Beneficiary Category</span>
                                     <span class="text-read-only">{{ activity_plan.beneficiary_category }}</span>
                                 </div>
                             </div>
@@ -317,7 +317,7 @@
                     </div>
                     <div class="col col-lg">
                         <div class="input-field is-required">
-                            <label>Activity Description</label>
+                            <span class="label">Activity Description</span>
                             <div class="input-holder">
                                 <span class="text-read-only">{{ activity_plan.description | linebreaksbr }}</span>
                             </div>
@@ -331,10 +331,10 @@
                                     {% else %}
                                     <input type="checkbox" disabled />
                                     {% endif %}
-                                    <label>
+                                    <span class="label">
                                         <span class="input"></span>
                                         <span class="text">Facility / Site Monitoring?</span>
-                                    </label>
+                                    </span>
                                 </div>
                             </div>
                             <div class="field-col">
@@ -344,10 +344,10 @@
                                     {% else %}
                                     <input type="checkbox" disabled />
                                     {% endif %}
-                                    <label>
+                                    <span class="label">
                                         <span class="input"></span>
                                         <span class="text">Gender / Age Desegregation?</span>
-                                    </label>
+                                    </span>
                                 </div>
                             </div>
                         </div>
@@ -358,14 +358,14 @@
                             <div class="field-col">
                                 <div class="input-field">
                                     <div class="select-field">
-                                        <label>Facility / Site Type</label>
+                                        <span class="label">Facility / Site Type</span>
                                         <span class="text-read-only">{{ activity_plan.facility_type }}</span>
                                     </div>
                                 </div>
                             </div>
                             <div class="field-col">
                                 <div class="input-field">
-                                    <label>Facility / Site Name</label>
+                                    <span class="label">Facility / Site Name</span>
                                     <span class="text-read-only">{{ activity_plan.facility_name }}</span>
                                 </div>
                             </div>
@@ -373,19 +373,19 @@
                         <div class="multiple-fields-row three-items" id="{{ form.prefix }}_facility_details_2">
                             <div class="field-col">
                                 <div class="input-field">
-                                    <label>Facility / Site ID</label>
+                                    <span class="label">Facility / Site ID</span>
                                     <span class="text-read-only">{{ activity_plan.facility_id }}</span>
                                 </div>
                             </div>
                             <div class="field-col">
                                 <div class="input-field">
-                                    <label>Facility / Site Latitude</label>
+                                    <span class="label">Facility / Site Latitude</span>
                                     <span class="text-read-only">{{ activity_plan.facility_lat }}</span>
                                 </div>
                             </div>
                             <div class="field-col">
                                 <div class="input-field">
-                                    <label>Facility / Site Longitude</label>
+                                    <span class="label">Facility / Site Longitude</span>
                                     <span class="text-read-only">{{ activity_plan.facility_long }}</span>
                                 </div>
                             </div>
@@ -531,13 +531,13 @@
                         <div class="multiple-fields-row three-items">
                             <div class="field-col">
                                 <div class="select-field is-required">
-                                    <label>Province</label>
+                                    <span class="label">Province</span>
                                     <span class="text-read-only">{{ target_location.province }}</span>
                                 </div>
                             </div>
                             <div class="field-col">
                                 <div class="input-field">
-                                    <label>District</label>
+                                    <span class="label">District</span>
                                     <div class="input-holder">
                                         <span class="text-read-only">{{ target_location.district }}</span>
                                     </div>
@@ -545,7 +545,7 @@
                             </div>
                             <div class="field-col">
                                 <div class="select-field ">
-                                    <label>Location Type</label>
+                                    <span class="label">Location Type</span>
                                     <span class="text-read-only">{{ target_location.location_type }}</span>
                                 </div>
                             </div>
@@ -555,13 +555,13 @@
                         <div class="multiple-fields-row three-items">
                             <div class="field-col">
                                 <div class="select-field">
-                                    <label>Site Name</label>
+                                    <span class="label">Site Name</span>
                                     <span class="text-read-only">{{ target_location.site_name }}</span>
                                 </div>
                             </div>
                             <div class="field-col">
                                 <div class="input-field">
-                                    <label>Site Latitude</label>
+                                    <span class="label">Site Latitude</span>
                                     <div class="input-holder">
                                         <span class="text-read-only">{{ target_location.site_lat }}</span>
                                     </div>
@@ -569,7 +569,7 @@
                             </div>
                             <div class="field-col">
                                 <div class="input-field">
-                                    <label>Site Longitude</label>
+                                    <span class="label">Site Longitude</span>
                                     <div class="input-holder">
                                         <span class="text-read-only">{{ target_location.site_long }}</span>
                                     </div>

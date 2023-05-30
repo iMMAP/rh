@@ -151,7 +151,7 @@ admin.site.register(ActivityPlan, ActivityPlanAdmin)
 
 
 class TargetLocationAdmin(admin.ModelAdmin):
-    list_display = ('title', 'site_name', 'project', 'country', 'province', 'district', 'state', 'active')
+    list_display = ('title', 'site_name', 'project', 'country', 'province', 'district', 'zone', 'state', 'active')
     search_fields = ('title', 'project__title', 'state', 'active')
     list_filter = ('state', 'active', 'project__code')
 

@@ -84,7 +84,7 @@ def register_view(request):
                 user = u_form.save()
                 user_profile = p_form.save(commit=False)
                 user_profile.user = user
-                user_profile.name = f"{user.first_name} {user.last_name}"
+                
                 user_profile.save()
                 p_form.save_m2m()
                 messages.success(request, f'Account created successfully for {username}.')
@@ -96,7 +96,7 @@ def register_view(request):
                 user.save()
                 user_profile = p_form.save(commit=False)
                 user_profile.user = user
-                user_profile.name = f"{user.first_name} {user.last_name}"
+                
                 user_profile.save()
                 p_form.save_m2m()
                 return send_account_activation_email(request, user, email)
@@ -163,7 +163,7 @@ def profile(request):
         if u_form.is_valid() and p_form.is_valid():
             user = u_form.save()
             user_profile = p_form.save(commit=False)
-            user_profile.name = f"{user.first_name} {user.last_name}"
+            
             user_profile.save()
             p_form.save_m2m()
             return redirect('profile')

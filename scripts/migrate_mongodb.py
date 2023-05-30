@@ -491,19 +491,19 @@ def import_users_from_csv(conn, users_csv):
 
         try:
             c.execute(
-                "select admin0pcode,cluster_id,name,organization_id,phone,position,skype,visits,username from tmp_accounts")
+                "select admin0pcode,cluster_id,organization_id,phone,position,skype,username from tmp_accounts")
             profile_info = c.fetchall()
             c.execute("select createdAt,email,last_logged_in,password,status,username from tmp_accounts")
             users = c.fetchall()
             profiles_list = []
             for profile in profile_info:
                 profile = list(profile)
-                skype = profile[7]
+                skype = profile[5]
                 if not skype:
-                    profile[7] = None
+                    profile[5] = None
                 country = profile[0]
                 cluster = profile[1]
-                organization = profile[3]
+                organization = profile[2]
                 if country:
                     c.execute(f"select id from rh_location where code='{country}'")
                     location_id = c.fetchone()
@@ -531,12 +531,13 @@ def import_users_from_csv(conn, users_csv):
                     c.execute(f"select id from rh_organization where old_id='{organization}'")
                     organization_id = c.fetchone()
                     if organization_id:
-                        profile[3] = organization_id[0]
+                        profile[2] = organization_id[0]
                     else:
-                        profile[3] = None
+                        profile[2] = None
 
                 profile = tuple(profile)
                 profiles_list.append(profile)
+
 
             for user in users:
                 user = list(user)
@@ -581,8 +582,8 @@ def import_users_from_csv(conn, users_csv):
                     u_profile = tuple(u_profile)
                 pquery = f"""
                         insert into 
-                        users_profile(country_id,name,organization_id,phone,position,skype,visits,user_id,is_cluster_contact) 
-                        values (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                        users_profile(country_id,organization_id,phone,position,skype,user_id,is_cluster_contact) 
+                        values (?, ?, ?, ?, ?, ?, ?)
                     """
                 c.execute(pquery, u_profile)
                 last_profile_id = c.lastrowid

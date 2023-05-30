@@ -80,17 +80,34 @@ def load_activity_domains(request):
 @login_required
 def load_locations_details(request):
     # FIXME: Fix the long url, by post request?
-    province_ids = [int(i) for i in request.GET.getlist('provinces[]') if i]
-    provinces = Location.objects.filter(pk__in=province_ids).select_related('parent')
+
+    parent_ids = [int(i) for i in request.GET.getlist('parents[]') if i]
+    parents = Location.objects.filter(pk__in=parent_ids).select_related('parent')
 
     response = ''.join([
-        f'<optgroup label="{province.name}">' +
-        ''.join([f'<option value="{district.pk}">{district}</option>' for district in province.location_set.order_by('name')]) +
+        f'<optgroup label="{parent.name}">' +
+        ''.join([f'<option value="{location.pk}">{location}</option>' for location in parent.children.order_by('name')]) +
         '</optgroup>'
-        for province in provinces
+        for parent in parents
     ])
 
     return JsonResponse(response, safe=False)
+
+# @cache_control(no_store=True)
+# @login_required
+# def load_locations_details(request):
+#     # FIXME: Fix the long url, by post request?
+#     parent_ids = [int(i) for i in request.GET.getlist('parents[]') if i]
+#     parents = Location.objects.filter(pk__in=parent_ids).select_related('parent')
+
+#     response = ''.join([
+#         f'<optgroup label="{parent.name}">' +
+#         ''.join([f'<option value="{location.pk}">{location}</option>' for location in parent.location_set.order_by('name')]) +
+#         '</optgroup>'
+#         for parent in parents
+#     ])
+
+    # return JsonResponse(response, safe=False)
 
 
 @cache_control(no_store=True)

@@ -1,7 +1,21 @@
 from django.contrib import admin
-
-from .models import *
 from django import forms
+from django.contrib.auth.models import User
+from django.contrib.auth.admin import UserAdmin
+from django.utils.html import format_html
+from django.urls import reverse
+from .models import *
+
+class UserAdminCustom(UserAdmin):
+   list_display = ('email', 'first_name', 'last_name', 'is_staff', 'is_superuser','profile_link')
+
+   def profile_link(self, obj):
+        url = reverse('admin:users_profile_change', args=[obj.profile.id])
+        return format_html('<a href="{}">{}</a>', url, obj.profile)
+
+admin.site.unregister(User)
+admin.site.register(User, UserAdminCustom)
+
 
 
 # ##############################################
@@ -25,9 +39,13 @@ class ProfileAdmin(admin.ModelAdmin):
     """
     Customize Default ProfileAdmin
     """
-    list_display = ('name', 'country', 'organization', 'position')
+    list_display = ('name', 'country', 'organization', 'position','user_link')
     list_filter = ('country',)
     form = ProfileForm
+
+    def user_link(self, obj):
+        url = reverse('admin:auth_user_change', args=[obj.user.id])
+        return format_html('<a href="{}">{}</a>', url, obj.user)
 
 
 admin.site.register(Profile, ProfileAdmin)

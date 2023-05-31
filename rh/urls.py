@@ -43,7 +43,8 @@ urlpatterns = [
     path('project/project_plan/submit/<str:pk>/', user_views.submit_project, name='project_submit'),
 
     path('ajax/load-activity_domains/', user_views.load_activity_domains, name='ajax-load-activity_domains'),
-    path('ajax/load-districts-details/', user_views.load_locations_details, name='ajax-load-districts'),
+    path('ajax/load-locations-details/', user_views.load_locations_details, name='ajax-load-locations'),
+    # path('ajax/load-zones-details/', user_views.load_zones_details, name='ajax-load-zones'),
     path('ajax/load-facility_sites/', user_views.load_facility_sites, name='ajax-load-facility_sites'),
 
 ]

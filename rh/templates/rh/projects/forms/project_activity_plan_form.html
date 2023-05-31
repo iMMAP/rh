@@ -109,19 +109,19 @@
                                             <div class="multiple-fields-row three-items">
                                                 <div class="field-col">
                                                     <div class="select-field is-required">
-                                                        <label>Activity Domain</label>
+                                                        <label for="{{form.activity_domain.id_for_label}}">Activity Domain</label>
                                                         {{ form.activity_domain }}
                                                     </div>
                                                 </div>
                                                 <div class="field-col">
                                                     <div class="select-field is-required">
-                                                        <label>Activity Type</label>
+                                                        <label for="{{form.activity_type.id_for_label}}">Activity Type</label>
                                                         {{ form.activity_type }}
                                                     </div>
                                                 </div>
                                                 <div class="field-col">
                                                     <div class="select-field">
-                                                        <label>Activity Detail</label>
+                                                        <label for="{{form.activity_detail.id_for_label}}">Activity Detail</label>
                                                         {{ form.activity_detail }}
                                                     </div>
                                                 </div>
@@ -131,7 +131,7 @@
                                     <div class="row">
                                         <div class="col">
                                             <div class="select-field">
-                                                <label>
+                                                <label for="{{form.indicators.id_for_label}}">
                                                     Indicators [Hold Control/Command button to select
                                                     multiple]
                                                 </label>
@@ -140,13 +140,13 @@
                                             <div class="multiple-fields-row">
                                                 <div class="field-col">
                                                     <div class="select-field">
-                                                        <label>Beneficiary</label>
+                                                        <label for="{{form.beneficiary.id_for_label}}">Beneficiary</label>
                                                         {{ form.beneficiary }}
                                                     </div>
                                                 </div>
                                                 <div class="field-col">
                                                     <div class="select-field">
-                                                        <label>Beneficiary Category</label>
+                                                        <label for="{{form.beneficiary_category.id_for_label}}">Beneficiary Category</label>
                                                         {{ form.beneficiary_category }}
                                                     </div>
                                                 </div>

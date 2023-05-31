@@ -19,8 +19,9 @@ class Location(models.Model):
         ('Country', 'Country'),
         ('Province', 'Province'),
         ('District', 'District'),
+        ('Zone', 'Zone'),
     ]
-    parent = models.ForeignKey("self", default=0, on_delete=models.CASCADE, blank=True, null=True)
+    parent = models.ForeignKey("self", default=0, on_delete=models.CASCADE, related_name='children', blank=True, null=True)
     code = models.CharField(max_length=200)
     name = models.CharField(max_length=200)
     level = models.IntegerField(default=0)
@@ -521,9 +522,13 @@ class TargetLocation(models.Model):
                                  blank=True)
     district = models.ForeignKey(Location, related_name='target_district', on_delete=models.SET_NULL, null=True,
                                  blank=True)
+    zone = models.ForeignKey(Location, related_name='target_zones', on_delete=models.SET_NULL, null=True,
+                                 blank=True)
     location_type = models.ForeignKey(LocationType, on_delete=models.SET_NULL, null=True, blank=True)
 
     implementing_partner = models.ForeignKey(Organization, on_delete=models.SET_NULL, null=True, blank=True)
+
+    site_monitoring = models.BooleanField(default=False)
     site_name = models.CharField(max_length=255, blank=True, null=True)
     site_lat = models.CharField(max_length=255, blank=True, null=True)
     site_long = models.CharField(max_length=255, blank=True, null=True)

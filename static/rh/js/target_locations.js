@@ -1,32 +1,36 @@
-$(document).ready(function () {
-	async function get_districts(formIndex) {
-		const districts_url = $(`#id_form-${formIndex}-district`).attr(
-			"districts-queries-url"
-		);
-		const districtIds = $(`select#id_form-${formIndex}-district option`)
-			.map(function () {
-				return $(this).val();
-			})
-			.get();
-		const provinceId = [$(`#id_form-${formIndex}-province`).val()];
-		const selected_districts = $(`select#id_form-${formIndex}-district`).val();
-		try {
-			const response = await $.ajax({
-				type: "GET",
-				url: districts_url,
-				data: {
-					provinces: provinceId,
-					listed_districts: districtIds,
-				},
-			});
+// Constant for the duration of the slideToggle animations
+const TOGGLE_DURATION = 500;
 
-			$(`#id_form-${formIndex}-district`).html(response);
-			$(`select#id_form-${formIndex}-district`).val(selected_districts);
+$(document).ready(function () {
+	async function getLocations(formIndex, locationType, parentType, clearZone=null) {
+		const locationUrl = $(`#id_form-${formIndex}-${locationType}`).attr(`locations-queries-url`);
+		const locationIds = $(`select#id_form-${formIndex}-${locationType} option`)
+		  .map((_, option) => option.value)
+		  .get();
+		const parentIds = [$(`#id_form-${formIndex}-${parentType}`).val()];
+	  
+		const selectedLocations = $(`select#id_form-${formIndex}-${locationType}`).val();
+	  
+		try {
+		  const response = await $.ajax({
+			type: "GET",
+			url: locationUrl,
+			data: {
+			  parents: parentIds,
+			  listed_locations: locationIds,
+			},
+		  });
+	  
+		  if (parentType === 'province' && clearZone === true) {
+			$(`#id_form-${formIndex}-zone`).html('').val('');
+		  }
+		  $(`#id_form-${formIndex}-${locationType}`).html(response);
+		  $(`select#id_form-${formIndex}-${locationType}`).val(selectedLocations);
 		} catch (error) {
-			console.error(`Error fetching districts: ${error}`);
+		  console.error(`Error fetching ${locationType}: ${error}`);
 		}
 	}
-
+	  
 	function updateLocationBlockTitles(formIndex) {
 		updateTitle(`form-${formIndex}`, `id_form-${formIndex}-province`);
 		updateTitle(`form-${formIndex}`, `id_form-${formIndex}-district`);
@@ -34,16 +38,35 @@ $(document).ready(function () {
 	}
 
 	const $locationBlockHolder = $(".location-block-holder");
+	$locationBlockHolder.on("change", function (event) {
+		event.preventDefault();
 
-	$locationBlockHolder.each(function (formIndex, formElement) {
+		const $formElement = $(this);
+		const formIndex = $(this).attr("data-form-id").split("form-")[1];
+
+		// Handle Site Monitoring Checkbox
+		if (event.target.name.indexOf("site_monitoring") >= 0) {
+			handleSiteMonitoring($formElement, formIndex)
+		}
+	});
+	$.fn.reverse = [].reverse;
+	$locationBlockHolder.reverse().each(function (formIndex, formElement) {
 		// Call updateTitle for activity_domain manually as on page load as it is not triggered for
 		// activity_domain
 		updateLocationBlockTitles(formIndex);
-		get_districts(formIndex);
+
+		// Initial load for districts and zones
+		getLocations(formIndex, 'district', 'province');
+		getLocations(formIndex, 'zone', 'district');
 
 		$(`#id_form-${formIndex}-province`).change(function () {
-			get_districts(formIndex);
+			getLocations(formIndex, 'district', 'province', clearZone=true);
 		});
+		$(`#id_form-${formIndex}-district`).change(function () {
+			getLocations(formIndex, 'zone', 'district');
+		});
+		
+		handleSiteMonitoring($(formElement), formIndex)
 	});
 });
 
@@ -71,5 +94,36 @@ function updateTitle(formPrefix, inputElementId) {
 				value.text(selectedValue ? selectedValue : "");
 			}
 		}
+	}
+}
+
+
+/**
+* Handle Facility Monitoring field
+@param {string} formElement - Form Element.
+@param {string} formIndex - Form Index.
+**/
+function handleSiteMonitoring($formElement, formIndex) {
+	let $siteMonitoring = $formElement.find(
+		`#id_form-${formIndex}-site_monitoring`
+	);
+	let $siteName = $formElement.find(
+		`#id_form-${formIndex}-site_name`
+	);
+	let $siteLat = $formElement.find(`#id_form-${formIndex}-site_lat`);
+	let $siteLong = $formElement.find(`#id_form-${formIndex}-site_long`);
+	let $siteDetails = $formElement.find(
+		`#form-${formIndex}_site_details`
+	);
+	if (!$siteMonitoring.is(":checked")) {
+		$siteDetails.hide(TOGGLE_DURATION);
+		$siteName.prop("required", false).removeClass("is-required");
+		$siteLat.prop("required", false).removeClass("is-required");
+		$siteLong.prop("required", false).removeClass("is-required");
+	} else {
+		$siteDetails.show(TOGGLE_DURATION);
+		$siteName.prop("required", true).addClass("is-required");
+		$siteLat.prop("required", true).addClass("is-required");
+		$siteLong.prop("required", true).addClass("is-required");
 	}
 }

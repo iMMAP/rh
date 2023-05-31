@@ -158,7 +158,9 @@ class TargetLocationForm(forms.ModelForm):
             # 'title': forms.widgets.HiddenInput(),
             'locations_group_by': forms.widgets.RadioSelect(),
             'district': forms.Select(
-                attrs={'districts-queries-url': reverse_lazy('ajax-load-districts')}),
+                attrs={'locations-queries-url': reverse_lazy('ajax-load-locations')}),
+            'zone': forms.Select(
+                attrs={'locations-queries-url': reverse_lazy('ajax-load-locations')}),
         }
 
     def __init__(self, *args, project, **kwargs):
@@ -170,6 +172,7 @@ class TargetLocationForm(forms.ModelForm):
                                                  widget=forms.HiddenInput(attrs={'name': self.prefix + '-save'}))
         self.fields['province'].queryset = self.fields['province'].queryset.filter(type='Province')
         self.fields['district'].queryset = self.fields['district'].queryset.filter(type='District')
+        self.fields['zone'].queryset = self.fields['zone'].queryset.filter(type='Zone')
         self.fields['implementing_partner'].queryset = self.fields['implementing_partner'].queryset.filter(
             pk__in=implementing_partner_ids)
         self.fields['province'].widget.attrs.update({'data-form-prefix': f"{kwargs.get('prefix')}",
@@ -177,7 +180,7 @@ class TargetLocationForm(forms.ModelForm):
                                                      })
         self.fields['district'].widget.attrs.update(
             {'onchange': f"updateTitle('{kwargs.get('prefix')}', 'id_{kwargs.get('prefix')}-district');",
-             'districts-queries-url': reverse_lazy('ajax-load-districts')})
+             'locations-queries-url': reverse_lazy('ajax-load-locations')})
         self.fields['site_name'].widget.attrs.update(
             {'onchange': f"updateTitle('{kwargs.get('prefix')}', 'id_{kwargs.get('prefix')}-site_name');"})
 

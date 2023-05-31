@@ -66,6 +66,7 @@ $(document).ready(function () {
 		const formIndex = $(this).attr("data-form-id").split("form-")[1];
 
 		// Handle Facility Monitoring Checkbox
+		// FIXME: Fix repeated code.
 		if (event.target.name.indexOf("facility_monitoring") >= 0) {
 			let $facilityMonitoring = $formElement.find(
 				`#id_form-${formIndex}-facility_monitoring`

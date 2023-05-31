@@ -123,17 +123,23 @@
                                 </div>
                                 <div class="row">
                                     <div class="col">
-                                        <div class="multiple-fields-row two-items">
+                                        <div class="multiple-fields-row three-items">
                                             <div class="field-col">
-                                                <div class="select-field">
-                                                    <label>Province / State *</label>
+                                                <div class="select-field is-required">
+                                                    <label for="{{form.province.id_for_label}}" >Province / State</label>
                                                     {{ form.province }}
                                                 </div>
                                             </div>
                                             <div class="field-col">
-                                                <div class="input-field">
-                                                    <label>District</label>
+                                                <div class="input-field is-required">
+                                                    <label for="{{form.district.id_for_label}}">District</label>
                                                     {{ form.district }}
+                                                </div>
+                                            </div>
+                                            <div class="field-col">
+                                                <div class="input-field">
+                                                    <label for="{{form.zone.id_for_label}}">Ward / Zone</label>
+                                                    {{ form.zone }}
                                                 </div>
                                             </div>
                                         </div>
@@ -141,20 +147,41 @@
                                     <div class="col">
                                         <div class="multiple-fields-row three-items">
                                             <div class="field-col">
+                                                <div class="input-check-holder">
+                                                    {{ form.site_monitoring }}
+                                                    <label for="{{ form.site_monitoring.id_for_label }}">
+                                                        <span class="input"></span>
+                                                        <span class="text">Site Monitoring</span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <div class="field-col">
+                                                {% comment %} <div class="input-check-holder">
+                                                    {{ form.age_desegregation }}
+                                                    <label for="{{ form.age_desegregation.id_for_label }}">
+                                                        <span class="input"></span>
+                                                        <span class="text">Gender / Age Desegregation</span>
+                                                    </label>
+                                                </div> {% endcomment %}
+                                            </div>
+                                            <div class="field-col"></div>
+                                        </div>
+                                        <div class="multiple-fields-row three-items" id="{{ form.prefix }}_site_details">
+                                            <div class="field-col" >
                                                 <div class="input-field">
-                                                    <label>Site name</label>
+                                                    <label for="{{form.site_name.id_for_label}}">Site name</label>
                                                     <div class="input-holder">{{ form.site_name }}</div>
                                                 </div>
                                             </div>
                                             <div class="field-col">
                                                 <div class="input-field">
-                                                    <label>Site Latitude</label>
+                                                    <label for="{{form.site_lat.id_for_label}}">Site Latitude</label>
                                                     <div class="input-holder">{{ form.site_lat }}</div>
                                                 </div>
                                             </div>
                                             <div class="field-col">
                                                 <div class="input-field">
-                                                    <label>Site Longitude</label>
+                                                    <label for="{{form.site_long.id_for_label}}">Site Longitude</label>
                                                     <div class="input-holder">{{ form.site_long }}</div>
                                                 </div>
                                             </div>

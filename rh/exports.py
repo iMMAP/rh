@@ -8,9 +8,7 @@ from io import BytesIO
 import base64
 from django.utils import timezone
 
-from .filters import *
-from .forms import *
-
+from .models import Project
 
 #############################################
 ############### Export Views #################
@@ -26,25 +24,25 @@ class ProjectExportExcelView(View):
     View class for exporting project data to Excel.
     """
 
-    def post(self, request):
+    def post(self, request, project_id):
         """
         Handle POST request to export project data to Excel.
 
         Args:
             request (HttpRequest): The HTTP request object.
+            project_id (int): The ID of the project.
 
         Returns:
             JsonResponse: The JSON response containing the file URL and name, or an error message.
         """
         try:
-            selected_ids = [int(i) for i in request.POST.getlist('selected_ids') if i]  # Get the selected record IDs
-            queryset = Project.objects.filter(id__in=selected_ids)  # Filter the queryset based on selected IDs
+            project = Project.objects.get(id=project_id)  # Get the project object
 
             workbook = Workbook()
 
-            self.write_project_sheet(workbook, queryset)
-            self.write_population_sheet(workbook, queryset)
-            self.write_target_locations_sheet(workbook, queryset)
+            self.write_project_sheet(workbook, project)
+            self.write_population_sheet(workbook, project)
+            self.write_target_locations_sheet(workbook, project)
 
             excel_file = BytesIO()
             workbook.save(excel_file)
@@ -60,13 +58,13 @@ class ProjectExportExcelView(View):
             response = {'error': str(e)}
             return JsonResponse(response, status=500)
 
-    def write_project_sheet(self, workbook, queryset):
+    def write_project_sheet(self, workbook, project):
         """
         Write the project sheet to the workbook.
 
         Args:
             workbook (Workbook): The Excel workbook object.
-            queryset (QuerySet): The queryset containing the project data.
+            project (Project): The project object.
         """
         sheet = workbook.active
         sheet.title = 'Project'
@@ -75,11 +73,25 @@ class ProjectExportExcelView(View):
         columns = [
             {'header': 'Focal Person', 'type': 'string', 'width': 20},
             {'header': 'Email', 'type': 'string', 'width': 25},
-            # ... Define other columns ...
+            {'header': 'Project Title', 'type': 'string', 'width': 40},
+            {'header': 'Code', 'type': 'string', 'width': 20},
+            {'header': 'Project Description', 'type': 'string', 'width': 50},
+            {'header': 'HRP Project Code', 'type': 'string', 'width': 20},
+            {'header': 'Project Start Date', 'type': 'date', 'width': 20},
+            {'header': 'Project End Date', 'type': 'date', 'width': 20},
+            {'header': 'Project Budget', 'type': 'float', 'width': 10},
+            {'header': 'Budget Received', 'type': 'float', 'width': 10},
+            {'header': 'Budget Gap', 'type': 'float', 'width': 10},
+            {'header': 'Project Budget Currency', 'type': 'string', 'width': 10},
+            {'header': 'Project Donors', 'type': 'string', 'width': 30},
+            {'header': 'Implementing Partners', 'type': 'string', 'width': 30},
+            {'header': 'Programme Partners', 'type': 'string', 'width': 30},
+            {'header': 'Status', 'type': 'string', 'width': 10},
+            {'header': 'URL', 'type': 'string', 'width': 20},
         ]
 
         self.write_sheet_columns(sheet, columns)
-        self.write_project_data_rows(sheet, queryset)
+        self.write_project_data_rows(sheet, project)
 
     def write_sheet_columns(self, sheet, columns):
         """
@@ -101,47 +113,46 @@ class ProjectExportExcelView(View):
 
             sheet.column_dimensions[column_letter].width = column['width']
 
-    def write_project_data_rows(self, sheet, queryset):
+    def write_project_data_rows(self, sheet, project):
         """
         Write project data rows to the sheet.
 
         Args:
             sheet (Worksheet): The worksheet object.
-            queryset (QuerySet): The queryset containing the project data.
+            project (Project): The project object.
         """
-        for row_idx, project in enumerate(queryset, start=2):
-            row = [
-                project.user.profile.name,
-                project.user.email,
-                project.title,
-                project.code,
-                project.description,
-                project.hrp_code,
-                project.start_date.astimezone(timezone.utc).replace(tzinfo=None) if project.start_date else None,
-                project.end_date.astimezone(timezone.utc).replace(tzinfo=None) if project.end_date else None,
-                project.budget,
-                project.budget_received,
-                project.budget_gap,
-                project.budget_currency.name,
-                ', '.join([donor.name for donor in project.donors.all()]),
-                ', '.join([implementing_partner.name for implementing_partner in project.implementing_partners.all()]),
-                ', '.join([programme_partner.name for programme_partner in project.programme_partners.all()]),
-                project.state,
-                'URL',
-            ]
+        row = [
+            project.user.profile.name,
+            project.user.email,
+            project.title,
+            project.code,
+            project.description,
+            project.hrp_code,
+            project.start_date.astimezone(timezone.utc).replace(tzinfo=None) if project.start_date else None,
+            project.end_date.astimezone(timezone.utc).replace(tzinfo=None) if project.end_date else None,
+            project.budget,
+            project.budget_received,
+            project.budget_gap,
+            project.budget_currency.name,
+            ', '.join([donor.name for donor in project.donors.all()]),
+            ', '.join([implementing_partner.name for implementing_partner in project.implementing_partners.all()]),
+            ', '.join([programme_partner.name for programme_partner in project.programme_partners.all()]),
+            project.state,
+            'URL',
+        ]
 
-            for col_idx, value in enumerate(row, start=1):
-                cell = sheet.cell(row=row_idx, column=col_idx, value=value)
+        for col_idx, value in enumerate(row, start=1):
+            cell = sheet.cell(row=2, column=col_idx, value=value)
 
         sheet.freeze_panes = sheet['A2']
 
-    def write_population_sheet(self, workbook, queryset):
+    def write_population_sheet(self, workbook, project):
         """
         Write the population sheet to the workbook.
 
         Args:
             workbook (Workbook): The Excel workbook object.
-            queryset (QuerySet): The queryset containing the project data.
+            project (Project): The project object.
         """
         sheet = workbook.create_sheet(title='Population')
 
@@ -154,38 +165,37 @@ class ProjectExportExcelView(View):
         ]
 
         self.write_sheet_columns(sheet, columns)
-        self.write_population_data_rows(sheet, queryset)
+        self.write_population_data_rows(sheet, project)
 
         sheet.freeze_panes = sheet['A2']
 
-    def write_population_data_rows(self, sheet, queryset):
+    def write_population_data_rows(self, sheet, project):
         """
         Write population data rows to the sheet.
 
         Args:
             sheet (Worksheet): The worksheet object.
-            queryset (QuerySet): The queryset containing the project data.
+            project (Project): The project object.
         """
-        for row_idx, project in enumerate(queryset, start=2):
-            activity_plans = project.activityplan_set.all()
-            for plan in activity_plans:
-                row = [
-                    plan.activity_domain.name,
-                    plan.activity_type.name,
-                    plan.activity_detail.name if plan.activity_detail else None,
-                    '\n'.join([indicator.name for indicator in plan.indicators.all()]),
-                ]
+        activity_plans = project.activityplan_set.all()
+        for plan in activity_plans:
+            row = [
+                plan.activity_domain.name,
+                plan.activity_type.name,
+                plan.activity_detail.name if plan.activity_detail else None,
+                '\n'.join([indicator.name for indicator in plan.indicators.all()]),
+            ]
 
-                for col_idx, value in enumerate(row, start=1):
-                    cell = sheet.cell(row=row_idx, column=col_idx, value=value)
+            for col_idx, value in enumerate(row, start=1):
+                cell = sheet.cell(row=2, column=col_idx, value=value)
 
-    def write_target_locations_sheet(self, workbook, queryset):
+    def write_target_locations_sheet(self, workbook, project):
         """
         Write the target locations sheet to the workbook.
 
         Args:
             workbook (Workbook): The Excel workbook object.
-            queryset (QuerySet): The queryset containing the project data.
+            project (Project): The project object.
         """
         sheet = workbook.create_sheet(title='Target Locations')
 
@@ -197,26 +207,25 @@ class ProjectExportExcelView(View):
         ]
 
         self.write_sheet_columns(sheet, columns)
-        self.write_target_locations_data_rows(sheet, queryset)
+        self.write_target_locations_data_rows(sheet, project)
 
         sheet.freeze_panes = sheet['A2']
 
-    def write_target_locations_data_rows(self, sheet, queryset):
+    def write_target_locations_data_rows(self, sheet, project):
         """
         Write target locations data rows to the sheet.
 
         Args:
             sheet (Worksheet): The worksheet object.
-            queryset (QuerySet): The queryset containing the project data.
+            project (Project): The project object.
         """
-        for row_idx, project in enumerate(queryset, start=2):
-            target_locations = project.targetlocation_set.all()
-            for location in target_locations:
-                row = [
-                    location.province.name,
-                    location.district.name,
-                    location.zone.name if location.zone else None,
-                ]
+        target_locations = project.targetlocation_set.all()
+        for location in target_locations:
+            row = [
+                location.province.name,
+                location.district.name,
+                location.zone.name if location.zone else None,
+            ]
 
-                for col_idx, value in enumerate(row, start=1):
-                    cell = sheet.cell(row=row_idx, column=col_idx, value=value)
+            for col_idx, value in enumerate(row, start=1):
+                cell = sheet.cell(row=2, column=col_idx, value=value)

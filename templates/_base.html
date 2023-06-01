@@ -232,6 +232,7 @@
             <script>
                 $(document).ready(function () {
                     $('.js_multiselect').select2();
+
                     $('tr[data-url]').click(function() {
                         window.location.href = $(this).data('url');
                     });
@@ -239,16 +240,15 @@
                     $('.export-button').click(function(event) {
                         event.preventDefault();
                         event.stopPropagation();
+                    
                         // Get the export URL from the button's data-url attribute
                         var exportUrl = $(this).find('a').data('url');
-                        var recordId = $(this).find('a').data('id');
-                        
+                    
                         // Send an AJAX request to the export URL
                         $.ajax({
                             url: exportUrl,
                             method: 'POST',
                             data: {
-                                selected_ids: recordId,
                                 csrfmiddlewaretoken: csrfToken
                             },
                             success: function(response) {
@@ -270,6 +270,7 @@
                             }
                         });
                     });
+                    
                     function showConfirmModal(event) {
                         // Prevent the default behavior of the click event
                         event.preventDefault();

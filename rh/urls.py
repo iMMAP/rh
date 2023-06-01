@@ -47,4 +47,7 @@ urlpatterns = [
     # path('ajax/load-zones-details/', user_views.load_zones_details, name='ajax-load-zones'),
     path('ajax/load-facility_sites/', user_views.load_facility_sites, name='ajax-load-facility_sites'),
 
+    # Exports
+    path('export-excel/', user_views.ProjectExportExcelView.as_view(), name='export_project_excel'),
+
 ]

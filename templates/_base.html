@@ -232,9 +232,43 @@
             <script>
                 $(document).ready(function () {
                     $('.js_multiselect').select2();
-                    
                     $('tr[data-url]').click(function() {
                         window.location.href = $(this).data('url');
+                    });
+                    
+                    $('.export-button').click(function(event) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                        // Get the export URL from the button's data-url attribute
+                        var exportUrl = $(this).find('a').data('url');
+                        var recordId = $(this).find('a').data('id');
+                        
+                        // Send an AJAX request to the export URL
+                        $.ajax({
+                            url: exportUrl,
+                            method: 'POST',
+                            data: {
+                                selected_ids: recordId,
+                                csrfmiddlewaretoken: csrfToken
+                            },
+                            success: function(response) {
+                                // Create a temporary download link and click it to trigger the file download
+                                var link = document.createElement('a');
+                                link.href = response.file_url;
+                                link.download = response.file_name;
+                                document.body.appendChild(link);
+                                link.click();
+                                document.body.removeChild(link);
+                            },
+                            error: function(xhr, status, error) {
+                                debugger
+                                if (xhr.status === 400) {
+                                    console.log('Error: No records selected for export');
+                                } else {
+                                    console.log('Error: ' + xhr.responseText);
+                                }
+                            }
+                        });
                     });
                     function showConfirmModal(event) {
                         // Prevent the default behavior of the click event

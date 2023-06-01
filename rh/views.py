@@ -9,7 +9,19 @@ from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.template import loader
 from django.views.decorators.cache import cache_control
-from django.db.models import Q
+# from django.db.models import Q
+
+from django.views import View
+from openpyxl import Workbook
+from openpyxl.utils import get_column_letter
+from openpyxl.styles import Font, NamedStyle
+from io import BytesIO
+import base64
+from django.utils import timezone
+
+
+
+
 
 from .filters import *
 from .forms import *
@@ -17,6 +29,112 @@ from .forms import *
 
 # TODO: Add is_safe_url to redirects
 # from django.utils.http import is_safe_url
+
+
+#############################################
+############### Export Views #################
+#############################################
+
+class ProjectExportExcelView(View):
+    def post(self, request):
+        try:
+            selected_ids = [int(i) for i in request.POST.getlist('selected_ids') if i]  # Get the selected record IDs
+        
+            queryset = Project.objects.filter(id__in=selected_ids)  # Filter the queryset based on selected IDs
+
+            # Create a new Workbook
+            workbook = Workbook()
+
+            # Get the active sheet
+            sheet = workbook.active
+
+            # Define column headers and types
+            columns = [
+                {'header': 'Focal Person', 'type': 'string', 'width': 20},
+                {'header': 'Email', 'type': 'string', 'width': 25},
+                {'header': 'Project Title', 'type': 'string', 'width': 40},
+                {'header': 'Code', 'type': 'string', 'width': 20},
+                {'header': 'Project Description', 'type': 'string', 'width': 50},
+                {'header': 'HRP Project Code', 'type': 'string', 'width': 20},
+                {'header': 'Project Start Date', 'type': 'date', 'width': 20},
+                {'header': 'Project End Date', 'type': 'date', 'width': 20},
+                {'header': 'Project Budget', 'type': 'float', 'width': 10},
+                {'header': 'Budget Received', 'type': 'float', 'width': 10},
+                {'header': 'Budget Gap', 'type': 'float', 'width': 10},
+                {'header': 'Project Budget Currency', 'type': 'string', 'width': 10},
+                {'header': 'Project Donors', 'type': 'string', 'width': 30},
+                {'header': 'Implementing Partners', 'type': 'string', 'width': 30},
+                {'header': 'Programme Partners', 'type': 'string', 'width': 30},
+                {'header': 'Status', 'type': 'string', 'width': 10},
+                {'header': 'URL', 'type': 'string', 'width': 20},
+            ]
+
+            # Create a named style for the header
+            header_style = NamedStyle(name='header')
+            header_style.font = Font(bold=True)
+
+            # Write column headers
+            for idx, column in enumerate(columns, start=1):
+                cell = sheet.cell(row=1, column=idx, value=column['header'])
+                cell.style = header_style
+
+                # Set column type
+                column_letter = get_column_letter(idx)
+                if column['type'] == 'number':
+                    sheet.column_dimensions[column_letter].number_format = 'General'
+                elif column['type'] == 'date':
+                    sheet.column_dimensions[column_letter].number_format = 'mm-dd-yyyy'
+
+                 # Set column width
+                sheet.column_dimensions[column_letter].width = column['width']
+
+            
+            # Write data rows
+            for row_idx, project in enumerate(queryset, start=2):
+                row = [
+                    project.user.profile.name,
+                    project.user.email,
+                    project.title,
+                    project.code,
+                    project.description,
+                    project.hrp_code,
+                    project.start_date.astimezone(timezone.utc).replace(tzinfo=None) if project.start_date else None,
+                    project.end_date.astimezone(timezone.utc).replace(tzinfo=None) if project.end_date else None,
+                    project.budget,
+                    project.budget_received,
+                    project.budget_gap,
+                    project.budget_currency.name,
+                    ', '.join([donor.name for donor in project.donors.all()]),
+                    ', '.join([implementing_partner.name for implementing_partner in project.implementing_partners.all()]),
+                    ', '.join([programme_partner.name for programme_partner in project.programme_partners.all()]),
+                    project.state,
+                    'URL',
+                ]
+
+                # Write each column value to the corresponding cell
+                for col_idx, value in enumerate(row, start=1):
+                    cell = sheet.cell(row=row_idx, column=col_idx, value=value)
+
+            # Freeze the header row
+            sheet.freeze_panes = sheet['A2']
+
+            # Save the workbook to a BytesIO object
+            excel_file = BytesIO()
+            workbook.save(excel_file)
+            excel_file.seek(0)
+
+            # Create the JSON response
+            response = {
+                'file_url': 'data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,' + base64.b64encode(excel_file.read()).decode('utf-8'),
+                'file_name': 'export.xlsx',
+            }
+
+            return JsonResponse(response)
+        except Exception as e:
+            response = {'error': str(e)}
+            return JsonResponse(response, status=500)
+        
+    
 
 
 #############################################

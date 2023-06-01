@@ -10,3 +10,4 @@ django-environ~=0.10.0
 django-compressor~=4.3.1
 django-compressor-toolkit~=0.6.0
 bcrypt~=4.0.1
+openpyxl==3.1.2

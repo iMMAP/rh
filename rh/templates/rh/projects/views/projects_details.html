@@ -42,8 +42,7 @@
                 <li>
                     <button class="export-button">
                         <a href="#"
-                           data-url="{% url 'export_project_excel' %}"
-                           data-id="{{ project.pk }}"
+                           data-url="{% url 'export_project_excel' project.pk %}"
                            class="text-decoration-none"
                            title="Export Excel">
                             <span class="project-detail icon-download"></span>

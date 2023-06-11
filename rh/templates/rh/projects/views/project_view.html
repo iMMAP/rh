@@ -68,7 +68,6 @@
             </div>
             <div class="bottom-block">
                 <div class="actions-panel">
-                    <a href="#" class="btn btn-gray"><span class="btn-text">Upload Document</span><span class="icon-upload"></span></a>
                     <div class="export-formats-holder">
                         <a href="#" class="btn btn-gray export-open">
                             <span class="btn-text">Export</span>
@@ -78,44 +77,56 @@
                             <span class="title">File format</span>
                             <ul class="formats-list">
                                 <li>
-                                    <div class="input-check-holder">
-                                        <input type="radio" id="radio1" name="exportFormat" />
-                                        <label for="radio1">
-                                            <span class="input"></span>
-                                            <span class="text">Docs</span>
-                                        </label>
-                                        <input type="radio" id="radio2" name="exportFormat" />
-                                    </div>
-                                </li>
-                                <li>
-                                    <div class="input-check-holder">
-                                        <label for="radio2">
-                                            <span class="input"></span>
-                                            <span class="text">CVS</span>
-                                        </label>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div class="input-check-holder">
-                                        <input type="radio" id="radio3" name="exportFormat" />
-                                        <label for="radio3">
-                                            <span class="input"></span>
+                                    <button class="export-button">
+                                        <a href="#"
+                                            data-url="{% url 'export_project_excel' project.pk %}"
+                                            class="text-decoration-none"
+                                            title="Export Excel">
                                             <span class="text">Excel</span>
-                                        </label>
-                                    </div>
+                                        </a>
+                                    </button>
                                 </li>
                                 <li>
-                                    <div class="input-check-holder">
-                                        <input type="radio" id="radio4" name="exportFormat" />
-                                        <label for="radio4">
-                                            <span class="input"></span>
+                                    <button class="export-button">
+                                        <a href="#"
+                                            data-url="{% url 'export_project_excel' project.pk %}"
+                                            class="text-decoration-none"
+                                            title="Export DOC">
+                                            <span class="text">DOC</span>
+                                        </a>
+                                    </button>
+                                </li>
+                                <li>
+                                    <button class="export-button">
+                                        <a href="#"
+                                            data-url="{% url 'export_project_excel' project.pk %}"
+                                            class="text-decoration-none"
+                                            title="Export CSV">
+                                            <span class="text">CSV</span>
+                                        </a>
+                                    </button>
+                                </li>
+                                <li>
+                                    <button class="export-button">
+                                        <a href="#"
+                                            data-url="{% url 'export_project_excel' project.pk %}"
+                                            class="text-decoration-none"
+                                            title="Export PDF">
                                             <span class="text">PDF</span>
-                                        </label>
-                                    </div>
+                                        </a>
+                                    </button>
                                 </li>
                             </ul>
                         </div>
                     </div>
+                    <a href="#"
+                        data-url="{% url 'copy_project' project.pk %}"
+                        data-return-url="{% url parent_page %}"
+                        data-type="copy"
+                        data-project="{{ project.title }}"
+                        class="btn btn-gray show_confirm"><span class="btn-text">Duplicate</span><span class="icon-copy-outline"></span>
+                    </a>
+                    {% comment %} <a href="#" class="btn btn-gray"><span class="btn-text">Upload Document</span><span class="icon-upload"></span></a> {% endcomment %}
                     {% if project.active %}
                         <a href="#"
                            data-url="{% url 'archive_project' project.pk %}"
@@ -156,13 +167,6 @@
                             </svg>
                         </a>
                     {% endif %}
-                    <a href="#"
-                        data-url="{% url 'copy_project' project.pk %}"
-                        data-return-url="{% url parent_page %}"
-                        data-type="copy"
-                        data-project="{{ project.title }}"
-                        class="btn btn-gray show_confirm"><span class="btn-text">Duplicate</span><span class="icon-copy-outline"></span>
-                    </a>
                     <a href="#"
                         data-url="{% url 'delete_project' project.pk %}"
                         data-return-url="{% url parent_page %}"
@@ -664,4 +668,8 @@
             {% endfor %}
         </div>
     </div>
+    {% comment %} TODO: Handle this in a proper way  {% endcomment %}
+    <script>
+        var csrfToken = '{{ csrf_token }}';
+    </script>
 {% endblock content %}

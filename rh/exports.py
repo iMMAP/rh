@@ -43,6 +43,7 @@ class ProjectExportExcelView(View):
             self.write_project_sheet(workbook, project)
             self.write_population_sheet(workbook, project)
             self.write_target_locations_sheet(workbook, project)
+            self.write_budget_progress_sheet(workbook, project)
 
             excel_file = BytesIO()
             workbook.save(excel_file)
@@ -154,7 +155,7 @@ class ProjectExportExcelView(View):
             workbook (Workbook): The Excel workbook object.
             project (Project): The project object.
         """
-        sheet = workbook.create_sheet(title='Population')
+        sheet = workbook.create_sheet(title='Target Population')
 
         # Define column headers and types for Sheet 2
         columns = [
@@ -225,6 +226,62 @@ class ProjectExportExcelView(View):
                 location.province.name,
                 location.district.name,
                 location.zone.name if location.zone else None,
+            ]
+
+            for col_idx, value in enumerate(row, start=1):
+                cell = sheet.cell(row=2, column=col_idx, value=value)
+    
+    def write_budget_progress_sheet(self, workbook, project):
+        """
+        Write the target locations sheet to the workbook.
+
+        Args:
+            workbook (Workbook): The Excel workbook object.
+            project (Project): The project object.
+        """
+        sheet = workbook.create_sheet(title='Budget Progress')
+
+        # Define column headers and types for Sheet 3
+        columns = [
+            {'header': 'Project', 'type': 'string', 'width': 20},
+            {'header': 'Title', 'type': 'string', 'width': 20},
+            {'header': 'Donor', 'type': 'string', 'width': 20},
+            {'header': 'Activity Domain', 'type': 'string', 'width': 20},
+            {'header': 'Grant', 'type': 'float', 'width': 10},
+            {'header': 'Amount Recieved', 'type': 'float', 'width': 10},
+            {'header': 'Budget Currency', 'type': 'string', 'width': 20},
+            {'header': 'Received Date', 'type': 'date', 'width': 20},
+            {'header': 'Country', 'type': 'string', 'width': 20},
+            {'header': 'Description', 'type': 'string', 'width': 20},
+            
+        ]
+
+        self.write_sheet_columns(sheet, columns)
+        self.write_budget_progress_data_rows(sheet, project)
+
+        sheet.freeze_panes = sheet['A2']
+
+    def write_budget_progress_data_rows(self, sheet, project):
+        """
+        Write budget progress data rows to the sheet.
+
+        Args:
+            sheet (Worksheet): The worksheet object.
+            project (Project): The project object.
+        """
+        budget_progress = project.budgetprogress_set.all()
+        for budget in budget_progress:
+            row = [
+                budget.project.name,
+                budget.title,
+                budget.donor.name,
+                budget.activity_domain.name,
+                budget.grant,
+                budget.amount_recieved,
+                budget.budget_currency.name,
+                budget.received_date,
+                budget.country.name,
+                budget.description,
             ]
 
             for col_idx, value in enumerate(row, start=1):

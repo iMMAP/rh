@@ -40,7 +40,7 @@ workon reporthub
 ### 5. Install packages
 
 ```
-pip install -r requirements_dev.txt
+pip install -r requirements.txt
 ```
 
 ### 6. Create .env file

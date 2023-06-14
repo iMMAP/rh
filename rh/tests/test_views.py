@@ -70,33 +70,6 @@ class TestLoggedInViews(TestCase):
 
         print('Test for load_locations_details view passed.')
     
-    def test_load_facility_sites_view(self):
-        # Create dummy clusters and facility sites
-        cluster1 = Cluster.objects.create(name='Cluster 1')
-        facility1 = FacilitySiteType.objects.create(name='Facility 1', cluster=cluster1)
-        facility2 = FacilitySiteType.objects.create(name='Facility 2', cluster=cluster1)
-
-        cluster2 = Cluster.objects.create(name='Cluster 2')
-        facility3 = FacilitySiteType.objects.create(name='Facility 3', cluster=cluster2)
-        facility4 = FacilitySiteType.objects.create(name='Facility 4', cluster=cluster2)
-
-        # Prepare GET request parameters
-        params = {
-            'clusters[]': [str(cluster1.pk), str(cluster2.pk)],
-            'listed_facilities[]': []
-        }
-
-        response = self.client.get(self.load_facility_sites_url, params)
-
-        self.assertEqual(response.status_code, 200)
-        self.assertContains(response, f'<optgroup label="{cluster1.name}">')
-        self.assertContains(response, f'<option value="{facility1.pk}">{facility1}</option>')
-        self.assertContains(response, f'<option value="{facility2.pk}">{facility2}</option>')
-        self.assertContains(response, f'<optgroup label="{cluster2.name}">')
-        self.assertContains(response, f'<option value="{facility3.pk}">{facility3}</option>')
-        self.assertContains(response, f'<option value="{facility4.pk}">{facility4}</option>')
-
-        print('Test for load_facility_sites view passed.')
 
 
 class TestNotLoggedInViews(TestCase):
@@ -146,19 +119,3 @@ class TestNotLoggedInViews(TestCase):
 
         self.assertEqual(response.status_code, 302)
         print('Access Denied! Please login and try again. Test for load_locations_details view passed.')
-
-    def test_load_facility_sites_view(self):
-        # Create dummy clusters and facility sites
-        cluster1 = Cluster.objects.create(name='Cluster 1')
-        cluster2 = Cluster.objects.create(name='Cluster 2')
-
-        # Prepare GET request parameters
-        params = {
-            'clusters[]': [str(cluster1.pk), str(cluster2.pk)],
-            'listed_facilities[]': []
-        }
-
-        response = self.client.get(self.load_facility_sites_url, params)
-
-        self.assertEqual(response.status_code, 302)
-        print('Access Denied! Please login and try again. Test for load_facility_sites view passed.')

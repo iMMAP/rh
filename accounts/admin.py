@@ -10,7 +10,7 @@ class UserAdminCustom(UserAdmin):
    list_display = ('email', 'first_name', 'last_name', 'is_staff', 'is_superuser','profile_link')
 
    def profile_link(self, obj):
-        url = reverse('admin:users_profile_change', args=[obj.profile.id])
+        url = reverse('admin:accounts_profile_change', args=[obj.profile.id])
         return format_html('<a href="{}">{}</a>', url, obj.profile)
 
 admin.site.unregister(User)

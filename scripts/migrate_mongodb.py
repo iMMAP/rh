@@ -8,21 +8,21 @@ import pandas as pd
 SQLITE_DB_PATH = '../db.sqlite3'
 
 # CSV DATA FILES
-CURRENCIES_CSV = '../data/currencies.csv'
-LOCATIONS_CSV = '../data/af_loc.csv'
-ORGANIZATIONS_CSV = '../data/organizations.csv'
-BENEFICIARY_TYPES_CSV = '../data/beneficiary_types.csv'
-DONORS_CSV = '../data/donors.csv'
-INDICATORS_CSV = '../data/Indicators.csv'
-ACTIVITIES_CSV = '../data/activities.csv'
-USERS_CSV = '../data/user.csv'
+CURRENCIES_CSV = '../static/data/currencies.csv'
+LOCATIONS_CSV = '../static/data/af_loc.csv'
+ORGANIZATIONS_CSV = '../static/data/organizations.csv'
+BENEFICIARY_TYPES_CSV = '../static/data/beneficiary_types.csv'
+DONORS_CSV = '../static/data/donors.csv'
+INDICATORS_CSV = '../static/data/Indicators.csv'
+ACTIVITIES_CSV = '../static/data/activities.csv'
+USERS_CSV = '../static/data/user.csv'
 
-CLUSTERS = '../data/new_db/clusters.csv'
-ACTIVITY_DOMAIN_CSV = '../data/new_db/activity_domains.csv'
-ACTIVITY_DESCRIPTION_CSV = '../data/new_db/activity_types.csv'
-ACTIVITY_DETAIL_CSV = '../data/new_db/activity_details.csv'
-INDICATORS_CSV_OLD_DB = '../data/new_db/indicators.csv'
-FACILITIES = '../data/new_db/facility_site_types.csv'
+CLUSTERS = '../static/data/new_db/clusters.csv'
+ACTIVITY_DOMAIN_CSV = '../static/data/new_db/activity_domains.csv'
+ACTIVITY_DESCRIPTION_CSV = '../static/data/new_db/activity_types.csv'
+ACTIVITY_DETAIL_CSV = '../static/data/new_db/activity_details.csv'
+INDICATORS_CSV_OLD_DB = '../static/data/new_db/indicators.csv'
+FACILITIES = '../static/data/new_db/facility_site_types.csv'
 
 
 def get_sqlite_client(dbname):
@@ -119,7 +119,7 @@ def import_indicators_from_csv(conn, indicators_csv):
     df = pd.read_csv(indicators_csv)
 
     if len(df) > 0:
-        table = "rh_indicator"
+        table = "activities_indicator"
 
         df.to_sql('tmp_indicator', conn, if_exists='replace', index=False)
         try:
@@ -130,7 +130,7 @@ def import_indicators_from_csv(conn, indicators_csv):
                 activity_type = indicator[0]
 
                 if activity_type:
-                    c.execute(f"select id from rh_activitytype where code='{activity_type}'")
+                    c.execute(f"select id from activities_activitytype where code='{activity_type}'")
                     activity_type_id = c.fetchone()
                     if activity_type_id:
                         activity_type = activity_type_id[0]
@@ -150,7 +150,7 @@ def import_indicators_from_csv(conn, indicators_csv):
                 if last_indicator_id and activity_type:
                     aquery = f"""
                         insert into 
-                        rh_indicator_activity_types(indicator_id, activitytype_id) 
+                        activities_indicator_activity_types(indicator_id, activitytype_id) 
                         values({last_indicator_id}, {activity_type})
                     """
                     c.execute(aquery)
@@ -168,7 +168,7 @@ def import_activity_domains_from_csv(conn, activity_domain_csv):
     df = pd.read_csv(activity_domain_csv)
 
     if len(df) > 0:
-        table = "rh_activitydomain"
+        table = "activities_activitydomain"
 
         df.to_sql('tmp_activitydomain', conn, if_exists='replace', index=False)
 
@@ -209,14 +209,14 @@ def import_activity_domains_from_csv(conn, activity_domain_csv):
                 if last_domain_id and country:
                     coquery = f"""
                         insert into 
-                        rh_activitydomain_countries(activitydomain_id, location_id) 
+                        activities_activitydomain_countries(activitydomain_id, location_id) 
                         values({last_domain_id}, {country})
                     """
                     c.execute(coquery)
                 if last_domain_id and cluster:
                     clquery = f"""
                            insert into 
-                           rh_activitydomain_clusters(activitydomain_id, cluster_id) 
+                           activities_activitydomain_clusters(activitydomain_id, cluster_id) 
                            values({last_domain_id}, {cluster})
                        """
                     c.execute(clquery)
@@ -230,7 +230,7 @@ def import_activity_descriptions_from_csv(conn, activity_description_csv):
     df = pd.read_csv(activity_description_csv)
 
     if len(df) > 0:
-        table = "rh_activitytype"
+        table = "activities_activitytype"
 
         df.to_sql('tmp_activitytype', conn, if_exists='replace', index=False)
 
@@ -246,7 +246,7 @@ def import_activity_descriptions_from_csv(conn, activity_description_csv):
                 country = 'AF'
 
                 if activity_domain:
-                    c.execute(f"select id from rh_activitydomain where code='{activity_domain}'")
+                    c.execute(f"select id from activities_activitydomain where code='{activity_domain}'")
                     activity_domain_id = c.fetchone()
                     if activity_domain_id:
                         activity_domain = activity_domain_id[0]
@@ -292,14 +292,14 @@ def import_activity_descriptions_from_csv(conn, activity_description_csv):
                 if last_activity_type_id and country:
                     coquery = f"""
                         insert into 
-                        rh_activitytype_countries(activitytype_id, location_id) 
+                        activities_activitytype_countries(activitytype_id, location_id) 
                         values({last_activity_type_id}, {country})
                     """
                     c.execute(coquery)
                 if last_activity_type_id and cluster:
                     clquery = f"""
                         insert into 
-                        rh_activitytype_clusters(activitytype_id, cluster_id) 
+                        activities_activitytype_clusters(activitytype_id, cluster_id) 
                         values({last_activity_type_id}, {cluster})
                     """
                     c.execute(clquery)
@@ -323,7 +323,7 @@ def import_activity_details_from_csv(conn, activity_details_csv):
     df = pd.read_csv(activity_details_csv)
 
     if len(df) > 0:
-        table = "rh_activitydetail"
+        table = "activities_activitydetail"
 
         df.to_sql('tmp_activitydetail', conn, if_exists='replace', index=False)
 
@@ -338,7 +338,7 @@ def import_activity_details_from_csv(conn, activity_details_csv):
                 # country = 'AF'
 
                 if activity_type:
-                    c.execute(f"select id from rh_activitytype where code='{activity_type}'")
+                    c.execute(f"select id from activities_activitytype where code='{activity_type}'")
                     activity_type_id = c.fetchone()
                     if activity_type_id:
                         activity_type = activity_type_id[0]
@@ -363,7 +363,7 @@ def import_beneficiary_types_from_csv(conn, beneficiary_type_csv):
     df = pd.read_csv(beneficiary_type_csv)
 
     if len(df) > 0:
-        table = "rh_beneficiarytype"
+        table = "activities_beneficiarytype"
 
         df.to_sql('tmp_beneficiarytype', conn, if_exists='replace', index=False)
 
@@ -582,7 +582,7 @@ def import_users_from_csv(conn, users_csv):
                     u_profile = tuple(u_profile)
                 pquery = f"""
                         insert into 
-                        users_profile(country_id,organization_id,phone,position,skype,user_id,is_cluster_contact) 
+                        accounts_profile(country_id,organization_id,phone,position,skype,user_id,is_cluster_contact) 
                         values (?, ?, ?, ?, ?, ?, ?)
                     """
                 c.execute(pquery, u_profile)
@@ -591,7 +591,7 @@ def import_users_from_csv(conn, users_csv):
                 if last_profile_id and profile_cluster_id:
                     alquery = f"""
                                 insert into 
-                                users_profile_clusters(profile_id, cluster_id) 
+                                accounts_profile_clusters(profile_id, cluster_id) 
                                 values({last_profile_id}, {profile_cluster_id})
                             """
                     c.execute(alquery)
@@ -615,7 +615,7 @@ def import_activities_from_csv(conn, activities_csv):
     # df['fields'] = df['fields'].apply(lambda x: json.loads(x) if isinstance(x, str) else json.loads(str(x)))
 
     if len(df) > 0:
-        table = "rh_activity"
+        table = "activities_activity"
 
         df.to_sql('tmp_activity', conn, if_exists='replace', index=False)
 
@@ -631,7 +631,7 @@ def import_activities_from_csv(conn, activities_csv):
 
                 indicator = activity[-1]
                 if indicator:
-                    c.execute(f"select id from rh_indicator where code='{indicator}'")
+                    c.execute(f"select id from activities_indicator where code='{indicator}'")
                     indicator = c.fetchone()
                     if indicator:
                         activity[-1] = indicator[0]
@@ -657,7 +657,7 @@ def import_activities_from_csv(conn, activities_csv):
                 if activity_id and location_id:
                     alquery = f"""
                         insert into 
-                        rh_activity_locations(activity_id, location_id) 
+                        activities_activity_locations(activity_id, location_id) 
                         values({activity_id}, {location_id[0]})
                     """
                     c.execute(alquery)
@@ -670,7 +670,7 @@ def import_activities_from_csv(conn, activities_csv):
                 if activity_id and cluster_id:
                     alquery = f"""
                         insert into 
-                        rh_activity_clusters(activity_id, cluster_id) 
+                        activities_activity_clusters(activity_id, cluster_id) 
                         values({activity_id}, {cluster_id[0]})
                     """
                     c.execute(alquery)
@@ -688,7 +688,7 @@ def import_facilities_from_csv(conn, facilities_csv):
     df = pd.read_csv(facilities_csv)
 
     if len(df) > 0:
-        table = "rh_facilitysitetype"
+        table = "activities_facilitysitetype"
 
         df.to_sql('tmp_facilitysitetype', conn, if_exists='replace', index=False)
         try:
@@ -738,7 +738,7 @@ try:
 
     import_indicators_from_csv(connection, INDICATORS_CSV_OLD_DB)
 
-    import_users_from_csv(connection, USERS_CSV)
+    # import_users_from_csv(connection, USERS_CSV)
 
     import_facilities_from_csv(connection, FACILITIES)
 

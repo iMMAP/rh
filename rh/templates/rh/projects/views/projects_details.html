@@ -2,11 +2,17 @@
     <td class="cluster-col">
         <div class="table-flex-holder">
             <div class="input-check-holder">
-                <input type="checkbox" id="table-check-11" name="table-check11" />
-                <label for="table-check-11">
+                <input type="checkbox" id="table-check-{{project.pk}}" name="table-check{{project.pk}}" />
+                <label for="table-check-{{project.pk}}">
                     <span class="input"></span>
                 </label>
             </div>
+            {% comment %} <div class="input-check-holder">
+                <input type="checkbox" name="selected_ids[]" value="{{ project.id }}" />
+                <label for="table-check-11">
+                    <span class="input" id="check_project_{{project.id}}"></span>
+                </label>
+            </div> {% endcomment %}
             {{ project.title }}
         </div>
     </td>
@@ -33,6 +39,29 @@
     <td class="action-col">
         <div class="table-flex-holder">
             <ul class="table-options-buttons ">
+                <li>
+                    <button class="export-button">
+                        <a href="#"
+                           data-url="{% url 'export_project_excel' project.pk %}"
+                           class="text-decoration-none"
+                           title="Export Excel">
+                            <span class="project-detail icon-download"></span>
+                        </a>
+                    </button>
+                </li>
+                <li>
+                    <button>
+                        <a href="#"
+                           data-url="{% url 'copy_project' project.pk %}"
+                           data-return-url="{% url 'draft_projects' %}"
+                           data-type="copy"
+                           data-project="{{ project.title }}"
+                           class="text-decoration-none show_confirm"
+                           title="Duplicate this project!">
+                            <span class="project-detail icon-copy"></span>
+                        </a>
+                    </button>
+                </li>
                 <li>
                     <button>
                         {% if project.active %}
@@ -76,19 +105,6 @@
                 <li>
                     <button>
                         <a href="#"
-                           data-url="{% url 'copy_project' project.pk %}"
-                           data-return-url="{% url 'draft_projects' %}"
-                           data-type="copy"
-                           data-project="{{ project.title }}"
-                           class="text-decoration-none show_confirm"
-                           title="Duplicate this project!">
-                            <span class="project-detail icon-copy"></span>
-                        </a>
-                    </button>
-                </li>
-                <li>
-                    <button>
-                        <a href="#"
                            data-url="{% url 'delete_project' project.pk %}"
                            data-return-url="{% url 'draft_projects' %}"
                            data-type="delete"
@@ -122,7 +138,7 @@
                     </dd>
                 </dl>
             </div>
-            <div class="col">
+            {% comment %} <div class="col">
                 <div class="input-check-holder">
                     <input type="checkbox" id="table-check-18" checked />
                     <label for="table-check-18">
@@ -130,7 +146,7 @@
                         <span class="text">HRP project</span>
                     </label>
                 </div>
-            </div>
+            </div> {% endcomment %}
             <div class="col">
                 <dl>
                     <dt>Activity types:</dt>
@@ -142,3 +158,6 @@
         </div>
     </td>
 </tr>
+<script>
+    var csrfToken = '{{ csrf_token }}';
+</script>

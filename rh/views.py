@@ -9,7 +9,7 @@ from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.template import loader
 from django.views.decorators.cache import cache_control
-from django.db.models import Q
+# from django.db.models import Q
 
 from .filters import *
 from .forms import *
@@ -22,7 +22,6 @@ from .forms import *
 #############################################
 ############### Index Views #################
 #############################################
-
 
 @cache_control(no_store=True)
 def index(request):

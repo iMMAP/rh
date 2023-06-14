@@ -6294,7 +6294,8 @@ body.confirmation-active {
 .project-detail.icon-trashbin-outline,
 .project-detail.icon-trashbin,
 .project-detail.icon-copy,
-.project-detail.icon-pen {
+.project-detail.icon-pen,
+.project-detail.icon-download {
   font-size: medium;
 }
 

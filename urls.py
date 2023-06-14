@@ -23,6 +23,8 @@ urlpatterns = [
     path('', include('rh.urls')),
     path('', include('stock.urls')),
     path('', include('accounts.urls')),
+    path('', include('projects.urls')),
+    path('', include('reports.urls')),
     path('', include('django.contrib.auth.urls')),
     path('admin/', admin.site.urls),
     path('chaining/', include('smart_selects.urls')),

@@ -35,8 +35,11 @@ INSTALLED_APPS = [
     'smart_selects',
 
     # RH apps
-    'rh.apps.RhConfig',
     'accounts.apps.AccountsConfig',
+    'activities.apps.ActivitiesConfig',
+    'projects.apps.ProjectsConfig',
+    'reports.apps.ReportsConfig',
+    'rh.apps.RhConfig',
     'stock.apps.StockConfig',
 ]
 USE_DJANGO_JQUERY = True

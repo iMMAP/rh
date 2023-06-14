@@ -1,6 +1,7 @@
 from django.urls import path
 
 from . import views as user_views
+from . import exports as export_views
 
 urlpatterns = [
     path('', user_views.index, name='index'),
@@ -46,5 +47,8 @@ urlpatterns = [
     path('ajax/load-locations-details/', user_views.load_locations_details, name='ajax-load-locations'),
     # path('ajax/load-zones-details/', user_views.load_zones_details, name='ajax-load-zones'),
     path('ajax/load-facility_sites/', user_views.load_facility_sites, name='ajax-load-facility_sites'),
+
+    # Exports
+    path('export-excel/<int:project_id>/', export_views.ProjectExportExcelView.as_view(), name='export_project_excel'),
 
 ]

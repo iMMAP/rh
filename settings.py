@@ -36,7 +36,7 @@ INSTALLED_APPS = [
 
     # RH apps
     'rh.apps.RhConfig',
-    'users.apps.UsersConfig',
+    'accounts.apps.AccountsConfig',
     'stock.apps.StockConfig',
 ]
 USE_DJANGO_JQUERY = True
@@ -115,7 +115,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
-    'users.backends.EmailBackend',
+    'accounts.backends.EmailBackend',
 ]
 
 PASSWORD_HASHERS = [

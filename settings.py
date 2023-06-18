@@ -31,6 +31,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     
     # Installed packages apps
+    'debug_toolbar',
     'django_filters',
     'smart_selects',
 
@@ -46,6 +47,9 @@ MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
+    
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
+
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -181,6 +185,11 @@ LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/profile/'
 LOGOUT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
+
+INTERNAL_IPS = [
+    "127.0.0.1",
+    "localhost",
+]
 
 # Can use MailTrap SMTP Setup for now (dev and staging only).
 # EMAIL_HOST = env('EMAIL_HOST')  # 'smtp.mailtrap.io'

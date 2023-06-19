@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     'debug_toolbar',
     'django_filters',
     'smart_selects',
+    'nested_inline',
 
     # RH apps
     'rh.apps.RhConfig',

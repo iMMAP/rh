@@ -31,7 +31,7 @@ urlpatterns = [
     # Projects Target Locations CRUD
     path('project/target_location/copy/<str:project>/<str:location>/', user_views.copy_target_location, name='copy_location'),
     path('project/target_location/delete/<str:pk>/', user_views.delete_target_location, name='delete_location'),
-    path('project/target_location/create/?project=<str:project>/',
+    path('project/target_location/create/?plan=<str:plan>/',
         user_views.create_project_target_location, name='create_project_target_location'),
 
     path('project/financials/budget_progress/?project=<str:project>/',
@@ -50,5 +50,5 @@ urlpatterns = [
 
     # Exports
     path('export-excel/<int:project_id>/', export_views.ProjectExportExcelView.as_view(), name='export_project_excel'),
-
+    # path('create-form/', user_views.create_project_target_location, name='form_create_view'),
 ]

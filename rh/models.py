@@ -317,19 +317,6 @@ class Indicator(models.Model):
         verbose_name_plural = "Indicators"
 
 
-class Disaggregation(models.Model):
-    clusters = models.ManyToManyField(Cluster)
-    indicators = models.ManyToManyField(Indicator)
-
-    name = models.CharField(max_length=NAME_MAX_LENGTH)
-    type = models.CharField(max_length=NAME_MAX_LENGTH)
-
-    updated = models.DateTimeField(auto_now=True)
-    created = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return self.name
-
 # ##############################################
 # ############## Project Planning ##############
 # ##############################################
@@ -479,7 +466,7 @@ class ActivityPlan(models.Model):
     old_id = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
 
     def __str__(self):
-        return f"{self.project}"
+        return f"{self.title}"
 
     class Meta:
         verbose_name = 'Activity Plan'
@@ -500,6 +487,8 @@ class TargetLocation(models.Model):
         ('district', 'District'),
     ]
     project = models.ForeignKey(Project, on_delete=models.CASCADE, null=True, blank=True)
+    activity_plan = models.ForeignKey(ActivityPlan, on_delete=models.SET_NULL, null=True, blank=True)
+    
     active = models.BooleanField(default=True)
     state = models.CharField(
         max_length=15,
@@ -540,6 +529,30 @@ class TargetLocation(models.Model):
     class Meta:
         verbose_name = 'Target Location'
         verbose_name_plural = "Target Locations"
+
+
+class Disaggregation(models.Model):
+    clusters = models.ManyToManyField(Cluster)
+    indicators = models.ManyToManyField(Indicator)
+
+    name = models.CharField(max_length=NAME_MAX_LENGTH)
+    type = models.CharField(max_length=NAME_MAX_LENGTH)
+
+    updated = models.DateTimeField(auto_now=True)
+    created = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.name
+
+
+class DisaggregationLocation(models.Model):
+    target_location = models.ForeignKey(TargetLocation, on_delete=models.CASCADE, null=True, blank=True)
+    disaggregation = models.ForeignKey(Disaggregation, on_delete=models.CASCADE, null=True, blank=True)
+
+    target = models.IntegerField(default=0, null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.disaggregation.name}" 
 
 
 # ##############################################

@@ -57,6 +57,22 @@ $(document).ready(function () {
 
 		// Call get_facility_sites and fetch the facility sites types.
 		get_facility_sites(formIndex);
+		
+		$(`#form-${formIndex}-create-form-button`).click(function(event) {
+			event.preventDefault();
+			$.ajax({
+				url: this.dataset.url,
+				type: 'GET',
+				success: function(response) {
+					debugger;
+					$(`#form-${formIndex}-form-container`).html(response);
+				},
+				error: function (error_data) {
+					debugger;
+				}
+			});
+		});
+	
 	});
 
 	$activityBlockHolder.on("change", function (event) {

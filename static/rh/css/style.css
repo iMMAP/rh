@@ -4260,6 +4260,12 @@ body.filter-active {
   margin: 25px 0 10px
 }
 
+.location-block-holder .block-top {
+  color: #be2126;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
 .activity-planning .review-block-top {
   display: flex;
   flex-wrap: wrap;
@@ -4584,14 +4590,19 @@ body.filter-active {
   padding-top: 8px
 }
 
-.location-block-holder {
-  padding: 20px 0
-}
 
 .location-block-holder .inner-holder {
   position: relative;
   padding: 24px 16px 26px;
   border: 2px solid #e6e7e8;
+  border-width: 2px 0;
+  background-color: #fafafa
+}
+
+.location-inner-holder{
+  position: relative;
+  padding: 24px 16px 26px;
+  border-top: 2px solid #e6e7e8;
   border-width: 2px 0;
   background-color: #fafafa
 }

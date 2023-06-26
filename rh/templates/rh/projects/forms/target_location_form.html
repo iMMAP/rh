@@ -1,0 +1,112 @@
+<!-- form_create.html -->
+    <div class="location-inner-holder">
+        <div class="">
+            <span class="title">
+                <span id="title-province-{{ target_location_form.prefix }}"></span>
+                <span id="title-district-{{ target_location_form.prefix }}"></span>
+                <span id="title-site_name-{{ target_location_form.prefix }}"></span>
+            </span>
+        </div>
+        <div id="{{ target_location_form.prefix }}-details">
+            {% comment %} <div class="options-holder">
+                <div class="input-check-holder">
+                    <input type="checkbox"
+                            name="{{ target_location_form.group_by_province.name }}"
+                            id="{{ target_location_form.group_by_province.id_for_label }}" />
+                    <label for="{{ target_location_form.group_by_province.id_for_label }}">
+                        <span class="input"></span>
+                        <span class="text">Group target locations by province</span>
+                    </label>
+                </div>
+                <div class="input-check-holder">
+                    <input type="checkbox"
+                            name="{{ target_location_form.group_by_district.name }}"
+                            id="{{ target_location_form.group_by_district.id_for_label }}" />
+                    <label for="{{ target_location_form.group_by_district.id_for_label }}">
+                        <span class="input"></span>
+                        <span class="text">Group target locations by district</span>
+                    </label>
+                </div>
+                <div class="input-check-holder">
+                    <input type="checkbox"
+                            name="{{ target_location_form.group_by_custom.name }}"
+                            id="{{ target_location_form.group_by_custom.id_for_label }}" />
+                    <label for="{{ target_location_form.group_by_custom.id_for_label }}">
+                        <span class="input"></span>
+                        <span class="text">Group target locations custom</span>
+                    </label>
+                </div>
+            </div> {% endcomment %}
+            <div class="row">
+                <div class="col">
+                    <div class="multiple-fields-row three-items">
+                        <div class="field-col">
+                            <div class="select-field is-required">
+                                <label for="{{target_location_form.province.id_for_label}}" >Province / State</label>
+                                {{ target_location_form.province }}
+                            </div>
+                        </div>
+                        <div class="field-col">
+                            <div class="input-field is-required">
+                                <label for="{{target_location_form.district.id_for_label}}">District</label>
+                                {{ target_location_form.district }}
+                            </div>
+                        </div>
+                        <div class="field-col">
+                            <div class="input-field">
+                                <label for="{{target_location_form.zone.id_for_label}}">Ward / Zone</label>
+                                {{ target_location_form.zone }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            
+                {% comment %} <div class="col">
+                    <div class="multiple-fields-row three-items">
+                        <div class="field-col">
+                            <div class="input-check-holder">
+                                {{ target_location_form.site_monitoring }}
+                                <label for="{{ target_location_form.site_monitoring.id_for_label }}">
+                                    <span class="input"></span>
+                                    <span class="text">Site Monitoring</span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="field-col">
+                        </div>
+                        <div class="field-col"></div>
+                    </div>
+                    <div class="multiple-fields-row three-items" id="{{ target_location_form.prefix }}_site_details">
+                        <div class="field-col" >
+                            <div class="input-field">
+                                <label for="{{target_location_form.site_name.id_for_label}}">Site name</label>
+                                <div class="input-holder">{{ target_location_form.site_name }}</div>
+                            </div>
+                        </div>
+                        <div class="field-col">
+                            <div class="input-field">
+                                <label for="{{target_location_form.site_lat.id_for_label}}">Site Latitude</label>
+                                <div class="input-holder">{{ target_location_form.site_lat }}</div>
+                            </div>
+                        </div>
+                        <div class="field-col">
+                            <div class="input-field">
+                                <label for="{{target_location_form.site_long.id_for_label}}">Site Longitude</label>
+                                <div class="input-holder">{{ target_location_form.site_long }}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div> {% endcomment %}
+            </div>
+            <div class="location-block-holder">
+                <div class="block-top">
+                    Disaggregations
+                </div>
+            </div>
+            {{ disaggregation_formset.management_form }}
+            {% for disaggregation_form in disaggregation_formset %}
+                {{ disaggregation_form.id }}
+                {% include "rh/projects/forms/disaggregation_form.html" %}
+            {% endfor %}
+        </div>
+    </div>

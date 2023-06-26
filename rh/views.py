@@ -387,42 +387,62 @@ def update_project_view(request, pk):
 @cache_control(no_store=True)
 @login_required
 def create_project_activity_plan(request, project):
-    """
-    View for creating or updating activity plans for a project.
-    """
     project = get_object_or_404(Project, pk=project)
     activity_plans = project.activityplan_set.all()
-    ActivityPlanFormSet = modelformset_factory(ActivityPlan, form=ActivityPlanForm, can_delete=True, extra=1)
-    formset = ActivityPlanFormSet(request.POST or None, queryset=activity_plans, form_kwargs={'project': project})
+
+    activity_plan_formset = ActivityPlanFormSet(
+        request.POST or None,
+        instance=project,
+        form_kwargs={'project': project}
+    )
+
+    target_location_formsets = []
+    for form in activity_plan_formset.forms:
+        target_location_formset = TargetLocationFormSet(
+            request.POST or None,
+            instance=form.instance,
+            prefix=f'target_locations_{form.prefix}'
+        )
+        target_location_formsets.append(target_location_formset)
+
+    #TODO:  Handle target location specific disaggregations
+    disaggregation_formsets = []
+    for location_formset in target_location_formsets:
+        for location_form in location_formset.forms:
+            disaggregation_formset = DisaggregationFormSet(
+                request.POST or None,
+                instance=location_form.instance,
+                prefix=f'disaggregation_{location_form.prefix}'
+            )
+            disaggregation_formsets.append(disaggregation_formset)
+
 
     if request.method == 'POST':
         submit_type = request.POST.get('submit_type')
-        if formset.is_valid():
-            for form in formset:
-                if form.cleaned_data.get('save') or submit_type == 'next_step':
-                    if form.cleaned_data.get('activity_domain') and form.cleaned_data.get('activity_type'):
-                        activity = form.save(commit=False)
-                        activity.project = project
-                        activity.title = f"{activity.activity_domain.name}, {activity.activity_type.name},  {activity.activity_detail.name if activity.activity_detail else ''}"
-                        activity.active = True
-                        activity.total_0_5 = activity.female_0_5 + activity.male_0_5 + activity.other_0_5
-                        activity.total_6_12 = activity.female_6_12 + activity.male_6_12 + activity.other_6_12
-                        activity.total_12_17 = activity.female_12_17 + activity.male_12_17 + activity.other_12_17
-                        activity.total_18 = activity.female_18 + activity.male_18 + activity.other_18
-                        activity.total = activity.female_total + activity.male_total + activity.other_total
-                        activity.save()
-                        form.save_m2m()
-            if submit_type == 'next_step':
-                return redirect('create_project_target_location', project=project.pk)
-            else:
-                return redirect('create_project_activity_plan', project=project.pk)
-        else:
-            for form in formset:
-                for error in form.errors:
-                    error_message = f"Something went wrong {formset.errors}"
-                    if form.errors[error]:
-                        error_message = f"{error}: {form.errors[error][0]}"
-                    messages.error(request, error_message)
+
+        for disaggregation_formset in disaggregation_formsets:
+            if disaggregation_formset.is_valid():
+                for disaggregation_form in disaggregation_formset:
+                    if disaggregation_form.cleaned_data:
+                        disaggregation = disaggregation_form.save(commit=False)
+                        disaggregation.save()
+
+        for target_location_formset in target_location_formsets:
+            if target_location_formset.is_valid():
+                for target_location_form in target_location_formset:
+                    if target_location_form.cleaned_data and target_location_form.cleaned_data.get('province', False) and target_location_form.cleaned_data.get('district', False):
+                        target_location = target_location_form.save(commit=False)
+                        target_location.save()
+
+        if activity_plan_formset.is_valid():
+            for activity_plan_form in activity_plan_formset:
+                if (
+                    activity_plan_form.cleaned_data and
+                    (activity_plan_form.cleaned_data.get('save') or submit_type == 'next_step') and
+                    activity_plan_form.cleaned_data.get('activity_domain')
+                ):
+                    activity_plan = activity_plan_form.save(commit=False)
+                    activity_plan.save()
 
     plans = list(activity_plans.values_list('pk', flat=True))
     clusters = project.clusters.all()
@@ -436,73 +456,76 @@ def create_project_activity_plan(request, project):
         'archive': 'archived_projects'
     }.get(project_state, None)
 
+    combined_formset = zip(activity_plan_formset.forms, target_location_formsets, disaggregation_formsets)
+
     context = {
-        'project': project, 
-        'formset': formset, 
-        'clusters': cluster_ids, 
+        'project': project,
+        'formset': activity_plan_formset,
+        'combined_formset': combined_formset,
+        'clusters': cluster_ids,
         'activity_planning': True,
         'plans': plans,
-        'parent_page':parent_page
-        }
+        'parent_page': parent_page
+    }
     return render(request, 'rh/projects/forms/project_activity_plan_form.html', context)
 
 
 @cache_control(no_store=True)
 @login_required
-def create_project_target_location(request, project):
-    project = get_object_or_404(Project, pk=project)
+def create_project_target_location(request, plan):
+    activity_plan = get_object_or_404(ActivityPlan, pk=plan)
+    project = activity_plan.project
 
-    activity_plans = project.activityplan_set.all()
-    target_locations = project.targetlocation_set.all()
+    target_locations = activity_plan.targetlocation_set.all()
 
     TargetLocationsFormSet = modelformset_factory(TargetLocation, form=TargetLocationForm, extra=1)
-    formset = TargetLocationsFormSet(request.POST or None, queryset=target_locations, form_kwargs={'project': project})
+    formset = TargetLocationsFormSet(request.POST or None, queryset=target_locations, form_kwargs={'activity_plan': plan, 'project': project})
 
-    if request.method == 'POST':
-        submit_type = request.POST.get('submit_type')
-        country = request.POST.get('country')
+    # if request.method == 'POST':
+    #     submit_type = request.POST.get('submit_type')
+    #     country = request.POST.get('country')
 
-        if formset.is_valid():
-            for form in formset:
-                if form.cleaned_data.get('save') or submit_type == 'next_step':
-                    if form.cleaned_data.get('province') and form.cleaned_data.get('district'):
-                        target_location = form.save(commit=False)
-                        target_location.project = project
-                        target_location.country_id = country
-                        target_location.title = f"{target_location.province.name}, {target_location.district.name}, {target_location.site_name if target_location.site_name else ''}"
-                        target_location.active = True
-                        target_location.save()
-            if submit_type == 'next_step':
-                return redirect('project_plan_review', project=project.pk)
-            else:
-                return redirect('create_project_target_location', project=project.pk)
-        else:
-            for form in formset:
-                for error in form.errors:
-                    error_message = f"Something went wrong {formset.errors}"
-                    if form.errors[error]:
-                        error_message = f"{error}: {form.errors[error][0]}"
-                    messages.error(request, error_message)
+    #     if formset.is_valid():
+    #         for form in formset:
+    #             if form.cleaned_data.get('save') or submit_type == 'next_step':
+    #                 if form.cleaned_data.get('province') and form.cleaned_data.get('district'):
+    #                     target_location = form.save(commit=False)
+    #                     target_location.project = project
+    #                     target_location.country_id = country
+    #                     target_location.title = f"{target_location.province.name}, {target_location.district.name}, {target_location.site_name if target_location.site_name else ''}"
+    #                     target_location.active = True
+    #                     target_location.save()
+    #         if submit_type == 'next_step':
+    #             return redirect('project_plan_review', project=project.pk)
+    #         else:
+    #             return redirect('create_project_target_location', project=project.pk)
+    #     else:
+    #         for form in formset:
+    #             for error in form.errors:
+    #                 error_message = f"Something went wrong {formset.errors}"
+    #                 if form.errors[error]:
+    #                     error_message = f"{error}: {form.errors[error][0]}"
+    #                 messages.error(request, error_message)
 
-    plans = list(activity_plans.values_list('pk', flat=True))
-    locations = list(target_locations.values_list('pk', flat=True))
-    project_state = project.state
-    parent_page = {
-        'in-progress': 'active_projects',
-        'draft': 'draft_projects',
-        'done': 'completed_projects',
-        'archive': 'archived_projects'
-    }.get(project_state, None)
+    # plans = list(activity_plans.values_list('pk', flat=True))
+    # locations = list(target_locations.values_list('pk', flat=True))
+    # project_state = project.state
+    # parent_page = {
+    #     'in-progress': 'active_projects',
+    #     'draft': 'draft_projects',
+    #     'done': 'completed_projects',
+    #     'archive': 'archived_projects'
+    # }.get(project_state, None)
 
     context = {
-        'project': project,
+        # 'project': project,
         'formset': formset, 
-        'locations_planning': True, 
-        'plans': plans,
-        'locations': locations,
-        'parent_page':parent_page
+        # 'locations_planning': True, 
+        # 'plans': plans,
+        # 'locations': locations,
+        # 'parent_page':parent_page
     }
-    return render(request, "rh/projects/forms/project_target_locations.html", context)
+    return render(request, "rh/projects/forms/form_create.html", context)
 
 
 @cache_control(no_store=True)
@@ -812,3 +835,10 @@ def delete_budget_progress(request, pk):
     if budget_progress:
         budget_progress.delete()
     return JsonResponse({ 'success': True})
+
+
+
+def form_create_view(request):
+    YourModelFormSet = modelformset_factory(TargetLocation, fields="__all__")
+    formset = YourModelFormSet(queryset=TargetLocation.objects.none())
+    return render(request, 'rh/projects/forms/form_create.html', {'formset': formset})

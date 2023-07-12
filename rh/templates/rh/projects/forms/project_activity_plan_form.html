@@ -43,7 +43,7 @@
                 </div>
                 <div id="activity-forms">
                     {{ formset.management_form }} {% csrf_token %}
-                    {% for form, target_location_formset, disaggregation_formset in combined_formset %}
+                    {% for form, target_location_formset in combined_formset %}
 
                         {{ form.id }} {{ form.save }}
                         <input type="hidden"
@@ -179,13 +179,13 @@
                                     <div class="row" id="Locations">
                                         <div class="col col-lg">
                                                 {{ target_location_formset.management_form }}
-                                                <div class="location-block-holder">
-                                                    <div class="block-top">
-                                                        Target Locations
-                                                    </div>
-                                                </div>
                                                 {% for target_location_form in target_location_formset %}
-                                                    {{ target_location_form.id }}
+                                                {{ target_location_form.id }}
+                                                    <div class="location-block-holder">
+                                                        <div class="block-top">
+                                                            Target Location
+                                                        </div>
+                                                    </div>
                                                     {% include "rh/projects/forms/target_location_form.html" %}
                                                 {% endfor %}
                                                 

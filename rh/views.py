@@ -397,52 +397,50 @@ def create_project_activity_plan(request, project):
     )
 
     target_location_formsets = []
-    for form in activity_plan_formset.forms:
+    for activity_plan_form in activity_plan_formset.forms:
         target_location_formset = TargetLocationFormSet(
             request.POST or None,
-            instance=form.instance,
-            prefix=f'target_locations_{form.prefix}'
+            instance=activity_plan_form.instance,
+            prefix=f'target_locations_{activity_plan_form.prefix}'
         )
-        target_location_formsets.append(target_location_formset)
-
-    #TODO:  Handle target location specific disaggregations
-    disaggregation_formsets = []
-    for location_formset in target_location_formsets:
-        for location_form in location_formset.forms:
+        for target_location_form in target_location_formset.forms:
             disaggregation_formset = DisaggregationFormSet(
                 request.POST or None,
-                instance=location_form.instance,
-                prefix=f'disaggregation_{location_form.prefix}'
-            )
-            disaggregation_formsets.append(disaggregation_formset)
+                instance=target_location_form.instance,
+                prefix=f'disaggregation_{target_location_form.prefix}'
+            )        
+            target_location_form.disaggregation_formset = disaggregation_formset
 
+        target_location_formsets.append(target_location_formset)
 
+    
     if request.method == 'POST':
-        submit_type = request.POST.get('submit_type')
-
-        for disaggregation_formset in disaggregation_formsets:
-            if disaggregation_formset.is_valid():
-                for disaggregation_form in disaggregation_formset:
-                    if disaggregation_form.cleaned_data:
-                        disaggregation = disaggregation_form.save(commit=False)
-                        disaggregation.save()
-
-        for target_location_formset in target_location_formsets:
-            if target_location_formset.is_valid():
-                for target_location_form in target_location_formset:
-                    if target_location_form.cleaned_data and target_location_form.cleaned_data.get('province', False) and target_location_form.cleaned_data.get('district', False):
-                        target_location = target_location_form.save(commit=False)
-                        target_location.save()
-
         if activity_plan_formset.is_valid():
-            for activity_plan_form in activity_plan_formset:
-                if (
-                    activity_plan_form.cleaned_data and
-                    (activity_plan_form.cleaned_data.get('save') or submit_type == 'next_step') and
-                    activity_plan_form.cleaned_data.get('activity_domain')
-                ):
-                    activity_plan = activity_plan_form.save(commit=False)
-                    activity_plan.save()
+            activity_plan_instances = activity_plan_formset.save()
+            for activity_plan_instance, target_location_formset in zip(activity_plan_instances, target_location_formsets):
+                if target_location_formset.is_valid():
+                    target_location_instances = target_location_formset.save(commit=False)
+
+                    for target_location_instance, target_location_form in zip(target_location_instances, target_location_formset.forms):
+                        target_location_instance.activity_plan = activity_plan_instance
+                        target_location_instance.save()
+
+                        if hasattr(target_location_form, 'disaggregation_formset'):
+                            disaggregation_formset = target_location_form.disaggregation_formset
+                            if disaggregation_formset.is_valid():
+                                disaggregation_instances = disaggregation_formset.save(commit=False)
+                                for disaggregation_instance in disaggregation_instances:
+                                    disaggregation_instance.target_location = target_location_instance
+                                    disaggregation_instance.save()
+
+                    target_location_formset.save()
+                    target_location_formset.save_m2m()
+
+        else:
+            # TODO:
+            # Handle invalid activity_plan_formset
+            # add error handling code here
+            pass
 
     plans = list(activity_plans.values_list('pk', flat=True))
     clusters = project.clusters.all()
@@ -456,7 +454,7 @@ def create_project_activity_plan(request, project):
         'archive': 'archived_projects'
     }.get(project_state, None)
 
-    combined_formset = zip(activity_plan_formset.forms, target_location_formsets, disaggregation_formsets)
+    combined_formset = zip(activity_plan_formset.forms, target_location_formsets)
 
     context = {
         'project': project,

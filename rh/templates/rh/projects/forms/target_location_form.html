@@ -103,8 +103,8 @@
                     Disaggregations
                 </div>
             </div>
-            {{ disaggregation_formset.management_form }}
-            {% for disaggregation_form in disaggregation_formset %}
+            {{ target_location_form.disaggregation_formset.management_form }}
+            {% for disaggregation_form in target_location_form.disaggregation_formset %}
                 {{ disaggregation_form.id }}
                 {% include "rh/projects/forms/disaggregation_form.html" %}
             {% endfor %}

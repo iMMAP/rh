@@ -548,7 +548,7 @@ class Disaggregation(models.Model):
 class DisaggregationLocation(models.Model):
     target_location = models.ForeignKey(TargetLocation, on_delete=models.CASCADE, null=True, blank=True)
     disaggregation = models.ForeignKey(Disaggregation, on_delete=models.CASCADE, null=True, blank=True)
-
+    
     target = models.IntegerField(default=0, null=True, blank=True)
 
     def __str__(self):

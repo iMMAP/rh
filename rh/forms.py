@@ -208,6 +208,7 @@ ActivityPlanFormSet = inlineformset_factory(
     can_delete=True,
 )
 
+
 class BudgetProgressForm(forms.ModelForm):
     class Meta:
         model = BudgetProgress

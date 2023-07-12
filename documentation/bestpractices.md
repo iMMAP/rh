@@ -197,3 +197,10 @@ Follow the Django coding style guide (https://docs.djangoproject.com/en/dev/inte
   - Aim for high test coverage to ensure the correctness and stability of your code.
   - Use tools like Flake8, pylint, or mypy for static code analysis and to enforce coding standards.
 
+### **GIT**
+
+  - Use descriptive branch names: Choose meaningful and descriptive names for branches that indicate the purpose or feature being worked on. For example, use names like "feature/authentication" or "bugfix/user-registration" instead of generic names like "branch1" or "dev_branch."
+  - Create feature branches: Each new feature or task should have its own dedicated branch. This allows for isolated development, easy collaboration, and the ability to track changes related to specific features.
+  - Keep the main branch stable: The main branch (often called "master" or "main") should always contain stable and production-ready code. Avoid pushing incomplete or experimental code directly to the main branch.
+  - Merge branches with pull requests: When merging code from a feature branch to the main branch, use pull requests (or merge requests) for code reviews. This helps ensure that changes are reviewed by other team members before merging them into the main branch.
+  - Delete merged branches: Once a branch has been merged into the main branch or is no longer needed, delete it to keep the repository clean and avoid clutter.

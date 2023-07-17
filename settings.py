@@ -18,7 +18,7 @@ DEBUG = env("DEBUG", default=True)
 # For Testing the registration email confirmation, make debug=True
 # DEBUG = False
 
-ALLOWED_HOSTS = ['dev.reporthub.immap.org', '127.0.0.1','localhost']
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 INSTALLED_APPS = [

@@ -39,8 +39,7 @@
                         </li>
                         <li class="breadcrumb-nav current">
                             {% if project_planning %}Project Plan{% endif %}
-                            {% if activity_planning %}Activity Planning{% endif %}
-                            {% if locations_planning %}Target Locations{% endif %}
+                            {% if activity_planning %}Activities Planning{% endif %}
                             {% if project_review %}Project Review{% endif %}
                         </li>
                     </ul>
@@ -72,9 +71,6 @@
         </div>
         <div class="two-cols-layout">
             <div class="breadcrumbs-nav-panel">
-                {% comment %} <div class="holder">
-                        <h2 class="plan-title">{{ project.title }}</h2>
-                </div> {% endcomment %}
             </div>
             <aside class="sidebar">
                 <div class="sidebar-nav-holder">
@@ -86,17 +82,12 @@
                         </li>
                         <li class="{% if activity_planning %}current{% endif %}">
                             <a class="{% if not project %}disabled-link{% endif %}"
-                               href="{% if project %}{% url 'create_project_activity_plan' project.pk %}{% else %}#{% endif %}">Activity
+                               href="{% if project %}{% url 'create_project_activity_plan' project.pk %}{% else %}#{% endif %}">Activities
                             Planning</a>
                         </li>
-                        <li class="{% if locations_planning %}current{% endif %}">
-                            <a class="{% if not plans %}disabled-link{% endif %}"
-                               href="{% if project %}{% url 'create_project_target_location' project.pk %}{% else %}#{% endif %}">Target
-                            Locations</a>
-                        </li>
                         <li class="{% if project_review %}current{% endif %}">
-                            <a class="{% if not locations %}disabled-link{% endif %}"
-                               href="{% if project and plans and locations %}{% url 'project_plan_review' project.pk %}{% else %}#{% endif %}">Review</a>
+                            <a class="{% if not plans %}disabled-link{% endif %}"
+                               href="{% if project and plans %}{% url 'project_plan_review' project.pk %}{% else %}#{% endif %}">Review</a>
                         </li>
                     </ul>
                 </div>

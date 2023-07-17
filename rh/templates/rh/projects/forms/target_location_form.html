@@ -37,7 +37,18 @@
                     </label>
                 </div>
             </div> {% endcomment %}
+            {% if target_location_formset.can_delete %}
+                    {% if target_location_form.instance.id %}
+                        <!-- If the form instance already exists, include a checkbox for deletion -->
+                        <div class="field">
+                            <label>Delete:</label>
+                            {% comment %} <button type="button " class="delete-btn">Delete</button> {% endcomment %}
+                            {{ target_location_form.DELETE }}
+                        </div>
+                    {% endif %}
+                {% endif %}
             <div class="row">
+                
                 <div class="col">
                     <div class="multiple-fields-row three-items">
                         <div class="field-col">
@@ -60,7 +71,6 @@
                         </div>
                     </div>
                 </div>
-            
                 {% comment %} <div class="col">
                     <div class="multiple-fields-row three-items">
                         <div class="field-col">
@@ -98,15 +108,24 @@
                     </div>
                 </div> {% endcomment %}
             </div>
-            <div class="location-block-holder">
-                <div class="block-top">
-                    Disaggregations
+            <div class="monthly-progress monthly-accordion">
+                <div class="inner-holder">
+                  <a href="#" class="block-top monthly-accordion-opener">
+                    <div class="location-block-holder">
+                        <div class="block-top">
+                            Disaggregations
+                        </div>
+                    </div>
+                  </a>
+                  <div class="monthly-accordion-slide">
+                        {{ target_location_form.disaggregation_formset.management_form }}
+                        {% for disaggregation_form in target_location_form.disaggregation_formset %}
+                            {{ disaggregation_form.id }}
+                            {% include "rh/projects/forms/disaggregation_form.html" %}
+                        {% endfor %}
+                  </div>
                 </div>
             </div>
-            {{ target_location_form.disaggregation_formset.management_form }}
-            {% for disaggregation_form in target_location_form.disaggregation_formset %}
-                {{ disaggregation_form.id }}
-                {% include "rh/projects/forms/disaggregation_form.html" %}
-            {% endfor %}
+            
         </div>
     </div>

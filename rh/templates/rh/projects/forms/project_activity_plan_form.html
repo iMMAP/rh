@@ -175,20 +175,26 @@
                                             </div>
                                         </div>
                                     </div>
-                                
                                     <div class="row" id="Locations">
                                         <div class="col col-lg">
-                                                {{ target_location_formset.management_form }}
-                                                {% for target_location_form in target_location_formset %}
-                                                {{ target_location_form.id }}
+                                            <div class="stock-block stock-accordion">
+                                                <div class="inner-holder">
+                                                  <a href="#" class="block-top stock-accordion-opener">
                                                     <div class="location-block-holder">
                                                         <div class="block-top">
-                                                            Target Location
+                                                            Target Locations
                                                         </div>
                                                     </div>
-                                                    {% include "rh/projects/forms/target_location_form.html" %}
-                                                {% endfor %}
-                                                
+                                                  </a>
+                                                  <div class="stock-accordion-slide">
+                                                    {{ target_location_formset.management_form }}
+                                                    {% for target_location_form in target_location_formset %}
+                                                    {{ target_location_form.id }}
+                                                        {% include "rh/projects/forms/target_location_form.html" %}
+                                                    {% endfor %}
+                                                  </div>
+                                                </div>
+                                            </div>                                                
                                         </div>
                                     </div>
                                 </div>

@@ -412,30 +412,45 @@ def create_project_activity_plan(request, project):
             target_location_form.disaggregation_formset = disaggregation_formset
 
         target_location_formsets.append(target_location_formset)
-
     
     if request.method == 'POST':
+        submit_type = request.POST.get('submit_type')
         if activity_plan_formset.is_valid():
-            activity_plan_instances = activity_plan_formset.save()
-            for activity_plan_instance, target_location_formset in zip(activity_plan_instances, target_location_formsets):
-                if target_location_formset.is_valid():
-                    target_location_instances = target_location_formset.save(commit=False)
+            for activity_plan_form in activity_plan_formset:
+                if activity_plan_form.cleaned_data.get('activity_domain') and activity_plan_form.cleaned_data.get('activity_type'):
+                    activity_plan_form.save()
 
-                    for target_location_instance, target_location_form in zip(target_location_instances, target_location_formset.forms):
-                        target_location_instance.activity_plan = activity_plan_instance
-                        target_location_instance.save()
+            for target_location_formset in target_location_formsets:
+                if target_location_formset.is_valid():
+                    for target_location_form in target_location_formset:
+                        if target_location_form in target_location_formset.deleted_forms:
+                            # Handle deleted form
+                            # Example: Delete the corresponding object from the database
+                            if target_location_form.instance.id:
+                                target_location_form.instance.delete()
+                        else:
+                            if target_location_form.cleaned_data != {}:
+                                if target_location_form.cleaned_data.get('province') and target_location_form.cleaned_data.get('district'):
+                                    target_location_instance = target_location_form.save()
 
                         if hasattr(target_location_form, 'disaggregation_formset'):
                             disaggregation_formset = target_location_form.disaggregation_formset
                             if disaggregation_formset.is_valid():
-                                disaggregation_instances = disaggregation_formset.save(commit=False)
-                                for disaggregation_instance in disaggregation_instances:
-                                    disaggregation_instance.target_location = target_location_instance
-                                    disaggregation_instance.save()
-
-                    target_location_formset.save()
-                    target_location_formset.save_m2m()
-
+                                for disaggregation_form in disaggregation_formset:
+                                    if disaggregation_form in disaggregation_formset.deleted_forms:
+                                        # Handle deleted form
+                                        # Example: Delete the corresponding object from the database
+                                        if disaggregation_form.instance.id:
+                                            disaggregation_form.instance.delete()
+                                    else:
+                                        if disaggregation_form.cleaned_data != {}:
+                                            disaggregation_instance = disaggregation_form.save(commit=False)
+                                            disaggregation_instance.target_location = target_location_instance
+                                            disaggregation_instance.save()
+            if submit_type == 'next_step':
+                return redirect('project_plan_review', project=project.pk)
+            else:
+                return redirect('create_project_target_location', project=project.pk)
         else:
             # TODO:
             # Handle invalid activity_plan_formset

@@ -450,7 +450,7 @@ def create_project_activity_plan(request, project):
             if submit_type == 'next_step':
                 return redirect('project_plan_review', project=project.pk)
             else:
-                return redirect('create_project_target_location', project=project.pk)
+                return redirect('create_project_activity_plan', project=project.pk)
         else:
             # TODO:
             # Handle invalid activity_plan_formset

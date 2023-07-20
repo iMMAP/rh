@@ -108,16 +108,16 @@
                     </div>
                 </div> {% endcomment %}
             </div>
-            <div class="monthly-progress monthly-accordion">
+            <div class="disaggregation-block disaggregation-accordion">
                 <div class="inner-holder">
-                  <a href="#" class="block-top monthly-accordion-opener">
+                  <a href="#" class="block-top disaggregation-accordion-opener">
                     <div class="location-block-holder">
                         <div class="block-top">
                             Disaggregations
                         </div>
                     </div>
                   </a>
-                  <div class="monthly-accordion-slide">
+                  <div class="disaggregation-accordion-slide">
                         {{ target_location_form.disaggregation_formset.management_form }}
                         {% for disaggregation_form in target_location_form.disaggregation_formset %}
                             {{ disaggregation_form.id }}

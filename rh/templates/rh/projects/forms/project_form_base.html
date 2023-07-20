@@ -34,7 +34,9 @@
                             {% if project %}
                                 <a href="{% url 'view_project' project.pk %}">{{ project.code }}</a>
                             {% else %}
-                                <a href="#">New Project</a>
+                            <a href="{% url 'active_projects' %}">
+                                Active Projects
+                            </a>
                             {% endif %}
                         </li>
                         <li class="breadcrumb-nav current">

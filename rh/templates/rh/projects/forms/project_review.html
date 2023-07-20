@@ -253,9 +253,9 @@
 
     {% for activity_plan in activity_plans %}
     <div class="activity-planning read-only">
-        <div class="activity-block-holder monthly-progress monthly-accordion">
+        <div class="activity-acc-block activity-acc-accordion">
             <div class="inner-holder">
-                <div class="review-block-top monthly-accordion-opener">
+                <div class="review-block-top activity-acc-accordion-opener">
                     <span class="title">
                         {{ activity_plan.activity_domain }},
                         {{ activity_plan.activity_type }}{% if activity_plan.activity_detail %}, {{ activity_plan.activity_detail }}{% endif %}
@@ -267,7 +267,7 @@
                         </span>
                     </div>
                 </div>
-                <div class="monthly-accordion-slide">
+                <div class="activity-acc-accordion-slide">
                     <div class="row">
                         <div class="col">
                             <div class="multiple-fields-row two-items">
@@ -326,9 +326,9 @@
                         </div>
                     </div>
                     <br/>
-                    <div class="stock-block stock-accordion">
+                    <div class="target_location-block target_location-accordion">
                         <div class="inner-holder">
-                            <a href="#" class="block-top stock-accordion-opener">
+                            <a href="#" class="block-top target_location-accordion-opener">
                                 <div class="location-block-holder">
                                     <div class="block-top">
                                         Target Locations
@@ -336,7 +336,7 @@
                                 </div>
                                 <span class="btn btn-red" style="float:right"> {{ activity_plan.targetlocation_set.all | length }}</span>
                             </a>
-                            <div class="stock-accordion-slide">
+                            <div class="target_location-accordion-slide js-acc-hidden">
                             {% for target_location in activity_plan.targetlocation_set.all %}                                
                                 <div class="target-location read-only">
                                     <div class="location-block-holder">
@@ -348,7 +348,9 @@
                                                     {% endif %}
                                                     {{ target_location.district }}
                                                 </span>
+                                                {% if target_location.site_name %}
                                                 <span class="subtitle">{{ target_location.site_name }}</span>
+                                                {% endif %}
                                             </div>
                                             <div class="row">
                                                 <div class="col col-lg">
@@ -404,21 +406,19 @@
                                                 </div>
                                             </div>
                                             <br/>
-                                            <div class="row">
-                                                <div class="col col-lg">
-                                                    <div class="monthly-progress monthly-accordion">
-                                                        <div class="inner-holder">
-                                                            <a href="#" class="block-top monthly-accordion-opener">
-                                                                <div class="location-block-holder">
-                                                                    <div class="block-top">
-                                                                        Disaggregations
-                                                                    </div>
-                                                                </div>
-                                                                <span class="btn btn-red" style="float:right"> {{ target_location.disaggregationlocation_set.all | length }}</span>
-                                                            </a>
+                                            <div class="disaggregation-block disaggregation-accordion">
+                                                <div class="inner-holder">
+                                                    <a href="#" class="block-top disaggregation-accordion-opener">
+                                                        <div class="location-block-holder">
+                                                            <div class="block-top">
+                                                                Disaggregations
+                                                            </div>
                                                         </div>
-                                                        <div class="monthly-accordion-slide">
-                                                            {% for disaggregation_location in target_location.disaggregationlocation_set.all %}
+                                                        <span class="btn btn-red" style="float:right"> {{ target_location.disaggregationlocation_set.all | length }}</span>
+                                                    </a>
+                                                    <div class="disaggregation-accordion-slide">
+                                                        {% for disaggregation_location in target_location.disaggregationlocation_set.all %}
+                                                            <div class="location-inner-holder">  
                                                                 <div class="col col-lg">
                                                                     <div class="multiple-fields-row two-items">
                                                                         <div class="field-col">
@@ -437,9 +437,8 @@
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                                <br/>
-                                                            {% endfor %} 
-                                                        </div>
+                                                            </div>
+                                                        {% endfor %} 
                                                     </div>
                                                 </div>
                                             </div>
@@ -457,7 +456,7 @@
     {% endfor %}
 
     <div class="plan-submit-holder">
-        <a href="{% url 'create_project_target_location' project.pk %}" class="btn btn-gray-outline">Back</a>
+        <a href="{% url 'create_project_activity_plan' project.pk %}" class="btn btn-gray-outline">Back</a>
         <a href="{% url 'project_submit' project.pk %}" class="btn btn-red">Submit</a>
     </div>
 </div>

@@ -1,6 +1,81 @@
 // Constant for the duration of the slideToggle animations
 const TOGGLE_DURATION = 500;
 
+/**
+* Handle Facility Monitoring field
+@param {string} formElement - Form Element.
+@param {string} formIndex - Form Index.
+**/
+function handleFacilityMonitoring(formElement, formIndex) {
+	let $facilityMonitoring = $(formElement).find(
+		`#id_form-${formIndex}-facility_monitoring`
+	);
+	let $facilityName = $(formElement).find(
+		`#id_form-${formIndex}-facility_name`
+	);
+	let $facilityId = $(formElement).find(`#id_form-${formIndex}-facility_id`);
+	let $facilityDetails1 = $(formElement).find(
+		`#form-${formIndex}_facility_details_1`
+	);
+	let $facilityDetails2 = $(formElement).find(
+		`#form-${formIndex}_facility_details_2`
+	);
+
+	if (!$facilityMonitoring.is(":checked")) {
+		$facilityDetails1.hide();
+		$facilityDetails2.hide();
+		$facilityName.prop("required", false).removeClass("is-required");
+		$facilityId.prop("required", false).removeClass("is-required");
+	} else {
+		$facilityName.prop("required", true).addClass("is-required");
+		$facilityId.prop("required", true).addClass("is-required");
+	}
+}
+
+/**
+* Handle Age Desegregation
+@param {string} formElement - Form Element.
+@param {string} formIndex - Form Index.
+**/
+function handleAgeDesegregation(formElement, formIndex) {
+	let $ageDesegregation = $(formElement).find(
+		`#id_form-${formIndex}-age_desegregation`
+	);
+	let $statisticTable = $(formElement).find(
+		`#form-${formIndex}-statistic-holder`
+	);
+	if (!$ageDesegregation.is(":checked")) {
+		$statisticTable.hide();
+	}
+}
+
+/**
+Updates the titles of the activity form sections based on the selected values of the input element.
+@param {string} formPrefix - The prefix of the activity form sections.
+@param {string} inputElementId - The ID of the input element that triggered the update.
+**/
+function updateTitle(formPrefix, inputElementId) {
+	const selectedValue = $("#" + inputElementId).val();
+	const selectedText = $("#" + inputElementId + " option:selected").text();
+
+	const titleElements = {
+		activity_domain: $("#title-domain-" + formPrefix),
+		activity_type: $("#title-type-" + formPrefix),
+		activity_detail: $("#title-detail-" + formPrefix),
+	};
+
+	for (const [key, value] of Object.entries(titleElements)) {
+		if (inputElementId.includes(key)) {
+			if (key === "activity_detail") {
+				value.text(selectedValue ? selectedText : "");
+			} else {
+				value.text(selectedValue ? selectedText + ", " : "");
+			}
+		}
+	}
+}
+
+
 $(document).ready(function () {
 	/**
 	 * Initializes facility monitoring form functionality for multiple forms.
@@ -192,77 +267,3 @@ $(document).ready(function () {
 			});
 	});
 });
-
-/**
-* Handle Facility Monitoring field
-@param {string} formElement - Form Element.
-@param {string} formIndex - Form Index.
-**/
-function handleFacilityMonitoring(formElement, formIndex) {
-	let $facilityMonitoring = $(formElement).find(
-		`#id_form-${formIndex}-facility_monitoring`
-	);
-	let $facilityName = $(formElement).find(
-		`#id_form-${formIndex}-facility_name`
-	);
-	let $facilityId = $(formElement).find(`#id_form-${formIndex}-facility_id`);
-	let $facilityDetails1 = $(formElement).find(
-		`#form-${formIndex}_facility_details_1`
-	);
-	let $facilityDetails2 = $(formElement).find(
-		`#form-${formIndex}_facility_details_2`
-	);
-
-	if (!$facilityMonitoring.is(":checked")) {
-		$facilityDetails1.hide();
-		$facilityDetails2.hide();
-		$facilityName.prop("required", false).removeClass("is-required");
-		$facilityId.prop("required", false).removeClass("is-required");
-	} else {
-		$facilityName.prop("required", true).addClass("is-required");
-		$facilityId.prop("required", true).addClass("is-required");
-	}
-}
-
-/**
-* Handle Age Desegregation
-@param {string} formElement - Form Element.
-@param {string} formIndex - Form Index.
-**/
-function handleAgeDesegregation(formElement, formIndex) {
-	let $ageDesegregation = $(formElement).find(
-		`#id_form-${formIndex}-age_desegregation`
-	);
-	let $statisticTable = $(formElement).find(
-		`#form-${formIndex}-statistic-holder`
-	);
-	if (!$ageDesegregation.is(":checked")) {
-		$statisticTable.hide();
-	}
-}
-
-/**
-Updates the titles of the activity form sections based on the selected values of the input element.
-@param {string} formPrefix - The prefix of the activity form sections.
-@param {string} inputElementId - The ID of the input element that triggered the update.
-**/
-function updateTitle(formPrefix, inputElementId) {
-	const selectedValue = $("#" + inputElementId).val();
-	const selectedText = $("#" + inputElementId + " option:selected").text();
-
-	const titleElements = {
-		activity_domain: $("#title-domain-" + formPrefix),
-		activity_type: $("#title-type-" + formPrefix),
-		activity_detail: $("#title-detail-" + formPrefix),
-	};
-
-	for (const [key, value] of Object.entries(titleElements)) {
-		if (inputElementId.includes(key)) {
-			if (key === "activity_detail") {
-				value.text(selectedValue ? selectedText : "");
-			} else {
-				value.text(selectedValue ? selectedText + ", " : "");
-			}
-		}
-	}
-}

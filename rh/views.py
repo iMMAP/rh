@@ -384,12 +384,32 @@ def update_project_view(request, pk):
     return render(request, 'rh/projects/forms/project_form.html', context)
 
 
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
+from django.views.decorators.cache import cache_control
+from .forms import ActivityPlanFormSet, TargetLocationFormSet, DisaggregationFormSet
+from .models import Project
+
 @cache_control(no_store=True)
 @login_required
 def create_project_activity_plan(request, project):
+    """
+    View function to handle creating or updating activity plans for a project.
+
+    Args:
+        request (HttpRequest): The HTTP request object.
+        project (int): The primary key of the Project object.
+
+    Returns:
+        HttpResponse: The response containing the rendered template with the activity plan forms.
+    """
+    # Get the project object or return 404 if not found
     project = get_object_or_404(Project, pk=project)
+    
+    # Get all existing activity plans for the project
     activity_plans = project.activityplan_set.all()
 
+    # Create the activity plan formset with initial data from the project
     activity_plan_formset = ActivityPlanFormSet(
         request.POST or None,
         instance=project,
@@ -397,29 +417,37 @@ def create_project_activity_plan(request, project):
     )
 
     target_location_formsets = []
+
+    # Iterate over activity plan forms in the formset
     for activity_plan_form in activity_plan_formset.forms:
+        # Create a target location formset for each activity plan form
         target_location_formset = TargetLocationFormSet(
             request.POST or None,
             instance=activity_plan_form.instance,
             prefix=f'target_locations_{activity_plan_form.prefix}'
         )
         for target_location_form in target_location_formset.forms:
+            # Create a disaggregation formset for each target location form
             disaggregation_formset = DisaggregationFormSet(
                 request.POST or None,
                 instance=target_location_form.instance,
                 prefix=f'disaggregation_{target_location_form.prefix}'
-            )        
+            )
             target_location_form.disaggregation_formset = disaggregation_formset
 
         target_location_formsets.append(target_location_formset)
     
     if request.method == 'POST':
+        # Check if the form was submitted for "Next Step" or "Save & Continue"
         submit_type = request.POST.get('submit_type')
+        
         if activity_plan_formset.is_valid():
+            # Save valid activity plan forms
             for activity_plan_form in activity_plan_formset:
                 if activity_plan_form.cleaned_data.get('activity_domain') and activity_plan_form.cleaned_data.get('activity_type'):
                     activity_plan_form.save()
 
+            # Process target location forms and their disaggregation forms
             for target_location_formset in target_location_formsets:
                 if target_location_formset.is_valid():
                     for target_location_form in target_location_formset:
@@ -447,16 +475,20 @@ def create_project_activity_plan(request, project):
                                             disaggregation_instance = disaggregation_form.save(commit=False)
                                             disaggregation_instance.target_location = target_location_instance
                                             disaggregation_instance.save()
+
             if submit_type == 'next_step':
+                # Redirect to the project review page if "Next Step" is clicked
                 return redirect('project_plan_review', project=project.pk)
             else:
+                # Redirect back to this view if "Save & Continue" is clicked
                 return redirect('create_project_activity_plan', project=project.pk)
         else:
             # TODO:
             # Handle invalid activity_plan_formset
-            # add error handling code here
+            # Add error handling code here
             pass
 
+    # Prepare data for rendering the template
     plans = list(activity_plans.values_list('pk', flat=True))
     clusters = project.clusters.all()
     cluster_ids = list(clusters.values_list('pk', flat=True))
@@ -480,7 +512,10 @@ def create_project_activity_plan(request, project):
         'plans': plans,
         'parent_page': parent_page
     }
+
+    # Render the template with the context data
     return render(request, 'rh/projects/forms/project_activity_plan_form.html', context)
+
 
 
 @cache_control(no_store=True)

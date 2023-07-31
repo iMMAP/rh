@@ -2,6 +2,54 @@
 const TOGGLE_DURATION = 500;
 
 /**
+* Handle Add Dynamic Activity Form
+**/
+function addActivityForm() {
+	// Get the empty form template
+	const emptyFormTemplate = $("#empty-activity-form-template");
+
+	// Get the formset container and the form index
+	const formsetContainer = $("#activity-formset");
+	const formIdx = formsetContainer.children().length; // Get the number of existing forms
+	const formPrefix = emptyFormTemplate[0].getAttribute('data-form-prefix'); // Get the formset prefix
+
+	// Replace the form prefix placeholder with the actual form index in the template HTML
+	const newFormHtml = emptyFormTemplate.html().replace(/__prefix__/g, formIdx);
+
+	// Create a new form element and prepend it to the formset container
+	const newForm = $(document.createElement('div')).html(newFormHtml);
+	formsetContainer.prepend(newForm.children().first());
+
+	setTimeout(function () {
+		// Initialize chained fields for the newly added form
+		const activityTypeSelect = $(`select[id^='id_activityplan_set-${formIdx}-activity_type']`);
+		const activityDomainSelectID = "#id_" + activityTypeSelect.data('chainfield');
+		const activityTypeUrl = activityTypeSelect.data('url');
+		const activityTypeID = "#" + activityTypeSelect.attr('id');
+		chainedfk.init(activityDomainSelectID, activityTypeUrl, activityTypeID, '', '--------', true);
+
+		const activityDetailSelect = $(`select[id^='id_activityplan_set-${formIdx}-activity_detail']`);
+		const activityTypeSelectID = "#id_" + activityDetailSelect.data('chainfield');
+		const activityDetailUrl = activityDetailSelect.data('url');
+		const activityDetailID = "#" + activityDetailSelect.attr('id');
+		chainedfk.init(activityTypeSelectID, activityDetailUrl, activityDetailID, '', '--------', true);
+
+		const IndicatorsSelect = $(`select[id^='id_activityplan_set-${formIdx}-indicators']`);
+		const IndicatorsUrl = IndicatorsSelect.data('url');
+		const IndicatorsID = "#" + IndicatorsSelect.attr('id');
+		chainedm2m.init(activityTypeSelectID, IndicatorsUrl, IndicatorsID, '', '--------', true);
+		$(IndicatorsID).select2();
+
+	}, 100);
+
+	// Update the management form values
+	const managementForm = $(`input[name="${formPrefix}-TOTAL_FORMS"]`);
+	const totalForms = parseInt(managementForm.val()) + 1;
+	managementForm.val(totalForms.toString());
+}
+
+
+/**
 * Handle Facility Monitoring field
 @param {string} formElement - Form Element.
 @param {string} formIndex - Form Index.
@@ -32,22 +80,6 @@ function handleFacilityMonitoring(formElement, formIndex) {
 	}
 }
 
-/**
-* Handle Age Desegregation
-@param {string} formElement - Form Element.
-@param {string} formIndex - Form Index.
-**/
-function handleAgeDesegregation(formElement, formIndex) {
-	let $ageDesegregation = $(formElement).find(
-		`#id_form-${formIndex}-age_desegregation`
-	);
-	let $statisticTable = $(formElement).find(
-		`#form-${formIndex}-statistic-holder`
-	);
-	if (!$ageDesegregation.is(":checked")) {
-		$statisticTable.hide();
-	}
-}
 
 /**
 Updates the titles of the activity form sections based on the selected values of the input element.
@@ -77,13 +109,22 @@ function updateTitle(formPrefix, inputElementId) {
 
 
 $(document).ready(function () {
+
+	// Initialize indicators with django select except the empty form
+	$("select[multiple]:not(#id_activityplan_set-__prefix__-indicators)").select2();
+
+	// Button to handle addition of new activity form.
+	$('#add-activity-form-button').on('click', function(event) {
+		event.preventDefault(); // Prevent the default behavior (form submission)
+		addActivityForm(); // Call the function to add a new activity form
+	});
+
 	/**
 	 * Initializes facility monitoring form functionality for multiple forms.
 	 * @param {number} currentFormCount - The number of facility monitoring forms currently displayed on the page.
 	 * @returns {void}
 	 */
-
-	async function get_facility_sites(formIndex) {
+	/*async function get_facility_sites(formIndex) {
 		const facilitySiteUrl = $(`#id_form-${formIndex}-facility_type`).attr(
 			"facility-sites-queries-url"
 		);
@@ -115,38 +156,21 @@ $(document).ready(function () {
 		} catch (error) {
 			console.error(`Error fetching Facilities: ${error}`);
 		}
-	}
+	}*/
 
 	$.fn.reverse = [].reverse;
 	let $activityBlockHolder = $(".activity-block-holder");
 	$activityBlockHolder.reverse().each(function (formIndex, formElement) {
 		// Call updateTitle for activity_domain manually as on page load as it is not triggered for
 		// activity_domain
-		updateTitle(`form-${formIndex}`, `id_form-${formIndex}-activity_domain`);
+		updateTitle(`activityplan_set-${formIndex}`, `id_activityplan_set-${formIndex}-activity_domain`);
 
 		// Call Facility Monitoring function when page loads.
-		handleFacilityMonitoring(formElement, formIndex);
-
-		// Call
-		handleAgeDesegregation(formElement, formIndex);
+		// handleFacilityMonitoring(formElement, formIndex);
 
 		// Call get_facility_sites and fetch the facility sites types.
-		get_facility_sites(formIndex);
-		
-		$(`#form-${formIndex}-create-form-button`).click(function(event) {
-			event.preventDefault();
-			$.ajax({
-				url: this.dataset.url,
-				type: 'GET',
-				success: function(response) {
-					debugger;
-					$(`#form-${formIndex}-form-container`).html(response);
-				},
-				error: function (error_data) {
-					debugger;
-				}
-			});
-		});
+		// get_facility_sites(formIndex);
+
 	
 	});
 
@@ -184,86 +208,7 @@ $(document).ready(function () {
 				$facilityName.prop("required", true).addClass("is-required");
 				$facilityId.prop("required", true).addClass("is-required");
 			}
-		}
-
-		// Handle Age Desegregation Checkbox
-		if (event.target.name.indexOf("age_desegregation") >= 0) {
-			let $ageDesegregation = $formElement.find(
-				`#id_form-${formIndex}-age_desegregation`
-			);
-			let $statisticTable = $formElement.find(
-				`#form-${formIndex}-statistic-holder`
-			);
-			if (!$ageDesegregation.is(":checked")) {
-				$statisticTable.hide(TOGGLE_DURATION);
-			} else {
-				$statisticTable.show(TOGGLE_DURATION);
-			}
-		}
+		}		
 	});
 
-	/*
-	 * Desegregation Table calculations
-	 */
-
-	// Attach a handler to the 'input' event for all number input fields
-	$('input[type="number"]').on("input", function () {
-		const tableId = $(this).closest("table").attr("id");
-
-		// Calculate the row total for the current row
-		var rowTotal = 0;
-		$(this)
-			.closest("tr")
-			.find('input[type="number"]')
-			.each(function () {
-				if ($(this).val()) {
-					rowTotal += parseInt($(this).val());
-				}
-			});
-
-		// Set the row total value for the current row and update the displayed value
-		$(this)
-			.closest("tr")
-			.find(".total-row")
-			.attr("data-row-total-value", rowTotal)
-			.val(rowTotal | 0);
-
-		var allRowsTotal = 0;
-		$(`#${tableId} tbody tr`).each(function () {
-			var rowTotal = parseInt($(this).find(".total-row").val());
-			if (!isNaN(rowTotal)) {
-				allRowsTotal += rowTotal;
-			}
-		});
-
-		// Set the all rows total value for the all the rows and update the displayed value
-		$(`#${tableId} tbody tr`)
-			.find(".all-rows-total")
-			.attr("data-row-total-value", allRowsTotal)
-			.val(allRowsTotal | 0);
-
-		const activityForm = tableId.split("-table")[0];
-		const people = $(`#${activityForm}-people-count`);
-		people.text(allRowsTotal);
-
-		// Calculate the column total for all number input fields that have a value, reverse the each loop
-		// as we are rendering the forms in reversed order
-		// $.fn.reverse = [].reverse;
-		/* TODO: Handle the total column wise */
-		$(`#${tableId} input[type="number"][step="1"][placeholder="-"][value!=""]`)
-			.reverse()
-			.each(function (index) {
-				// $('input[type="number"][step="1"][placeholder="-"][value!=""]').reverse().each(function(index) {
-				var colTotal = 0;
-				$(`#${tableId} tbody tr`).each(function () {
-					var val = $(this).find('input[type="number"]').eq(index).val();
-					if (val) {
-						colTotal += parseInt(val);
-					}
-				});
-				// var tableId = $(this).closest('table').attr('id');
-				// Set the column total value for all total cells and update the displayed value
-				// $(`.${tableId.replace("-table", "")}-total-col`).eq(index).attr('data-col-total-value', colTotal).val(colTotal);
-			});
-	});
 });

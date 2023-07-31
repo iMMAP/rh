@@ -387,7 +387,7 @@ def update_project_view(request, pk):
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import cache_control
-from .forms import ActivityPlanFormSet, TargetLocationFormSet, DisaggregationFormSet
+# from .forms import ActivityPlanFormSet, TargetLocationFormSet, DisaggregationFormSet
 from .models import Project
 
 @cache_control(no_store=True)
@@ -408,6 +408,21 @@ def create_project_activity_plan(request, project):
     
     # Get all existing activity plans for the project
     activity_plans = project.activityplan_set.all()
+
+    ActivityPlanFormSet = inlineformset_factory(Project, ActivityPlan,
+                                                form=ActivityPlanForm,
+                                                extra=0,
+                                                can_delete=True,)
+
+    TargetLocationFormSet = inlineformset_factory(ActivityPlan, TargetLocation,
+                                                    form=TargetLocationForm,
+                                                    extra=1,  # Number of empty forms to display
+                                                    can_delete=True)  # Allow deletion of existing forms
+
+    DisaggregationFormSet = inlineformset_factory(TargetLocation, DisaggregationLocation,
+                                                    fields="__all__",
+                                                    extra=2,
+                                                    can_delete=True)
 
     # Create the activity plan formset with initial data from the project
     activity_plan_formset = ActivityPlanFormSet(
@@ -505,7 +520,7 @@ def create_project_activity_plan(request, project):
 
     context = {
         'project': project,
-        'formset': activity_plan_formset,
+        'activity_plan_formset': activity_plan_formset,
         'combined_formset': combined_formset,
         'clusters': cluster_ids,
         'activity_planning': True,

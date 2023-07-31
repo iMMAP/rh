@@ -152,21 +152,21 @@ class TargetLocationForm(forms.ModelForm):
             {'onchange': f"updateTitle('{kwargs.get('prefix')}', 'id_{kwargs.get('prefix')}-site_name');"})
 
 
-TargetLocationFormSet = inlineformset_factory(
-        ActivityPlan,
-        TargetLocation,
-        form=TargetLocationForm,
-        extra=1,  # Number of empty forms to display
-        can_delete=True  # Allow deletion of existing forms
-    )
+# TargetLocationFormSet = inlineformset_factory(
+#         ActivityPlan,
+#         TargetLocation,
+#         form=TargetLocationForm,
+#         extra=1,  # Number of empty forms to display
+#         can_delete=True  # Allow deletion of existing forms
+#     )
 
-DisaggregationFormSet = inlineformset_factory(
-        TargetLocation,
-        DisaggregationLocation,
-        fields="__all__",
-        extra=1,  # Number of empty forms to display
-        can_delete=True  # Allow deletion of existing forms
-    )
+# DisaggregationFormSet = inlineformset_factory(
+#         TargetLocation,
+#         DisaggregationLocation,
+#         fields="__all__",
+#         extra=1,  # Number of empty forms to display
+#         can_delete=True  # Allow deletion of existing forms
+#     )
 
 
 class ActivityPlanForm(forms.ModelForm):
@@ -197,16 +197,16 @@ class ActivityPlanForm(forms.ModelForm):
         self.fields['activity_detail'].widget.attrs.update(
             {'onchange': f"updateTitle('{kwargs.get('prefix')}', 'id_{kwargs.get('prefix')}-activity_detail');"})
         self.fields['indicators'].widget.attrs.update({'style': 'height: 128px;'})
-        self.fields['facility_type'].queryset = self.fields['facility_type'].queryset.filter(cluster__in=cluster_ids)
+        # self.fields['facility_type'].queryset = self.fields['facility_type'].queryset.filter(cluster__in=cluster_ids)
 
 
-ActivityPlanFormSet = inlineformset_factory(
-    Project,
-    ActivityPlan,
-    form=ActivityPlanForm,
-    extra=1,
-    can_delete=True,
-)
+# ActivityPlanFormSet = inlineformset_factory(
+#     Project,
+#     ActivityPlan,
+#     form=ActivityPlanForm,
+#     extra=1,
+#     can_delete=True,
+# )
 
 
 class BudgetProgressForm(forms.ModelForm):

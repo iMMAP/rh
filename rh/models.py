@@ -428,42 +428,16 @@ class ActivityPlan(models.Model):
     )
 
     # Facility Monitoring
-    facility_monitoring = models.BooleanField(default=False)
-    facility_name = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True, )
-    facility_id = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True, )
-    facility_type = models.ForeignKey(FacilitySiteType, on_delete=models.SET_NULL, null=True, blank=True)
-    facility_lat = models.CharField(max_length=NAME_MAX_LENGTH, null=True, blank=True)
-    facility_long = models.CharField(max_length=NAME_MAX_LENGTH, null=True, blank=True)
+    # facility_monitoring = models.BooleanField(default=False)
+    # facility_name = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True, )
+    # facility_id = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True, )
+    # facility_type = models.ForeignKey(FacilitySiteType, on_delete=models.SET_NULL, null=True, blank=True)
+    # facility_lat = models.CharField(max_length=NAME_MAX_LENGTH, null=True, blank=True)
+    # facility_long = models.CharField(max_length=NAME_MAX_LENGTH, null=True, blank=True)
 
-    age_desegregation = models.BooleanField(default=False)
-    female_0_5 = models.IntegerField(default=0, blank=True, null=True)
-    female_6_12 = models.IntegerField(default=0, blank=True, null=True)
-    female_12_17 = models.IntegerField(default=0, blank=True, null=True)
-    female_18 = models.IntegerField(default=0, blank=True, null=True)
-    female_total = models.IntegerField(default=0, blank=True, null=True)
-
-    male_0_5 = models.IntegerField(default=0, blank=True, null=True)
-    male_6_12 = models.IntegerField(default=0, blank=True, null=True)
-    male_12_17 = models.IntegerField(default=0, blank=True, null=True)
-    male_18 = models.IntegerField(default=0, blank=True, null=True)
-    male_total = models.IntegerField(default=0, blank=True, null=True)
-
-    other_0_5 = models.IntegerField(default=0, blank=True, null=True)
-    other_6_12 = models.IntegerField(default=0, blank=True, null=True)
-    other_12_17 = models.IntegerField(default=0, blank=True, null=True)
-    other_18 = models.IntegerField(default=0, blank=True, null=True)
-    other_total = models.IntegerField(default=0, blank=True, null=True)
-
-    total_0_5 = models.IntegerField(default=0, blank=True, null=True)
-    total_6_12 = models.IntegerField(default=0, blank=True, null=True)
-    total_12_17 = models.IntegerField(default=0, blank=True, null=True)
-    total_18 = models.IntegerField(blank=True, null=True)
-
-    total = models.IntegerField(default=0, blank=True, null=True)
-
-    households = models.IntegerField(default=0, blank=True, null=True)
+    # households = models.IntegerField(default=0, blank=True, null=True)
     description = models.TextField(blank=True, null=True)
-    old_id = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
+    # old_id = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
 
     def __str__(self):
         return f"{self.title}"

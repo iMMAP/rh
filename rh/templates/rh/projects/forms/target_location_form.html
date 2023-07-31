@@ -8,41 +8,12 @@
             </span>
         </div>
         <div id="{{ target_location_form.prefix }}-details">
-            {% comment %} <div class="options-holder">
-                <div class="input-check-holder">
-                    <input type="checkbox"
-                            name="{{ target_location_form.group_by_province.name }}"
-                            id="{{ target_location_form.group_by_province.id_for_label }}" />
-                    <label for="{{ target_location_form.group_by_province.id_for_label }}">
-                        <span class="input"></span>
-                        <span class="text">Group target locations by province</span>
-                    </label>
-                </div>
-                <div class="input-check-holder">
-                    <input type="checkbox"
-                            name="{{ target_location_form.group_by_district.name }}"
-                            id="{{ target_location_form.group_by_district.id_for_label }}" />
-                    <label for="{{ target_location_form.group_by_district.id_for_label }}">
-                        <span class="input"></span>
-                        <span class="text">Group target locations by district</span>
-                    </label>
-                </div>
-                <div class="input-check-holder">
-                    <input type="checkbox"
-                            name="{{ target_location_form.group_by_custom.name }}"
-                            id="{{ target_location_form.group_by_custom.id_for_label }}" />
-                    <label for="{{ target_location_form.group_by_custom.id_for_label }}">
-                        <span class="input"></span>
-                        <span class="text">Group target locations custom</span>
-                    </label>
-                </div>
-            </div> {% endcomment %}
+            
             {% if target_location_formset.can_delete %}
                     {% if target_location_form.instance.id %}
                         <!-- If the form instance already exists, include a checkbox for deletion -->
                         <div class="field">
                             <label>Delete:</label>
-                            {% comment %} <button type="button " class="delete-btn">Delete</button> {% endcomment %}
                             {{ target_location_form.DELETE }}
                         </div>
                     {% endif %}

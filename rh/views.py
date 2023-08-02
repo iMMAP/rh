@@ -8,6 +8,8 @@ from django.forms import modelformset_factory
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.template import loader
+from django.template.loader import render_to_string
+
 from django.views.decorators.cache import cache_control
 # from django.db.models import Q
 
@@ -409,26 +411,29 @@ def create_project_activity_plan(request, project):
     # Get all existing activity plans for the project
     activity_plans = project.activityplan_set.all()
 
-    ActivityPlanFormSet = inlineformset_factory(Project, ActivityPlan,
-                                                form=ActivityPlanForm,
-                                                extra=0,
-                                                can_delete=True,)
+    # ActivityPlanFormSet = inlineformset_factory(Project, ActivityPlan,
+    #                                             form=ActivityPlanForm,
+    #                                             extra=1,
+    #                                             can_delete=True,)
 
-    TargetLocationFormSet = inlineformset_factory(ActivityPlan, TargetLocation,
-                                                    form=TargetLocationForm,
-                                                    extra=1,  # Number of empty forms to display
-                                                    can_delete=True)  # Allow deletion of existing forms
+    # TargetLocationFormSet = inlineformset_factory(ActivityPlan, TargetLocation,
+    #                                                 form=TargetLocationForm,
+    #                                                 extra=1,  # Number of empty forms to display
+    #                                                 can_delete=True)  # Allow deletion of existing forms
 
-    DisaggregationFormSet = inlineformset_factory(TargetLocation, DisaggregationLocation,
-                                                    fields="__all__",
-                                                    extra=2,
-                                                    can_delete=True)
+    # DisaggregationFormSet = inlineformset_factory(TargetLocation, DisaggregationLocation,
+    #                                                 fields="__all__",
+    #                                                 extra=1,
+    #                                                 can_delete=True)
 
     # Create the activity plan formset with initial data from the project
     activity_plan_formset = ActivityPlanFormSet(
         request.POST or None,
         instance=project,
         form_kwargs={'project': project}
+    )
+    target_location_formset = TargetLocationFormSet(
+        request.POST or None,
     )
 
     target_location_formsets = []
@@ -441,14 +446,14 @@ def create_project_activity_plan(request, project):
             instance=activity_plan_form.instance,
             prefix=f'target_locations_{activity_plan_form.prefix}'
         )
-        for target_location_form in target_location_formset.forms:
-            # Create a disaggregation formset for each target location form
-            disaggregation_formset = DisaggregationFormSet(
-                request.POST or None,
-                instance=target_location_form.instance,
-                prefix=f'disaggregation_{target_location_form.prefix}'
-            )
-            target_location_form.disaggregation_formset = disaggregation_formset
+        # for target_location_form in target_location_formset.forms:
+        #     # Create a disaggregation formset for each target location form
+        #     disaggregation_formset = DisaggregationFormSet(
+        #         request.POST or None,
+        #         instance=target_location_form.instance,
+        #         prefix=f'disaggregation_{target_location_form.prefix}'
+        #     )
+        #     target_location_form.disaggregation_formset = disaggregation_formset
 
         target_location_formsets.append(target_location_formset)
     
@@ -461,6 +466,9 @@ def create_project_activity_plan(request, project):
             for activity_plan_form in activity_plan_formset:
                 if activity_plan_form.cleaned_data.get('activity_domain') and activity_plan_form.cleaned_data.get('activity_type'):
                     activity_plan_form.save()
+
+
+            # FIXME: HANDLE THE TARGET LOCATIONS SAVING IN OTHER ACIVITY ISSUE
 
             # Process target location forms and their disaggregation forms
             for target_location_formset in target_location_formsets:
@@ -476,20 +484,20 @@ def create_project_activity_plan(request, project):
                                 if target_location_form.cleaned_data.get('province') and target_location_form.cleaned_data.get('district'):
                                     target_location_instance = target_location_form.save()
 
-                        if hasattr(target_location_form, 'disaggregation_formset'):
-                            disaggregation_formset = target_location_form.disaggregation_formset
-                            if disaggregation_formset.is_valid():
-                                for disaggregation_form in disaggregation_formset:
-                                    if disaggregation_form in disaggregation_formset.deleted_forms:
-                                        # Handle deleted form
-                                        # Example: Delete the corresponding object from the database
-                                        if disaggregation_form.instance.id:
-                                            disaggregation_form.instance.delete()
-                                    else:
-                                        if disaggregation_form.cleaned_data != {}:
-                                            disaggregation_instance = disaggregation_form.save(commit=False)
-                                            disaggregation_instance.target_location = target_location_instance
-                                            disaggregation_instance.save()
+                        # if hasattr(target_location_form, 'disaggregation_formset'):
+                        #     disaggregation_formset = target_location_form.disaggregation_formset
+                        #     if disaggregation_formset.is_valid():
+                        #         for disaggregation_form in disaggregation_formset:
+                        #             if disaggregation_form in disaggregation_formset.deleted_forms:
+                        #                 # Handle deleted form
+                        #                 # Example: Delete the corresponding object from the database
+                        #                 if disaggregation_form.instance.id:
+                        #                     disaggregation_form.instance.delete()
+                        #             else:
+                        #                 if disaggregation_form.cleaned_data != {}:
+                        #                     disaggregation_instance = disaggregation_form.save(commit=False)
+                        #                     disaggregation_instance.target_location = target_location_instance
+                        #                     disaggregation_instance.save()
 
             if submit_type == 'next_step':
                 # Redirect to the project review page if "Next Step" is clicked
@@ -521,6 +529,7 @@ def create_project_activity_plan(request, project):
     context = {
         'project': project,
         'activity_plan_formset': activity_plan_formset,
+        'target_location_formset': target_location_formset,
         'combined_formset': combined_formset,
         'clusters': cluster_ids,
         'activity_planning': True,
@@ -531,6 +540,52 @@ def create_project_activity_plan(request, project):
     # Render the template with the context data
     return render(request, 'rh/projects/forms/project_activity_plan_form.html', context)
 
+
+def get_target_location_empty_form(request):
+    """Get target location empty form"""
+    project = get_object_or_404(Project, pk=request.GET.get('project'))
+
+    form_kwargs={'project': project}
+    activity_plan_formset = ActivityPlanFormSet(form_kwargs=form_kwargs, instance=project)
+    activity_plan_form = activity_plan_formset.forms[0]
+
+    prefix_index = request.GET.get('prefix_index')
+
+    target_location_formset = TargetLocationFormSet(
+        prefix=f"target_locations_{(activity_plan_form.prefix).replace('0', prefix_index)}"
+    )
+
+    context = {
+        'target_location_form': target_location_formset.empty_form,
+    }
+    html = render_to_string('rh/projects/forms/target_location_form.html', context)
+    return JsonResponse({'html': html})
+
+
+def get_activity_empty_form(request):
+    """Get activity empty form"""
+    project = get_object_or_404(Project, pk=request.GET.get('project'))
+    activity_plans = project.activityplan_set.all()
+    plans = list(activity_plans.values_list('pk', flat=True))
+
+    form_kwargs={'project': project}
+
+    activity_plan_formset = ActivityPlanFormSet(form_kwargs=form_kwargs, instance=project)
+    activity_plan_form = activity_plan_formset.forms[0]
+
+    prefix_index = request.GET.get('prefix_index')
+
+    target_location_formset = TargetLocationFormSet(
+        prefix=f"target_locations_{(activity_plan_form.prefix).replace('0', prefix_index)}"
+    )
+    context = {
+        'form': activity_plan_formset.empty_form,
+        'target_location_formset': target_location_formset,
+        'project': project,
+        'plans': plans
+    }
+    html = render_to_string('rh/projects/forms/activity_empty_form.html', context)
+    return JsonResponse({'html': html})
 
 
 @cache_control(no_store=True)

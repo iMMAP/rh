@@ -4,80 +4,120 @@ const TOGGLE_DURATION = 500;
 /**
 * Handle Add Dynamic Activity Form
 **/
-function addActivityForm() {
+function addActivityForm(prefix, project, nextFormIndex) {
 	// Get the empty form template
-	const emptyFormTemplate = $("#empty-activity-form-template");
+	debugger
+	const activityFormPrefix = prefix
+	const projectID = project
 
-	// Get the formset container and the form index
-	const formsetContainer = $("#activity-formset");
-	const formIdx = formsetContainer.children().length; // Get the number of existing forms
-	const formPrefix = emptyFormTemplate[0].getAttribute('data-form-prefix'); // Get the formset prefix
+	$.ajax({
+		url: '/ajax/get_activity_empty_form/',
+		data: {'project': projectID, 'prefix_index': nextFormIndex},
+		type: 'GET',
+		dataType: 'json',
+		success: function (data) {
+			if (data.html) {
 
-	// Replace the form prefix placeholder with the actual form index in the template HTML
-	const newFormHtml = emptyFormTemplate.html().replace(/__prefix__/g, formIdx);
+				const emptyFormTemplate = data.html
 
-	// Create a new form element and prepend it to the formset container
-	const newForm = $(document.createElement('div')).html(newFormHtml);
-	formsetContainer.prepend(newForm.children().first());
+				// Get the formset container
+				const formsetContainer = $("#activity-formset");
+				
+				// Get the number of existing forms
+				const formIdx = formsetContainer.children().length; 
+			
+				// Replace the form prefix placeholder with the actual form index in the template HTML
+				const newFormHtml = emptyFormTemplate.replace(/__prefix__/g, formIdx);
+			
+				// Create a new form element and append it to the formset container
+				const newForm = $(document.createElement('div')).html(newFormHtml);
+				formsetContainer.append(newForm.children().first());
 
-	setTimeout(function () {
-		// Initialize chained fields for the newly added form
-		const activityTypeSelect = $(`select[id^='id_activityplan_set-${formIdx}-activity_type']`);
-		const activityDomainSelectID = "#id_" + activityTypeSelect.data('chainfield');
-		const activityTypeUrl = activityTypeSelect.data('url');
-		const activityTypeID = "#" + activityTypeSelect.attr('id');
-		chainedfk.init(activityDomainSelectID, activityTypeUrl, activityTypeID, '', '--------', true);
-
-		const activityDetailSelect = $(`select[id^='id_activityplan_set-${formIdx}-activity_detail']`);
-		const activityTypeSelectID = "#id_" + activityDetailSelect.data('chainfield');
-		const activityDetailUrl = activityDetailSelect.data('url');
-		const activityDetailID = "#" + activityDetailSelect.attr('id');
-		chainedfk.init(activityTypeSelectID, activityDetailUrl, activityDetailID, '', '--------', true);
-
-		const IndicatorsSelect = $(`select[id^='id_activityplan_set-${formIdx}-indicators']`);
-		const IndicatorsUrl = IndicatorsSelect.data('url');
-		const IndicatorsID = "#" + IndicatorsSelect.attr('id');
-		chainedm2m.init(activityTypeSelectID, IndicatorsUrl, IndicatorsID, '', '--------', true);
-		$(IndicatorsID).select2();
-
-	}, 100);
+				setTimeout(function () {
+					// Initialize chained and chainedm2m fields for the newly added form
+					const activityTypeSelect = $(`select[id^='id_activityplan_set-${formIdx}-activity_type']`);
+					const activityDomainSelectID = "#id_" + activityTypeSelect.data('chainfield');
+					const activityTypeUrl = activityTypeSelect.data('url');
+					const activityTypeID = "#" + activityTypeSelect.attr('id');
+					chainedfk.init(activityDomainSelectID, activityTypeUrl, activityTypeID, '', '--------', true);
+			
+					const activityDetailSelect = $(`select[id^='id_activityplan_set-${formIdx}-activity_detail']`);
+					const activityTypeSelectID = "#id_" + activityDetailSelect.data('chainfield');
+					const activityDetailUrl = activityDetailSelect.data('url');
+					const activityDetailID = "#" + activityDetailSelect.attr('id');
+					chainedfk.init(activityTypeSelectID, activityDetailUrl, activityDetailID, '', '--------', true);
+			
+					const IndicatorsSelect = $(`select[id^='id_activityplan_set-${formIdx}-indicators']`);
+					const IndicatorsUrl = IndicatorsSelect.data('url');
+					const IndicatorsID = "#" + IndicatorsSelect.attr('id');
+					chainedm2m.init(activityTypeSelectID, IndicatorsUrl, IndicatorsID, '', '--------', true);
+					$(IndicatorsID).select2();
+			
+				}, 100);
+				
+			}
+		},
+		error: function (error) {
+			console.log('Error fetching empty form:', error);
+		}
+	});
 
 	// Update the management form values
-	const managementForm = $(`input[name="${formPrefix}-TOTAL_FORMS"]`);
+	const managementForm = $(`input[name="${activityFormPrefix}-TOTAL_FORMS"]`);
 	const totalForms = parseInt(managementForm.val()) + 1;
-	managementForm.val(totalForms.toString());
+	managementForm.val(totalForms.toString());	
 }
 
 
 /**
-* Handle Facility Monitoring field
-@param {string} formElement - Form Element.
-@param {string} formIndex - Form Index.
+* Handle Add Dynamic Activity Form
 **/
-function handleFacilityMonitoring(formElement, formIndex) {
-	let $facilityMonitoring = $(formElement).find(
-		`#id_form-${formIndex}-facility_monitoring`
-	);
-	let $facilityName = $(formElement).find(
-		`#id_form-${formIndex}-facility_name`
-	);
-	let $facilityId = $(formElement).find(`#id_form-${formIndex}-facility_id`);
-	let $facilityDetails1 = $(formElement).find(
-		`#form-${formIndex}_facility_details_1`
-	);
-	let $facilityDetails2 = $(formElement).find(
-		`#form-${formIndex}_facility_details_2`
-	);
+function addTargetLocationForm(prefix, project, nextFormIndex) {
+	// Get the empty form template
+	// const emptyFormTemplate = $(`#empty-target-location-form-template-${activityFormPrefix}`);
+	const activityFormPrefix = prefix
+	const projectID = project
+	$.ajax({
+		url: '/ajax/get_target_location_empty_form/',
+		data: {'project': projectID, 'prefix_index': nextFormIndex},
+		type: 'GET',
+		dataType: 'json',
+		success: function (data) {
+			if (data.html) {
 
-	if (!$facilityMonitoring.is(":checked")) {
-		$facilityDetails1.hide();
-		$facilityDetails2.hide();
-		$facilityName.prop("required", false).removeClass("is-required");
-		$facilityId.prop("required", false).removeClass("is-required");
-	} else {
-		$facilityName.prop("required", true).addClass("is-required");
-		$facilityId.prop("required", true).addClass("is-required");
-	}
+				const emptyFormTemplate = data.html
+				
+				// Get the formset prefix
+				const formPrefix = activityFormPrefix; 
+				
+				// Get the formset container
+				const formsetContainer = $(`#${formPrefix}`);
+
+				// Get the number of existing forms
+				const formIdx = formsetContainer.children().length; // Get the number of existing forms
+				
+				// Replace the form prefix placeholder with the actual form index in the template HTML
+				const newFormHtml = emptyFormTemplate.replace(/__prefix__/g, formIdx);
+				
+				// Create a new form element and prepend it to the formset container
+				const newForm = $(document.createElement('div')).html(newFormHtml);
+				formsetContainer.append(newForm.children().first());
+
+				// Update the management form values
+				const managementForm = $(`input[name="target_locations_${formPrefix}-TOTAL_FORMS"]`);
+				const totalForms = parseInt(managementForm.val()) + 1;
+				managementForm.val(totalForms.toString());
+				
+				// Open/Activate the accordion
+				const parentDiv = formsetContainer.closest('.target_location-accordion-slide')
+				parentDiv.removeClass('js-acc-hidden')
+				parentDiv.closest('.inner-holder').addClass('target_location-accordion-active')
+			}
+		},
+		error: function (error) {
+			console.log('Error fetching empty form:', error);
+		}
+	});
 }
 
 
@@ -116,47 +156,21 @@ $(document).ready(function () {
 	// Button to handle addition of new activity form.
 	$('#add-activity-form-button').on('click', function(event) {
 		event.preventDefault(); // Prevent the default behavior (form submission)
-		addActivityForm(); // Call the function to add a new activity form
+		const activityFormPrefix = event.currentTarget.dataset.formPrefix
+		const activityProject = event.currentTarget.dataset.project
+		const nextFormIndex = event.currentTarget.dataset.formsCount
+		addActivityForm(activityFormPrefix, activityProject, nextFormIndex); // Call the function to add a new activity form
 	});
-
-	/**
-	 * Initializes facility monitoring form functionality for multiple forms.
-	 * @param {number} currentFormCount - The number of facility monitoring forms currently displayed on the page.
-	 * @returns {void}
-	 */
-	/*async function get_facility_sites(formIndex) {
-		const facilitySiteUrl = $(`#id_form-${formIndex}-facility_type`).attr(
-			"facility-sites-queries-url"
-		);
-
-		const facilityIds = $(`select#id_form-${formIndex}-facility_type option`)
-			.map(function () {
-				return $(this).val();
-			})
-			.get();
-		const clusterIds = $("#clusters").data("clusters");
-		const selected_facilities = $(
-			`select#id_form-${formIndex}-facility_type`
-		).val();
-
-		requestData = {
-			clusters: clusterIds,
-			listed_facilities: facilityIds,
-		}
-
-		try {
-			const response = await $.ajax({
-				type: "GET",
-				url: facilitySiteUrl,
-				data: requestData,
-			});
-
-			$(`#id_form-${formIndex}-facility_type`).html(response);
-			$(`select#id_form-${formIndex}-facility_type`).val(selected_facilities);
-		} catch (error) {
-			console.error(`Error fetching Facilities: ${error}`);
-		}
-	}*/
+	
+	// Button to handle addition of new activity form.
+	$(document).on('click', '.add-target-location-form-button', function(event) {
+		event.preventDefault(); // Prevent the default behavior (form submission)
+		event.stopPropagation(); // Prevent the default behavior (propagation)
+		const activityFormPrefix = event.currentTarget.dataset.formPrefix
+		const activityProject = event.currentTarget.dataset.project
+		const activityFormIndex = activityFormPrefix.match(/\d+/)[0]
+		addTargetLocationForm(activityFormPrefix, activityProject, activityFormIndex); // Call the function to add a new activity form
+	});
 
 	$.fn.reverse = [].reverse;
 	let $activityBlockHolder = $(".activity-block-holder");
@@ -164,13 +178,6 @@ $(document).ready(function () {
 		// Call updateTitle for activity_domain manually as on page load as it is not triggered for
 		// activity_domain
 		updateTitle(`activityplan_set-${formIndex}`, `id_activityplan_set-${formIndex}-activity_domain`);
-
-		// Call Facility Monitoring function when page loads.
-		// handleFacilityMonitoring(formElement, formIndex);
-
-		// Call get_facility_sites and fetch the facility sites types.
-		// get_facility_sites(formIndex);
-
 	
 	});
 

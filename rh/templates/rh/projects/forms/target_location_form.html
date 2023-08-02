@@ -1,4 +1,6 @@
 <!-- form_create.html -->
+<div class="target_location_form">
+    {{ target_location_form.id }}
     <div class="location-inner-holder">
         <div class="">
             <span class="title">
@@ -79,7 +81,7 @@
                     </div>
                 </div> {% endcomment %}
             </div>
-            <div class="disaggregation-block disaggregation-accordion">
+            {% comment %} <div class="disaggregation-block disaggregation-accordion">
                 <div class="inner-holder">
                   <a href="#" class="block-top disaggregation-accordion-opener">
                     <div class="location-block-holder">
@@ -96,7 +98,9 @@
                         {% endfor %}
                   </div>
                 </div>
-            </div>
+            </div> {% endcomment %}
             
         </div>
     </div>
+</div>
+

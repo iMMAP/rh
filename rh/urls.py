@@ -48,6 +48,10 @@ urlpatterns = [
     # path('ajax/load-zones-details/', user_views.load_zones_details, name='ajax-load-zones'),
     path('ajax/load-facility_sites/', user_views.load_facility_sites, name='ajax-load-facility_sites'),
 
+    path('ajax/get_target_location_empty_form/', user_views.get_target_location_empty_form, name='get_target_location_empty_form'),
+    path('ajax/get_activity_empty_form/', user_views.get_activity_empty_form, name='get_activity_empty_form'),
+
+
     # Exports
     path('export-excel/<int:project_id>/', export_views.ProjectExportExcelView.as_view(), name='export_project_excel'),
     # path('create-form/', user_views.create_project_target_location, name='form_create_view'),

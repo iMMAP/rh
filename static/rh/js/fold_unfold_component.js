@@ -21,7 +21,6 @@ $(function () {
 		e.preventDefault();
 		const allCollapsed = !$("#fold-icon-down").hasClass("hidden");
 		$(".js-collapse-expand").each(function (formIndex, formElement) {
-			debugger
 			foldUnfoldDetails(`activityplan_set-${formIndex}`, allCollapsed);
 		});
 		$("#fold-icon-up, #fold-icon-down, #all-fold, #all-unfold").toggleClass(

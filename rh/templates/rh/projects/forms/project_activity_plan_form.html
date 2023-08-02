@@ -28,7 +28,7 @@
                                 <span class="subtitle">Activities Planning</span>
                             </div>
                             <div>
-                                <button id="add-activity-form-button"
+                                <button id="add-activity-form-button" type="button" data-forms-count="{{ activity_plan_formset.management_form.TOTAL_FORMS.value }}" data-form-prefix="{{activity_plan_formset.prefix}}" data-project="{{project.pk}}"
                                     class="btn btn-red">Add Activity
                                 </button>
 
@@ -47,9 +47,10 @@
                 </div>
                 {{ activity_plan_formset.management_form }} {% csrf_token %}
                 
-                <div id="empty-activity-form-template" style="display: none;" data-form-prefix="{{activity_plan_formset.prefix}}">
+                {% comment %} <div id="empty-activity-form-template" style="display: none;" data-form-prefix="{{activity_plan_formset.prefix}}">
                     {% include "rh/projects/forms/activity_empty_form.html" with form=activity_plan_formset.empty_form target_location_formset=target_location_formset %}
-                </div>
+                </div> {% endcomment %}
+
                 <div id="activity-formset">
                     {% for form, target_location_formset in combined_formset %}
                         {% include "rh/projects/forms/activity_empty_form.html" with form=form target_location_formset=target_location_formset %}
@@ -69,6 +70,47 @@
 {% endblock project_contents %}
 
 {% block scripts %}
+{% comment %} <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        /**
+        * Handle Add Dynamic Activity Form
+        **/
+        function addTargetLocationForm() {
+            debugger
+            // Get the empty form template
+            const emptyFormTemplate = document.getElementById("empty-target-location-form-template");
+    
+            // Get the formset container and the form index
+            const formsetContainer = document.getElementById("target-location-formset");
+            const formIdx = formsetContainer.childElementCount; // Get the number of existing forms
+            const formPrefix = emptyFormTemplate.getAttribute('data-form-prefix'); // Get the formset prefix
+    
+            // Replace the form prefix placeholder with the actual form index in the template HTML
+            const newFormHtml = emptyFormTemplate.innerHTML.replace(/__prefix__/g, formIdx);
+    
+            // Create a new form element and prepend it to the formset container
+            const newForm = document.createElement('div');
+            newForm.innerHTML = newFormHtml;
+            formsetContainer.prepend(newForm.firstElementChild);
+    
+            // Update the management form values
+            const managementForm = document.querySelector(`input[name="${formPrefix}-TOTAL_FORMS"]`);
+            const totalForms = parseInt(managementForm.value) + 1;
+            managementForm.setAttribute('value', totalForms.toString());
+        }
+    
+        // Button to handle addition of new activity form.
+        document.getElementById('add-target-location-form-button').addEventListener('click', function (event) {
+            debugger
+            event.preventDefault(); // Prevent the default behavior (form submission)
+            event.stopPropagation(); // Prevent the event from propagating to parent elements
+            
+            addTargetLocationForm(); // Call the function to add a new activity form
+        });
+    });
+    
+</script> {% endcomment %}
+
     {{ activity_plan_formset.media.js }}
     {% compress js %}
         <script defer src="{% static 'rh/js/activity_planning.js' %}"></script>

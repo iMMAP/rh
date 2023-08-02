@@ -92,34 +92,52 @@
                             </label>
                             {{ form.indicators }}
                         </div>
+                        <div class="multiple-fields-row">
+                            <div class="field-col">
+                                <div class="select-field">
+                                    <label for="{{form.beneficiary.id_for_label}}">Beneficiary</label>
+                                    {{ form.beneficiary }}
+                                </div>
+                            </div>
+                            <div class="field-col">
+                                <div class="select-field">
+                                    <label for="{{form.beneficiary_category.id_for_label}}">Beneficiary Category</label>
+                                    {{ form.beneficiary_category }}
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                {% comment %} <div class="row" id="Locations">
+                
+                <div class="row" id="Locations-{{form.prefix}}">
                     <div class="col col-lg">
                         <div class="target_location-block target_location-accordion">
                             <div class="inner-holder">
-                              <a href="#" class="block-top target_location-accordion-opener">
-                                <div class="location-block-holder">
-                                    <div class="block-top">
-                                        <div>Target Locations</div>
-                                        <div>
-                                            <button id="add-target-location-form-button" class="btn btn-red">Add Target Location
-                                            </button>
+                                <button data-form-prefix="{{form.prefix}}" data-project="{{project.pk}}" type="button"  style="float:right;margin-top: 20px;"
+                                    class="btn btn-red add-target-location-form-button">Add Target Location
+                                </button>
+                                <a href="#" class="block-top target_location-accordion-opener">
+                                    <div class="location-block-holder">
+                                        <div class="block-top">
+                                            Target Locations
                                         </div>
                                     </div>
+                                </a>
+                                <div class="target_location-accordion-slide">
+                                    {{ target_location_formset.management_form }}
+                                    {% comment %} <div id="empty-target-location-form-template-{{form.prefix}}" style="display: none;" data-form-prefix="{{form.prefix}}">
+                                        {% include "rh/projects/forms/target_location_form.html" with target_location_form=target_location_formset.empty_form %}
+                                    </div> {% endcomment %}
+                                    <div id="{{form.prefix}}">
+                                        {% for target_location_form in target_location_formset %}
+                                            {% include "rh/projects/forms/target_location_form.html" with target_location_form=target_location_form %}
+                                        {% endfor %}
+                                    </div>
                                 </div>
-                              </a>
-                              <div class="target_location-accordion-slide">
-                                {{ target_location_formset.management_form }}
-                                {% for target_location_form in target_location_formset %}
-                                {{ target_location_form.id }}
-                                    {% include "rh/projects/forms/target_location_form.html"  %}
-                                {% endfor %}
-                              </div>
                             </div>
                         </div>                                                
                     </div>
-                </div> {% endcomment %}
+                </div>
             </div>
         </div>
     </div>

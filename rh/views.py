@@ -411,21 +411,6 @@ def create_project_activity_plan(request, project):
     # Get all existing activity plans for the project
     activity_plans = project.activityplan_set.all()
 
-    # ActivityPlanFormSet = inlineformset_factory(Project, ActivityPlan,
-    #                                             form=ActivityPlanForm,
-    #                                             extra=1,
-    #                                             can_delete=True,)
-
-    # TargetLocationFormSet = inlineformset_factory(ActivityPlan, TargetLocation,
-    #                                                 form=TargetLocationForm,
-    #                                                 extra=1,  # Number of empty forms to display
-    #                                                 can_delete=True)  # Allow deletion of existing forms
-
-    # DisaggregationFormSet = inlineformset_factory(TargetLocation, DisaggregationLocation,
-    #                                                 fields="__all__",
-    #                                                 extra=1,
-    #                                                 can_delete=True)
-
     # Create the activity plan formset with initial data from the project
     activity_plan_formset = ActivityPlanFormSet(
         request.POST or None,
@@ -446,14 +431,14 @@ def create_project_activity_plan(request, project):
             instance=activity_plan_form.instance,
             prefix=f'target_locations_{activity_plan_form.prefix}'
         )
-        # for target_location_form in target_location_formset.forms:
-        #     # Create a disaggregation formset for each target location form
-        #     disaggregation_formset = DisaggregationFormSet(
-        #         request.POST or None,
-        #         instance=target_location_form.instance,
-        #         prefix=f'disaggregation_{target_location_form.prefix}'
-        #     )
-        #     target_location_form.disaggregation_formset = disaggregation_formset
+        for target_location_form in target_location_formset.forms:
+            # Create a disaggregation formset for each target location form
+            disaggregation_formset = DisaggregationFormSet(
+                request.POST or None,
+                instance=target_location_form.instance,
+                prefix=f'disaggregation_{target_location_form.prefix}'
+            )
+            target_location_form.disaggregation_formset = disaggregation_formset
 
         target_location_formsets.append(target_location_formset)
     
@@ -466,9 +451,6 @@ def create_project_activity_plan(request, project):
             for activity_plan_form in activity_plan_formset:
                 if activity_plan_form.cleaned_data.get('activity_domain') and activity_plan_form.cleaned_data.get('activity_type'):
                     activity_plan_form.save()
-
-
-            # FIXME: HANDLE THE TARGET LOCATIONS SAVING IN OTHER ACIVITY ISSUE
 
             # Process target location forms and their disaggregation forms
             for target_location_formset in target_location_formsets:
@@ -540,6 +522,47 @@ def create_project_activity_plan(request, project):
     # Render the template with the context data
     return render(request, 'rh/projects/forms/project_activity_plan_form.html', context)
 
+def get_disaggregations_forms(request):
+    """Get target location empty form"""
+    indicators = Indicator.objects.filter(pk__in=request.GET.getlist('indicators[]'))
+    
+    project = get_object_or_404(Project, pk=request.GET.get('project'))
+    activity_index = request.GET.get('activity_index')
+    locations_indexes = request.GET.getlist('locations_indexes[]')
+    
+    # Use a set to store unique related Disaggregations
+    unique_related_disaggregations = set()
+
+    # Loop through each Indicator and retrieve its related Disaggregations
+    for indicator in indicators:
+        related_disaggregations = indicator.disaggregation_set.all()
+        unique_related_disaggregations.update(related_disaggregations)
+    
+    # Convert the set to a list
+    related_disaggregations = list(unique_related_disaggregations)
+
+    # TODO: Handle the disaggregation forms, continue from here  
+    
+    # form_kwargs={'project': project}
+
+    # activity_plan_formset = ActivityPlanFormSet(form_kwargs=form_kwargs, instance=project)
+
+    # target_location_formset = TargetLocationFormSet(
+    #     prefix=f"target_locations_{activity_plan_formset.prefix}-{activity_index}"
+    # )
+    # target_location_form = target_location_formset.forms[0]
+
+    # disaggregation_formset = DisaggregationFormSet(prefix=f'disaggregation_{target_location_formset.prefix}')
+
+    # prefix_index = request.GET.get('prefix_index')
+
+
+    context = {
+        # 'target_location_form': target_location_formset.empty_form,
+    }
+    html = render_to_string('rh/projects/forms/target_location_form.html', context)
+    return JsonResponse({'html': html})
+
 
 def get_target_location_empty_form(request):
     """Get target location empty form"""
@@ -547,12 +570,11 @@ def get_target_location_empty_form(request):
 
     form_kwargs={'project': project}
     activity_plan_formset = ActivityPlanFormSet(form_kwargs=form_kwargs, instance=project)
-    activity_plan_form = activity_plan_formset.forms[0]
 
     prefix_index = request.GET.get('prefix_index')
 
     target_location_formset = TargetLocationFormSet(
-        prefix=f"target_locations_{(activity_plan_form.prefix).replace('0', prefix_index)}"
+        prefix=f"target_locations_{activity_plan_formset.prefix}-{prefix_index}"
     )
 
     context = {
@@ -571,12 +593,12 @@ def get_activity_empty_form(request):
     form_kwargs={'project': project}
 
     activity_plan_formset = ActivityPlanFormSet(form_kwargs=form_kwargs, instance=project)
-    activity_plan_form = activity_plan_formset.forms[0]
+    # activity_plan_form = activity_plan_formset.forms[0]
 
     prefix_index = request.GET.get('prefix_index')
 
     target_location_formset = TargetLocationFormSet(
-        prefix=f"target_locations_{(activity_plan_form.prefix).replace('0', prefix_index)}"
+        prefix=f"target_locations_{activity_plan_formset.prefix}-{prefix_index}"
     )
     context = {
         'form': activity_plan_formset.empty_form,

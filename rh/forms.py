@@ -164,7 +164,7 @@ DisaggregationFormSet = inlineformset_factory(
         TargetLocation,
         DisaggregationLocation,
         fields="__all__",
-        extra=1,  # Number of empty forms to display
+        extra=0,  # Number of empty forms to display
         can_delete=True  # Allow deletion of existing forms
     )
 

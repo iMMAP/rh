@@ -47,9 +47,9 @@ function addActivityForm(prefix, project, nextFormIndex) {
 					const activityDetailID = "#" + activityDetailSelect.attr('id');
 					chainedfk.init(activityTypeSelectID, activityDetailUrl, activityDetailID, '', '--------', true);
 			
-					const IndicatorsSelect = $(`select[id^='id_activityplan_set-${formIdx}-indicators']`);
-					const IndicatorsUrl = IndicatorsSelect.data('url');
-					const IndicatorsID = "#" + IndicatorsSelect.attr('id');
+					const indicatorsSelect = $(`select[id^='id_activityplan_set-${formIdx}-indicators']`);
+					const IndicatorsUrl = indicatorsSelect.data('url');
+					const IndicatorsID = "#" + indicatorsSelect.attr('id');
 					chainedm2m.init(activityTypeSelectID, IndicatorsUrl, IndicatorsID, '', '--------', true);
 					$(IndicatorsID).select2();
 			
@@ -172,12 +172,47 @@ $(document).ready(function () {
 		addTargetLocationForm(activityFormPrefix, activityProject, activityFormIndex); // Call the function to add a new activity form
 	});
 
+	
+
+	// $(document).on("click", ".select2-search__field", function(event) {
+	// 	event.preventDefault();
+	// 	event.stopPropagation()
+	// 	debugger
+
+	// });
+	
+
 	$.fn.reverse = [].reverse;
 	let $activityBlockHolder = $(".activity-block-holder");
 	$activityBlockHolder.reverse().each(function (formIndex, formElement) {
 		// Call updateTitle for activity_domain manually as on page load as it is not triggered for
 		// activity_domain
 		updateTitle(`activityplan_set-${formIndex}`, `id_activityplan_set-${formIndex}-activity_domain`);
+
+		var $select2Event = $(`#id_activityplan_set-${formIndex}-indicators`);
+		$select2Event.on("select2:select", function (event) { 
+			let indicatorsSelect = event.currentTarget
+			let selectedIDs = $(indicatorsSelect).select2('data').map(item => item.id);
+			$.ajax({
+				url: '/ajax/get_disaggregations_forms/',
+				data: {'indicators': selectedIDs},
+				type: 'GET',
+				dataType: 'json',
+				success: function (data) {
+					if (data.html) {
+						debugger
+		
+						
+					}
+				},
+				error: function (error) {
+					console.log('Error fetching empty form:', error);
+				}
+			});
+
+
+			console.log("select2:select", selectedIDs); 
+		});
 	
 	});
 

@@ -1,11 +1,11 @@
 <div class="activity_form">
     {{ form.id }} {{ form.save }}
     <input type="hidden"
-            name="project_id"
-            id="project_id"
-            value="{{ project.id }}" />
+           name="project_id"
+           id="project_id"
+           value="{{ project.id }}"/>
     <div class="activity-block-holder js-collapse-expand"
-            data-form-id="{{ form.prefix }}">
+         data-form-id="{{ form.prefix }}">
         <div class="inner-holder">
             <div class="block-activity mb-3">
                 <div id="{{ form.prefix }}-actions">
@@ -30,7 +30,8 @@
                     <button type="submit"
                             class="btn btn-red save"
                             value="true"
-                            name="{{ form.prefix }}-save">Save</button>
+                            name="{{ form.prefix }}-save">Save
+                    </button>
                 </div>
                 <a href="#" class="btn btn-gray-outline collapse-details">
                     <span class="icon-chevron-up up" id="{{ form.prefix }}-up"></span>
@@ -42,15 +43,15 @@
             <div class="block-top">
                 <span class="title">
                     {% if form.total.value %}
-                        <span class="people">
-                            <span class="icon-group"></span>
-                            <span id="{{ form.prefix }}-people-count">{{ form.total.value }}</span>
-                            -
-                        </span>
+                    <span class="people">
+                        <span class="icon-group"></span>
+                        <span id="{{ form.prefix }}-people-count">{{ form.total.value }}</span>
+                        -
+                    </span>
                     {% endif %}
                     {% if not form.id.value %}
-                        <span>Add New Beneficiary</span>
-                        <br />
+                    <span>Add New Beneficiary</span>
+                    <br/>
                     {% endif %}
                     <span id="title-domain-{{ form.prefix }}"></span>
                     <span id="title-type-{{ form.prefix }}"></span>
@@ -108,13 +109,14 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="row" id="Locations-{{form.prefix}}">
                     <div class="col col-lg">
                         <div class="target_location-block target_location-accordion">
                             <div class="inner-holder">
-                                <button data-form-prefix="{{form.prefix}}" data-project="{{project.pk}}" type="button"  style="float:right;margin-top: 20px;"
-                                    class="btn btn-red add-target-location-form-button">Add Target Location
+                                <button data-form-prefix="{{form.prefix}}" data-project="{{project.pk}}" type="button"
+                                        style="float:right;margin-top: 20px;"
+                                        class="btn btn-red add-target-location-form-button">Add Target Location
                                 </button>
                                 <a href="#" class="block-top target_location-accordion-opener">
                                     <div class="location-block-holder">
@@ -125,17 +127,19 @@
                                 </a>
                                 <div class="target_location-accordion-slide">
                                     {{ target_location_formset.management_form }}
-                                    {% comment %} <div id="empty-target-location-form-template-{{form.prefix}}" style="display: none;" data-form-prefix="{{form.prefix}}">
-                                        {% include "rh/projects/forms/target_location_form.html" with target_location_form=target_location_formset.empty_form %}
-                                    </div> {% endcomment %}
+                                    {% comment %} <div id="empty-target-location-form-template-{{form.prefix}}"
+                                                       style="display: none;" data-form-prefix="{{form.prefix}}">
+                                    {% include "rh/projects/forms/target_location_form.html" with
+                                    target_location_form=target_location_formset.empty_form %}
+                                </div> {% endcomment %}
                                     <div id="{{form.prefix}}">
                                         {% for target_location_form in target_location_formset %}
-                                            {% include "rh/projects/forms/target_location_form.html" with target_location_form=target_location_form %}
+                                        {% include "rh/projects/forms/target_location_form.html" with target_location_form=target_location_form %}
                                         {% endfor %}
                                     </div>
                                 </div>
                             </div>
-                        </div>                                                
+                        </div>
                     </div>
                 </div>
             </div>

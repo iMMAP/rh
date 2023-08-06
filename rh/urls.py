@@ -50,6 +50,7 @@ urlpatterns = [
 
     path('ajax/get_target_location_empty_form/', user_views.get_target_location_empty_form, name='get_target_location_empty_form'),
     path('ajax/get_activity_empty_form/', user_views.get_activity_empty_form, name='get_activity_empty_form'),
+    path('ajax/get_disaggregations_forms/', user_views.get_disaggregations_forms, name='get_disaggregations_forms'),
 
 
     # Exports

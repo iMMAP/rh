@@ -6,7 +6,6 @@ const TOGGLE_DURATION = 500;
 **/
 function addActivityForm(prefix, project, nextFormIndex) {
 	// Get the empty form template
-	debugger
 	const activityFormPrefix = prefix
 	const projectID = project
 
@@ -52,6 +51,8 @@ function addActivityForm(prefix, project, nextFormIndex) {
 					const IndicatorsID = "#" + indicatorsSelect.attr('id');
 					chainedm2m.init(activityTypeSelectID, IndicatorsUrl, IndicatorsID, '', '--------', true);
 					$(IndicatorsID).select2();
+
+					// TODO: Handle the Locations dropdown for the new form as well.
 			
 				}, 100);
 				
@@ -122,9 +123,60 @@ function addTargetLocationForm(prefix, project, nextFormIndex) {
 
 
 /**
+* Handle Add Dynamic Disaggregation Form
+**/
+function handleDisaggregationForms(indicatorsSelect, selectedIDs) {
+    // Extract activity index from indicatorsSelect name attribute
+    const activityIndex = (indicatorsSelect.name).match(/activityplan_set-(\d+)/)[1];
+
+    // Get all target location forms
+    var targetLocationForms = $(`#Locations-activityplan_set-${activityIndex} .target_location_form`);
+
+    // Extract locations prefixes from target location forms
+    var locationsPrefixes = [];
+    targetLocationForms.each(function(index, element) {
+        var locationPrefix = $(element).data("location-prefix");
+        locationsPrefixes.push(locationPrefix);
+    });
+
+    // Make AJAX request to fetch disaggregation forms
+    $.ajax({
+        url: '/ajax/get_disaggregations_forms/',
+        data: {'indicators': selectedIDs, 'locations_prefixes': locationsPrefixes},
+        type: 'GET',
+        dataType: 'json',
+        success: function (data) {
+            if (data) {
+                $.each(locationsPrefixes, function(locationIndex) {
+                    const locationPrefix = locationsPrefixes[locationIndex];
+                    const disaggregationFormsArray = data[locationPrefix];
+
+                    // Remove existing forms
+                    $('#' + locationPrefix).find('.location-inner-holder').remove();
+
+                    if (disaggregationFormsArray) {
+                        // Append new disaggregation forms
+                        $('#' + locationPrefix).find('.disaggregation-accordion-slide').append(disaggregationFormsArray.join(" "));
+                    }
+
+                    // Update the management form values
+                    if (disaggregationFormsArray) {
+                        const managementForm = $(`input[name="disaggregation_${locationPrefix}-TOTAL_FORMS"]`);
+                        const totalForms = parseInt(disaggregationFormsArray.length);
+                        managementForm.val(totalForms.toString());
+                    }
+                });
+            }
+        },
+        error: function (error) {
+            console.log('Error fetching empty form:', error);
+        }
+    });
+}
+
+
+/**
 Updates the titles of the activity form sections based on the selected values of the input element.
-@param {string} formPrefix - The prefix of the activity form sections.
-@param {string} inputElementId - The ID of the input element that triggered the update.
 **/
 function updateTitle(formPrefix, inputElementId) {
 	const selectedValue = $("#" + inputElementId).val();
@@ -148,6 +200,50 @@ function updateTitle(formPrefix, inputElementId) {
 }
 
 
+/**
+* Get Districts and Zpnes for Target Location Form
+**/
+async function getLocations(locationPrefix, locationType, parentType, clearZone = null) {
+    // Get the URL for fetching locations
+    const locationUrl = $(`#id_${locationPrefix}-${locationType}`).attr(`locations-queries-url`);
+    
+    // Get an array of location IDs
+    const locationIds = $(`select#id_${locationPrefix}-${locationType} option`)
+        .map((_, option) => option.value)
+        .get();
+
+    // Get the parent IDs
+    const parentIds = [$(`#id_${locationPrefix}-${parentType}`).val()];
+
+    // Get the selected locations
+    const selectedLocations = $(`select#id_${locationPrefix}-${locationType}`).val();
+
+    try {
+        // Make an AJAX request to fetch locations data
+        const response = await $.ajax({
+            type: "GET",
+            url: locationUrl,
+            data: {
+                parents: parentIds,
+                listed_locations: locationIds,
+            },
+        });
+
+        // Clear zone if needed
+        if (parentType === 'province' && clearZone === true) {
+            $(`#id_${locationPrefix}-zone`).html('').val('');
+        }
+
+        // Update the location select element
+        $(`#id_${locationPrefix}-${locationType}`).html(response);
+        $(`select#id_${locationPrefix}-${locationType}`).val(selectedLocations);
+    } catch (error) {
+        console.error(`Error fetching ${locationType}: ${error}`);
+    }
+}
+
+
+
 $(document).ready(function () {
 
 	// Initialize indicators with django select except the empty form
@@ -162,7 +258,7 @@ $(document).ready(function () {
 		addActivityForm(activityFormPrefix, activityProject, nextFormIndex); // Call the function to add a new activity form
 	});
 	
-	// Button to handle addition of new activity form.
+	// Button to handle addition of new target location form.
 	$(document).on('click', '.add-target-location-form-button', function(event) {
 		event.preventDefault(); // Prevent the default behavior (form submission)
 		event.stopPropagation(); // Prevent the default behavior (propagation)
@@ -172,85 +268,50 @@ $(document).ready(function () {
 		addTargetLocationForm(activityFormPrefix, activityProject, activityFormIndex); // Call the function to add a new activity form
 	});
 
-	
-
-	// $(document).on("click", ".select2-search__field", function(event) {
-	// 	event.preventDefault();
-	// 	event.stopPropagation()
-	// 	debugger
-
-	// });
-	
-
-	$.fn.reverse = [].reverse;
-	let $activityBlockHolder = $(".activity-block-holder");
-	$activityBlockHolder.reverse().each(function (formIndex, formElement) {
+	let $activityBlockHolder = $(".activity_form");
+	$activityBlockHolder.each(function (formIndex, formElement) {
+		
 		// Call updateTitle for activity_domain manually as on page load as it is not triggered for
-		// activity_domain
 		updateTitle(`activityplan_set-${formIndex}`, `id_activityplan_set-${formIndex}-activity_domain`);
 
+		// Update disaggregations based on indicators
+		/*$('.select2-selection--multiple').ready(function(){
+			debugger
+			let selectedIDs = $select2Event[0].dataset.value
+			handleDisaggregationForms($select2Event[0], JSON.parse(selectedIDs))
+		});*/
+		
+		// Update disaggregations based on indicators
 		var $select2Event = $(`#id_activityplan_set-${formIndex}-indicators`);
-		$select2Event.on("select2:select", function (event) { 
+		$select2Event.on("change.select2", function (event) { 
 			let indicatorsSelect = event.currentTarget
 			let selectedIDs = $(indicatorsSelect).select2('data').map(item => item.id);
-			$.ajax({
-				url: '/ajax/get_disaggregations_forms/',
-				data: {'indicators': selectedIDs},
-				type: 'GET',
-				dataType: 'json',
-				success: function (data) {
-					if (data.html) {
-						debugger
-		
-						
-					}
-				},
-				error: function (error) {
-					console.log('Error fetching empty form:', error);
-				}
-			});
-
-
-			console.log("select2:select", selectedIDs); 
+			handleDisaggregationForms(indicatorsSelect, selectedIDs)
 		});
-	
 	});
 
-	$activityBlockHolder.on("change", function (event) {
-		event.preventDefault();
+	const $locationBlock = $(".target_location_form");
+	$locationBlock.each(function (formIndex, formElement) {
+		// Call updateTitle for activity_domain manually as on page load as it is not triggered for
+		// activity_domain
+		// updateLocationBlockTitles(formIndex);
+		
+		const locationPrefix = formElement.dataset.locationPrefix
 
-		const $formElement = $(this);
-		const formIndex = $(this).attr("data-form-id").split("form-")[1];
 
-		// Handle Facility Monitoring Checkbox
-		// FIXME: Fix repeated code.
-		if (event.target.name.indexOf("facility_monitoring") >= 0) {
-			let $facilityMonitoring = $formElement.find(
-				`#id_form-${formIndex}-facility_monitoring`
-			);
-			let $facilityName = $formElement.find(
-				`#id_form-${formIndex}-facility_name`
-			);
-			let $facilityId = $formElement.find(`#id_form-${formIndex}-facility_id`);
-			let $facilityDetails1 = $formElement.find(
-				`#form-${formIndex}_facility_details_1`
-			);
-			let $facilityDetails2 = $formElement.find(
-				`#form-${formIndex}_facility_details_2`
-			);
+		// Initial load for districts and zones
+		getLocations(locationPrefix, 'district', 'province');
+		getLocations(locationPrefix, 'zone', 'district');
+		
 
-			if (!$facilityMonitoring.is(":checked")) {
-				$facilityDetails1.hide(TOGGLE_DURATION);
-				$facilityDetails2.hide(TOGGLE_DURATION);
-				$facilityName.prop("required", false).removeClass("is-required");
-				$facilityId.prop("required", false).removeClass("is-required");
-			} else {
-				$facilityDetails1.show(TOGGLE_DURATION);
-				$facilityDetails2.show(TOGGLE_DURATION);
-				$facilityName.prop("required", true).addClass("is-required");
-				$facilityId.prop("required", true).addClass("is-required");
-			}
-		}		
+		$(`#id_${locationPrefix}-province`).change(function () {
+			getLocations(locationPrefix, 'district', 'province', clearZone=true);
+		});
+		$(`#id_${locationPrefix}-district`).change(function () {
+			getLocations(locationPrefix, 'zone', 'district');
+		});
+		
+		// handleSiteMonitoring($(formElement), formIndex)
 	});
 
 });

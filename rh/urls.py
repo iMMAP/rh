@@ -31,8 +31,8 @@ urlpatterns = [
     # Projects Target Locations CRUD
     path('project/target_location/copy/<str:project>/<str:location>/', user_views.copy_target_location, name='copy_location'),
     path('project/target_location/delete/<str:pk>/', user_views.delete_target_location, name='delete_location'),
-    path('project/target_location/create/?plan=<str:plan>/',
-        user_views.create_project_target_location, name='create_project_target_location'),
+    # path('project/target_location/create/?plan=<str:plan>/',
+    #     user_views.create_project_target_location, name='create_project_target_location'),
 
     path('project/financials/budget_progress/?project=<str:project>/',
         user_views.create_project_budget_progress_view, name='create_project_budget_progress'),

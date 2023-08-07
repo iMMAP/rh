@@ -1,15 +1,4 @@
-<!-- form_create.html -->
 <div class="location-inner-holder">
-    {% if target_location_form.disaggregation_formset.can_delete %}
-        {% if disaggregation_form.instance.id %}
-            <!-- If the form instance already exists, include a checkbox for deletion -->
-            <div class="field">
-                <label>Delete:</label>
-                {% comment %} <button type="button " class="delete-btn">Delete</button> {% endcomment %}
-                {{ disaggregation_form.DELETE }}
-            </div>
-        {% endif %}
-    {% endif %}
     <div class="row">
         <div class="col">
             <div class="multiple-fields-row two-items">
@@ -29,19 +18,3 @@
         </div>
     </div>
 </div>
-{% comment %} <script>
-    // Assuming you have included jQuery in your project
-    $(document).ready(function() {
-        // Handle deletion button click
-        $('.delete-btn').on('click', function() {
-            // Find the corresponding form and mark it for deletion
-            var formPrefix = $(this).siblings('input[type="hidden"]').attr('name').split('-')[0];
-            var formIndex = $(this).siblings('input[type="hidden"]').attr('name').split('-')[1];
-            var deleteInput = $('input[name="' + formPrefix + '-' + formIndex + '-DELETE"]');
-            deleteInput.prop('checked', true);
-            
-            // Optionally, you can remove the deleted form visually from the DOM if desired
-            $(this).closest('.location-inner-holder').remove();
-        });
-    });
-</script> {% endcomment %}

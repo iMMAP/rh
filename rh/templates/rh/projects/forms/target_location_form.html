@@ -1,5 +1,4 @@
-<!-- form_create.html -->
-<div class="target_location_form">
+<div class="target_location_form" data-location-prefix="{{ target_location_form.prefix }}">
     {{ target_location_form.id }}
     <div class="location-inner-holder">
         <div class="">
@@ -9,7 +8,7 @@
                 <span id="title-site_name-{{ target_location_form.prefix }}"></span>
             </span>
         </div>
-        <div id="{{ target_location_form.prefix }}-details">
+        <div id="{{ target_location_form.prefix }}" >
             
             {% if target_location_formset.can_delete %}
                     {% if target_location_form.instance.id %}
@@ -44,42 +43,6 @@
                         </div>
                     </div>
                 </div>
-                <!-- <div class="col">
-                    <div class="multiple-fields-row three-items">
-                        <div class="field-col">
-                            <div class="input-check-holder">
-                                {{ target_location_form.site_monitoring }}
-                                <label for="{{ target_location_form.site_monitoring.id_for_label }}">
-                                    <span class="input"></span>
-                                    <span class="text">Site Monitoring</span>
-                                </label>
-                            </div>
-                        </div>
-                        <div class="field-col">
-                        </div>
-                        <div class="field-col"></div>
-                    </div>
-                    <div class="multiple-fields-row three-items" id="{{ target_location_form.prefix }}_site_details">
-                        <div class="field-col" >
-                            <div class="input-field">
-                                <label for="{{target_location_form.site_name.id_for_label}}">Site name</label>
-                                <div class="input-holder">{{ target_location_form.site_name }}</div>
-                            </div>
-                        </div>
-                        <div class="field-col">
-                            <div class="input-field">
-                                <label for="{{target_location_form.site_lat.id_for_label}}">Site Latitude</label>
-                                <div class="input-holder">{{ target_location_form.site_lat }}</div>
-                            </div>
-                        </div>
-                        <div class="field-col">
-                            <div class="input-field">
-                                <label for="{{target_location_form.site_long.id_for_label}}">Site Longitude</label>
-                                <div class="input-holder">{{ target_location_form.site_long }}</div>
-                            </div>
-                        </div>
-                    </div>
-                </div> -->
             </div>
             <div class="disaggregation-block disaggregation-accordion">
                 <div class="inner-holder">

@@ -1,12 +1,10 @@
-// Constant for the duration of the slideToggle animations
-const TOGGLE_DURATION = 500;
-
 /**
 * Handle Add Dynamic Activity Form
 **/
 function addActivityForm(prefix, project, nextFormIndex) {
 	// Get the empty form template
-	const activityFormPrefix = prefix
+	const activityFormPrefix = `${prefix}-${nextFormIndex}`
+	const activityFormIndex = nextFormIndex
 	const projectID = project
 
 	$.ajax({
@@ -51,6 +49,8 @@ function addActivityForm(prefix, project, nextFormIndex) {
 					const IndicatorsID = "#" + indicatorsSelect.attr('id');
 					chainedm2m.init(activityTypeSelectID, IndicatorsUrl, IndicatorsID, '', '--------', true);
 					$(IndicatorsID).select2();
+					
+					addTargetLocationForm(activityFormPrefix, projectID, activityFormIndex);
 
 					// TODO: Handle the Locations dropdown for the new form as well.
 			
@@ -64,7 +64,7 @@ function addActivityForm(prefix, project, nextFormIndex) {
 	});
 
 	// Update the management form values
-	const managementForm = $(`input[name="${activityFormPrefix}-TOTAL_FORMS"]`);
+	const managementForm = $(`input[name="${prefix}-TOTAL_FORMS"]`);
 	const totalForms = parseInt(managementForm.val()) + 1;
 	managementForm.val(totalForms.toString());	
 }
@@ -74,8 +74,6 @@ function addActivityForm(prefix, project, nextFormIndex) {
 * Handle Add Dynamic Activity Form
 **/
 function addTargetLocationForm(prefix, project, nextFormIndex) {
-	// Get the empty form template
-	// const emptyFormTemplate = $(`#empty-target-location-form-template-${activityFormPrefix}`);
 	const activityFormPrefix = prefix
 	const projectID = project
 	$.ajax({
@@ -100,9 +98,10 @@ function addTargetLocationForm(prefix, project, nextFormIndex) {
 				// Replace the form prefix placeholder with the actual form index in the template HTML
 				const newFormHtml = emptyFormTemplate.replace(/__prefix__/g, formIdx);
 				
-				// Create a new form element and prepend it to the formset container
+				// Create a new form element and append it to the formset container
 				const newForm = $(document.createElement('div')).html(newFormHtml);
-				formsetContainer.append(newForm.children().first());
+				const addedForm = newForm.children().first()
+				formsetContainer.append(addedForm);
 
 				// Update the management form values
 				const managementForm = $(`input[name="target_locations_${formPrefix}-TOTAL_FORMS"]`);
@@ -113,6 +112,37 @@ function addTargetLocationForm(prefix, project, nextFormIndex) {
 				const parentDiv = formsetContainer.closest('.target_location-accordion-slide')
 				parentDiv.removeClass('js-acc-hidden')
 				parentDiv.closest('.inner-holder').addClass('target_location-accordion-active')
+
+				if (addedForm){
+					const locationPrefix = addedForm[0].dataset.locationPrefix
+
+					// Load Locations (districts and zones)
+					getLocations(locationPrefix, 'district', 'province');
+					getLocations(locationPrefix, 'zone', 'district');
+					
+					// Add Load Locations (districts and zones) event for new form
+					$(`#id_${locationPrefix}-province`).change(function () {
+						getLocations(locationPrefix, 'district', 'province', clearZone=true);
+					});
+					$(`#id_${locationPrefix}-district`).change(function () {
+						getLocations(locationPrefix, 'zone', 'district');
+					});
+					
+					// Update disaggregations based on indicators for the new added form 
+					const activityFormIndex = formPrefix.match(/activityplan_set-(\d+)/)[1] 
+					var $select2Event = $(`#id_activityplan_set-${activityFormIndex}-indicators`);
+					if ($select2Event){
+						let selectedIDs = $select2Event.select2('data').map(item => item.id);
+						handleDisaggregationForms($select2Event[0], selectedIDs)
+					}
+
+					// Update change event on indicators for the new added form 
+					$select2Event.on("change.select2", function (event) { 
+						let indicatorsSelect = event.currentTarget
+						let selectedIDs = $(indicatorsSelect).select2('data').map(item => item.id);
+						handleDisaggregationForms(indicatorsSelect, selectedIDs)
+					});
+				}
 			}
 		},
 		error: function (error) {
@@ -243,10 +273,12 @@ async function getLocations(locationPrefix, locationType, parentType, clearZone 
 }
 
 
-
+/**
+* Ready Function
+**/
 $(document).ready(function () {
 
-	// Initialize indicators with django select except the empty form
+	// Initialize indicators with django select except for the empty form
 	$("select[multiple]:not(#id_activityplan_set-__prefix__-indicators)").select2();
 
 	// Button to handle addition of new activity form.
@@ -273,13 +305,6 @@ $(document).ready(function () {
 		
 		// Call updateTitle for activity_domain manually as on page load as it is not triggered for
 		updateTitle(`activityplan_set-${formIndex}`, `id_activityplan_set-${formIndex}-activity_domain`);
-
-		// Update disaggregations based on indicators
-		/*$('.select2-selection--multiple').ready(function(){
-			debugger
-			let selectedIDs = $select2Event[0].dataset.value
-			handleDisaggregationForms($select2Event[0], JSON.parse(selectedIDs))
-		});*/
 		
 		// Update disaggregations based on indicators
 		var $select2Event = $(`#id_activityplan_set-${formIndex}-indicators`);
@@ -298,11 +323,9 @@ $(document).ready(function () {
 		
 		const locationPrefix = formElement.dataset.locationPrefix
 
-
 		// Initial load for districts and zones
 		getLocations(locationPrefix, 'district', 'province');
 		getLocations(locationPrefix, 'zone', 'district');
-		
 
 		$(`#id_${locationPrefix}-province`).change(function () {
 			getLocations(locationPrefix, 'district', 'province', clearZone=true);

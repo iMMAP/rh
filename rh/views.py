@@ -449,7 +449,6 @@ def create_project_activity_plan(request, project):
                                         'province') and target_location_form.cleaned_data.get('district'):
                                     target_location_instance = target_location_form.save()
 
-
                         if hasattr(target_location_form, 'disaggregation_formset'):
                             disaggregation_formset = target_location_form.disaggregation_formset
                             if disaggregation_formset.is_valid():
@@ -462,6 +461,8 @@ def create_project_activity_plan(request, project):
                                         disaggregation_instance = disaggregation_form.save(commit=False)
                                         disaggregation_instance.target_location = target_location_instance
                                         disaggregation_instance.save()
+
+            activity_plan_formset.save()
 
             if submit_type == 'next_step':
                 # Redirect to the project review page if "Next Step" is clicked
@@ -533,6 +534,10 @@ def get_disaggregations_forms(request):
     # Populate initial data with related disaggregations
     if related_disaggregations:
         for disaggregation in related_disaggregations:
+            # FIXME: Everytime disaggregation form is added, all existing
+            # disaggregation forms are refreshed which results in loss of 
+            # exisitng instances of disaggregation locations,
+            # Handle the existing disaggregation instances to avoid overitting. 
             initial_data.append({'disaggregation': disaggregation})
 
         # Create DisaggregationFormSet for each location prefix
@@ -580,9 +585,19 @@ def get_target_location_empty_form(request):
         prefix=f"target_locations_{activity_plan_formset.prefix}-{prefix_index}"
     )
 
+    # for target_location_form in target_location_formset.forms:
+        # Create a disaggregation formset for each target location form
+    target_location_form = target_location_formset.empty_form
+    disaggregation_formset = DisaggregationFormSet(
+        request.POST or None,
+        instance=target_location_form.instance,
+        prefix=f'disaggregation_{target_location_form.prefix}'
+    )
+    target_location_form.disaggregation_formset = disaggregation_formset
+
     # Prepare context for rendering the target location form template
     context = {
-        'target_location_form': target_location_formset.empty_form,
+        'target_location_form': target_location_form,
     }
 
     # Render the target location form template and generate HTML

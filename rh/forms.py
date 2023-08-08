@@ -156,7 +156,7 @@ TargetLocationFormSet = inlineformset_factory(
         ActivityPlan,
         TargetLocation,
         form=TargetLocationForm,
-        extra=1,  # Number of empty forms to display
+        extra=0,  # Number of empty forms to display
         can_delete=True  # Allow deletion of existing forms
     )
 
@@ -203,7 +203,7 @@ ActivityPlanFormSet = inlineformset_factory(
     Project,
     ActivityPlan,
     form=ActivityPlanForm,
-    extra=1,
+    extra=0,
     can_delete=True,
 )
 

@@ -548,7 +548,7 @@ def get_disaggregations_forms(request):
                 context = {
                     'disaggregation_form': disaggregation_form,
                 }
-                html = render_to_string('rh/projects/forms/disaggregation_form.html', context)
+                html = render_to_string('rh/projects/forms/disaggregation_empty_form.html', context)
             
                 if location_prefix in location_disaggregation_dict:
                     location_disaggregation_dict[location_prefix].append(html)
@@ -599,7 +599,7 @@ def get_target_location_empty_form(request):
     }
 
     # Render the target location form template and generate HTML
-    html = render_to_string('rh/projects/forms/target_location_form.html', context)
+    html = render_to_string('rh/projects/forms/target_location_empty_form.html', context)
 
     # Return JSON response containing the generated HTML
     return JsonResponse({'html': html})
@@ -646,6 +646,8 @@ def get_activity_empty_form(request):
     # Return JSON response containing the generated HTML
     return JsonResponse({'html': html})
 
+
+# TODO: Fix the functions related to the above activity planning changes
 
 @cache_control(no_store=True)
 @login_required

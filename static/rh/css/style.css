@@ -6519,3 +6519,19 @@ span.select2-container.select2-container--default.select2-container--open {
   font-weight: 600;
   line-height: 1.2;
 }
+
+.location_accordion_opener{
+  text-decoration: none;
+}
+
+.location_accordion_opener:hover{
+  text-decoration: none;
+}
+
+.disaggregation_accordion_opener{
+  text-decoration: none;
+}
+
+.disaggregation_accordion_opener:hover{
+  text-decoration: none;
+}

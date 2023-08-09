@@ -454,7 +454,7 @@ def create_project_activity_plan(request, project):
                             if disaggregation_formset.is_valid():
                                 for disaggregation_form in disaggregation_formset:
 
-                                    # FIXME Replace the exisiting records with the new records once
+                                    # FIXME: Replace the exisiting records with the new records once
                                     # the indicator is changed and the disaggregation forms are filled 
 
                                     if disaggregation_form.cleaned_data != {} and disaggregation_form.cleaned_data.get('target') > 0:
@@ -506,9 +506,10 @@ def create_project_activity_plan(request, project):
     return render(request, 'rh/projects/forms/project_activity_plan_form.html', context)
 
 
+@login_required
 def get_disaggregations_forms(request):
     """Get target location empty form"""
-    
+    # FIXME: Fix the long url, by post request?
     # Get selected indicators
     indicators = Indicator.objects.filter(pk__in=request.GET.getlist('indicators[]'))
 
@@ -565,9 +566,10 @@ def get_disaggregations_forms(request):
     return JsonResponse(location_disaggregation_dict)
 
 
+@login_required
 def get_target_location_empty_form(request):
     """Get an empty target location form for a project"""
-
+    # FIXME: Fix the long url, by post request?
     # Get the project object based on the provided project ID
     project = get_object_or_404(Project, pk=request.GET.get('project'))
 
@@ -607,9 +609,10 @@ def get_target_location_empty_form(request):
     return JsonResponse({'html': html})
 
 
+@login_required
 def get_activity_empty_form(request):
     """Get an empty activity form"""
-
+    # FIXME: Fix the long url, by post request?
     # Get the project object based on the provided project ID
     project = get_object_or_404(Project, pk=request.GET.get('project'))
 
@@ -646,30 +649,6 @@ def get_activity_empty_form(request):
 
     # Return JSON response containing the generated HTML
     return JsonResponse({'html': html})
-
-
-
-# @cache_control(no_store=True)
-# @login_required
-# def create_project_target_location(request, plan):
-#     activity_plan = get_object_or_404(ActivityPlan, pk=plan)
-#     project = activity_plan.project
-
-#     target_locations = activity_plan.targetlocation_set.all()
-
-#     TargetLocationsFormSet = modelformset_factory(TargetLocation, form=TargetLocationForm, extra=1)
-#     formset = TargetLocationsFormSet(request.POST or None, queryset=target_locations,
-#                                      form_kwargs={'activity_plan': plan, 'project': project})
-
-#     context = {
-#         # 'project': project,
-#         'formset': formset,
-#         # 'locations_planning': True, 
-#         # 'plans': plans,
-#         # 'locations': locations,
-#         # 'parent_page':parent_page
-#     }
-#     return render(request, "rh/projects/forms/form_create.html", context)
 
 
 @cache_control(no_store=True)

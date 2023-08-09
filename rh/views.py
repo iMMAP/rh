@@ -535,10 +535,6 @@ def get_disaggregations_forms(request):
     # Populate initial data with related disaggregations
     if related_disaggregations:
         for disaggregation in related_disaggregations:
-            # FIXME: Everytime disaggregation form is added, all existing
-            # disaggregation forms are refreshed which results in loss of 
-            # exisitng instances of disaggregation locations,
-            # Handle the existing disaggregation instances to avoid overitting. 
             initial_data.append({'disaggregation': disaggregation})
 
         # Create DisaggregationFormSet for each location prefix

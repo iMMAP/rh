@@ -120,7 +120,6 @@ function addTargetLocationForm(prefix, project, nextFormIndex) {
 
 				if (addedForm){
 					const locationPrefix = addedForm[0].dataset.locationPrefix
-
 					// Load Locations (districts and zones)
 					getLocations(locationPrefix, 'district', 'province');
 					getLocations(locationPrefix, 'zone', 'district');
@@ -138,14 +137,14 @@ function addTargetLocationForm(prefix, project, nextFormIndex) {
 					var $select2Event = $(`#id_activityplan_set-${activityFormIndex}-indicators`);
 					if ($select2Event){
 						let selectedIDs = $select2Event.select2('data').map(item => item.id);
-						handleDisaggregationForms($select2Event[0], selectedIDs)
+						handleDisaggregationForms($select2Event[0], selectedIDs, [locationPrefix])
 					}
 
 					// Update change event on indicators for the new added form 
 					$select2Event.on("change.select2", function (event) { 
 						let indicatorsSelect = event.currentTarget
 						let selectedIDs = $(indicatorsSelect).select2('data').map(item => item.id);
-						handleDisaggregationForms(indicatorsSelect, selectedIDs)
+						handleDisaggregationForms(indicatorsSelect, selectedIDs, [locationPrefix])
 					});
 				}
 			}
@@ -160,19 +159,19 @@ function addTargetLocationForm(prefix, project, nextFormIndex) {
 /**
 * Handle Add Dynamic Disaggregation Form
 **/
-function handleDisaggregationForms(indicatorsSelect, selectedIDs) {
+function handleDisaggregationForms(indicatorsSelect, selectedIDs, locationsPrefixes=[]) {
     // Extract activity index from indicatorsSelect name attribute
     const activityIndex = (indicatorsSelect.name).match(/activityplan_set-(\d+)/)[1];
-
     // Get all target location forms
     var targetLocationForms = $(`#Locations-activityplan_set-${activityIndex} .target_location_form`);
-
+	
     // Extract locations prefixes from target location forms
-    var locationsPrefixes = [];
-    targetLocationForms.each(function(index, element) {
-        var locationPrefix = $(element).data("location-prefix");
-        locationsPrefixes.push(locationPrefix);
-    });
+	if (locationsPrefixes.length === 0){
+		targetLocationForms.each(function(index, element) {
+			var locationPrefix = $(element).data("location-prefix");
+			locationsPrefixes.push(locationPrefix);
+		});
+	}
 
     // Make AJAX request to fetch disaggregation forms
     $.ajax({
@@ -349,10 +348,7 @@ $(document).ready(function () {
 
 	const $locationBlock = $(".target_location_form");
 	$locationBlock.each(function (formIndex, formElement) {
-		// Call updateTitle for activity_domain manually as on page load as it is not triggered for
-		// activity_domain
-		// updateLocationBlockTitles(formIndex);
-		
+
 		const locationPrefix = formElement.dataset.locationPrefix
 
 		// Initial load for districts and zones
@@ -366,7 +362,6 @@ $(document).ready(function () {
 			getLocations(locationPrefix, 'zone', 'district');
 		});
 		
-		// handleSiteMonitoring($(formElement), formIndex)
 	});
 
 });

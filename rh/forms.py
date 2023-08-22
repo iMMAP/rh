@@ -1,7 +1,5 @@
 from django import forms
 from django.forms.models import inlineformset_factory
-
-
 from django.urls import reverse_lazy
 
 from .models import *
@@ -101,6 +99,7 @@ class ProjectForm(forms.ModelForm):
     def __init__(self, *args, **kargs):
         super().__init__(*args, **kargs)
         user_profile = False
+        user_clusters = []
         if self.initial.get('user', False):
             if isinstance(self.initial.get('user'), int):
                 user_profile = User.objects.get(pk=self.initial.get('user')).profile
@@ -109,7 +108,8 @@ class ProjectForm(forms.ModelForm):
         if args and args[0].get('user', False):
             user_profile = User.objects.get(pk=args[0].get('user')).profile
 
-        user_clusters = list(user_profile.clusters.all().values_list('pk', flat=True))
+        if user_profile and user_profile.clusters:
+            user_clusters = list(user_profile.clusters.all().values_list('pk', flat=True))
 
         self.fields['clusters'].queryset = self.fields['clusters'].queryset.filter(
             id__in=user_clusters)
@@ -127,7 +127,6 @@ class TargetLocationForm(forms.ModelForm):
         widgets = {
             'country': forms.widgets.HiddenInput(),
             'active': forms.widgets.HiddenInput(),
-            # 'title': forms.widgets.HiddenInput(),
             'locations_group_by': forms.widgets.RadioSelect(),
             'district': forms.Select(
                 attrs={'locations-queries-url': reverse_lazy('ajax-load-locations')}),

@@ -4266,6 +4266,10 @@ body.filter-active {
   margin-bottom: 5px;
 }
 
+.location-title{
+  padding-left: 5px;
+}
+
 .activity-planning .review-block-top {
   display: flex;
   flex-wrap: wrap;

@@ -1,28 +1,27 @@
 RECORDS_PER_PAGE = 3
 
 from django.contrib import messages
-from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
+from django.db.models import Q
 from django.forms import modelformset_factory
 from django.http import HttpResponse, JsonResponse
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import get_object_or_404, redirect, render
 from django.template import loader
 from django.template.loader import render_to_string
+from django.urls import reverse
 from django.views.decorators.cache import cache_control
-# from django.db.models import Q
 
 from .filters import *
 from .forms import *
 from .models import Project
-
 
 # TODO: Add is_safe_url to redirects
 # from django.utils.http import is_safe_url
 
 
 #############################################
-############### Index Views #################
+#                Index Views 
 #############################################
 
 @cache_control(no_store=True)
@@ -57,7 +56,7 @@ def home(request):
 
 
 #############################################
-############## Project Views ################
+#               Project Views 
 #############################################
 
 @cache_control(no_store=True)
@@ -438,25 +437,21 @@ def create_project_activity_plan(request, project):
             for target_location_formset in target_location_formsets:
                 if target_location_formset.is_valid():
                     for target_location_form in target_location_formset:
-                        if target_location_form in target_location_formset.deleted_forms:
-                            # Handle deleted form
-                            # Example: Delete the corresponding object from the database
-                            if target_location_form.instance.id:
-                                target_location_form.instance.delete()
-                        else:
-                            if target_location_form.cleaned_data != {}:
-                                if target_location_form.cleaned_data.get(
-                                        'province') and target_location_form.cleaned_data.get('district'):
-                                    target_location_instance = target_location_form.save()
+                        if target_location_form.cleaned_data != {}:
+                            if target_location_form.cleaned_data.get(
+                                    'province') and target_location_form.cleaned_data.get('district'):
+
+                                target_location_instance = target_location_form.save()
 
                         if hasattr(target_location_form, 'disaggregation_formset'):
                             disaggregation_formset = target_location_form.disaggregation_formset
                             if disaggregation_formset.is_valid():
+
+                                # Delete the exisiting instances of the disaggregation location and create new
+                                # based on the indicator disaggregations
+                                target_location_form.instance.disaggregationlocation_set.all().delete()
+
                                 for disaggregation_form in disaggregation_formset:
-
-                                    # FIXME: Replace the exisiting records with the new records once
-                                    # the indicator is changed and the disaggregation forms are filled 
-
                                     if disaggregation_form.cleaned_data != {} and disaggregation_form.cleaned_data.get('target') > 0:
                                         disaggregation_instance = disaggregation_form.save(commit=False)
                                         disaggregation_instance.target_location = target_location_instance
@@ -525,7 +520,7 @@ def get_disaggregations_forms(request):
         unique_related_disaggregations.update(related_disaggregations)
 
     # Convert the set to a list
-    related_disaggregations = list(unique_related_disaggregations)
+    unique_related_disaggregations = list(unique_related_disaggregations)
 
     # Create a dictionary to hold disaggregation forms per location prefix
     location_disaggregation_dict = {}
@@ -533,13 +528,13 @@ def get_disaggregations_forms(request):
     initial_data = []
 
     # Populate initial data with related disaggregations
-    if related_disaggregations:
-        for disaggregation in related_disaggregations:
+    if unique_related_disaggregations:
+        for disaggregation in unique_related_disaggregations:
             initial_data.append({'disaggregation': disaggregation})
 
         # Create DisaggregationFormSet for each location prefix
         for location_prefix in locations_prefix:
-            DisaggregationFormSet.extra = len(related_disaggregations)
+            DisaggregationFormSet.extra = len(unique_related_disaggregations)
             disaggregation_formset = DisaggregationFormSet(prefix=f'disaggregation_{location_prefix}',
                                                             initial=initial_data)
 

@@ -13,6 +13,26 @@ admin.site.register(TransferCategory)
 admin.site.register(GrantType)
 admin.site.register(UnitType)
 admin.site.register(ReportType)
+from django.contrib.admin.widgets import FilteredSelectMultiple
+from django import forms
+
+
+
+class ActivityPlanModelAdminForm(forms.ModelForm):
+    class Meta:
+        model = ActivityPlan
+        fields = '__all__'
+        widgets = {
+            'indicators': FilteredSelectMultiple('Indicators', False),
+        }
+
+class DisseggregationModelAdminForm(forms.ModelForm):
+    class Meta:
+        model = Disaggregation
+        fields = '__all__'
+        widgets = {
+            'indicators': FilteredSelectMultiple('Indicators', False),
+        }
 
 
 class ClusterAdmin(admin.ModelAdmin):
@@ -81,6 +101,7 @@ admin.site.register(BeneficiaryType, BeneficiaryTypeAdmin)
 class DisaggregationAdmin(admin.ModelAdmin):
     list_display = ('name','indicators_count','clusters_count')
     search_fields = ('code', 'name',)
+    form = DisseggregationModelAdminForm
     # list_filter = ('cluster', 'country')
     
     def indicators_count(self, obj):
@@ -89,6 +110,8 @@ class DisaggregationAdmin(admin.ModelAdmin):
     def clusters_count(self, obj):
         return obj.clusters.count()
 admin.site.register(Disaggregation, DisaggregationAdmin)
+
+admin.site.register(DisaggregationLocation)
 
 
 class DisaggregationInline(admin.TabularInline):
@@ -145,14 +168,16 @@ admin.site.register(Project, ProjectAdmin)
 
 
 class ActivityPlanAdmin(admin.ModelAdmin):
-    list_display = ('title', 'project', 'households', 'beneficiary', 'beneficiary_category', 'state', 'active')
-    search_fields = ('title', 'state', 'active', 'project__title', 'households')
+    list_display = ('title', 'project', 'beneficiary', 'beneficiary_category', 'state', 'active')
+    search_fields = ('title', 'state', 'active', 'project__title')
     list_filter = ('state', 'active', 'project__code')
+    form = ActivityPlanModelAdminForm
 admin.site.register(ActivityPlan, ActivityPlanAdmin)
 
 
+
 class TargetLocationAdmin(admin.ModelAdmin):
-    list_display = ('title', 'site_name', 'project', 'country', 'province', 'district', 'zone', 'state', 'active')
+    list_display = ('title', 'site_name', 'project', 'activity_plan', 'country', 'province', 'district', 'zone', 'state', 'active')
     search_fields = ('title', 'project__title', 'state', 'active')
     list_filter = ('state', 'active', 'project__code')
 

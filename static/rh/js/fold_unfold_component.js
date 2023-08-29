@@ -5,7 +5,7 @@ $(function () {
 	// Loop through all elements with the class 'js-collapse-expand'
 	// and initialize them as unfolded using the 'foldUnfoldDetails' function.
 	$(".js-collapse-expand").each(function (formIndex, formElement) {
-		foldUnfoldDetails(`form-${formIndex}`, false);
+		foldUnfoldDetails(`activityplan_set-${formIndex}`, false);
 	});
 
 	// Attach click event handler to all elements with class 'collapse-details'
@@ -21,7 +21,7 @@ $(function () {
 		e.preventDefault();
 		const allCollapsed = !$("#fold-icon-down").hasClass("hidden");
 		$(".js-collapse-expand").each(function (formIndex, formElement) {
-			foldUnfoldDetails(`form-${formIndex}`, allCollapsed);
+			foldUnfoldDetails(`activityplan_set-${formIndex}`, allCollapsed);
 		});
 		$("#fold-icon-up, #fold-icon-down, #all-fold, #all-unfold").toggleClass(
 			"hidden"

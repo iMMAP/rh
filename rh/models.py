@@ -317,19 +317,6 @@ class Indicator(models.Model):
         verbose_name_plural = "Indicators"
 
 
-class Disaggregation(models.Model):
-    clusters = models.ManyToManyField(Cluster)
-    indicators = models.ManyToManyField(Indicator)
-
-    name = models.CharField(max_length=NAME_MAX_LENGTH)
-    type = models.CharField(max_length=NAME_MAX_LENGTH)
-
-    updated = models.DateTimeField(auto_now=True)
-    created = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return self.name
-
 # ##############################################
 # ############## Project Planning ##############
 # ##############################################
@@ -441,45 +428,19 @@ class ActivityPlan(models.Model):
     )
 
     # Facility Monitoring
-    facility_monitoring = models.BooleanField(default=False)
-    facility_name = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True, )
-    facility_id = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True, )
-    facility_type = models.ForeignKey(FacilitySiteType, on_delete=models.SET_NULL, null=True, blank=True)
-    facility_lat = models.CharField(max_length=NAME_MAX_LENGTH, null=True, blank=True)
-    facility_long = models.CharField(max_length=NAME_MAX_LENGTH, null=True, blank=True)
+    # facility_monitoring = models.BooleanField(default=False)
+    # facility_name = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True, )
+    # facility_id = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True, )
+    # facility_type = models.ForeignKey(FacilitySiteType, on_delete=models.SET_NULL, null=True, blank=True)
+    # facility_lat = models.CharField(max_length=NAME_MAX_LENGTH, null=True, blank=True)
+    # facility_long = models.CharField(max_length=NAME_MAX_LENGTH, null=True, blank=True)
 
-    age_desegregation = models.BooleanField(default=False)
-    female_0_5 = models.IntegerField(default=0, blank=True, null=True)
-    female_6_12 = models.IntegerField(default=0, blank=True, null=True)
-    female_12_17 = models.IntegerField(default=0, blank=True, null=True)
-    female_18 = models.IntegerField(default=0, blank=True, null=True)
-    female_total = models.IntegerField(default=0, blank=True, null=True)
-
-    male_0_5 = models.IntegerField(default=0, blank=True, null=True)
-    male_6_12 = models.IntegerField(default=0, blank=True, null=True)
-    male_12_17 = models.IntegerField(default=0, blank=True, null=True)
-    male_18 = models.IntegerField(default=0, blank=True, null=True)
-    male_total = models.IntegerField(default=0, blank=True, null=True)
-
-    other_0_5 = models.IntegerField(default=0, blank=True, null=True)
-    other_6_12 = models.IntegerField(default=0, blank=True, null=True)
-    other_12_17 = models.IntegerField(default=0, blank=True, null=True)
-    other_18 = models.IntegerField(default=0, blank=True, null=True)
-    other_total = models.IntegerField(default=0, blank=True, null=True)
-
-    total_0_5 = models.IntegerField(default=0, blank=True, null=True)
-    total_6_12 = models.IntegerField(default=0, blank=True, null=True)
-    total_12_17 = models.IntegerField(default=0, blank=True, null=True)
-    total_18 = models.IntegerField(blank=True, null=True)
-
-    total = models.IntegerField(default=0, blank=True, null=True)
-
-    households = models.IntegerField(default=0, blank=True, null=True)
+    # households = models.IntegerField(default=0, blank=True, null=True)
     description = models.TextField(blank=True, null=True)
-    old_id = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
+    # old_id = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
 
     def __str__(self):
-        return f"{self.project}"
+        return f"{self.title}"
 
     class Meta:
         verbose_name = 'Activity Plan'
@@ -500,6 +461,8 @@ class TargetLocation(models.Model):
         ('district', 'District'),
     ]
     project = models.ForeignKey(Project, on_delete=models.CASCADE, null=True, blank=True)
+    activity_plan = models.ForeignKey(ActivityPlan, on_delete=models.SET_NULL, null=True, blank=True)
+    
     active = models.BooleanField(default=True)
     state = models.CharField(
         max_length=15,
@@ -540,6 +503,30 @@ class TargetLocation(models.Model):
     class Meta:
         verbose_name = 'Target Location'
         verbose_name_plural = "Target Locations"
+
+
+class Disaggregation(models.Model):
+    clusters = models.ManyToManyField(Cluster)
+    indicators = models.ManyToManyField(Indicator)
+
+    name = models.CharField(max_length=NAME_MAX_LENGTH)
+    type = models.CharField(max_length=NAME_MAX_LENGTH)
+
+    updated = models.DateTimeField(auto_now=True)
+    created = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.name
+
+
+class DisaggregationLocation(models.Model):
+    target_location = models.ForeignKey(TargetLocation, on_delete=models.CASCADE, null=True, blank=True)
+    disaggregation = models.ForeignKey(Disaggregation, on_delete=models.CASCADE, null=True, blank=True)
+    
+    target = models.IntegerField(default=0, null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.disaggregation.name}" 
 
 
 # ##############################################

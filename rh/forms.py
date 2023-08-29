@@ -1,4 +1,5 @@
 from django import forms
+from django.forms.models import inlineformset_factory
 from django.urls import reverse_lazy
 
 from .models import *
@@ -98,6 +99,7 @@ class ProjectForm(forms.ModelForm):
     def __init__(self, *args, **kargs):
         super().__init__(*args, **kargs)
         user_profile = False
+        user_clusters = []
         if self.initial.get('user', False):
             if isinstance(self.initial.get('user'), int):
                 user_profile = User.objects.get(pk=self.initial.get('user')).profile
@@ -106,7 +108,8 @@ class ProjectForm(forms.ModelForm):
         if args and args[0].get('user', False):
             user_profile = User.objects.get(pk=args[0].get('user')).profile
 
-        user_clusters = list(user_profile.clusters.all().values_list('pk', flat=True))
+        if user_profile and user_profile.clusters:
+            user_clusters = list(user_profile.clusters.all().values_list('pk', flat=True))
 
         self.fields['clusters'].queryset = self.fields['clusters'].queryset.filter(
             id__in=user_clusters)
@@ -115,6 +118,53 @@ class ProjectForm(forms.ModelForm):
         self.fields['implementing_partners'].queryset = Organization.objects.order_by('name')
         self.fields['programme_partners'].queryset = Organization.objects.order_by('name')
         self.fields['user'].queryset = User.objects.order_by('username')
+
+
+class TargetLocationForm(forms.ModelForm):
+    class Meta:
+        model = TargetLocation
+        fields = "__all__"
+        widgets = {
+            'country': forms.widgets.HiddenInput(),
+            'active': forms.widgets.HiddenInput(),
+            'locations_group_by': forms.widgets.RadioSelect(),
+            'district': forms.Select(
+                attrs={'locations-queries-url': reverse_lazy('ajax-load-locations')}),
+            'zone': forms.Select(
+                attrs={'locations-queries-url': reverse_lazy('ajax-load-locations')}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['save'] = forms.BooleanField(required=False, initial=False,
+                                                 widget=forms.HiddenInput(attrs={'name': self.prefix + '-save'}))
+        self.fields['province'].queryset = self.fields['province'].queryset.filter(type='Province')
+        self.fields['district'].queryset = self.fields['district'].queryset.filter(type='District')
+        self.fields['zone'].queryset = self.fields['zone'].queryset.filter(type='Zone')
+        self.fields['province'].widget.attrs.update({'data-form-prefix': f"{kwargs.get('prefix')}",
+                                                     'onchange': f"updateLocationTitle('{kwargs.get('prefix')}', 'id_{kwargs.get('prefix')}-province');",
+                                                     })
+        self.fields['district'].widget.attrs.update(
+            {'onchange': f"updateLocationTitle('{kwargs.get('prefix')}', 'id_{kwargs.get('prefix')}-district');",
+             'locations-queries-url': reverse_lazy('ajax-load-locations')})
+        self.fields['site_name'].widget.attrs.update(
+            {'onchange': f"updateLocationTitle('{kwargs.get('prefix')}', 'id_{kwargs.get('prefix')}-site_name');"})
+
+
+TargetLocationFormSet = inlineformset_factory(
+        ActivityPlan,
+        TargetLocation,
+        form=TargetLocationForm,
+        extra=0,  # Number of empty forms to display
+        can_delete=True  # Allow deletion of existing forms
+    )
+
+DisaggregationFormSet = inlineformset_factory(
+        TargetLocation,
+        DisaggregationLocation,
+        fields="__all__",
+        extra=0,  # Number of empty forms to display
+    )
 
 
 class ActivityPlanForm(forms.ModelForm):
@@ -138,51 +188,23 @@ class ActivityPlanForm(forms.ModelForm):
         self.fields['activity_domain'].queryset = self.fields['activity_domain'].queryset.filter(
             pk__in=activity_domains)
         self.fields['activity_domain'].widget.attrs.update({'data-form-prefix': f"{kwargs.get('prefix')}",
-                                                            'onchange': f"updateTitle('{kwargs.get('prefix')}', 'id_{kwargs.get('prefix')}-activity_domain');",
+                                                            'onchange': f"updateActivityTitle('{kwargs.get('prefix')}', 'id_{kwargs.get('prefix')}-activity_domain');",
                                                             })
         self.fields['activity_type'].widget.attrs.update(
-            {'onchange': f"updateTitle('{kwargs.get('prefix')}', 'id_{kwargs.get('prefix')}-activity_type');"})
+            {'onchange': f"updateActivityTitle('{kwargs.get('prefix')}', 'id_{kwargs.get('prefix')}-activity_type');"})
         self.fields['activity_detail'].widget.attrs.update(
-            {'onchange': f"updateTitle('{kwargs.get('prefix')}', 'id_{kwargs.get('prefix')}-activity_detail');"})
+            {'onchange': f"updateActivityTitle('{kwargs.get('prefix')}', 'id_{kwargs.get('prefix')}-activity_detail');"})
         self.fields['indicators'].widget.attrs.update({'style': 'height: 128px;'})
-        self.fields['facility_type'].queryset = self.fields['facility_type'].queryset.filter(cluster__in=cluster_ids)
+        # self.fields['facility_type'].queryset = self.fields['facility_type'].queryset.filter(cluster__in=cluster_ids)
 
 
-class TargetLocationForm(forms.ModelForm):
-    class Meta:
-        model = TargetLocation
-        fields = "__all__"
-        widgets = {
-            'country': forms.widgets.HiddenInput(),
-            'active': forms.widgets.HiddenInput(),
-            # 'title': forms.widgets.HiddenInput(),
-            'locations_group_by': forms.widgets.RadioSelect(),
-            'district': forms.Select(
-                attrs={'locations-queries-url': reverse_lazy('ajax-load-locations')}),
-            'zone': forms.Select(
-                attrs={'locations-queries-url': reverse_lazy('ajax-load-locations')}),
-        }
-
-    def __init__(self, *args, project, **kwargs):
-        super().__init__(*args, **kwargs)
-        implementing_partners = project.implementing_partners.all()
-        implementing_partner_ids = list(implementing_partners.values_list('pk', flat=True))
-
-        self.fields['save'] = forms.BooleanField(required=False, initial=False,
-                                                 widget=forms.HiddenInput(attrs={'name': self.prefix + '-save'}))
-        self.fields['province'].queryset = self.fields['province'].queryset.filter(type='Province')
-        self.fields['district'].queryset = self.fields['district'].queryset.filter(type='District')
-        self.fields['zone'].queryset = self.fields['zone'].queryset.filter(type='Zone')
-        self.fields['implementing_partner'].queryset = self.fields['implementing_partner'].queryset.filter(
-            pk__in=implementing_partner_ids)
-        self.fields['province'].widget.attrs.update({'data-form-prefix': f"{kwargs.get('prefix')}",
-                                                     'onchange': f"updateTitle('{kwargs.get('prefix')}', 'id_{kwargs.get('prefix')}-province');",
-                                                     })
-        self.fields['district'].widget.attrs.update(
-            {'onchange': f"updateTitle('{kwargs.get('prefix')}', 'id_{kwargs.get('prefix')}-district');",
-             'locations-queries-url': reverse_lazy('ajax-load-locations')})
-        self.fields['site_name'].widget.attrs.update(
-            {'onchange': f"updateTitle('{kwargs.get('prefix')}', 'id_{kwargs.get('prefix')}-site_name');"})
+ActivityPlanFormSet = inlineformset_factory(
+    Project,
+    ActivityPlan,
+    form=ActivityPlanForm,
+    extra=0,
+    can_delete=True,
+)
 
 
 class BudgetProgressForm(forms.ModelForm):

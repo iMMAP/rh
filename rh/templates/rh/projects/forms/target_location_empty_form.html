@@ -1,0 +1,69 @@
+<div class="target_location_form" data-location-prefix="{{ target_location_form.prefix }}">
+    {{ target_location_form.id }}
+    <div class="location-inner-holder">
+        <div class="block-top">
+            <span class="title">
+                <span id="title-province-{{ target_location_form.prefix }}"></span>
+                <span class="location-title" id="title-district-{{ target_location_form.prefix }}"></span>
+                <span class="location-title" id="title-site_name-{{ target_location_form.prefix }}"></span>
+            </span>
+        </div>
+        <div id="{{ target_location_form.prefix }}" >
+            
+            {% comment %} {% if target_location_formset.can_delete %}
+                {% if target_location_form.instance.id %}
+                    <div class="field">
+                        <label>Delete:</label>
+                        {{ target_location_form.DELETE }}
+                    </div>
+                {% endif %}
+            {% endif %} {% endcomment %}
+            
+            <div class="row">
+                
+                <div class="col">
+                    <div class="multiple-fields-row three-items">
+                        <div class="field-col">
+                            <div class="select-field is-required">
+                                <label for="{{target_location_form.province.id_for_label}}" >Province / State</label>
+                                {{ target_location_form.province }}
+                            </div>
+                        </div>
+                        <div class="field-col">
+                            <div class="input-field is-required">
+                                <label for="{{target_location_form.district.id_for_label}}">District</label>
+                                {{ target_location_form.district }}
+                            </div>
+                        </div>
+                        <div class="field-col">
+                            <div class="input-field">
+                                <label for="{{target_location_form.zone.id_for_label}}">Ward / Zone</label>
+                                {{ target_location_form.zone }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="disaggregation-block disaggregation-accordion">
+                <div class="inner-holder">
+                  <a href="#" class="block-top disaggregation_accordion_opener">
+                    <div class="location-block-holder">
+                        <div class="block-top">
+                            Disaggregations
+                        </div>
+                    </div>
+                  </a>
+                  <div class="disaggregation_accordion_slide">
+                        {{ target_location_form.disaggregation_formset.management_form }}
+                        {% for disaggregation_form in target_location_form.disaggregation_formset %}
+                            {{ disaggregation_form.id }}
+                            {% include "rh/projects/forms/disaggregation_empty_form.html" %}
+                        {% endfor %}
+                  </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</div>
+

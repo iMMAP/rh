@@ -1,24 +1,24 @@
 <div class="target_location_form" data-location-prefix="{{ target_location_form.prefix }}">
     {{ target_location_form.id }}
     <div class="location-inner-holder">
-        <div class="">
+        <div class="block-top">
             <span class="title">
                 <span id="title-province-{{ target_location_form.prefix }}"></span>
-                <span id="title-district-{{ target_location_form.prefix }}"></span>
-                <span id="title-site_name-{{ target_location_form.prefix }}"></span>
+                <span class="location-title" id="title-district-{{ target_location_form.prefix }}"></span>
+                <span class="location-title" id="title-site_name-{{ target_location_form.prefix }}"></span>
             </span>
         </div>
         <div id="{{ target_location_form.prefix }}" >
             
-            {% if target_location_formset.can_delete %}
-                    {% if target_location_form.instance.id %}
-                        <!-- If the form instance already exists, include a checkbox for deletion -->
-                        <div class="field">
-                            <label>Delete:</label>
-                            {{ target_location_form.DELETE }}
-                        </div>
-                    {% endif %}
+            {% comment %} {% if target_location_formset.can_delete %}
+                {% if target_location_form.instance.id %}
+                    <div class="field">
+                        <label>Delete:</label>
+                        {{ target_location_form.DELETE }}
+                    </div>
                 {% endif %}
+            {% endif %} {% endcomment %}
+            
             <div class="row">
                 
                 <div class="col">

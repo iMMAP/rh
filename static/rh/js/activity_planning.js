@@ -223,7 +223,7 @@ function handleDisaggregationForms(indicatorsSelect, selectedIDs, locationsPrefi
 /**
 Updates the titles of the activity form sections based on the selected values of the input element.
 **/
-function updateTitle(formPrefix, inputElementId) {
+function updateActivityTitle(formPrefix, inputElementId) {
 	const selectedValue = $("#" + inputElementId).val();
 	const selectedText = $("#" + inputElementId + " option:selected").text();
 
@@ -242,6 +242,49 @@ function updateTitle(formPrefix, inputElementId) {
 			}
 		}
 	}
+}
+
+
+/**
+Updates the titles of the activity form sections based on the selected values of the input element.
+@param {string} activityFormPrefix - The prefix of the activity form sections.
+@param {string} locationInputElementId - The ID of the input element that triggered the update.
+**/
+function updateLocationTitle(locationPrefix, locationInputElementId) {
+	const selectedLocationValue = $("#" + locationInputElementId).val();
+	const selectedLocationText = $("#" + locationInputElementId + " option:selected").text();
+	
+	const locationTitleElements = {
+		province: $("#title-province-" + locationPrefix),
+		district: $("#title-district-" + locationPrefix),
+		// TODO: Update for site and zone
+		// site_name: $("#title-site_name-" + locationPrefix),
+	};
+
+	for (const [key, value] of Object.entries(locationTitleElements)) {
+		if (locationInputElementId.includes(key)) {
+			if (key === "district") {
+				value.text(selectedLocationValue ? selectedLocationText : "");
+			} else {
+				value.text(selectedLocationValue ? selectedLocationText + "," : "");
+			}
+		}
+	}
+}
+
+
+/**
+* Update the titles for locations in each activity
+@param {string} locationPrefix - The prefix of the location form sections.
+**/
+function updateLocationBlockTitles(locationPrefix) {
+
+	// id_target_locations_activityplan_set-0-0-province
+	updateLocationTitle(locationPrefix, `id_${locationPrefix}-province`);
+	updateLocationTitle(locationPrefix, `id_${locationPrefix}-district`);
+
+	// TODO: Update for site and zone
+	// updateLocationTitle(locationPrefix, `id_${locationPrefix}-site_name`);
 }
 
 
@@ -334,8 +377,8 @@ $(document).ready(function () {
 	let $activityBlockHolder = $(".activity_form");
 	$activityBlockHolder.each(function (formIndex, formElement) {
 		
-		// Call updateTitle for activity_domain manually as on page load as it is not triggered for
-		updateTitle(`activityplan_set-${formIndex}`, `id_activityplan_set-${formIndex}-activity_domain`);
+		// Call updateActivityTitle for activity_domain manually as on page load as it is not triggered for
+		updateActivityTitle(`activityplan_set-${formIndex}`, `id_activityplan_set-${formIndex}-activity_domain`);
 		
 		// Update disaggregations based on indicators
 		var $select2Event = $(`#id_activityplan_set-${formIndex}-indicators`);
@@ -350,6 +393,9 @@ $(document).ready(function () {
 	$locationBlock.each(function (formIndex, formElement) {
 
 		const locationPrefix = formElement.dataset.locationPrefix
+
+		// Update the Target Locations Titles
+		updateLocationBlockTitles(locationPrefix);
 
 		// Initial load for districts and zones
 		getLocations(locationPrefix, 'district', 'province');

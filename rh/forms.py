@@ -142,13 +142,13 @@ class TargetLocationForm(forms.ModelForm):
         self.fields['district'].queryset = self.fields['district'].queryset.filter(type='District')
         self.fields['zone'].queryset = self.fields['zone'].queryset.filter(type='Zone')
         self.fields['province'].widget.attrs.update({'data-form-prefix': f"{kwargs.get('prefix')}",
-                                                     'onchange': f"updateTitle('{kwargs.get('prefix')}', 'id_{kwargs.get('prefix')}-province');",
+                                                     'onchange': f"updateLocationTitle('{kwargs.get('prefix')}', 'id_{kwargs.get('prefix')}-province');",
                                                      })
         self.fields['district'].widget.attrs.update(
-            {'onchange': f"updateTitle('{kwargs.get('prefix')}', 'id_{kwargs.get('prefix')}-district');",
+            {'onchange': f"updateLocationTitle('{kwargs.get('prefix')}', 'id_{kwargs.get('prefix')}-district');",
              'locations-queries-url': reverse_lazy('ajax-load-locations')})
         self.fields['site_name'].widget.attrs.update(
-            {'onchange': f"updateTitle('{kwargs.get('prefix')}', 'id_{kwargs.get('prefix')}-site_name');"})
+            {'onchange': f"updateLocationTitle('{kwargs.get('prefix')}', 'id_{kwargs.get('prefix')}-site_name');"})
 
 
 TargetLocationFormSet = inlineformset_factory(
@@ -188,12 +188,12 @@ class ActivityPlanForm(forms.ModelForm):
         self.fields['activity_domain'].queryset = self.fields['activity_domain'].queryset.filter(
             pk__in=activity_domains)
         self.fields['activity_domain'].widget.attrs.update({'data-form-prefix': f"{kwargs.get('prefix')}",
-                                                            'onchange': f"updateTitle('{kwargs.get('prefix')}', 'id_{kwargs.get('prefix')}-activity_domain');",
+                                                            'onchange': f"updateActivityTitle('{kwargs.get('prefix')}', 'id_{kwargs.get('prefix')}-activity_domain');",
                                                             })
         self.fields['activity_type'].widget.attrs.update(
-            {'onchange': f"updateTitle('{kwargs.get('prefix')}', 'id_{kwargs.get('prefix')}-activity_type');"})
+            {'onchange': f"updateActivityTitle('{kwargs.get('prefix')}', 'id_{kwargs.get('prefix')}-activity_type');"})
         self.fields['activity_detail'].widget.attrs.update(
-            {'onchange': f"updateTitle('{kwargs.get('prefix')}', 'id_{kwargs.get('prefix')}-activity_detail');"})
+            {'onchange': f"updateActivityTitle('{kwargs.get('prefix')}', 'id_{kwargs.get('prefix')}-activity_detail');"})
         self.fields['indicators'].widget.attrs.update({'style': 'height: 128px;'})
         # self.fields['facility_type'].queryset = self.fields['facility_type'].queryset.filter(cluster__in=cluster_ids)
 

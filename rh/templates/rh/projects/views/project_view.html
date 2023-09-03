@@ -123,7 +123,7 @@
                         data-url="{% url 'copy_project' project.pk %}"
                         data-return-url="{% url parent_page %}"
                         data-type="copy"
-                        data-project="{{ project.title }}"
+                        data-record-name="project"
                         class="btn btn-gray show_confirm"><span class="btn-text">Duplicate</span><span class="icon-copy-outline"></span>
                     </a>
                     {% comment %} <a href="#" class="btn btn-gray"><span class="btn-text">Upload Document</span><span class="icon-upload"></span></a> {% endcomment %}
@@ -132,7 +132,7 @@
                            data-url="{% url 'archive_project' project.pk %}"
                            data-return-url="{% url parent_page %}"
                            data-type="archive"
-                           data-project="{{ project.title }}"
+                           data-record-name="project"
                            class="btn btn-gray show_confirm"
                            title="Archive this project!">
                             <span class="btn-text">Archive</span>
@@ -149,7 +149,7 @@
                            data-url="{% url 'unarchive_project' project.pk %}"
                            data-return-url="{% url 'draft_projects' %}"
                            data-type="unarchive"
-                           data-project="{{ project.title }}"
+                           data-record-name="project"
                            class="btn btn-gray show_confirm"
                            title="Unarchive this project!">
                             <span class="btn-text">Unarchive</span>
@@ -171,7 +171,7 @@
                         data-url="{% url 'delete_project' project.pk %}"
                         data-return-url="{% url parent_page %}"
                         data-type="delete"
-                        data-project="{{ project.title }}"
+                        data-record-name="project"
                         class="btn btn-gray show_confirm"><span class="btn-text">Delete</span><span class="icon-trashbin-outline"></span>
                     </a>
                 </div>

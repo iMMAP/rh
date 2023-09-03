@@ -591,6 +591,7 @@ def get_target_location_empty_form(request):
     # Prepare context for rendering the target location form template
     context = {
         'target_location_form': target_location_form,
+        'project': project,
     }
 
     # Render the target location form template and generate HTML
@@ -867,6 +868,7 @@ def copy_target_location(request, project, location):
 @cache_control(no_store=True)
 @login_required
 def delete_target_location(request, pk):
+    """Delete the target location"""
     target_location = get_object_or_404(TargetLocation, pk=pk)
     project = target_location.project
     if target_location:

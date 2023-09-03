@@ -461,7 +461,7 @@ class TargetLocation(models.Model):
         ('district', 'District'),
     ]
     project = models.ForeignKey(Project, on_delete=models.CASCADE, null=True, blank=True)
-    activity_plan = models.ForeignKey(ActivityPlan, on_delete=models.SET_NULL, null=True, blank=True)
+    activity_plan = models.ForeignKey(ActivityPlan, on_delete=models.CASCADE, null=True, blank=True)
     
     active = models.BooleanField(default=True)
     state = models.CharField(

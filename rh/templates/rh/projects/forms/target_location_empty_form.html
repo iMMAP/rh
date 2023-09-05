@@ -4,6 +4,13 @@
         <div class="block-activity mb-3">
             <div>
                 <button href="#"
+                    data-url="{% url 'copy_location' project=project.pk location=target_location_form.instance.pk  %}"
+                    data-return-url="{% url 'create_project_activity_plan' project=project.pk %}"
+                    data-type="copy"
+                    data-record-name="target location"
+                    class="btn btn-gray-outline show_confirm"><span class="btn-text">Duplicate</span><span class="icon-copy-outline"></span>
+                </button>
+                <button href="#"
                     data-url="{% url 'delete_location' target_location_form.instance.pk %}"
                     data-return-url="{% url 'create_project_activity_plan' project=project.pk %}"
                     data-type="delete"

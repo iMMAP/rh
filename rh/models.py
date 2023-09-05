@@ -520,6 +520,7 @@ class Disaggregation(models.Model):
 
 
 class DisaggregationLocation(models.Model):
+    active = models.BooleanField(default=True)
     target_location = models.ForeignKey(TargetLocation, on_delete=models.CASCADE, null=True, blank=True)
     disaggregation = models.ForeignKey(Disaggregation, on_delete=models.CASCADE, null=True, blank=True)
     

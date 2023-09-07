@@ -6,12 +6,18 @@ function addActivityForm(prefix, project, nextFormIndex) {
 	const activityFormPrefix = `${prefix}-${nextFormIndex}`
 	const activityFormIndex = nextFormIndex
 	const projectID = project
+	
+	// Use JavaScript Cookie library
+	const csrftoken = Cookies.get('csrftoken');
 
 	$.ajax({
 		url: '/ajax/get_activity_empty_form/',
 		data: {'project': projectID, 'prefix_index': nextFormIndex},
-		type: 'GET',
+		type: 'POST',
 		dataType: 'json',
+		beforeSend: function(xhr, settings) {
+			xhr.setRequestHeader("X-CSRFToken", csrftoken);
+		},
 		success: function (data) {
 			if (data.html) {
 
@@ -74,11 +80,18 @@ function addActivityForm(prefix, project, nextFormIndex) {
 function addTargetLocationForm(prefix, project, nextFormIndex) {
 	const activityFormPrefix = prefix
 	const projectID = project
+
+	// Use JavaScript Cookie library
+	const csrftoken = Cookies.get('csrftoken');
+
 	$.ajax({
 		url: '/ajax/get_target_location_empty_form/',
 		data: {'project': projectID, 'prefix_index': nextFormIndex},
-		type: 'GET',
+		type: 'POST',
 		dataType: 'json',
+		beforeSend: function(xhr, settings) {
+			xhr.setRequestHeader("X-CSRFToken", csrftoken);
+		},
 		success: function (data) {
 			if (data.html) {
 
@@ -173,12 +186,18 @@ function handleDisaggregationForms(indicatorsSelect, selectedIDs, locationsPrefi
 		});
 	}
 
+	// Use JavaScript Cookie library
+	const csrftoken = Cookies.get('csrftoken');
+
     // Make AJAX request to fetch disaggregation forms
     $.ajax({
         url: '/ajax/get_disaggregations_forms/',
         data: {'indicators': selectedIDs, 'locations_prefixes': locationsPrefixes},
-        type: 'GET',
+        type: 'POST',
         dataType: 'json',
+		beforeSend: function(xhr, settings) {
+			xhr.setRequestHeader("X-CSRFToken", csrftoken);
+		},
         success: function (data) {
             if (data) {
                 $.each(locationsPrefixes, function(locationIndex) {
@@ -307,14 +326,21 @@ async function getLocations(locationPrefix, locationType, parentType, clearZone 
     const selectedLocations = $(`select#id_${locationPrefix}-${locationType}`).val();
 
     try {
+
+		// Use JavaScript Cookie library
+		const csrftoken = Cookies.get('csrftoken');
+
         // Make an AJAX request to fetch locations data
         const response = await $.ajax({
-            type: "GET",
+            type: "POST",
             url: locationUrl,
             data: {
                 parents: parentIds,
                 listed_locations: locationIds,
             },
+			beforeSend: function(xhr, settings) {
+				xhr.setRequestHeader("X-CSRFToken", csrftoken);
+			},
         });
 
         // Clear zone if needed

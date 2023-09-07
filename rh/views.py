@@ -62,8 +62,7 @@ def home(request):
 @cache_control(no_store=True)
 @login_required
 def load_activity_domains(request):
-    # FIXME: Fix the long url, by post request?
-    cluster_ids = [int(i) for i in request.GET.getlist('clusters[]') if i]
+    cluster_ids = [int(i) for i in request.POST.getlist('clusters[]') if i]
     clusters = Cluster.objects.filter(pk__in=cluster_ids).prefetch_related('activitydomain_set')
 
     response = ''.join([
@@ -80,9 +79,7 @@ def load_activity_domains(request):
 @cache_control(no_store=True)
 @login_required
 def load_locations_details(request):
-    # FIXME: Fix the long url, by post request?
-
-    parent_ids = [int(i) for i in request.GET.getlist('parents[]') if i]
+    parent_ids = [int(i) for i in request.POST.getlist('parents[]') if i]
     parents = Location.objects.filter(pk__in=parent_ids).select_related('parent')
 
     response = ''.join([
@@ -506,12 +503,11 @@ def create_project_activity_plan(request, project):
 @login_required
 def get_disaggregations_forms(request):
     """Get target location empty form"""
-    # FIXME: Fix the long url, by post request?
     # Get selected indicators
-    indicators = Indicator.objects.filter(pk__in=request.GET.getlist('indicators[]'))
+    indicators = Indicator.objects.filter(pk__in=request.POST.getlist('indicators[]'))
 
     # Get selected locations prefixes
-    locations_prefix = request.GET.getlist('locations_prefixes[]')
+    locations_prefix = request.POST.getlist('locations_prefixes[]')
 
     # Use a set to store unique related Disaggregations
     unique_related_disaggregations = set()
@@ -562,9 +558,8 @@ def get_disaggregations_forms(request):
 @login_required
 def get_target_location_empty_form(request):
     """Get an empty target location form for a project"""
-    # FIXME: Fix the long url, by post request?
     # Get the project object based on the provided project ID
-    project = get_object_or_404(Project, pk=request.GET.get('project'))
+    project = get_object_or_404(Project, pk=request.POST.get('project'))
 
     # Prepare form_kwargs to pass to ActivityPlanFormSet
     form_kwargs = {'project': project}
@@ -573,7 +568,7 @@ def get_target_location_empty_form(request):
     activity_plan_formset = ActivityPlanFormSet(form_kwargs=form_kwargs, instance=project)
 
     # Get the prefix index from the request
-    prefix_index = request.GET.get('prefix_index')
+    prefix_index = request.POST.get('prefix_index')
 
     # Create an instance of TargetLocationFormSet with a prefixed name
     target_location_formset = TargetLocationFormSet(
@@ -606,9 +601,8 @@ def get_target_location_empty_form(request):
 @login_required
 def get_activity_empty_form(request):
     """Get an empty activity form"""
-    # FIXME: Fix the long url, by post request?
     # Get the project object based on the provided project ID
-    project = get_object_or_404(Project, pk=request.GET.get('project'))
+    project = get_object_or_404(Project, pk=request.POST.get('project'))
 
     # Get all activity plans associated with the project
     activity_plans = project.activityplan_set.all()
@@ -623,7 +617,7 @@ def get_activity_empty_form(request):
     activity_plan_formset = ActivityPlanFormSet(form_kwargs=form_kwargs, instance=project)
 
     # Get the prefix index from the request
-    prefix_index = request.GET.get('prefix_index')
+    prefix_index = request.POST.get('prefix_index')
 
     # Create an instance of TargetLocationFormSet with a prefixed name
     target_location_formset = TargetLocationFormSet(

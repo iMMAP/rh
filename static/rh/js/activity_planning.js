@@ -1,3 +1,6 @@
+// Constant for the duration of the slideToggle animations
+const TOGGLE_DURATION = 500;
+
 /**
 * Handle Add Dynamic Activity Form
 **/
@@ -143,6 +146,12 @@ function addTargetLocationForm(prefix, project, nextFormIndex) {
 					});
 					$(`#id_${locationPrefix}-district`).change(function () {
 						getLocations(locationPrefix, 'zone', 'district');
+					});
+
+					handleSiteMonitoring(locationPrefix, addedForm);
+
+					$(`#id_${locationPrefix}-site_monitoring`).change(function () {
+						handleSiteMonitoring(locationPrefix, addedForm);
 					});
 					
 					// Update disaggregations based on indicators for the new added form 
@@ -358,6 +367,103 @@ async function getLocations(locationPrefix, locationType, parentType, clearZone 
 
 
 /**
+* Handle Facility Monitoring field
+@param {string} formElement - Form Element.
+@param {string} formIndex - Form Index.
+**/
+function handleSiteMonitoring(locationPrefix, formElement) {
+	$formElement = $(formElement)
+	let $siteMonitoring = $(`#id_${locationPrefix}-site_monitoring`);
+	let $siteName = $formElement.find(
+		`#id_${locationPrefix}-site_name`
+	);
+	let $siteLat = $formElement.find(`#id_${locationPrefix}-site_lat`);
+	let $siteLong = $formElement.find(`#id_${locationPrefix}-site_long`);
+	let $siteDetails = $formElement.find(
+		`#${locationPrefix}_site_details`
+	);
+	if (!$siteMonitoring.is(":checked")) {
+		$siteDetails.hide(TOGGLE_DURATION);
+		$siteName.prop("required", false).removeClass("is-required");
+		$siteLat.prop("required", false).removeClass("is-required");
+		$siteLong.prop("required", false).removeClass("is-required");
+	} else {
+		$siteDetails.show(TOGGLE_DURATION);
+		$siteName.prop("required", true).addClass("is-required");
+		$siteLat.prop("required", true).addClass("is-required");
+		$siteLong.prop("required", true).addClass("is-required");
+	}
+}
+
+
+async function get_facility_sites(formIndex) {
+	const facilitySiteUrl = $(`#id_form-${formIndex}-facility_type`).attr(
+		"facility-sites-queries-url"
+	);
+
+	const facilityIds = $(`select#id_form-${formIndex}-facility_type option`)
+		.map(function () {
+			return $(this).val();
+		})
+		.get();
+	const clusterIds = $("#clusters").data("clusters");
+	const selected_facilities = $(
+		`select#id_form-${formIndex}-facility_type`
+	).val();
+
+	requestData = {
+		clusters: clusterIds,
+		listed_facilities: facilityIds,
+	}
+
+	try {
+		const response = await $.ajax({
+			type: "GET",
+			url: facilitySiteUrl,
+			data: requestData,
+		});
+
+		$(`#id_form-${formIndex}-facility_type`).html(response);
+		$(`select#id_form-${formIndex}-facility_type`).val(selected_facilities);
+	} catch (error) {
+		console.error(`Error fetching Facilities: ${error}`);
+	}
+}
+
+
+/**
+* Handle Facility Monitoring field
+@param {string} locationPrefix - Form Location Prefix.
+@param {string} formElement - Form Element.
+**/
+function handleFacilityMonitoring(locationPrefix, formElement) {
+	debugger
+	$formElement = $(formElement)
+	let $facilityMonitoring = $(`#id_${locationPrefix}-facility_monitoring`);
+	let $facilityName = $formElement.find(
+		`#id_${locationPrefix}-facility_name`
+	);
+	let $facilityId = $formElement.find(`#id_${locationPrefix}-facility_id`);
+	let $facilityDetails1 = $formElement.find(
+		`#${locationPrefix}_facility_details_1`
+	);
+	let $facilityDetails2 = $formElement.find(
+		`#${locationPrefix}_facility_details_2`
+	);
+
+	if (!$facilityMonitoring.is(":checked")) {
+		$facilityDetails1.hide();
+		$facilityDetails2.hide();
+		$facilityName.prop("required", false).removeClass("is-required");
+		$facilityId.prop("required", false).removeClass("is-required");
+	} else {
+		$facilityName.prop("required", true).addClass("is-required");
+		$facilityId.prop("required", true).addClass("is-required");
+	}
+}
+
+
+/**
 * Ready Function
 **/
 $(document).ready(function () {
@@ -417,7 +523,6 @@ $(document).ready(function () {
 
 	const $locationBlock = $(".target_location_form");
 	$locationBlock.each(function (formIndex, formElement) {
-
 		const locationPrefix = formElement.dataset.locationPrefix
 
 		// Update the Target Locations Titles
@@ -433,6 +538,19 @@ $(document).ready(function () {
 		$(`#id_${locationPrefix}-district`).change(function () {
 			getLocations(locationPrefix, 'zone', 'district');
 		});
+		
+		// Call handleSiteMonitoring and fetch the facility sites types.
+		// handleSiteMonitoring(locationPrefix, formElement);
+
+		// $(`#id_${locationPrefix}-site_monitoring`).change(function () {
+		// 	handleSiteMonitoring(locationPrefix, formElement);
+		// });
+
+		// Call get_facility_sites and fetch the facility sites types.
+		// get_facility_sites(formElement);
+
+		// Call Facility Monitoring function when page loads.
+		// handleFacilityMonitoring(locationPrefix, formElement);
 		
 	});
 

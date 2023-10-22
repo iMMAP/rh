@@ -263,14 +263,31 @@ class ActivityDomain(models.Model):
         verbose_name_plural = "Activity Domains"
 
 
+class FacilityMonitoring(models.Model):
+    """Facility Monitoring"""
+    # activity_types = models.ManyToManyField(ActivityType)
+    facility_name = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
+    facility_id = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
+    facility_type = models.ForeignKey(FacilitySiteType, on_delete=models.SET_NULL, null=True, blank=True)
+    facility_lat = models.CharField(max_length=NAME_MAX_LENGTH, null=True, blank=True)
+    facility_long = models.CharField(max_length=NAME_MAX_LENGTH, null=True, blank=True)
+
+    def __str__(self):
+        return self.facility_name
+
+    class Meta:
+        verbose_name = 'Facility'
+        verbose_name_plural = "Facilities"
+
+
 class ActivityType(models.Model):
     activity_domain = models.ForeignKey(ActivityDomain, on_delete=models.SET_NULL, blank=True, null=True)
+    facility = models.ForeignKey(FacilityMonitoring, on_delete=models.SET_NULL, blank=True, null=True)
     active = models.BooleanField(default=True)
     code = models.CharField(max_length=DESCRIPTION_MAX_LENGTH, blank=True, null=True)
     name = models.CharField(max_length=DESCRIPTION_MAX_LENGTH, blank=True, null=True)
     countries = models.ManyToManyField(Location)
     clusters = models.ManyToManyField(Cluster)
-    # indicators = models.ManyToManyField(Indicator)
     activity_date = models.DateTimeField(auto_now_add=True, blank=True, null=True)
     hrp_code = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
     code_indicator = models.BooleanField(default=False, blank=True, null=True)
@@ -426,20 +443,10 @@ class ActivityPlan(models.Model):
         choices=CATEGORY_TYPES,
         default=False, null=True, blank=True
     )
-
-    # Facility Monitoring
-    # facility_monitoring = models.BooleanField(default=False)
-    # facility_name = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True, )
-    # facility_id = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True, )
-    # facility_type = models.ForeignKey(FacilitySiteType, on_delete=models.SET_NULL, null=True, blank=True)
-    # facility_lat = models.CharField(max_length=NAME_MAX_LENGTH, null=True, blank=True)
-    # facility_long = models.CharField(max_length=NAME_MAX_LENGTH, null=True, blank=True)
-
-    # households = models.IntegerField(default=0, blank=True, null=True)
-    # female_headed_households = models.IntegerField(default=0, blank=True, null=True)
+    households = models.IntegerField(default=0, blank=True, null=True)
+    female_headed_households = models.IntegerField(default=0, blank=True, null=True)
 
     description = models.TextField(blank=True, null=True)
-    # old_id = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
 
     def __str__(self):
         return f"{self.title}"
@@ -497,7 +504,6 @@ class TargetLocation(models.Model):
     site_name = models.CharField(max_length=255, blank=True, null=True)
     site_lat = models.CharField(max_length=255, blank=True, null=True)
     site_long = models.CharField(max_length=255, blank=True, null=True)
-    # old_id = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
 
     def __str__(self):
         return f"{self.project}, {self.province}, {self.district}"

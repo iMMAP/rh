@@ -1,4 +1,6 @@
+from django import forms
 from django.contrib import admin
+from django.contrib.admin.widgets import FilteredSelectMultiple
 from django.db.models import Count
 
 from .models import *
@@ -13,9 +15,7 @@ admin.site.register(TransferCategory)
 admin.site.register(GrantType)
 admin.site.register(UnitType)
 admin.site.register(ReportType)
-from django.contrib.admin.widgets import FilteredSelectMultiple
-from django import forms
-
+admin.site.register(FacilityMonitoring)
 
 
 class ActivityPlanModelAdminForm(forms.ModelForm):

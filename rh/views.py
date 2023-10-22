@@ -442,6 +442,8 @@ def create_project_activity_plan(request, project):
                                     'province') and target_location_form.cleaned_data.get('district'):
 
                                 target_location_instance = target_location_form.save()
+                                target_location_instance.project = project
+                                target_location_instance.save()
 
                         if hasattr(target_location_form, 'disaggregation_formset'):
                             disaggregation_formset = target_location_form.disaggregation_formset
@@ -591,6 +593,7 @@ def get_target_location_empty_form(request):
     # Prepare context for rendering the target location form template
     context = {
         'target_location_form': target_location_form,
+        'project': project,
     }
 
     # Render the target location form template and generate HTML
@@ -652,9 +655,7 @@ def project_planning_review(request, **kwargs):
     pk = int(kwargs['project'])
     project = get_object_or_404(Project, pk=pk)
     activity_plans = project.activityplan_set.all()
-    target_locations = project.targetlocation_set.all()
-    plans = list(activity_plans.values_list('pk', flat=True))
-    locations = list(target_locations.values_list('pk', flat=True))
+    target_locations = [activity_plan.targetlocation_set.all() for activity_plan in activity_plans]
     project_state = project.state
     parent_page = {
         'in-progress': 'active_projects',
@@ -668,8 +669,6 @@ def project_planning_review(request, **kwargs):
         'activity_plans': activity_plans,
         'target_locations': target_locations,
         'project_review': True,
-        'plans': plans,
-        'locations': locations,
         'parent_page': parent_page
     }
     return render(request, 'rh/projects/forms/project_review.html', context)
@@ -678,20 +677,22 @@ def project_planning_review(request, **kwargs):
 @cache_control(no_store=True)
 @login_required
 def submit_project(request, pk):
+    """Project Submission"""
+
     project = get_object_or_404(Project, pk=pk)
-    activity_plans = project.activityplan_set.all()
-    target_locations = project.targetlocation_set.all()
     if project:
         project.state = 'in-progress'
         project.save()
 
+    activity_plans = project.activityplan_set.all()
     for plan in activity_plans:
+        target_locations = plan.targetlocation_set.all()
+        for target in target_locations:
+            target.state = 'in-progress'
+            target.save()
+
         plan.state = 'in-progress'
         plan.save()
-
-    for target in target_locations:
-        target.state = 'in-progress'
-        target.save()
 
     return redirect('active_projects')
 
@@ -699,20 +700,31 @@ def submit_project(request, pk):
 @cache_control(no_store=True)
 @login_required
 def archive_project(request, pk):
+    """Archiving Project"""
     project = get_object_or_404(Project, pk=pk)
     if project:
         activity_plans = project.activityplan_set.all()
-        target_locations = project.targetlocation_set.all()
-
+        
+        # Iterate through activity plans and archive them.
         for plan in activity_plans:
+            target_locations = plan.targetlocation_set.all()
+                
+            # Iterate through target locations and archive them.
+            for location in target_locations:
+                disaggregation_locations = location.disaggregationlocation_set.all()
+
+                # Iterate through disaggregation locations and archive.
+                for disaggregation_location in disaggregation_locations:
+                    disaggregation_location.active = False
+                    disaggregation_location.save()
+
+                location.state = 'archive'
+                location.active = False
+                location.save()
+                
             plan.state = 'archive'
             plan.active = False
             plan.save()
-
-        for location in target_locations:
-            location.state = 'archive'
-            location.active = False
-            location.save()
 
         project.state = 'archive'
         project.active = False
@@ -724,20 +736,31 @@ def archive_project(request, pk):
 @cache_control(no_store=True)
 @login_required
 def unarchive_project(request, pk):
+    """Unarchiving Project"""
     project = get_object_or_404(Project, pk=pk)
     if project:
         activity_plans = project.activityplan_set.all()
-        target_locations = project.targetlocation_set.all()
-
+        
+        # Iterate through activity plans and archive them.
         for plan in activity_plans:
+            target_locations = plan.targetlocation_set.all()
+                
+            # Iterate through target locations and archive them.
+            for location in target_locations:
+                disaggregation_locations = location.disaggregationlocation_set.all()
+
+                # Iterate through disaggregation locations and archive.
+                for disaggregation_location in disaggregation_locations:
+                    disaggregation_location.active = True
+                    disaggregation_location.save()
+
+                location.state = 'draft'
+                location.active = True
+                location.save()
+                
             plan.state = 'draft'
             plan.active = True
             plan.save()
-
-        for location in target_locations:
-            location.state = 'draft'
-            location.active = True
-            location.save()
 
         project.state = 'draft'
         project.active = True
@@ -759,75 +782,156 @@ def delete_project(request, pk):
 @cache_control(no_store=True)
 @login_required
 def copy_project(request, pk):
+    """Copying Project"""
     project = get_object_or_404(Project, pk=pk)
+    
     if project:
+        # Create a new project by duplicating the original project.
         new_project = get_object_or_404(Project, pk=pk)
-        new_project.pk = None
-        new_project.save()
+        new_project.pk = None  # Generate a new primary key for the new project.
+        new_project.save()  # Save the new project to the database.
+        
+        # Copy related data from the original project to the new project.
         new_project.clusters.set(project.clusters.all())
         new_project.activity_domains.set(project.activity_domains.all())
         new_project.donors.set(project.donors.all())
         new_project.programme_partners.set(project.programme_partners.all())
         new_project.implementing_partners.set(project.implementing_partners.all())
+        
+        # Modify the title, code, and state of the new project to indicate it's a copy.
         new_project.title = f"[COPY] - {project.title}"
         new_project.code = f"[COPY] - {project.code}"
         new_project.state = 'draft'
-
+        
+        # Check if the new project was successfully created.
         if new_project:
+            # Get all activity plans associated with the original project.
             activity_plans = project.activityplan_set.all()
-            target_locations = project.targetlocation_set.all()
-
+            
+            # Iterate through each activity plan and copy it to the new project.
             for plan in activity_plans:
-                copy_project_activity_plan(new_project, plan)
-
-            for location in target_locations:
-                copy_project_target_location(new_project, location)
-
+                new_plan = copy_project_activity_plan(new_project, plan)
+                target_locations = plan.targetlocation_set.all()
+                
+                # Iterate through target locations and copy them to the new plan.
+                for location in target_locations:
+                    new_location = copy_project_target_location(new_plan, location)
+                    disaggregation_locations = location.disaggregationlocation_set.all()
+                    
+                    # Iterate through disaggregation locations and copy them to the new location.
+                    for disaggregation_location in disaggregation_locations:
+                        copy_target_location_disaggregation_locations(new_location, disaggregation_location)
+        
+        # Save the changes made to the new project.
         new_project.save()
-
+    
+    # Return a JSON response indicating success and providing a return URL to view the new project.
     return JsonResponse({'success': True, 'returnURL': reverse('view_project', args=[new_project.pk])})
 
 
 def copy_project_activity_plan(project, plan):
+    """Copy Activity Plans """
     try:
+        # Duplicate the original activity plan by retrieving it with the provided primary key.
         new_plan = get_object_or_404(ActivityPlan, pk=plan.pk)
-        new_plan.pk = None
-        new_plan.save()
+        new_plan.pk = None  # Generate a new primary key for the duplicated plan.
+        new_plan.save()  # Save the duplicated plan to the database.
+        
+        # Associate the duplicated plan with the new project.
         new_plan.project = project
+        
+        # Set the plan as active and in a draft state to indicate it's a copy.
         new_plan.active = True
         new_plan.state = 'draft'
+        
+        # Modify the title of the duplicated plan to indicate it's a copy.
         new_plan.title = f'[COPY] - {plan.title}'
+        
+        # Copy indicators from the original plan to the duplicated plan.
         new_plan.indicators.set(plan.indicators.all())
+        
+        # Save the changes made to the duplicated plan.
         new_plan.save()
-        return True
+        
+        # Return the duplicated plan.
+        return new_plan
     except Exception as e:
+        # If an exception occurs, return False to indicate the copy operation was not successful.
         return False
 
 
-def copy_project_target_location(project, location):
+def copy_project_target_location(plan, location):
+    """Copy Target Locations"""
     try:
+        # Duplicate the original target location by retrieving it with the provided primary key.
         new_location = get_object_or_404(TargetLocation, pk=location.pk)
-        new_location.pk = None
-        new_location.save()
-        new_location.project = project
+        new_location.pk = None  # Generate a new primary key for the duplicated location.
+        new_location.save()  # Save the duplicated location to the database.
+        
+        # Associate the duplicated location with the new activity plan.
+        new_location.activity_plan = plan
+        new_location.project = plan.project
+        
+        # Set the location as active and in a draft state to indicate it's a copy.
         new_location.active = True
         new_location.state = 'draft'
+        
+        # Modify the title of the duplicated location to indicate it's a copy.
         new_location.title = f'[COPY] - {location.title}'
+        
+        # Save the changes made to the duplicated location.
         new_location.save()
+        
+        # Return the duplicated location.
+        return new_location
+    except Exception as e:
+        # If an exception occurs, return False to indicate the copy operation was not successful.
+        return False
+    
+
+def copy_target_location_disaggregation_locations(location, disaggregation_location):
+    """Copy Disaggregation Locations"""
+    try:
+        # Duplicate the original disaggregation location by retrieving it with the provided primary key.
+        new_disaggregation_location = get_object_or_404(DisaggregationLocation, pk=disaggregation_location.pk)
+        new_disaggregation_location.pk = None  # Generate a new primary key for the duplicated location.
+        new_disaggregation_location.save()  # Save the duplicated location to the database.
+        
+        # Associate the duplicated disaggregation location with the new target location.
+        new_disaggregation_location.target_location = location
+        
+        # Save the changes made to the duplicated disaggregation location.
+        new_disaggregation_location.save()
+        
+        # Return True to indicate that the copy operation was successful.
         return True
     except Exception as e:
+        # If an exception occurs, return False to indicate the copy operation was not successful.
         return False
 
 
 @cache_control(no_store=True)
 @login_required
 def copy_activity_plan(request, project, plan):
+    """Copy only the activity plan not whole project"""
     project = get_object_or_404(Project, pk=project)
     activity_plan = get_object_or_404(ActivityPlan, pk=plan)
     new_plan = get_object_or_404(ActivityPlan, pk=activity_plan.pk)
+    
     if new_plan:
         new_plan.pk = None
         new_plan.save()
+
+        # Iterate through target locations and copy them to the new plan.
+        target_locations = activity_plan.targetlocation_set.all()
+        for location in target_locations:
+            new_location = copy_project_target_location(new_plan, location)
+            disaggregation_locations = location.disaggregationlocation_set.all()
+            
+            # Iterate through disaggregation locations and copy them to the new location.
+            for disaggregation_location in disaggregation_locations:
+                copy_target_location_disaggregation_locations(new_location, disaggregation_location)
+        
         new_plan.project = project
         new_plan.active = True
         new_plan.state = 'draft'
@@ -840,8 +944,8 @@ def copy_activity_plan(request, project, plan):
 @cache_control(no_store=True)
 @login_required
 def delete_activity_plan(request, pk):
+    """Delete the specific activity plan"""
     activity_plan = get_object_or_404(ActivityPlan, pk=pk)
-    project = activity_plan.project
     if activity_plan:
         activity_plan.delete()
     return JsonResponse({'success': True})
@@ -856,6 +960,13 @@ def copy_target_location(request, project, location):
     if new_location:
         new_location.pk = None
         new_location.save()
+
+        disaggregation_locations = target_location.disaggregationlocation_set.all()
+            
+        # Iterate through disaggregation locations and copy them to the new location.
+        for disaggregation_location in disaggregation_locations:
+            copy_target_location_disaggregation_locations(new_location, disaggregation_location)
+        
         new_location.project = project
         new_location.active = True
         new_location.state = 'draft'
@@ -867,8 +978,8 @@ def copy_target_location(request, project, location):
 @cache_control(no_store=True)
 @login_required
 def delete_target_location(request, pk):
+    """Delete the target location"""
     target_location = get_object_or_404(TargetLocation, pk=pk)
-    project = target_location.project
     if target_location:
         target_location.delete()
     return JsonResponse({'success': True})

@@ -1,12 +1,12 @@
-from django.http import JsonResponse
+import base64
+from io import BytesIO
 
+from django.http import JsonResponse
+from django.utils import timezone
 from django.views import View
 from openpyxl import Workbook
-from openpyxl.utils import get_column_letter
 from openpyxl.styles import Font, NamedStyle
-from io import BytesIO
-import base64
-from django.utils import timezone
+from openpyxl.utils import get_column_letter
 
 from .models import Project
 

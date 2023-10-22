@@ -65,35 +65,6 @@ $(document).ready(function () {
 	$("#id_budget, #id_budget_received").on("input", calculateBudgetGap);
 	
 
-	/**
-	 * Retrieves districts based on selected and listed provinces
-	 */
-	function get_districts() {
-		const districtsUrl = $("#id_districts").attr("districts-queries-url");
-		const districtIds = $("#id_districts option")
-			.map(function () {
-				return $(this).val();
-			})
-			.get();
-
-		const provinceIds = $("#id_provinces").val();
-		const selectedDistricts = $("#id_districts").val();
-		const requestData = {
-			provinces: provinceIds,
-			listed_districts: districtIds,
-		}
-		$.ajax({
-			type: "GET",
-			url: districtsUrl,
-			data: requestData,
-			success: function (data) {
-				const $districts = $("#id_districts");
-				$districts.html(data);
-				$districts.val(selectedDistricts);
-			},
-		});
-	}
-
 	function get_activity_domains() {
 		const domainsUrl = $("#id_activity_domains").attr("activity-domains-queries-url");
 		const domainsIds = $("#id_activity_domains option")
@@ -110,10 +81,16 @@ $(document).ready(function () {
 			listed_domains: domainsIds,
 		};
 
+		// Use JavaScript Cookie library
+		const csrftoken = Cookies.get('csrftoken');
+
 		$.ajax({
-			type: "GET",
+			type: "POST",
 			url: domainsUrl,
 			data: requestData,
+			beforeSend: function(xhr, settings) {
+				xhr.setRequestHeader("X-CSRFToken", csrftoken);
+			},
 			success: function (data) {
 				const $domains = $("#id_activity_domains");
 				$domains.html(data);
@@ -122,12 +99,7 @@ $(document).ready(function () {
 		});
 	}
 
-	get_districts();
 	get_activity_domains();
-
-	$("#id_provinces").change(function () {
-		get_districts();
-	});
 
 	$("#id_clusters").change(function () {
 		get_activity_domains();

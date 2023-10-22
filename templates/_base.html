@@ -224,6 +224,11 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js" integrity="sha512-2ImtlRlf2VVmiGZsjm9bEyhjGW4dU7B6TNwh/hx/iSByxNENtj3WVE6o/9Lj4TJeVXPi4bnOIMXFIJJAeufa0A==" crossorigin="anonymous" referrerpolicy="no-referrer">
         </script>
         <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+        
+        {% comment %} JavaScript Cookie library {% endcomment %}
+        {% comment %} TODO: Handle with node package {% endcomment %}
+        <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
+
         {% compress js %}
             <script defer src="{% static 'rh/js/app.js' %}"></script>
             <script defer src="{% static 'rh/js/fold_unfold_component.js' %}"></script>

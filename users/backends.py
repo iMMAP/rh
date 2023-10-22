@@ -1,13 +1,15 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.backends import ModelBackend
 
+UserModel = get_user_model()
+
 
 class EmailBackend(ModelBackend):
     """
     Custom authentication backend that allows users to authenticate using their email and password.
     """
 
-    def authenticate(self, request, email=None, password=None, **kwargs):
+    def authenticate(self, request, username=None, password=None, **kwargs):
         """
         Authenticates a user based on the provided email and password.
 
@@ -19,10 +21,17 @@ class EmailBackend(ModelBackend):
         Returns:
             User: The authenticated user if successful, None otherwise.
         """
-        UserModel = get_user_model()
+        if username is None:
+            username = kwargs.get(UserModel.USERNAME_FIELD, kwargs.get(UserModel.EMAIL_FIELD))
+        if username is None or password is None:
+            return
         try:
-            user = UserModel.objects.get(email=email)
+            user = UserModel.objects.get(email=username)
         except UserModel.DoesNotExist:
+            return None
+        
+        except UserModel.MultipleObjectsReturned:
+            # TODO: Handle with proper message
             return None
 
         if user.check_password(password):

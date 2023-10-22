@@ -1,6 +1,6 @@
 from django.conf import settings
 from django.contrib import messages
-from django.contrib.auth import get_user_model, login, logout, authenticate
+from django.contrib.auth import authenticate, get_user_model, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import EmailMultiAlternatives
@@ -8,7 +8,7 @@ from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.template import loader
 from django.utils.encoding import force_bytes, force_str
-from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from django.views.decorators.cache import cache_control
 
 from .decorators import unauthenticated_user
@@ -77,7 +77,8 @@ def register_view(request):
         p_form = ProfileCreateForm(request.POST)
         if u_form.is_valid() and p_form.is_valid():
             username = u_form.cleaned_data.get('username')
-            email = u_form.cleaned_data.get('email')
+            email = u_form.clean_email()
+            
             # Registration with email confirmation step.
             if settings.DEBUG:
                 # If development mode then go ahead and create the user.

@@ -55,7 +55,7 @@
                            data-url="{% url 'copy_project' project.pk %}"
                            data-return-url="{% url 'draft_projects' %}"
                            data-type="copy"
-                           data-project="{{ project.title }}"
+                           data-record-name="project"
                            class="text-decoration-none show_confirm"
                            title="Duplicate this project!">
                             <span class="project-detail icon-copy"></span>
@@ -69,7 +69,7 @@
                                data-url="{% url 'archive_project' project.pk %}"
                                data-return-url="{% url 'draft_projects' %}"
                                data-type="archive"
-                               data-project="{{ project.title }}"
+                               data-record-name="project"
                                class="text-decoration-none show_confirm"
                                title="Archive this project!">
                                 <svg xmlns="http://www.w3.org/2000/svg"
@@ -85,7 +85,7 @@
                                data-url="{% url 'unarchive_project' project.pk %}"
                                data-return-url="{% url 'draft_projects' %}"
                                data-type="unarchive"
-                               data-project="{{ project.title }}"
+                               data-record-name="project"
                                class="text-decoration-none show_confirm"
                                title="Unarchive this project!">
                                 <svg xmlns="http://www.w3.org/2000/svg"
@@ -108,7 +108,7 @@
                            data-url="{% url 'delete_project' project.pk %}"
                            data-return-url="{% url 'draft_projects' %}"
                            data-type="delete"
-                           data-project="{{ project.title }}"
+                           data-record-name="project"
                            class="text-decoration-none show_confirm"
                            title="Delete this project!"><span class="project-detail icon-trashbin"></span></a>
                     </button>

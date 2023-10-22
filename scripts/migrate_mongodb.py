@@ -8,21 +8,21 @@ import pandas as pd
 SQLITE_DB_PATH = '../db.sqlite3'
 
 # CSV DATA FILES
-CURRENCIES_CSV = '../data/currencies.csv'
-LOCATIONS_CSV = '../data/af_loc.csv'
-ORGANIZATIONS_CSV = '../data/organizations.csv'
-BENEFICIARY_TYPES_CSV = '../data/beneficiary_types.csv'
-DONORS_CSV = '../data/donors.csv'
-INDICATORS_CSV = '../data/Indicators.csv'
-ACTIVITIES_CSV = '../data/activities.csv'
-USERS_CSV = '../data/user.csv'
+CURRENCIES_CSV = './data/currencies.csv'
+LOCATIONS_CSV = './data/af_loc.csv'
+ORGANIZATIONS_CSV = './data/organizations.csv'
+BENEFICIARY_TYPES_CSV = './data/beneficiary_types.csv'
+DONORS_CSV = './data/donors.csv'
+INDICATORS_CSV = './data/Indicators.csv'
+ACTIVITIES_CSV = './data/activities.csv'
+USERS_CSV = './data/user.csv'
 
-CLUSTERS = '../data/new_db/clusters.csv'
-ACTIVITY_DOMAIN_CSV = '../data/new_db/activity_domains.csv'
-ACTIVITY_DESCRIPTION_CSV = '../data/new_db/activity_types.csv'
-ACTIVITY_DETAIL_CSV = '../data/new_db/activity_details.csv'
-INDICATORS_CSV_OLD_DB = '../data/new_db/indicators.csv'
-FACILITIES = '../data/new_db/facility_site_types.csv'
+CLUSTERS = './data/new_db/clusters.csv'
+ACTIVITY_DOMAIN_CSV = './data/new_db/activity_domains.csv'
+ACTIVITY_DESCRIPTION_CSV = './data/new_db/activity_types.csv'
+ACTIVITY_DETAIL_CSV = './data/new_db/activity_details.csv'
+INDICATORS_CSV_OLD_DB = './data/new_db/indicators.csv'
+FACILITIES = './data/new_db/facility_site_types.csv'
 
 
 def get_sqlite_client(dbname):

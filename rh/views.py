@@ -12,9 +12,11 @@ from django.template.loader import render_to_string
 from django.urls import reverse
 from django.views.decorators.cache import cache_control
 
+from project_reports.models import ProjectMonthlyReport as Report
+
 from .filters import *
 from .forms import *
-from .models import Project
+from .models import *
 
 # TODO: Add is_safe_url to redirects
 # from django.utils.http import is_safe_url
@@ -1028,7 +1030,7 @@ def create_project_budget_progress_view(request, project):
         'formset': formset,
         'parent_page': parent_page,
     }
-    return render(request, "rh/projects/financials/project_budget_progress.html", context)
+    return render(request, "rh/financial_reports/project_budget_progress.html", context)
 
 
 @cache_control(no_store=True)
@@ -1056,9 +1058,3 @@ def delete_budget_progress(request, pk):
     if budget_progress:
         budget_progress.delete()
     return JsonResponse({'success': True})
-
-
-def form_create_view(request):
-    YourModelFormSet = modelformset_factory(TargetLocation, fields="__all__")
-    formset = YourModelFormSet(queryset=TargetLocation.objects.none())
-    return render(request, 'rh/projects/forms/form_create.html', {'formset': formset})

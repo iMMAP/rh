@@ -2397,6 +2397,15 @@ select option[value=placeholder] {
   padding-bottom: 16px
 }
 
+.page-top-panel-reports{
+  padding-bottom: -8px;
+  border-bottom: 2px solid #e6e7e8;
+}
+
+.page-top-panel-reports .tabs-nav-holder:only-child {
+  margin-bottom: -8px
+}
+
 .page-top-panel.page-top-panel-large {
   padding: 13px 0 0;
   margin-bottom: 10px
@@ -2407,7 +2416,7 @@ select option[value=placeholder] {
 }
 
 .page-top-panel .tabs-nav-holder:only-child {
-  margin-bottom: 0
+  margin-bottom: 
 }
 
 .project-title {
@@ -3292,6 +3301,10 @@ select option[value=placeholder] {
 
 .page-navigation-panel {
   border-bottom: 2px solid #e6e7e8
+}
+
+.page-navigation-panel-reports{
+  padding: 10px 0 0px;
 }
 
 .page-navigation-panel .tabs-nav-holder {

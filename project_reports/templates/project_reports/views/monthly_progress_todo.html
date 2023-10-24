@@ -1,0 +1,12 @@
+{% extends "project_reports/views/project_reports_base.html" %}
+{% block table_body %}
+    <tbody>
+        <!--Include The Todo Monthly Progress Details Here -->
+        {% for report in monthly_reports %}
+            {% include "project_reports/views/project_report_details.html" %}
+        {% endfor %}
+    </tbody>
+{% endblock table_body %}
+<!-- {% block pager %}
+    {% include "rh/projects/views/projects_pager.html" %}
+{% endblock pager %} -->

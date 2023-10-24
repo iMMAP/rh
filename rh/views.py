@@ -3,7 +3,7 @@ RECORDS_PER_PAGE = 3
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
-from django.db.models import Q
+from django.db.models import Prefetch, Q
 from django.forms import modelformset_factory
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
@@ -65,17 +65,24 @@ def home(request):
 @login_required
 def load_activity_domains(request):
     cluster_ids = [int(i) for i in request.POST.getlist('clusters[]') if i]
-    clusters = Cluster.objects.filter(pk__in=cluster_ids).prefetch_related('activitydomain_set')
+
+    # Define a Prefetch object to optimize the related activitydomain_set
+    prefetch_activitydomain = Prefetch(
+        'activitydomain_set',
+        queryset=ActivityDomain.objects.order_by('name'),
+    )
+
+    clusters = Cluster.objects.filter(pk__in=cluster_ids).prefetch_related(prefetch_activitydomain)
 
     response = ''.join([
         f'<optgroup label="{cluster.title}">' +
-        ''.join([f'<option value="{domain.pk}">{domain}</option>' for domain in
-                 cluster.activitydomain_set.order_by('name')]) +
+        ''.join([f'<option value="{domain.pk}">{domain}</option>' for domain in cluster.activitydomain_set.all()]) +
         '</optgroup>'
         for cluster in clusters
     ])
 
     return JsonResponse(response, safe=False)
+
 
 
 @cache_control(no_store=True)
@@ -430,7 +437,11 @@ def create_project_activity_plan(request, project):
             for activity_plan_form in activity_plan_formset:
                 if activity_plan_form.cleaned_data.get('activity_domain') and activity_plan_form.cleaned_data.get(
                         'activity_type'):
-                    activity_plan_form.save()
+                    activity_plan = activity_plan_form.save()
+                    title = f"{activity_plan_form.cleaned_data.get('activity_domain').name}, {activity_plan_form.cleaned_data.get('activity_type').name}"
+                    if activity_plan_form.cleaned_data.get('activity_detail'):
+                        title += f", {activity_plan_form.cleaned_data.get('activity_detail').name}"
+                    activity_plan.title = title
 
             # Process target location forms and their disaggregation forms
             for target_location_formset in target_location_formsets:

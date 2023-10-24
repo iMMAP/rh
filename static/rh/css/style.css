@@ -2881,7 +2881,9 @@ select option[value=placeholder] {
   margin-bottom: 8px
 }
 
-
+.breadcrumbs-nav-panel {
+  padding: 10px 0;
+}
 
 .breadcrumbs-nav-panel .breadcrumbs {
   margin-bottom: 10px
@@ -5258,7 +5260,7 @@ body.filter-active {
 
   .breadcrumbs-nav-panel .holder {
     display: flex;
-    align-items: baseline;
+    align-items: center;
     justify-content: space-between;
     min-height: 25px
   }
@@ -5348,7 +5350,7 @@ body.filter-active {
   .page-navigation-panel .holder {
     display: grid;
     align-items: center;
-    grid-template-columns: 30% 50% 15%
+    grid-template-columns: 25% 50% 25%
   }
 
   .page-navigation-panel .tabs-nav {
@@ -6114,9 +6116,9 @@ body.filter-active {
   font-weight: 600;
 }
 
-.link-holder {
+/* .link-holder {
   padding-bottom: 10px;
-}
+} */
 
 .text-decoration-none {
   text-decoration: none;

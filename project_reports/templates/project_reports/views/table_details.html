@@ -1,0 +1,36 @@
+{% load custom_filters %}
+
+<tr>
+    <td class="month-col" data-title="Month">
+        <div class="table-flex-holder">
+            {% with report_state=report.state %}
+                <span class="indicator indicator-{{ report|custom_class }}"></span>
+            {% endwith %}
+            {{ report.get_month }} {{ report.get_year }}
+        </div>
+    </td>
+
+    <td class="progress-col" data-title="Progress Report">Monthly progress for {{ report.get_month }} {{ report.get_year }}</td>
+
+    <td class="date-col" data-title="Due date">{{ report.report_due_date | date:"d F Y" }}</td>
+
+    <td class="id-col" data-title="Locations"><a href="#">Ghazni</a><br/><a href="#">Parwan</a></td>
+
+    <td class="id-col" data-title="Locations"><a href="#">Ghazni</a><br/><a href="#">Parwan</a></td>
+
+    <td class="notes-col" data-title="Notes">Lorem ipsum dolor sit amet</td>
+
+    <td class="date-col" data-title="Due date">{{ report.get_state_display }}</td>
+
+    <td class="edit-col" data-title="Edit">
+        <ul class="table-options-buttons">
+            <li>
+                <button>
+                    <a class="text-decoration-none" href="{% url 'view_monthly_report' report.id %}">
+                        <span class="icon-pen"></span>
+                    </a>
+                </button>
+            </li>
+        </ul>
+    </td>
+</tr>

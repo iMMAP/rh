@@ -55,7 +55,7 @@
               content="width=device-width, initial-scale=1, shrink-to-fit=no" />
               
 
-        {% vite 'styles/style.scss' %}
+        {% vite 'src/styles/style.scss' %}
 
         <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css"
               rel="stylesheet" />
@@ -229,7 +229,7 @@
         {% comment %} TODO: Handle with node package {% endcomment %}
         <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
 
-        {% vite 'js/app.js' %}
+        {% vite 'src/js/app.js' %}
 
         {% compress js %}
             {% comment %} <script defer src="{% static 'rh/js/app.js' %}"></script> {% endcomment %}

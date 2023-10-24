@@ -263,26 +263,6 @@ def archived_projects_view(request):
 
 @cache_control(no_store=True)
 @login_required
-def completed_project_view(request, pk):
-    """Projects Plans"""
-
-    project = Project.objects.get(pk=pk)
-
-    activity_plans = ActivityPlan.objects.filter(project__id=project.pk)
-    target_locations = TargetLocation.objects.filter(project__id=project.pk)
-
-    context = {
-        'project': project,
-        'activity_plans': activity_plans,
-        'target_locations': target_locations,
-        'project_review': True,
-        'locations': target_locations
-    }
-    return render(request, 'rh/projects/views/completed_project.html', context)
-
-
-@cache_control(no_store=True)
-@login_required
 def open_project_view(request, pk):
     """View for creating a project."""
 
@@ -305,7 +285,11 @@ def open_project_view(request, pk):
         'target_locations': target_locations,
         'plans': plans,
         'locations': locations,
-        'parent_page': parent_page
+        'parent_page': parent_page,
+        'project_view': True,
+        'financial_view': False,
+        'reports_view': False,
+        
     }
     return render(request, 'rh/projects/views/project_view.html', context)
 
@@ -336,6 +320,9 @@ def create_project_view(request):
     context = {
         'form': form,
         'project_planning': True,
+        'project_view': True,
+        'financial_view': False,
+        'reports_view': False,
     }
     return render(request, 'rh/projects/forms/project_form.html', context)
 
@@ -373,7 +360,10 @@ def update_project_view(request, pk):
         'project_planning': True,
         'plans': plans,
         'locations': locations,
-        'parent_page': parent_page
+        'parent_page': parent_page,
+        'project_view': True,
+        'financial_view': False,
+        'reports_view': False,
     }
     return render(request, 'rh/projects/forms/project_form.html', context)
 
@@ -506,7 +496,10 @@ def create_project_activity_plan(request, project):
         'clusters': cluster_ids,
         'activity_planning': True,
         'plans': plans,
-        'parent_page': parent_page
+        'parent_page': parent_page,
+        'project_view': True,
+        'financial_view': False,
+        'reports_view': False,
     }
 
     # Render the template with the context data
@@ -676,7 +669,10 @@ def project_planning_review(request, **kwargs):
         'activity_plans': activity_plans,
         'target_locations': target_locations,
         'project_review': True,
-        'parent_page': parent_page
+        'parent_page': parent_page,
+        'project_view': True,
+        'financial_view': False,
+        'reports_view': False,
     }
     return render(request, 'rh/projects/forms/project_review.html', context)
 
@@ -1040,6 +1036,9 @@ def create_project_budget_progress_view(request, project):
         'project': project,
         'formset': formset,
         'parent_page': parent_page,
+        'project_view': False,
+        'financial_view': True,
+        'reports_view': False,
     }
     return render(request, "rh/financial_reports/project_budget_progress.html", context)
 

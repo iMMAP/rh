@@ -6,10 +6,9 @@ urlpatterns = [
     # Projects CRUD
     path('project/monthly_progress/?project=<str:project>/',
         user_views.index_project_report_view, name='project_reports_home'),
-    path('project/monthly_progress/create/', user_views.create_project_monthly_report_view, name='create_project_monthly_report'),
-
     path('project/monthly_progress/view/<str:pk>/', user_views.details_monthly_progress_view, name='view_monthly_report'),
-
+    path('project/monthly_progress/create/?project=<str:project>', user_views.create_project_monthly_report_view, name='create_project_monthly_report'),
+    
     # # Projects Activity Plannings CRUD
     # path('project/activity_plan/create/?project=<str:project>/', user_views.create_project_activity_plan,
     #     name='create_project_activity_plan'),

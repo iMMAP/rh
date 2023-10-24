@@ -41,6 +41,10 @@ class ProjectMonthlyReport(models.Model):
             year = self.report_date.year
         return year
 
+    # def get_report_status(self):
+    #     status = 
+    #     return year
+
     def __str__(self):
         name = "Monthly Report"
         if self.report_date:

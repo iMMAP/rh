@@ -30,6 +30,7 @@ INSTALLED_APPS = [
     # Installed packages apps
     'django_filters',
     'smart_selects',
+    "django_vite_plugin",
 
     # RH apps
     'rh.apps.RhConfig',
@@ -119,10 +120,17 @@ STATICFILES_FINDERS = [
 
 
 STATIC_URL = 'static/'
-STATIC_ROOT = BASE_DIR / 'static-cdn'
 STATICFILES_DIRS = [
    BASE_DIR / "static",
 ]
+STATIC_ROOT = BASE_DIR / 'static-cdn'
+
+DJANGO_VITE_PLUGIN = {
+    "BUILD_DIR": "static-cdn/build",
+    "BUILD_URL_PREFIX": "/" + STATIC_URL + "build",
+    "DEV_MODE": True,
+}
+
 
 INSTALLED_APPS += (
     'compressor',

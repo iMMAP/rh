@@ -1,0 +1,81 @@
+.tabs-nav {
+  @extend %listreset;
+
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0 -10px;
+  font-size: 14px;
+  line-height: 1.2;
+
+  @include media('>=desktop') {
+    margin: 0 -20px;
+    font-size: 16px;
+  }
+
+  &.tabs-nav-small {
+    font-size: 14px;
+
+    @include media('>=desktop') {
+      margin: 0 -12px;
+    }
+
+    li {
+      @include media('>=desktop') {
+        padding: 0 12px;
+      }
+    }
+  }
+
+  li {
+    padding: 0 10px;
+
+    @include media('>=desktop') {
+      padding: 0 20px;
+    }
+  }
+
+  a {
+    text-decoration: none;
+    color: $gray-35;
+    padding: 4px 0;
+    display: inline-block;
+    vertical-align: top;
+    position: relative;
+    text-transform: capitalize;
+
+    &:after {
+      @include transition(background-color);
+
+      content: '';
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 100%;
+      height: 2px;
+      background-color: transparent;
+    }
+
+    &:hover {
+      &:after {
+        background-color: $gray-d3;
+      }
+    }
+  }
+
+  .active {
+    a {
+      &:after {
+        font-weight: 600;
+        background-color: $red-be;
+      }
+    }
+  }
+}
+
+.page-navigation-panel {
+  .tabs-nav {
+    a {
+      font-weight: 600;
+    }
+  }
+}

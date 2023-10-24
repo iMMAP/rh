@@ -1,6 +1,7 @@
 <!-- templates/_base.html -->
 {% load static %}
 {% load compress %}
+{% load vite %}
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -52,11 +53,10 @@
         </noscript>
         <meta name="viewport"
               content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-        {% compress css inline %}
-            <link rel="stylesheet"
-                  type="text/css"
-                  href="{% static 'rh/css/style.css' %}">
-        {% endcompress %}
+              
+
+        {% vite 'styles/style.scss' %}
+
         <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css"
               rel="stylesheet" />
     </head>
@@ -229,8 +229,10 @@
         {% comment %} TODO: Handle with node package {% endcomment %}
         <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
 
+        {% vite 'js/app.js' %}
+
         {% compress js %}
-            <script defer src="{% static 'rh/js/app.js' %}"></script>
+            {% comment %} <script defer src="{% static 'rh/js/app.js' %}"></script> {% endcomment %}
             <script defer src="{% static 'rh/js/fold_unfold_component.js' %}"></script>
             {% comment %} TODO: Create a js file and move these  {% endcomment %}
             <script>

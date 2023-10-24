@@ -1,0 +1,48 @@
+.section-heading {
+  text-align: center;
+  margin-bottom: 40px;
+
+  &.section-heading-wide {
+    .description {
+      max-width: 100%;
+    }
+  }
+
+  .title {
+    padding-bottom: 6px;
+    border-bottom: 2px solid $red-be;
+    margin-bottom: 16px;
+  }
+
+  .description {
+    max-width: 632px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .subtitle {
+    display: block;
+    font-size: 16px;
+    line-height: 1.2;
+    font-weight: 600;
+    margin-bottom: 11px;
+  }
+
+  .text {
+    margin-bottom: 22px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    p {
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  .btn {
+    min-width: 254px;
+  }
+}

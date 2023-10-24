@@ -30,13 +30,22 @@ class ProjectMonthlyReport(models.Model):
     description = models.TextField(blank=True, null=True)
 
     def get_month(self):
-        return self.report_date.month
+        month = ""
+        if self.report_date:
+            month =  self.report_date.strftime('%B')
+        return month
 
     def get_year(self):
-        return self.report_date.year
+        year = ""
+        if self.report_date:
+            year = self.report_date.year
+        return year
 
     def __str__(self):
-        return f"{self.get_month}, {self.get_year} Report"
+        name = "Monthly Report"
+        if self.report_date:
+            name = f"{self.report_date.month}, {self.report_date.year} Report"
+        return name
 
     class Meta:
         verbose_name = 'Monthly Report'

@@ -139,3 +139,4 @@ dmypy.json
 node_modules
 static-cdn
 .vscode
+.vite

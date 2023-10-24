@@ -3,330 +3,75 @@
 {% block report_body %}
 <div class="content-block top-border">
     <div class="project-title">
-      <div class="holder">
-        <strong class="h5">October 2022</strong>
-        <ul class="buttons-list-inline">
-          <li>
-            <a href="#" class="btn btn-gray">
-              <span class="btn-text">Delete</span>
-              <span class="icon-trashbin-outline"></span>
-            </a>
-          </li>
-        </ul>
-      </div>
+        <div class="holder">
+            <strong class="h5">October 2022</strong>
+            <ul class="buttons-list-inline">
+                <li>
+                    <a href="#" class="btn btn-gray">
+                        <span class="btn-text">Delete</span>
+                        <span class="icon-trashbin-outline"></span>
+                    </a>
+                </li>
+            </ul>
+        </div>
     </div>
-
+    {% for activity_report_form in activity_report_formset.forms %}
     <div class="monthly-progress monthly-accordion create-report">
-      <div class="inner-holder">
-        <a href="#" class="block-top monthly-accordion-opener">
-          <span class="title"
-            >District
-            <span class="tooltip-info icon-info" data-tippy-content="Lorem lorem lorem"></span>
-          </span>
-          <span class="people">
-            <span class="icon-group"></span>
-            1657
-          </span>
-        </a>
-        <div class="monthly-accordion-slide">
-          <div class="row">
-            <div class="col">
-              <div class="multiple-fields-row three-items">
-                <div class="field-col">
-                  <div class="select-field">
-                    <label>Activity</label>
+        <div class="inner-holder">
+            <a href="#" class="block-top monthly-accordion-opener">
+				<span class="title">
+					<span class="tooltip-info icon-info" data-tippy-content="Lorem lorem lorem"></span>
+                    {{ activity_report_form.initial.activity_plan }}
+                </span>
+				<span class="people">
+					<span class="icon-group"></span>
+					1657
+				</span>
+            </a>
+            <div class="monthly-accordion-slide">
+                <div class="row">
+                    <div class="col">
+                        <div class="multiple-fields-row two-items">
+							<div class="field-col">
+								<div class="select-field">
+									<span class="label">Activity Domain</span>
+									<span class="text-read-only">{{ activity_report_form.initial.activity_plan.activity_domain }}</span>
+								</div>
+							</div>
+							<div class="field-col">
+								<div class="select-field">
+									<span class="label">Activity Type</span>
+									<span class="text-read-only">{{ activity_report_form.initial.activity_plan.activity_type }}</span>
+								</div>
+							</div>
+                        </div>
+                    </div>
+					{% if activity_report_form.initial.activity_plan.activity_detail %}
+						<div class="col">
+							<div class="field-col">
+								<div class="select-field">
+									<span class="label">Activity Details</span>
+									<span class="text-read-only">{{ activity_report_form.initial.activity_plan.activity_detail }}</span>
+								</div>
+							</div>
+						</div>
+					{% endif %}
+					<div class="col">
+						<div class="field-col">
+							<div class="select-field">
+								<label>Indicator</label>
 
-                    <select name="select" class="custom-select" id="monthlyActivity1">
-                      <option value="placeholder" disabled selected placeholder>Activity</option>
-                      <option value="option1">Other</option>
-                      <option value="option2">Option 2</option>
-                    </select>
-                  </div>
+								{{ activity_report_form.indicator }}
+							</div>
+						</div>
+					</div>
                 </div>
-                <div class="field-col">
-                  <div class="select-field">
-                    <label>Description</label>
-
-                    <select name="select" class="custom-select" id="monthlyDesc1">
-                      <option value="placeholder" disabled selected placeholder>Description</option>
-                      <option value="option1">Water</option>
-                      <option value="option2">Option 2</option>
-                    </select>
-                  </div>
-                </div>
-                <div class="field-col">
-                  <div class="select-field">
-                    <label>Description</label>
-
-                    <select name="select" class="custom-select" id="monthlyBenefciary1">
-                      <option value="placeholder" disabled selected placeholder>Description</option>
-                      <option value="option1">Water</option>
-                      <option value="option2">Option 2</option>
-                    </select>
-                  </div>
-                </div>
-              </div>
             </div>
-            <div class="col">
-              <div class="multiple-fields-row three-items">
-                <div class="field-col">
-                  <div class="select-field">
-                    <label>HRP Status</label>
-
-                    <select name="select" class="custom-select" id="monthlyStatus1">
-                      <option value="placeholder" disabled selected placeholder>HRP Status</option>
-                      <option value="option1">Other</option>
-                      <option value="option2">Option 2</option>
-                    </select>
-                  </div>
-                </div>
-                <div class="field-col">
-                  <div class="select-field">
-                    <label>Category</label>
-
-                    <select name="select" class="custom-select" id="monthlyCat1">
-                      <option value="placeholder" disabled selected placeholder>Category</option>
-                      <option value="option1">Water</option>
-                      <option value="option2">Option 2</option>
-                    </select>
-                  </div>
-                </div>
-                <div class="field-col">
-                  <div class="select-field">
-                    <label>Type</label>
-
-                    <select name="select" class="custom-select" id="monthlyType1">
-                      <option value="placeholder" disabled selected placeholder>Type</option>
-                      <option value="option1">Water</option>
-                      <option value="option2">Option 2</option>
-                    </select>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="col">
-              <div class="multiple-fields-row three-items">
-                <div class="field-col">
-                  <div class="input-field">
-                    <label>Boys</label>
-                    <div class="input-holder">
-                      <input type="text" id="monthlyB1" placeholder="Boys" value="" />
-                    </div>
-                  </div>
-                </div>
-                <div class="field-col">
-                  <div class="input-field">
-                    <label>Girls</label>
-                    <div class="input-holder">
-                      <input type="text" id="monthlyG1" placeholder="Girls" value="" />
-                    </div>
-                  </div>
-                </div>
-                <div class="field-col">
-                  <div class="input-field">
-                    <label>Men</label>
-                    <div class="input-holder">
-                      <input type="text" id="monthlyM1" placeholder="Men" value="" />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="col">
-              <div class="multiple-fields-row three-items">
-                <div class="field-col">
-                  <div class="input-field">
-                    <label>Women</label>
-                    <div class="input-holder">
-                      <input type="text" id="monthlyW1" placeholder="Women" value="" />
-                    </div>
-                  </div>
-                </div>
-                <div class="field-col">
-                  <div class="input-field">
-                    <label>Eld. men (60+)</label>
-                    <div class="input-holder">
-                      <input type="text" id="monthlyEM1" placeholder="Eld. men (60+)" value="" />
-                    </div>
-                  </div>
-                </div>
-                <div class="field-col">
-                  <div class="input-field">
-                    <label>Eld. women (60+)</label>
-                    <div class="input-holder">
-                      <input type="text" id="monthlyEW1" placeholder="Eld. women (60+)" value="" />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="input-check-holder">
-            <input type="checkbox" id="monProgress1" checked />
-            <label for="monProgress1">
-              <span class="input"></span>
-              <span class="text">Winterization</span>
-            </label>
-          </div>
         </div>
-      </div>
-
-      <div class="inner-holder">
-        <a href="#" class="block-top monthly-accordion-opener">
-          <span class="title"
-            >District
-            <span class="tooltip-info icon-info" data-tippy-content="Lorem lorem lorem"></span>
-          </span>
-          <span class="people">
-            <span class="icon-group"></span>
-            1657
-          </span>
-        </a>
-        <div class="monthly-accordion-slide">
-          <div class="row">
-            <div class="col">
-              <div class="multiple-fields-row three-items">
-                <div class="field-col">
-                  <div class="select-field">
-                    <label>Activity</label>
-
-                    <select name="select" class="custom-select" id="monthlyActivity2">
-                      <option value="placeholder" disabled selected placeholder>Activity</option>
-                      <option value="option1">Other</option>
-                      <option value="option2">Option 2</option>
-                    </select>
-                  </div>
-                </div>
-                <div class="field-col">
-                  <div class="select-field">
-                    <label>Description</label>
-
-                    <select name="select" class="custom-select" id="monthlyDesc2">
-                      <option value="placeholder" disabled selected placeholder>Description</option>
-                      <option value="option1">Water</option>
-                      <option value="option2">Option 2</option>
-                    </select>
-                  </div>
-                </div>
-                <div class="field-col">
-                  <div class="select-field">
-                    <label>Description</label>
-
-                    <select name="select" class="custom-select" id="monthlyBenefciary2">
-                      <option value="placeholder" disabled selected placeholder>Description</option>
-                      <option value="option1">Water</option>
-                      <option value="option2">Option 2</option>
-                    </select>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="col">
-              <div class="multiple-fields-row three-items">
-                <div class="field-col">
-                  <div class="select-field">
-                    <label>HRP Status</label>
-
-                    <select name="select" class="custom-select" id="monthlyStatus2">
-                      <option value="placeholder" disabled selected placeholder>HRP Status</option>
-                      <option value="option1">Other</option>
-                      <option value="option2">Option 2</option>
-                    </select>
-                  </div>
-                </div>
-                <div class="field-col">
-                  <div class="select-field">
-                    <label>Category</label>
-
-                    <select name="select" class="custom-select" id="monthlyCat2">
-                      <option value="placeholder" disabled selected placeholder>Category</option>
-                      <option value="option1">Water</option>
-                      <option value="option2">Option 2</option>
-                    </select>
-                  </div>
-                </div>
-                <div class="field-col">
-                  <div class="select-field">
-                    <label>Type</label>
-
-                    <select name="select" class="custom-select" id="monthlyType2">
-                      <option value="placeholder" disabled selected placeholder>Type</option>
-                      <option value="option1">Water</option>
-                      <option value="option2">Option 2</option>
-                    </select>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="col">
-              <div class="multiple-fields-row three-items">
-                <div class="field-col">
-                  <div class="input-field">
-                    <label>Boys</label>
-                    <div class="input-holder">
-                      <input type="text" id="monthlyB2" placeholder="Boys" value="" />
-                    </div>
-                  </div>
-                </div>
-                <div class="field-col">
-                  <div class="input-field">
-                    <label>Girls</label>
-                    <div class="input-holder">
-                      <input type="text" id="monthlyG2" placeholder="Girls" value="" />
-                    </div>
-                  </div>
-                </div>
-                <div class="field-col">
-                  <div class="input-field">
-                    <label>Men</label>
-                    <div class="input-holder">
-                      <input type="text" id="monthlyM2" placeholder="Men" value="" />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="col">
-              <div class="multiple-fields-row three-items">
-                <div class="field-col">
-                  <div class="input-field">
-                    <label>Women</label>
-                    <div class="input-holder">
-                      <input type="text" id="monthlyW2" placeholder="Women" value="" />
-                    </div>
-                  </div>
-                </div>
-                <div class="field-col">
-                  <div class="input-field">
-                    <label>Eld. men (60+)</label>
-                    <div class="input-holder">
-                      <input type="text" id="monthlyEM2" placeholder="Eld. men (60+)" value="" />
-                    </div>
-                  </div>
-                </div>
-                <div class="field-col">
-                  <div class="input-field">
-                    <label>Eld. women (60+)</label>
-                    <div class="input-holder">
-                      <input type="text" id="monthlyEW2" placeholder="Eld. women (60+)" value="" />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="input-check-holder">
-            <input type="checkbox" id="monProgress2" checked />
-            <label for="monProgress2">
-              <span class="input"></span>
-              <span class="text">Winterization</span>
-            </label>
-          </div>
-        </div>
-      </div>
     </div>
+    {% endfor %}
     <div class="monthly-progress-submit-holder text-center">
-      <button type="submit" class="btn btn-red">Save</button>
+        <button type="submit" class="btn btn-red">Save</button>
     </div>
-  </div>
+</div>
 {% endblock report_body %}

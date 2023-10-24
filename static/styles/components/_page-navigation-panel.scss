@@ -1,0 +1,28 @@
+.page-navigation-panel {
+  border-bottom: 2px solid $gray-e6;
+
+  .holder {
+    @include media('>=tablet') {
+      display: grid;
+      align-items: center;
+      grid-template-columns: 25% 50% 25%;
+    }
+  }
+
+  .tabs-nav {
+    @include media('>=tablet') {
+      justify-content: center;
+      margin: 0;
+    }
+
+    li {
+      @include media('>=laptop') {
+        padding: 0 35px;
+      }
+    }
+  }
+
+  .tabs-nav-holder {
+    grid-column: 2 / 3;
+  }
+}

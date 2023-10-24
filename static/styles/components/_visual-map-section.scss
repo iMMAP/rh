@@ -1,0 +1,242 @@
+.visual-map-section {
+  padding: 20px 0;
+
+  @include media('>=desktop') {
+    padding: 20px 0 33px;
+  }
+
+  &.main-map {
+    .row {
+      display: flex;
+      flex-wrap: wrap;
+      margin: 0 -4px;
+    }
+
+    .col {
+      width: 100%;
+      padding: 0 4px;
+
+      @include media('>=desktop') {
+        width: 62.6%;
+      }
+
+      &.col-sm {
+        @include media('>=desktop') {
+          width: 14%;
+        }
+      }
+
+      &.col-md {
+        @include media('>=desktop') {
+          width: 23.4%;
+        }
+      }
+
+      &.order-1 {
+        order: 1;
+      }
+
+      &.order-lg-1 {
+        @include media('>=desktop') {
+          order: 1;
+        }
+      }
+
+      &.order-2 {
+        order: 2;
+      }
+
+      &.order-lg-2 {
+        @include media('>=desktop') {
+          order: 2;
+        }
+      }
+
+      &.order-3 {
+        order: 3;
+      }
+
+      &.order-lg-3 {
+        @include media('>=desktop') {
+          order: 3;
+        }
+      }
+    }
+  }
+
+  .inner-holder {
+    position: relative;
+    padding: 10px 0;
+    border: 2px solid $gray-e6;
+    border-width: 2px 0;
+
+    &:before,
+    &:after {
+      content: '';
+      position: absolute;
+      display: block;
+      height: 2px;
+      width: 33.1%;
+      background-color: $red-be;
+      z-index: 1;
+    }
+
+    &:before {
+      top: -2px;
+      left: 0;
+    }
+
+    &:after {
+      bottom: -2px;
+      right: 0;
+    }
+  }
+
+  .top-panel {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    margin: 0 0 4px;
+
+    .locations {
+      display: inline-block;
+      font-size: 24px;
+      font-weight: 600;
+      line-height: 1.2;
+      color: $gray-35;
+    }
+
+    .actions-panel {
+      @include media('<desktop') {
+        padding: 14px 0;
+        margin-left: auto;
+      }
+    }
+  }
+
+  .map-holder {
+    > img {
+      width: 100%;
+    }
+  }
+}
+
+.charts-holder {
+  padding: 10px 0;
+}
+
+.single-chart-holder {
+  border-bottom: 1px solid $gray-bc;
+  padding: 0 0 12px;
+  margin: 0 0 14px;
+
+  &:last-child {
+    margin: 0;
+
+    @include media('<desktop') {
+      border: 0;
+    }
+  }
+}
+
+.chart-inner {
+  margin: 0 auto;
+  max-width: 212px;
+  width: 100%;
+
+  @include media('>=desktop') {
+    margin: 0 0 0 auto;
+  }
+
+  .main-title {
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.2;
+    display: block;
+    margin: 0 0 6px;
+  }
+
+  .col-title {
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.25;
+    display: block;
+    margin: 0 0 8px;
+    color: $gray-35;
+  }
+
+  .col-percent {
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1;
+    display: block;
+    margin: 0 0 8px;
+    color: $gray-a4;
+  }
+
+  .col-quantity {
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.2;
+    display: block;
+    color: $gray-a4;
+  }
+}
+
+.chart-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.chart-col {
+  width: 40px;
+  padding: 0 12px;
+
+  &.main {
+    width: auto;
+    flex: 0 0 auto;
+  }
+}
+
+.chart {
+  .chart-circle {
+    animation: circle-chart-fill 2s reverse;
+    transform: rotate(-90deg);
+    transform-origin: center;
+  }
+
+  .chart-info {
+    animation: circle-chart-appear 2s forwards;
+    opacity: 0;
+    transform: translateY(0.3em);
+  }
+
+  .chart-percent {
+    font-size: 6px;
+    line-height: 1;
+    font-weight: 600;
+    color: $gray-35;
+  }
+
+  .chart-subline {
+    font-size: 5px;
+    line-height: 1.33;
+    font-weight: 600;
+    color: $gray-a4;
+  }
+
+  @keyframes circle-chart-fill {
+    to {
+      stroke-dasharray: 0 100;
+    }
+  }
+
+  @keyframes circle-chart-appear {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}

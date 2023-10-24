@@ -1,0 +1,64 @@
+.info-section {
+  padding: 20px 0;
+
+  &:last-child {
+    padding-bottom: 75px;
+  }
+
+  .section-heading {
+    @include media('>=desktop') {
+      margin: 0 0 50px;
+    }
+  }
+
+  .section-row {
+    display: flex;
+    flex-wrap: wrap;
+    margin: -10px -5px;
+
+    @include media('>=tablet') {
+      margin: -20px -10px;
+    }
+
+    @include media('>=desktop') {
+      margin: -20px -43px;
+    }
+  }
+
+  .section-col {
+    width: 33.333%;
+    padding: 10px 5px;
+    display: flex;
+
+    @include media('>=tablet') {
+      padding: 20px 10px;
+    }
+
+    @include media('>=desktop') {
+      padding: 20px 43px;
+    }
+  }
+
+  .info-block {
+    width: 100%;
+    padding: 0 0 16px;
+    border-bottom: 1px solid $gray-bc;
+    text-align: center;
+
+    .title {
+      display: block;
+      color: $red-be;
+      font-size: 12px;
+      font-weight: 600;
+      line-height: 1.67;
+    }
+
+    .number {
+      display: block;
+      color: $gray-35;
+      font-size: 23px;
+      font-weight: 600;
+      line-height: 1.2;
+    }
+  }
+}

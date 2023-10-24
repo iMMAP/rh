@@ -1,0 +1,54 @@
+
+// -----------------------------------------------------------------------------
+// This file contains very basic styles.
+// -----------------------------------------------------------------------------
+
+/**
+ * Set up a decent box model on the root element
+ */
+
+html {
+  box-sizing: border-box;
+  -webkit-text-size-adjust: none;
+}
+
+/**
+ * Make all elements from the DOM inherit from the parent box-sizing
+ * Since `*` has a specificity of 0, it does not override the `html` value
+ * making all elements inheriting from the root box-sizing value
+ * See: https://css-tricks.com/inheriting-box-sizing-probably-slightly-better-best-practice/
+ */
+
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+}
+
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure,
+footer, header, hgroup, main, menu, nav, section,
+iframe {
+  display: block;
+}
+
+/* adaptive images */
+img {
+  max-width: 100%;
+  height: auto;
+  vertical-align: top;
+}
+
+/* google map fix */
+.gm-style img {max-width: none}
+
+iframe {
+  width: 100%;
+  max-width: 100%;
+  border: 0;
+}
+
+figure {
+  margin: 0;
+}
+

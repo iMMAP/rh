@@ -12,9 +12,15 @@ export default defineConfig({
     }),
 
     djangoVitePlugin({
-      input: ["./src/js/app.js", "./src/styles/style.scss"],
+      input: ["src/styles/style.scss","src/js/app.js"],
       root:"..",
     }),
     
   ],
+
+  build: {
+    commonjsOptions: {
+      exclude: ['select2'],
+    },
+  }
 });

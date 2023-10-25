@@ -125,11 +125,6 @@ STATICFILES_DIRS = [
 ]
 STATIC_ROOT = BASE_DIR / 'static-cdn'
 
-DJANGO_VITE_PLUGIN = {
-    "BUILD_DIR": "static-cdn/build",
-    "BUILD_URL_PREFIX": "/" + STATIC_URL + "build",
-    "DEV_MODE": True,
-}
 
 
 INSTALLED_APPS += (

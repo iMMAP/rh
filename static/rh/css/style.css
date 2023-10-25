@@ -6555,3 +6555,18 @@ span.select2-container.select2-container--default.select2-container--open {
 .disaggregation_accordion_opener:hover{
   text-decoration: none;
 }
+
+
+.monthly-reporting{
+  padding: 20px 0 20px 0;
+}
+
+.report-title{
+  font-size: 16px;
+}
+
+.report_indicator{
+  text-wrap: wrap;
+  height: auto;
+
+}

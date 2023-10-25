@@ -8,7 +8,7 @@ from rh.models import *
 # ##############################################
 
 class ProjectMonthlyReport(models.Model):
-    """Project Monthly Reportign"""
+    """Project Monthly Reporting"""
 
     project = models.ForeignKey(Project, on_delete=models.SET_NULL, null=True, blank=True)
     REPORT_STATES = [

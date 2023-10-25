@@ -1,4 +1,7 @@
 {% extends "project_reports/forms/monthly_report_form_base.html" %}
+{% load static %}
+{% load compress %}
+
 
 {% block report_body %}
 <div class="content-block top-border">
@@ -15,7 +18,31 @@
             </ul>
         </div>
     </div>
-    {% for activity_report_form in activity_report_formset.forms %}
+
+	{% comment %} Monthly Reporting Date {% endcomment %}
+	<div class="monthly-reporting">
+		<div class="row">
+			<div class="col">
+				<div class="report-date-picker-field">
+					<div class="date start">
+						<label for="{{ report_form.report_date.id_for_label }}">Report Date</label>
+						{{ report_form.report_date }}
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	{% comment %} Monthly Reporting Activities against Locations and Indicators {% endcomment %}
+	<div class="location-block-holder">
+		<div class="block-top report-title">
+			Reporting Activities
+		</div>
+	</div>
+	{{ activity_report_formset.management_form }} 
+	{% csrf_token %}
+
+	{% for activity_report_form, location_report_formset in combined_formset %}
     <div class="monthly-progress monthly-accordion create-report">
         <div class="inner-holder">
             <a href="#" class="block-top monthly-accordion-opener">
@@ -60,18 +87,66 @@
 						<div class="field-col">
 							<div class="select-field">
 								<label>Indicator</label>
-
 								{{ activity_report_form.indicator }}
 							</div>
 						</div>
 					</div>
                 </div>
+
+				<div class="row monthly-reporting" id="report_locations-{{activity_report_form.prefix}}">
+                    <div class="col col-lg">
+                        <div class="target_location-block target_location-accordion">
+                            <div class="inner-holder">
+                                <button data-form-prefix="{{activity_report_form.prefix}}" type="button"
+                                        style="float:right;margin-top: 20px;"
+                                        class="btn btn-red add-target-location-form-button">Add Location Report
+                                </button>
+                                <a href="#" class="block-top target_location-accordion-opener">
+                                    <div class="location-block-holder">
+                                        <div class="block-top report-title">
+                                            Reporting Targeted Locations
+                                        </div>
+                                    </div>
+                                </a>
+                                <div class="target_location-accordion-slide">
+                                    {{ location_report_formset.management_form }}
+                                    <div id="{{ activity_report_form.prefix}}">
+                                        {% for location_report_form in location_report_formset %}
+                                        	{% include "project_reports/forms/location_report_empty_form.html" with location_report_form=location_report_form %}
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
             </div>
         </div>
     </div>
     {% endfor %}
+
+	{% comment %} Monthly Report Description and Files Upload {% endcomment %}
+	<div class="monthly-reporting">
+		<div class="row">
+			<div class="col">
+				<div class="input-field">
+					<label for="{{ report_form.description.id_for_label}}">Description &amp; Objectives</label>
+					<div class="input-holder">{{ report_form.description }}</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
     <div class="monthly-progress-submit-holder text-center">
         <button type="submit" class="btn btn-red">Save</button>
     </div>
 </div>
+
+{% comment %} {{ activity_plan_formset.media.js }}
+{% compress js %}
+	<script defer src="{% static 'project_reports/js/monthly_report_progress.js' %}"></script>
+{% endcompress js %} {% endcomment %}
+
 {% endblock report_body %}

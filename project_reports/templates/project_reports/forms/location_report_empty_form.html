@@ -1,0 +1,62 @@
+<div class="target_location_form" data-location-prefix="{{ location_report_form.prefix }}">
+    {{ location_report_form.id }}
+    <div class="location-inner-holder">
+        <div class="block-activity mb-3">
+        
+        </div>
+        <!-- <div class="block-top">
+            <span class="title">
+                <span id="title-province-{{ target_location_form.prefix }}"></span>
+                <span class="location-title" id="title-district-{{ target_location_form.prefix }}"></span>
+                <span class="location-title" id="title-site_name-{{ target_location_form.prefix }}"></span>
+            </span>
+        </div> -->
+        <div id="{{ target_location_form.prefix }}" >            
+            <div class="row">
+                <div class="col">
+                    <div class="multiple-fields-row three-items">
+                        <div class="field-col">
+                            <div class="select-field is-required">
+                                <label for="{{location_report_form.province.id_for_label}}" >Province / State</label>
+                                {{ location_report_form.province }}
+                            </div>
+                        </div>
+                        <div class="field-col">
+                            <div class="input-field is-required">
+                                <label for="{{location_report_form.district.id_for_label}}">District</label>
+                                {{ location_report_form.district }}
+                            </div>
+                        </div>
+                        <div class="field-col">
+                            <div class="input-field">
+                                <label for="{{location_report_form.zone.id_for_label}}">Ward / Zone</label>
+                                {{ location_report_form.zone }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br/>
+            <div class="disaggregation-block disaggregation-accordion monthly-reporting">
+                <div class="inner-holder">
+                  <a href="#" class="block-top disaggregation-accordion-opener">
+                    <div class="location-block-holder">
+                        <div class="block-top report-title">
+                            Reporting Disaggregations
+                        </div>
+                    </div>
+                  </a>
+                  <div class="disaggregation-accordion-slide">
+                        {{ location_report_form.disaggregation_report_formset.management_form }}
+                        {% for disaggregation_report_form in location_report_form.disaggregation_report_formset %}
+                            {{ disaggregation_report_form.id }}
+                            {% include "project_reports/forms/disaggregation_report_empty_form.html" %}
+                        {% endfor %}
+                  </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</div>
+

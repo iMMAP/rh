@@ -138,5 +138,4 @@ dmypy.json
 .prettierignore
 node_modules
 static-cdn
-.vscode
 .vite

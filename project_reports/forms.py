@@ -13,6 +13,9 @@ class ProjectMonthlyReportForm(forms.ModelForm):
         widgets = {
             'report_date': forms.widgets.DateInput(
                 attrs={'type': 'date', 'onfocus': "(this.type='date')", 'onblur': "(this.type='text')"}),
+            'state': forms.widgets.HiddenInput(),
+            'project': forms.widgets.HiddenInput(),
+            'active': forms.widgets.HiddenInput(),
         }
 
 
@@ -67,6 +70,10 @@ class ActivityPlanReportForm(forms.ModelForm):
     class Meta:
         model = ActivityPlanReport
         fields = "__all__"
+
+        widgets = {
+            'activity_plan': forms.widgets.HiddenInput(),
+        }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

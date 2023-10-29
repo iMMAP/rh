@@ -21,7 +21,7 @@ class ProjectMonthlyReport(models.Model):
     state = models.CharField(
         max_length=15,
         choices=REPORT_STATES,
-        default='draft', null=True, blank=True
+        default='todo', null=True, blank=True
     )
     active = models.BooleanField(default=True)
     report_period = models.DateField(blank=True, null=True)
@@ -86,7 +86,7 @@ class TargetLocationReport(models.Model):
 
 
     def __str__(self):
-        return f"{self.project}, {self.province}, {self.district}"
+        return f"{self.activity_plan_report}, {self.province}, {self.district}"
 
     class Meta:
         verbose_name = 'Target Location Report'

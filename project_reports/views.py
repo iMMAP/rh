@@ -2,7 +2,7 @@
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.forms.models import inlineformset_factory
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.cache import cache_control
 
 from rh.models import *
@@ -48,8 +48,7 @@ def create_project_monthly_report_view(request, project):
     project_state = project.state
 
     # Get all existing activity plans for the project
-    activity_plans = project.activityplan_set.select_related('activity_domain', 'activity_type', 'activity_detail').all()
-
+    activity_plans = project.activityplan_set.select_related('activity_domain', 'activity_type', 'activity_detail')
     # Get all existing target locaitions for the project
     target_locations = project.targetlocation_set.select_related('province', 'district').all()
     
@@ -64,7 +63,7 @@ def create_project_monthly_report_view(request, project):
     target_location_zones = Location.objects.filter(zone_q)
 
     # Create the Project Monthly Report form
-    report_form = ProjectMonthlyReportForm(initial={'project': project})
+    report_form = ProjectMonthlyReportForm(request.POST or None, initial={'project': project, 'state': 'todo'})
 
     # Create the activity plan formset with initial data from the project
     ActivityReportFormset = inlineformset_factory(
@@ -112,8 +111,53 @@ def create_project_monthly_report_view(request, project):
     for i, form in enumerate(activity_report_formset.forms):
         if i < len(activity_plans):
             activity_plan = activity_plans[i]
-            form.initial = {'activity_plan': activity_plan, 'project': project}
+            form.initial = {'activity_plan': activity_plan, 'project_id': project}
             form.fields['indicator'].queryset = activity_plan.indicators.all()
+    
+    if request.method == 'POST':
+        if report_form.is_valid():
+            monthly_report = report_form.save()
+            if activity_report_formset.is_valid():
+                # Save valid activity plan forms
+                for activity_report_form in activity_report_formset:
+                    if activity_report_form.cleaned_data.get('indicator'):
+                        activity_report = activity_report_form.save(commit=False)
+                        activity_report.monthly_report = monthly_report
+                        activity_report.save()
+
+                # Process target location forms and their disaggregation forms
+                for location_report_formset in location_report_formsets:
+                    if location_report_formset.is_valid():
+                        for location_report_form in location_report_formset:
+                            if location_report_form.cleaned_data != {}:
+                                if location_report_form.cleaned_data.get(
+                                        'province') and location_report_form.cleaned_data.get('district'):
+
+                                    location_report = location_report_form.save(commit=False)
+                                    location_report.activity_plan_report = activity_report
+                                    location_report.save()
+
+                            # if hasattr(location_report_form, 'disaggregation_report_formset'):
+                            #     disaggregation_report_formset = location_report_form.disaggregation_formset
+                            #     if disaggregation_formset.is_valid():
+
+                            #         # Delete the exisiting instances of the disaggregation location and create new
+                            #         # based on the indicator disaggregations
+                            #         target_location_form.instance.disaggregationlocation_set.all().delete()
+
+                            #         for disaggregation_form in disaggregation_formset:
+                            #             if disaggregation_form.cleaned_data != {} and disaggregation_form.cleaned_data.get('target') > 0:
+                            #                 disaggregation_instance = disaggregation_form.save(commit=False)
+                            #                 disaggregation_instance.target_location = target_location_instance
+                            #                 disaggregation_instance.save()
+
+                # activity_report_formset.save()
+                return redirect('create_project_monthly_report', project=project.pk)
+            else:
+                # TODO:
+                # Handle invalid activity_plan_formset
+                # Add error handling code here
+                pass
 
 
     parent_page = {

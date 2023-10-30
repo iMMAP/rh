@@ -43,7 +43,7 @@ class Location(models.Model):
 class Cluster(models.Model):
     """Clusters Model"""
 
-    countries = models.ManyToManyField(Location, blank=True, null=True)
+    countries = models.ManyToManyField(Location, blank=True)
 
     name = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
     code = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
@@ -76,8 +76,8 @@ class BeneficiaryType(models.Model):
 
 class Organization(models.Model):
     """Organizations Model"""
-    countries = models.ManyToManyField(Location, blank=True, null=True)
-    clusters = models.ManyToManyField(Cluster, blank=True, null=True)
+    countries = models.ManyToManyField(Location, blank=True)
+    clusters = models.ManyToManyField(Cluster, blank=True)
 
     name = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
     code = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
@@ -94,8 +94,8 @@ class Donor(models.Model):
     code = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
     name = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
 
-    countries = models.ManyToManyField(Location, blank=True, null=True)
-    clusters = models.ManyToManyField(Cluster, blank=True, null=True)
+    countries = models.ManyToManyField(Location, blank=True)
+    clusters = models.ManyToManyField(Cluster, blank=True)
 
     old_id = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
 

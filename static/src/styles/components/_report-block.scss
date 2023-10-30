@@ -1,0 +1,133 @@
+.financial-report {
+  &.read-only {
+    .btn {
+      &.btn-edit {
+        min-width: 128px;
+      }
+    }
+
+    .input-check-holder {
+      margin: 14px 0;
+
+      @include media('>=tablet') {
+        margin: 0;
+      }
+    }
+
+    .multiple-check-holder {
+      @include media('>=tablet') {
+        margin: 0 0 22px;
+      }
+    }
+  }
+
+  .inner-holder {
+    position: relative;
+    padding: 24px 16px 26px;
+    border: 2px solid $gray-e6;
+    border-width: 2px 0;
+    background-color: $gray-fa;
+
+    &:before,
+    &:after {
+      content: '';
+      position: absolute;
+      display: block;
+      height: 2px;
+      width: 33.1%;
+      background-color: $red-be;
+      z-index: 1;
+    }
+
+    &:before {
+      top: -2px;
+      left: 0;
+    }
+
+    &:after {
+      bottom: -2px;
+      right: 0;
+    }
+  }
+
+  .row {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0 -8px;
+  }
+
+  .col {
+    width: 100%;
+    flex: 1 auto;
+    padding: 0 8px;
+
+    &:last-child {
+      .input-field,
+      .select-field {
+        @include media('>=tablet') {
+          margin-bottom: 0;
+        }
+      }
+    }
+  }
+
+  .block-top {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    margin: 0 0 22px;
+
+    .title {
+      display: block;
+      color: $red-be;
+      font-size: 16px;
+      font-weight: 600;
+      line-height: 1.2;
+    }
+  }
+
+  .block-report-activity {
+    display: flex;
+    align-items: center;
+    margin-left: auto;
+  }
+
+  .finance-overall {
+    display: inline-block;
+    margin-right: 24px;
+    font-size: 16px;
+    font-weight: 500;
+    color: $gray-35;
+    min-width: 54px;
+    text-align: right;
+
+    &:only-child {
+      margin-right: 0;
+    }
+  }
+
+  .btn {
+    [class*='icon-'] {
+      margin-right: 4px;
+      color: $gray;
+    }
+  }
+
+  .input-check-holder {
+    margin-bottom: 12px;
+  }
+
+  .inner-heading-holder {
+    padding: 4px 0;
+    border-bottom: 1px solid $gray-a4;
+    margin: 20px 0;
+  }
+
+  .inner-heading-title {
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.2;
+    color: $gray;
+  }
+}

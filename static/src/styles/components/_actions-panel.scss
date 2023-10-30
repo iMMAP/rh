@@ -1,0 +1,239 @@
+.actions-panel {
+  display: flex;
+  align-items: center;
+
+  > * {
+    margin-right: 8px;
+
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+
+  .btn {
+    min-width: 84px;
+  }
+
+  .choices {
+    .choices__placeholder {
+      color: $gray-35;
+    }
+  }
+}
+
+.export-formats-holder {
+  position: relative;
+  z-index: 2;
+
+  &.export-formats-active {
+    .export-formats {
+      opacity: 1;
+      visibility: visible;
+    }
+  }
+
+  .export-formats {
+    @include transition(opacity visibility);
+
+    display: block !important;
+    position: absolute;
+    top: calc(100% + 10px);
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    visibility: hidden;
+    background-color: $white;
+    padding: 8px 8px 15px;
+    box-shadow: 0 4px 4px rgba(116, 114, 116, 0.1);
+    width: 200px;
+  }
+
+  .title {
+    display: block;
+    color: $gray-35;
+    font-size: 14px;
+    line-height: 1.2;
+    font-weight: 500;
+    margin: 0 0 21px;
+  }
+
+  .formats-list {
+    @extend %listreset;
+
+    padding: 0 2px;
+
+    li {
+      margin: 0 0 14px;
+
+      &:last-child {
+        margin: 0;
+      }
+    }
+
+    .input-check-holder {
+      margin: 0;
+    }
+  }
+}
+
+/* stylelint-disable */
+body.filter-active {
+  overflow: hidden;
+}
+/* stylelint-enable */
+
+.filter-holder {
+  position: relative;
+  z-index: 2;
+
+  &:after {
+    @include transition(opacity visibility);
+
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba($gray-35, 0.35);
+    opacity: 0;
+    visibility: hidden;
+    z-index: -1;
+  }
+
+  &.filter-active {
+    z-index: 9999;
+
+    &:after {
+      opacity: 1;
+      visibility: visible;
+      z-index: 1;
+    }
+
+    .filter-options {
+      opacity: 1;
+      visibility: visible;
+      transform: translateX(0);
+      z-index: 2;
+    }
+  }
+}
+
+.filter-options {
+  @include transition(opacity visibility transform);
+
+  max-width: 408px;
+  width: 100%;
+  display: flex !important;
+  flex-direction: column;
+  align-items: stretch;
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  padding: 32px;
+  background: $white;
+  box-shadow: 0 0 18px 0 rgba($gray-35, 0.75);
+  height: 100vh;
+  height: calc(var(--vh, 1vh) * 100);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateX(110%);
+  z-index: 1;
+
+  /* stylelint-disable */
+  &::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    background-color: $gray-d1;
+  }
+
+  &::-webkit-scrollbar {
+    width: 4px;
+    background-color: $red-be;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: $black;
+  }
+  /* stylelint-enable */
+
+  .block-top {
+    width: 100%;
+    padding-right: 30px;
+    margin: 0 0 32px;
+    flex: 0 0 auto;
+  }
+
+  .block-body {
+    width: calc(100% + 10px);
+    flex: 1 auto;
+    max-height: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+    padding-right: 10px;
+  }
+
+  .block-footer {
+    padding: 34px 0 0;
+
+    .btn-wrapper {
+      display: flex;
+      align-items: center;
+    }
+
+    .btn {
+      margin-right: 24px;
+      width: 50%;
+
+      &:last-child {
+        margin: 0;
+      }
+    }
+  }
+
+  .title {
+    display: block;
+    font-size: 24px;
+    font-weight: 600;
+    line-height: 1.2;
+    color: $gray-35;
+  }
+
+  .filter-close {
+    @include transition(transform color);
+
+    display: block;
+    width: 16px;
+    height: 16px;
+    position: absolute;
+    top: 32px;
+    right: 32px;
+    color: $gray-35;
+    z-index: 1;
+
+    &:before,
+    &:after {
+      content: '';
+      display: block;
+      width: 23px;
+      height: 1px;
+      background-color: currentColor;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+    }
+
+    &:before {
+      transform: translate(-50%, -50%) rotate(45deg);
+    }
+
+    &:after {
+      transform: translate(-50%, -50%) rotate(-45deg);
+    }
+
+    &:hover {
+      color: $red-be;
+      transform: rotate(360deg) scale(0.7);
+    }
+  }
+}

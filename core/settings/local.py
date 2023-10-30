@@ -1,3 +1,4 @@
+# ruff: noqa
 from .base import *
 
 LOCAL_INSTALLED_APPS = [
@@ -71,7 +72,5 @@ DJANGO_VITE_PLUGIN = {
     "BUILD_URL_PREFIX": "/" + STATIC_URL + "build",
     "DEV_MODE": True,
     "STATIC_LOOKUP": False,
-    'JS_ATTRS': {
-        'type': 'module'
-    },
+   
 }

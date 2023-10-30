@@ -1,0 +1,235 @@
+.cluster-section {
+  .profile-layout {
+    padding-top: 20px;
+
+    @include media('>=tablet') {
+      padding-top: 32px;
+    }
+  }
+}
+
+.profile-layout {
+  @include media('>=tablet') {
+    display: grid;
+    grid-template-columns: 250px 1fr;
+  }
+
+  @include media('>=desktop') {
+    grid-template-columns: 300px 1fr;
+  }
+
+  @include media('>=laptop') {
+    grid-template-columns: 346px 1fr;
+  }
+
+  .sidebar {
+    position: relative;
+    border-bottom: 2px solid $gray-e6;
+
+    @include media('>=tablet') {
+      border-right: 2px solid $gray-e6;
+      border-bottom: 0;
+    }
+
+    &:after {
+      @include media('>=tablet') {
+        content: '';
+        position: absolute;
+        right: -2px;
+        top: 0;
+        height: 160px;
+        width: 2px;
+        background-color: $red-be;
+      }
+    }
+  }
+
+  .main-content {
+    @include media('>=tablet') {
+      padding-left: 24px;
+      padding-right: 24px;
+    }
+
+    @include media('>=laptop') {
+      padding-left: 40px;
+      padding-right: 40px;
+    }
+
+    @include media('>=tablet') {
+      padding-bottom: 10px;
+    }
+  }
+}
+
+.profile-info-holder {
+  color: $gray-35;
+
+  @include media('>=tablet') {
+    padding: 11px 16px 0;
+  }
+
+  @include media('>=desktop') {
+    padding: 11px 24px 0 16px;
+  }
+
+  .buttons-holder {
+    padding-top: 12px;
+
+    .btn {
+      width: 100%;
+    }
+  }
+}
+
+.profile-info-block {
+  margin-bottom: 10px;
+
+  @include media('>=tablet') {
+    margin-bottom: 20px;
+  }
+
+  h1,
+  .h1 {
+    margin-bottom: 10px;
+
+    @include media('>=tablet') {
+      margin-bottom: 21px;
+    }
+  }
+
+  .subtitle-block {
+    border-bottom: 1px solid $gray-a4;
+    padding: 4px 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 9px;
+
+    .edit-btn {
+      @include transition(color);
+
+      color: $gray;
+      font-size: 10px;
+
+      &:hover {
+        color: $gray-35;
+      }
+    }
+
+    + .user-profile-contacts {
+      /* stylelint-disable */
+      li {
+        &:first-child {
+          padding-top: 8px;
+        }
+      }
+      /* stylelint-enable */
+    }
+  }
+
+  .subtitle {
+    font-size: 14px;
+    line-height: 1.2;
+    color: $red-be;
+    font-weight: 600;
+  }
+
+  .user-position {
+    display: block;
+    font-size: 14px;
+    line-height: 1.2;
+    font-weight: 600;
+    margin-bottom: 2px;
+  }
+
+  address,
+  .address {
+    line-height: 2.1;
+
+    a {
+      text-decoration: none;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+}
+
+.cluster-info-list {
+  @extend %listreset;
+
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0 -18px -8px;
+
+  li {
+    padding: 0 18px;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+  }
+
+  .title {
+    font-size: 14px;
+    color: $gray-92;
+    font-weight: 500;
+  }
+
+  .value {
+    font-size: 16px;
+    color: $gray-35;
+    font-weight: 600;
+    margin-left: 4px;
+  }
+}
+
+.user-profile-contacts {
+  @extend %listreset;
+
+  li {
+    padding: 12px 0;
+    border-bottom: 1px solid $gray-e6;
+
+    @include media('<tablet') {
+      border-bottom: 0;
+    }
+
+    @include media('>=tablet') {
+      padding: 16px 0 18px;
+    }
+  }
+
+  .title {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 11px;
+  }
+
+  a {
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+.user-info-form {
+  padding: 16px 0 0;
+
+  @include media('>=tablet') {
+    max-width: 440px;
+    margin: 0 auto;
+    padding: 12px 0 0;
+  }
+
+  .btn-holder {
+    padding-top: 12px;
+
+    .btn {
+      width: 100%;
+    }
+  }
+}

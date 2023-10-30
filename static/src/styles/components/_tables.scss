@@ -1,0 +1,698 @@
+.table-wrapper-scrollable {
+  overflow-y: hidden;
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  color: $gray-35;
+
+  &.responsive-table {
+    thead {
+      @include media('<tablet') {
+        display: none;
+      }
+    }
+
+    tr {
+      @include media('<tablet') {
+        display: block;
+      }
+
+      &:last-child {
+        /* stylelint-disable */
+        td {
+          @include media('<tablet') {
+            border-bottom: 1px solid $gray-e6;
+          }
+        }
+        /* stylelint-enable */
+      }
+    }
+
+    td {
+      @include media('<tablet') {
+        display: flex;
+        border-bottom: 1px solid $gray-e6;
+      }
+
+      &:last-child {
+        @include media('<tablet') {
+          border-bottom: 1px solid $gray-35;
+        }
+      }
+
+      &:before {
+        @include media('<tablet') {
+          content: attr(data-title);
+          width: 50%;
+          font-weight: 600;
+          font-size: 14px;
+          padding-right: 15px;
+          flex-shrink: 0;
+        }
+      }
+    }
+  }
+
+  th {
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 1.1428;
+    text-align: left;
+    padding: 8px;
+    border-bottom: 1px solid $gray-d1;
+    height: 46px;
+
+    &:first-child {
+      @include media('>=desktop') {
+        padding-left: 16px;
+      }
+    }
+
+    &:last-child {
+      @include media('>=desktop') {
+        padding-right: 16px;
+      }
+    }
+  }
+
+  td {
+    padding: 11px 8px;
+    border-bottom: 1px solid $gray-e6;
+    font-size: 12px;
+    line-height: 1.5;
+    vertical-align: top;
+
+    &:first-child {
+      @include media('>=desktop') {
+        padding-left: 16px;
+      }
+    }
+
+    &:last-child {
+      @include media('>=desktop') {
+        padding-right: 16px;
+      }
+    }
+  }
+
+  tbody {
+    tr {
+      &:last-child {
+        /* stylelint-disable */
+        td {
+          border-bottom: 0;
+        }
+        /* stylelint-enable */
+      }
+    }
+  }
+}
+
+//all projects table
+.all-projects-table {
+  table-layout: fixed;
+  min-width: 1150px;
+
+  th {
+    height: auto;
+    min-height: 46px;
+    display: flex;
+    align-items: center;
+    padding: 8px !important;
+  }
+
+  td {
+    padding: 11px 8px !important;
+  }
+
+  tr {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .active-row {
+    td {
+      border-bottom-color: transparent;
+      background-color: rgba($gray-f3, 0.3);
+    }
+
+    .table-slide-opener {
+      /* stylelint-disable */
+      [class*=icon-] {
+        transform: rotate(-180deg);
+      }
+      /* stylelint-enable */
+    }
+  }
+
+  .input-check-holder {
+    margin-bottom: 0;
+  }
+
+  .cluster-col {
+    width: 16.5%;
+
+    @include media('>=laptop') {
+      width: 12.75%;
+    }
+  }
+
+  .organisation-col {
+    width: 13.5%;
+  }
+
+  .title-col {
+    width: 14%;
+
+    @include media('>=laptop') {
+      width: 15.85%;
+    }
+  }
+
+  .update-date-col {
+    width: 13%;
+
+    @include media('>=laptop') {
+      width: 13.4%;
+    }
+  }
+
+  .location-col {
+    width: 9.2%;
+  }
+
+  .description-col {
+    width: 20%;
+
+    @include media('>=laptop') {
+      width: 23.3%;
+    }
+  }
+
+  .action-col {
+    width: 13.8%;
+    vertical-align: middle;
+    display: flex;
+
+    @include media('>=laptop') {
+      width: 12%;
+    }
+  }
+
+  .project-details-col {
+    @include transition(max-height);
+
+    width: 100%;
+    background-color: $gray-e6 !important;
+    border-bottom: 0;
+    vertical-align: middle;
+    font-size: 14px;
+    padding: 0 !important;
+    max-height: 0;
+    overflow: hidden;
+
+    .title {
+      font-weight: 600;
+    }
+
+    .table-flex-holder {
+      padding: 10px 8px;
+      min-height: 56px;
+      justify-content: center;
+    }
+
+    .col {
+      display: flex;
+      align-items: center;
+      padding: 0 20px;
+
+      @include media('>=tablet') {
+        padding: 0 30px;
+      }
+
+      @include media('>=desktop') {
+        padding: 0 55px;
+      }
+    }
+
+    dl {
+      display: flex;
+      margin-bottom: 0;
+      margin-left: 16px;
+
+      &:only-child {
+        margin-left: 0;
+      }
+    }
+
+    dt {
+      font-weight: 500;
+    }
+
+    dd {
+      font-weight: 400;
+      margin-left: 10px;
+    }
+  }
+}
+
+.table-flex-holder {
+  display: flex;
+  align-items: center;
+}
+
+.table-sort-buttons {
+  font-size: 4px;
+  display: flex;
+  flex-direction: column;
+  margin-left: 9px;
+
+  button {
+    margin: 1px 0;
+    font-weight: bold;
+  }
+
+  [class*=icon-] {
+    font-weight: 600;
+  }
+}
+
+.table-options-buttons {
+  @extend %listreset;
+
+  margin: 0 -12px;
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+
+  li {
+    padding: 0 12px;
+  }
+
+  button {
+    @include transition(color);
+
+    color: $gray;
+
+    &:hover {
+      color: $gray-35;
+    }
+  }
+}
+
+.table-slide-opener {
+  @include transition(color);
+
+  font-size: 8px;
+  color: $gray-35;
+  margin-left: 26px;
+  text-decoration: none;
+
+  &:hover {
+    color: $gray-35;
+    text-decoration: none;
+  }
+
+  [class*=icon-] {
+    @include transition(transform);
+
+    display: block;
+  }
+}
+
+// locations table
+.locations-table {
+  table-layout: fixed;
+
+  td {
+    vertical-align: middle;
+  }
+
+  .location-col {
+    @include media('>=tablet') {
+      width: 20.5%;
+    }
+  }
+
+  .sector-col {
+    @include media('>=tablet') {
+      width: 11%;
+    }
+  }
+
+  .name-col {
+    @include media('>=tablet') {
+      width: 34%;
+    }
+
+    @include media('>=desktop') {
+      width: 38%;
+    }
+  }
+
+  .people-col {
+    @include media('>=tablet') {
+      width: 18%;
+    }
+  }
+
+  .date-col {
+    @include media('>=tablet') {
+      width: 16.5%;
+    }
+
+    @include media('>=desktop') {
+      width: 12.5%;
+    }
+  }
+}
+
+//financial report table
+.report-table {
+  table-layout: fixed;
+
+  tbody {
+    tr {
+      &:last-child {
+        /* stylelint-disable */
+        td {
+          @include media('>=tablet') {
+            border-bottom: 1px solid $gray-d1;
+          }
+        }
+        /* stylelint-enable */
+      }
+    }
+  }
+
+  td {
+    @include media('>=desktop') {
+      height: 90px;
+      vertical-align: middle;
+    }
+
+    > a {
+      display: inline-block;
+      vertical-align: top;
+      margin-bottom: 14px;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  .month-col {
+    @include media('>=tablet') {
+      width: 19.5%;
+    }
+  }
+
+  .amount-col {
+    @include media('>=tablet') {
+      width: 19%;
+    }
+  }
+
+  .activity-col {
+    @include media('>=tablet') {
+      width: 19%;
+    }
+  }
+
+  .id-col {
+    @include media('>=tablet') {
+      width: 19%;
+    }
+  }
+
+  .notes-col {
+    @include media('>=tablet') {
+      width: 19%;
+    }
+  }
+
+  .edit-col {
+    @include media('>=tablet') {
+      width: 4.5%;
+    }
+  }
+
+  .date-col {
+    @include media('>=tablet') {
+      width: 19%;
+    }
+  }
+
+  .progress-col {
+    @include media('>=tablet') {
+      width: 19%;
+    }
+  }
+
+  .locations-col {
+    @include media('>=tablet') {
+      width: 19%;
+    }
+  }
+
+  .table-options-buttons {
+    font-size: 14px;
+  }
+
+  .indicator {
+    display: inline-block;
+    vertical-align: middle;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-right: 8px;
+
+    &-red {
+      background-color: $red-ae;
+    }
+
+    &-green {
+      background-color: $green;
+    }
+
+    &-olive {
+      background-color: $olive;
+    }
+  }
+}
+
+//users table
+.users-table {
+  table-layout: fixed;
+
+  tbody {
+    tr {
+      &:last-child {
+        /* stylelint-disable */
+        td {
+          @include media('>=tablet') {
+            border-bottom: 1px solid $gray-d1;
+          }
+        }
+        /* stylelint-enable */
+      }
+    }
+  }
+
+  th {
+    @include media('>=tablet', '<desktop') {
+      font-size: 12px;
+    }
+  }
+
+  td {
+    vertical-align: middle;
+
+    @include media('>=desktop') {
+      height: 54px;
+    }
+  }
+
+  .name-col {
+    @include media('>=tablet') {
+      width: 11.6%;
+    }
+  }
+
+  .position-col {
+    @include media('>=tablet') {
+      width: 11.6%;
+    }
+  }
+
+  .organization-col {
+    @include media('>=tablet') {
+      width: 11.6%;
+    }
+  }
+
+  .country-col {
+    @include media('>=tablet') {
+      width: 11.6%;
+    }
+  }
+
+  .sector-col {
+    @include media('>=tablet') {
+      width: 11.6%;
+    }
+  }
+
+  .username-col {
+    @include media('>=tablet') {
+      width: 11.6%;
+    }
+  }
+
+  .role-col {
+    @include media('>=tablet') {
+      width: 9.5%;
+    }
+  }
+
+  .last-login-col {
+    @include media('>=tablet') {
+      width: 13.5%;
+    }
+  }
+
+  .action-col {
+    @include media('>=tablet') {
+      width: 7.4%;
+    }
+  }
+
+  .table-options-buttons {
+    font-size: 14px;
+  }
+}
+
+//admin report table
+.admin-report-table {
+  @include media('>=desktop') {
+    table-layout: fixed;
+  }
+
+  tbody {
+    tr {
+      &:last-child {
+        /* stylelint-disable */
+        td {
+          @include media('>=tablet') {
+            border-bottom: 1px solid $gray-d1;
+          }
+        }
+        /* stylelint-enable */
+      }
+    }
+  }
+
+  td {
+    vertical-align: middle;
+
+    @include media('>=desktop') {
+      height: 72px;
+    }
+  }
+ 
+  .sector-col {
+    @include media('>=desktop') {
+      width: 11.6%;
+    }
+  }
+
+  .organization-col {
+    @include media('>=desktop') {
+      width: 11.6%;
+    }
+  }
+
+  .user-col {
+    @include media('>=desktop') {
+      width: 11.6%;
+    }
+  }
+
+  .contact-col {
+    @include media('>=desktop') {
+      width: 18.6%;
+    }
+
+    @include media('>=widescreen') {
+      width: 11.6%;
+    }
+  }
+
+  .name-col {
+    @include media('>=desktop') {
+      width: 34%;
+    }
+
+    @include media('>=widescreen') {
+      width: 39%;
+    }
+  }
+
+  .period-col {
+    @include media('>=desktop') {
+      width: 12.6%;
+    }
+
+    @include media('>=widescreen') {
+      width: 14.6%;
+    }
+  }
+}
+
+//admin contacts table
+.admin-contacts-table {
+  @include media('>=desktop') {
+    table-layout: fixed;
+  }
+
+  th,
+  td {
+    @include media('>=desktop') {
+      width: calc(100% / 7);
+    }
+  }
+
+  td {
+    vertical-align: middle;
+
+    @include media('>=desktop') {
+      height: 72px;
+    }
+  }
+}
+
+//profile info table
+.info-table {
+  @include media('>=desktop') {
+    table-layout: fixed;
+  }
+
+  th,
+  td {
+    @include media('>=desktop') {
+      width: 20%;
+    }
+  }
+
+  td {
+    vertical-align: middle;
+
+    @include media('>=desktop') {
+      height: 54px;
+    }
+  }
+}

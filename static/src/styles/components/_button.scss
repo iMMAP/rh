@@ -1,0 +1,116 @@
+// -----------------------------------------------------------------------------
+// This file contains all styles related to the button component.
+// -----------------------------------------------------------------------------
+#{$buttons} {
+  @extend %resetButton;
+}
+
+%btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 24px;
+  vertical-align: top;
+  color: $btn-color;
+  background-color: $btn-background;
+  padding: $btn-padding;
+  font-size: $btn-font-size;
+  line-height: $btn-line-height;
+  font-weight: $btn-font-weight;
+  text-decoration: none;
+  border-radius: 4px;
+  border: 1px solid currentColor;
+  text-align: center;
+
+  &:hover {
+    text-decoration: none;
+  }
+}
+
+.btn {
+  @extend %btn;
+  @include transition(color border-color background-color);
+
+  &.btn-red {
+    color: $white;
+    background-color: $red;
+    border-color: $red;
+
+    &:hover {
+      color: $white;
+      background-color: $red-a5;
+      border-color: $red-a5;
+    }
+  }
+
+  &.btn-gray-outline {
+    color: $gray-35;
+    border-color: $gray-d1;
+    background-color: transparent;
+
+    &:hover {
+      color: $gray-35;
+      border-color: $gray;
+    }
+  }
+
+  &.btn-gray {
+    color: $gray-35;
+    background-color: $gray-e6;
+    border-color: $gray-e6;
+
+    &:hover {
+      color: $gray-35;
+      background-color: $gray-d1;
+      border-color: $gray-d1;
+    }
+
+    [class*=icon-] {
+      color: $gray;
+    }
+  }
+
+  [class*=icon-] {
+    font-size: 86%;
+
+    &:last-child {
+      margin-left: 0.4em;
+    }
+  }
+}
+
+.btn-back {
+  display: inline-block;
+  vertical-align: top;
+  position: relative;
+  font-size: 14px;
+  line-height: 1.333;
+  color: $gray-35;
+  text-decoration: none;
+
+  &:before {
+    @extend %icon;
+
+    content: $icon-chevron-left;
+    font-size: 10px;
+    margin-right: 10px;
+    font-weight: 600;
+  }
+
+  &:hover {
+    text-decoration: none;
+  }
+}
+
+.buttons-list-inline {
+  @extend %listreset;
+
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0 -4px -8px;
+
+  li {
+    padding: 0 4px;
+    margin-bottom: 8px;
+  }
+}

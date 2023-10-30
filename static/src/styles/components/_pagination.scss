@@ -1,0 +1,169 @@
+.pagination-holder {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  align-items: center;
+  padding: 22px 0 0;
+
+  .view-options {
+    display: flex;
+    align-items: center;
+    margin-left: auto;
+
+    @include media('>=tablet') {
+      margin: 0;
+    }
+
+    label {
+      font-size: 14px;
+      font-weight: 600;
+      color: $gray-35;
+      line-height: 1.2;
+      margin: 0 10px 0 0;
+    }
+
+    .choices__list--dropdown {
+      min-width: 120px;
+
+      @include media('<tablet') {
+        left: auto;
+        right: 0;
+      }
+    }
+  }
+}
+
+.pagination-wrapper {
+  padding: 0 14px;
+  width: 100%;
+
+  @include media('>=tablet') {
+    width: auto;
+    flex: 0 0 auto;
+  }
+}
+
+.pagination {
+  @extend %listreset;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: nowrap;
+  margin: 0 -14px;
+  font-size: 14px;
+  font-weight: 400;
+  color: $gray-35;
+  line-height: 1;
+
+  .page-item {
+    padding: 0 14px;
+
+    &.current-page {
+      pointer-events: none;
+
+      .page-link {
+        color: $white;
+
+        &:before {
+          opacity: 1;
+          visibility: visible;
+        }
+      }
+    }
+
+    &.disabled {
+      pointer-events: none;
+    }
+
+    &.prev,
+    &.next {
+      font-weight: 600;
+      position: relative;
+
+      &:after {
+        @extend %icon;
+
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 12px;
+        z-index: -1;
+      }
+
+      &:hover {
+        .color-link {
+          color: $red-b5;
+        }
+      }
+
+      .page-link {
+        &:before {
+          content: none;
+        }
+      }
+    }
+
+    &.prev {
+      padding-right: 5px;
+      padding-left: 0;
+
+      &:after {
+        content: $icon-chevron-left;
+        left: 0;
+      }
+
+      .page-link {
+        padding-left: 14px;
+      }
+    }
+
+    &.next {
+      padding-left: 5px;
+      padding-right: 0;
+
+      &:after {
+        content: $icon-chevron-right;
+        right: 0;
+      }
+
+      .page-link {
+        padding-right: 14px;
+      }
+    }
+  }
+
+  .page-link {
+    @include transition(color);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    text-decoration: none;
+
+    &:before {
+      @include transition(opacity visibility);
+
+      content: '';
+      display: block;
+      width: 30px;
+      height: 30px;
+      background-color: $red-b5;
+      opacity: 0;
+      visibility: hidden;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+      z-index: -1;
+    }
+  }
+
+  .sep {
+    display: block;
+    margin: 0 17px;
+    pointer-events: none;
+  }
+}

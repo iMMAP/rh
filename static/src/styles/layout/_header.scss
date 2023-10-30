@@ -12,7 +12,7 @@
     top: 0;
     left: 0;
     right: 0;
-    box-shadow: 0 4px 21px 0 rgba($black, 0.75);
+    box-shadow: 0 0.5px 5px 0 rgba($black, 0.15);
     z-index: 999;
   }
 }
@@ -20,13 +20,14 @@
 .header {
   @include transition(box-shadow);
 
-  padding: 14px 0;
+  padding: 10px 0;
   position: relative;
   background: $white;
+  // background: $gray-f5;
   z-index: 99;
 
   @include media('>=desktop') {
-    padding: 22px 0;
+    padding: 14px 0;
   }
 
   .nav-active & {
@@ -70,7 +71,7 @@
   width: 55px;
 
   @include media('>=tablet') {
-    width: 94px;
+    width: 55px;
   }
 
   a {
@@ -163,6 +164,7 @@
     }
   }
 }
+
 /* stylelint-enable */
 
 .mobile-menu-holder {
@@ -286,7 +288,7 @@
   }
 
   .current {
-    > a {
+    >a {
       &:before {
         opacity: 1;
         visibility: visible;

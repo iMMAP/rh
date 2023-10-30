@@ -1,5 +1,6 @@
 {% extends "../_base.html" %}
 {% load static %}
+{% load vite %}
 
 {% block content %}
 
@@ -347,5 +348,8 @@
         </div>
     </div>
 </div>
+
+{% comment %} Full Pack relative to location of manage.py file {% endcomment %}
+{% vite 'stock/static/stock/stock.js' %}
 
 {% endblock content %}

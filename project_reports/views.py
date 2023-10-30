@@ -137,19 +137,19 @@ def create_project_monthly_report_view(request, project):
                                     location_report.activity_plan_report = activity_report
                                     location_report.save()
 
-                            # if hasattr(location_report_form, 'disaggregation_report_formset'):
-                            #     disaggregation_report_formset = location_report_form.disaggregation_formset
-                            #     if disaggregation_formset.is_valid():
+                            if hasattr(location_report_form, 'disaggregation_report_formset'):
+                                disaggregation_report_formset = location_report_form.disaggregation_report_formset
+                                if disaggregation_report_formset.is_valid():
 
-                            #         # Delete the exisiting instances of the disaggregation location and create new
-                            #         # based on the indicator disaggregations
-                            #         target_location_form.instance.disaggregationlocation_set.all().delete()
+                                    # Delete the exisiting instances of the disaggregation location and create new
+                                    # based on the indicator disaggregations
+                                    location_report_form.instance.disaggregationlocationreport_set.all().delete()
 
-                            #         for disaggregation_form in disaggregation_formset:
-                            #             if disaggregation_form.cleaned_data != {} and disaggregation_form.cleaned_data.get('target') > 0:
-                            #                 disaggregation_instance = disaggregation_form.save(commit=False)
-                            #                 disaggregation_instance.target_location = target_location_instance
-                            #                 disaggregation_instance.save()
+                                    for disaggregation_report_form in disaggregation_report_formset:
+                                        if disaggregation_report_form.cleaned_data != {} and disaggregation_report_form.cleaned_data.get('target') > 0:
+                                            disaggregation_report_instance = disaggregation_report_form.save(commit=False)
+                                            disaggregation_report_instance.target_location = location_report
+                                            disaggregation_report_instance.save()
 
                 # activity_report_formset.save()
                 return redirect('create_project_monthly_report', project=project.pk)

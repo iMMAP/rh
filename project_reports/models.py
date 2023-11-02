@@ -29,26 +29,10 @@ class ProjectMonthlyReport(models.Model):
     report_due_date = models.DateField(blank=True, null=True)
     description = models.TextField(blank=True, null=True)
 
-    def get_month(self):
-        month = ""
-        if self.report_date:
-            month =  self.report_date.strftime('%B')
-        return month
-
-    def get_year(self):
-        year = ""
-        if self.report_date:
-            year = self.report_date.year
-        return year
-
-    # def get_report_status(self):
-    #     status = 
-    #     return year
-
     def __str__(self):
         name = "Monthly Report"
         if self.report_date:
-            name = f"{self.report_date.month}, {self.report_date.year} Report"
+            name = f"{self.report_date.strftime('%B')}, {self.report_date.year} Report"
         return name
 
     class Meta:

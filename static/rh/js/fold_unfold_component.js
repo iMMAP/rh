@@ -1,4 +1,4 @@
-const DETAILS_TOGGLE_DURATION = 500;
+var DETAILS_TOGGLE_DURATION = 500;
 
 // jQuery's shorthand document ready function
 $(function () {

@@ -9,6 +9,7 @@
                     <li>
                         <a href="{% url 'home' %}">Home</a>
                     </li>
+                    {% if parent_page %}
                     <li>
                         <a id="return-url" href="{% url parent_page %}">
                             {% if project.state == 'in-progress' %}
@@ -22,6 +23,7 @@
                             {% endif %}
                         </a>
                     </li>
+                    {% endif %}
                     {% if project %}
                         <li class="current">{{ project.code }}</li>
                     {% else %}

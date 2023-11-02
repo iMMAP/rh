@@ -7,7 +7,7 @@ urlpatterns = [
     path('project/monthly_progress/?project=<str:project>/',
         user_views.index_project_report_view, name='project_reports_home'),
     path('project/monthly_progress/view/<str:pk>/', user_views.details_monthly_progress_view, name='view_monthly_report'),
-    path('project/monthly_progress/create/?project=<str:project>', user_views.create_project_monthly_report_view, name='create_project_monthly_report'),
+    path('project/monthly_progress/create/<str:project>/<str:report>', user_views.create_project_monthly_report_view, name='create_project_monthly_report'),
     
     # # Projects Activity Plannings CRUD
     # path('project/activity_plan/create/?project=<str:project>/', user_views.create_project_activity_plan,
@@ -18,11 +18,12 @@ urlpatterns = [
 
     # path('project/project_plan/submit/<str:pk>/', user_views.submit_project, name='project_submit'),
 
+    # Ajax for data load
+    # path('ajax/load-activity_domains/', user_views.load_activity_domains, name='ajax-load-activity_domains'),
     # path('ajax/load-locations-details/', user_views.load_locations_details, name='ajax-load-locations'),
     # path('ajax/load-facility_sites/', user_views.load_facility_sites, name='ajax-load-facility_sites'),
 
-    # path('ajax/get_target_location_empty_form/', user_views.get_target_location_empty_form, name='get_target_location_empty_form'),
-    # path('ajax/get_activity_empty_form/', user_views.get_activity_empty_form, name='get_activity_empty_form'),
-    # path('ajax/get_disaggregations_forms/', user_views.get_disaggregations_forms, name='get_disaggregations_forms'),
+    path('ajax/get_location_report_empty_form/', user_views.get_location_report_empty_form, name='get_location_report_empty_form'),
+    path('ajax/get_disaggregations_report_forms/', user_views.get_disaggregations_report_empty_forms, name='get_disaggregations_report_empty_forms'),
 
 ]

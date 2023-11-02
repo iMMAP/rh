@@ -54,7 +54,7 @@ TargetLocationReportFormSet = inlineformset_factory(
         ActivityPlanReport,
         TargetLocationReport,
         form=TargetLocationReportForm,
-        extra=1,  # Number of empty forms to display
+        extra=0,  # Number of empty forms to display
         can_delete=True  # Allow deletion of existing forms
     )
 
@@ -62,7 +62,7 @@ DisaggregationReportFormSet = inlineformset_factory(
         TargetLocationReport,
         DisaggregationLocationReport,
         fields="__all__",
-        extra=2,  # Number of empty forms to display
+        extra=0,  # Number of empty forms to display
     )
 
 

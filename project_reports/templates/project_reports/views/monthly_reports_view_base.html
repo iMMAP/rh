@@ -23,7 +23,13 @@
             <li>
                 <a href="{% url 'view_project' project.id %}">{{ project.code }}</a>
             </li>
-            <li class="current">Monthly progress</li>
+            <li class="current">
+                {% if report %}
+                    {{report}}
+                {% else %}
+                    Monthly progress
+                {% endif %}
+            </li>
         </ul>
         <div class="actions-panel">
             <div class="filter-holder">
@@ -181,7 +187,7 @@
                 </ul>
             </div>
             <div>
-                <a href="{% url 'create_project_monthly_report' project.id %}" class="btn btn-red add-btn">Add Monthly
+                <a href="{% url 'create_project_monthly_report' project=project.pk report='New' %}" class="btn btn-red add-btn">Add Monthly
                     Report
                 </a>
             </div>

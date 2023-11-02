@@ -434,30 +434,36 @@ def create_project_activity_plan(request, project):
                     activity_plan.title = title
 
             # Process target location forms and their disaggregation forms
-            for target_location_formset in target_location_formsets:
-                if target_location_formset.is_valid():
-                    for target_location_form in target_location_formset:
-                        if target_location_form.cleaned_data != {}:
-                            if target_location_form.cleaned_data.get(
-                                    'province') and target_location_form.cleaned_data.get('district'):
+            for post_target_location_formset in target_location_formsets:
+                if post_target_location_formset.is_valid():
+                    for post_target_location_form in post_target_location_formset:
+                        if post_target_location_form.cleaned_data != {}:
+                            if post_target_location_form.cleaned_data.get(
+                                    'province') and post_target_location_form.cleaned_data.get('district'):
 
-                                target_location_instance = target_location_form.save()
+                                target_location_instance = post_target_location_form.save()
                                 target_location_instance.project = project
                                 target_location_instance.save()
 
-                        if hasattr(target_location_form, 'disaggregation_formset'):
-                            disaggregation_formset = target_location_form.disaggregation_formset
-                            if disaggregation_formset.is_valid():
-
-                                # Delete the exisiting instances of the disaggregation location and create new
-                                # based on the indicator disaggregations
-                                target_location_form.instance.disaggregationlocation_set.all().delete()
-
-                                for disaggregation_form in disaggregation_formset:
+                        if hasattr(post_target_location_form, 'disaggregation_formset'):
+                            post_disaggregation_formset = post_target_location_form.disaggregation_formset.forms
+                            
+                            # Delete the exisiting instances of the disaggregation location and create new
+                            # based on the indicator disaggregations
+                            # 
+                            new_disaggregations = []
+                            for disaggregation_form in post_disaggregation_formset:
+                                if disaggregation_form.is_valid():
                                     if disaggregation_form.cleaned_data != {} and disaggregation_form.cleaned_data.get('target') > 0:
                                         disaggregation_instance = disaggregation_form.save(commit=False)
                                         disaggregation_instance.target_location = target_location_instance
                                         disaggregation_instance.save()
+                                        new_disaggregations.append(disaggregation_instance.id)
+
+                            all_disaggregations = post_target_location_form.instance.disaggregationlocation_set.all()
+                            for dis in all_disaggregations:
+                                if dis.id not in new_disaggregations:
+                                    dis.delete()
 
             activity_plan_formset.save()
 

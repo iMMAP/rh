@@ -10,7 +10,11 @@
         <div class="page-navigation-panel">
             <div class="holder">
                 <div class="link-holder">
-                    <a href="{% url parent_page %}" class="btn-back">Back to All Projects</a>
+                    {% if parent_page %}
+                        <a href="{% url parent_page %}" class="btn-back">Back to All Projects</a>
+                    {% else %}
+                        <a href="{% url 'active_projects' %}" class="btn-back">Back to Active Projects</a>
+                    {% endif %}
                 </div>
 
                 <div class="tabs-nav-holder">

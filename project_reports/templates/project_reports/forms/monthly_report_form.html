@@ -7,7 +7,7 @@
 <div class="content-block top-border">
     <div class="project-title">
         <div class="holder">
-            <strong class="h5">October 2022</strong>
+            <strong class="h5">{{ report_form.instance.report_date | date:"F Y" }}</strong>
             <ul class="buttons-list-inline">
                 <li>
                     <a href="#" class="btn btn-gray">
@@ -18,11 +18,7 @@
             </ul>
         </div>
     </div>
-
-	
-
 	<form method="post" enctype="multipart/form-data" id="activity-formset-form">
-		
 		{% comment %} Monthly Reporting Date {% endcomment %}
 		<div class="monthly-reporting">
 			<div class="row">
@@ -56,8 +52,13 @@
 				<a href="#" class="block-top monthly-accordion-opener">
 					<span class="title">
 						<span class="tooltip-info icon-info" data-tippy-content="Lorem lorem lorem"></span>
-						{{ activity_report_form.initial.activity_plan }}
+						{% if activity_report_form.instance.pk %}
+							{{ activity_report_form.instance.activity_plan }}
+						{% else %}
+							{{ activity_report_form.initial.activity_plan }}
+						{% endif %}
 						{{ activity_report_form.activity_plan }}
+						{{ activity_report_form.id }}
 					</span>
 					<span class="people">
 						<span class="icon-group"></span>
@@ -71,23 +72,41 @@
 								<div class="field-col">
 									<div class="select-field">
 										<span class="label">Activity Domain</span>
-										<span class="text-read-only">{{ activity_report_form.initial.activity_plan.activity_domain.name }}</span>
+										<span class="text-read-only">
+											{% if activity_report_form.instance.pk %}
+												{{ activity_report_form.instance.activity_plan.activity_domain.name }}
+											{% else %}
+												{{ activity_report_form.initial.activity_plan.activity_domain.name }}
+											{% endif %}
+										</span>
 									</div>
 								</div>
 								<div class="field-col">
 									<div class="select-field">
 										<span class="label">Activity Type</span>
-										<span class="text-read-only">{{ activity_report_form.initial.activity_plan.activity_type.name }}</span>
+										<span class="text-read-only">
+											{% if activity_report_form.instance.pk %}
+												{{ activity_report_form.instance.activity_plan.activity_type.name }}
+											{% else %}
+												{{ activity_report_form.initial.activity_plan.activity_type.name }}
+											{% endif %}
+										</span>
 									</div>
 								</div>
 							</div>
 						</div>
-						{% if activity_report_form.initial.activity_plan.activity_detail %}
+						{% if activity_report_form.instance.activity_plan.activity_detail or activity_report_form.initial.activity_plan.activity_detail %}
 							<div class="col">
 								<div class="field-col">
 									<div class="select-field">
 										<span class="label">Activity Details</span>
-										<span class="text-read-only">{{ activity_report_form.initial.activity_plan.activity_detail.name }}</span>
+										<span class="text-read-only">
+											{% if activity_report_form.instance.pk %}
+												{{ activity_report_form.instance.activity_plan.activity_detail.name }}
+											{% else %}
+												{{ activity_report_form.initial.activity_plan.activity_detail.name }}
+											{% endif %}
+										</span>
 									</div>
 								</div>
 							</div>
@@ -106,9 +125,9 @@
 						<div class="col col-lg">
 							<div class="target_location-block target_location-accordion">
 								<div class="inner-holder">
-									<button data-form-prefix="{{activity_report_form.prefix}}" type="button"
+									<button data-form-prefix="{{activity_report_form.prefix}}" data-project="{{ project.pk }}" type="button"
 											style="float:right;margin-top: 20px;"
-											class="btn btn-red add-target-location-form-button">Add Location Report
+											class="btn btn-red add-location-report-button">Add Location Report
 									</button>
 									<a href="#" class="block-top target_location-accordion-opener">
 										<div class="location-block-holder">
@@ -119,7 +138,7 @@
 									</a>
 									<div class="target_location-accordion-slide">
 										{{ location_report_formset.management_form }}
-										<div id="{{ activity_report_form.prefix}}">
+										<div id="{{ activity_report_form.prefix }}">
 											{% for location_report_form in location_report_formset %}
 												{% include "project_reports/forms/location_report_empty_form.html" with location_report_form=location_report_form %}
 											{% endfor %}
@@ -129,8 +148,6 @@
 							</div>
 						</div>
 					</div>
-
-
 				</div>
 			</div>
 		</div>
@@ -154,9 +171,9 @@
 	</form>
 </div>
 
-{% comment %} {{ activity_plan_formset.media.js }}
+{{ activity_plan_formset.media.js }}
 {% compress js %}
 	<script defer src="{% static 'project_reports/js/monthly_report_progress.js' %}"></script>
-{% endcompress js %} {% endcomment %}
+{% endcompress js %}
 
 {% endblock report_body %}

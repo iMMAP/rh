@@ -6,11 +6,11 @@
             {% with report_state=report.state %}
                 <span class="indicator indicator-{{ report|custom_class }}"></span>
             {% endwith %}
-            {{ report.get_month }} {{ report.get_year }}
+            {{ report.report_date | date:"F Y" }}
         </div>
     </td>
 
-    <td class="progress-col" data-title="Progress Report">Monthly progress for {{ report.get_month }} {{ report.get_year }}</td>
+    <td class="progress-col" data-title="Progress Report">Monthly progress for {{ report.report_date | date:"F Y" }}</td>
 
     <td class="date-col" data-title="Due date">{{ report.report_due_date | date:"d F Y" }}</td>
 
@@ -26,7 +26,7 @@
         <ul class="table-options-buttons">
             <li>
                 <button>
-                    <a class="text-decoration-none" href="{% url 'view_monthly_report' report.id %}">
+                    <a class="text-decoration-none" href="{% url 'create_project_monthly_report' project=project.id report=report.id %}">
                         <span class="icon-pen"></span>
                     </a>
                 </button>

@@ -1,0 +1,47 @@
+{% extends "rh/projects/projects_index.html" %}
+
+{% block project_body %}
+<div class="breadcrumbs-nav-panel">
+    <div class="holder">
+      <ul class="breadcrumbs">
+        <li>
+            <a href="{% url 'home' %}">Home</a>
+        </li>
+        <li>
+            <a id="return-url" href="{% url parent_page %}">
+                {% if project.state == 'in-progress' %}
+                    Active Projects
+                {% elif project.state == 'draft' %}
+                    Draft Projects
+                {% elif project.state == 'archive' %}
+                    Archived Projects
+                {% elif project.state == 'done' %}
+                    Completed Projects
+                {% endif %}
+            </a>
+        </li>
+        <li>
+            <a href="{% url 'view_project' project.id %}">{{ project.code }}</a>
+        </li>
+        <li class="current">Monthly progress</li>
+    </ul>
+      <ul class="buttons-list-inline">
+        <li>
+          <a href="#" class="btn btn-gray">
+            <span class="btn-text">Copy last month</span>
+            <span class="icon-copy-outline"></span>
+          </a>
+        </li>
+        <li>
+          <a href="#" class="btn btn-red">
+            <span class="btn-text">Import</span>
+            <span class="icon-upload"></span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+  {% block report_body %}
+  {% endblock report_body %}
+
+{% endblock project_body %}

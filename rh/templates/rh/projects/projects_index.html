@@ -1,0 +1,41 @@
+{% extends "../../_base.html" %}
+{% load static %}
+{% load compress %}
+{% block page_title %}
+    ReportHub -
+    Projects
+{% endblock page_title %}
+{% block content %}
+    <div class="container">
+        <div class="page-navigation-panel">
+            <div class="holder">
+                <div class="link-holder">
+                    {% if parent_page %}
+                        <a href="{% url parent_page %}" class="btn-back">Back to All Projects</a>
+                    {% else %}
+                        <a href="{% url 'active_projects' %}" class="btn-back">Back to Active Projects</a>
+                    {% endif %}
+                </div>
+
+                <div class="tabs-nav-holder">
+                    <ul class="tabs-nav">
+                        <li class="{% if project_view %}active{% endif %}">
+                            <a href="{% if project %}{% url 'update_project' project.pk %}{% else %}{% url 'create_project' %}{% endif %}">Project
+                            planning</a>
+                        </li>
+                        <li class="{% if financial_view %}active{% endif %}">
+                            <a href="{% if project %}{% url 'create_project_budget_progress' project.pk %}{% else %}#{% endif %}">Financial Reports</a>
+                        </li>
+                        <li class="{% if reports_view %}active{% endif %}">
+                            <a href="{% if project %}{% url 'project_reports_home' project.pk %}{% else %}#{% endif %}">Monthly Progress</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        {% block project_body %}
+        {% endblock project_body %}
+        
+    </div>
+    
+{% endblock content %}

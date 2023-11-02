@@ -14,8 +14,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path, include
-
+from django.urls import include, path
 
 admin.site.site_header = 'ReportHub Admin'
 
@@ -23,6 +22,7 @@ urlpatterns = [
     path('', include('rh.urls')),
     path('', include('stock.urls')),
     path('', include('users.urls')),
+    path('', include('project_reports.urls')),
     path('', include('django.contrib.auth.urls')),
     path('admin/', admin.site.urls),
     path('chaining/', include('smart_selects.urls')),

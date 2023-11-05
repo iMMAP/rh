@@ -1,7 +1,9 @@
 # ReportHub from iMMAP
 
-### Make sure Poetry is installed on your machine
+## Setup the project locally
 
+### Install poetry
+Make sure Poetry is installed on your machine
 ```shell
 poetry --version
 ```
@@ -35,6 +37,11 @@ Run the vite developement server
 
 ```shell
 make vite
+```
+
+### Run the linter
+```shell
+make lint
 ```
 
 ### Install additional package

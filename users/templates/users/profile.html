@@ -1,5 +1,6 @@
 {% extends "../_base.html" %}
 {% load static %}
+{% load compress %}
 {% block content %}
     <div class="base-section">
         <div class="container">
@@ -84,4 +85,9 @@
             </div>
         </div>
     </div>
+
+    {% compress js %}
+        <script defer src="{% static 'users/js/profile.js' %}"></script>
+    {% endcompress js %}
+
 {% endblock content %}

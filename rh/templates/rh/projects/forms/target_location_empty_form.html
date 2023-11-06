@@ -1,32 +1,32 @@
 <div class="target_location_form" data-location-prefix="{{ target_location_form.prefix }}">
     {{ target_location_form.id }}
     <div class="location-inner-holder">
-        <div class="block-activity mb-3">
-            <div>
-                <button href="#"
-                    data-url="{% url 'copy_location' project=project.pk location=target_location_form.instance.pk  %}"
-                    data-return-url="{% url 'create_project_activity_plan' project=project.pk %}"
-                    data-type="copy"
-                    data-record-name="target location"
-                    class="btn btn-gray-outline show_confirm"><span class="btn-text">Duplicate</span><span class="icon-copy-outline"></span>
-                </button>
-                <button href="#"
-                    data-url="{% url 'delete_location' target_location_form.instance.pk %}"
-                    data-return-url="{% url 'create_project_activity_plan' project=project.pk %}"
-                    data-type="delete"
-                    data-record-name="target location"
-                    class="btn btn-gray-outline show_confirm">
-                    <span class="icon-trashbin"></span>
-                    <span class="btn-text">Delete</span>
-                </button>
-            </div>
-        </div>
         <div class="block-top">
-            <span class="title">
+            <div class="title">
                 <span id="title-province-{{ target_location_form.prefix }}"></span>
                 <span class="location-title" id="title-district-{{ target_location_form.prefix }}"></span>
                 <span class="location-title" id="title-site_name-{{ target_location_form.prefix }}"></span>
-            </span>
+            </div>
+            <div class="block-activity mb-3">
+                <div>
+                    <button href="#"
+                        data-url="{% url 'copy_location' project=project.pk location=target_location_form.instance.pk  %}"
+                        data-return-url="{% url 'create_project_activity_plan' project=project.pk %}"
+                        data-type="copy"
+                        data-record-name="target location"
+                        class="btn btn-gray-outline show_confirm"><span class="btn-text">Duplicate</span><span class="icon-copy-outline"></span>
+                    </button>
+                    <button href="#"
+                        data-url="{% url 'delete_location' target_location_form.instance.pk %}"
+                        data-return-url="{% url 'create_project_activity_plan' project=project.pk %}"
+                        data-type="delete"
+                        data-record-name="target location"
+                        class="btn btn-gray-outline show_confirm">
+                        <span class="icon-trashbin"></span>
+                        <span class="btn-text">Delete</span>
+                    </button>
+                </div>
+            </div>
         </div>
         <div id="{{ target_location_form.prefix }}" >
             
@@ -66,7 +66,7 @@
             </div>
             <div class="disaggregation-block disaggregation-accordion">
                 <div class="inner-holder">
-                  <div class="block-top disaggregation_accordion_opener">
+                  <div class="block-top disaggregation-accordion-opener">
                     <div class="location-block-holder">
                         <div class="block-top-title">
                             <div class="title">
@@ -75,7 +75,7 @@
                         </div>
                     </div>
                 </div>
-                  <div class="disaggregation_accordion_slide">
+                  <div class="disaggregation-accordion-slide">
                         {{ target_location_form.disaggregation_formset.management_form }}
                         {% for disaggregation_form in target_location_form.disaggregation_formset %}
                             {{ disaggregation_form.id }}

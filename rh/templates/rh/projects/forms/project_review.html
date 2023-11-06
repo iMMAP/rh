@@ -330,8 +330,10 @@
                         <div class="inner-holder">
                             <a href="#" class="block-top target_location-accordion-opener">
                                 <div class="location-block-holder">
-                                    <div class="block-top">
-                                        Target Locations
+                                    <div class="block-top-title">
+                                        <div class="title">
+                                            Target Locations
+                                        </div>
                                     </div>
                                 </div>
                                 <span class="btn btn-red" style="float:right"> {{ activity_plan.targetlocation_set.all | length }}</span>
@@ -410,34 +412,40 @@
                                                 <div class="inner-holder">
                                                     <a href="#" class="block-top disaggregation-accordion-opener">
                                                         <div class="location-block-holder">
-                                                            <div class="block-top">
-                                                                Disaggregations
+                                                            <div class="block-top-title">
+                                                                <div class="title">
+                                                                    Disaggregations
+                                                                </div>
                                                             </div>
                                                         </div>
                                                         <span class="btn btn-red" style="float:right"> {{ target_location.disaggregationlocation_set.all | length }}</span>
                                                     </a>
                                                     <div class="disaggregation-accordion-slide">
                                                         {% for disaggregation_location in target_location.disaggregationlocation_set.all %}
-                                                            <div class="location-inner-holder">  
-                                                                <div class="col col-lg">
-                                                                    <div class="multiple-fields-row two-items">
-                                                                        <div class="field-col">
-                                                                            <div class="select-field">
-                                                                                <span class="label">Disaggregation</span>
-                                                                                <span class="text-read-only">{{ disaggregation_location.disaggregation }}</span>
+                                                            <div class="location-inner-holder">
+                                                                <div class="row">
+                                                                    <div class="col col-lg">
+                                                                        <div class="multiple-fields-row two-items">
+                                                                            <div class="field-col">
+                                                                                <div class="select-field">
+                                                                                    <span class="label">Disaggregation</span>
+                                                                                    <span class="text-read-only">{{ disaggregation_location.disaggregation }}</span>
+                                                                                </div>
                                                                             </div>
-                                                                        </div>
-                                                                        <div class="field-col">
-                                                                            <div class="input-field">
-                                                                                <span class="label">Target</span>
-                                                                                <div class="input-holder">
-                                                                                    <span class="text-read-only">{{ disaggregation_location.target }}</span>
+                                                                            <div class="field-col">
+                                                                                <div class="input-field">
+                                                                                    <span class="label">Target</span>
+                                                                                    <div class="input-holder">
+                                                                                        <span class="text-read-only">{{ disaggregation_location.target }}</span>
+                                                                                    </div>
                                                                                 </div>
                                                                             </div>
                                                                         </div>
                                                                     </div>
-                                                                </div>
+                                                                </div>  
                                                             </div>
+                                                            <br/>
+                                                            <br/>
                                                         {% endfor %} 
                                                     </div>
                                                 </div>

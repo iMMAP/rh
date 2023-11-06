@@ -7,7 +7,7 @@
 
       .input-check-holder {
         @include media('>=tablet') {
-          padding: 35px 0 16px 7px !important;
+          padding: 5px 0 16px 7px !important;
         }
       }
     }
@@ -82,6 +82,8 @@
 .activity-title {
   display: block;
   color: $red-be;
+  font-size: 18px;
+  font-weight: 800;
 }
 
 .plan-submit-holder {
@@ -140,7 +142,7 @@
     align-items: center;
     justify-content: space-between;
     border-bottom: 2px solid $gray-e6;
-    margin: 0 0 4px;
+    margin: 0 0 -2px;
   }
 
   .subtitle {
@@ -224,14 +226,14 @@
 
     .title {
       display: block;
-      margin: 0 10px 14px 0;
+      margin: 15px 10px 14px 0;
       color: $red-be;
       font-size: 16px;
       line-height: 1.2;
       font-weight: 600;
 
       @include media('>=tablet') {
-        margin: 0 10px 0 0;
+        margin: 15px 10px 0 0;
       }
     }
 
@@ -292,7 +294,12 @@
       margin-right: 7px;
       font-size: 12px;
     }
+    
+    &.save {
+      color: $white;
+    }
   }
+
 }
 
 .block-location-activity {

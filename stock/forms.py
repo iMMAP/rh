@@ -1,21 +1,21 @@
 from django import forms
-
-from .models import *
+from rh.models import Location
+from .models import WarehouseLocation, StockLocationDetails, StockReports
 
 
 class WarehouseLocationForm(forms.ModelForm):
     class Meta:
         model = WarehouseLocation
-        fields = ('province', 'district', 'name')
+        fields = ("province", "district", "name")
         labels = {
-            'name': 'Warehouse Name',
+            "name": "Warehouse Name",
         }
         # exclude = ['id']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['province'].queryset = Location.objects.filter(type='Province')
-        self.fields['district'].queryset = Location.objects.filter(type='District')
+        self.fields["province"].queryset = Location.objects.filter(type="Province")
+        self.fields["district"].queryset = Location.objects.filter(type="District")
 
 
 class StockLocationDetailsForm(forms.ModelForm):
@@ -27,4 +27,4 @@ class StockLocationDetailsForm(forms.ModelForm):
 class StockReportForm(forms.ModelForm):
     class Meta:
         model = StockReports
-        fields = ['note']
+        fields = ["note"]

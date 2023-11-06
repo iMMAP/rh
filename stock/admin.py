@@ -1,15 +1,21 @@
 from django.contrib import admin
 
-from .models import *
-
-
+from .models import (
+    StockLocationDetails,
+    StockReports,
+    StockType,
+    StockUnit,
+    WarehouseLocation,
+)
+from rh.models import Location
 # Register your models here.
+
 
 def get_app_list(self, request):
     """
 
     ***IMPORTANT***
-    Add future new models here in this ordering method and then register 
+    Add future new models here in this ordering method and then register
     in admin.
     ***IMPORTANT***
 
@@ -19,18 +25,8 @@ def get_app_list(self, request):
     """
     # Retrieve the original list
     app_dict = self._build_app_dict(request)
-    app_list = sorted(app_dict.values(), key=lambda x: x['name'].lower())
+    app_list = sorted(app_dict.values(), key=lambda x: x["name"].lower())
 
-    # Sort the models customably within each app.
-    for app in app_list:
-        if app['app_label'] == 'stock':
-            ordering = {
-                "StockType": 16,
-                "StockUnit": 17,
-                "WarehouseLocation": 18,
-                "StockLocationDetails": 19,
-                "StockReports": 20,
-            }
     return app_list
 
 
@@ -52,15 +48,15 @@ admin.site.register(StockUnit)
 ###### Warehouse Location Model Admin ########
 ##############################################
 class WarehouseLocationAdmin(admin.ModelAdmin):
-    list_display = ('name', 'province', 'district')
-    search_fields = ('name', 'province__name')
-    list_filter = ('name', 'province')
+    list_display = ("name", "province", "district")
+    search_fields = ("name", "province__name")
+    list_filter = ("name", "province")
 
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         if db_field.name == "province":
-            kwargs["queryset"] = Location.objects.filter(type='Province')
+            kwargs["queryset"] = Location.objects.filter(type="Province")
         if db_field.name == "district":
-            kwargs["queryset"] = Location.objects.filter(type='District')
+            kwargs["queryset"] = Location.objects.filter(type="District")
         return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
 

@@ -29,7 +29,7 @@ class EmailBackend(ModelBackend):
             user = UserModel.objects.get(email=username)
         except UserModel.DoesNotExist:
             return None
-        
+
         except UserModel.MultipleObjectsReturned:
             # TODO: Handle with proper message
             return None

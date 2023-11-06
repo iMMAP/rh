@@ -1,5 +1,6 @@
 # ruff: noqa
 from .base import *
+import logging
 
 LOCAL_INSTALLED_APPS = [
     "debug_toolbar",
@@ -72,5 +73,4 @@ DJANGO_VITE_PLUGIN = {
     "BUILD_URL_PREFIX": "/" + STATIC_URL + "build",
     "DEV_MODE": True,
     "STATIC_LOOKUP": False,
-   
 }

@@ -1,8 +1,12 @@
 from django import forms
 from django.forms.models import inlineformset_factory
-from django.urls import reverse_lazy
 
-from .models import *
+from .models import (
+    ProjectMonthlyReport,
+    TargetLocationReport,
+    ActivityPlanReport,
+    DisaggregationLocationReport,
+)
 
 
 class ProjectMonthlyReportForm(forms.ModelForm):
@@ -11,11 +15,16 @@ class ProjectMonthlyReportForm(forms.ModelForm):
         fields = "__all__"
 
         widgets = {
-            'report_date': forms.widgets.DateInput(
-                attrs={'type': 'date', 'onfocus': "(this.type='date')", 'onblur': "(this.type='text')"}),
-            'state': forms.widgets.HiddenInput(),
-            'project': forms.widgets.HiddenInput(),
-            'active': forms.widgets.HiddenInput(),
+            "report_date": forms.widgets.DateInput(
+                attrs={
+                    "type": "date",
+                    "onfocus": "(this.type='date')",
+                    "onblur": "(this.type='text')",
+                }
+            ),
+            "state": forms.widgets.HiddenInput(),
+            "project": forms.widgets.HiddenInput(),
+            "active": forms.widgets.HiddenInput(),
         }
 
 
@@ -36,13 +45,13 @@ class TargetLocationReportForm(forms.ModelForm):
     # def __init__(self, *args, **kwargs):
     #     super().__init__(*args, **kwargs)
     #     self.fields['save'] = forms.BooleanField(required=False, initial=False,
-    #                                              widget=forms.HiddenInput(attrs={'name': self.prefix + '-save'}))
+    #                 widget=forms.HiddenInput(attrs={'name': self.prefix + '-save'}))
     #     self.fields['province'].queryset = self.fields['province'].queryset.filter(type='Province')
     #     self.fields['district'].queryset = self.fields['district'].queryset.filter(type='District')
     #     self.fields['zone'].queryset = self.fields['zone'].queryset.filter(type='Zone')
     #     self.fields['province'].widget.attrs.update({'data-form-prefix': f"{kwargs.get('prefix')}",
-    #                                                  'onchange': f"updateLocationTitle('{kwargs.get('prefix')}', 'id_{kwargs.get('prefix')}-province');",
-    #                                                  })
+    #        'onchange': f"updateLocationTitle('{kwargs.get('prefix')}', 'id_{kwargs.get('prefix')}-province');",
+    #      })
     #     self.fields['district'].widget.attrs.update(
     #         {'onchange': f"updateLocationTitle('{kwargs.get('prefix')}', 'id_{kwargs.get('prefix')}-district');",
     #          'locations-queries-url': reverse_lazy('ajax-load-locations')})
@@ -51,19 +60,19 @@ class TargetLocationReportForm(forms.ModelForm):
 
 
 TargetLocationReportFormSet = inlineformset_factory(
-        ActivityPlanReport,
-        TargetLocationReport,
-        form=TargetLocationReportForm,
-        extra=0,  # Number of empty forms to display
-        can_delete=True  # Allow deletion of existing forms
-    )
+    ActivityPlanReport,
+    TargetLocationReport,
+    form=TargetLocationReportForm,
+    extra=0,  # Number of empty forms to display
+    can_delete=True,  # Allow deletion of existing forms
+)
 
 DisaggregationReportFormSet = inlineformset_factory(
-        TargetLocationReport,
-        DisaggregationLocationReport,
-        fields="__all__",
-        extra=0,  # Number of empty forms to display
-    )
+    TargetLocationReport,
+    DisaggregationLocationReport,
+    fields="__all__",
+    extra=0,  # Number of empty forms to display
+)
 
 
 class ActivityPlanReportForm(forms.ModelForm):
@@ -72,10 +81,10 @@ class ActivityPlanReportForm(forms.ModelForm):
         fields = "__all__"
 
         widgets = {
-            'activity_plan': forms.widgets.HiddenInput(),
+            "activity_plan": forms.widgets.HiddenInput(),
         }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        
-        self.fields['indicator'].widget.attrs.update({'class': 'report_indicator'})
+
+        self.fields["indicator"].widget.attrs.update({"class": "report_indicator"})

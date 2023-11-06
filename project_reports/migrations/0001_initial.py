@@ -5,76 +5,219 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
     dependencies = [
-        ('rh', '0001_initial'),
+        ("rh", "0001_initial"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='ActivityPlanReport',
+            name="ActivityPlanReport",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('activity_plan', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='rh.activityplan')),
-                ('indicator', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='rh.indicator')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "activity_plan",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="rh.activityplan",
+                    ),
+                ),
+                (
+                    "indicator",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        to="rh.indicator",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Activity Plan Report',
-                'verbose_name_plural': 'Activity Plan Reports',
+                "verbose_name": "Activity Plan Report",
+                "verbose_name_plural": "Activity Plan Reports",
             },
         ),
         migrations.CreateModel(
-            name='TargetLocationReport',
+            name="TargetLocationReport",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('activity_plan_report', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='project_reports.activityplanreport')),
-                ('country', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='target_report_country', to='rh.location')),
-                ('district', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='target_report_district', to='rh.location')),
-                ('location_type', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='rh.locationtype')),
-                ('province', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='target_report_province', to='rh.location')),
-                ('zone', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='target_report_zones', to='rh.location')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "activity_plan_report",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="project_reports.activityplanreport",
+                    ),
+                ),
+                (
+                    "country",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        related_name="target_report_country",
+                        to="rh.location",
+                    ),
+                ),
+                (
+                    "district",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        related_name="target_report_district",
+                        to="rh.location",
+                    ),
+                ),
+                (
+                    "location_type",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        to="rh.locationtype",
+                    ),
+                ),
+                (
+                    "province",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        related_name="target_report_province",
+                        to="rh.location",
+                    ),
+                ),
+                (
+                    "zone",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        related_name="target_report_zones",
+                        to="rh.location",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Target Location Report',
-                'verbose_name_plural': 'Target Location Reports',
+                "verbose_name": "Target Location Report",
+                "verbose_name_plural": "Target Location Reports",
             },
         ),
         migrations.CreateModel(
-            name='ProjectMonthlyReport',
+            name="ProjectMonthlyReport",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('state', models.CharField(blank=True, choices=[('todo', 'Todo'), ('pending', 'Pending'), ('approve', 'Approved'), ('reject', 'Rejected'), ('complete', 'Complete')], default='todo', max_length=15, null=True)),
-                ('active', models.BooleanField(default=True)),
-                ('report_period', models.DateField(blank=True, null=True)),
-                ('report_date', models.DateField(blank=True, null=True)),
-                ('report_due_date', models.DateField(blank=True, null=True)),
-                ('description', models.TextField(blank=True, null=True)),
-                ('project', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='rh.project')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "state",
+                    models.CharField(
+                        blank=True,
+                        choices=[
+                            ("todo", "Todo"),
+                            ("pending", "Pending"),
+                            ("approve", "Approved"),
+                            ("reject", "Rejected"),
+                            ("complete", "Complete"),
+                        ],
+                        default="todo",
+                        max_length=15,
+                        null=True,
+                    ),
+                ),
+                ("active", models.BooleanField(default=True)),
+                ("report_period", models.DateField(blank=True, null=True)),
+                ("report_date", models.DateField(blank=True, null=True)),
+                ("report_due_date", models.DateField(blank=True, null=True)),
+                ("description", models.TextField(blank=True, null=True)),
+                (
+                    "project",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        to="rh.project",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Monthly Report',
-                'verbose_name_plural': 'Monthly Reports',
+                "verbose_name": "Monthly Report",
+                "verbose_name_plural": "Monthly Reports",
             },
         ),
         migrations.CreateModel(
-            name='DisaggregationLocationReport',
+            name="DisaggregationLocationReport",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('active', models.BooleanField(default=True)),
-                ('target', models.IntegerField(blank=True, default=0, null=True)),
-                ('disaggregation', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='rh.disaggregation')),
-                ('target_location_report', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='project_reports.targetlocationreport')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("active", models.BooleanField(default=True)),
+                ("target", models.IntegerField(blank=True, default=0, null=True)),
+                (
+                    "disaggregation",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="rh.disaggregation",
+                    ),
+                ),
+                (
+                    "target_location_report",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="project_reports.targetlocationreport",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Disaggregation Location Report',
-                'verbose_name_plural': 'Disaggregation Location Reports',
+                "verbose_name": "Disaggregation Location Report",
+                "verbose_name_plural": "Disaggregation Location Reports",
             },
         ),
         migrations.AddField(
-            model_name='activityplanreport',
-            name='monthly_report',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='project_reports.projectmonthlyreport'),
+            model_name="activityplanreport",
+            name="monthly_report",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                to="project_reports.projectmonthlyreport",
+            ),
         ),
     ]

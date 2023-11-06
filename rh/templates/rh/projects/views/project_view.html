@@ -1,561 +1,537 @@
-{% extends "../../../_base.html" %}
-{% load static %}
-{% load compress %}
-{% block page_title %}
-    ReportHub -
-    Projects
-{% endblock page_title %}
-{% block content %}
-    <div class="container">
-        <div class="breadcrumbs-nav-panel">
-            <div class="holder">
-                <div>
-                    <ul class="breadcrumbs">
-                        <li>
-                            <a id="return-url" href="{% url parent_page %}">
-                                {% if project.state == 'in-progress' %}
-                                    Active Projects
-                                {% elif project.state == 'draft' %}
-                                    Draft Projects
-                                {% elif project.state == 'archive' %}
-                                    Archived Projects
-                                {% elif project.state == 'done' %}
-                                    Completed Projects
-                                {% endif %}
-                            </a>
-                        </li>
-                        {% if project %}
-                            <li class="current">{{ project.code }}</li>
-                        {% else %}
-                            <li>New Project</li>
+{% extends "../projects_index.html" %}
+
+{% block project_body %}
+    <div class="breadcrumbs-nav-panel">
+        <div class="holder">
+            <ul class="breadcrumbs">
+                <li>
+                    <a href="{% url 'home' %}">Home</a>
+                </li>
+                <li>
+                    <a id="return-url" href="{% url parent_page %}">
+                        {% if project.state == 'in-progress' %}
+                            Active Projects
+                        {% elif project.state == 'draft' %}
+                            Draft Projects
+                        {% elif project.state == 'archive' %}
+                            Archived Projects
+                        {% elif project.state == 'done' %}
+                            Completed Projects
                         {% endif %}
-                    </ul>
+                    </a>
+                </li>
+                {% if project %}
+                    <li class="current">{{ project.code }}</li>
+                {% else %}
+                    <li>New Project</li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+    <div class="project-options-panel">
+        <div class="top-block">
+            <ul class="project-breadcrumbs">
+                <li>
+                    {% if user.profile.country %}{{ user.profile.country }}{% endif %}
+                </li>
+                <li>{{ project.code }}</li>
+                <li>
+                    {% for cluster in project.clusters.all %}
+                        {{ cluster.title }}
+                        {% if not forloop.last %},{% endif %}
+                    {% endfor %}
+                </li>
+            </ul>
+            <a href="{% url 'update_project' project.pk %}" class="btn btn-red">Edit</a>
+        </div>
+        <div class="bottom-block">
+            <div class="actions-panel">
+                <div class="export-formats-holder">
+                    <a href="#" class="btn btn-gray export-open">
+                        <span class="btn-text">Export</span>
+                        <span class="icon-download"></span>
+                    </a>
+                    <div class="export-formats">
+                        <span class="title">File format</span>
+                        <ul class="formats-list">
+                            <li>
+                                <button class="export-button">
+                                    <a href="#"
+                                        data-url="{% url 'export_project_excel' project.pk %}"
+                                        class="text-decoration-none"
+                                        title="Export Excel">
+                                        <span class="text">Excel</span>
+                                    </a>
+                                </button>
+                            </li>
+                            <li>
+                                <button class="export-button">
+                                    <a href="#"
+                                        data-url="{% url 'export_project_excel' project.pk %}"
+                                        class="text-decoration-none"
+                                        title="Export DOC">
+                                        <span class="text">DOC</span>
+                                    </a>
+                                </button>
+                            </li>
+                            <li>
+                                <button class="export-button">
+                                    <a href="#"
+                                        data-url="{% url 'export_project_excel' project.pk %}"
+                                        class="text-decoration-none"
+                                        title="Export CSV">
+                                        <span class="text">CSV</span>
+                                    </a>
+                                </button>
+                            </li>
+                            <li>
+                                <button class="export-button">
+                                    <a href="#"
+                                        data-url="{% url 'export_project_excel' project.pk %}"
+                                        class="text-decoration-none"
+                                        title="Export PDF">
+                                        <span class="text">PDF</span>
+                                    </a>
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
-                <div class="tabs-nav-holder">
-                    <ul class="tabs-nav">
-                        <li>
-                            <a href="{% if project %}{% url 'update_project' project.pk %}{% else %}{% url 'create_project' %}{% endif %}">Project
-                            plan</a>
-                        </li>
-                        <li>
-                            <a href="{% if project %}{% url 'create_project_budget_progress' project.pk %}{% else %}#{% endif %}">Financial Reports</a>
-                        </li>
-                        <li>
-                            <a href="#">Monthly Progress</a>
-                        </li>
-                    </ul>
-                </div>
-                <div class="tabs-nav-holder">
-                    
-                </div>
+                <a href="#"
+                    data-url="{% url 'copy_project' project.pk %}"
+                    data-return-url="{% url parent_page %}"
+                    data-type="copy"
+                    data-record-name="project"
+                    class="btn btn-gray show_confirm"><span class="btn-text">Duplicate</span><span class="icon-copy-outline"></span>
+                </a>
+                {% if project.active %}
+                    <a href="#"
+                        data-url="{% url 'archive_project' project.pk %}"
+                        data-return-url="{% url parent_page %}"
+                        data-type="archive"
+                        data-record-name="project"
+                        class="btn btn-gray show_confirm"
+                        title="Archive this project!">
+                        <span class="btn-text">Archive</span>
+                        <svg xmlns="http://www.w3.org/2000/svg"
+                                class="project-view archive-icon"
+                                width="15"
+                                height="15"
+                                viewBox="0 0 24 24">
+                            <path fill="currentColor" d="M20 21H4V10h2v9h12v-9h2v11M3 3h18v6H3V3m2 2v2h14V5m-8.5 6v3H8l4 4l4-4h-2.5v-3" />
+                        </svg>
+                    </a>
+                {% else %}
+                    <a href="#"
+                        data-url="{% url 'unarchive_project' project.pk %}"
+                        data-return-url="{% url 'draft_projects' %}"
+                        data-type="unarchive"
+                        data-record-name="project"
+                        class="btn btn-gray show_confirm"
+                        title="Unarchive this project!">
+                        <span class="btn-text">Unarchive</span>
+                        <svg xmlns="http://www.w3.org/2000/svg"
+                                class="project-view-icon"
+                                width="15"
+                                height="15"
+                                viewBox="0 0 36 36">
+                            <path fill="currentColor" d="M29 32H7V22H5v10a2 2 0 0 0 2 2h22a2 2 0 0 0 2-2V22h-2Z" class="clr-i-outline clr-i-outline-path-1" />
+                            <path fill="currentColor" d="M14 24a1 1 0 0 0 1 1h6a1 1 0 0 0 0-2h-6a1 1 0 0 0-1 1Z" class="clr-i-outline clr-i-outline-path-2" />
+                            <path fill="currentColor" d="M15 18H6v-4h9v-2H5.5A1.5 1.5 0 0 0 4 13.5V20h11.78a3 3 0 0 1-.78-2Z" class="clr-i-outline clr-i-outline-path-3" />
+                            <path fill="currentColor" d="M30.5 12H21v2h9v4h-9a3 3 0 0 1-.78 2H32v-6.5a1.5 1.5 0 0 0-1.5-1.5Z" class="clr-i-outline clr-i-outline-path-4" />
+                            <path fill="currentColor" d="m13 9.55l4-3.95V18a1 1 0 1 0 2 0V5.6l4 3.95a1 1 0 1 0 1.41-1.42L18 1.78l-6.39 6.35A1 1 0 0 0 13 9.55Z" class="clr-i-outline clr-i-outline-path-5" />
+                            <path fill="none" d="M0 0h36v36H0z" />
+                        </svg>
+                    </a>
+                {% endif %}
+                <a href="#"
+                    data-url="{% url 'delete_project' project.pk %}"
+                    data-return-url="{% url parent_page %}"
+                    data-type="delete"
+                    data-record-name="project"
+                    class="btn btn-gray show_confirm"><span class="btn-text">Delete</span><span class="icon-trashbin-outline"></span>
+                </a>
             </div>
         </div>
-        <div class="project-options-panel">
-            <div class="top-block">
-                <ul class="project-breadcrumbs">
-                    <li>
-                        {% if user.profile.country %}{{ user.profile.country }}{% endif %}
-                    </li>
-                    <li>{{ project.code }}</li>
-                    <li>
+    </div>
+    <div class="project-plan read-only">
+        <div class="row">
+            <div class="col">
+                <div class="input-field">
+                    <span class="label">Project title</span>
+                    <div class="input-holder">
+                        <span id="title" class="text-read-only">{{ project.title }}</span>
+                    </div>
+                </div>
+                <div class="input-field">
+                    <span class="label">Project code</span>
+                    <div class="input-holder">
+                        <span class="text-read-only">{{ project.code }}</span>
+                    </div>
+                </div>
+                <div class="select-field is-required">
+                    <span class="label">Clusters</span>
+                    <span class="text-read-only m2m-badges">
                         {% for cluster in project.clusters.all %}
-                            {{ cluster.title }}
-                            {% if not forloop.last %},{% endif %}
+                        <span class="btn btn-red"> {{ cluster.title }}</span>
                         {% endfor %}
-                    </li>
-                </ul>
-                <a href="{% url 'update_project' project.pk %}" class="btn btn-red">Edit</a>
-            </div>
-            <div class="bottom-block">
-                <div class="actions-panel">
-                    <div class="export-formats-holder">
-                        <a href="#" class="btn btn-gray export-open">
-                            <span class="btn-text">Export</span>
-                            <span class="icon-download"></span>
-                        </a>
-                        <div class="export-formats">
-                            <span class="title">File format</span>
-                            <ul class="formats-list">
-                                <li>
-                                    <button class="export-button">
-                                        <a href="#"
-                                            data-url="{% url 'export_project_excel' project.pk %}"
-                                            class="text-decoration-none"
-                                            title="Export Excel">
-                                            <span class="text">Excel</span>
-                                        </a>
-                                    </button>
-                                </li>
-                                <li>
-                                    <button class="export-button">
-                                        <a href="#"
-                                            data-url="{% url 'export_project_excel' project.pk %}"
-                                            class="text-decoration-none"
-                                            title="Export DOC">
-                                            <span class="text">DOC</span>
-                                        </a>
-                                    </button>
-                                </li>
-                                <li>
-                                    <button class="export-button">
-                                        <a href="#"
-                                            data-url="{% url 'export_project_excel' project.pk %}"
-                                            class="text-decoration-none"
-                                            title="Export CSV">
-                                            <span class="text">CSV</span>
-                                        </a>
-                                    </button>
-                                </li>
-                                <li>
-                                    <button class="export-button">
-                                        <a href="#"
-                                            data-url="{% url 'export_project_excel' project.pk %}"
-                                            class="text-decoration-none"
-                                            title="Export PDF">
-                                            <span class="text">PDF</span>
-                                        </a>
-                                    </button>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                    <a href="#"
-                        data-url="{% url 'copy_project' project.pk %}"
-                        data-return-url="{% url parent_page %}"
-                        data-type="copy"
-                        data-record-name="project"
-                        class="btn btn-gray show_confirm"><span class="btn-text">Duplicate</span><span class="icon-copy-outline"></span>
-                    </a>
-                    {% comment %} <a href="#" class="btn btn-gray"><span class="btn-text">Upload Document</span><span class="icon-upload"></span></a> {% endcomment %}
-                    {% if project.active %}
-                        <a href="#"
-                           data-url="{% url 'archive_project' project.pk %}"
-                           data-return-url="{% url parent_page %}"
-                           data-type="archive"
-                           data-record-name="project"
-                           class="btn btn-gray show_confirm"
-                           title="Archive this project!">
-                            <span class="btn-text">Archive</span>
-                            <svg xmlns="http://www.w3.org/2000/svg"
-                                 class="project-view archive-icon"
-                                 width="15"
-                                 height="15"
-                                 viewBox="0 0 24 24">
-                                <path fill="currentColor" d="M20 21H4V10h2v9h12v-9h2v11M3 3h18v6H3V3m2 2v2h14V5m-8.5 6v3H8l4 4l4-4h-2.5v-3" />
-                            </svg>
-                        </a>
-                    {% else %}
-                        <a href="#"
-                           data-url="{% url 'unarchive_project' project.pk %}"
-                           data-return-url="{% url 'draft_projects' %}"
-                           data-type="unarchive"
-                           data-record-name="project"
-                           class="btn btn-gray show_confirm"
-                           title="Unarchive this project!">
-                            <span class="btn-text">Unarchive</span>
-                            <svg xmlns="http://www.w3.org/2000/svg"
-                                 class="project-view-icon"
-                                 width="15"
-                                 height="15"
-                                 viewBox="0 0 36 36">
-                                <path fill="currentColor" d="M29 32H7V22H5v10a2 2 0 0 0 2 2h22a2 2 0 0 0 2-2V22h-2Z" class="clr-i-outline clr-i-outline-path-1" />
-                                <path fill="currentColor" d="M14 24a1 1 0 0 0 1 1h6a1 1 0 0 0 0-2h-6a1 1 0 0 0-1 1Z" class="clr-i-outline clr-i-outline-path-2" />
-                                <path fill="currentColor" d="M15 18H6v-4h9v-2H5.5A1.5 1.5 0 0 0 4 13.5V20h11.78a3 3 0 0 1-.78-2Z" class="clr-i-outline clr-i-outline-path-3" />
-                                <path fill="currentColor" d="M30.5 12H21v2h9v4h-9a3 3 0 0 1-.78 2H32v-6.5a1.5 1.5 0 0 0-1.5-1.5Z" class="clr-i-outline clr-i-outline-path-4" />
-                                <path fill="currentColor" d="m13 9.55l4-3.95V18a1 1 0 1 0 2 0V5.6l4 3.95a1 1 0 1 0 1.41-1.42L18 1.78l-6.39 6.35A1 1 0 0 0 13 9.55Z" class="clr-i-outline clr-i-outline-path-5" />
-                                <path fill="none" d="M0 0h36v36H0z" />
-                            </svg>
-                        </a>
-                    {% endif %}
-                    <a href="#"
-                        data-url="{% url 'delete_project' project.pk %}"
-                        data-return-url="{% url parent_page %}"
-                        data-type="delete"
-                        data-record-name="project"
-                        class="btn btn-gray show_confirm"><span class="btn-text">Delete</span><span class="icon-trashbin-outline"></span>
-                    </a>
-                </div>
-            </div>
-        </div>
-        <div class="project-plan read-only">
-            <div class="row">
-                <div class="col">
-                    <div class="input-field">
-                        <span class="label">Project title</span>
-                        <div class="input-holder">
-                            <span id="title" class="text-read-only">{{ project.title }}</span>
-                        </div>
-                    </div>
-                    <div class="input-field">
-                        <span class="label">Project code</span>
-                        <div class="input-holder">
-                            <span class="text-read-only">{{ project.code }}</span>
-                        </div>
-                    </div>
-                    <div class="select-field is-required">
-                        <span class="label">Clusters</span>
-                        <span class="text-read-only m2m-badges">
-                            {% for cluster in project.clusters.all %}
-                            <span class="btn btn-red"> {{ cluster.title }}</span>
-                            {% endfor %}
-                        </span>
-                    </div>
-                    <div class="select-field is-required">
-                        <span class="label">Project donor</span>
-                        <span class="text-read-only m2m-badges">
-                            {% for donor in project.donors.all %}
-                            <span class="btn btn-red"> {{ donor.name }}</span>
-                            {% endfor %}
-                        </span>
-                    </div>
-                    <div class="select-field is-required">
-                        <span class="label">Implementing Partners</span>
-                        <span class="text-read-only m2m-badges">
-                            {% for implementing_partner in project.implementing_partners.all %}
-                            <span class="btn btn-red"> {{ implementing_partner.code }}</span>
-                            {% endfor %}
-                        </span>
-                    </div>
-                    <div class="select-field is-required">
-                        <span class="label">Programme Partners</span>
-                        <span class="text-read-only m2m-badges">
-                            {% for programme_partner in project.programme_partners.all %}
-                            <span class="btn btn-red"> {{ programme_partner.code }}</span>
-                            {% endfor %}
-                        </span>
-                    </div>
-                </div>
-                <div class="col col-sm">
-                    <div class="date-picker-field">
-                        <div class="date start">
-                            <span class="label">Start Date</span>
-                            <span class="text-read-only">{{ project.start_date | date:'d M, Y' }}</span>
-                        </div>
-                        <div class="date end">
-                            <span class="label">End Date</span>
-                            <span class="text-read-only">{{ project.end_date | date:'d M, Y' }}</span>
-                        </div>
-                    </div>
-                    <div class="multiple-fields-row">
-                        <div class="field-col">
-                            <div class="input-field">
-                                <span class="label">Project budget</span>
-                                <div class="input-holder">
-                                    <span class="text-read-only">{{ project.budget }}</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="field-col">
-                            <span class="label">Currency</span>
-                            <div class="select-field is-required">
-                                <span class="text-read-only">{{ project.budget_currency }}</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="multiple-fields-row">
-                        <div class="field-col">
-                            <div class="input-field">
-                                <span class="label">Budget Received</span>
-                                <div class="input-holder">
-                                    <span class="text-read-only">{{ project.budget_received }}</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="field-col">
-                            <div class="input-field">
-                                <span class="label">Budget Gap</span>
-                                <div class="input-holder">
-                                    <span class="text-read-only">{{ project.budget_gap }}</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="multiple-fields-row">
-                        <div class="field-col">
-                            <div class="input-check-holder">
-                                {% if project.is_hrp_project %}
-                                <input type="checkbox" disabled checked />
-                                {% else %}
-                                <input type="checkbox" disabled />
-                                {% endif %}
-                                <span class="label">
-                                    <span class="input"></span>
-                                    <span class="text">HRP project?</span>
-                                </span>
-                            </div>
-                        </div>
-                        <div class="field-col">
-                            <div class="input-check-holder">
-                                {% if project.has_hrp_code %}
-                                <input type="checkbox" disabled checked />
-                                {% else %}
-                                <input type="checkbox" disabled />
-                                {% endif %}
-                                <span class="label">
-                                    <span class="input"></span>
-                                    <span class="text">HRP Code?</span>
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="input-field">
-                        <span class="label">HRP project code</span>
-                        <div class="input-holder">
-                            <span class="text-read-only">{{ project.hrp_code }}</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="col col-lg">
-                    <div class="select-field is-required">
-                        <span class="label">Activity Domains</span>
-                        <span class="text-read-only m2m-badges">
-                            {% for activity_domain in project.activity_domains.all %}
-                            <span class="btn btn-red"> {{ activity_domain.name }}</span>
-                            {% endfor %}
-                        </span>
-                    </div>
-                    <div class="select-field">
-                        <span class="label">Focal point</span>
-                        <div class="input-holder">
-                            <span class="text-read-only">
-                                {% if project.user.first_name %} {{ project.user.first_name }} {% endif %}
-                                {% if project.user.last_name %} {{ project.user.last_name }} {% endif %}
-                                {% if project.user.username %} | {{ project.user.username }} {% endif %}
-                                {% if project.user.profile.position %} | {{ project.user.profile.position }} {% endif %}
-                                {% if project.user.profile.phone %} | {{ project.user.profile.phone }} {% endif %}
-                                {% if project.user.email %} | {{ project.user.email }} {% endif %}
-                            </span>
-                        </div>
-                    </div>
-                    <div class="input-field is-required">
-                        <span class="label">Project description &amp; objectives</span>
-                        <div class="input-holder">{{ project.description | linebreaksbr }}
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    
-        <div class="activity-planning read-only">
-            <div class="activity-block-holder">
-                <div class="top-activity-block">
-                    <span class="activity-title">
-                        <span>
-                        Activities Planning
-                        </span>
-                        <span class="btn btn-red" style="float:right"> {{ activity_plans | length }}</span>
                     </span>
-                    
+                </div>
+                <div class="select-field is-required">
+                    <span class="label">Project donor</span>
+                    <span class="text-read-only m2m-badges">
+                        {% for donor in project.donors.all %}
+                        <span class="btn btn-red"> {{ donor.name }}</span>
+                        {% endfor %}
+                    </span>
+                </div>
+                <div class="select-field is-required">
+                    <span class="label">Implementing Partners</span>
+                    <span class="text-read-only m2m-badges">
+                        {% for implementing_partner in project.implementing_partners.all %}
+                        <span class="btn btn-red"> {{ implementing_partner.code }}</span>
+                        {% endfor %}
+                    </span>
+                </div>
+                <div class="select-field is-required">
+                    <span class="label">Programme Partners</span>
+                    <span class="text-read-only m2m-badges">
+                        {% for programme_partner in project.programme_partners.all %}
+                        <span class="btn btn-red"> {{ programme_partner.code }}</span>
+                        {% endfor %}
+                    </span>
                 </div>
             </div>
-        </div>
-    
-        {% for activity_plan in activity_plans %}
-        <div class="activity-planning read-only">
-            <div class="activity-acc-block activity-acc-accordion">
-                <div class="inner-holder">
-                    <div class="review-block-top activity-acc-accordion-opener">
-                        <span class="title">
-                            {{ activity_plan.activity_domain }},
-                            {{ activity_plan.activity_type }}{% if activity_plan.activity_detail %}, {{ activity_plan.activity_detail }}{% endif %}
-                        </span>
-                        <div class="block-activity">
-                            <span class="people">
-                                <span class="icon-group"></span>
-                                {{ activity_plan.total }}
+            <div class="col col-sm">
+                <div class="date-picker-field">
+                    <div class="date start">
+                        <span class="label">Start Date</span>
+                        <span class="text-read-only">{{ project.start_date | date:'d M, Y' }}</span>
+                    </div>
+                    <div class="date end">
+                        <span class="label">End Date</span>
+                        <span class="text-read-only">{{ project.end_date | date:'d M, Y' }}</span>
+                    </div>
+                </div>
+                <div class="multiple-fields-row">
+                    <div class="field-col">
+                        <div class="input-field">
+                            <span class="label">Project budget</span>
+                            <div class="input-holder">
+                                <span class="text-read-only">{{ project.budget }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="field-col">
+                        <span class="label">Currency</span>
+                        <div class="select-field is-required">
+                            <span class="text-read-only">{{ project.budget_currency }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="multiple-fields-row">
+                    <div class="field-col">
+                        <div class="input-field">
+                            <span class="label">Budget Received</span>
+                            <div class="input-holder">
+                                <span class="text-read-only">{{ project.budget_received }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="field-col">
+                        <div class="input-field">
+                            <span class="label">Budget Gap</span>
+                            <div class="input-holder">
+                                <span class="text-read-only">{{ project.budget_gap }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="multiple-fields-row">
+                    <div class="field-col">
+                        <div class="input-check-holder">
+                            {% if project.is_hrp_project %}
+                            <input type="checkbox" disabled checked />
+                            {% else %}
+                            <input type="checkbox" disabled />
+                            {% endif %}
+                            <span class="label">
+                                <span class="input"></span>
+                                <span class="text">HRP project?</span>
                             </span>
                         </div>
                     </div>
-                    <div class="activity-acc-accordion-slide">
-                        <div class="row">
-                            <div class="col">
-                                <div class="multiple-fields-row two-items">
-                                    <div class="field-col">
-                                        <div class="select-field">
-                                            <span class="label">Activity Domain</span>
-                                            <span class="text-read-only">{{ activity_plan.activity_domain }}</span>
-                                        </div>
-                                    </div>
-                                    <div class="field-col">
-                                        <div class="select-field">
-                                            <span class="label">Activity Type</span>
-                                            <span class="text-read-only">{{ activity_plan.activity_type }}</span>
-                                        </div>
+                    <div class="field-col">
+                        <div class="input-check-holder">
+                            {% if project.has_hrp_code %}
+                            <input type="checkbox" disabled checked />
+                            {% else %}
+                            <input type="checkbox" disabled />
+                            {% endif %}
+                            <span class="label">
+                                <span class="input"></span>
+                                <span class="text">HRP Code?</span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="input-field">
+                    <span class="label">HRP project code</span>
+                    <div class="input-holder">
+                        <span class="text-read-only">{{ project.hrp_code }}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col col-lg">
+                <div class="select-field is-required">
+                    <span class="label">Activity Domains</span>
+                    <span class="text-read-only m2m-badges">
+                        {% for activity_domain in project.activity_domains.all %}
+                        <span class="btn btn-red"> {{ activity_domain.name }}</span>
+                        {% endfor %}
+                    </span>
+                </div>
+                <div class="select-field">
+                    <span class="label">Focal point</span>
+                    <div class="input-holder">
+                        <span class="text-read-only">
+                            {% if project.user.first_name %} {{ project.user.first_name }} {% endif %}
+                            {% if project.user.last_name %} {{ project.user.last_name }} {% endif %}
+                            {% if project.user.username %} | {{ project.user.username }} {% endif %}
+                            {% if project.user.profile.position %} | {{ project.user.profile.position }} {% endif %}
+                            {% if project.user.profile.phone %} | {{ project.user.profile.phone }} {% endif %}
+                            {% if project.user.email %} | {{ project.user.email }} {% endif %}
+                        </span>
+                    </div>
+                </div>
+                <div class="input-field is-required">
+                    <span class="label">Project description &amp; objectives</span>
+                    <div class="input-holder">{{ project.description | linebreaksbr }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="activity-planning read-only">
+        <div class="activity-block-holder">
+            <div class="top-activity-block">
+                <span class="activity-title">
+                    <span>
+                    Activities Planning
+                    </span>
+                    <span class="btn btn-red" style="float:right"> {{ activity_plans | length }}</span>
+                </span>
+                
+            </div>
+        </div>
+    </div>
+
+    {% for activity_plan in activity_plans %}
+    <div class="activity-planning read-only">
+        <div class="activity-acc-block activity-acc-accordion">
+            <div class="inner-holder">
+                <div class="review-block-top activity-acc-accordion-opener">
+                    <span class="title">
+                        {{ activity_plan.activity_domain }},
+                        {{ activity_plan.activity_type }}{% if activity_plan.activity_detail %}, {{ activity_plan.activity_detail }}{% endif %}
+                    </span>
+                    <div class="block-activity">
+                        <span class="people">
+                            <span class="icon-group"></span>
+                            {{ activity_plan.total }}
+                        </span>
+                    </div>
+                </div>
+                <div class="activity-acc-accordion-slide">
+                    <div class="row">
+                        <div class="col">
+                            <div class="multiple-fields-row two-items">
+                                <div class="field-col">
+                                    <div class="select-field">
+                                        <span class="label">Activity Domain</span>
+                                        <span class="text-read-only">{{ activity_plan.activity_domain }}</span>
                                     </div>
                                 </div>
-                                {% if activity_plan.activity_detail %}
-                                <div class="select-field">
-                                    <span class="label">Activity Details</span>
-                                    <span class="text-read-only">{{ activity_plan.activity_detail }}</span>
-                                </div>
-                                {% endif %}
-                                <div class="select-field">
-                                    <span class="label">Indicators</span>
-                                    {% for indicator in activity_plan.indicators.all %}
-                                    <span class="text-read-only">
-                                        {{ indicator.name }} <br>
-                                    </span>
-                                    {% endfor %}
+                                <div class="field-col">
+                                    <div class="select-field">
+                                        <span class="label">Activity Type</span>
+                                        <span class="text-read-only">{{ activity_plan.activity_type }}</span>
+                                    </div>
                                 </div>
                             </div>
-    
-                            <div class="col col-lg">
-                                <div class="multiple-fields-row">
-                                    <div class="field-col">
-                                        <div class="select-field">
-                                            <span class="label">Beneficiary</span>
-                                            <span class="text-read-only">{{ activity_plan.beneficiary }}</span>
-                                        </div>
-                                    </div>
-                                    <div class="field-col">
-                                        <div class="select-field">
-                                            <span class="label">Beneficiary Category</span>
-                                            <span class="text-read-only">{{ activity_plan.beneficiary_category }}</span>
-                                        </div>
+                            {% if activity_plan.activity_detail %}
+                            <div class="select-field">
+                                <span class="label">Activity Details</span>
+                                <span class="text-read-only">{{ activity_plan.activity_detail }}</span>
+                            </div>
+                            {% endif %}
+                            <div class="select-field">
+                                <span class="label">Indicators</span>
+                                {% for indicator in activity_plan.indicators.all %}
+                                <span class="text-read-only">
+                                    {{ indicator.name }} <br>
+                                </span>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <div class="col col-lg">
+                            <div class="multiple-fields-row">
+                                <div class="field-col">
+                                    <div class="select-field">
+                                        <span class="label">Beneficiary</span>
+                                        <span class="text-read-only">{{ activity_plan.beneficiary }}</span>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="col col-lg">
-                                <div class="input-field is-required">
-                                    <span class="label">Activity Description</span>
-                                    <div class="input-holder">
-                                        <span class="text-read-only">{{ activity_plan.description | linebreaksbr }}</span>
+                                <div class="field-col">
+                                    <div class="select-field">
+                                        <span class="label">Beneficiary Category</span>
+                                        <span class="text-read-only">{{ activity_plan.beneficiary_category }}</span>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <br/>
-                        <div class="target_location-block target_location-accordion">
-                            <div class="inner-holder">
-                                <a href="#" class="block-top target_location-accordion-opener">
-                                    <div class="location-block-holder">
-                                        <div class="block-top">
-                                            Target Locations
-                                        </div>
+                        <div class="col col-lg">
+                            <div class="input-field is-required">
+                                <span class="label">Activity Description</span>
+                                <div class="input-holder">
+                                    <span class="text-read-only">{{ activity_plan.description | linebreaksbr }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br/>
+                    <div class="target_location-block target_location-accordion">
+                        <div class="inner-holder">
+                            <a href="#" class="block-top target_location-accordion-opener">
+                                <div class="location-block-holder">
+                                    <div class="block-top">
+                                        Target Locations
                                     </div>
-                                    <span class="btn btn-red" style="float:right"> {{ activity_plan.targetlocation_set.all | length }}</span>
-                                </a>
-                                <div class="target_location-accordion-slide js-acc-hidden">
-                                {% for target_location in activity_plan.targetlocation_set.all %}                                
-                                    <div class="target-location read-only">
-                                        <div class="location-block-holder">
-                                            <div class="inner-holder">
-                                                <div class="block-top">
-                                                    <span class="title">
-                                                        {% if target_location.province %}
-                                                        {{ target_location.province }},
-                                                        {% endif %}
-                                                        {{ target_location.district }}
-                                                    </span>
-                                                    {% if target_location.site_name %}
-                                                    <span class="subtitle">{{ target_location.site_name }}</span>
+                                </div>
+                                <span class="btn btn-red" style="float:right"> {{ activity_plan.targetlocation_set.all | length }}</span>
+                            </a>
+                            <div class="target_location-accordion-slide js-acc-hidden">
+                            {% for target_location in activity_plan.targetlocation_set.all %}                                
+                                <div class="target-location read-only">
+                                    <div class="location-block-holder">
+                                        <div class="inner-holder">
+                                            <div class="block-top">
+                                                <span class="title">
+                                                    {% if target_location.province %}
+                                                    {{ target_location.province }},
                                                     {% endif %}
-                                                </div>
-                                                <div class="row">
-                                                    <div class="col col-lg">
-                                                        <div class="multiple-fields-row three-items">
-                                                            <div class="field-col">
-                                                                <div class="select-field is-required">
-                                                                    <span class="label">Province</span>
-                                                                    <span class="text-read-only">{{ target_location.province }}</span>
-                                                                </div>
+                                                    {{ target_location.district }}
+                                                </span>
+                                                {% if target_location.site_name %}
+                                                <span class="subtitle">{{ target_location.site_name }}</span>
+                                                {% endif %}
+                                            </div>
+                                            <div class="row">
+                                                <div class="col col-lg">
+                                                    <div class="multiple-fields-row three-items">
+                                                        <div class="field-col">
+                                                            <div class="select-field is-required">
+                                                                <span class="label">Province</span>
+                                                                <span class="text-read-only">{{ target_location.province }}</span>
                                                             </div>
-                                                            <div class="field-col">
-                                                                <div class="input-field">
-                                                                    <span class="label">District</span>
-                                                                    <div class="input-holder">
-                                                                        <span class="text-read-only">{{ target_location.district }}</span>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="field-col">
-                                                                <div class="select-field ">
-                                                                    <span class="label">Location Type</span>
-                                                                    <span class="text-read-only">{{ target_location.location_type }}</span>
+                                                        </div>
+                                                        <div class="field-col">
+                                                            <div class="input-field">
+                                                                <span class="label">District</span>
+                                                                <div class="input-holder">
+                                                                    <span class="text-read-only">{{ target_location.district }}</span>
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                    </div>
-                                                    <br/>
-                                                    <div class="col col-lg">
-                                                        <div class="multiple-fields-row three-items">
-                                                            <div class="field-col">
-                                                                <div class="select-field">
-                                                                    <span class="label">Site Name</span>
-                                                                    <span class="text-read-only">{{ target_location.site_name }}</span>
-                                                                </div>
-                                                            </div>
-                                                            <div class="field-col">
-                                                                <div class="input-field">
-                                                                    <span class="label">Site Latitude</span>
-                                                                    <div class="input-holder">
-                                                                        <span class="text-read-only">{{ target_location.site_lat }}</span>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="field-col">
-                                                                <div class="input-field">
-                                                                    <span class="label">Site Longitude</span>
-                                                                    <div class="input-holder">
-                                                                        <span class="text-read-only">{{ target_location.site_long }}</span>
-                                                                    </div>
-                                                                </div>
+                                                        <div class="field-col">
+                                                            <div class="select-field ">
+                                                                <span class="label">Location Type</span>
+                                                                <span class="text-read-only">{{ target_location.location_type }}</span>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <br/>
-                                                <div class="disaggregation-block disaggregation-accordion">
-                                                    <div class="inner-holder">
-                                                        <a href="#" class="block-top disaggregation-accordion-opener">
-                                                            <div class="location-block-holder">
-                                                                <div class="block-top">
-                                                                    Disaggregations
+                                                <div class="col col-lg">
+                                                    <div class="multiple-fields-row three-items">
+                                                        <div class="field-col">
+                                                            <div class="select-field">
+                                                                <span class="label">Site Name</span>
+                                                                <span class="text-read-only">{{ target_location.site_name }}</span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="field-col">
+                                                            <div class="input-field">
+                                                                <span class="label">Site Latitude</span>
+                                                                <div class="input-holder">
+                                                                    <span class="text-read-only">{{ target_location.site_lat }}</span>
                                                                 </div>
                                                             </div>
-                                                            <span class="btn btn-red" style="float:right"> {{ target_location.disaggregationlocation_set.all | length }}</span>
-                                                        </a>
-                                                        <div class="disaggregation-accordion-slide">
-                                                            {% for disaggregation_location in target_location.disaggregationlocation_set.all %}
-                                                                <div class="location-inner-holder">  
-                                                                    <div class="col col-lg">
-                                                                        <div class="multiple-fields-row two-items">
-                                                                            <div class="field-col">
-                                                                                <div class="select-field">
-                                                                                    <span class="label">Disaggregation</span>
-                                                                                    <span class="text-read-only">{{ disaggregation_location.disaggregation }}</span>
-                                                                                </div>
+                                                        </div>
+                                                        <div class="field-col">
+                                                            <div class="input-field">
+                                                                <span class="label">Site Longitude</span>
+                                                                <div class="input-holder">
+                                                                    <span class="text-read-only">{{ target_location.site_long }}</span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <br/>
+                                            <div class="disaggregation-block disaggregation-accordion">
+                                                <div class="inner-holder">
+                                                    <a href="#" class="block-top disaggregation-accordion-opener">
+                                                        <div class="location-block-holder">
+                                                            <div class="block-top">
+                                                                Disaggregations
+                                                            </div>
+                                                        </div>
+                                                        <span class="btn btn-red" style="float:right"> {{ target_location.disaggregationlocation_set.all | length }}</span>
+                                                    </a>
+                                                    <div class="disaggregation-accordion-slide">
+                                                        {% for disaggregation_location in target_location.disaggregationlocation_set.all %}
+                                                            <div class="location-inner-holder">  
+                                                                <div class="col col-lg">
+                                                                    <div class="multiple-fields-row two-items">
+                                                                        <div class="field-col">
+                                                                            <div class="select-field">
+                                                                                <span class="label">Disaggregation</span>
+                                                                                <span class="text-read-only">{{ disaggregation_location.disaggregation }}</span>
                                                                             </div>
-                                                                            <div class="field-col">
-                                                                                <div class="input-field">
-                                                                                    <span class="label">Target</span>
-                                                                                    <div class="input-holder">
-                                                                                        <span class="text-read-only">{{ disaggregation_location.target }}</span>
-                                                                                    </div>
+                                                                        </div>
+                                                                        <div class="field-col">
+                                                                            <div class="input-field">
+                                                                                <span class="label">Target</span>
+                                                                                <div class="input-holder">
+                                                                                    <span class="text-read-only">{{ disaggregation_location.target }}</span>
                                                                                 </div>
                                                                             </div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                            {% endfor %} 
-                                                        </div>
+                                                            </div>
+                                                        {% endfor %} 
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                {% endfor %} 
                                 </div>
+                            {% endfor %} 
                             </div>
-                        </div> 
-                    </div>
+                        </div>
+                    </div> 
                 </div>
             </div>
         </div>
-        {% endfor %}
     </div>
-    {% comment %} TODO: Handle this in a proper way  {% endcomment %}
+    {% endfor %}
+
     <script>
         var csrfToken = '{{ csrf_token }}';
     </script>
-{% endblock content %}
+{% endblock project_body %}

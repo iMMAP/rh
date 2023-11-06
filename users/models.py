@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from django.db import models
 
-from rh.models import Organization, Cluster, Location
+from rh.models import Cluster, Location, Organization
 
 
 class Profile(models.Model):
@@ -25,3 +25,7 @@ class Profile(models.Model):
 
     def __str__(self):
         return f"{self.name}'s Profile"
+    
+    class Meta:
+        verbose_name = 'User Profile'
+        verbose_name_plural = "User Profiles"

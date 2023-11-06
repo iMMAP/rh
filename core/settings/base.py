@@ -1,6 +1,7 @@
 import logging
-import environ
 from pathlib import Path
+
+import environ
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
@@ -36,6 +37,7 @@ INSTALLED_APPS = [
     'rh.apps.RhConfig',
     'users.apps.UsersConfig',
     'stock.apps.StockConfig',
+    'project_reports.apps.ProjectReportsConfig',
 ]
 USE_DJANGO_JQUERY = True
 

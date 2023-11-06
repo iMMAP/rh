@@ -1,4 +1,4 @@
-.target_location-block {
+.target-location-block {
   .add-target-location-form-button{
     float: right;
   }
@@ -32,8 +32,8 @@
     }
   }
 
-  .target_location-accordion-active {
-    .target_location-accordion-opener {
+  .target-location-accordion-active {
+    .target-location-accordion-opener {
       &:after {
         transform: translateY(-50%) rotate(-180deg) !important;
       }
@@ -47,7 +47,7 @@
     justify-content: space-between;
     margin: 22px 0 22px;
 
-    &.target_location-accordion-opener {
+    &.target-location-accordion-opener {
       text-decoration: none;
       position: relative;
       padding-right: 40px;

@@ -47,8 +47,8 @@ $(function () {
 
 	toggleHrpCode();
 	toggleRequired();
-	isHrpProject.on("change", function() {toggleHrpCode});
-	hasHrpCode.on("change", function() {toggleRequired});
+	isHrpProject.on("change", function() {toggleHrpCode()});
+	hasHrpCode.on("change", function() {toggleRequired()});
 
 	// Define a function to calculate the budget gap
 	function calculateBudgetGap() {

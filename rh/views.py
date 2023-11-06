@@ -3,7 +3,7 @@ RECORDS_PER_PAGE = 3
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
-from django.db.models import Q
+from django.db.models import Prefetch, Q
 from django.forms import modelformset_factory
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
@@ -12,9 +12,11 @@ from django.template.loader import render_to_string
 from django.urls import reverse
 from django.views.decorators.cache import cache_control
 
+from project_reports.models import ProjectMonthlyReport as Report
+
 from .filters import *
 from .forms import *
-from .models import Project
+from .models import *
 
 # TODO: Add is_safe_url to redirects
 # from django.utils.http import is_safe_url
@@ -63,17 +65,24 @@ def home(request):
 @login_required
 def load_activity_domains(request):
     cluster_ids = [int(i) for i in request.POST.getlist('clusters[]') if i]
-    clusters = Cluster.objects.filter(pk__in=cluster_ids).prefetch_related('activitydomain_set')
+
+    # Define a Prefetch object to optimize the related activitydomain_set
+    prefetch_activitydomain = Prefetch(
+        'activitydomain_set',
+        queryset=ActivityDomain.objects.order_by('name'),
+    )
+
+    clusters = Cluster.objects.filter(pk__in=cluster_ids).prefetch_related(prefetch_activitydomain)
 
     response = ''.join([
         f'<optgroup label="{cluster.title}">' +
-        ''.join([f'<option value="{domain.pk}">{domain}</option>' for domain in
-                 cluster.activitydomain_set.order_by('name')]) +
+        ''.join([f'<option value="{domain.pk}">{domain}</option>' for domain in cluster.activitydomain_set.all()]) +
         '</optgroup>'
         for cluster in clusters
     ])
 
     return JsonResponse(response, safe=False)
+
 
 
 @cache_control(no_store=True)
@@ -254,26 +263,6 @@ def archived_projects_view(request):
 
 @cache_control(no_store=True)
 @login_required
-def completed_project_view(request, pk):
-    """Projects Plans"""
-
-    project = Project.objects.get(pk=pk)
-
-    activity_plans = ActivityPlan.objects.filter(project__id=project.pk)
-    target_locations = TargetLocation.objects.filter(project__id=project.pk)
-
-    context = {
-        'project': project,
-        'activity_plans': activity_plans,
-        'target_locations': target_locations,
-        'project_review': True,
-        'locations': target_locations
-    }
-    return render(request, 'rh/projects/views/completed_project.html', context)
-
-
-@cache_control(no_store=True)
-@login_required
 def open_project_view(request, pk):
     """View for creating a project."""
 
@@ -296,7 +285,11 @@ def open_project_view(request, pk):
         'target_locations': target_locations,
         'plans': plans,
         'locations': locations,
-        'parent_page': parent_page
+        'parent_page': parent_page,
+        'project_view': True,
+        'financial_view': False,
+        'reports_view': False,
+        
     }
     return render(request, 'rh/projects/views/project_view.html', context)
 
@@ -327,6 +320,9 @@ def create_project_view(request):
     context = {
         'form': form,
         'project_planning': True,
+        'project_view': True,
+        'financial_view': False,
+        'reports_view': False,
     }
     return render(request, 'rh/projects/forms/project_form.html', context)
 
@@ -364,7 +360,10 @@ def update_project_view(request, pk):
         'project_planning': True,
         'plans': plans,
         'locations': locations,
-        'parent_page': parent_page
+        'parent_page': parent_page,
+        'project_view': True,
+        'financial_view': False,
+        'reports_view': False,
     }
     return render(request, 'rh/projects/forms/project_form.html', context)
 
@@ -428,33 +427,43 @@ def create_project_activity_plan(request, project):
             for activity_plan_form in activity_plan_formset:
                 if activity_plan_form.cleaned_data.get('activity_domain') and activity_plan_form.cleaned_data.get(
                         'activity_type'):
-                    activity_plan_form.save()
+                    activity_plan = activity_plan_form.save()
+                    title = f"{activity_plan_form.cleaned_data.get('activity_domain').name}, {activity_plan_form.cleaned_data.get('activity_type').name}"
+                    if activity_plan_form.cleaned_data.get('activity_detail'):
+                        title += f", {activity_plan_form.cleaned_data.get('activity_detail').name}"
+                    activity_plan.title = title
 
             # Process target location forms and their disaggregation forms
-            for target_location_formset in target_location_formsets:
-                if target_location_formset.is_valid():
-                    for target_location_form in target_location_formset:
-                        if target_location_form.cleaned_data != {}:
-                            if target_location_form.cleaned_data.get(
-                                    'province') and target_location_form.cleaned_data.get('district'):
+            for post_target_location_formset in target_location_formsets:
+                if post_target_location_formset.is_valid():
+                    for post_target_location_form in post_target_location_formset:
+                        if post_target_location_form.cleaned_data != {}:
+                            if post_target_location_form.cleaned_data.get(
+                                    'province') and post_target_location_form.cleaned_data.get('district'):
 
-                                target_location_instance = target_location_form.save()
+                                target_location_instance = post_target_location_form.save()
                                 target_location_instance.project = project
                                 target_location_instance.save()
 
-                        if hasattr(target_location_form, 'disaggregation_formset'):
-                            disaggregation_formset = target_location_form.disaggregation_formset
-                            if disaggregation_formset.is_valid():
-
-                                # Delete the exisiting instances of the disaggregation location and create new
-                                # based on the indicator disaggregations
-                                target_location_form.instance.disaggregationlocation_set.all().delete()
-
-                                for disaggregation_form in disaggregation_formset:
+                        if hasattr(post_target_location_form, 'disaggregation_formset'):
+                            post_disaggregation_formset = post_target_location_form.disaggregation_formset.forms
+                            
+                            # Delete the exisiting instances of the disaggregation location and create new
+                            # based on the indicator disaggregations
+                            # 
+                            new_disaggregations = []
+                            for disaggregation_form in post_disaggregation_formset:
+                                if disaggregation_form.is_valid():
                                     if disaggregation_form.cleaned_data != {} and disaggregation_form.cleaned_data.get('target') > 0:
                                         disaggregation_instance = disaggregation_form.save(commit=False)
                                         disaggregation_instance.target_location = target_location_instance
                                         disaggregation_instance.save()
+                                        new_disaggregations.append(disaggregation_instance.id)
+
+                            all_disaggregations = post_target_location_form.instance.disaggregationlocation_set.all()
+                            for dis in all_disaggregations:
+                                if dis.id not in new_disaggregations:
+                                    dis.delete()
 
             activity_plan_formset.save()
 
@@ -493,7 +502,10 @@ def create_project_activity_plan(request, project):
         'clusters': cluster_ids,
         'activity_planning': True,
         'plans': plans,
-        'parent_page': parent_page
+        'parent_page': parent_page,
+        'project_view': True,
+        'financial_view': False,
+        'reports_view': False,
     }
 
     # Render the template with the context data
@@ -663,7 +675,10 @@ def project_planning_review(request, **kwargs):
         'activity_plans': activity_plans,
         'target_locations': target_locations,
         'project_review': True,
-        'parent_page': parent_page
+        'parent_page': parent_page,
+        'project_view': True,
+        'financial_view': False,
+        'reports_view': False,
     }
     return render(request, 'rh/projects/forms/project_review.html', context)
 
@@ -1027,8 +1042,11 @@ def create_project_budget_progress_view(request, project):
         'project': project,
         'formset': formset,
         'parent_page': parent_page,
+        'project_view': False,
+        'financial_view': True,
+        'reports_view': False,
     }
-    return render(request, "rh/projects/financials/project_budget_progress.html", context)
+    return render(request, "rh/financial_reports/project_budget_progress.html", context)
 
 
 @cache_control(no_store=True)
@@ -1056,9 +1074,3 @@ def delete_budget_progress(request, pk):
     if budget_progress:
         budget_progress.delete()
     return JsonResponse({'success': True})
-
-
-def form_create_view(request):
-    YourModelFormSet = modelformset_factory(TargetLocation, fields="__all__")
-    formset = YourModelFormSet(queryset=TargetLocation.objects.none())
-    return render(request, 'rh/projects/forms/form_create.html', {'formset': formset})

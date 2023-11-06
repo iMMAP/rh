@@ -1,4 +1,6 @@
+from django import forms
 from django.contrib import admin
+from django.contrib.admin.widgets import FilteredSelectMultiple
 from django.db.models import Count
 
 from .models import *
@@ -13,10 +15,6 @@ admin.site.register(TransferCategory)
 admin.site.register(GrantType)
 admin.site.register(UnitType)
 admin.site.register(ReportType)
-from django.contrib.admin.widgets import FilteredSelectMultiple
-from django import forms
-
-
 
 class ActivityPlanModelAdminForm(forms.ModelForm):
     class Meta:
@@ -196,17 +194,3 @@ class BudgetProgressAdmin(admin.ModelAdmin):
         'project', 'donor', 'activity_domain', 'country')
     list_filter = ('project', 'donor', 'country')
 admin.site.register(BudgetProgress, BudgetProgressAdmin)
-
-##############################################
-######### Reporting Model Admins ##########
-##############################################
-
-class ReportAdmin(admin.ModelAdmin):
-    list_display = (
-        'project', 'activity_plan', 'location', 'boys', 'girls', 'men', 'women', 'elderly_men', 'elderly_women',
-        'households')
-    search_fields = (
-        'project__title', 'location__name', 'boys', 'girls', 'men', 'women', 'elderly_men', 'elderly_women',
-        'households')
-    list_filter = ('project', 'activity_plan', 'location')
-admin.site.register(Report, ReportAdmin)

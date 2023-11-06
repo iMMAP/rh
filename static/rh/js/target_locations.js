@@ -1,7 +1,7 @@
 // Constant for the duration of the slideToggle animations
 const TOGGLE_DURATION = 500;
 
-$(document).ready(function () {
+$(function () {
 	async function getLocations(formIndex, locationType, parentType, clearZone=null) {
 		const locationUrl = $(`#id_form-${formIndex}-${locationType}`).attr(`locations-queries-url`);
 		const locationIds = $(`select#id_form-${formIndex}-${locationType} option`)

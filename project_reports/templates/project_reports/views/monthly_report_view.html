@@ -1,0 +1,366 @@
+{% extends "../../_base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container">
+    <div class="page-navigation-panel">
+    <div class="holder">
+        <div class="link-holder">
+        <a href="#" class="btn-back">Back to Monthly Progress</a>
+        </div>
+
+        <div class="tabs-nav-holder">
+        <ul class="tabs-nav">
+            <li class="">
+            <a href="#">Project plan</a>
+            </li>
+
+            <li class="">
+            <a href="#">financial reports</a>
+            </li>
+
+            <li class="active">
+            <a href="#">monthly progress</a>
+            </li>
+        </ul>
+        </div>
+    </div>
+    </div>
+
+    <div class="breadcrumbs-nav-panel">
+    <div class="holder">
+        <ul class="breadcrumbs">
+        <li>
+            <a href="#">Home</a>
+        </li>
+
+        <li>
+            <a href="#">Active projects</a>
+        </li>
+
+        <li class="current">Monthly progress</li>
+        </ul>
+        <ul class="buttons-list-inline">
+        <li>
+            <a href="#" class="btn btn-gray">
+            <span class="btn-text">Copy last month</span>
+            <span class="icon-copy-outline"></span>
+            </a>
+        </li>
+        <li>
+            <a href="#" class="btn btn-red">
+            <span class="btn-text">Import</span>
+            <span class="icon-upload"></span>
+            </a>
+        </li>
+        </ul>
+    </div>
+    </div>
+    <div class="content-block top-border">
+    <div class="project-title">
+        <div class="holder">
+        <strong class="h5">October 2022</strong>
+        <ul class="buttons-list-inline">
+            <li>
+            <a href="#" class="btn btn-red">Edit</a>
+            </li>
+        </ul>
+        </div>
+    </div>
+
+    <div class="monthly-progress monthly-accordion read-only">
+        <div class="inner-holder">
+        <a href="#" class="block-top monthly-accordion-opener">
+            <span class="title"
+            >District
+            <span class="tooltip-info icon-info" data-tippy-content="Lorem lorem lorem"></span>
+            </span>
+            <span class="people">
+            <span class="icon-group"></span>
+            1657
+            </span>
+        </a>
+        <div class="monthly-accordion-slide">
+            <div class="row">
+            <div class="col">
+                <div class="multiple-fields-row three-items">
+                <div class="field-col">
+                    <div class="select-field">
+                    <label>Activity</label>
+
+                    <span class="text-read-only">Activity</span>
+                    </div>
+                </div>
+                <div class="field-col">
+                    <div class="select-field">
+                    <label>Description</label>
+
+                    <span class="text-read-only">Description</span>
+                    </div>
+                </div>
+                <div class="field-col">
+                    <div class="select-field">
+                    <label>Description</label>
+
+                    <span class="text-read-only">Description</span>
+                    </div>
+                </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="multiple-fields-row three-items">
+                <div class="field-col">
+                    <div class="select-field">
+                    <label>HRP Status</label>
+
+                    <span class="text-read-only">HRP Status</span>
+                    </div>
+                </div>
+                <div class="field-col">
+                    <div class="select-field">
+                    <label>Category</label>
+
+                    <span class="text-read-only">Category</span>
+                    </div>
+                </div>
+                <div class="field-col">
+                    <div class="select-field">
+                    <label>Type</label>
+
+                    <span class="text-read-only">Type</span>
+                    </div>
+                </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="multiple-fields-row three-items">
+                <div class="field-col">
+                    <div class="input-field">
+                    <label>Boys</label>
+                    <div class="input-holder">
+                        <span class="text-read-only">Boys</span>
+                    </div>
+                    </div>
+                </div>
+                <div class="field-col">
+                    <div class="input-field">
+                    <label>Girls</label>
+                    <div class="input-holder">
+                        <span class="text-read-only">Girls</span>
+                    </div>
+                    </div>
+                </div>
+                <div class="field-col">
+                    <div class="input-field">
+                    <label>Men</label>
+                    <div class="input-holder">
+                        <span class="text-read-only">Men</span>
+                    </div>
+                    </div>
+                </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="multiple-fields-row three-items">
+                <div class="field-col">
+                    <div class="input-field">
+                    <label>Women</label>
+                    <div class="input-holder">
+                        <span class="text-read-only">Women</span>
+                    </div>
+                    </div>
+                </div>
+                <div class="field-col">
+                    <div class="input-field">
+                    <label>Eld. men (60+)</label>
+                    <div class="input-holder">
+                        <span class="text-read-only">Eld. men (60+)</span>
+                    </div>
+                    </div>
+                </div>
+                <div class="field-col">
+                    <div class="input-field">
+                    <label>Eld. women (60+)</label>
+                    <div class="input-holder">
+                        <span class="text-read-only">Eld. women (60+)</span>
+                    </div>
+                    </div>
+                </div>
+                </div>
+            </div>
+            </div>
+            <div class="input-check-holder">
+            <input type="checkbox" id="monProgress1" disabled checked />
+            <label for="monProgress1">
+                <span class="input"></span>
+                <span class="text">Winterization</span>
+            </label>
+            </div>
+        </div>
+        </div>
+
+        <div class="monthly-info-block">
+        <div class="block-heading">
+            <span class="title">Funding Per Year</span>
+        </div>
+        <ul class="monthly-info-list">
+            <li>Coordination meeting took place with relevant stakeholders at provincial, district and community level.</li>
+
+            <li>Regular Monitoring and supervision conducted from target districts by Badakhshan team.</li>
+
+            <li>PHCC and PDC meeting attended.</li>
+
+            <li>Project report completed and submitted to the provincial health office (PHO).</li>
+        </ul>
+        </div>
+
+        <div class="inner-holder">
+        <a href="#" class="block-top monthly-accordion-opener">
+            <span class="title"
+            >District
+            <span class="tooltip-info icon-info" data-tippy-content="Lorem lorem lorem"></span>
+            </span>
+            <span class="people">
+            <span class="icon-group"></span>
+            1657
+            </span>
+        </a>
+        <div class="monthly-accordion-slide">
+            <div class="row">
+            <div class="col">
+                <div class="multiple-fields-row three-items">
+                <div class="field-col">
+                    <div class="select-field">
+                    <label>Activity</label>
+
+                    <span class="text-read-only">Activity</span>
+                    </div>
+                </div>
+                <div class="field-col">
+                    <div class="select-field">
+                    <label>Description</label>
+
+                    <span class="text-read-only">Description</span>
+                    </div>
+                </div>
+                <div class="field-col">
+                    <div class="select-field">
+                    <label>Description</label>
+
+                    <span class="text-read-only">Description</span>
+                    </div>
+                </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="multiple-fields-row three-items">
+                <div class="field-col">
+                    <div class="select-field">
+                    <label>HRP Status</label>
+
+                    <span class="text-read-only">HRP Status</span>
+                    </div>
+                </div>
+                <div class="field-col">
+                    <div class="select-field">
+                    <label>Category</label>
+
+                    <span class="text-read-only">Category</span>
+                    </div>
+                </div>
+                <div class="field-col">
+                    <div class="select-field">
+                    <label>Type</label>
+
+                    <span class="text-read-only">Type</span>
+                    </div>
+                </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="multiple-fields-row three-items">
+                <div class="field-col">
+                    <div class="input-field">
+                    <label>Boys</label>
+                    <div class="input-holder">
+                        <span class="text-read-only">Boys</span>
+                    </div>
+                    </div>
+                </div>
+                <div class="field-col">
+                    <div class="input-field">
+                    <label>Girls</label>
+                    <div class="input-holder">
+                        <span class="text-read-only">Girls</span>
+                    </div>
+                    </div>
+                </div>
+                <div class="field-col">
+                    <div class="input-field">
+                    <label>Men</label>
+                    <div class="input-holder">
+                        <span class="text-read-only">Men</span>
+                    </div>
+                    </div>
+                </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="multiple-fields-row three-items">
+                <div class="field-col">
+                    <div class="input-field">
+                    <label>Women</label>
+                    <div class="input-holder">
+                        <span class="text-read-only">Women</span>
+                    </div>
+                    </div>
+                </div>
+                <div class="field-col">
+                    <div class="input-field">
+                    <label>Eld. men (60+)</label>
+                    <div class="input-holder">
+                        <span class="text-read-only">Eld. men (60+)</span>
+                    </div>
+                    </div>
+                </div>
+                <div class="field-col">
+                    <div class="input-field">
+                    <label>Eld. women (60+)</label>
+                    <div class="input-holder">
+                        <span class="text-read-only">Eld. women (60+)</span>
+                    </div>
+                    </div>
+                </div>
+                </div>
+            </div>
+            </div>
+            <div class="input-check-holder">
+            <input type="checkbox" id="monProgress2" disabled checked />
+            <label for="monProgress2">
+                <span class="input"></span>
+                <span class="text">Winterization</span>
+            </label>
+            </div>
+        </div>
+        </div>
+
+        <div class="monthly-info-block">
+        <div class="block-heading">
+            <span class="title">Funding Per Year</span>
+        </div>
+        <ul class="monthly-info-list">
+            <li>Coordination meeting took place with relevant stakeholders at provincial, district and community level.</li>
+
+            <li>Regular Monitoring and supervision conducted from target districts by Badakhshan team.</li>
+
+            <li>PHCC and PDC meeting attended.</li>
+
+            <li>Project report completed and submitted to the provincial health office (PHO).</li>
+        </ul>
+        </div>
+    </div>
+    </div>
+</div>
+{% endblock content %}
+
+        

@@ -4,7 +4,7 @@
            name="project_id"
            id="project_id"
            value="{{ project.id }}"/>
-    <div class="activity-block-holder js-collapse-expand"
+    <div class="activity-block-holder project-activity-accordion"
          data-form-id="{{ form.prefix }}">
         <div class="inner-holder">
             <div class="block-activity mb-3">
@@ -33,15 +33,10 @@
                             name="{{ form.prefix }}-save">Save
                     </button>
                 </div>
-                <a href="#" class="btn btn-gray-outline collapse-details">
-                    <span class="icon-chevron-up up" id="{{ form.prefix }}-up"></span>
-                    <span class="icon-chevron-down down hidden" id="{{ form.prefix }}-down"></span>
-                    <span class="btn-text" id="{{ form.prefix }}-fold">Collapse</span>
-                    <span class="btn-text hidden" id="{{ form.prefix }}-unfold">Expand</span>
-                </a>
             </div>
-            <div class="block-top">
-                <span class="title">
+            
+            <div class="block-top project-activity-accordion-opener">
+                <span class="title ">
                     {% if form.total.value %}
                     <span class="people">
                         <span class="icon-group"></span>
@@ -59,7 +54,7 @@
                 </span>
                 <span class="subtitle"></span>
             </div>
-            <div id="{{ form.prefix }}-details">
+            <div class="project-activity-accordion-slide" id="{{ form.prefix }}-details">
                 <div class="row">
                     <div class="col">
                         <div class="multiple-fields-row three-items">
@@ -114,17 +109,20 @@
                     <div class="col col-lg">
                         <div class="target_location-block target_location-accordion">
                             <div class="inner-holder">
-                                <button data-form-prefix="{{form.prefix}}" data-project="{{project.pk}}" type="button"
-                                        style="float:right;margin-top: 20px;"
-                                        class="btn btn-red add-target-location-form-button">Add Target Location
-                                </button>
-                                <a href="#" class="block-top location_accordion_opener">
+                                <div class="block-top location_accordion_opener">
                                     <div class="location-block-holder">
-                                        <div class="block-top">
-                                            Target Locations
+                                        <div class="block-top-title">
+                                            <span class="title">
+                                                Target Locations
+                                            </span>
                                         </div>
                                     </div>
-                                </a>
+                                    <div>
+                                        <button data-form-prefix="{{form.prefix}}" data-project="{{project.pk}}" type="button"
+                                                class="btn btn-red add-target-location-form-button">Add Target Location
+                                        </button>
+                                    </div>
+                                </div>
                                 <div class="location_accordion_slide">
                                     {{ target_location_formset.management_form }}
                                     <div id="{{form.prefix}}">
@@ -138,6 +136,7 @@
                     </div>
                 </div>
             </div>
+        </div>
         </div>
     </div>
 </div>

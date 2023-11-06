@@ -56,7 +56,8 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
               
         {% vite 'static/src/styles/style.scss' %}
-        <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+        <!-- <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" /> -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" integrity="sha512-nMNlpuaDPrqlEls3IX/Q56H36qvBASwb3ipuo3MxeWbsQB1881ox0cRv7UPTgBlriqoynt35KjEwgGUeUXIPnw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     </head>
     <body>
         <div class="wrapper" id="wrapper">
@@ -217,7 +218,7 @@
             </div>
         </div>
 
-        {% comment %} jQuery CDN {% endcomment %}
+        <!-- jQuery CDN -->
         <script 
             src="https://code.jquery.com/jquery-3.6.1.min.js"
             integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ="
@@ -225,14 +226,19 @@
         >
         </script>
 
-        {% comment %} Full Pack relative to location of manage.py file {% endcomment %}
+        <!-- Full Pack relative to location of manage.py file -->
         {% vite 'static/src/js/app.js' %}
         
         <script 
             defer 
             src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"
         >
+        
         </script>
+        <!-- Select2 CDN -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js" integrity="sha512-2ImtlRlf2VVmiGZsjm9bEyhjGW4dU7B6TNwh/hx/iSByxNENtj3WVE6o/9Lj4TJeVXPi4bnOIMXFIJJAeufa0A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    </script>
+        
        
     </body>
 </html>

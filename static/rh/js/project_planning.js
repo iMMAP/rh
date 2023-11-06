@@ -55,12 +55,23 @@ $(function () {
 		// Get the values of the budget and budget received fields
 		var budget = parseFloat($("#id_budget").val());
 		var budgetReceived = parseFloat($("#id_budget_received").val());
-
-		// Calculate the budget gap
+		if(budgetReceived > budget){
+			$("#budget_received_message").text("The received budget can not be more than the whole budget !!");
+			$("#budget_received_message").css("color","red");
+			$("#id_budget_received").val(budget);
+			$("#id_budget_received").attr("max",budget);
+			$("#id_budget_gap").val(0);
+			setTimeout(() => {
+				$("#budget_received_message").text("");
+			}, 3000);
+		} else {
+			// Calculate the budget gap
 		var budgetGap = budget - budgetReceived;
 
 		// Set the value of the budget gap field
 		$("#id_budget_gap").val(budgetGap.toFixed(0));
+		}
+		
 	}
 
 	// Attach the function to the change event of the budget and budget received fields

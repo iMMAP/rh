@@ -66,13 +66,15 @@
             </div>
             <div class="disaggregation-block disaggregation-accordion">
                 <div class="inner-holder">
-                  <a href="#" class="block-top disaggregation_accordion_opener">
+                  <div class="block-top disaggregation_accordion_opener">
                     <div class="location-block-holder">
-                        <div class="block-top">
-                            Disaggregations
+                        <div class="block-top-title">
+                            <div class="title">
+                                Disaggregations
+                            </div>
                         </div>
                     </div>
-                  </a>
+                </div>
                   <div class="disaggregation_accordion_slide">
                         {{ target_location_form.disaggregation_formset.management_form }}
                         {% for disaggregation_form in target_location_form.disaggregation_formset %}

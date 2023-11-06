@@ -1,4 +1,6 @@
-$(document).ready(function () {
+// window.jQuery = window.$ = require('jquery');
+// require('select2');
+$(function () {
 	const isHrpProject = $("#id_is_hrp_project");
 	const hasHrpCode = $("#id_has_hrp_code");
 	const prHasHRPCodeEl = $("#prHasHRPCodeEl");
@@ -45,8 +47,8 @@ $(document).ready(function () {
 
 	toggleHrpCode();
 	toggleRequired();
-	isHrpProject.change(toggleHrpCode);
-	hasHrpCode.change(toggleRequired);
+	isHrpProject.on("change", function() {toggleHrpCode});
+	hasHrpCode.on("change", function() {toggleRequired});
 
 	// Define a function to calculate the budget gap
 	function calculateBudgetGap() {
@@ -100,8 +102,10 @@ $(document).ready(function () {
 	}
 
 	get_activity_domains();
-
-	$("#id_clusters").change(function () {
+	
+	$("#id_clusters").on("change", function() {
 		get_activity_domains();
-	});
+	})
+
+	$('.js_multiselect').select2()
 });

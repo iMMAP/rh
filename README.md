@@ -1,7 +1,9 @@
 # ReportHub from iMMAP
 
-### Make sure Poetry is installed on your machine
+## Setup the project locally
 
+### Install poetry
+Make sure Poetry is installed on your machine
 ```shell
 poetry --version
 ```
@@ -12,30 +14,34 @@ If not installed, install Poetry with:
 pip install poetry
 ```
 
+### Create a virtualenv 
+```shell
+virtualenv .venv
+```
+
 ### Install the dependencies
+Make sure to 'make' installed for your machine.
 
 ```shell
-poetry install
+make install # to install python package
+make npm-install # to install npm packges inside static folder
 ```
 
 ### Run the project:
 
-Run the Django server in local environment.
+Run Django development server
+```shell
+make serve
+```
+Run the vite developement server
 
 ```shell
-poetry run python manage.py runserver
+make vite
 ```
 
-Run the Django server in production environment.
-
+### Run the linter
 ```shell
-poetry run python manage.py runserver --settings=core.settings.production
-```
-
-Run the vite asset bundler.
-
-```shell
-cd static && npm run dev
+make lint
 ```
 
 ### Install additional package
@@ -50,18 +56,6 @@ poetry add package_name
 poetry add --dev package_name
 ```
 
-### Update packages
-
-```shell
-poetry update
-```
-
-### Activate poetry virtual environment
-
-```shell
-poetry shell
-```
-
 ### View dependencies tree
 
 ```shell
@@ -73,23 +67,16 @@ poetry show
 Build the frontend assets
 
 ```shell
-npm run build
+cd static && npm run build
 ```
 
-## Use [ruff](https://github.com/astral-sh/ruff)
+## Linting and formatting 
+[Ruff](https://github.com/astral-sh/ruff) is used for linting and formatting.
+
+Ruff is an extremely fast Python linter and code formatter.
+It can replace Flake8 and black formatter
 
 Install the vs code extension to setup immediatly.
 
-An extremely fast Python linter and code formatter.
-It can replace Flake8 and black formatter
 
-## Using Flake8
 
-Flake8 is a popular Python code linter, which is a tool that analyzes source code for potential errors, violations of coding conventions, and style inconsistencies. It combines multiple static analysis tools, including PyFlakes, pycodestyle (formerly known as pep8), and McCabe complexity checker.
-Flake8 configuration is defined at the root level in the .flake8 file.
-
-## To run Flake8
-
-```shell
-flake8
-```

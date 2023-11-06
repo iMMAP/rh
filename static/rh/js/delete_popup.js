@@ -1,6 +1,6 @@
 import swal from 'sweetalert';
 
-$(document).ready(function () {
+$(function () {
     $('.show_confirm').click(function (event) {
         debugger
         var deleteURL = $("#delete-project").attr("data-url");;

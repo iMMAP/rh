@@ -31,29 +31,25 @@ urlpatterns = [
     # Projects Target Locations CRUD
     path('project/target_location/copy/<str:project>/<str:location>/', user_views.copy_target_location, name='copy_location'),
     path('project/target_location/delete/<str:pk>/', user_views.delete_target_location, name='delete_location'),
-    # path('project/target_location/create/?plan=<str:plan>/',
-    #     user_views.create_project_target_location, name='create_project_target_location'),
-
-    path('project/financials/budget_progress/?project=<str:project>/',
-        user_views.create_project_budget_progress_view, name='create_project_budget_progress'),
         
-    path('project/budget_progress/copy/<str:project>/<str:budget>/', user_views.copy_budget_progress, name='copy_budget'),
-    path('project/budget_progress/delete/<str:pk>/', user_views.delete_budget_progress, name='delete_budget'),
-
     path('project/project_plan/review/?project=<str:project>/', user_views.project_planning_review, name='project_plan_review'),
     path('project/project_plan/submit/<str:pk>/', user_views.submit_project, name='project_submit'),
 
+    # Financial Reporting
+    path('project/financials/budget_progress/?project=<str:project>/',
+        user_views.create_project_budget_progress_view, name='create_project_budget_progress'),
+    path('project/budget_progress/copy/<str:project>/<str:budget>/', user_views.copy_budget_progress, name='copy_budget'),
+    path('project/budget_progress/delete/<str:pk>/', user_views.delete_budget_progress, name='delete_budget'),
+    
+    # Ajax for data load
     path('ajax/load-activity_domains/', user_views.load_activity_domains, name='ajax-load-activity_domains'),
     path('ajax/load-locations-details/', user_views.load_locations_details, name='ajax-load-locations'),
-    # path('ajax/load-zones-details/', user_views.load_zones_details, name='ajax-load-zones'),
     path('ajax/load-facility_sites/', user_views.load_facility_sites, name='ajax-load-facility_sites'),
 
     path('ajax/get_target_location_empty_form/', user_views.get_target_location_empty_form, name='get_target_location_empty_form'),
     path('ajax/get_activity_empty_form/', user_views.get_activity_empty_form, name='get_activity_empty_form'),
     path('ajax/get_disaggregations_forms/', user_views.get_disaggregations_forms, name='get_disaggregations_forms'),
 
-
     # Exports
     path('export-excel/<int:project_id>/', export_views.ProjectExportExcelView.as_view(), name='export_project_excel'),
-    # path('create-form/', user_views.create_project_target_location, name='form_create_view'),
 ]

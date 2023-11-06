@@ -81,6 +81,7 @@ pre-commit = "^3.5.0"
 
 [tool.ruff]
 # Exclude a variety of commonly ignored directories.
+line-length=120
 exclude = [
     ".bzr",
     ".direnv",
@@ -103,6 +104,7 @@ exclude = [
     "dist",
     "node_modules",
     "venv",
+    "scripts",
 ]
 
 

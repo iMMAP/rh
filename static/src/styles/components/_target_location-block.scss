@@ -1,4 +1,7 @@
 .target_location-block {
+  .add-target-location-form-button{
+    float: right;
+  }
   .inner-holder {
     position: relative;
     padding: 24px 16px 20px;
@@ -42,7 +45,7 @@
     flex-wrap: wrap;
     align-items: center;
     justify-content: space-between;
-    margin: 0 0 22px;
+    margin: 22px 0 22px;
 
     &.target_location-accordion-opener {
       text-decoration: none;
@@ -69,6 +72,22 @@
       color: $red-be;
       font-size: 16px;
       font-weight: 600;
+      line-height: 1.2;
+    }
+  }
+  .block-top-title {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    margin: 0;
+
+    .title {
+      display: flex;
+      align-items: center;
+      color: $red-be;
+      font-size: 18px;
+      font-weight: 800;
       line-height: 1.2;
     }
   }

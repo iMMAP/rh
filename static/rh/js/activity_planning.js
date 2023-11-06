@@ -1,3 +1,4 @@
+var DETAILS_TOGGLE_DURATION = 500;
 /**
 * Handle Add Dynamic Activity Form
 **/
@@ -360,7 +361,7 @@ async function getLocations(locationPrefix, locationType, parentType, clearZone 
 /**
 * Ready Function
 **/
-$(document).ready(function () {
+$(function () {
 
 	// Open/Activate the accordion
 	$('.location_accordion_opener').click(function(event) {

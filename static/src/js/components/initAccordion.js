@@ -52,4 +52,14 @@ export default function initAccordion() {
       extraOffset: 0,
     },
   });
+  jQuery('.project-activity-accordion').slideAccordion({
+    opener: '.project-activity-accordion-opener',
+    slider: '.project-activity-accordion-slide',
+    animSpeed: 300,
+    activeClass: 'project-activity-accordion-active',
+    scrollToActiveItem: {
+      enable: true,
+      extraOffset: 0,
+    },
+  });
 }

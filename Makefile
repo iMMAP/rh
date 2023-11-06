@@ -2,6 +2,10 @@
 install:
 	poetry install
 
+.PHONY: install
+test:
+	poetry run python manage.py test
+
 .PHONY: install-pre-commit
 install-pre-commit:
 	poetry run pre-commit uninstall && poetry run pre-commit install

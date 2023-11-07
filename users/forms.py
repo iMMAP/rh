@@ -51,7 +51,7 @@ class ProfileCreateForm(forms.ModelForm):
         labels = {"clusters": "Clusters / Sectors"}
 
         widgets = {
-            "clusters": forms.SelectMultiple(attrs={"class": "js_multiselect", "multiple": ""}),
+            "clusters": forms.SelectMultiple(attrs={"class": "js_multiselect"}),
         }
 
     def __init__(self, *args, **kwargs):

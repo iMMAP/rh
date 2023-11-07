@@ -46,14 +46,18 @@
                         </div>
                     </div>
                     <div class="col col-sm">
-                        <div class="date-picker-field">
-                            <div class="date start">
-                                <label for="{{ form.start_date.id_for_label }}">Start Date</label>
-                                {{ form.start_date }}
+                        <div class="multiple-fields-row">
+                            <div class="field-col">
+                                <div class=" date start">
+                                    <label for="{{ form.start_date.id_for_label }}">Start Date</label>
+                                    <div class="date-picker-field">{{ form.start_date }}</div>
+                                </div>
                             </div>
-                            <div class="date end">
-                                <label for="{{ form.end_date.id_for_label }}">End Date</label>
-                                {{ form.end_date }}
+                            <div class="field-col">
+                                <div class="date end">
+                                    <label for="{{ form.end_date.id_for_label }}">End Date</label>
+                                    <div class="date-picker-field">{{ form.end_date }}</div>
+                                </div>
                             </div>
                         </div>
                         <div class="multiple-fields-row">

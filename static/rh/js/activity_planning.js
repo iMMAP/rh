@@ -121,15 +121,15 @@ function addTargetLocationForm(prefix, project, nextFormIndex) {
 				managementForm.val(totalForms.toString());
 				
 				// Open/Activate the accordion
-				const parentDiv = formsetContainer.closest('.location_accordion_slide')
+				const parentDiv = formsetContainer.closest('.target-location-accordion-slide')
 				const innerHolder = parentDiv.closest('.inner-holder')
 
 				// Unbind any existing click events
-				innerHolder.find('.location_accordion_opener').off('click');
-				innerHolder.find('.location_accordion_opener').click(function(event) {
+				innerHolder.find('.target-location-accordion-opener').off('click');
+				innerHolder.find('.target-location-accordion-opener').on('click', function(event) {
 					event.preventDefault(); // Prevent the default behavior (form submission)
 					event.stopPropagation(); // Prevent the default behavior (propagation)
-					$(this).next('.location_accordion_slide').slideToggle(DETAILS_TOGGLE_DURATION);
+					$(this).next('.target-location-accordion-slide').slideToggle(DETAILS_TOGGLE_DURATION);
 				});
 
 				if (addedForm){
@@ -204,28 +204,27 @@ function handleDisaggregationForms(indicatorsSelect, selectedIDs, locationsPrefi
                 $.each(locationsPrefixes, function(locationIndex) {
                     const locationPrefix = locationsPrefixes[locationIndex];
                     const disaggregationFormsArray = data[locationPrefix];
-
                     // Remove existing forms
                     $('#' + locationPrefix).find('.location-inner-holder').remove();
-
+					
                     if (disaggregationFormsArray) {
-                        // Append new disaggregation forms
-                        $('#' + locationPrefix).find('.disaggregation_accordion_slide').append(disaggregationFormsArray.join(" "));
+						// Append new disaggregation forms
+                        $('#' + locationPrefix).find('.disaggregation-accordion-slide').append(disaggregationFormsArray.join(" "));
                     }
-
+					
                     // Update the management form values
                     if (disaggregationFormsArray) {
-                        const managementForm = $(`input[name="disaggregation_${locationPrefix}-TOTAL_FORMS"]`);
+						const managementForm = $(`input[name="disaggregation_${locationPrefix}-TOTAL_FORMS"]`);
                         const totalForms = parseInt(disaggregationFormsArray.length);
                         managementForm.val(totalForms.toString());
                     }
 					// Open/Activate the accordion
-					const parentDiv = $('#' + locationPrefix).find('.disaggregation_accordion_slide')
+					const parentDiv = $('#' + locationPrefix).find('.disaggregation-accordion-slide')
 					const innerHolder = parentDiv.closest('.inner-holder')
-
+					
 					// Unbind any existing click events
-					innerHolder.find('.disaggregation_accordion_opener').off('click');
-					innerHolder.find('.disaggregation_accordion_opener').click(function(event) {
+					innerHolder.find('.disaggregation-accordion-opener').off('click');
+					innerHolder.find('.disaggregation-accordion-opener').on('click', function(event) {
 						event.preventDefault(); // Prevent the default behavior
 						event.stopPropagation(); // Prevent the default behavior (propagation)
 						parentDiv.slideToggle(DETAILS_TOGGLE_DURATION);
@@ -364,18 +363,18 @@ async function getLocations(locationPrefix, locationType, parentType, clearZone 
 $(function () {
 
 	// Open/Activate the accordion
-	$('.location_accordion_opener').click(function(event) {
-		event.preventDefault(); // Prevent the default behavior (form submission)
-		event.stopPropagation(); // Prevent the default behavior (propagation)
-		$(this).next('.location_accordion_slide').slideToggle(DETAILS_TOGGLE_DURATION);
-	});
+	// $('.target-location-accordion-opener').on('click', function(event) {
+	// 	event.preventDefault(); // Prevent the default behavior (form submission)
+	// 	event.stopPropagation(); // Prevent the default behavior (propagation)
+	// 	$(this).next('.target-location-accordion-slide').slideToggle(DETAILS_TOGGLE_DURATION);
+	// });
 
 	// Open/Activate the accordion
-	$('.disaggregation_accordion_opener').click(function(event) {
-		event.preventDefault(); // Prevent the default behavior (form submission)
-		event.stopPropagation(); // Prevent the default behavior (propagation)
-		$(this).next('.disaggregation_accordion_slide').slideToggle(DETAILS_TOGGLE_DURATION);
-	});
+	// $('.disaggregation-accordion-opener').on('click', function(event) {
+	// 	event.preventDefault(); // Prevent the default behavior (form submission)
+	// 	event.stopPropagation(); // Prevent the default behavior (propagation)
+	// 	$(this).next('.disaggregation-accordion-slide').slideToggle(DETAILS_TOGGLE_DURATION);
+	// });
 
 	// Initialize indicators with django select except for the empty form
 	$("select[multiple]:not(#id_activityplan_set-__prefix__-indicators)").select2();

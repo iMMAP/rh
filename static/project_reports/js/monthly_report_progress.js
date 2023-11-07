@@ -1,3 +1,4 @@
+var DETAILS_TOGGLE_DURATION = 500
 /**
 * Handle Add Dynamic Target Location Report Form
 **/
@@ -18,7 +19,6 @@ function addTargetLocationReportForm(prefix, project, nextFormIndex) {
 			xhr.setRequestHeader("X-CSRFToken", csrftoken);
 		},
 		success: function (data) {
-			debugger
 			if (data.html) {
 
 				const emptylocationReportTemplate = data.html
@@ -46,16 +46,15 @@ function addTargetLocationReportForm(prefix, project, nextFormIndex) {
 				managementForm.val(totalForms.toString());
 				
 				// Open/Activate the accordion
-				const parentDiv = formsetContainer.closest('.location_accordion_slide')
+				const parentDiv = formsetContainer.closest('.target-location-accordion-slide')
 				const innerHolder = parentDiv.closest('.inner-holder')
 
 				// Unbind any existing click events
-				innerHolder.find('.target_location-accordion-opener').off('click');
-				innerHolder.find('.target_location-accordion-opener').click(function(event) {
-					debugger
+				innerHolder.find('.target-location-accordion-opener').off('click');
+				innerHolder.find('.target-location-accordion-opener').on('click', function(event) {
 					event.preventDefault(); // Prevent the default behavior (form submission)
 					event.stopPropagation(); // Prevent the default behavior (propagation)
-					$(this).next('.target_location-accordion-slide').slideToggle(DETAILS_TOGGLE_DURATION);
+					$(this).next('.target-location-accordion-slide').slideToggle(DETAILS_TOGGLE_DURATION);
 				});
 
 				if (addedForm){
@@ -65,10 +64,10 @@ function addTargetLocationReportForm(prefix, project, nextFormIndex) {
 				// 	getLocations(locationPrefix, 'zone', 'district');
 					
 				// 	// Add Load Locations (districts and zones) event for new form
-				// 	$(`#id_${locationPrefix}-province`).change(function () {
+				// 	$(`#id_${locationPrefix}-province`).on('change', function() {
 				// 		getLocations(locationPrefix, 'district', 'province', clearZone=true);
 				// 	});
-				// 	$(`#id_${locationPrefix}-district`).change(function () {
+				// 	$(`#id_${locationPrefix}-district`).on('change', function() {
 				// 		getLocations(locationPrefix, 'zone', 'district');
 				// 	});
 					
@@ -82,7 +81,6 @@ function addTargetLocationReportForm(prefix, project, nextFormIndex) {
 				
 				// 	// Update change event on indicators for the new added form 
 				$indicator.on("change", function (event) { 
-						debugger
 						let indicatorsSelect = event.currentTarget
 						let selectedID = $indicator[0].value;
 						handleDisaggregationReportForms(indicatorsSelect, selectedID, [locationReportPrefix])
@@ -117,7 +115,6 @@ function handleDisaggregationReportForms(indicatorsSelect, selectedID, locations
 	// Use JavaScript Cookie library
 	const csrftoken = Cookies.get('csrftoken');
 	
-	debugger
     // Make AJAX request to fetch disaggregation forms
     $.ajax({
         url: '/ajax/get_disaggregations_report_forms/',
@@ -141,7 +138,6 @@ function handleDisaggregationReportForms(indicatorsSelect, selectedID, locations
                         $('#' + locationReportPrefix).find('.disaggregation-accordion-slide').append(disaggregationFormsArray.join(" "));
                     }
 					
-					debugger
                     // Update the management form values
                     if (disaggregationFormsArray) {
                         const managementForm = $(`input[name="disaggregation_report_${locationReportPrefix}-TOTAL_FORMS"]`);
@@ -154,7 +150,7 @@ function handleDisaggregationReportForms(indicatorsSelect, selectedID, locations
 
 					// Unbind any existing click events
 					innerHolder.find('.disaggregation-accordion-opener').off('click');
-					innerHolder.find('.disaggregation-accordion-opener').click(function(event) {
+					innerHolder.find('.disaggregation-accordion-opener').on('click', function(event) {
 						event.preventDefault(); // Prevent the default behavior
 						event.stopPropagation(); // Prevent the default behavior (propagation)
 						parentDiv.slideToggle(DETAILS_TOGGLE_DURATION);
@@ -222,23 +218,20 @@ async function getLocations(locationPrefix, locationType, parentType, clearZone 
 /**
 * Ready Function
 **/
-$(document).ready(function () {
+$(function () {
 	
 	// Button to handle addition of new target location form.
-	$(document).on('click', '.add-location-report-button', function(event) {
+	$(document).on('click', '.add-target-location-form-button', function(event) {
 		event.preventDefault(); // Prevent the default behavior (form submission)
 		event.stopPropagation(); // Prevent the default behavior (propagation)
-		debugger
 		const activityReportFormPrefix = event.currentTarget.dataset.formPrefix
 		const activityProject = event.currentTarget.dataset.project
 		const activityReportFormIndex = activityReportFormPrefix.match(/\d+/)[0]
 		addTargetLocationReportForm(activityReportFormPrefix, activityProject, activityReportFormIndex); // Call the function to add a new activity form
-		// addTargetLocationReportForm(activityReportFormPrefix, activityReportFormIndex); // Call the function to add a new activity form
 	});
 
 	let $activityBlockHolder = $("#activity-formset-form");
 	$activityBlockHolder.each(function (formIndex, formElement) {
-		debugger
 		// Update disaggregations based on indicators
 		var $indicator = $(`#id_activityplanreport_set-${formIndex}-indicator`);
 		$indicator.on("change", function (event) { 
@@ -260,10 +253,10 @@ $(document).ready(function () {
 	// 	getLocations(locationPrefix, 'district', 'province');
 	// 	getLocations(locationPrefix, 'zone', 'district');
 
-	// 	$(`#id_${locationPrefix}-province`).change(function () {
+	// 	$(`#id_${locationPrefix}-province`).on('change', function() {
 	// 		getLocations(locationPrefix, 'district', 'province', clearZone=true);
 	// 	});
-	// 	$(`#id_${locationPrefix}-district`).change(function () {
+	// 	$(`#id_${locationPrefix}-district`).on('change', function() {
 	// 		getLocations(locationPrefix, 'zone', 'district');
 	// 	});
 		

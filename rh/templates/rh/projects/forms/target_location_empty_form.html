@@ -66,22 +66,22 @@
             </div>
             <div class="disaggregation-block disaggregation-accordion">
                 <div class="inner-holder">
-                  <div class="block-top disaggregation-accordion-opener">
-                    <div class="location-block-holder">
-                        <div class="block-top-title">
-                            <div class="title">
-                                Disaggregations
+                    <div class="block-top disaggregation-accordion-opener">
+                        <div class="location-block-holder">
+                            <div class="block-top-title">
+                                <div class="title">
+                                    Disaggregations
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                  <div class="disaggregation-accordion-slide">
+                    <div class="disaggregation-accordion-slide">
                         {{ target_location_form.disaggregation_formset.management_form }}
                         {% for disaggregation_form in target_location_form.disaggregation_formset %}
-                            {{ disaggregation_form.id }}
-                            {% include "rh/projects/forms/disaggregation_empty_form.html" %}
+                        {{ disaggregation_form.id }}
+                        {% include "rh/projects/forms/disaggregation_empty_form.html" %}
                         {% endfor %}
-                  </div>
+                    </div>
                 </div>
             </div>
             

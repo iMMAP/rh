@@ -36,23 +36,24 @@
                     </div>
                 </div>
             </div>
-            <br/>
-            <div class="disaggregation-block disaggregation-accordion monthly-reporting">
+            <div class="disaggregation-block disaggregation-accordion">
                 <div class="inner-holder">
-                  <a href="#" class="block-top disaggregation-accordion-opener">
-                    <div class="location-block-holder">
-                        <div class="block-top report-title">
-                            Reporting Disaggregations
+                    <div class="block-top disaggregation-accordion-opener">
+                        <div class="location-block-holder">
+                            <div class="block-top-title">
+                                <div class="title">
+                                    Reporting Disaggregations
+                                </div>
+                            </div>
                         </div>
                     </div>
-                  </a>
-                  <div class="disaggregation-accordion-slide">
+                    <div class="disaggregation-accordion-slide">
                         {{ location_report_form.disaggregation_report_formset.management_form }}
                         {% for disaggregation_report_form in location_report_form.disaggregation_report_formset %}
                             {{ disaggregation_report_form.id }}
                             {% include "project_reports/forms/disaggregation_report_empty_form.html" %}
                         {% endfor %}
-                  </div>
+                    </div>
                 </div>
             </div>
             

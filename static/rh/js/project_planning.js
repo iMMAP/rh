@@ -119,6 +119,5 @@ $(function () {
 	})
 
 	$('.js_multiselect').select2()
-	$('.date-picker-field1').datepicker();
-	$.datepicker.original['ja'];
+
 });

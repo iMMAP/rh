@@ -3,7 +3,6 @@ var DETAILS_TOGGLE_DURATION = 500
 * Handle Add Dynamic Target Location Report Form
 **/
 function addTargetLocationReportForm(prefix, project, nextFormIndex) {
-// function addTargetLocationReportForm(prefix, nextFormIndex) {
 	const activityReportFormPrefix = prefix
 	const projectID = project
 
@@ -54,7 +53,9 @@ function addTargetLocationReportForm(prefix, project, nextFormIndex) {
 				innerHolder.find('.target-location-accordion-opener').on('click', function(event) {
 					event.preventDefault(); // Prevent the default behavior (form submission)
 					event.stopPropagation(); // Prevent the default behavior (propagation)
-					$(this).next('.target-location-accordion-slide').slideToggle(DETAILS_TOGGLE_DURATION);
+					innerHolder.toggleClass('target-location-accordion-active')
+					parentDiv.toggleClass('js-acc-hidden')
+					// $(this).next('.target-location-accordion-slide').slideToggle(DETAILS_TOGGLE_DURATION);
 				});
 
 				if (addedForm){
@@ -86,6 +87,18 @@ function addTargetLocationReportForm(prefix, project, nextFormIndex) {
 						handleDisaggregationReportForms(indicatorsSelect, selectedID, [locationReportPrefix])
 					});
 				}
+				
+				// Load Locations (districts and zones)
+				// 	getLocations(locationPrefix, 'district', 'province');
+				// 	getLocations(locationPrefix, 'zone', 'district');
+					
+				// 	// Add Load Locations (districts and zones) event for new form
+				// 	$(`#id_${locationPrefix}-province`).on('change', function() {
+				// 		getLocations(locationPrefix, 'district', 'province', clearZone=true);
+				// 	});
+				// 	$(`#id_${locationPrefix}-district`).on('change', function() {
+				// 		getLocations(locationPrefix, 'zone', 'district');
+				// 	});
 			}
 		},
 		error: function (error) {
@@ -153,7 +166,9 @@ function handleDisaggregationReportForms(indicatorsSelect, selectedID, locations
 					innerHolder.find('.disaggregation-accordion-opener').on('click', function(event) {
 						event.preventDefault(); // Prevent the default behavior
 						event.stopPropagation(); // Prevent the default behavior (propagation)
-						parentDiv.slideToggle(DETAILS_TOGGLE_DURATION);
+						innerHolder.toggleClass('disaggregation-accordion-active')
+						parentDiv.toggleClass('js-acc-hidden')
+						// parentDiv.slideToggle(DETAILS_TOGGLE_DURATION);
 					});
                 });
             }

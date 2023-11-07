@@ -34,17 +34,35 @@
                 {% csrf_token %}
                 <div class="form-holder">
                     {% for field in u_form %}
-                        <div class="input-field">
+                        <div class="input-field is-required"">
                             {{ field.label_tag }}
                             <div class="input-holder">{{ field }}</div>
                         </div>
                     {% endfor %}
-                    {% for field in p_form %}
+                    <!-- {% for field in p_form %}
                         <div class="input-field">
                             {{ field.label_tag }}
                             <div class="input-holder">{{ field }}</div>
                         </div>
-                    {% endfor %}
+                    {% endfor %} -->
+                    <div class="input-field is-required"">
+                        <label for="{{ p_form.position_for_label }}">Position</label>
+                        <div class="input-holder">{{ p_form.position }}</div>
+                    </div>
+                    <div class="input-field is-required"">
+                        <label for="{{ p_form.organization.id_for_label }}">Organization</label>
+                        <div class="input-holder">{{ p_form.organization }}</div>
+                    </div>
+                    <div class="select-field is-required">
+                        <label for="{{ p_form.clusters.id_for_label }}">Cluster [Hold Control/Command button to select
+                            multiple]</label>
+                        <div class="input-holder">{{ p_form.clusters }}</div>
+                    </div>
+                    <div class="input-field is-required"">
+                        <label for="{{ p_form.country.id_for_label }}">Country</label>
+                        <div class="input-holder">{{ p_form.country }}</div>
+                    </div>
+
                     <div class="input-check-holder">
                         <input type="checkbox" id="check1" required />
                         <label for="check1">
@@ -65,4 +83,5 @@
             </form>
         </div>
     </div>
+    
 {% endblock content %}

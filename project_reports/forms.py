@@ -1,8 +1,12 @@
 from django import forms
 from django.forms.models import inlineformset_factory
-from django.urls import reverse_lazy
 
-from .models import *
+from .models import (
+    ActivityPlanReport,
+    DisaggregationLocationReport,
+    ProjectMonthlyReport,
+    TargetLocationReport,
+)
 
 
 class ProjectMonthlyReportForm(forms.ModelForm):
@@ -11,11 +15,21 @@ class ProjectMonthlyReportForm(forms.ModelForm):
         fields = "__all__"
 
         widgets = {
-            'report_date': forms.widgets.DateInput(
-                attrs={'type': 'date', 'onfocus': "(this.type='date')", 'onblur': "(this.type='text')"}),
-            'state': forms.widgets.HiddenInput(),
-            'project': forms.widgets.HiddenInput(),
-            'active': forms.widgets.HiddenInput(),
+            "report_date": forms.widgets.DateInput(
+                attrs={
+                    "type": "date",
+                    "onfocus": "(this.type='date')",
+                    "onblur": "(this.type='text')",
+                }
+            ),
+            "report_due_date": forms.widgets.DateInput(
+                attrs={
+                    "type": "date",
+                    "onfocus": "(this.type='date')",
+                    "onblur": "(this.type='text')",
+                    "readonly": "",
+                }
+            ),
         }
 
 
@@ -51,19 +65,19 @@ class TargetLocationReportForm(forms.ModelForm):
 
 
 TargetLocationReportFormSet = inlineformset_factory(
-        ActivityPlanReport,
-        TargetLocationReport,
-        form=TargetLocationReportForm,
-        extra=0,  # Number of empty forms to display
-        can_delete=True  # Allow deletion of existing forms
-    )
+    ActivityPlanReport,
+    TargetLocationReport,
+    form=TargetLocationReportForm,
+    extra=0,  # Number of empty forms to display
+    can_delete=True,  # Allow deletion of existing forms
+)
 
 DisaggregationReportFormSet = inlineformset_factory(
-        TargetLocationReport,
-        DisaggregationLocationReport,
-        fields="__all__",
-        extra=0,  # Number of empty forms to display
-    )
+    TargetLocationReport,
+    DisaggregationLocationReport,
+    fields="__all__",
+    extra=0,  # Number of empty forms to display
+)
 
 
 class ActivityPlanReportForm(forms.ModelForm):
@@ -72,10 +86,17 @@ class ActivityPlanReportForm(forms.ModelForm):
         fields = "__all__"
 
         widgets = {
-            'activity_plan': forms.widgets.HiddenInput(),
+            "activity_plan": forms.widgets.HiddenInput(),
         }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        
-        self.fields['indicator'].widget.attrs.update({'class': 'report_indicator'})
+
+        self.fields["indicator"].widget.attrs.update({"class": "report_indicator"})
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.fields["indicator"].widget.attrs.update(
+            {"class": "report_indicator", "required": ""}
+        )

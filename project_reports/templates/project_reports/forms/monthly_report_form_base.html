@@ -23,7 +23,16 @@
         <li>
             <a href="{% url 'view_project' project.id %}">{{ project.code }}</a>
         </li>
-        <li class="current">Monthly progress</li>
+        <li>
+            <a href="{% url 'project_reports_home' project=project.id %}">Progress Reports</a>
+        </li>
+        <li class="current">
+          {% if monthly_report %}
+              {{monthly_report.report_date | date:"F Y"}}
+          {% else %}
+              New Progress Report
+          {% endif %}
+        </li>
     </ul>
       <ul class="buttons-list-inline">
         <li>

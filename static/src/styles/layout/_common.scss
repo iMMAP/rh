@@ -470,3 +470,11 @@
   font-weight: 600;
   line-height: 1.2;
 }
+
+.report-table tbody tr:hover {
+  background-color: #f2f2f2;
+}
+
+.report-table tbody tr:hover td {
+  color: #be2126;
+}

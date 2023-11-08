@@ -304,11 +304,7 @@
                         </span>
                     </div>
                 </div>
-                <div class="input-field is-required">
-                    <span class="label">Project description &amp; objectives</span>
-                    <div class="input-holder">{{ project.description | linebreaksbr }}
-                    </div>
-                </div>
+                
             </div>
         </div>
     </div>
@@ -402,17 +398,19 @@
                         </div>
                     </div>
                     <br/>
-                    <div class="target_location-block target_location-accordion">
+                    <div class="target-location-block target-location-accordion">
                         <div class="inner-holder">
-                            <a href="#" class="block-top target_location-accordion-opener">
+                            <a href="#" class="block-top target-location-accordion-opener">
                                 <div class="location-block-holder">
-                                    <div class="block-top">
-                                        Target Locations
+                                    <div class="block-top-title">
+                                        <div class="title">
+                                            Target Locations
+                                        </div>
                                     </div>
                                 </div>
                                 <span class="btn btn-red" style="float:right"> {{ activity_plan.targetlocation_set.all | length }}</span>
                             </a>
-                            <div class="target_location-accordion-slide js-acc-hidden">
+                            <div class="target-location-accordion-slide js-acc-hidden">
                             {% for target_location in activity_plan.targetlocation_set.all %}                                
                                 <div class="target-location read-only">
                                     <div class="location-block-holder">
@@ -486,8 +484,10 @@
                                                 <div class="inner-holder">
                                                     <a href="#" class="block-top disaggregation-accordion-opener">
                                                         <div class="location-block-holder">
-                                                            <div class="block-top">
-                                                                Disaggregations
+                                                            <div class="block-top-title">
+                                                                <div class="title">
+                                                                    Disaggregations
+                                                                </div>
                                                             </div>
                                                         </div>
                                                         <span class="btn btn-red" style="float:right"> {{ target_location.disaggregationlocation_set.all | length }}</span>
@@ -514,6 +514,7 @@
                                                                     </div>
                                                                 </div>
                                                             </div>
+                                                            <br/>
                                                         {% endfor %} 
                                                     </div>
                                                 </div>
@@ -530,6 +531,12 @@
         </div>
     </div>
     {% endfor %}
+
+    <div class="input-field is-required">
+        <span class="label">Project description &amp; objectives</span>
+        <div class="input-holder">{{ project.description | linebreaksbr }}
+        </div>
+    </div>
 
     <script>
         var csrfToken = '{{ csrf_token }}';

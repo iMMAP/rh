@@ -1,6 +1,6 @@
 {% load custom_filters %}
 
-<tr>
+<tr data-url="{% url 'view_monthly_report' project=project.id report=report.id %}">
     <td class="month-col" data-title="Month">
         <div class="table-flex-holder">
             {% with report_state=report.state %}
@@ -22,15 +22,15 @@
 
     <td class="date-col" data-title="Due date">{{ report.get_state_display }}</td>
 
-    <td class="edit-col" data-title="Edit">
+    <!-- <td class="edit-col" data-title="Edit">
         <ul class="table-options-buttons">
             <li>
                 <button>
-                    <a class="text-decoration-none" href="{% url 'create_project_monthly_report' project=project.id report=report.id %}">
+                    <a class="text-decoration-none" href="{% url 'create_project_monthly_report' project=project.id %}">
                         <span class="icon-pen"></span>
                     </a>
                 </button>
             </li>
         </ul>
-    </td>
+    </td> -->
 </tr>

@@ -237,6 +237,7 @@ $(function () {
 	
 	// Button to handle addition of new target location form.
 	$(document).on('click', '.add-target-location-form-button', function(event) {
+		debugger
 		event.preventDefault(); // Prevent the default behavior (form submission)
 		event.stopPropagation(); // Prevent the default behavior (propagation)
 		const activityReportFormPrefix = event.currentTarget.dataset.formPrefix

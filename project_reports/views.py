@@ -131,25 +131,32 @@ def details_monthly_progress_view(request, project, report):
     return render(request, "project_reports/views/monthly_report_view.html", context)
 
 
-@cache_control(no_store=True)
-@login_required
-def create_project_monthly_report_progress_view(request, project, report):
-    project = get_object_or_404(Project, pk=project)
+def get_project_and_report_details(project_id, report_id=None):
+    project = get_object_or_404(Project, pk=project_id)
     project_state = project.state
-
-    # Get all existing activity plans for the project
     activity_plans = project.activityplan_set.select_related(
         "activity_domain", "activity_type", "activity_detail"
     )
-    # Get all existing target locaitions for the project
     target_locations = project.targetlocation_set.select_related(
         "province", "district", "zone"
     ).all()
+    monthly_report_instance = None
 
-    monthly_report_instance = get_object_or_404(ProjectMonthlyReport, pk=report)
+    if report_id is not None:
+        monthly_report_instance = get_object_or_404(ProjectMonthlyReport, pk=report_id)
 
-    # Create Q objects for each location type
+    return (
+        project,
+        project_state,
+        activity_plans,
+        target_locations,
+        monthly_report_instance,
+    )
+
+
+def get_target_locations_doamin(target_locations):
     # TODO: use cache
+    # Create Q objects for each location type
     province_q = Q(
         id__in=[
             location.province.id for location in target_locations if location.province
@@ -168,6 +175,27 @@ def create_project_monthly_report_progress_view(request, project, report):
     target_location_provinces = Location.objects.filter(province_q)
     target_location_districts = Location.objects.filter(district_q)
     target_location_zones = Location.objects.filter(zone_q)
+
+    return (target_location_provinces, target_location_districts, target_location_zones)
+
+
+@cache_control(no_store=True)
+@login_required
+def create_project_monthly_report_progress_view(request, project, report):
+    """Create View"""
+    (
+        project,
+        project_state,
+        activity_plans,
+        target_locations,
+        monthly_report_instance,
+    ) = get_project_and_report_details(project, report)
+
+    (
+        target_location_provinces,
+        target_location_districts,
+        target_location_zones,
+    ) = get_target_locations_doamin(target_locations)
 
     # Create the activity plan formset with initial data from the project
     ActivityReportFormset = inlineformset_factory(
@@ -348,47 +376,27 @@ def create_project_monthly_report_progress_view(request, project, report):
 @cache_control(no_store=True)
 @login_required
 def update_project_monthly_report_progress_view(request, project, report):
-    project = get_object_or_404(Project, pk=project)
-    project_state = project.state
+    """Update View"""
+    (
+        project,
+        project_state,
+        activity_plans,
+        target_locations,
+        monthly_report_instance,
+    ) = get_project_and_report_details(project, report)
 
-    # Get all existing activity plans for the project
-    activity_plans = project.activityplan_set.select_related(
-        "activity_domain", "activity_type", "activity_detail"
-    )
-    # Get all existing target locaitions for the project
-    target_locations = project.targetlocation_set.select_related(
-        "province", "district", "zone"
-    ).all()
-
-    monthly_report_instance = get_object_or_404(ProjectMonthlyReport, pk=report)
-
-    # Create Q objects for each location type
-    # TODO: use cache
-    province_q = Q(
-        id__in=[
-            location.province.id for location in target_locations if location.province
-        ]
-    )
-    district_q = Q(
-        id__in=[
-            location.district.id for location in target_locations if location.district
-        ]
-    )
-    zone_q = Q(
-        id__in=[location.zone.id for location in target_locations if location.zone]
-    )
-
-    # Collect provinces, districts, and zones using a single query for each
-    target_location_provinces = Location.objects.filter(province_q)
-    target_location_districts = Location.objects.filter(district_q)
-    target_location_zones = Location.objects.filter(zone_q)
+    (
+        target_location_provinces,
+        target_location_districts,
+        target_location_zones,
+    ) = get_target_locations_doamin(target_locations)
 
     # Create the activity plan formset with initial data from the project
     ActivityReportFormset = inlineformset_factory(
         ProjectMonthlyReport,
         ActivityPlanReport,
         form=ActivityPlanReportForm,
-        extra=len(activity_plans),
+        extra=0,
         can_delete=True,
     )
 
@@ -437,11 +445,6 @@ def update_project_monthly_report_progress_view(request, project, report):
         for i, form in enumerate(activity_report_formset.forms):
             if i < len(activity_plans):
                 activity_plan = activity_plans[i]
-                # if not form.instance.pk:
-                #     form.initial = {
-                #         "activity_plan": activity_plan,
-                #         "project_id": project,
-                #     }
                 form.fields["indicator"].queryset = activity_plan.indicators.all()
 
     if request.method == "POST":
@@ -451,7 +454,6 @@ def update_project_monthly_report_progress_view(request, project, report):
                 if indicator_data:
                     activity_report = activity_report_form.save(commit=False)
                     activity_report.monthly_report = monthly_report_instance
-                    # activity_report.activity_plan = monthly_report_instance
                     activity_report.save()
 
                     # Process target location forms and their disaggregation forms
@@ -520,7 +522,6 @@ def update_project_monthly_report_progress_view(request, project, report):
                                             ):
                                                 disaggregation_report.delete()
 
-            # activity_report_formset.save()
             return redirect(
                 "view_monthly_report",
                 project=project.pk,
@@ -528,7 +529,7 @@ def update_project_monthly_report_progress_view(request, project, report):
             )
         else:
             # TODO:
-            # Handle invalid activity_plan_formset
+            # Handle invalid activity_plan_report_formset
             # Add error handling code here
             pass
 
@@ -547,7 +548,6 @@ def update_project_monthly_report_progress_view(request, project, report):
         "activity_plans": activity_plans,
         "report_form": monthly_report_instance,
         "activity_report_formset": activity_report_formset,
-        # 'location_report_formset': location_report_formset,
         "combined_formset": combined_formset,
         "parent_page": parent_page,
         "project_view": False,
@@ -571,25 +571,11 @@ def get_location_report_empty_form(request):
         "province", "district", "zone"
     ).all()
 
-    # Create Q objects for each location type
-    province_q = Q(
-        id__in=[
-            location.province.id for location in target_locations if location.province
-        ]
-    )
-    district_q = Q(
-        id__in=[
-            location.district.id for location in target_locations if location.district
-        ]
-    )
-    zone_q = Q(
-        id__in=[location.zone.id for location in target_locations if location.zone]
-    )
-
-    # Collect provinces, districts, and zones using a single query for each
-    target_location_provinces = Location.objects.filter(province_q)
-    target_location_districts = Location.objects.filter(district_q)
-    target_location_zones = Location.objects.filter(zone_q)
+    (
+        target_location_provinces,
+        target_location_districts,
+        target_location_zones,
+    ) = get_target_locations_doamin(target_locations)
 
     ActivityReportFormset = inlineformset_factory(
         ProjectMonthlyReport,

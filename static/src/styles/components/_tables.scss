@@ -131,6 +131,13 @@
   tr {
     display: flex;
     flex-wrap: wrap;
+
+    &:hover {
+      background-color: #f2f2f2;
+    }
+    &:hover td {
+      color: #be2126;
+    }
   }
 
   .active-row {
@@ -156,12 +163,12 @@
     width: 16.5%;
 
     @include media('>=laptop') {
-      width: 12.75%;
+      width: 13%;
     }
   }
 
   .organisation-col {
-    width: 13.5%;
+    width: 18.5%;
   }
 
   .title-col {
@@ -181,7 +188,7 @@
   }
 
   .location-col {
-    width: 9.2%;
+    width: 16.2%;
   }
 
   .description-col {
@@ -198,7 +205,7 @@
     display: flex;
 
     @include media('>=laptop') {
-      width: 12%;
+      width: 13%;
     }
   }
 

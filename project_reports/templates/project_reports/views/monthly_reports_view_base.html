@@ -1,4 +1,7 @@
 {% extends "rh/projects/projects_index.html" %}
+{% load static %}
+{% load compress %}
+
 
 {% block project_body %}
 <div class="breadcrumbs-nav-panel">
@@ -23,13 +26,12 @@
             <li>
                 <a href="{% url 'view_project' project.id %}">{{ project.code }}</a>
             </li>
-            <li class="current">
-                {% if report %}
-                    {{report}}
-                {% else %}
-                    Monthly progress
-                {% endif %}
+            <li>
+                <a href="{% url 'view_project' project.id %}">{{ project.code }}</a>
             </li>
+            <li class="current">
+                Progress Reports
+            </li>            
         </ul>
         <div class="actions-panel">
             <div class="filter-holder">
@@ -187,7 +189,7 @@
                 </ul>
             </div>
             <div>
-                <a href="{% url 'create_project_monthly_report' project=project.pk report='New' %}" class="btn btn-red add-btn">Add Monthly
+                <a href="{% url 'create_project_monthly_report' project=project.pk %}" class="btn btn-red add-btn">Add Monthly
                     Report
                 </a>
             </div>
@@ -226,9 +228,9 @@
                     <strong class="table-title">Status</strong>
                 </th>
 
-                <th class="edit-col">
+                <!-- <th class="edit-col">
                     <strong class="table-title"></strong>
-                </th>
+                </th> -->
             </tr>
             </thead>
             <tbody>
@@ -270,9 +272,9 @@
                     <strong class="table-title">Status</strong>
                 </th>
 
-                <th class="edit-col">
+                <!-- <th class="edit-col">
                     <strong class="table-title"></strong>
-                </th>
+                </th> -->
             </tr>
             </thead>
             <tbody>
@@ -283,5 +285,8 @@
         </table>
     </div>
 </div>
+{% compress js %}
+	<script defer src="{% static 'project_reports/js/monthly_report.js' %}"></script>
+{% endcompress js %}
 {% endblock project_body %}
 

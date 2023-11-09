@@ -26,9 +26,9 @@
 
     position: relative;
     display: inline-block;
-    margin-left: 10px;
     color: $gray-7d;
     z-index: 9;
+    margin-right: 10px;
 
     &:hover {
       color: $red-be;
@@ -84,7 +84,7 @@
   .row {
     display: flex;
     flex-wrap: wrap;
-    margin: 0 -8px;
+    margin: 20px -8px;
   }
 
   .col {
@@ -137,7 +137,7 @@
   }
 
   .people {
-    margin: 0 16px 0 0;
+    margin: 10px 16px 0 0;
     font-size: 16px;
     font-weight: 600;
     display: block;

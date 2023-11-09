@@ -1,366 +1,240 @@
-{% extends "../../_base.html" %}
+{% extends "project_reports/forms/monthly_report_progress_form.html" %}
 {% load static %}
+{% load compress %}
 
-{% block content %}
-<div class="container">
-    <div class="page-navigation-panel">
-    <div class="holder">
-        <div class="link-holder">
-        <a href="#" class="btn-back">Back to Monthly Progress</a>
-        </div>
+{% block report_body %}
 
-        <div class="tabs-nav-holder">
-        <ul class="tabs-nav">
-            <li class="">
-            <a href="#">Project plan</a>
-            </li>
-
-            <li class="">
-            <a href="#">financial reports</a>
-            </li>
-
-            <li class="active">
-            <a href="#">monthly progress</a>
-            </li>
-        </ul>
-        </div>
-    </div>
-    </div>
-
-    <div class="breadcrumbs-nav-panel">
-    <div class="holder">
-        <ul class="breadcrumbs">
-        <li>
-            <a href="#">Home</a>
-        </li>
-
-        <li>
-            <a href="#">Active projects</a>
-        </li>
-
-        <li class="current">Monthly progress</li>
-        </ul>
-        <ul class="buttons-list-inline">
-        <li>
-            <a href="#" class="btn btn-gray">
-            <span class="btn-text">Copy last month</span>
-            <span class="icon-copy-outline"></span>
-            </a>
-        </li>
-        <li>
-            <a href="#" class="btn btn-red">
-            <span class="btn-text">Import</span>
-            <span class="icon-upload"></span>
-            </a>
-        </li>
-        </ul>
-    </div>
-    </div>
     <div class="content-block top-border">
-    <div class="project-title">
-        <div class="holder">
-        <strong class="h5">October 2022</strong>
-        <ul class="buttons-list-inline">
-            <li>
-            <a href="#" class="btn btn-red">Edit</a>
-            </li>
-        </ul>
+        <div class="project-title">
+            <div class="holder">
+                <strong class="h5">{{ monthly_report.report_date | date:"F Y" }}</strong>
+                <ul class="buttons-list-inline">
+                    <li>
+                        <a href="{% url 'update_project_monthly_report_progress' project=project.id report=monthly_report.pk %}" class="btn btn-red">
+                            Edit
+                        </a>
+                    </li>
+                </ul>
+            </div>
         </div>
-    </div>
+        <br/>
+        <div>
+            <div class="project-monthly_report read-only">
+                <div class="row">
+                    <div class="col">
+                        <div class="multiple-fields-row three-items">
+                            <div class="field-col">
+                                <div class="input-field">
+                                <label>Report Date</label>
+                                <span class="text-read-only">{{ monthly_report.report_date | date:"F Y" }}</span>
+                                </div>
+                            </div>
+                            <div class="field-col">
+                                <div class="input-field">
+                                <label>Report Due Date</label>
+                                <span class="text-read-only">{{ monthly_report.report_due_date | date:"F Y" }}</span>
+                                </div>
+                            </div>
+                            <div class="field-col">
+                                <div class="input-field">
+                                <label>Report Status</label>
+                                <span class="text-read-only">{{ monthly_report.get_state_display }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br/>
+        <div class="location-block-holder">
+            <div class="block-top-title report-title">
+                <div class="title">
+                    Reporting Activities
+                </div>
+            </div>
+        </div>
+        {% for activity_report in activity_reports %}
+            <div class="monthly-progress monthly-accordion read-only">
+                <div class="inner-holder">
+                    <a href="#" class="block-top monthly-accordion-opener">
+                        <span class="title">
+                            <span class="tooltip-info icon-info" data-tippy-content="Lorem lorem lorem"></span>
+                            {{ activity_report.activity_plan }}
+                        </span>
+                        <span class="people">
+                            <span class="icon-group"></span>
+                            1657
+                        </span>
+                    </a>
+                    
+                    <div class="monthly-accordion-slide">
+                        <div class="row">
+                            <div class="col">
+                                <div class="multiple-fields-row two-items">
+                                <div class="field-col">
+                                    <div class="select-field">
+                                    <label>Activity Domain</label>
+                                    <span class="text-read-only">{{activity_report.activity_plan.activity_domain}}</span>
+                                    </div>
+                                </div>
+                                <div class="field-col">
+                                    <div class="select-field">
+                                    <label>Activity Type</label>
+                
+                                    <span class="text-read-only">{{activity_report.activity_plan.activity_type}}</span>
+                                    </div>
+                                </div>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="field-col">
+                                    <div class="select-field">
+                                    <label>Activity Details</label>
+                
+                                    <span class="text-read-only">{{activity_report.activity_plan.activity_detail}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="field-col">
+                                    <div class="select-field">
+                                        <label>Indicator</label>
+                                        <span class="text-read-only">{{activity_report.indicator}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="target_location-block target-location-accordion">
+                            <div class="inner-holder">
+                                <div class="block-top target-location-accordion-opener">
+                                    <div class="location-block-holder">
+                                        <div class="block-top-title">
+                                            <div class="title">
+                                                Reporting Target Locations
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <span class="btn btn-red" style="float:right"> {{ activity_report.targetlocationreport_set.all | length }}</span>
+                                </div>
+                                <div class="target-location-accordion-slide js-acc-hidden">
+                                {% for location_report in activity_report.targetlocationreport_set.all %}                                
+                                    <div class="target-location read-only">
+                                        <div class="location-block-holder">
+                                            <div class="inner-holder">
+                                                <div class="block-top">
+                                                    <span class="title">
+                                                        {% if location_report.province %}
+                                                        {{ location_report.province }},
+                                                        {% endif %}
+                                                        {{ location_report.district }}
+                                                    </span>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col col-lg">
+                                                        <div class="multiple-fields-row three-items">
+                                                            <div class="field-col">
+                                                                <div class="select-field is-required">
+                                                                    <span class="label">Province</span>
+                                                                    <span class="text-read-only">{{ location_report.province }}</span>
+                                                                </div>
+                                                            </div>
+                                                            <div class="field-col">
+                                                                <div class="input-field">
+                                                                    <span class="label">District</span>
+                                                                    <div class="input-holder">
+                                                                        <span class="text-read-only">{{ location_report.district }}</span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="field-col">
+                                                                <div class="select-field ">
+                                                                    <span class="label">Location Type</span>
+                                                                    <span class="text-read-only">{{ location_report.location_type }}</span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <br/>
+                                                </div>
+                                                <br/>
+                                                <div class="disaggregation-block disaggregation-accordion">
+                                                    <div class="inner-holder">
+                                                        <a href="#" class="block-top disaggregation-accordion-opener">
+                                                            <div class="location-block-holder">
+                                                                <div class="block-top-title">
+                                                                    <div class="title">
+                                                                        Reporting Disaggregations
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <span class="btn btn-red" style="float:right"> {{ location_report.disaggregationlocationreport_set.all | length }}</span>
+                                                        </a>
+                                                        <div class="disaggregation-accordion-slide">
+                                                            {% for disaggregation_report in location_report.disaggregationlocationreport_set.all %}
+                                                                <div class="location-inner-holder">  
+                                                                    <div class="col col-lg">
+                                                                        <div class="multiple-fields-row two-items">
+                                                                            <div class="field-col">
+                                                                                <div class="select-field">
+                                                                                    <span class="label">Disaggregation</span>
+                                                                                    <span class="text-read-only">{{ disaggregation_report.disaggregation }}</span>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="field-col">
+                                                                                <div class="input-field">
+                                                                                    <span class="label">Target</span>
+                                                                                    <div class="input-holder">
+                                                                                        <span class="text-read-only">{{ disaggregation_report.target }}</span>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <br/>
+                                                            {% endfor %} 
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %} 
+                                </div>
+                            </div>
+                        </div> 
+                        <!-- <div class="monthly-info-block">
+                            <div class="block-heading">
+                                <span class="title">Funding Per Year</span>
+                            </div>
+                            <ul class="monthly-info-list">
+                                <li>Coordination meeting took place with relevant stakeholders at provincial, district and community level.</li>
+                    
+                                <li>Regular Monitoring and supervision conducted from target districts by Badakhshan team.</li>
+                    
+                                <li>PHCC and PDC meeting attended.</li>
+                    
+                                <li>Project report completed and submitted to the provincial health office (PHO).</li>
+                            </ul>
+                        </div> -->
+                    </div>
+            
+                </div>
+            </div>
+        {% endfor %}
 
-    <div class="monthly-progress monthly-accordion read-only">
-        <div class="inner-holder">
-        <a href="#" class="block-top monthly-accordion-opener">
-            <span class="title"
-            >District
-            <span class="tooltip-info icon-info" data-tippy-content="Lorem lorem lorem"></span>
-            </span>
-            <span class="people">
-            <span class="icon-group"></span>
-            1657
-            </span>
-        </a>
-        <div class="monthly-accordion-slide">
+        <div class="monthly-reporting">
             <div class="row">
-            <div class="col">
-                <div class="multiple-fields-row three-items">
-                <div class="field-col">
-                    <div class="select-field">
-                    <label>Activity</label>
-
-                    <span class="text-read-only">Activity</span>
+                <div class="col">
+                    <div class="input-field">
+                        <label>Description &amp; Objectives</label>
+                        <span class="text-read-only">{{ monthly_report.description }}</span>
                     </div>
-                </div>
-                <div class="field-col">
-                    <div class="select-field">
-                    <label>Description</label>
-
-                    <span class="text-read-only">Description</span>
-                    </div>
-                </div>
-                <div class="field-col">
-                    <div class="select-field">
-                    <label>Description</label>
-
-                    <span class="text-read-only">Description</span>
-                    </div>
-                </div>
                 </div>
             </div>
-            <div class="col">
-                <div class="multiple-fields-row three-items">
-                <div class="field-col">
-                    <div class="select-field">
-                    <label>HRP Status</label>
-
-                    <span class="text-read-only">HRP Status</span>
-                    </div>
-                </div>
-                <div class="field-col">
-                    <div class="select-field">
-                    <label>Category</label>
-
-                    <span class="text-read-only">Category</span>
-                    </div>
-                </div>
-                <div class="field-col">
-                    <div class="select-field">
-                    <label>Type</label>
-
-                    <span class="text-read-only">Type</span>
-                    </div>
-                </div>
-                </div>
-            </div>
-            <div class="col">
-                <div class="multiple-fields-row three-items">
-                <div class="field-col">
-                    <div class="input-field">
-                    <label>Boys</label>
-                    <div class="input-holder">
-                        <span class="text-read-only">Boys</span>
-                    </div>
-                    </div>
-                </div>
-                <div class="field-col">
-                    <div class="input-field">
-                    <label>Girls</label>
-                    <div class="input-holder">
-                        <span class="text-read-only">Girls</span>
-                    </div>
-                    </div>
-                </div>
-                <div class="field-col">
-                    <div class="input-field">
-                    <label>Men</label>
-                    <div class="input-holder">
-                        <span class="text-read-only">Men</span>
-                    </div>
-                    </div>
-                </div>
-                </div>
-            </div>
-            <div class="col">
-                <div class="multiple-fields-row three-items">
-                <div class="field-col">
-                    <div class="input-field">
-                    <label>Women</label>
-                    <div class="input-holder">
-                        <span class="text-read-only">Women</span>
-                    </div>
-                    </div>
-                </div>
-                <div class="field-col">
-                    <div class="input-field">
-                    <label>Eld. men (60+)</label>
-                    <div class="input-holder">
-                        <span class="text-read-only">Eld. men (60+)</span>
-                    </div>
-                    </div>
-                </div>
-                <div class="field-col">
-                    <div class="input-field">
-                    <label>Eld. women (60+)</label>
-                    <div class="input-holder">
-                        <span class="text-read-only">Eld. women (60+)</span>
-                    </div>
-                    </div>
-                </div>
-                </div>
-            </div>
-            </div>
-            <div class="input-check-holder">
-            <input type="checkbox" id="monProgress1" disabled checked />
-            <label for="monProgress1">
-                <span class="input"></span>
-                <span class="text">Winterization</span>
-            </label>
-            </div>
-        </div>
-        </div>
-
-        <div class="monthly-info-block">
-        <div class="block-heading">
-            <span class="title">Funding Per Year</span>
-        </div>
-        <ul class="monthly-info-list">
-            <li>Coordination meeting took place with relevant stakeholders at provincial, district and community level.</li>
-
-            <li>Regular Monitoring and supervision conducted from target districts by Badakhshan team.</li>
-
-            <li>PHCC and PDC meeting attended.</li>
-
-            <li>Project report completed and submitted to the provincial health office (PHO).</li>
-        </ul>
-        </div>
-
-        <div class="inner-holder">
-        <a href="#" class="block-top monthly-accordion-opener">
-            <span class="title"
-            >District
-            <span class="tooltip-info icon-info" data-tippy-content="Lorem lorem lorem"></span>
-            </span>
-            <span class="people">
-            <span class="icon-group"></span>
-            1657
-            </span>
-        </a>
-        <div class="monthly-accordion-slide">
-            <div class="row">
-            <div class="col">
-                <div class="multiple-fields-row three-items">
-                <div class="field-col">
-                    <div class="select-field">
-                    <label>Activity</label>
-
-                    <span class="text-read-only">Activity</span>
-                    </div>
-                </div>
-                <div class="field-col">
-                    <div class="select-field">
-                    <label>Description</label>
-
-                    <span class="text-read-only">Description</span>
-                    </div>
-                </div>
-                <div class="field-col">
-                    <div class="select-field">
-                    <label>Description</label>
-
-                    <span class="text-read-only">Description</span>
-                    </div>
-                </div>
-                </div>
-            </div>
-            <div class="col">
-                <div class="multiple-fields-row three-items">
-                <div class="field-col">
-                    <div class="select-field">
-                    <label>HRP Status</label>
-
-                    <span class="text-read-only">HRP Status</span>
-                    </div>
-                </div>
-                <div class="field-col">
-                    <div class="select-field">
-                    <label>Category</label>
-
-                    <span class="text-read-only">Category</span>
-                    </div>
-                </div>
-                <div class="field-col">
-                    <div class="select-field">
-                    <label>Type</label>
-
-                    <span class="text-read-only">Type</span>
-                    </div>
-                </div>
-                </div>
-            </div>
-            <div class="col">
-                <div class="multiple-fields-row three-items">
-                <div class="field-col">
-                    <div class="input-field">
-                    <label>Boys</label>
-                    <div class="input-holder">
-                        <span class="text-read-only">Boys</span>
-                    </div>
-                    </div>
-                </div>
-                <div class="field-col">
-                    <div class="input-field">
-                    <label>Girls</label>
-                    <div class="input-holder">
-                        <span class="text-read-only">Girls</span>
-                    </div>
-                    </div>
-                </div>
-                <div class="field-col">
-                    <div class="input-field">
-                    <label>Men</label>
-                    <div class="input-holder">
-                        <span class="text-read-only">Men</span>
-                    </div>
-                    </div>
-                </div>
-                </div>
-            </div>
-            <div class="col">
-                <div class="multiple-fields-row three-items">
-                <div class="field-col">
-                    <div class="input-field">
-                    <label>Women</label>
-                    <div class="input-holder">
-                        <span class="text-read-only">Women</span>
-                    </div>
-                    </div>
-                </div>
-                <div class="field-col">
-                    <div class="input-field">
-                    <label>Eld. men (60+)</label>
-                    <div class="input-holder">
-                        <span class="text-read-only">Eld. men (60+)</span>
-                    </div>
-                    </div>
-                </div>
-                <div class="field-col">
-                    <div class="input-field">
-                    <label>Eld. women (60+)</label>
-                    <div class="input-holder">
-                        <span class="text-read-only">Eld. women (60+)</span>
-                    </div>
-                    </div>
-                </div>
-                </div>
-            </div>
-            </div>
-            <div class="input-check-holder">
-            <input type="checkbox" id="monProgress2" disabled checked />
-            <label for="monProgress2">
-                <span class="input"></span>
-                <span class="text">Winterization</span>
-            </label>
-            </div>
-        </div>
-        </div>
-
-        <div class="monthly-info-block">
-        <div class="block-heading">
-            <span class="title">Funding Per Year</span>
-        </div>
-        <ul class="monthly-info-list">
-            <li>Coordination meeting took place with relevant stakeholders at provincial, district and community level.</li>
-
-            <li>Regular Monitoring and supervision conducted from target districts by Badakhshan team.</li>
-
-            <li>PHCC and PDC meeting attended.</li>
-
-            <li>Project report completed and submitted to the provincial health office (PHO).</li>
-        </ul>
         </div>
     </div>
-    </div>
-</div>
-{% endblock content %}
+{% endblock report_body %}
 
         

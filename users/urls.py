@@ -2,7 +2,7 @@ from django.contrib.auth import views as auth_views
 from django.urls import path
 
 from . import views as user_views
-from .forms import UserPasswordResetForm, UserSetPasswordForm, UserPasswordChangeForm
+from .forms import UserPasswordChangeForm, UserPasswordResetForm, UserSetPasswordForm
 
 urlpatterns = [
     path("register/", user_views.register_view, name="register"),

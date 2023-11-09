@@ -1,20 +1,10 @@
 {% extends "../../../_base.html" %}
 {% load static %}
+{% load compress %}
 {% block page_title %}
     ReportHub - Projects
 {% endblock page_title %}
 {% block content %}
-    <style>
-    tbody tr:hover {
-        background: #f5f5f5;
-        color: #af4745;
-        cursor: pointer;
-    }
-
-    td a {
-        display: block;
-    }
-    </style>
     <div class="container">
         <div class="page-top-panel">
             <div class="tabs-nav-holder">
@@ -276,4 +266,7 @@
         {% block pager %}
         {% endblock pager %}
     </div>
+    {% compress js %}
+        <script defer src="{% static 'rh/js/all_projects.js' %}"></script>
+    {% endcompress js %}
 {% endblock content %}

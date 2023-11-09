@@ -76,23 +76,29 @@ def import_locations(conn, locations_csv):
         c.execute(
             f"""
         insert into {table} (level, parent_id, code, name, original_name, type, created_at, updated_at)
-        select distinct 0 level, NULL parent, ADM0_PCODE code, ADM0_NA_EN name, ADM0_translation original_name, 'Country' type, datetime('now') created_at, datetime('now') updated_at from tmp_locs
+        select distinct 0 level, NULL parent, ADM0_PCODE code, ADM0_NA_EN name, ADM0_translation original_name, 
+        'Country' type, datetime('now') created_at, datetime('now') updated_at 
+        from tmp_locs
         """
         )
 
         c.execute(
             f"""
         insert into {table} (level, parent_id, code, name, original_name, type, created_at, updated_at)
-        select distinct 1 level, r.id as parent_id, ADM1_PCODE code, ADM1_NA_EN name, ADM1_translation original_name, 'Province' type, datetime('now') created_at, datetime('now') updated_at
-        from tmp_locs t inner join {table} r ON r.code = t.ADM0_PCODE;
+        select distinct 1 level, r.id as parent_id, ADM1_PCODE code, ADM1_NA_EN name, ADM1_translation 
+        original_name, 'Province' type, datetime('now') created_at, datetime('now') updated_at
+        from tmp_locs t 
+        inner join {table} r ON r.code = t.ADM0_PCODE;
         """
         )
 
         c.execute(
             f"""
         insert into {table} (level, parent_id, code, name, type, lat, long, created_at, updated_at)
-        select distinct 2 level, r.id as parent_id, ADM2_PCODE code, ADM2_NA_EN name, 'District' type, t.lat, t.long, datetime('now') created_at, datetime('now') updated_at
-        from tmp_locs t inner join {table} r ON r.code = t.ADM1_PCODE;
+        select distinct 2 level, r.id as parent_id, ADM2_PCODE code, ADM2_NA_EN name, 'District' type, 
+        t.lat, t.long, datetime('now') created_at, datetime('now') updated_at
+        from tmp_locs t 
+        inner join {table} r ON r.code = t.ADM1_PCODE;
         """
         )
 
@@ -155,7 +161,8 @@ def import_indicators_from_csv(conn, indicators_csv):
                 indicator.append(None)
                 indicator.append(None)
 
-                aquery = f"""insert into {table}(code, name, numerator, denominator, description) values (?, ?, ?, ?, ?)
+                aquery = f"""insert into {table}(code, name, numerator, denominator, description) 
+                values (?, ?, ?, ?, ?)
                 """
                 c.execute(aquery, indicator)
                 last_indicator_id = c.lastrowid
@@ -250,7 +257,8 @@ def import_activity_descriptions_from_csv(conn, activity_description_csv):
 
         try:
             c.execute(
-                """select activity_description_id,activity_description_name,activity_type_id,cluster_id from tmp_activitytype
+                """select activity_description_id,activity_description_name,activity_type_id,cluster_id 
+                from tmp_activitytype
             """
             )
             activity_types = c.fetchall()
@@ -300,7 +308,8 @@ def import_activity_descriptions_from_csv(conn, activity_description_csv):
 
                 # activity_type[4] = indicator
 
-                aquery = f"""insert into {table}(code,name,activity_domain_id,active,activity_date,hrp_code,code_indicator,start_date,end_date,ocha_code,objective_id) 
+                aquery = f"""insert into {table}(code,name,activity_domain_id,active,activity_date,
+                hrp_code,code_indicator,start_date,end_date,ocha_code,objective_id) 
                     values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """
                 c.execute(aquery, activity_type)
@@ -392,7 +401,8 @@ def import_beneficiary_types_from_csv(conn, beneficiary_type_csv):
                     insert into 
                     {table}(name, code, description, start_date, end_date, country_id) 
                     select 
-                    beneficiary_type_name, beneficiary_type_id, description, start_date, end_date, (select id from rh_location where code = tmp_beneficiarytype.admin0pcode)
+                    beneficiary_type_name, beneficiary_type_id, description, start_date, end_date, 
+                    (select id from rh_location where code = tmp_beneficiarytype.admin0pcode)
                     from tmp_beneficiarytype"""
             )
             c.execute("DROP TABLE tmp_beneficiarytype;")
@@ -414,7 +424,8 @@ def import_organizations_from_csv(conn, organizations_csv):
         df.to_sql("tmp_organization", conn, if_exists="replace", index=False)
         try:
             c.execute(
-                "select _id, createdAt, organization, organization_name, organization_type, updatedAt, admin0pcode from tmp_organization"
+                """select _id, createdAt, organization, organization_name, organization_type, 
+                updatedAt, admin0pcode from tmp_organization"""
             )
             organizations = c.fetchall()
             for organization in organizations:
@@ -461,7 +472,8 @@ def import_donors_from_csv(conn, donors_csv):
 
         try:
             c.execute(
-                "select _id, end_date, project_donor_id, project_donor_name, start_date, admin0pcode from tmp_donor"
+                """select _id, end_date, project_donor_id, project_donor_name, start_date, 
+                admin0pcode from tmp_donor"""
             )
             donors = c.fetchall()
             for donor in donors:
@@ -590,7 +602,8 @@ def import_users_from_csv(conn, users_csv):
                 user = tuple(user)
                 aquery = f"""
                         insert into 
-                        {table}(date_joined, email, last_login, password, is_active, username, is_superuser, is_staff, last_name, first_name) 
+                        {table}(date_joined, email, last_login, password, is_active, username, 
+                        is_superuser, is_staff, last_name, first_name) 
                         values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                     """
 
@@ -641,8 +654,6 @@ def import_activities_from_csv(conn, activities_csv):
     df = pd.read_csv(activities_csv)
     df["fields"] = df["fields"].fillna("")
 
-    # df['fields'] = df['fields'].apply(lambda x: json.loads(x) if isinstance(x, str) else json.loads(str(x)))
-
     if len(df) > 0:
         table = "rh_activity"
 
@@ -650,7 +661,9 @@ def import_activities_from_csv(conn, activities_csv):
 
         try:
             c.execute(
-                "select active, activity_date, HRP_Code, Core_Indicator_Yes_No, code, name, subdomain_code, subdomain_name, start_date, end_date, _id, admin0pcode, cluster_id, indicator_id from tmp_activity"
+                """select active, activity_date, HRP_Code, Core_Indicator_Yes_No, code, name, 
+                subdomain_code, subdomain_name, start_date, end_date, _id, admin0pcode, 
+                cluster_id, indicator_id from tmp_activity"""
             )
             activities = c.fetchall()
             for activity in activities:
@@ -672,7 +685,8 @@ def import_activities_from_csv(conn, activities_csv):
 
                 aquery = f"""
                         insert into 
-                        {table}(active, activity_date, hrp_code, code_indicator, code, name, subdomain_code, subdomain_name, start_date, end_date, old_id, indicator_id) 
+                        {table}(active, activity_date, hrp_code, code_indicator, code, name, 
+                        subdomain_code, subdomain_name, start_date, end_date, old_id, indicator_id) 
                         values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                     """
 
@@ -692,7 +706,11 @@ def import_activities_from_csv(conn, activities_csv):
                     """
                     c.execute(alquery)
 
-                cquery = f"""select id from rh_cluster where code='{cluster}' or title='{cluster}' or name='{cluster}'"""
+                cquery = f"""
+                select id 
+                from rh_cluster 
+                where code='{cluster}' or title='{cluster}' or name='{cluster}'
+                """
                 c.execute(cquery)
 
                 cluster_id = c.fetchone()

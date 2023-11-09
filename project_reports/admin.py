@@ -1,10 +1,10 @@
 from django.contrib import admin
 
 from .models import (
-    ProjectMonthlyReport,
     ActivityPlanReport,
-    TargetLocationReport,
     DisaggregationLocationReport,
+    ProjectMonthlyReport,
+    TargetLocationReport,
 )
 
 ##############################################
@@ -48,7 +48,7 @@ admin.site.register(TargetLocationReport, TargetLocationReportAdmin)
 
 
 class DisaggregationLocationReportAdmin(admin.ModelAdmin):
-    list_display = ("active", "target_location_report", "disaggregation", "target")
+    list_display = ("target_location_report", "active", "disaggregation", "target")
 
 
 admin.site.register(DisaggregationLocationReport, DisaggregationLocationReportAdmin)

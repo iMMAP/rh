@@ -10,6 +10,7 @@ export default defineConfig({
 
         // relative to the folder that vite.config is located
         "../stock/static/stock/stock.js",
+        "../users/static/users/users.js",
       ],
       root: "..",
     }),

@@ -1,5 +1,6 @@
 {% extends "../../_base.html" %}
 {% load static %}
+{% load vite %}
 {% block content %}
     <div class="login-section sign-up base-section">
         <div class="decor-holder">
@@ -34,7 +35,7 @@
                 {% csrf_token %}
                 <div class="form-holder">
                     {% for field in u_form %}
-                        <div class="input-field is-required"">
+                        <div class="input-field is-required">
                             {{ field.label_tag }}
                             <div class="input-holder">{{ field }}</div>
                         </div>
@@ -67,3 +68,7 @@
     </div>
 {% endblock content %}
 
+
+{% block scripts %}
+    {% vite 'users/static/users/users.js' %}
+{% endblock scripts %}

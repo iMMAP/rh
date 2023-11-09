@@ -293,7 +293,8 @@ def create_project_monthly_report_progress_view(request, project, report):
                                             location_report_form.disaggregation_report_formset.forms
                                         )
 
-                                        # Delete the exisiting instances of the disaggregation location reports and create new
+                                        # Delete the exisiting instances of the disaggregation location
+                                        # reports and create new
                                         # based on the indicator disaggregations
                                         new_report_disaggregations = []
                                         for (
@@ -482,7 +483,8 @@ def update_project_monthly_report_progress_view(request, project, report):
                                             location_report_form.disaggregation_report_formset.forms
                                         )
 
-                                        # Delete the exisiting instances of the disaggregation location reports and create new
+                                        # Delete the exisiting instances of the disaggregation
+                                        # location reports and create new
                                         # based on the indicator disaggregations
                                         new_report_disaggregations = []
                                         for (

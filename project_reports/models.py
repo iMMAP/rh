@@ -17,9 +17,7 @@ from rh.models import (
 class ProjectMonthlyReport(models.Model):
     """Project Monthly Reporting"""
 
-    project = models.ForeignKey(
-        Project, on_delete=models.SET_NULL, null=True, blank=True
-    )
+    project = models.ForeignKey(Project, on_delete=models.SET_NULL, null=True, blank=True)
     REPORT_STATES = [
         ("todo", "Todo"),
         ("pending", "Pending"),
@@ -27,9 +25,7 @@ class ProjectMonthlyReport(models.Model):
         ("reject", "Rejected"),
         ("complete", "Complete"),
     ]
-    state = models.CharField(
-        max_length=15, choices=REPORT_STATES, default="todo", null=True, blank=True
-    )
+    state = models.CharField(max_length=15, choices=REPORT_STATES, default="todo", null=True, blank=True)
     active = models.BooleanField(default=True)
     report_period = models.DateField(blank=True, null=True)
     report_date = models.DateField(blank=True, null=True)
@@ -50,15 +46,9 @@ class ProjectMonthlyReport(models.Model):
 class ActivityPlanReport(models.Model):
     """Activity Plans model"""
 
-    monthly_report = models.ForeignKey(
-        ProjectMonthlyReport, on_delete=models.CASCADE, null=True, blank=True
-    )
-    activity_plan = models.ForeignKey(
-        ActivityPlan, on_delete=models.CASCADE, null=True, blank=True
-    )
-    indicator = models.ForeignKey(
-        Indicator, on_delete=models.SET_NULL, null=True, blank=True
-    )
+    monthly_report = models.ForeignKey(ProjectMonthlyReport, on_delete=models.CASCADE, null=True, blank=True)
+    activity_plan = models.ForeignKey(ActivityPlan, on_delete=models.CASCADE, null=True, blank=True)
+    indicator = models.ForeignKey(Indicator, on_delete=models.SET_NULL, null=True, blank=True)
 
     class Meta:
         verbose_name = "Activity Plan Report"
@@ -68,9 +58,7 @@ class ActivityPlanReport(models.Model):
 class TargetLocationReport(models.Model):
     """Target Locations model"""
 
-    activity_plan_report = models.ForeignKey(
-        ActivityPlanReport, on_delete=models.CASCADE, null=True, blank=True
-    )
+    activity_plan_report = models.ForeignKey(ActivityPlanReport, on_delete=models.CASCADE, null=True, blank=True)
 
     country = models.ForeignKey(
         Location,
@@ -100,9 +88,7 @@ class TargetLocationReport(models.Model):
         null=True,
         blank=True,
     )
-    location_type = models.ForeignKey(
-        LocationType, on_delete=models.SET_NULL, null=True, blank=True
-    )
+    location_type = models.ForeignKey(LocationType, on_delete=models.SET_NULL, null=True, blank=True)
 
     def __str__(self):
         return f"{self.activity_plan_report}, {self.province}, {self.district}"
@@ -114,12 +100,8 @@ class TargetLocationReport(models.Model):
 
 class DisaggregationLocationReport(models.Model):
     active = models.BooleanField(default=True)
-    target_location_report = models.ForeignKey(
-        TargetLocationReport, on_delete=models.CASCADE, null=True, blank=True
-    )
-    disaggregation = models.ForeignKey(
-        Disaggregation, on_delete=models.CASCADE, null=True, blank=True
-    )
+    target_location_report = models.ForeignKey(TargetLocationReport, on_delete=models.CASCADE, null=True, blank=True)
+    disaggregation = models.ForeignKey(Disaggregation, on_delete=models.CASCADE, null=True, blank=True)
 
     target = models.IntegerField(default=0, null=True, blank=True)
 

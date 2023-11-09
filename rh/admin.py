@@ -69,9 +69,7 @@ class ClusterAdmin(admin.ModelAdmin):
     # get the count of a many to many relationship with Donor model
     def get_queryset(self, request):
         queryset = super().get_queryset(request)
-        queryset = queryset.annotate(
-            donors_count=Count("donor"), countries_count=Count("countries")
-        )
+        queryset = queryset.annotate(donors_count=Count("donor"), countries_count=Count("countries"))
         return queryset
 
     def donors_count(self, obj):

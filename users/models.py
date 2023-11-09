@@ -8,13 +8,9 @@ class Profile(models.Model):
     """Inherit AbstractUser model and include our custom fields"""
 
     user = models.OneToOneField(User, on_delete=models.CASCADE, blank=True, null=True)
-    country = models.ForeignKey(
-        Location, blank=False, null=True, on_delete=models.SET_NULL
-    )
+    country = models.ForeignKey(Location, blank=False, null=True, on_delete=models.SET_NULL)
     clusters = models.ManyToManyField(Cluster)
-    organization = models.ForeignKey(
-        Organization, on_delete=models.SET_NULL, blank=True, null=True
-    )
+    organization = models.ForeignKey(Organization, on_delete=models.SET_NULL, blank=True, null=True)
     position = models.CharField(max_length=200, blank=True, null=True)
     phone = models.CharField(max_length=200, blank=True, null=True)
     whatsapp = models.CharField(max_length=200, blank=True, null=True)

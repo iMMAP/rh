@@ -103,9 +103,7 @@ def register_view(request):
 
                 user_profile.save()
                 p_form.save_m2m()
-                messages.success(
-                    request, f"Account created successfully for {username}."
-                )
+                messages.success(request, f"Account created successfully for {username}.")
                 return redirect("login")
             else:
                 # If production mode send a verification email to the user for account activation

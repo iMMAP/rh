@@ -43,9 +43,7 @@ class ProfileForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(ProfileForm, self).__init__(*args, **kwargs)
-        self.fields["country"].queryset = self.fields["country"].queryset.filter(
-            type="Country"
-        )
+        self.fields["country"].queryset = self.fields["country"].queryset.filter(type="Country")
 
 
 class ProfileAdmin(admin.ModelAdmin):

@@ -1,9 +1,10 @@
-from django.contrib import admin
 from django import forms
-from django.contrib.auth.models import User
+from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from django.utils.html import format_html
+from django.contrib.auth.models import User
 from django.urls import reverse
+from django.utils.html import format_html
+
 from .models import Profile
 
 
@@ -42,7 +43,9 @@ class ProfileForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(ProfileForm, self).__init__(*args, **kwargs)
-        self.fields["country"].queryset = self.fields["country"].queryset.filter(type="Country")
+        self.fields["country"].queryset = self.fields["country"].queryset.filter(
+            type="Country"
+        )
 
 
 class ProfileAdmin(admin.ModelAdmin):

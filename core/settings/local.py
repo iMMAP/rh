@@ -1,6 +1,7 @@
 # ruff: noqa
-from .base import *
 import logging
+
+from .base import *
 
 LOCAL_INSTALLED_APPS = [
     "debug_toolbar",

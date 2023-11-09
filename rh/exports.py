@@ -1,12 +1,12 @@
-from django.http import JsonResponse
+import base64
+from io import BytesIO
 
+from django.http import JsonResponse
+from django.utils import timezone
 from django.views import View
 from openpyxl import Workbook
-from openpyxl.utils import get_column_letter
 from openpyxl.styles import Font, NamedStyle
-from io import BytesIO
-import base64
-from django.utils import timezone
+from openpyxl.utils import get_column_letter
 
 from .models import Project
 
@@ -130,15 +130,29 @@ class ProjectExportExcelView(View):
             project.code,
             project.description,
             project.hrp_code,
-            project.start_date.astimezone(timezone.utc).replace(tzinfo=None) if project.start_date else None,
-            project.end_date.astimezone(timezone.utc).replace(tzinfo=None) if project.end_date else None,
+            project.start_date.astimezone(timezone.utc).replace(tzinfo=None)
+            if project.start_date
+            else None,
+            project.end_date.astimezone(timezone.utc).replace(tzinfo=None)
+            if project.end_date
+            else None,
             project.budget,
             project.budget_received,
             project.budget_gap,
             project.budget_currency.name,
             ", ".join([donor.name for donor in project.donors.all()]),
-            ", ".join([implementing_partner.name for implementing_partner in project.implementing_partners.all()]),
-            ", ".join([programme_partner.name for programme_partner in project.programme_partners.all()]),
+            ", ".join(
+                [
+                    implementing_partner.name
+                    for implementing_partner in project.implementing_partners.all()
+                ]
+            ),
+            ", ".join(
+                [
+                    programme_partner.name
+                    for programme_partner in project.programme_partners.all()
+                ]
+            ),
             project.state,
             "URL",
         ]

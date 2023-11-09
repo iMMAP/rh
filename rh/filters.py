@@ -1,6 +1,7 @@
 import django_filters
 from django import forms
-from .models import Cluster, Organization, Donor, ActivityDomain, Project
+
+from .models import ActivityDomain, Cluster, Donor, Organization, Project
 
 
 class ProjectsFilter(django_filters.FilterSet):

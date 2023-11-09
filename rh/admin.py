@@ -4,31 +4,31 @@ from django.contrib.admin.widgets import FilteredSelectMultiple
 from django.db.models import Count
 
 from .models import (
-    Location,
-    Currency,
-    LocationType,
-    FacilitySiteType,
-    ImplementationModalityType,
-    TransferMechanismType,
-    PackageType,
-    TransferCategory,
-    GrantType,
-    UnitType,
-    ReportType,
-    ActivityPlan,
-    Cluster,
-    Disaggregation,
-    Organization,
-    BeneficiaryType,
-    Donor,
-    DisaggregationLocation,
-    Indicator,
-    ActivityDomain,
     ActivityDetail,
+    ActivityDomain,
+    ActivityPlan,
     ActivityType,
-    Project,
-    TargetLocation,
+    BeneficiaryType,
     BudgetProgress,
+    Cluster,
+    Currency,
+    Disaggregation,
+    DisaggregationLocation,
+    Donor,
+    FacilitySiteType,
+    GrantType,
+    ImplementationModalityType,
+    Indicator,
+    Location,
+    LocationType,
+    Organization,
+    PackageType,
+    Project,
+    ReportType,
+    TargetLocation,
+    TransferCategory,
+    TransferMechanismType,
+    UnitType,
 )
 
 admin.site.register(Currency)
@@ -69,7 +69,9 @@ class ClusterAdmin(admin.ModelAdmin):
     # get the count of a many to many relationship with Donor model
     def get_queryset(self, request):
         queryset = super().get_queryset(request)
-        queryset = queryset.annotate(donors_count=Count("donor"), countries_count=Count("countries"))
+        queryset = queryset.annotate(
+            donors_count=Count("donor"), countries_count=Count("countries")
+        )
         return queryset
 
     def donors_count(self, obj):

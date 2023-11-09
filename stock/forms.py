@@ -1,6 +1,8 @@
 from django import forms
+
 from rh.models import Location
-from .models import WarehouseLocation, StockLocationDetails, StockReports
+
+from .models import StockLocationDetails, StockReports, WarehouseLocation
 
 
 class WarehouseLocationForm(forms.ModelForm):

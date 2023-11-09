@@ -1,5 +1,7 @@
 from django.contrib import admin
 
+from rh.models import Location
+
 from .models import (
     StockLocationDetails,
     StockReports,
@@ -7,7 +9,7 @@ from .models import (
     StockUnit,
     WarehouseLocation,
 )
-from rh.models import Location
+
 # Register your models here.
 
 

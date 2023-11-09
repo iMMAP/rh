@@ -1,10 +1,10 @@
 from django import forms
 from django.contrib.auth import password_validation
 from django.contrib.auth.forms import (
-    UserCreationForm,
+    PasswordChangeForm,
     PasswordResetForm,
     SetPasswordForm,
-    PasswordChangeForm,
+    UserCreationForm,
 )
 from django.contrib.auth.models import User
 
@@ -30,7 +30,9 @@ class UserRegisterForm(UserCreationForm):
         username = self.cleaned_data.get("username")
         qs = User.objects.filter(username__iexact=username)
         if qs.exists():
-            raise forms.ValidationError(f"{username} is an invalid username, please pick another.")
+            raise forms.ValidationError(
+                f"{username} is an invalid username, please pick another."
+            )
         return username
 
     def clean_email(self):
@@ -38,7 +40,9 @@ class UserRegisterForm(UserCreationForm):
         email = self.cleaned_data.get("email")
         qs = User.objects.filter(email__iexact=email)
         if qs.exists():
-            raise forms.ValidationError(f"{email} is an invalid email address, please pick another.")
+            raise forms.ValidationError(
+                f"{email} is an invalid email address, please pick another."
+            )
         return email
 
 
@@ -56,7 +60,9 @@ class ProfileCreateForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields["country"].queryset = self.fields["country"].queryset.filter(type="Country")
+        self.fields["country"].queryset = self.fields["country"].queryset.filter(
+            type="Country"
+        )
 
 
 class UserUpdateForm(forms.ModelForm):
@@ -80,7 +86,9 @@ class ProfileUpdateForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields["country"].queryset = self.fields["country"].queryset.filter(type="Country")
+        self.fields["country"].queryset = self.fields["country"].queryset.filter(
+            type="Country"
+        )
 
 
 class UserPasswordChangeForm(PasswordChangeForm):

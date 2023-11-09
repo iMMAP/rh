@@ -6,22 +6,26 @@ from dateutil.relativedelta import relativedelta
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.forms import modelformset_factory
-from django.shortcuts import render, redirect
+from django.shortcuts import redirect, render
 from django.views.decorators.cache import cache_control
 from django.views.decorators.http import require_http_methods
 
-from .forms import WarehouseLocationForm, StockReportForm, StockLocationDetailsForm
-from .models import WarehouseLocation, StockReports, StockLocationDetails
+from .forms import StockLocationDetailsForm, StockReportForm, WarehouseLocationForm
+from .models import StockLocationDetails, StockReports, WarehouseLocation
 
 
 @cache_control(no_store=True)
 @login_required
 def stock_index_view(request):
     """Stock Views"""
-    WarehouseLocationFormset = modelformset_factory(WarehouseLocation, form=WarehouseLocationForm)
+    WarehouseLocationFormset = modelformset_factory(
+        WarehouseLocation, form=WarehouseLocationForm
+    )
     if request.method == "POST":
         enurl = urllib.parse.urlencode(request.POST)  # To convert POST into a string
-        delete_btn = re.search(r"delete_(.*?)_warehouse", enurl)  # To match for e.g. delete_<num>_warehouse
+        delete_btn = re.search(
+            r"delete_(.*?)_warehouse", enurl
+        )  # To match for e.g. delete_<num>_warehouse
         if delete_btn:
             warehouse_id = delete_btn.group(1)
             try:
@@ -35,7 +39,9 @@ def stock_index_view(request):
             if formset.is_valid():
                 formset.save()
 
-        formset = WarehouseLocationFormset(request.POST, queryset=WarehouseLocation.objects.all())
+        formset = WarehouseLocationFormset(
+            request.POST, queryset=WarehouseLocation.objects.all()
+        )
         if formset.is_valid():
             instances = formset.save()
             for instance in instances:
@@ -73,7 +79,9 @@ def stock_report_view(request, pk):
 
     if stock_report.submitted:
         for warehouse in warehouse_locations:
-            warehouse_stock_details = stock_location_details.filter(warehouse_location__id=warehouse.id)
+            warehouse_stock_details = stock_location_details.filter(
+                warehouse_location__id=warehouse.id
+            )
             warehouse_location_stocks.update({warehouse: warehouse_stock_details})
 
         context = {
@@ -92,7 +100,9 @@ def stock_report_view(request, pk):
             form=StockLocationDetailsForm,
             extra=1,
         )
-        warehouse_stock_details = stock_location_details.filter(warehouse_location__id=warehouse.id)
+        warehouse_stock_details = stock_location_details.filter(
+            warehouse_location__id=warehouse.id
+        )
 
         formset = StockLocationDetailsFormSet(
             queryset=warehouse_stock_details, prefix=f"warehouse-{warehouse.id}-stock"
@@ -100,12 +110,18 @@ def stock_report_view(request, pk):
         warehouse_location_stocks.update({warehouse: formset})
 
         if request.method == "POST":
-            enurl = urllib.parse.urlencode(request.POST)  # To convert POST into a string
-            delete_btn = re.search(r"delete_(.*?)_stock_detail", enurl)  # To match for e.g. delete_<num>_warehouse
+            enurl = urllib.parse.urlencode(
+                request.POST
+            )  # To convert POST into a string
+            delete_btn = re.search(
+                r"delete_(.*?)_stock_detail", enurl
+            )  # To match for e.g. delete_<num>_warehouse
             if delete_btn:
                 stock_detail_id = delete_btn.group(1)
                 try:
-                    stock_location_id = StockLocationDetails.objects.get(pk=stock_detail_id)
+                    stock_location_id = StockLocationDetails.objects.get(
+                        pk=stock_detail_id
+                    )
                 except Exception as _:
                     stock_location_id = None
 
@@ -153,5 +169,7 @@ def stock_report_view(request, pk):
 @login_required
 @require_http_methods(["POST"])
 def submit_stock_report_form(request, pk):
-    StockReports.objects.filter(id=pk).update(submitted=True, submitted_at=datetime.datetime.now())
+    StockReports.objects.filter(id=pk).update(
+        submitted=True, submitted_at=datetime.datetime.now()
+    )
     return redirect("stock_report", pk)

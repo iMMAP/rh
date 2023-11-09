@@ -1,17 +1,17 @@
 from django import forms
+from django.contrib.auth.models import User
 from django.forms.models import inlineformset_factory
 from django.urls import reverse_lazy
-from django.contrib.auth.models import User
 
 from .models import (
-    Organization,
-    TargetLocation,
-    Donor,
     ActivityPlan,
-    Project,
+    BudgetProgress,
     Currency,
     DisaggregationLocation,
-    BudgetProgress,
+    Donor,
+    Organization,
+    Project,
+    TargetLocation,
 )
 
 
@@ -26,7 +26,9 @@ class FieldHandler:
                 initials = initial_data.get(name, None)
             else:
                 initials = None
-            f = getattr(self, "create_field_for_" + field["type"])(field, options, initials)
+            f = getattr(self, "create_field_for_" + field["type"])(
+                field, options, initials
+            )
             self.form_fields[field["name"]] = f
 
     def get_options(self, field):
@@ -135,12 +137,18 @@ class ProjectForm(forms.ModelForm):
         widgets = {
             "clusters": forms.SelectMultiple(attrs={"class": "js_multiselect"}),
             "donors": forms.SelectMultiple(attrs={"class": "js_multiselect"}),
-            "implementing_partners": forms.SelectMultiple(attrs={"class": "js_multiselect"}),
-            "programme_partners": forms.SelectMultiple(attrs={"class": "js_multiselect"}),
+            "implementing_partners": forms.SelectMultiple(
+                attrs={"class": "js_multiselect"}
+            ),
+            "programme_partners": forms.SelectMultiple(
+                attrs={"class": "js_multiselect"}
+            ),
             "activity_domains": forms.SelectMultiple(
                 attrs={
                     "class": "js_multiselect",
-                    "activity-domains-queries-url": reverse_lazy("ajax-load-activity_domains"),
+                    "activity-domains-queries-url": reverse_lazy(
+                        "ajax-load-activity_domains"
+                    ),
                 }
             ),
             "start_date": forms.widgets.DateInput(
@@ -173,13 +181,21 @@ class ProjectForm(forms.ModelForm):
             user_profile = User.objects.get(pk=args[0].get("user")).profile
 
         if user_profile and user_profile.clusters:
-            user_clusters = list(user_profile.clusters.all().values_list("pk", flat=True))
+            user_clusters = list(
+                user_profile.clusters.all().values_list("pk", flat=True)
+            )
 
-        self.fields["clusters"].queryset = self.fields["clusters"].queryset.filter(id__in=user_clusters)
+        self.fields["clusters"].queryset = self.fields["clusters"].queryset.filter(
+            id__in=user_clusters
+        )
         self.fields["donors"].queryset = Donor.objects.order_by("name")
         self.fields["budget_currency"].queryset = Currency.objects.order_by("name")
-        self.fields["implementing_partners"].queryset = Organization.objects.order_by("name")
-        self.fields["programme_partners"].queryset = Organization.objects.order_by("name")
+        self.fields["implementing_partners"].queryset = Organization.objects.order_by(
+            "name"
+        )
+        self.fields["programme_partners"].queryset = Organization.objects.order_by(
+            "name"
+        )
         self.fields["user"].queryset = User.objects.order_by("username")
 
 
@@ -191,8 +207,12 @@ class TargetLocationForm(forms.ModelForm):
             "country": forms.widgets.HiddenInput(),
             "active": forms.widgets.HiddenInput(),
             "locations_group_by": forms.widgets.RadioSelect(),
-            "district": forms.Select(attrs={"locations-queries-url": reverse_lazy("ajax-load-locations")}),
-            "zone": forms.Select(attrs={"locations-queries-url": reverse_lazy("ajax-load-locations")}),
+            "district": forms.Select(
+                attrs={"locations-queries-url": reverse_lazy("ajax-load-locations")}
+            ),
+            "zone": forms.Select(
+                attrs={"locations-queries-url": reverse_lazy("ajax-load-locations")}
+            ),
         }
 
     def __init__(self, *args, **kwargs):
@@ -202,8 +222,12 @@ class TargetLocationForm(forms.ModelForm):
             initial=False,
             widget=forms.HiddenInput(attrs={"name": self.prefix + "-save"}),
         )
-        self.fields["province"].queryset = self.fields["province"].queryset.filter(type="Province")
-        self.fields["district"].queryset = self.fields["district"].queryset.filter(type="District")
+        self.fields["province"].queryset = self.fields["province"].queryset.filter(
+            type="Province"
+        )
+        self.fields["district"].queryset = self.fields["district"].queryset.filter(
+            type="District"
+        )
         self.fields["zone"].queryset = self.fields["zone"].queryset.filter(type="Zone")
         self.fields["province"].widget.attrs.update(
             {
@@ -218,7 +242,9 @@ class TargetLocationForm(forms.ModelForm):
             }
         )
         self.fields["site_name"].widget.attrs.update(
-            {"onchange": f"updateLocationTitle('{kwargs.get('prefix')}', 'id_{kwargs.get('prefix')}-site_name');"}
+            {
+                "onchange": f"updateLocationTitle('{kwargs.get('prefix')}', 'id_{kwargs.get('prefix')}-site_name');"
+            }
         )
 
 
@@ -244,7 +270,11 @@ class ActivityPlanForm(forms.ModelForm):
         fields = "__all__"
         widgets = {
             "facility_type": forms.Select(
-                attrs={"facility-sites-queries-url": reverse_lazy("ajax-load-facility_sites")}
+                attrs={
+                    "facility-sites-queries-url": reverse_lazy(
+                        "ajax-load-facility_sites"
+                    )
+                }
             ),
         }
 
@@ -261,9 +291,9 @@ class ActivityPlanForm(forms.ModelForm):
             initial=False,
             widget=forms.HiddenInput(attrs={"name": self.prefix + "-save"}),
         )
-        self.fields["activity_domain"].queryset = self.fields["activity_domain"].queryset.filter(
-            pk__in=activity_domains
-        )
+        self.fields["activity_domain"].queryset = self.fields[
+            "activity_domain"
+        ].queryset.filter(pk__in=activity_domains)
         self.fields["activity_domain"].widget.attrs.update(
             {
                 "data-form-prefix": f"{prefix}",
@@ -271,13 +301,19 @@ class ActivityPlanForm(forms.ModelForm):
             }
         )
         self.fields["activity_type"].widget.attrs.update(
-            {"onchange": f"updateActivityTitle('{prefix}', 'id_{prefix}-activity_type');"}
+            {
+                "onchange": f"updateActivityTitle('{prefix}', 'id_{prefix}-activity_type');"
+            }
         )
         self.fields["activity_detail"].widget.attrs.update(
-            {"onchange": f"updateActivityTitle('{prefix}', 'id_{prefix}-activity_detail');"}
+            {
+                "onchange": f"updateActivityTitle('{prefix}', 'id_{prefix}-activity_detail');"
+            }
         )
         self.fields["indicators"].widget.attrs.update({"style": "height: 128px;"})
-        # self.fields['facility_type'].queryset = self.fields['facility_type'].queryset.filter(cluster__in=cluster_ids)
+        # self.fields["facility_type"].queryset = self.fields[
+        #     "facility_type"
+        # ].queryset.filter(cluster__in=cluster_ids)
 
 
 ActivityPlanFormSet = inlineformset_factory(
@@ -320,8 +356,12 @@ class BudgetProgressForm(forms.ModelForm):
             initial=False,
             widget=forms.HiddenInput(attrs={"name": self.prefix + "-save"}),
         )
-        self.fields["activity_domain"].queryset = self.fields["activity_domain"].queryset.filter(
-            pk__in=activity_domains
+        self.fields["activity_domain"].queryset = self.fields[
+            "activity_domain"
+        ].queryset.filter(pk__in=activity_domains)
+        self.fields["donor"].queryset = self.fields["donor"].queryset.filter(
+            pk__in=donor_ids
         )
-        self.fields["donor"].queryset = self.fields["donor"].queryset.filter(pk__in=donor_ids)
-        self.fields["budget_currency"].queryset = self.fields["budget_currency"].queryset.filter(pk=budget_currency.pk)
+        self.fields["budget_currency"].queryset = self.fields[
+            "budget_currency"
+        ].queryset.filter(pk=budget_currency.pk)

@@ -22,7 +22,9 @@ class EmailBackend(ModelBackend):
             User: The authenticated user if successful, None otherwise.
         """
         if username is None:
-            username = kwargs.get(UserModel.USERNAME_FIELD, kwargs.get(UserModel.EMAIL_FIELD))
+            username = kwargs.get(
+                UserModel.USERNAME_FIELD, kwargs.get(UserModel.EMAIL_FIELD)
+            )
         if username is None or password is None:
             return
         try:

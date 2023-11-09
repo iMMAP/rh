@@ -92,12 +92,19 @@ def load_activity_domains(request):
         queryset=ActivityDomain.objects.order_by("name"),
     )
 
-    clusters = Cluster.objects.filter(pk__in=cluster_ids).prefetch_related(prefetch_activitydomain)
+    clusters = Cluster.objects.filter(pk__in=cluster_ids).prefetch_related(
+        prefetch_activitydomain
+    )
 
     response = "".join(
         [
             f'<optgroup label="{cluster.title}">'
-            + "".join([f'<option value="{domain.pk}">{domain}</option>' for domain in cluster.activitydomain_set.all()])
+            + "".join(
+                [
+                    f'<option value="{domain.pk}">{domain}</option>'
+                    for domain in cluster.activitydomain_set.all()
+                ]
+            )
             + "</optgroup>"
             for cluster in clusters
         ]
@@ -116,7 +123,10 @@ def load_locations_details(request):
         [
             f'<optgroup label="{parent.name}">'
             + "".join(
-                [f'<option value="{location.pk}">{location}</option>' for location in parent.children.order_by("name")]
+                [
+                    f'<option value="{location.pk}">{location}</option>'
+                    for location in parent.children.order_by("name")
+                ]
             )
             + "</optgroup>"
             for parent in parents
@@ -339,7 +349,11 @@ def create_project_view(request):
         messages.error(request, error_message)
     else:
         # Use user's country and clusters as default values if available
-        if request.user.is_authenticated and request.user.profile and request.user.profile.country:
+        if (
+            request.user.is_authenticated
+            and request.user.profile
+            and request.user.profile.country
+        ):
             country = request.user.profile.country
             # clusters = request.user.profile.clusters.all()
             form = ProjectForm(initial={"user": request.user, "country": country})
@@ -452,12 +466,16 @@ def create_project_activity_plan(request, project):
         if activity_plan_formset.is_valid():
             # Save valid activity plan forms
             for activity_plan_form in activity_plan_formset:
-                if activity_plan_form.cleaned_data.get("activity_domain") and activity_plan_form.cleaned_data.get(
-                    "activity_type"
-                ):
+                if activity_plan_form.cleaned_data.get(
+                    "activity_domain"
+                ) and activity_plan_form.cleaned_data.get("activity_type"):
                     activity_plan = activity_plan_form.save()
-                    activity_domain_name = activity_plan_form.cleaned_data.get("activity_domain").name
-                    activity_type_name = activity_plan_form.cleaned_data.get("activity_type").name
+                    activity_domain_name = activity_plan_form.cleaned_data.get(
+                        "activity_domain"
+                    ).name
+                    activity_type_name = activity_plan_form.cleaned_data.get(
+                        "activity_type"
+                    ).name
                     title = f"{activity_domain_name}, {activity_type_name}"
                     if activity_plan_form.cleaned_data.get("activity_detail"):
                         title += f", {activity_plan_form.cleaned_data.get('activity_detail').name}"
@@ -470,13 +488,19 @@ def create_project_activity_plan(request, project):
                         if post_target_location_form.cleaned_data != {}:
                             if post_target_location_form.cleaned_data.get(
                                 "province"
-                            ) and post_target_location_form.cleaned_data.get("district"):
-                                target_location_instance = post_target_location_form.save()
+                            ) and post_target_location_form.cleaned_data.get(
+                                "district"
+                            ):
+                                target_location_instance = (
+                                    post_target_location_form.save()
+                                )
                                 target_location_instance.project = project
                                 target_location_instance.save()
 
                         if hasattr(post_target_location_form, "disaggregation_formset"):
-                            post_disaggregation_formset = post_target_location_form.disaggregation_formset.forms
+                            post_disaggregation_formset = (
+                                post_target_location_form.disaggregation_formset.forms
+                            )
 
                             # Delete the exisiting instances of the disaggregation location and create new
                             # based on the indicator disaggregations
@@ -486,14 +510,25 @@ def create_project_activity_plan(request, project):
                                 if disaggregation_form.is_valid():
                                     if (
                                         disaggregation_form.cleaned_data != {}
-                                        and disaggregation_form.cleaned_data.get("target") > 0
+                                        and disaggregation_form.cleaned_data.get(
+                                            "target"
+                                        )
+                                        > 0
                                     ):
-                                        disaggregation_instance = disaggregation_form.save(commit=False)
-                                        disaggregation_instance.target_location = target_location_instance
+                                        disaggregation_instance = (
+                                            disaggregation_form.save(commit=False)
+                                        )
+                                        disaggregation_instance.target_location = (
+                                            target_location_instance
+                                        )
                                         disaggregation_instance.save()
-                                        new_disaggregations.append(disaggregation_instance.id)
+                                        new_disaggregations.append(
+                                            disaggregation_instance.id
+                                        )
 
-                            all_disaggregations = post_target_location_form.instance.disaggregationlocation_set.all()
+                            all_disaggregations = (
+                                post_target_location_form.instance.disaggregationlocation_set.all()
+                            )
                             for dis in all_disaggregations:
                                 if dis.id not in new_disaggregations:
                                     dis.delete()
@@ -587,7 +622,9 @@ def get_disaggregations_forms(request):
                 context = {
                     "disaggregation_form": disaggregation_form,
                 }
-                html = render_to_string("rh/projects/forms/disaggregation_empty_form.html", context)
+                html = render_to_string(
+                    "rh/projects/forms/disaggregation_empty_form.html", context
+                )
 
                 if location_prefix in location_disaggregation_dict:
                     location_disaggregation_dict[location_prefix].append(html)
@@ -611,7 +648,9 @@ def get_target_location_empty_form(request):
     form_kwargs = {"project": project}
 
     # Create an instance of ActivityPlanFormSet using the project instance and form_kwargs
-    activity_plan_formset = ActivityPlanFormSet(form_kwargs=form_kwargs, instance=project)
+    activity_plan_formset = ActivityPlanFormSet(
+        form_kwargs=form_kwargs, instance=project
+    )
 
     # Get the prefix index from the request
     prefix_index = request.POST.get("prefix_index")
@@ -638,7 +677,9 @@ def get_target_location_empty_form(request):
     }
 
     # Render the target location form template and generate HTML
-    html = render_to_string("rh/projects/forms/target_location_empty_form.html", context)
+    html = render_to_string(
+        "rh/projects/forms/target_location_empty_form.html", context
+    )
 
     # Return JSON response containing the generated HTML
     return JsonResponse({"html": html})
@@ -660,7 +701,9 @@ def get_activity_empty_form(request):
     form_kwargs = {"project": project}
 
     # Create an instance of ActivityPlanFormSet using the project instance and form_kwargs
-    activity_plan_formset = ActivityPlanFormSet(form_kwargs=form_kwargs, instance=project)
+    activity_plan_formset = ActivityPlanFormSet(
+        form_kwargs=form_kwargs, instance=project
+    )
 
     # Get the prefix index from the request
     prefix_index = request.POST.get("prefix_index")
@@ -696,7 +739,9 @@ def project_planning_review(request, **kwargs):
     pk = int(kwargs["project"])
     project = get_object_or_404(Project, pk=pk)
     activity_plans = project.activityplan_set.all()
-    target_locations = [activity_plan.targetlocation_set.all() for activity_plan in activity_plans]
+    target_locations = [
+        activity_plan.targetlocation_set.all() for activity_plan in activity_plans
+    ]
     project_state = project.state
     parent_page = {
         "in-progress": "active_projects",
@@ -864,13 +909,17 @@ def copy_project(request, pk):
 
                     # Iterate through disaggregation locations and copy them to the new location.
                     for disaggregation_location in disaggregation_locations:
-                        copy_target_location_disaggregation_locations(new_location, disaggregation_location)
+                        copy_target_location_disaggregation_locations(
+                            new_location, disaggregation_location
+                        )
 
         # Save the changes made to the new project.
         new_project.save()
 
     # Return a JSON response indicating success and providing a return URL to view the new project.
-    return JsonResponse({"success": True, "returnURL": reverse("view_project", args=[new_project.pk])})
+    return JsonResponse(
+        {"success": True, "returnURL": reverse("view_project", args=[new_project.pk])}
+    )
 
 
 def copy_project_activity_plan(project, plan):
@@ -910,7 +959,9 @@ def copy_project_target_location(plan, location):
         # Duplicate the original target location
         # by retrieving it with the provided primary key.
         new_location = get_object_or_404(TargetLocation, pk=location.pk)
-        new_location.pk = None  # Generate a new primary key for the duplicated location.
+        new_location.pk = (
+            None  # Generate a new primary key for the duplicated location.
+        )
         new_location.save()  # Save the duplicated location to the database.
 
         # Associate the duplicated location with the new activity plan.
@@ -938,8 +989,12 @@ def copy_target_location_disaggregation_locations(location, disaggregation_locat
     """Copy Disaggregation Locations"""
     try:
         # Duplicate the original disaggregation location by retrieving it with the provided primary key.
-        new_disaggregation_location = get_object_or_404(DisaggregationLocation, pk=disaggregation_location.pk)
-        new_disaggregation_location.pk = None  # Generate a new primary key for the duplicated location.
+        new_disaggregation_location = get_object_or_404(
+            DisaggregationLocation, pk=disaggregation_location.pk
+        )
+        new_disaggregation_location.pk = (
+            None  # Generate a new primary key for the duplicated location.
+        )
         new_disaggregation_location.save()  # Save the duplicated location to the database.
 
         # Associate the duplicated disaggregation location with the new target location.
@@ -975,7 +1030,9 @@ def copy_activity_plan(request, project, plan):
 
             # Iterate through disaggregation locations and copy them to the new location.
             for disaggregation_location in disaggregation_locations:
-                copy_target_location_disaggregation_locations(new_location, disaggregation_location)
+                copy_target_location_disaggregation_locations(
+                    new_location, disaggregation_location
+                )
 
         new_plan.project = project
         new_plan.active = True
@@ -1010,7 +1067,9 @@ def copy_target_location(request, project, location):
 
         # Iterate through disaggregation locations and copy them to the new location.
         for disaggregation_location in disaggregation_locations:
-            copy_target_location_disaggregation_locations(new_location, disaggregation_location)
+            copy_target_location_disaggregation_locations(
+                new_location, disaggregation_location
+            )
 
         new_location.project = project
         new_location.active = True
@@ -1042,8 +1101,12 @@ def create_project_budget_progress_view(request, project):
 
     budget_progress = project.budgetprogress_set.all()
 
-    BudgetProgressFormSet = modelformset_factory(BudgetProgress, form=BudgetProgressForm, extra=1)
-    formset = BudgetProgressFormSet(request.POST or None, queryset=budget_progress, form_kwargs={"project": project})
+    BudgetProgressFormSet = modelformset_factory(
+        BudgetProgress, form=BudgetProgressForm, extra=1
+    )
+    formset = BudgetProgressFormSet(
+        request.POST or None, queryset=budget_progress, form_kwargs={"project": project}
+    )
 
     if request.method == "POST":
         country = request.POST.get("country")
@@ -1051,7 +1114,9 @@ def create_project_budget_progress_view(request, project):
         if formset.is_valid():
             for form in formset:
                 if form.cleaned_data.get("save"):
-                    if form.cleaned_data.get("activity_domain") and form.cleaned_data.get("donor"):
+                    if form.cleaned_data.get(
+                        "activity_domain"
+                    ) and form.cleaned_data.get("donor"):
                         budget_progress = form.save(commit=False)
                         budget_progress.project = project
                         budget_progress.country_id = country

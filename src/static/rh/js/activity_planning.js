@@ -29,7 +29,6 @@ function addActivityForm(prefix, project, nextFormIndex) {
 				
 				// Get the number of existing forms
 				const formIdx = formsetContainer.children().length; 
-			
 				// Replace the form prefix placeholder with the actual form index in the template HTML
 				const newFormHtml = emptyFormTemplate.replace(/__prefix__/g, formIdx);
 			
@@ -40,7 +39,6 @@ function addActivityForm(prefix, project, nextFormIndex) {
 
 				// Open/Activate the accordion
 				const parentDiv = addForm.find('.project-activity-accordion-slide');
-				debugger
 				const innerHolder = parentDiv.closest('.inner-holder')
 
 				// Unbind any existing click events
@@ -168,13 +166,20 @@ function addTargetLocationForm(prefix, project, nextFormIndex) {
 					// Update disaggregations based on indicators for the new added form 
 					const activityFormIndex = formPrefix.match(/activityplan_set-(\d+)/)[1] 
 					var $select2Event = $(`#id_activityplan_set-${activityFormIndex}-indicators`);
-					if ($select2Event){
+					if ($select2Event.length && $select2Event.select2 && $select2Event.select2('data')) {
 						let selectedIDs = $select2Event.select2('data').map(item => item.id);
-						handleDisaggregationForms($select2Event[0], selectedIDs, [locationPrefix])
+						handleDisaggregationForms($select2Event[0], selectedIDs, [locationPrefix]);
 					}
 
 					// Update change event on indicators for the new added form 
-					$select2Event.on("change.select2", function (event) { 
+					$select2Event.on("select2:select", function (event) { 
+						let indicatorsSelect = event.currentTarget
+						let selectedIDs = $(indicatorsSelect).select2('data').map(item => item.id);
+						handleDisaggregationForms(indicatorsSelect, selectedIDs, [locationPrefix])
+					});
+
+					// Update change event on indicators for the new added form 
+					$select2Event.on("select2:unselect", function (event) { 
 						let indicatorsSelect = event.currentTarget
 						let selectedIDs = $(indicatorsSelect).select2('data').map(item => item.id);
 						handleDisaggregationForms(indicatorsSelect, selectedIDs, [locationPrefix])
@@ -331,7 +336,7 @@ function updateLocationBlockTitles(locationPrefix) {
 /**
 * Get Districts and Zpnes for Target Location Form
 **/
-async function getLocations(locationPrefix, locationType, parentType, clearZone = null) {
+function getLocations(locationPrefix, locationType, parentType, clearZone=null) {
     // Get the URL for fetching locations
     const locationUrl = $(`#id_${locationPrefix}-${locationType}`).attr(`locations-queries-url`);
     
@@ -345,36 +350,38 @@ async function getLocations(locationPrefix, locationType, parentType, clearZone 
 
     // Get the selected locations
     const selectedLocations = $(`select#id_${locationPrefix}-${locationType}`).val();
-
-    try {
-
+	if (locationUrl){
 		// Use JavaScript Cookie library
 		const csrftoken = Cookies.get('csrftoken');
-
-        // Make an AJAX request to fetch locations data
-        const response = await $.ajax({
-            type: "POST",
-            url: locationUrl,
-            data: {
-                parents: parentIds,
-                listed_locations: locationIds,
-            },
+		$.ajax({
+			url: locationUrl,
+			data: {
+				"parents": parentIds,
+				"listed_locations": locationIds,
+			},
+			type: 'POST',
+			dataType: 'json',
 			beforeSend: function(xhr, settings) {
 				xhr.setRequestHeader("X-CSRFToken", csrftoken);
 			},
-        });
-
-        // Clear zone if needed
-        if (parentType === 'province' && clearZone === true) {
-            $(`#id_${locationPrefix}-zone`).html('').val('');
-        }
-
-        // Update the location select element
-        $(`#id_${locationPrefix}-${locationType}`).html(response);
-        $(`select#id_${locationPrefix}-${locationType}`).val(selectedLocations);
-    } catch (error) {
-        console.error(`Error fetching ${locationType}: ${error}`);
-    }
+			success: function (data) {
+				if (data) {
+					// Clear zone if needed
+					if (parentType === 'province' && clearZone === true) {
+						$(`#id_${locationPrefix}-zone`).html('').val('');
+					}
+	
+					// Update the location select element
+					$(`#id_${locationPrefix}-${locationType}`).html(data);
+					$(`select#id_${locationPrefix}-${locationType}`).val(selectedLocations);
+	
+				}
+			},
+			error: function (error) {
+				console.log('Error fetching empty form:', error);
+			}
+		});
+	}
 }
 
 
@@ -383,36 +390,22 @@ async function getLocations(locationPrefix, locationType, parentType, clearZone 
 **/
 $(function () {
 
-	// Open/Activate the accordion
-	// $('.target-location-accordion-opener').on('click', function(event) {
-	// 	event.preventDefault(); // Prevent the default behavior (form submission)
-	// 	event.stopPropagation(); // Prevent the default behavior (propagation)
-	// 	$(this).next('.target-location-accordion-slide').slideToggle(DETAILS_TOGGLE_DURATION);
-	// });
-
-	// Open/Activate the accordion
-	// $('.disaggregation-accordion-opener').on('click', function(event) {
-	// 	event.preventDefault(); // Prevent the default behavior (form submission)
-	// 	event.stopPropagation(); // Prevent the default behavior (propagation)
-	// 	$(this).next('.disaggregation-accordion-slide').slideToggle(DETAILS_TOGGLE_DURATION);
-	// });
-
 	// Initialize indicators with django select except for the empty form
 	$("select[multiple]:not(#id_activityplan_set-__prefix__-indicators)").select2();
 
 	// Button to handle addition of new activity form.
-	$('#add-activity-form-button').on('click', function(event) {
+	$('#add-activity-form-button').off('click').on('click', function(event) {
 		event.preventDefault(); // Prevent the default behavior (form submission)
+		event.stopPropagation();
 		const activityFormPrefix = event.currentTarget.dataset.formPrefix
 		const activityProject = event.currentTarget.dataset.project
 		const nextFormIndex = event.currentTarget.dataset.formsCount
 		addActivityForm(activityFormPrefix, activityProject, nextFormIndex); // Call the function to add a new activity form
-		event.currentTarget.dataset.formsCount = `${parseInt(nextFormIndex) + 1}`
 		
 	});
 	
 	// Button to handle addition of new target location form.
-	$(document).on('click', '.add-target-location-form-button', function(event) {
+	$(document).off('click').on('click', '.add-target-location-form-button', function(event) {
 		event.preventDefault(); // Prevent the default behavior (form submission)
 		event.stopPropagation(); // Prevent the default behavior (propagation)
 		const activityFormPrefix = event.currentTarget.dataset.formPrefix
@@ -429,7 +422,13 @@ $(function () {
 		
 		// Update disaggregations based on indicators
 		var $select2Event = $(`#id_activityplan_set-${formIndex}-indicators`);
-		$select2Event.on("change.select2", function (event) { 
+		$select2Event.on("select2:select", function (event) { 
+			let indicatorsSelect = event.currentTarget
+			let selectedIDs = $(indicatorsSelect).select2('data').map(item => item.id);
+			handleDisaggregationForms(indicatorsSelect, selectedIDs)
+		});
+
+		$select2Event.on("select2:unselect", function (event) { 
 			let indicatorsSelect = event.currentTarget
 			let selectedIDs = $(indicatorsSelect).select2('data').map(item => item.id);
 			handleDisaggregationForms(indicatorsSelect, selectedIDs)
@@ -444,6 +443,7 @@ $(function () {
 		// Update the Target Locations Titles
 		updateLocationBlockTitles(locationPrefix);
 
+		// TODO: Optimize by saving data locally
 		// Initial load for districts and zones
 		getLocations(locationPrefix, 'district', 'province');
 		getLocations(locationPrefix, 'zone', 'district');

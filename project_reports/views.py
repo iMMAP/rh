@@ -46,9 +46,7 @@ def index_project_report_view(request, project):
         "reports_view": True,
     }
 
-    return render(
-        request, "project_reports/views/monthly_reports_view_base.html", context
-    )
+    return render(request, "project_reports/views/monthly_reports_view_base.html", context)
 
 
 @cache_control(no_store=True)
@@ -107,9 +105,7 @@ def details_monthly_progress_view(request, project, report):
     """Project Monthly Report Read View"""
     project = get_object_or_404(Project, pk=project)
     monthly_report = get_object_or_404(ProjectMonthlyReport, pk=report)
-    activity_reports = monthly_report.activityplanreport_set.select_related(
-        "activity_plan", "indicator"
-    )
+    activity_reports = monthly_report.activityplanreport_set.select_related("activity_plan", "indicator")
 
     project_state = project.state
     parent_page = {
@@ -134,12 +130,8 @@ def details_monthly_progress_view(request, project, report):
 def get_project_and_report_details(project_id, report_id=None):
     project = get_object_or_404(Project, pk=project_id)
     project_state = project.state
-    activity_plans = project.activityplan_set.select_related(
-        "activity_domain", "activity_type", "activity_detail"
-    )
-    target_locations = project.targetlocation_set.select_related(
-        "province", "district", "zone"
-    ).all()
+    activity_plans = project.activityplan_set.select_related("activity_domain", "activity_type", "activity_detail")
+    target_locations = project.targetlocation_set.select_related("province", "district", "zone").all()
     monthly_report_instance = None
 
     if report_id is not None:
@@ -157,19 +149,9 @@ def get_project_and_report_details(project_id, report_id=None):
 def get_target_locations_doamin(target_locations):
     # TODO: use cache
     # Create Q objects for each location type
-    province_q = Q(
-        id__in=[
-            location.province.id for location in target_locations if location.province
-        ]
-    )
-    district_q = Q(
-        id__in=[
-            location.district.id for location in target_locations if location.district
-        ]
-    )
-    zone_q = Q(
-        id__in=[location.zone.id for location in target_locations if location.zone]
-    )
+    province_q = Q(id__in=[location.province.id for location in target_locations if location.province])
+    district_q = Q(id__in=[location.district.id for location in target_locations if location.district])
+    zone_q = Q(id__in=[location.zone.id for location in target_locations if location.zone])
 
     # Collect provinces, districts, and zones using a single query for each
     target_location_provinces = Location.objects.filter(province_q)
@@ -226,23 +208,15 @@ def create_project_monthly_report_progress_view(request, project, report):
                 instance=location_report_form.instance,
                 prefix=f"disaggregation_report_{location_report_form.prefix}",
             )
-            location_report_form.disaggregation_report_formset = (
-                disaggregation_report_formset
-            )
+            location_report_form.disaggregation_report_formset = disaggregation_report_formset
 
         # Loop through the forms in the formset and set queryset values for specific fields
         if not request.POST:
             for i, form in enumerate(location_report_formset.forms):
                 if i < len(target_locations):
-                    form.fields["province"].queryset = Location.objects.filter(
-                        id__in=target_location_provinces
-                    )
-                    form.fields["district"].queryset = Location.objects.filter(
-                        id__in=target_location_districts
-                    )
-                    form.fields["zone"].queryset = Location.objects.filter(
-                        id__in=target_location_zones
-                    )
+                    form.fields["province"].queryset = Location.objects.filter(id__in=target_location_provinces)
+                    form.fields["district"].queryset = Location.objects.filter(id__in=target_location_districts)
+                    form.fields["zone"].queryset = Location.objects.filter(id__in=target_location_zones)
 
         location_report_formsets.append(location_report_formset)
 
@@ -277,12 +251,8 @@ def create_project_monthly_report_progress_view(request, project, report):
                                     district = cleaned_data.get("district")
 
                                     if province and district:
-                                        location_report_instance = (
-                                            location_report_form.save(commit=False)
-                                        )
-                                        location_report_instance.activity_plan_report = (
-                                            activity_report
-                                        )
+                                        location_report_instance = location_report_form.save(commit=False)
+                                        location_report_instance.activity_plan_report = activity_report
                                         location_report_instance.save()
 
                                     if hasattr(
@@ -297,41 +267,26 @@ def create_project_monthly_report_progress_view(request, project, report):
                                         # reports and create new
                                         # based on the indicator disaggregations
                                         new_report_disaggregations = []
-                                        for (
-                                            disaggregation_report_form
-                                        ) in disaggregation_report_formset:
+                                        for disaggregation_report_form in disaggregation_report_formset:
                                             if disaggregation_report_form.is_valid():
                                                 if (
-                                                    disaggregation_report_form.cleaned_data
-                                                    != {}
-                                                    and disaggregation_report_form.cleaned_data.get(
-                                                        "target"
-                                                    )
-                                                    > 0
+                                                    disaggregation_report_form.cleaned_data != {}
+                                                    and disaggregation_report_form.cleaned_data.get("target") > 0
                                                 ):
-                                                    disaggregation_report_instance = (
-                                                        disaggregation_report_form.save(
-                                                            commit=False
-                                                        )
+                                                    disaggregation_report_instance = disaggregation_report_form.save(
+                                                        commit=False
                                                     )
                                                     disaggregation_report_instance.target_location = (
                                                         location_report_instance
                                                     )
                                                     disaggregation_report_instance.save()
-                                                    new_report_disaggregations.append(
-                                                        disaggregation_report_instance.id
-                                                    )
+                                                    new_report_disaggregations.append(disaggregation_report_instance.id)
 
                                         all_report_disaggregations = (
                                             location_report_form.instance.disaggregationlocationreport_set.all()
                                         )
-                                        for (
-                                            disaggregation_report
-                                        ) in all_report_disaggregations:
-                                            if (
-                                                disaggregation_report.id
-                                                not in new_report_disaggregations
-                                            ):
+                                        for disaggregation_report in all_report_disaggregations:
+                                            if disaggregation_report.id not in new_report_disaggregations:
                                                 disaggregation_report.delete()
 
             # activity_report_formset.save()
@@ -369,9 +324,7 @@ def create_project_monthly_report_progress_view(request, project, report):
         "reports_view": True,
     }
 
-    return render(
-        request, "project_reports/forms/monthly_report_progress_form.html", context
-    )
+    return render(request, "project_reports/forms/monthly_report_progress_form.html", context)
 
 
 @cache_control(no_store=True)
@@ -421,23 +374,15 @@ def update_project_monthly_report_progress_view(request, project, report):
                 instance=location_report_form.instance,
                 prefix=f"disaggregation_report_{location_report_form.prefix}",
             )
-            location_report_form.disaggregation_report_formset = (
-                disaggregation_report_formset
-            )
+            location_report_form.disaggregation_report_formset = disaggregation_report_formset
 
         # Loop through the forms in the formset and set queryset values for specific fields
         if not request.POST:
             for i, form in enumerate(location_report_formset.forms):
                 if i < len(target_locations):
-                    form.fields["province"].queryset = Location.objects.filter(
-                        id__in=target_location_provinces
-                    )
-                    form.fields["district"].queryset = Location.objects.filter(
-                        id__in=target_location_districts
-                    )
-                    form.fields["zone"].queryset = Location.objects.filter(
-                        id__in=target_location_zones
-                    )
+                    form.fields["province"].queryset = Location.objects.filter(id__in=target_location_provinces)
+                    form.fields["district"].queryset = Location.objects.filter(id__in=target_location_districts)
+                    form.fields["zone"].queryset = Location.objects.filter(id__in=target_location_zones)
 
         location_report_formsets.append(location_report_formset)
 
@@ -467,12 +412,8 @@ def update_project_monthly_report_progress_view(request, project, report):
                                     district = cleaned_data.get("district")
 
                                     if province and district:
-                                        location_report_instance = (
-                                            location_report_form.save(commit=False)
-                                        )
-                                        location_report_instance.activity_plan_report = (
-                                            activity_report
-                                        )
+                                        location_report_instance = location_report_form.save(commit=False)
+                                        location_report_instance.activity_plan_report = activity_report
                                         location_report_instance.save()
 
                                     if hasattr(
@@ -487,41 +428,26 @@ def update_project_monthly_report_progress_view(request, project, report):
                                         # location reports and create new
                                         # based on the indicator disaggregations
                                         new_report_disaggregations = []
-                                        for (
-                                            disaggregation_report_form
-                                        ) in disaggregation_report_formset:
+                                        for disaggregation_report_form in disaggregation_report_formset:
                                             if disaggregation_report_form.is_valid():
                                                 if (
-                                                    disaggregation_report_form.cleaned_data
-                                                    != {}
-                                                    and disaggregation_report_form.cleaned_data.get(
-                                                        "target"
-                                                    )
-                                                    > 0
+                                                    disaggregation_report_form.cleaned_data != {}
+                                                    and disaggregation_report_form.cleaned_data.get("target") > 0
                                                 ):
-                                                    disaggregation_report_instance = (
-                                                        disaggregation_report_form.save(
-                                                            commit=False
-                                                        )
+                                                    disaggregation_report_instance = disaggregation_report_form.save(
+                                                        commit=False
                                                     )
                                                     disaggregation_report_instance.target_location = (
                                                         location_report_instance
                                                     )
                                                     disaggregation_report_instance.save()
-                                                    new_report_disaggregations.append(
-                                                        disaggregation_report_instance.id
-                                                    )
+                                                    new_report_disaggregations.append(disaggregation_report_instance.id)
 
                                         all_report_disaggregations = (
                                             location_report_form.instance.disaggregationlocationreport_set.all()
                                         )
-                                        for (
-                                            disaggregation_report
-                                        ) in all_report_disaggregations:
-                                            if (
-                                                disaggregation_report.id
-                                                not in new_report_disaggregations
-                                            ):
+                                        for disaggregation_report in all_report_disaggregations:
+                                            if disaggregation_report.id not in new_report_disaggregations:
                                                 disaggregation_report.delete()
 
             return redirect(
@@ -557,9 +483,7 @@ def update_project_monthly_report_progress_view(request, project, report):
         "reports_view": True,
     }
 
-    return render(
-        request, "project_reports/forms/monthly_report_progress_form.html", context
-    )
+    return render(request, "project_reports/forms/monthly_report_progress_form.html", context)
 
 
 @login_required
@@ -569,9 +493,7 @@ def get_location_report_empty_form(request):
     project = get_object_or_404(Project, pk=request.POST.get("project"))
 
     # Get all existing target locaitions for the project
-    target_locations = project.targetlocation_set.select_related(
-        "province", "district", "zone"
-    ).all()
+    target_locations = project.targetlocation_set.select_related("province", "district", "zone").all()
 
     (
         target_location_provinces,
@@ -601,15 +523,9 @@ def get_location_report_empty_form(request):
     # Create a disaggregation formset for each target location form
     location_report_form = location_report_formset.empty_form
 
-    location_report_form.fields["province"].queryset = Location.objects.filter(
-        id__in=target_location_provinces
-    )
-    location_report_form.fields["district"].queryset = Location.objects.filter(
-        id__in=target_location_districts
-    )
-    location_report_form.fields["zone"].queryset = Location.objects.filter(
-        id__in=target_location_zones
-    )
+    location_report_form.fields["province"].queryset = Location.objects.filter(id__in=target_location_provinces)
+    location_report_form.fields["district"].queryset = Location.objects.filter(id__in=target_location_districts)
+    location_report_form.fields["zone"].queryset = Location.objects.filter(id__in=target_location_zones)
 
     disaggregation_report_formset = DisaggregationReportFormSet(
         request.POST or None,
@@ -624,9 +540,7 @@ def get_location_report_empty_form(request):
     }
 
     # Render the target location form template and generate HTML
-    html = render_to_string(
-        "project_reports/forms/location_report_empty_form.html", context
-    )
+    html = render_to_string("project_reports/forms/location_report_empty_form.html", context)
 
     # Return JSON response containing the generated HTML
     return JsonResponse({"html": html})
@@ -674,13 +588,9 @@ def get_disaggregations_report_empty_forms(request):
                     )
 
                     if location_report_prefix in location_disaggregation_report_dict:
-                        location_disaggregation_report_dict[
-                            location_report_prefix
-                        ].append(html)
+                        location_disaggregation_report_dict[location_report_prefix].append(html)
                     else:
-                        location_disaggregation_report_dict.update(
-                            {location_report_prefix: [html]}
-                        )
+                        location_disaggregation_report_dict.update({location_report_prefix: [html]})
 
         # Set back extra to 0 to avoid empty forms if refreshed.
         DisaggregationReportFormSet.extra = 0

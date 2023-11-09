@@ -65,24 +65,12 @@ class StockLocationDetails(models.Model):
         ("Available", "Available"),
         ("Reserved", "Reserved"),
     ]
-    warehouse_location = models.ForeignKey(
-        WarehouseLocation, on_delete=models.CASCADE, null=True, blank=True
-    )
-    cluster = models.ForeignKey(
-        Cluster, on_delete=models.SET_NULL, null=True, blank=True
-    )
-    stock_purpose = models.CharField(
-        max_length=255, choices=PURPOSE_TYPES, default="", null=True, blank=True
-    )
-    targeted_groups = models.CharField(
-        max_length=255, choices=TARGET_GROUP_TYPES, default="", null=True, blank=True
-    )
-    stock_type = models.ForeignKey(
-        StockType, on_delete=models.SET_NULL, null=True, blank=True
-    )
-    status = models.CharField(
-        max_length=255, choices=STATUS_TYPES, default="", null=True, blank=True
-    )
+    warehouse_location = models.ForeignKey(WarehouseLocation, on_delete=models.CASCADE, null=True, blank=True)
+    cluster = models.ForeignKey(Cluster, on_delete=models.SET_NULL, null=True, blank=True)
+    stock_purpose = models.CharField(max_length=255, choices=PURPOSE_TYPES, default="", null=True, blank=True)
+    targeted_groups = models.CharField(max_length=255, choices=TARGET_GROUP_TYPES, default="", null=True, blank=True)
+    stock_type = models.ForeignKey(StockType, on_delete=models.SET_NULL, null=True, blank=True)
+    status = models.CharField(max_length=255, choices=STATUS_TYPES, default="", null=True, blank=True)
     stock_unit = models.ForeignKey(
         StockUnit,
         verbose_name="Units",
@@ -90,12 +78,8 @@ class StockLocationDetails(models.Model):
         null=True,
         blank=True,
     )
-    qty_in_stock = models.IntegerField(
-        default=0, verbose_name="Qty in Stock", null=True, blank=True
-    )
-    qty_in_pipeline = models.IntegerField(
-        default=0, verbose_name="Qty in Pipeline", null=True, blank=True
-    )
+    qty_in_stock = models.IntegerField(default=0, verbose_name="Qty in Stock", null=True, blank=True)
+    qty_in_pipeline = models.IntegerField(default=0, verbose_name="Qty in Pipeline", null=True, blank=True)
     beneficiary_coverage = models.IntegerField(default=0, blank=True, null=True)
 
     def __str__(self):

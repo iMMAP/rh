@@ -450,7 +450,9 @@ class ActivityPlan(models.Model):
         null=True,
         blank=True,
     )
-    beneficiary_category = models.CharField(max_length=15, choices=CATEGORY_TYPES, default=False, null=True, blank=True)
+    beneficiary_category = models.CharField(
+        max_length=15, choices=CATEGORY_TYPES, default="non-disabled", null=True, blank=True
+    )
 
     # Facility Monitoring
     # facility_monitoring = models.BooleanField(default=False)

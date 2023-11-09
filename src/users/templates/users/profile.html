@@ -1,6 +1,7 @@
 {% extends "../_base.html" %}
 {% load static %}
 {% load compress %}
+{% load vite %}
 {% block content %}
     <div class="base-section">
         <div class="container">
@@ -85,9 +86,8 @@
             </div>
         </div>
     </div>
-
-    {% compress js %}
-        <script defer src="{% static 'users/js/profile.js' %}"></script>
-    {% endcompress js %}
-
 {% endblock content %}
+
+{% block scripts %}
+    {% vite 'users/static/users/users.js' %}
+{% endblock scripts %}

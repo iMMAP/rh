@@ -1,4 +1,5 @@
-from rh.models import *
+from django.db import models
+from rh.models import Location, Cluster
 
 
 class StockType(models.Model):
@@ -8,7 +9,7 @@ class StockType(models.Model):
         return self.name
 
     class Meta:
-        verbose_name = 'Stock Type'
+        verbose_name = "Stock Type"
         verbose_name_plural = "Stock Types"
 
 
@@ -19,57 +20,63 @@ class StockUnit(models.Model):
         return self.name
 
     class Meta:
-        verbose_name = 'Stock Unit'
+        verbose_name = "Stock Unit"
         verbose_name_plural = "Stock Units"
 
 
 class WarehouseLocation(models.Model):
-    province = models.ForeignKey(Location, related_name='province', on_delete=models.SET_NULL, null=True, blank=True)
-    district = models.ForeignKey(Location, related_name='district', on_delete=models.SET_NULL, null=True, blank=True)
+    province = models.ForeignKey(
+        Location,
+        related_name="province",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+    )
+    district = models.ForeignKey(
+        Location,
+        related_name="district",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+    )
     name = models.CharField(max_length=255, blank=True, null=True)
 
     def __str__(self):
         return self.name
 
     class Meta:
-        verbose_name = 'Warehouse Location Plan'
+        verbose_name = "Warehouse Location Plan"
         verbose_name_plural = "Warehouse Locations"
 
 
 class StockLocationDetails(models.Model):
     PURPOSE_TYPES = [
-        ('Prepositioned', 'Prepositioned'),
-        ('Operational', 'Operational'),
+        ("Prepositioned", "Prepositioned"),
+        ("Operational", "Operational"),
     ]
     TARGET_GROUP_TYPES = [
-        ('All Population', 'All Population'),
-        ('Conflict Affected', 'Conflict Affected'),
-        ('Natural Disaster', 'Natural Disaster'),
-        ('Returnees', 'Returnees'),
+        ("All Population", "All Population"),
+        ("Conflict Affected", "Conflict Affected"),
+        ("Natural Disaster", "Natural Disaster"),
+        ("Returnees", "Returnees"),
     ]
     STATUS_TYPES = [
-        ('Available', 'Available'),
-        ('Reserved', 'Reserved'),
+        ("Available", "Available"),
+        ("Reserved", "Reserved"),
     ]
     warehouse_location = models.ForeignKey(WarehouseLocation, on_delete=models.CASCADE, null=True, blank=True)
     cluster = models.ForeignKey(Cluster, on_delete=models.SET_NULL, null=True, blank=True)
-    stock_purpose = models.CharField(
-        max_length=255,
-        choices=PURPOSE_TYPES,
-        default='', null=True, blank=True
-    )
-    targeted_groups = models.CharField(
-        max_length=255,
-        choices=TARGET_GROUP_TYPES,
-        default='', null=True, blank=True
-    )
+    stock_purpose = models.CharField(max_length=255, choices=PURPOSE_TYPES, default="", null=True, blank=True)
+    targeted_groups = models.CharField(max_length=255, choices=TARGET_GROUP_TYPES, default="", null=True, blank=True)
     stock_type = models.ForeignKey(StockType, on_delete=models.SET_NULL, null=True, blank=True)
-    status = models.CharField(
-        max_length=255,
-        choices=STATUS_TYPES,
-        default='', null=True, blank=True
+    status = models.CharField(max_length=255, choices=STATUS_TYPES, default="", null=True, blank=True)
+    stock_unit = models.ForeignKey(
+        StockUnit,
+        verbose_name="Units",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
     )
-    stock_unit = models.ForeignKey(StockUnit, verbose_name="Units", on_delete=models.SET_NULL, null=True, blank=True)
     qty_in_stock = models.IntegerField(default=0, verbose_name="Qty in Stock", null=True, blank=True)
     qty_in_pipeline = models.IntegerField(default=0, verbose_name="Qty in Pipeline", null=True, blank=True)
     beneficiary_coverage = models.IntegerField(default=0, blank=True, null=True)
@@ -78,7 +85,7 @@ class StockLocationDetails(models.Model):
         return f"{self.warehouse_location} Stock Details"
 
     class Meta:
-        verbose_name = 'Stock Detail'
+        verbose_name = "Stock Detail"
         verbose_name_plural = "Stock Details"
 
 
@@ -95,5 +102,5 @@ class StockReports(models.Model):
         return self.created_at.strftime("%B, %Y")
 
     class Meta:
-        verbose_name = 'Stock Report'
+        verbose_name = "Stock Report"
         verbose_name_plural = "Stock Reports"

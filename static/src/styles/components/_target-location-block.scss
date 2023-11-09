@@ -1,6 +1,6 @@
-.target_location-block {
-  .add-target-location-form-button{
-    float: right;
+.target-location-block {
+  .add_button{
+    text-align: end;
   }
   .inner-holder {
     position: relative;
@@ -32,8 +32,8 @@
     }
   }
 
-  .target_location-accordion-active {
-    .target_location-accordion-opener {
+  .target-location-accordion-active {
+    .target-location-accordion-opener {
       &:after {
         transform: translateY(-50%) rotate(-180deg) !important;
       }
@@ -45,12 +45,13 @@
     flex-wrap: wrap;
     align-items: center;
     justify-content: space-between;
-    margin: 22px 0 22px;
+    margin: 0px 0 22px;
 
-    &.target_location-accordion-opener {
+    &.target-location-accordion-opener {
       text-decoration: none;
       position: relative;
       padding-right: 40px;
+      margin-top:25px;
       z-index: 1;
 
       &:after {
@@ -86,8 +87,8 @@
       display: flex;
       align-items: center;
       color: $red-be;
-      font-size: 18px;
-      font-weight: 800;
+      font-size: 18px !important;
+      font-weight: 600;
       line-height: 1.2;
     }
   }

@@ -1,12 +1,12 @@
 from django.db import models
 
 from rh.models import (
-    Project,
     ActivityPlan,
-    Indicator,
     Disaggregation,
-    LocationType,
+    Indicator,
     Location,
+    LocationType,
+    Project,
 )
 
 # ##############################################

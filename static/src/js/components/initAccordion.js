@@ -32,11 +32,11 @@ export default function initAccordion() {
       extraOffset: 0,
     },
   });
-  jQuery('.target_location-accordion').slideAccordion({
-    opener: '.target_location-accordion-opener',
-    slider: '.target_location-accordion-slide',
+  jQuery('.target-location-accordion').slideAccordion({
+    opener: '.target-location-accordion-opener',
+    slider: '.target-location-accordion-slide',
     animSpeed: 300,
-    activeClass: 'target_location-accordion-active',
+    activeClass: 'target-location-accordion-active',
     scrollToActiveItem: {
       enable: true,
       extraOffset: 0,

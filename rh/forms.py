@@ -1,17 +1,17 @@
 from django import forms
+from django.contrib.auth.models import User
 from django.forms.models import inlineformset_factory
 from django.urls import reverse_lazy
-from django.contrib.auth.models import User
 
 from .models import (
-    Organization,
-    TargetLocation,
-    Donor,
     ActivityPlan,
-    Project,
+    BudgetProgress,
     Currency,
     DisaggregationLocation,
-    BudgetProgress,
+    Donor,
+    Organization,
+    Project,
+    TargetLocation,
 )
 
 
@@ -277,7 +277,9 @@ class ActivityPlanForm(forms.ModelForm):
             {"onchange": f"updateActivityTitle('{prefix}', 'id_{prefix}-activity_detail');"}
         )
         self.fields["indicators"].widget.attrs.update({"style": "height: 128px;"})
-        # self.fields['facility_type'].queryset = self.fields['facility_type'].queryset.filter(cluster__in=cluster_ids)
+        # self.fields["facility_type"].queryset = self.fields[
+        #     "facility_type"
+        # ].queryset.filter(cluster__in=cluster_ids)
 
 
 ActivityPlanFormSet = inlineformset_factory(

@@ -55,14 +55,14 @@
                     {% for form, target_location_formset in combined_formset %}
                         {% include "rh/projects/forms/activity_empty_form.html" with form=form target_location_formset=target_location_formset %}
                     {% endfor %}
-                </div>
-                <div class="plan-submit-holder">
-                    <a href="{% url 'update_project' project.pk %}"
-                       class="btn btn-gray-outline">Back</a>
-                    <button type="submit"
-                            class="btn btn-red"
-                            name="submit_type"
-                            value="next_step">Save and Next</button>
+                    <div class="plan-submit-holder">
+                        <a href="{% url 'update_project' project.pk %}"
+                           class="btn btn-gray-outline">Back</a>
+                        <button type="submit"
+                                class="btn btn-red"
+                                name="submit_type"
+                                value="next_step">Save and Next</button>
+                    </div>
                 </div>
             </form>
         </div>

@@ -1,5 +1,6 @@
 from django.db import models
-from rh.models import Location, Cluster
+
+from rh.models import Cluster, Location
 
 
 class StockType(models.Model):

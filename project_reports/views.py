@@ -1,3 +1,6 @@
+import calendar
+from datetime import datetime
+
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.forms.models import inlineformset_factory
@@ -6,15 +9,15 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.template.loader import render_to_string
 from django.views.decorators.cache import cache_control
 
-from rh.models import Project, Location, Indicator
+from rh.models import Indicator, Location, Project
 
 from .forms import (
-    ProjectMonthlyReportForm,
     ActivityPlanReportForm,
-    TargetLocationReportFormSet,
     DisaggregationReportFormSet,
+    ProjectMonthlyReportForm,
+    TargetLocationReportFormSet,
 )
-from .models import ProjectMonthlyReport, ActivityPlanReport
+from .models import ActivityPlanReport, ProjectMonthlyReport
 
 
 @cache_control(no_store=True)
@@ -48,22 +51,104 @@ def index_project_report_view(request, project):
 
 @cache_control(no_store=True)
 @login_required
-def create_project_monthly_report_view(request, project, report=None):
-    """Project Monthly Report Creation View"""
+def create_project_monthly_report_view(request, project):
+    """View for creating a project."""
     project = get_object_or_404(Project, pk=project)
-    if report == "New":
-        monthly_report_instance = None
-    else:
-        monthly_report_instance = get_object_or_404(ProjectMonthlyReport, pk=report)
+
+    # Get the current date
+    current_date = datetime.now()
+
+    # Calculate the last day of the current month
+    last_day = calendar.monthrange(current_date.year, current_date.month)[1]
+
+    # Create a new date representing the end of the current month
+    end_of_month = datetime(current_date.year, current_date.month, last_day)
+
+    form = ProjectMonthlyReportForm(
+        request.POST or None,
+        initial={"report_due_date": end_of_month, "project": project},
+    )
+
     project_state = project.state
+    parent_page = {
+        "in-progress": "active_projects",
+        "draft": "draft_projects",
+        "done": "completed_projects",
+        "archive": "archived_projects",
+    }.get(project_state, None)
 
-    # Get all existing activity plans for the project
+    if request.method == "POST":
+        if form.is_valid():
+            report = form.save(commit=False)
+            report.project = project
+            report.save()
+            return redirect(
+                "create_project_monthly_report_progress",
+                project=project.pk,
+                report=report.pk,
+            )
+
+    context = {
+        "project": project,
+        "report_form": form,
+        "parent_page": parent_page,
+        "project_view": False,
+        "financial_view": False,
+        "reports_view": True,
+    }
+    return render(request, "project_reports/forms/monthly_report_form.html", context)
+
+
+@cache_control(no_store=True)
+@login_required
+def details_monthly_progress_view(request, project, report):
+    """Project Monthly Report Read View"""
+    project = get_object_or_404(Project, pk=project)
+    monthly_report = get_object_or_404(ProjectMonthlyReport, pk=report)
+    activity_reports = monthly_report.activityplanreport_set.select_related("activity_plan", "indicator")
+
+    project_state = project.state
+    parent_page = {
+        "in-progress": "active_projects",
+        "draft": "draft_projects",
+        "done": "completed_projects",
+        "archive": "archived_projects",
+    }.get(project_state, None)
+    context = {
+        "project": project,
+        "monthly_report": monthly_report,
+        "activity_reports": activity_reports,
+        "parent_page": parent_page,
+        "project_view": False,
+        "financial_view": False,
+        "reports_view": True,
+    }
+
+    return render(request, "project_reports/views/monthly_report_view.html", context)
+
+
+def get_project_and_report_details(project_id, report_id=None):
+    project = get_object_or_404(Project, pk=project_id)
+    project_state = project.state
     activity_plans = project.activityplan_set.select_related("activity_domain", "activity_type", "activity_detail")
-    # Get all existing target locaitions for the project
     target_locations = project.targetlocation_set.select_related("province", "district", "zone").all()
+    monthly_report_instance = None
 
-    # Create Q objects for each location type
+    if report_id is not None:
+        monthly_report_instance = get_object_or_404(ProjectMonthlyReport, pk=report_id)
+
+    return (
+        project,
+        project_state,
+        activity_plans,
+        target_locations,
+        monthly_report_instance,
+    )
+
+
+def get_target_locations_doamin(target_locations):
     # TODO: use cache
+    # Create Q objects for each location type
     province_q = Q(id__in=[location.province.id for location in target_locations if location.province])
     district_q = Q(id__in=[location.district.id for location in target_locations if location.district])
     zone_q = Q(id__in=[location.zone.id for location in target_locations if location.zone])
@@ -73,19 +158,33 @@ def create_project_monthly_report_view(request, project, report=None):
     target_location_districts = Location.objects.filter(district_q)
     target_location_zones = Location.objects.filter(zone_q)
 
-    report_init = {}
-    if not monthly_report_instance:
-        report_init = {"project": project, "state": "todo"}
+    return (target_location_provinces, target_location_districts, target_location_zones)
 
-    # Create the Project Monthly Report form
-    report_form = ProjectMonthlyReportForm(request.POST or None, instance=monthly_report_instance, initial=report_init)
+
+@cache_control(no_store=True)
+@login_required
+def create_project_monthly_report_progress_view(request, project, report):
+    """Create View"""
+    (
+        project,
+        project_state,
+        activity_plans,
+        target_locations,
+        monthly_report_instance,
+    ) = get_project_and_report_details(project, report)
+
+    (
+        target_location_provinces,
+        target_location_districts,
+        target_location_zones,
+    ) = get_target_locations_doamin(target_locations)
 
     # Create the activity plan formset with initial data from the project
     ActivityReportFormset = inlineformset_factory(
         ProjectMonthlyReport,
         ActivityPlanReport,
         form=ActivityPlanReportForm,
-        extra=len(activity_plans) if not monthly_report_instance else 0,
+        extra=len(activity_plans),
         can_delete=True,
     )
 
@@ -133,59 +232,68 @@ def create_project_monthly_report_view(request, project, report=None):
                     }
                 form.fields["indicator"].queryset = activity_plan.indicators.all()
 
-    if request.method == "POST" and report_form.is_valid():
-        monthly_report = report_form.save()
-        report = monthly_report
+    if request.method == "POST":
         if activity_report_formset.is_valid():
             for activity_report_form in activity_report_formset:
                 indicator_data = activity_report_form.cleaned_data.get("indicator")
                 if indicator_data:
                     activity_report = activity_report_form.save(commit=False)
-                    activity_report.monthly_report = monthly_report
+                    activity_report.monthly_report = monthly_report_instance
                     activity_report.save()
 
-            # Process target location forms and their disaggregation forms
-            for location_report_formset in location_report_formsets:
-                if location_report_formset.is_valid():
-                    for location_report_form in location_report_formset:
-                        cleaned_data = location_report_form.cleaned_data
-                        province = cleaned_data.get("province")
-                        district = cleaned_data.get("district")
+                    # Process target location forms and their disaggregation forms
+                    for location_report_formset in location_report_formsets:
+                        if location_report_formset.instance == activity_report:
+                            if location_report_formset.is_valid():
+                                for location_report_form in location_report_formset:
+                                    cleaned_data = location_report_form.cleaned_data
+                                    province = cleaned_data.get("province")
+                                    district = cleaned_data.get("district")
 
-                        if province and district:
-                            location_report_instance = location_report_form.save(commit=False)
-                            location_report_instance.activity_plan_report = activity_report
-                            location_report_instance.save()
+                                    if province and district:
+                                        location_report_instance = location_report_form.save(commit=False)
+                                        location_report_instance.activity_plan_report = activity_report
+                                        location_report_instance.save()
 
-                        if hasattr(location_report_form, "disaggregation_report_formset"):
-                            disaggregation_report_formset = location_report_form.disaggregation_report_formset.forms
-
-                            # Delete the exisiting instances of the disaggregation location reports and create new
-                            # based on the indicator disaggregations
-                            new_report_disaggregations = []
-                            for disaggregation_report_form in disaggregation_report_formset:
-                                if disaggregation_report_form.is_valid():
-                                    if (
-                                        disaggregation_report_form.cleaned_data != {}
-                                        and disaggregation_report_form.cleaned_data.get("target") > 0
+                                    if hasattr(
+                                        location_report_form,
+                                        "disaggregation_report_formset",
                                     ):
-                                        disaggregation_report_instance = disaggregation_report_form.save(commit=False)
-                                        disaggregation_report_instance.target_location = location_report_instance
-                                        disaggregation_report_instance.save()
-                                        new_report_disaggregations.append(disaggregation_report_instance.id)
+                                        disaggregation_report_formset = (
+                                            location_report_form.disaggregation_report_formset.forms
+                                        )
 
-                            all_report_disaggregations = (
-                                location_report_form.instance.disaggregationlocationreport_set.all()
-                            )
-                            for disaggregation_report in all_report_disaggregations:
-                                if disaggregation_report.id not in new_report_disaggregations:
-                                    disaggregation_report.delete()
+                                        # Delete the exisiting instances of the disaggregation location
+                                        # reports and create new
+                                        # based on the indicator disaggregations
+                                        new_report_disaggregations = []
+                                        for disaggregation_report_form in disaggregation_report_formset:
+                                            if disaggregation_report_form.is_valid():
+                                                if (
+                                                    disaggregation_report_form.cleaned_data != {}
+                                                    and disaggregation_report_form.cleaned_data.get("target") > 0
+                                                ):
+                                                    disaggregation_report_instance = disaggregation_report_form.save(
+                                                        commit=False
+                                                    )
+                                                    disaggregation_report_instance.target_location = (
+                                                        location_report_instance
+                                                    )
+                                                    disaggregation_report_instance.save()
+                                                    new_report_disaggregations.append(disaggregation_report_instance.id)
+
+                                        all_report_disaggregations = (
+                                            location_report_form.instance.disaggregationlocationreport_set.all()
+                                        )
+                                        for disaggregation_report in all_report_disaggregations:
+                                            if disaggregation_report.id not in new_report_disaggregations:
+                                                disaggregation_report.delete()
 
             # activity_report_formset.save()
             return redirect(
-                "create_project_monthly_report",
+                "view_monthly_report",
                 project=project.pk,
-                report=monthly_report.pk,
+                report=monthly_report_instance.pk,
             )
         else:
             # TODO:
@@ -204,9 +312,9 @@ def create_project_monthly_report_view(request, project, report=None):
 
     context = {
         "project": project,
-        "report": report,
+        "monthly_report": monthly_report_instance,
         "activity_plans": activity_plans,
-        "report_form": report_form,
+        "report_form": monthly_report_instance,
         "activity_report_formset": activity_report_formset,
         # 'location_report_formset': location_report_formset,
         "combined_formset": combined_formset,
@@ -216,7 +324,166 @@ def create_project_monthly_report_view(request, project, report=None):
         "reports_view": True,
     }
 
-    return render(request, "project_reports/forms/monthly_report_form.html", context)
+    return render(request, "project_reports/forms/monthly_report_progress_form.html", context)
+
+
+@cache_control(no_store=True)
+@login_required
+def update_project_monthly_report_progress_view(request, project, report):
+    """Update View"""
+    (
+        project,
+        project_state,
+        activity_plans,
+        target_locations,
+        monthly_report_instance,
+    ) = get_project_and_report_details(project, report)
+
+    (
+        target_location_provinces,
+        target_location_districts,
+        target_location_zones,
+    ) = get_target_locations_doamin(target_locations)
+
+    # Create the activity plan formset with initial data from the project
+    ActivityReportFormset = inlineformset_factory(
+        ProjectMonthlyReport,
+        ActivityPlanReport,
+        form=ActivityPlanReportForm,
+        extra=0,
+        can_delete=True,
+    )
+
+    activity_report_formset = ActivityReportFormset(
+        request.POST or None,
+        instance=monthly_report_instance,
+    )
+
+    location_report_formsets = []
+    for activity_report in activity_report_formset:
+        # Create a target location formset for each activity plan form
+        location_report_formset = TargetLocationReportFormSet(
+            request.POST or None,
+            instance=activity_report.instance,
+            prefix=f"locations_report_{activity_report.prefix}",
+        )
+        for location_report_form in location_report_formset.forms:
+            # Create a disaggregation formset for each target location form
+            disaggregation_report_formset = DisaggregationReportFormSet(
+                request.POST or None,
+                instance=location_report_form.instance,
+                prefix=f"disaggregation_report_{location_report_form.prefix}",
+            )
+            location_report_form.disaggregation_report_formset = disaggregation_report_formset
+
+        # Loop through the forms in the formset and set queryset values for specific fields
+        if not request.POST:
+            for i, form in enumerate(location_report_formset.forms):
+                if i < len(target_locations):
+                    form.fields["province"].queryset = Location.objects.filter(id__in=target_location_provinces)
+                    form.fields["district"].queryset = Location.objects.filter(id__in=target_location_districts)
+                    form.fields["zone"].queryset = Location.objects.filter(id__in=target_location_zones)
+
+        location_report_formsets.append(location_report_formset)
+
+    # Loop through the forms in the formset and set initial and queryset values for specific fields
+    if not request.POST:
+        for i, form in enumerate(activity_report_formset.forms):
+            if i < len(activity_plans):
+                activity_plan = activity_plans[i]
+                form.fields["indicator"].queryset = activity_plan.indicators.all()
+
+    if request.method == "POST":
+        if activity_report_formset.is_valid():
+            for activity_report_form in activity_report_formset:
+                indicator_data = activity_report_form.cleaned_data.get("indicator")
+                if indicator_data:
+                    activity_report = activity_report_form.save(commit=False)
+                    activity_report.monthly_report = monthly_report_instance
+                    activity_report.save()
+
+                    # Process target location forms and their disaggregation forms
+                    for location_report_formset in location_report_formsets:
+                        if location_report_formset.instance == activity_report:
+                            if location_report_formset.is_valid():
+                                for location_report_form in location_report_formset:
+                                    cleaned_data = location_report_form.cleaned_data
+                                    province = cleaned_data.get("province")
+                                    district = cleaned_data.get("district")
+
+                                    if province and district:
+                                        location_report_instance = location_report_form.save(commit=False)
+                                        location_report_instance.activity_plan_report = activity_report
+                                        location_report_instance.save()
+
+                                    if hasattr(
+                                        location_report_form,
+                                        "disaggregation_report_formset",
+                                    ):
+                                        disaggregation_report_formset = (
+                                            location_report_form.disaggregation_report_formset.forms
+                                        )
+
+                                        # Delete the exisiting instances of the disaggregation
+                                        # location reports and create new
+                                        # based on the indicator disaggregations
+                                        new_report_disaggregations = []
+                                        for disaggregation_report_form in disaggregation_report_formset:
+                                            if disaggregation_report_form.is_valid():
+                                                if (
+                                                    disaggregation_report_form.cleaned_data != {}
+                                                    and disaggregation_report_form.cleaned_data.get("target") > 0
+                                                ):
+                                                    disaggregation_report_instance = disaggregation_report_form.save(
+                                                        commit=False
+                                                    )
+                                                    disaggregation_report_instance.target_location = (
+                                                        location_report_instance
+                                                    )
+                                                    disaggregation_report_instance.save()
+                                                    new_report_disaggregations.append(disaggregation_report_instance.id)
+
+                                        all_report_disaggregations = (
+                                            location_report_form.instance.disaggregationlocationreport_set.all()
+                                        )
+                                        for disaggregation_report in all_report_disaggregations:
+                                            if disaggregation_report.id not in new_report_disaggregations:
+                                                disaggregation_report.delete()
+
+            return redirect(
+                "view_monthly_report",
+                project=project.pk,
+                report=monthly_report_instance.pk,
+            )
+        else:
+            # TODO:
+            # Handle invalid activity_plan_report_formset
+            # Add error handling code here
+            pass
+
+    parent_page = {
+        "in-progress": "active_projects",
+        "draft": "draft_projects",
+        "done": "completed_projects",
+        "archive": "archived_projects",
+    }.get(project_state, None)
+
+    combined_formset = zip(activity_report_formset.forms, location_report_formsets)
+
+    context = {
+        "project": project,
+        "monthly_report": monthly_report_instance,
+        "activity_plans": activity_plans,
+        "report_form": monthly_report_instance,
+        "activity_report_formset": activity_report_formset,
+        "combined_formset": combined_formset,
+        "parent_page": parent_page,
+        "project_view": False,
+        "financial_view": False,
+        "reports_view": True,
+    }
+
+    return render(request, "project_reports/forms/monthly_report_progress_form.html", context)
 
 
 @login_required
@@ -228,15 +495,11 @@ def get_location_report_empty_form(request):
     # Get all existing target locaitions for the project
     target_locations = project.targetlocation_set.select_related("province", "district", "zone").all()
 
-    # Create Q objects for each location type
-    province_q = Q(id__in=[location.province.id for location in target_locations if location.province])
-    district_q = Q(id__in=[location.district.id for location in target_locations if location.district])
-    zone_q = Q(id__in=[location.zone.id for location in target_locations if location.zone])
-
-    # Collect provinces, districts, and zones using a single query for each
-    target_location_provinces = Location.objects.filter(province_q)
-    target_location_districts = Location.objects.filter(district_q)
-    target_location_zones = Location.objects.filter(zone_q)
+    (
+        target_location_provinces,
+        target_location_districts,
+        target_location_zones,
+    ) = get_target_locations_doamin(target_locations)
 
     ActivityReportFormset = inlineformset_factory(
         ProjectMonthlyReport,
@@ -334,26 +597,3 @@ def get_disaggregations_report_empty_forms(request):
 
     # Return JSON response containing generated HTML forms
     return JsonResponse(location_disaggregation_report_dict)
-
-
-@cache_control(no_store=True)
-@login_required
-def details_monthly_progress_view(request, pk):
-    """Project Monthly Report Read View"""
-    project = get_object_or_404(Project, pk=pk)
-    project_state = project.state
-    parent_page = {
-        "in-progress": "active_projects",
-        "draft": "draft_projects",
-        "done": "completed_projects",
-        "archive": "archived_projects",
-    }.get(project_state, None)
-    context = {
-        "project": project,
-        "parent_page": parent_page,
-        "project_view": False,
-        "financial_view": False,
-        "reports_view": True,
-    }
-
-    return render(request, "project_reports/views/monthly_report_view.html", context)

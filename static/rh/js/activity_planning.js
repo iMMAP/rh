@@ -35,7 +35,24 @@ function addActivityForm(prefix, project, nextFormIndex) {
 			
 				// Create a new form element and append it to the formset container
 				const newForm = $(document.createElement('div')).html(newFormHtml);
-				formsetContainer.append(newForm.children().first());
+				const addForm = newForm.children().first()
+				formsetContainer.append(addForm);
+
+				// Open/Activate the accordion
+				const parentDiv = addForm.find('.project-activity-accordion-slide');
+				debugger
+				const innerHolder = parentDiv.closest('.inner-holder')
+
+				// Unbind any existing click events
+				innerHolder.find('.project-activity-accordion-opener').off('click');
+				innerHolder.find('.project-activity-accordion-opener').on('click', function(event) {
+					event.preventDefault(); // Prevent the default behavior (form submission)
+					event.stopPropagation(); // Prevent the default behavior (propagation)
+					innerHolder.toggleClass('project-activity-accordion-active')
+					$(this).next('.project-activity-accordion-slide').toggleClass('js-acc-hidden')
+					// $(this).next('.target-location-accordion-slide').slideToggle(DETAILS_TOGGLE_DURATION);
+				});
+
 
 				setTimeout(function () {
 					// Initialize chained and chainedm2m fields for the newly added form
@@ -121,15 +138,17 @@ function addTargetLocationForm(prefix, project, nextFormIndex) {
 				managementForm.val(totalForms.toString());
 				
 				// Open/Activate the accordion
-				const parentDiv = formsetContainer.closest('.location_accordion_slide')
+				const parentDiv = formsetContainer.closest('.target-location-accordion-slide')
 				const innerHolder = parentDiv.closest('.inner-holder')
 
 				// Unbind any existing click events
-				innerHolder.find('.location_accordion_opener').off('click');
-				innerHolder.find('.location_accordion_opener').click(function(event) {
+				innerHolder.find('.target-location-accordion-opener').off('click');
+				innerHolder.find('.target-location-accordion-opener').on('click', function(event) {
 					event.preventDefault(); // Prevent the default behavior (form submission)
 					event.stopPropagation(); // Prevent the default behavior (propagation)
-					$(this).next('.location_accordion_slide').slideToggle(DETAILS_TOGGLE_DURATION);
+					innerHolder.toggleClass('target-location-accordion-active')
+					$(this).next('.target-location-accordion-slide').toggleClass('js-acc-hidden')
+					// $(this).next('.target-location-accordion-slide').slideToggle(DETAILS_TOGGLE_DURATION);
 				});
 
 				if (addedForm){
@@ -139,10 +158,10 @@ function addTargetLocationForm(prefix, project, nextFormIndex) {
 					getLocations(locationPrefix, 'zone', 'district');
 					
 					// Add Load Locations (districts and zones) event for new form
-					$(`#id_${locationPrefix}-province`).change(function () {
+					$(`#id_${locationPrefix}-province`).on('change', function() {
 						getLocations(locationPrefix, 'district', 'province', clearZone=true);
 					});
-					$(`#id_${locationPrefix}-district`).change(function () {
+					$(`#id_${locationPrefix}-district`).on('change', function() {
 						getLocations(locationPrefix, 'zone', 'district');
 					});
 					
@@ -204,31 +223,32 @@ function handleDisaggregationForms(indicatorsSelect, selectedIDs, locationsPrefi
                 $.each(locationsPrefixes, function(locationIndex) {
                     const locationPrefix = locationsPrefixes[locationIndex];
                     const disaggregationFormsArray = data[locationPrefix];
-
                     // Remove existing forms
                     $('#' + locationPrefix).find('.location-inner-holder').remove();
-
+					
                     if (disaggregationFormsArray) {
-                        // Append new disaggregation forms
-                        $('#' + locationPrefix).find('.disaggregation_accordion_slide').append(disaggregationFormsArray.join(" "));
+						// Append new disaggregation forms
+                        $('#' + locationPrefix).find('.disaggregation-accordion-slide').append(disaggregationFormsArray.join(" "));
                     }
-
+					
                     // Update the management form values
                     if (disaggregationFormsArray) {
-                        const managementForm = $(`input[name="disaggregation_${locationPrefix}-TOTAL_FORMS"]`);
+						const managementForm = $(`input[name="disaggregation_${locationPrefix}-TOTAL_FORMS"]`);
                         const totalForms = parseInt(disaggregationFormsArray.length);
                         managementForm.val(totalForms.toString());
                     }
 					// Open/Activate the accordion
-					const parentDiv = $('#' + locationPrefix).find('.disaggregation_accordion_slide')
+					const parentDiv = $('#' + locationPrefix).find('.disaggregation-accordion-slide')
 					const innerHolder = parentDiv.closest('.inner-holder')
-
+					
 					// Unbind any existing click events
-					innerHolder.find('.disaggregation_accordion_opener').off('click');
-					innerHolder.find('.disaggregation_accordion_opener').click(function(event) {
+					innerHolder.find('.disaggregation-accordion-opener').off('click');
+					innerHolder.find('.disaggregation-accordion-opener').on('click', function(event) {
 						event.preventDefault(); // Prevent the default behavior
 						event.stopPropagation(); // Prevent the default behavior (propagation)
-						parentDiv.slideToggle(DETAILS_TOGGLE_DURATION);
+						innerHolder.toggleClass('disaggregation-accordion-active')
+						parentDiv.toggleClass('js-acc-hidden')
+						// parentDiv.slideToggle(DETAILS_TOGGLE_DURATION);
 					});
                 });
             }
@@ -364,18 +384,18 @@ async function getLocations(locationPrefix, locationType, parentType, clearZone 
 $(function () {
 
 	// Open/Activate the accordion
-	$('.location_accordion_opener').click(function(event) {
-		event.preventDefault(); // Prevent the default behavior (form submission)
-		event.stopPropagation(); // Prevent the default behavior (propagation)
-		$(this).next('.location_accordion_slide').slideToggle(DETAILS_TOGGLE_DURATION);
-	});
+	// $('.target-location-accordion-opener').on('click', function(event) {
+	// 	event.preventDefault(); // Prevent the default behavior (form submission)
+	// 	event.stopPropagation(); // Prevent the default behavior (propagation)
+	// 	$(this).next('.target-location-accordion-slide').slideToggle(DETAILS_TOGGLE_DURATION);
+	// });
 
 	// Open/Activate the accordion
-	$('.disaggregation_accordion_opener').click(function(event) {
-		event.preventDefault(); // Prevent the default behavior (form submission)
-		event.stopPropagation(); // Prevent the default behavior (propagation)
-		$(this).next('.disaggregation_accordion_slide').slideToggle(DETAILS_TOGGLE_DURATION);
-	});
+	// $('.disaggregation-accordion-opener').on('click', function(event) {
+	// 	event.preventDefault(); // Prevent the default behavior (form submission)
+	// 	event.stopPropagation(); // Prevent the default behavior (propagation)
+	// 	$(this).next('.disaggregation-accordion-slide').slideToggle(DETAILS_TOGGLE_DURATION);
+	// });
 
 	// Initialize indicators with django select except for the empty form
 	$("select[multiple]:not(#id_activityplan_set-__prefix__-indicators)").select2();
@@ -428,10 +448,10 @@ $(function () {
 		getLocations(locationPrefix, 'district', 'province');
 		getLocations(locationPrefix, 'zone', 'district');
 
-		$(`#id_${locationPrefix}-province`).change(function () {
+		$(`#id_${locationPrefix}-province`).on('change', function() {
 			getLocations(locationPrefix, 'district', 'province', clearZone=true);
 		});
-		$(`#id_${locationPrefix}-district`).change(function () {
+		$(`#id_${locationPrefix}-district`).on('change', function() {
 			getLocations(locationPrefix, 'zone', 'district');
 		});
 		

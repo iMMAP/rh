@@ -6,12 +6,12 @@ from dateutil.relativedelta import relativedelta
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.forms import modelformset_factory
-from django.shortcuts import render, redirect
+from django.shortcuts import redirect, render
 from django.views.decorators.cache import cache_control
 from django.views.decorators.http import require_http_methods
 
-from .forms import WarehouseLocationForm, StockReportForm, StockLocationDetailsForm
-from .models import WarehouseLocation, StockReports, StockLocationDetails
+from .forms import StockLocationDetailsForm, StockReportForm, WarehouseLocationForm
+from .models import StockLocationDetails, StockReports, WarehouseLocation
 
 
 @cache_control(no_store=True)

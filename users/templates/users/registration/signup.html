@@ -34,13 +34,13 @@
                 {% csrf_token %}
                 <div class="form-holder">
                     {% for field in u_form %}
-                        <div class="input-field">
+                        <div class="input-field is-required"">
                             {{ field.label_tag }}
                             <div class="input-holder">{{ field }}</div>
                         </div>
                     {% endfor %}
                     {% for field in p_form %}
-                        <div class="input-field">
+                        <div class="input-field is-required">
                             {{ field.label_tag }}
                             <div class="input-holder">{{ field }}</div>
                         </div>
@@ -66,3 +66,4 @@
         </div>
     </div>
 {% endblock content %}
+

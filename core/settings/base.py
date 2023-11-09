@@ -1,4 +1,3 @@
-import logging
 from pathlib import Path
 
 import environ
@@ -7,7 +6,7 @@ import environ
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 env = environ.Env()
-environ.Env.read_env('.env')
+environ.Env.read_env(".env")
 
 SECRET_KEY = env("SECRET_KEY", default="unsafe-secret-key")
 
@@ -16,61 +15,59 @@ DJANGO_SETTINGS_MODULE = env("DJANGO_SETTINGS_MODULE", default="core.settings.lo
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env("DEBUG", default=True)
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ["*"]
 
 # Application definition
 INSTALLED_APPS = [
     # Default django apps
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-    
+    "django.contrib.admin",
+    "django.contrib.auth",
+    "django.contrib.contenttypes",
+    "django.contrib.sessions",
+    "django.contrib.messages",
+    "django.contrib.staticfiles",
     # Installed packages apps
-    'django_filters',
-    'smart_selects',
+    "django_filters",
+    "smart_selects",
     "django_vite_plugin",
-
     # RH apps
-    'rh.apps.RhConfig',
-    'users.apps.UsersConfig',
-    'stock.apps.StockConfig',
-    'project_reports.apps.ProjectReportsConfig',
+    "rh.apps.RhConfig",
+    "users.apps.UsersConfig",
+    "stock.apps.StockConfig",
+    "project_reports.apps.ProjectReportsConfig",
 ]
 USE_DJANGO_JQUERY = True
 
 MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "django.middleware.security.SecurityMiddleware",
+    "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.middleware.common.CommonMiddleware",
+    "django.middleware.csrf.CsrfViewMiddleware",
+    "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "django.contrib.messages.middleware.MessageMiddleware",
+    "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-ROOT_URLCONF = 'core.urls'
+ROOT_URLCONF = "core.urls"
 
 TEMPLATES = [
     {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        "BACKEND": "django.template.backends.django.DjangoTemplates",
         # 'DIRS': [],
-        'APP_DIRS': True,
-        'DIRS': [BASE_DIR / 'templates'],
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
+        "APP_DIRS": True,
+        "DIRS": [BASE_DIR / "templates"],
+        "OPTIONS": {
+            "context_processors": [
+                "django.template.context_processors.debug",
+                "django.template.context_processors.request",
+                "django.contrib.auth.context_processors.auth",
+                "django.contrib.messages.context_processors.messages",
             ],
         },
     },
 ]
 
-WSGI_APPLICATION = 'core.wsgi.application'
+WSGI_APPLICATION = "core.wsgi.application"
 
 DATA_UPLOAD_MAX_NUMBER_FIELDS = 50240
 
@@ -79,34 +76,34 @@ DATA_UPLOAD_MAX_NUMBER_FIELDS = 50240
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
 ]
 
 AUTHENTICATION_BACKENDS = [
-    'django.contrib.auth.backends.ModelBackend',
-    'users.backends.EmailBackend',
+    "django.contrib.auth.backends.ModelBackend",
+    "users.backends.EmailBackend",
 ]
 
 PASSWORD_HASHERS = [
-    'django.contrib.auth.hashers.BCryptPasswordHasher',
+    "django.contrib.auth.hashers.BCryptPasswordHasher",
 ]
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = "UTC"
 
 USE_I18N = True
 
@@ -121,34 +118,31 @@ STATICFILES_FINDERS = [
 ]
 
 
-STATIC_URL = 'static/'
+STATIC_URL = "static/"
 STATICFILES_DIRS = [
-   BASE_DIR / "static",
+    BASE_DIR / "static",
 ]
-STATIC_ROOT = BASE_DIR / 'static-cdn'
-
+STATIC_ROOT = BASE_DIR / "static-cdn"
 
 
 INSTALLED_APPS += (
-    'compressor',
-    'compressor_toolkit',
+    "compressor",
+    "compressor_toolkit",
 )
 
-STATICFILES_FINDERS += (
-    'compressor.finders.CompressorFinder',
-)
+STATICFILES_FINDERS += ("compressor.finders.CompressorFinder",)
 
 COMPRESS_CSS_FILTERS = [
-    'compressor.filters.css_default.CssAbsoluteFilter',
-    'compressor.filters.cssmin.CSSMinFilter',
-    'compressor.filters.template.TemplateFilter'
+    "compressor.filters.css_default.CssAbsoluteFilter",
+    "compressor.filters.cssmin.CSSMinFilter",
+    "compressor.filters.template.TemplateFilter",
 ]
 COMPRESS_JS_FILTERS = [
-    'compressor.filters.jsmin.JSMinFilter',
+    "compressor.filters.jsmin.JSMinFilter",
 ]
 COMPRESS_PRECOMPILERS = (
-    ('module', 'compressor_toolkit.precompilers.ES6Compiler'),
-    ('css', 'compressor_toolkit.precompilers.SCSSCompiler'),
+    ("module", "compressor_toolkit.precompilers.ES6Compiler"),
+    ("css", "compressor_toolkit.precompilers.SCSSCompiler"),
 )
 COMPRESS_ENABLED = True
 
@@ -156,12 +150,12 @@ COMPRESS_ENABLED = True
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-LOGIN_URL = '/login/'
-LOGIN_REDIRECT_URL = '/profile/'
-LOGOUT_URL = '/'
-LOGOUT_REDIRECT_URL = '/'
+LOGIN_URL = "/login/"
+LOGIN_REDIRECT_URL = "/profile/"
+LOGOUT_URL = "/"
+LOGOUT_REDIRECT_URL = "/"
 
 INTERNAL_IPS = [
     "127.0.0.1",

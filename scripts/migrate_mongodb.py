@@ -5,24 +5,24 @@ from datetime import datetime
 import pandas as pd
 
 # SET THE FILE PATHS
-SQLITE_DB_PATH = '../db.sqlite3'
+SQLITE_DB_PATH = "../db.sqlite3"
 
 # CSV DATA FILES
-CURRENCIES_CSV = './data/currencies.csv'
-LOCATIONS_CSV = './data/af_loc.csv'
-ORGANIZATIONS_CSV = './data/organizations.csv'
-BENEFICIARY_TYPES_CSV = './data/beneficiary_types.csv'
-DONORS_CSV = './data/donors.csv'
-INDICATORS_CSV = './data/Indicators.csv'
-ACTIVITIES_CSV = './data/activities.csv'
-USERS_CSV = './data/user.csv'
+CURRENCIES_CSV = "./data/currencies.csv"
+LOCATIONS_CSV = "./data/af_loc.csv"
+ORGANIZATIONS_CSV = "./data/organizations.csv"
+BENEFICIARY_TYPES_CSV = "./data/beneficiary_types.csv"
+DONORS_CSV = "./data/donors.csv"
+INDICATORS_CSV = "./data/Indicators.csv"
+ACTIVITIES_CSV = "./data/activities.csv"
+USERS_CSV = "./data/user.csv"
 
-CLUSTERS = './data/new_db/clusters.csv'
-ACTIVITY_DOMAIN_CSV = './data/new_db/activity_domains.csv'
-ACTIVITY_DESCRIPTION_CSV = './data/new_db/activity_types.csv'
-ACTIVITY_DETAIL_CSV = './data/new_db/activity_details.csv'
-INDICATORS_CSV_OLD_DB = './data/new_db/indicators.csv'
-FACILITIES = './data/new_db/facility_site_types.csv'
+CLUSTERS = "./data/new_db/clusters.csv"
+ACTIVITY_DOMAIN_CSV = "./data/new_db/activity_domains.csv"
+ACTIVITY_DESCRIPTION_CSV = "./data/new_db/activity_types.csv"
+ACTIVITY_DETAIL_CSV = "./data/new_db/activity_details.csv"
+INDICATORS_CSV_OLD_DB = "./data/new_db/indicators.csv"
+FACILITIES = "./data/new_db/facility_site_types.csv"
 
 
 def get_sqlite_client(dbname):
@@ -42,7 +42,7 @@ def import_currencies_from_csv(conn, currencies_csv):
     if len(df) > 0:
         table = "rh_currency"
 
-        df.to_sql('tmp_currency', conn, if_exists='replace', index=False)
+        df.to_sql("tmp_currency", conn, if_exists="replace", index=False)
 
         try:
             c.execute(f"""insert into {table}(name) select name from tmp_currency""")
@@ -61,32 +61,40 @@ def import_locations(conn, locations_csv):
     if len(df) > 0:
         table = "rh_location"
 
-        df['Long'] = df['Long'].str.replace(',', '.').astype(float)
-        df['Lat'] = df['Lat'].str.replace(',', '.').astype(float)
+        df["Long"] = df["Long"].str.replace(",", ".").astype(float)
+        df["Lat"] = df["Lat"].str.replace(",", ".").astype(float)
 
-        df.to_sql('tmp_locs', conn, if_exists='replace', index=False)
+        df.to_sql("tmp_locs", conn, if_exists="replace", index=False)
 
-        c.execute(f"""
+        c.execute(
+            f"""
         insert into {table} (level, parent_id, code, name, original_name, type, created_at, updated_at)
         VALUES (0, NULL, 'ALL', 'ALL', NULL, 'All', datetime('now'), datetime('now'))
-        """)
+        """
+        )
 
-        c.execute(f"""
+        c.execute(
+            f"""
         insert into {table} (level, parent_id, code, name, original_name, type, created_at, updated_at)
         select distinct 0 level, NULL parent, ADM0_PCODE code, ADM0_NA_EN name, ADM0_translation original_name, 'Country' type, datetime('now') created_at, datetime('now') updated_at from tmp_locs
-        """)
+        """
+        )
 
-        c.execute(f"""
+        c.execute(
+            f"""
         insert into {table} (level, parent_id, code, name, original_name, type, created_at, updated_at)
         select distinct 1 level, r.id as parent_id, ADM1_PCODE code, ADM1_NA_EN name, ADM1_translation original_name, 'Province' type, datetime('now') created_at, datetime('now') updated_at
         from tmp_locs t inner join {table} r ON r.code = t.ADM0_PCODE;
-        """)
+        """
+        )
 
-        c.execute(f"""
+        c.execute(
+            f"""
         insert into {table} (level, parent_id, code, name, type, lat, long, created_at, updated_at)
         select distinct 2 level, r.id as parent_id, ADM2_PCODE code, ADM2_NA_EN name, 'District' type, t.lat, t.long, datetime('now') created_at, datetime('now') updated_at
         from tmp_locs t inner join {table} r ON r.code = t.ADM1_PCODE;
-        """)
+        """
+        )
 
         c.execute("DROP TABLE tmp_locs;")
 
@@ -101,11 +109,12 @@ def import_clusters_from_csv(conn, clusters_csv):
     if len(df) > 0:
         table = "rh_cluster"
 
-        df.to_sql('tmp_clusters', conn, if_exists='replace', index=False)
+        df.to_sql("tmp_clusters", conn, if_exists="replace", index=False)
 
         try:
             c.execute(
-                f"""insert into {table}(title, code, name) select title, code, name from tmp_clusters""")
+                f"""insert into {table}(title, code, name) select title, code, name from tmp_clusters"""
+            )
             c.execute("DROP TABLE tmp_clusters;")
         except Exception as exception:
             conn.rollback()
@@ -121,16 +130,20 @@ def import_indicators_from_csv(conn, indicators_csv):
     if len(df) > 0:
         table = "rh_indicator"
 
-        df.to_sql('tmp_indicator', conn, if_exists='replace', index=False)
+        df.to_sql("tmp_indicator", conn, if_exists="replace", index=False)
         try:
-            c.execute("select activity_description_id,indicator_id,indicator_name from tmp_indicator")
+            c.execute(
+                "select activity_description_id,indicator_id,indicator_name from tmp_indicator"
+            )
             indicators = c.fetchall()
             for indicator in indicators:
                 indicator = list(indicator)
                 activity_type = indicator[0]
 
                 if activity_type:
-                    c.execute(f"select id from rh_activitytype where code='{activity_type}'")
+                    c.execute(
+                        f"select id from rh_activitytype where code='{activity_type}'"
+                    )
                     activity_type_id = c.fetchone()
                     if activity_type_id:
                         activity_type = activity_type_id[0]
@@ -170,16 +183,17 @@ def import_activity_domains_from_csv(conn, activity_domain_csv):
     if len(df) > 0:
         table = "rh_activitydomain"
 
-        df.to_sql('tmp_activitydomain', conn, if_exists='replace', index=False)
+        df.to_sql("tmp_activitydomain", conn, if_exists="replace", index=False)
 
         try:
             c.execute(
-                "select activity_type_id,activity_type_name,cluster_id from tmp_activitydomain")
+                "select activity_type_id,activity_type_name,cluster_id from tmp_activitydomain"
+            )
             activity_domains = c.fetchall()
             for domain in activity_domains:
                 domain = list(domain)
                 cluster = domain[2]
-                country = 'AF'
+                country = "AF"
 
                 if country:
                     c.execute(f"select id from rh_location where code='{country}'")
@@ -232,21 +246,24 @@ def import_activity_descriptions_from_csv(conn, activity_description_csv):
     if len(df) > 0:
         table = "rh_activitytype"
 
-        df.to_sql('tmp_activitytype', conn, if_exists='replace', index=False)
+        df.to_sql("tmp_activitytype", conn, if_exists="replace", index=False)
 
         try:
             c.execute(
                 """select activity_description_id,activity_description_name,activity_type_id,cluster_id from tmp_activitytype
-            """)
+            """
+            )
             activity_types = c.fetchall()
             for activity_type in activity_types:
                 activity_type = list(activity_type)
                 activity_domain = activity_type[2]
                 cluster = activity_type[3]
-                country = 'AF'
+                country = "AF"
 
                 if activity_domain:
-                    c.execute(f"select id from rh_activitydomain where code='{activity_domain}'")
+                    c.execute(
+                        f"select id from rh_activitydomain where code='{activity_domain}'"
+                    )
                     activity_domain_id = c.fetchone()
                     if activity_domain_id:
                         activity_domain = activity_domain_id[0]
@@ -310,7 +327,6 @@ def import_activity_descriptions_from_csv(conn, activity_description_csv):
                 #         values({last_activity_type_id}, {indicator})
                 #     """
                 #     c.execute(inquery)
-
         except Exception as exception:
             conn.rollback()
 
@@ -325,11 +341,12 @@ def import_activity_details_from_csv(conn, activity_details_csv):
     if len(df) > 0:
         table = "rh_activitydetail"
 
-        df.to_sql('tmp_activitydetail', conn, if_exists='replace', index=False)
+        df.to_sql("tmp_activitydetail", conn, if_exists="replace", index=False)
 
         try:
             c.execute(
-                "select activity_description_id,activity_detail_id,activity_detail_name from tmp_activitydetail")
+                "select activity_description_id,activity_detail_id,activity_detail_name from tmp_activitydetail"
+            )
             activity_details = c.fetchall()
             m2m_records = []
             for activity_detail in activity_details:
@@ -338,7 +355,9 @@ def import_activity_details_from_csv(conn, activity_details_csv):
                 # country = 'AF'
 
                 if activity_type:
-                    c.execute(f"select id from rh_activitytype where code='{activity_type}'")
+                    c.execute(
+                        f"select id from rh_activitytype where code='{activity_type}'"
+                    )
                     activity_type_id = c.fetchone()
                     if activity_type_id:
                         activity_type = activity_type_id[0]
@@ -365,7 +384,7 @@ def import_beneficiary_types_from_csv(conn, beneficiary_type_csv):
     if len(df) > 0:
         table = "rh_beneficiarytype"
 
-        df.to_sql('tmp_beneficiarytype', conn, if_exists='replace', index=False)
+        df.to_sql("tmp_beneficiarytype", conn, if_exists="replace", index=False)
 
         try:
             c.execute(
@@ -374,7 +393,8 @@ def import_beneficiary_types_from_csv(conn, beneficiary_type_csv):
                     {table}(name, code, description, start_date, end_date, country_id) 
                     select 
                     beneficiary_type_name, beneficiary_type_id, description, start_date, end_date, (select id from rh_location where code = tmp_beneficiarytype.admin0pcode)
-                    from tmp_beneficiarytype""")
+                    from tmp_beneficiarytype"""
+            )
             c.execute("DROP TABLE tmp_beneficiarytype;")
         except Exception as exception:
             conn.rollback()
@@ -391,9 +411,11 @@ def import_organizations_from_csv(conn, organizations_csv):
     if len(df) > 0:
         table = "rh_organization"
 
-        df.to_sql('tmp_organization', conn, if_exists='replace', index=False)
+        df.to_sql("tmp_organization", conn, if_exists="replace", index=False)
         try:
-            c.execute("select _id, createdAt, organization, organization_name, organization_type, updatedAt, admin0pcode from tmp_organization")
+            c.execute(
+                "select _id, createdAt, organization, organization_name, organization_type, updatedAt, admin0pcode from tmp_organization"
+            )
             organizations = c.fetchall()
             for organization in organizations:
                 organization = list(organization)
@@ -406,7 +428,7 @@ def import_organizations_from_csv(conn, organizations_csv):
                     """
                 c.execute(oquery, organization)
                 last_org_id = c.lastrowid
-                
+
                 lquery = f"""select id from rh_location where code='{country}'"""
                 c.execute(lquery)
                 country_id = c.fetchone()
@@ -420,7 +442,7 @@ def import_organizations_from_csv(conn, organizations_csv):
                     c.execute(olquery)
             c.execute("DROP TABLE tmp_organization;")
         except Exception as exception:
-            print('exception: ', exception)
+            print("exception: ", exception)
             conn.rollback()
 
 
@@ -435,10 +457,12 @@ def import_donors_from_csv(conn, donors_csv):
     if len(df) > 0:
         table = "rh_donor"
 
-        df.to_sql('tmp_donor', conn, if_exists='replace', index=False)
+        df.to_sql("tmp_donor", conn, if_exists="replace", index=False)
 
-        try:    
-            c.execute("select _id, end_date, project_donor_id, project_donor_name, start_date, admin0pcode from tmp_donor")
+        try:
+            c.execute(
+                "select _id, end_date, project_donor_id, project_donor_name, start_date, admin0pcode from tmp_donor"
+            )
             donors = c.fetchall()
             for donor in donors:
                 donor = list(donor)
@@ -447,7 +471,7 @@ def import_donors_from_csv(conn, donors_csv):
                     donor[1] = datetime.now()
                 if not donor[-1]:
                     donor[-1] = datetime.now()
-                
+
                 donor = tuple(donor)
                 dquery = f"""
                         insert into 
@@ -456,7 +480,7 @@ def import_donors_from_csv(conn, donors_csv):
                     """
                 c.execute(dquery, donor)
                 last_donor_id = c.lastrowid
-                
+
                 lquery = f"""select id from rh_location where code='{country}'"""
                 c.execute(lquery)
                 country_id = c.fetchone()
@@ -487,13 +511,16 @@ def import_users_from_csv(conn, users_csv):
     if len(df) > 0:
         table = "auth_user"
 
-        df.to_sql('tmp_accounts', conn, if_exists='replace', index=False)
+        df.to_sql("tmp_accounts", conn, if_exists="replace", index=False)
 
         try:
             c.execute(
-                "select admin0pcode,cluster_id,organization_id,phone,position,skype,username from tmp_accounts")
+                "select admin0pcode,cluster_id,organization_id,phone,position,skype,username from tmp_accounts"
+            )
             profile_info = c.fetchall()
-            c.execute("select createdAt,email,last_logged_in,password,status,username from tmp_accounts")
+            c.execute(
+                "select createdAt,email,last_logged_in,password,status,username from tmp_accounts"
+            )
             users = c.fetchall()
             profiles_list = []
             for profile in profile_info:
@@ -513,14 +540,15 @@ def import_users_from_csv(conn, users_csv):
                         profile[0] = None
 
                 if cluster:
-                    if cluster in ['coordination', 'smsd']:
-                        cluster = 'cccm'
-                    if cluster == 'agriculture':
-                        cluster = 'fsac'
-                    if cluster == 'rnr_chapter':
-                        cluster = 'protection'
+                    if cluster in ["coordination", "smsd"]:
+                        cluster = "cccm"
+                    if cluster == "agriculture":
+                        cluster = "fsac"
+                    if cluster == "rnr_chapter":
+                        cluster = "protection"
                     c.execute(
-                        f"select id from rh_cluster where code='{cluster}' or title='{cluster}' or name='{cluster}'")
+                        f"select id from rh_cluster where code='{cluster}' or title='{cluster}' or name='{cluster}'"
+                    )
                     cluster_id = c.fetchone()
                     if cluster_id:
                         profile[1] = cluster_id[0]
@@ -528,7 +556,9 @@ def import_users_from_csv(conn, users_csv):
                         profile[1] = None
 
                 if organization:
-                    c.execute(f"select id from rh_organization where old_id='{organization}'")
+                    c.execute(
+                        f"select id from rh_organization where old_id='{organization}'"
+                    )
                     organization_id = c.fetchone()
                     if organization_id:
                         profile[2] = organization_id[0]
@@ -538,16 +568,15 @@ def import_users_from_csv(conn, users_csv):
                 profile = tuple(profile)
                 profiles_list.append(profile)
 
-
             for user in users:
                 user = list(user)
                 status = user[4]
                 user.append(False)
                 user.append(False)
-                user.append('')
-                user.append('')
+                user.append("")
+                user.append("")
 
-                if status == 'active':
+                if status == "active":
                     user[4] = True
 
                 if not user[5]:
@@ -555,7 +584,7 @@ def import_users_from_csv(conn, users_csv):
 
                 password = user[3]
                 if password:
-                    user[3] = 'bcrypt$' + password
+                    user[3] = "bcrypt$" + password
 
                 # user = ['NULL' if a==None else a for a in user]
                 user = tuple(user)
@@ -610,18 +639,19 @@ def import_activities_from_csv(conn, activities_csv):
     c = conn.cursor()
 
     df = pd.read_csv(activities_csv)
-    df['fields'] = df['fields'].fillna('')
+    df["fields"] = df["fields"].fillna("")
 
     # df['fields'] = df['fields'].apply(lambda x: json.loads(x) if isinstance(x, str) else json.loads(str(x)))
 
     if len(df) > 0:
         table = "rh_activity"
 
-        df.to_sql('tmp_activity', conn, if_exists='replace', index=False)
+        df.to_sql("tmp_activity", conn, if_exists="replace", index=False)
 
         try:
             c.execute(
-                "select active, activity_date, HRP_Code, Core_Indicator_Yes_No, code, name, subdomain_code, subdomain_name, start_date, end_date, _id, admin0pcode, cluster_id, indicator_id from tmp_activity")
+                "select active, activity_date, HRP_Code, Core_Indicator_Yes_No, code, name, subdomain_code, subdomain_name, start_date, end_date, _id, admin0pcode, cluster_id, indicator_id from tmp_activity"
+            )
             activities = c.fetchall()
             for activity in activities:
                 activity = list(activity)
@@ -690,7 +720,7 @@ def import_facilities_from_csv(conn, facilities_csv):
     if len(df) > 0:
         table = "rh_facilitysitetype"
 
-        df.to_sql('tmp_facilitysitetype', conn, if_exists='replace', index=False)
+        df.to_sql("tmp_facilitysitetype", conn, if_exists="replace", index=False)
         try:
             c.execute("select cluster,name from tmp_facilitysitetype")
             facility_site_types = c.fetchall()
@@ -745,7 +775,6 @@ try:
     connection.commit()
 
 except Exception as exc:
-
     print("***********IMPORT ERROR:************ ", exc)
     print("***********Traceback:************ ", traceback.format_exc())
     print("***********Roll Back The Commits************ ")

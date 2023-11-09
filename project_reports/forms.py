@@ -37,31 +37,6 @@ class TargetLocationReportForm(forms.ModelForm):
     class Meta:
         model = TargetLocationReport
         fields = "__all__"
-        # widgets = {
-        #     'country': forms.widgets.HiddenInput(),
-        #     'active': forms.widgets.HiddenInput(),
-        #     'locations_group_by': forms.widgets.RadioSelect(),
-        #     'district': forms.Select(
-        #         attrs={'locations-queries-url': reverse_lazy('ajax-load-locations')}),
-        #     'zone': forms.Select(
-        #         attrs={'locations-queries-url': reverse_lazy('ajax-load-locations')}),
-        # }
-
-    # def __init__(self, *args, **kwargs):
-    #     super().__init__(*args, **kwargs)
-    #     self.fields['save'] = forms.BooleanField(required=False, initial=False,
-    #                                              widget=forms.HiddenInput(attrs={'name': self.prefix + '-save'}))
-    #     self.fields['province'].queryset = self.fields['province'].queryset.filter(type='Province')
-    #     self.fields['district'].queryset = self.fields['district'].queryset.filter(type='District')
-    #     self.fields['zone'].queryset = self.fields['zone'].queryset.filter(type='Zone')
-    #     self.fields['province'].widget.attrs.update({'data-form-prefix': f"{kwargs.get('prefix')}",
-    #                                                  'onchange': f"updateLocationTitle('{kwargs.get('prefix')}', 'id_{kwargs.get('prefix')}-province');",
-    #                                                  })
-    #     self.fields['district'].widget.attrs.update(
-    #         {'onchange': f"updateLocationTitle('{kwargs.get('prefix')}', 'id_{kwargs.get('prefix')}-district');",
-    #          'locations-queries-url': reverse_lazy('ajax-load-locations')})
-    #     self.fields['site_name'].widget.attrs.update(
-    #         {'onchange': f"updateLocationTitle('{kwargs.get('prefix')}', 'id_{kwargs.get('prefix')}-site_name');"})
 
 
 TargetLocationReportFormSet = inlineformset_factory(
@@ -88,11 +63,6 @@ class ActivityPlanReportForm(forms.ModelForm):
         widgets = {
             "activity_plan": forms.widgets.HiddenInput(),
         }
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-        self.fields["indicator"].widget.attrs.update({"class": "report_indicator"})
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

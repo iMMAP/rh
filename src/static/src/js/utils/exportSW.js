@@ -1,3 +1,4 @@
+
 export default function initExportAndSW() {
   jQuery(function () {
     $(".js_multiselect").select2();
@@ -9,9 +10,9 @@ export default function initExportAndSW() {
     $(".export-button").click(function (event) {
       event.preventDefault();
       event.stopPropagation();
-
       // Get the export URL from the button's data-url attribute
       var exportUrl = $(this).find("a").data("url");
+      
       // Send an AJAX request to the export URL
       $.ajax({
         url: exportUrl,
@@ -29,7 +30,6 @@ export default function initExportAndSW() {
           document.body.removeChild(link);
         },
         error: function (xhr, status, error) {
-          debugger;
           if (xhr.status === 400) {
             console.log("Error: No records selected for export");
           } else {

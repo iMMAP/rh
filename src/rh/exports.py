@@ -173,7 +173,8 @@ class ProjectExportExcelView(View):
 
     def write_population_data_rows(self, sheet, project):
         """
-        Write population data rows to the sheet.
+        Write population data rows to the sheet.plan.activity_detail.name if plan.activity_detail else None,
+                # "\n".join([indicator.name for indicator in plan.indicators.all()]),
 
         Args:
             sheet (Worksheet): The worksheet object.
@@ -182,8 +183,8 @@ class ProjectExportExcelView(View):
         activity_plans = project.activityplan_set.all()
         for plan in activity_plans:
             row = [
-                plan.activity_domain.name,
-                plan.activity_type.name,
+                plan.activity_domain.name if plan.activity_domain else None,
+                plan.activity_type.name if plan.activity_type else None,
                 plan.activity_detail.name if plan.activity_detail else None,
                 "\n".join([indicator.name for indicator in plan.indicators.all()]),
             ]
@@ -199,6 +200,7 @@ class ProjectExportExcelView(View):
             workbook (Workbook): The Excel workbook object.
             project (Project): The project object.
         """
+
         sheet = workbook.create_sheet(title="Target Locations")
 
         # Define column headers and types for Sheet 3

@@ -48,3 +48,6 @@ test:
 .PHONY: db-seed
 db-seed:
 	poetry run python src/manage.py seed 
+
+.PHONY: format-templates
+	djlint --profile=django && djlint --reformat --profile=django

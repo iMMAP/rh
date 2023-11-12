@@ -16,7 +16,7 @@ import initShowHideInputValue from "./components/initShowHideInputValue";
 import initCopyInputValue from "./components/initCopyInputValue";
 import initAccordion from "./components/initAccordion";
 import initTooltip from "./components/initTooltip";
-// import initExportAndSW from './utils/exportSW';
+import initExportAndSW from './utils/exportSW';
 
 ready(() => {
   window.ResizeObserver = ResizeObserver;
@@ -36,5 +36,5 @@ ready(() => {
   initAccordion();
   initTooltip();
 
-  // initExportAndSW();
+  initExportAndSW();
 });

@@ -50,4 +50,9 @@ db-seed:
 	poetry run python src/manage.py seed 
 
 .PHONY: format-templates
-	djlint --profile=django && djlint --reformat --profile=django
+format-templates:
+	djlint --reformat --profile=django src
+
+.PHONY: lint-templates
+lint-templates:
+	djlint --profile=django src

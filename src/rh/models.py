@@ -14,6 +14,8 @@ DESCRIPTION_MAX_LENGTH = 600
 class Location(models.Model):
     """Locations Model"""
 
+    LOCATION_CLASSIFICATIONS = [("urban", "Urban"), ("rural", "Rural")]
+
     LOCATION_TYPES = [
         ("All", "ALL"),
         ("Country", "Country"),
@@ -34,6 +36,9 @@ class Location(models.Model):
     level = models.IntegerField(default=0)
     original_name = models.CharField(max_length=200, blank=True, null=True)
     type = models.CharField(max_length=15, choices=LOCATION_TYPES, default="Country", null=True, blank=True)
+    classification = models.CharField(
+        max_length=15, choices=LOCATION_CLASSIFICATIONS, default="Rural", null=True, blank=True
+    )
     lat = models.FloatField(blank=True, null=True)
     long = models.FloatField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)

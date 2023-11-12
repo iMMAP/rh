@@ -361,8 +361,8 @@ class Project(models.Model):
     activity_domains = models.ManyToManyField(ActivityDomain, related_name="activity_domains")
 
     donors = models.ManyToManyField(Donor)
-    implementing_partners = models.ManyToManyField(Organization, related_name="implementing_partners")
-    programme_partners = models.ManyToManyField(Organization, related_name="programme_partners")
+    implementing_partners = models.ManyToManyField(Organization, related_name="implementing_partners", blank=True)
+    programme_partners = models.ManyToManyField(Organization, related_name="programme_partners", blank=True)
 
     # locations = models.ManyToManyField(Location)
     # country = models.ForeignKey(Location, on_delete=models.SET_NULL, null=True, blank=True)

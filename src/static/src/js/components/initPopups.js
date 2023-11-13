@@ -17,4 +17,12 @@ export default function initPopups() {
     btnClose: '.filter-close',
     openClass: 'filter-active',
   });
+
+  // jQuery('.confirmation-modal, body').contentPopup({
+  //   mode: 'click',
+  //   popup: '.confirmation-options',
+  //   btnOpen: '.confirmation-open',
+  //   btnClose: '.confirmation-close',
+  //   openClass: 'confirmation-active',
+  // });
 }

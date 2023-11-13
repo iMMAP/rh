@@ -22,23 +22,52 @@
             <div class="project-monthly_report read-only">
                 <div class="row">
                     <div class="col">
-                        <div class="multiple-fields-row three-items">
+                        <div class="multiple-fields-row two-items">
                             <div class="field-col">
                                 <div class="input-field">
                                 <label>Report Date</label>
                                 <span class="text-read-only">{{ monthly_report.report_date | date:"F Y" }}</span>
                                 </div>
                             </div>
+                            {% if monthly_report.submitted_on %}
+                                <div class="field-col">
+                                    <div class="input-field">
+                                    <label>Submitted On</label>
+                                    <span class="text-read-only">
+                                        {{ monthly_report.submitted_on }}
+                                    </span>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="multiple-fields-row two-items">
                             <div class="field-col">
                                 <div class="input-field">
-                                <label>Report Due Date</label>
-                                <span class="text-read-only">{{ monthly_report.report_due_date | date:"F Y" }}</span>
+                                    <label>Report Due Date</label>
+                                    <span class="text-read-only">{{ monthly_report.report_due_date | date:"F Y" }}</span>
                                 </div>
                             </div>
+                            {% if monthly_report.approved_on %}
+                                <div class="field-col">
+                                    <div class="input-field">
+                                    <label>Approved On</label>
+                                    <span class="text-read-only">
+                                        {{ monthly_report.approved_on }}
+                                    </span>
+                                    </div>
+                                </div>
+                            {% endif %}
+                            
+                        </div>
+                        <div class="multiple-fields-row two-items">
                             <div class="field-col">
                                 <div class="input-field">
-                                <label>Report Status</label>
-                                <span class="text-read-only">{{ monthly_report.get_state_display }}</span>
+                                    <label>Report Status</label>
+                                    <span class="text-read-only">
+                                        <span class="badge">
+                                            {{ monthly_report.get_state_display }}
+                                        </span>
+                                    </span>
                                 </div>
                             </div>
                         </div>
@@ -234,6 +263,35 @@
                 </div>
             </div>
         </div>
+        
+        {% if monthly_report.comments %}
+        <div class="monthly-reporting">
+            <div class="row">
+                <div class="col">
+                    <div class="input-field">
+                        <label>Rejection Reasone and Comments</label>
+                        <span class="text-read-only">{{ monthly_report.comments }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        
+        <div class="monthly-progress-submit-holder text-center">
+            {% if monthly_report.state in "pending,todo,reject" %}
+                <a href='{% url "submit_monthly_report" monthly_report.pk %}' class="btn btn-red">
+                    <span class="btn-text">Submit Monthly Report</span>
+                </a>
+            {% elif monthly_report.state == "submit" %}
+                <a href='{% url "approve_monthly_report" monthly_report.pk %}' class="btn btn-red">
+                    <span class="btn-text">Approve Monthly Report</span>
+                </a>
+                <a href='{% url "reject_monthly_report" monthly_report.pk %}' class="btn btn-gray">
+                    <span class="btn-text">Reject Monthly Report</span>
+                </a>
+            {% endif %}
+        </div>
+
     </div>
 {% endblock report_body %}
 

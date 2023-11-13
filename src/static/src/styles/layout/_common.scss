@@ -478,3 +478,23 @@
 .report-table tbody tr:hover td {
   color: #be2126;
 }
+
+.m2m-badges {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.m2m-badges>* {
+  margin-right: 8px;
+  margin-bottom: 8px;
+
+}
+
+.badge {
+  background-color:  #be2126;
+  color: white;
+  padding: 4px 8px;
+  text-align: center;
+  border-radius: 5px;
+}

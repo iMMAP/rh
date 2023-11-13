@@ -7,6 +7,7 @@ from django.forms.models import inlineformset_factory
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.template.loader import render_to_string
+from django.utils import timezone
 from django.views.decorators.cache import cache_control
 
 from rh.models import Indicator, Location, Project
@@ -597,3 +598,40 @@ def get_disaggregations_report_empty_forms(request):
 
     # Return JSON response containing generated HTML forms
     return JsonResponse(location_disaggregation_report_dict)
+
+
+def submit_monthly_report_view(request, report):
+    monthly_report = get_object_or_404(ProjectMonthlyReport, pk=report)
+    monthly_report.state = "submit"
+    monthly_report.submitted_on = timezone.now()
+    monthly_report.save()
+    return redirect(
+        "view_monthly_report",
+        project=monthly_report.project.pk,
+        report=monthly_report.pk,
+    )
+
+
+def approve_monthly_report_view(request, report):
+    monthly_report = get_object_or_404(ProjectMonthlyReport, pk=report)
+    monthly_report.state = "complete"
+    monthly_report.approved_on = timezone.now()
+    monthly_report.save()
+    return redirect(
+        "view_monthly_report",
+        project=monthly_report.project.pk,
+        report=monthly_report.pk,
+    )
+
+
+def reject_monthly_report_view(request, report):
+    # TODO: Provide a popup reasone for rejection field here.
+    monthly_report = get_object_or_404(ProjectMonthlyReport, pk=report)
+    monthly_report.state = "reject"
+    monthly_report.submitted_on = timezone.now()
+    monthly_report.save()
+    return redirect(
+        "view_monthly_report",
+        project=monthly_report.project.pk,
+        report=monthly_report.pk,
+    )

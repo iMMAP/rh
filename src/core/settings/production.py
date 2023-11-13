@@ -26,5 +26,5 @@ DJANGO_VITE_PLUGIN = {
     "BUILD_DIR": "static-cdn/build",
     "BUILD_URL_PREFIX": "/" + STATIC_URL + "build",
     "DEV_MODE": False,
-    "STATIC_LOOKUP": True,
+    "STATIC_LOOKUP": False,
 }

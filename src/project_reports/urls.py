@@ -29,6 +29,21 @@ urlpatterns = [
         user_views.update_project_monthly_report_progress_view,
         name="update_project_monthly_report_progress",
     ),
+    path(
+        "project/monthly_progress/submit_report/<str:report>/",
+        user_views.submit_monthly_report_view,
+        name="submit_monthly_report",
+    ),
+    path(
+        "project/monthly_progress/approve_report/<str:report>/",
+        user_views.approve_monthly_report_view,
+        name="approve_monthly_report",
+    ),
+    path(
+        "project/monthly_progress/reject_report/<str:report>/",
+        user_views.reject_monthly_report_view,
+        name="reject_monthly_report",
+    ),
     # # Projects Activity Plannings CRUD
     # path(
     #     "project/activity_plan/create/?project=<str:project>/",

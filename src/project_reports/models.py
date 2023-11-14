@@ -1,13 +1,6 @@
 from django.db import models
 
-from rh.models import (
-    ActivityPlan,
-    Disaggregation,
-    Indicator,
-    Location,
-    LocationType,
-    Project,
-)
+from rh.models import ActivityPlan, Disaggregation, Indicator, Location, LocationType, Project
 
 # ##############################################
 # ############# Project Reporting ##############
@@ -21,9 +14,9 @@ class ProjectMonthlyReport(models.Model):
     REPORT_STATES = [
         ("todo", "Todo"),
         ("pending", "Pending"),
-        ("approve", "Approved"),
+        ("submit", "Submitted"),
         ("reject", "Rejected"),
-        ("complete", "Complete"),
+        ("complete", "Completed"),
     ]
     state = models.CharField(max_length=15, choices=REPORT_STATES, default="todo", null=True, blank=True)
     active = models.BooleanField(default=True)
@@ -31,6 +24,9 @@ class ProjectMonthlyReport(models.Model):
     report_date = models.DateField(blank=True, null=True)
     report_due_date = models.DateField(blank=True, null=True)
     description = models.TextField(blank=True, null=True)
+    comments = models.TextField(blank=True, null=True)
+    submitted_on = models.DateTimeField(blank=True, null=True)
+    approved_on = models.DateTimeField(blank=True, null=True)
 
     def __str__(self):
         name = "Monthly Report"

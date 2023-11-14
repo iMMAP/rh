@@ -14,13 +14,7 @@ from django.views.decorators.cache import cache_control
 from project_reports.models import ProjectMonthlyReport as Report
 
 from .filters import ProjectsFilter
-from .forms import (
-    ActivityPlanFormSet,
-    BudgetProgressForm,
-    DisaggregationFormSet,
-    ProjectForm,
-    TargetLocationFormSet,
-)
+from .forms import ActivityPlanFormSet, BudgetProgressForm, DisaggregationFormSet, ProjectForm, TargetLocationFormSet
 from .models import (
     ActivityDomain,
     ActivityPlan,

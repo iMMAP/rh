@@ -2,6 +2,10 @@
 install:
 	poetry install
 
+.PHONY: install-no-dev
+install-no-dev:
+	poetry install --without dev
+
 .PHONY: install-pre-commit
 install-pre-commit:
 	poetry run pre-commit uninstall && poetry run pre-commit install

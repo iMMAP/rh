@@ -43,15 +43,186 @@
                 </li>
             </ul>
             <a href="{% url 'update_project' project.pk %}" class="btn btn-red">Edit</a>
+            
         </div>
         <div class="bottom-block">
             <div class="actions-panel">
-                <div class="export-formats-holder">
-                    <a href="#" class="btn btn-gray export-open">
+                <div class="filter-holder">
+                    <a href="#" class="btn btn-gray filter-open">
                         <span class="btn-text">Export</span>
                         <span class="icon-download"></span>
                     </a>
-                    <div class="export-formats">
+                    <!-- FIXME: FIX the filter selections -->
+                    <!-- <form action="" class="filter-form"  > -->
+                        <div class="filter-options">
+                            <div class="block-top">
+                                <span class="title">Export</span>
+                                <a class="filter-close" href="#"></a>
+                            </div>
+                            <div class="export-format">
+                                <div class="">File Format</div>
+                                <div class="text">
+                                    download the whole project without applying filter.
+                                </div>
+                                <button class="export-button btn btn-gray">
+                                    <a href="#"
+                                        data-url="{% url 'export_project_excel' project.pk %}"
+                                        class="text-decoration-none btn-text"
+                                        title="Export Excel">
+                                        <span class="text">Excel</span>
+                                    </a>
+                                </button>
+                                <button class="export-button btn btn-gray">
+                                    <a href="#"
+                                        data-url="{% url 'export_project_excel' project.pk %}"
+                                        class="text-decoration-none btn-text"
+                                        title="Export CSV">
+                                        <span class="text">CSV</span>
+                                    </a>
+                                </button>
+                            </div>
+                            <div class="project-title report-title">
+                                Project
+                            </div>
+                            <div class="block-body" data-simplebar>
+                        
+                                    <div class="multiple-fields-row two-items">
+                                        <div class="field-col">
+                                            <div class="input-holder">
+                                                <input type="checkbox" id="title" class="input-check" name="title" value="{{project_filter.title}}">
+                                                <label for="title">Title</label>
+                                            </div>
+                                            <div class="input-holder">
+                                                <input type="checkbox" id="code" class="input-check" name="code" value="{{project_filter.code}}">
+                                                <label for="code">Code</label>
+                                            </div>
+                                            <div class="input-holder">
+                                                <input type="checkbox" id="budget" class="input-check" name="budget" value="{{project_filter.budget}}">
+                                                <label for="budget">Budget</label>
+                                            </div>
+                                            <div class="input-holder">
+                                                <input type="checkbox" id="budgetReceived" class="input-check" name="budget_received" value="{{project_filter.budget_received}}">
+                                                <label for="budgetReceived">Received Budget</label>
+                                            </div>
+                                            <div class="input-holder">
+                                                <input type="checkbox" id="user" class="input-check" name="user" value="{{project_filter.user}}">
+                                                <label for="user">Focal Point</label>
+                                            </div>
+                                            <div class="input-holder">
+                                                <input type="checkbox" id="startDate" class="input-check" name="start_date" value="{{ project_filter.start_date }}">
+                                                <label for="startDate">Start Date</label>
+                                            </div>
+
+                                        </div>
+                                        
+                                        <div class="field-col">
+                                            <div class="input-holder">
+                                                <input type="checkbox" id="state" 
+                                                class="input-check" name="state" value="{{project_filter.state}}">
+                                                <label for="state">State</label>
+                                            </div>
+                                            <div class="input-holder">
+                                                <input type="checkbox" id="budgetGap" 
+                                                class="input-check" name="is_hrp_project" value="{{project_filter.budget_gap}}">
+                                                <label for="budgetGap">Budget Gap</label>
+                                            </div>
+                                            <div class="input-holder">
+                                                <input type="checkbox" id="isHRPProject" 
+                                                class="input-check" name="is_hrp_project" value="{{project_filter.is_hrp_project}}">
+                                                <label for="isHRPProject">Is HRP Project</label>
+                                            </div>
+                                            <div class="input-holder">
+                                                <input type="checkbox" id="hrpCode" 
+                                                class="input-check" name="hrp_code" value="{{project_filter.hrp_code}}">
+                                                <label for="hrpCode">HRP Code</label>
+                                            </div>
+                                            <div class="input-holder">
+                                                <input type="checkbox" id="budgetCurrency" 
+                                                class="input-check" name="budget_currency" value="{{project_filter.budget_currency}}">
+                                                <label for="budgetCurrency">Budget Currency</label>
+                                            </div>
+                                            <div class="input-holder">
+                                                <input type="checkbox" id="endDate" 
+                                                class="input-check" name="end_date" value="{{ project_filter.end_date }}">
+                                                <label for="endDate">End Date</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                <div class="project-title report-title">
+                                    Donors
+                                </div>
+                                <div class="select-field">
+                                    {% for donor in project_filter.donors.all %}
+                                        <input type="checkbox" id="donor-{{forloop.counter}}" 
+                                        class="input-check-donor" name="donors" value="{{donor.name }}">
+                                        <label for="donor-{{forloop.counter}}">{{donor.name}}</label><br>
+                                    {% endfor %}
+                                </div>
+                                <div class="project-title report-title">
+                                    Clusters / Sectors
+                                </div>
+                                <div class="select-field ">
+                                    {% for cluster in project_filter.clusters.all %}
+                                        <input type="checkbox" id="cluster-{{forloop.counter}}" 
+                                        class="input-check-cluster" name="clusters" value="{{cluster.title}}">
+                                        <label for="cluster-{{forloop.counter}}"> {{ cluster.title }}</label><br>
+                                    {% endfor %}
+                                </div>
+                                <div class="project-title report-title">
+                                    Activity Domain
+                                </div>
+                                <div class="select-field">
+                                    {% for activity_domain in project_filter.activity_domains.all %}
+                                        <input type="checkbox" id="activityDomain-{{forloop.counter}}" 
+                                        class="input-check-activityDomain" name="activity_domains" value="{{activity_domain.name}}">
+                                        <label for="activityDomain-{{forloop.counter}}">{{activity_domain.name}}</label><br>
+                                    {% endfor %}
+                                </div>
+                                
+                                <div class="project-title report-title">
+                                    Implementing Partner
+                                </div>
+                                <div class="select-field">
+                                    {% for implementing in project_filter.implementing_partners.all %}
+                                        <input type="checkbox" id="implementingPartner-{{forloop.counter}}" 
+                                        class="input-check-implement" name="activity_domains" value="{{implementing.code}}({{implementing.type}})">
+                                        <label for="implementingPartner-{{forloop.counter}}">{{implementing.code}}</label><br>
+                                    {% endfor %}
+                                </div>
+                                <div class="project-title report-title">
+                                    Programme Partner
+                                </div>
+                                <div class="select-field">
+                                    {% for program in project_filter.programme_partners.all %}
+                                        <input type="checkbox" id="programPartner-{{forloop.counter}}" 
+                                        class="input-check-program" name="programme_partners" value="{{program.code}}">
+                                        <label for="programPartner-{{forloop.counter}}">{{program.code}}</label><br>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <div class="block-footer">
+                                <div class="btn-wrapper">
+                                    <div class="multiple-fields-row two-items">
+                                        <div class="field-col">
+                                            <button class="btn btn-red" id="resetFilterButton">
+                                                Reset
+                                            </button>
+                                        </div>
+                                        <div class="field-col">
+                                            <button id="downloadFilterForm">
+                                                <a href="#" class="btn btn-red" data-url="{% url 'export_project_filter' %}">Download</a>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    <!-- </form> -->
+                    </div>
+                <!-- export and filter ended -->
+
+                    <!--<div class="export-formats">
                         <span class="title">File format</span>
                         <ul class="formats-list">
                             <li>
@@ -96,7 +267,7 @@
                             </li>
                         </ul>
                     </div>
-                </div>
+                </div> -->
                 <a href="#"
                     data-url="{% url 'copy_project' project.pk %}"
                     data-return-url="{% url parent_page %}"
@@ -531,7 +702,7 @@
         </div>
     </div>
     {% endfor %}
-
+   
     <div class="input-field is-required">
         <span class="label">Project description &amp; objectives</span>
         <div class="input-holder">{{ project.description | linebreaksbr }}

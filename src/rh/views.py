@@ -301,6 +301,7 @@ def open_project_view(request, pk):
     target_locations = project.targetlocation_set.all()
     plans = list(activity_plans.values_list("pk", flat=True))
     locations = list(target_locations.values_list("pk", flat=True))
+
     project_state = project.state
     parent_page = {
         "in-progress": "active_projects",
@@ -319,6 +320,7 @@ def open_project_view(request, pk):
         "project_view": True,
         "financial_view": False,
         "reports_view": False,
+        "project_filter": project,
     }
     return render(request, "rh/projects/views/project_view.html", context)
 

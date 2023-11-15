@@ -2,6 +2,10 @@
 export default function initExportAndSW() {
   jQuery(function () {
     $(".js_multiselect").select2();
+    // changing the checkbox color when it checked
+    $("input[type=checkbox]").change(function(){
+      $(this).css("accent-color","#af4745");
+    });
 
     $("tr[data-url]").click(function () {
       window.location.href = $(this).data("url");
@@ -38,7 +42,84 @@ export default function initExportAndSW() {
         },
       });
     });
+    // filter the project field and download start
+    $("#downloadFilterForm").click(function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      var routeUrl = $(this).find("a").data("url");
+      console.log(routeUrl)
+      let exportData = {};
+      let donorData = [];
+      let clusterData = [];
+      let activityDomainData = [];
+      let implementingPartnerData = [];
+      let programPartnerData = [];
 
+      var checkedDonor = document.querySelectorAll(".input-check-donor");
+      for(var i = 0; i < checkedDonor.length; i++){
+        if(checkedDonor[i].checked == true){
+          donorData.push(checkedDonor[i].value);
+        }
+      }
+      var checkedCluster = document.querySelectorAll(".input-check-cluster");
+      for(var i = 0; i < checkedCluster.length; i++){
+        if(checkedCluster[i].checked == true){
+          clusterData.push(checkedCluster[i].value);
+        }
+      }
+      var checkedActivityDomainData = document.querySelectorAll(".input-check-activityDomain");
+      for(var i = 0; i < checkedActivityDomainData.length; i++){
+        if(checkedActivityDomainData[i].checked == true){
+          activityDomainData.push(checkedActivityDomainData[i].value);
+        }
+      }
+      var checkImplement = document.querySelectorAll(".input-check-implement");
+      for(var i = 0; i < checkImplement.length; i++){
+        if(checkImplement[i].checked == true ) {
+        implementingPartnerData.push(checkImplement[i].value);
+        }
+      }
+      var checkProgram = document.querySelectorAll(".input-check-program");
+      for(var i = 0; i < checkProgram.length; i++) {
+        if(checkProgram[i].checked == true) {
+          programPartnerData.push(checkProgram[i].value);
+        }
+      }
+      var checkedItem = document.querySelectorAll(".input-check");
+      for(var i = 0; i < checkedItem.length; i++) {
+        if(checkedItem[i].checked == true) {
+          exportData[checkedItem[i].name] = checkedItem[i].value;
+        }
+      }
+      if(donorData != '') {exportData['Donors']=donorData; alert("helo");}
+      if(clusterData != '') {exportData['Clusters'] = clusterData;}
+      if(activityDomainData != ''){exportData['Activity_domains'] = activityDomainData;}
+      if(implementingPartnerData != ''){exportData['Implementing_partners'] = implementingPartnerData;}
+      if(programPartnerData != ''){exportData['Program_partners'] = programPartnerData;}
+      console.log(exportData);
+      $.post({
+        url: routeUrl,
+        method: "POST",
+        data:{
+        "exportData":JSON.stringify(exportData),
+        csrfmiddlewaretoken:csrfToken,
+        },
+        success: function (response){
+          var link = document.createElement("a");
+          link.href = response.file_url;
+          link.download = response.file_name;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          console.log(response);
+        },
+        error: function (error){
+          console.log("No Record Found");
+        },
+      });
+    });
+
+    //filter the project field and download 
     function showConfirmModal(event) {
       // Prevent the default behavior of the click event
       event.preventDefault();

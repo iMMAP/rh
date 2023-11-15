@@ -140,4 +140,15 @@ urlpatterns = [
         export_views.ProjectExportExcelView.as_view(),
         name="export_project_excel",
     ),
+    # Filter Export
+    path(
+        "export-filter/",
+        export_views.ProjectFilterExportView.as_view(),
+        name="export_project_filter",
+    ),
+    # path(
+    #     "project/view_project/1/export-filter/",
+    #     user_views.ProjectFilterExportView,
+    #     name="export_project_filter",
+    #     ),
 ]

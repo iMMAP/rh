@@ -39,8 +39,10 @@ jobs:
       - name: Install ubuntu dependencies
         run: |
             sudo apt install python3-pip
+      - name: Install poetry
+        run: |
             pip install poetry
       - name: Run deploy
         run: |
-          ssh target "cd rh/ && poetry shell && make install-no-dev && make migrate && make npm-install && make collectstatic && make npm-build"
+          ssh target "cd rh/ && make install-no-dev && make migrate && make npm-install && make collectstatic && make npm-build"
       

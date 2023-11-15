@@ -46,7 +46,7 @@ export default function initExportAndSW() {
     $("#downloadFilterForm").click(function(e) {
       e.preventDefault();
       e.stopPropagation();
-      var routeUrl = $(this).find("a").data("url");
+      const routeUrl = $(this).find("a").data("url");
       console.log(routeUrl)
       let exportData = {};
       let donorData = [];
@@ -55,38 +55,38 @@ export default function initExportAndSW() {
       let implementingPartnerData = [];
       let programPartnerData = [];
 
-      var checkedDonor = document.querySelectorAll(".input-check-donor");
-      for(var i = 0; i < checkedDonor.length; i++){
+      const checkedDonor = document.querySelectorAll(".input-check-donor");
+      for(let i = 0; i < checkedDonor.length; i++){
         if(checkedDonor[i].checked == true){
           donorData.push(checkedDonor[i].value);
         }
       }
-      var checkedCluster = document.querySelectorAll(".input-check-cluster");
-      for(var i = 0; i < checkedCluster.length; i++){
+      const checkedCluster = document.querySelectorAll(".input-check-cluster");
+      for(let i = 0; i < checkedCluster.length; i++){
         if(checkedCluster[i].checked == true){
           clusterData.push(checkedCluster[i].value);
         }
       }
-      var checkedActivityDomainData = document.querySelectorAll(".input-check-activityDomain");
-      for(var i = 0; i < checkedActivityDomainData.length; i++){
+      const checkedActivityDomainData = document.querySelectorAll(".input-check-activityDomain");
+      for(let i = 0; i < checkedActivityDomainData.length; i++){
         if(checkedActivityDomainData[i].checked == true){
           activityDomainData.push(checkedActivityDomainData[i].value);
         }
       }
-      var checkImplement = document.querySelectorAll(".input-check-implement");
-      for(var i = 0; i < checkImplement.length; i++){
+      const checkImplement = document.querySelectorAll(".input-check-implement");
+      for(let i = 0; i < checkImplement.length; i++){
         if(checkImplement[i].checked == true ) {
         implementingPartnerData.push(checkImplement[i].value);
         }
       }
-      var checkProgram = document.querySelectorAll(".input-check-program");
-      for(var i = 0; i < checkProgram.length; i++) {
+      const checkProgram = document.querySelectorAll(".input-check-program");
+      for(let i = 0; i < checkProgram.length; i++) {
         if(checkProgram[i].checked == true) {
           programPartnerData.push(checkProgram[i].value);
         }
       }
-      var checkedItem = document.querySelectorAll(".input-check");
-      for(var i = 0; i < checkedItem.length; i++) {
+      const checkedItem = document.querySelectorAll(".input-check");
+      for(let i = 0; i < checkedItem.length; i++) {
         if(checkedItem[i].checked == true) {
           exportData[checkedItem[i].name] = checkedItem[i].value;
         }

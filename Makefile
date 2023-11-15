@@ -56,3 +56,7 @@ format-templates:
 .PHONY: lint-templates
 lint-templates:
 	djlint --profile=django src
+
+.PHONY: collectstatic
+collectstatic:
+	poetry run python src/manage.py collectstatic --no-input --ignore=node_modules --ignore=*.scss --ignore=*.json --ignore=vite.config.js 

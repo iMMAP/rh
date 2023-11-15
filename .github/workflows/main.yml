@@ -36,6 +36,8 @@ jobs:
             LogLevel ERROR
             StrictHostKeyChecking no
           END
+      - name: Checkout code # checking our the code at current commit that triggers the workflow
+        uses: actions/checkout@v2
       - name: Install ubuntu dependencies
         run: |
             sudo apt install python3-pip

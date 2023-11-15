@@ -36,6 +36,11 @@ jobs:
             LogLevel ERROR
             StrictHostKeyChecking no
           END
+      - name: Install ubuntu dependencies
+        run: |
+            sudo apt install python3-pip
+            pip install peotry
       - name: Run deploy
         run: |
           ssh target "cd rh/ && poetry install --without dev && make migrate && make npm-install && make collectstatic && make npm-build"
+      

@@ -38,5 +38,5 @@ jobs:
           END
       - name: Run deploy
         run: |
-          ssh target "ls -la && cd rh/ && make install-no-dev && make migrate && make npm-install && make collectstatic && make npm-build"
+          ssh target "cd rh/ && ls -la && make install-no-dev && make migrate && make npm-install && make collectstatic && make npm-build"
       

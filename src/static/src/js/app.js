@@ -16,7 +16,9 @@ import initShowHideInputValue from "./components/initShowHideInputValue";
 import initCopyInputValue from "./components/initCopyInputValue";
 import initAccordion from "./components/initAccordion";
 import initTooltip from "./components/initTooltip";
-import initExportAndSW from './utils/exportSW';
+import initExport from './utils/export';
+import initSWPopup from './utils/sweatalert_popups';
+import Swal from 'sweetalert2';
 
 ready(() => {
   window.ResizeObserver = ResizeObserver;
@@ -36,5 +38,6 @@ ready(() => {
   initAccordion();
   initTooltip();
 
-  initExportAndSW();
+  initExport();
+  initSWPopup();
 });

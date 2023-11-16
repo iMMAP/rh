@@ -4,6 +4,10 @@
 
 
 {% block project_body %}
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.9.0/dist/sweetalert2.min.css">
+
+
 <div class="breadcrumbs-nav-panel">
     <div class="holder">
         <ul class="breadcrumbs">
@@ -285,8 +289,14 @@
         </table>
     </div>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.9.0/dist/sweetalert2.all.min.js"></script>
+
 {% compress js %}
 	<script defer src="{% static 'project_reports/js/monthly_report.js' %}"></script>
 {% endcompress js %}
+
+
+
 {% endblock project_body %}
 

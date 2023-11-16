@@ -41,7 +41,6 @@ jobs:
           ssh target "
             cd rh/
             source .venv/bin/activate
-            command -v poetry >/dev/null 2>&1 || { curl -sSL https://install.python-poetry.org | python3 - ; }
-            git pull origin main && make migrate && make npm-install && make collectstatic && make npm-build
+            git pull origin main && poetry install --without dev && make migrate && make npm-install && make collectstatic && make npm-build
           "
       

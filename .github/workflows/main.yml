@@ -39,7 +39,8 @@ jobs:
       - name: Run deploy
         run: |
           ssh target "
+            source .venv/bin/activate
             command -v poetry >/dev/null 2>&1 || { curl -sSL https://install.python-poetry.org | python3 - ; }
-            cd rh/ && source .venv/bin/activate && git pull origin main && make install-no-dev && make migrate && make npm-install && make collectstatic && make npm-build
+            cd rh/ && git pull origin main && make install-no-dev && make migrate && make npm-install && make collectstatic && make npm-build
           "
       

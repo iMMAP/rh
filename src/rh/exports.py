@@ -78,9 +78,9 @@ class ProjectExportExcelView(View):
             {"header": "Focal Person", "type": "string", "width": 20},
             {"header": "Email", "type": "string", "width": 25},
             {"header": "Project Description", "type": "string", "width": 50},
-            {'header': 'Organization', 'type': 'string', 'width': 40},
-            {'header': 'Organization Type', 'type': 'string', 'width': 40},
-            {'header': 'Cluster', 'type': 'string', 'width': 50},
+            {"header": "Organization", "type": "string", "width": 40},
+            {"header": "Organization Type", "type": "string", "width": 40},
+            {"header": "Cluster", "type": "string", "width": 50},
             {"header": "HRP Project Code", "type": "string", "width": 20},
             {"header": "Project Start Date", "type": "date", "width": 20},
             {"header": "Project End Date", "type": "date", "width": 20},
@@ -92,7 +92,7 @@ class ProjectExportExcelView(View):
             {"header": "Implementing Partners", "type": "string", "width": 30},
             {"header": "Programme Partners", "type": "string", "width": 30},
             {"header": "Status", "type": "string", "width": 10},
-            {'header': 'Activity Domain', 'type': 'string', 'width': 50},
+            {"header": "Activity Domain", "type": "string", "width": 50},
             # {'header': 'Activity Type', 'type': 'string', 'width': 50},
             # {'header': 'Activity Detail', 'type': 'string', 'width': 50},
             # {'header': 'Indicators', 'type': 'string', 'width': 50},
@@ -134,7 +134,7 @@ class ProjectExportExcelView(View):
             sheet (Worksheet): The worksheet object.
             project (Project): The project object.
         """
-        
+
         row = [
             project.title,
             project.code,
@@ -143,7 +143,7 @@ class ProjectExportExcelView(View):
             project.description,
             project.user.profile.organization.code,
             project.user.profile.organization.type,
-            ', '.join([clusters.name for clusters in project.clusters.all()]),
+            ", ".join([clusters.name for clusters in project.clusters.all()]),
             project.hrp_code,
             project.start_date.astimezone(timezone.utc).replace(tzinfo=None) if project.start_date else None,
             project.end_date.astimezone(timezone.utc).replace(tzinfo=None) if project.end_date else None,
@@ -155,7 +155,7 @@ class ProjectExportExcelView(View):
             ", ".join([implementing_partner.code for implementing_partner in project.implementing_partners.all()]),
             ", ".join([programme_partner.code for programme_partner in project.programme_partners.all()]),
             project.state,
-            ', '.join([ActivityDomain.name for ActivityDomain in project.activity_domains.all()]),
+            ", ".join([ActivityDomain.name for ActivityDomain in project.activity_domains.all()]),
             # ', '.join([ActivityPlan.activity_type for ActivityPlan in project.activity_type.all()]),
         ]
 

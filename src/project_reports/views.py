@@ -7,9 +7,9 @@ from django.forms.models import inlineformset_factory
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.template.loader import render_to_string
+from django.urls import reverse
 from django.utils import timezone
 from django.views.decorators.cache import cache_control
-
 from rh.models import Indicator, Location, Project
 
 from .forms import (
@@ -27,7 +27,7 @@ def index_project_report_view(request, project):
     """Project Monthly Report View"""
     project = get_object_or_404(Project, pk=project)
     project_reports = ProjectMonthlyReport.objects.all()
-    project_reports_todo = project_reports.filter(state__in=["todo", "pending"])
+    project_reports_todo = project_reports.filter(state__in=["todo", "pending", "submit", "reject"])
     project_report_complete = project_reports.filter(state="complete")
     project_state = project.state
     parent_page = {
@@ -605,11 +605,18 @@ def submit_monthly_report_view(request, report):
     monthly_report.state = "submit"
     monthly_report.submitted_on = timezone.now()
     monthly_report.save()
-    return redirect(
+    # Generate the URL using reverse
+    url = reverse(
         "view_monthly_report",
-        project=monthly_report.project.pk,
-        report=monthly_report.pk,
+        kwargs={
+            "project": monthly_report.project.pk,
+            "report": monthly_report.pk,
+        },
     )
+
+    # Return the URL in a JSON response
+    response_data = {"redirect_url": url}
+    return JsonResponse(response_data)
 
 
 def approve_monthly_report_view(request, report):
@@ -617,21 +624,42 @@ def approve_monthly_report_view(request, report):
     monthly_report.state = "complete"
     monthly_report.approved_on = timezone.now()
     monthly_report.save()
-    return redirect(
+    # Generate the URL using reverse
+    url = reverse(
         "view_monthly_report",
-        project=monthly_report.project.pk,
-        report=monthly_report.pk,
+        kwargs={
+            "project": monthly_report.project.pk,
+            "report": monthly_report.pk,
+        },
     )
+
+    # Return the URL in a JSON response
+    response_data = {"redirect_url": url}
+    return JsonResponse(response_data)
 
 
 def reject_monthly_report_view(request, report):
     # TODO: Provide a popup reasone for rejection field here.
     monthly_report = get_object_or_404(ProjectMonthlyReport, pk=report)
+    message = ""
+    if request.GET.get("message", ""):
+        message = request.GET.get("message")
+
     monthly_report.state = "reject"
-    monthly_report.submitted_on = timezone.now()
+    monthly_report.rejected_on = timezone.now()
+    monthly_report.comments = message
+
     monthly_report.save()
-    return redirect(
+
+    # Generate the URL using reverse
+    url = reverse(
         "view_monthly_report",
-        project=monthly_report.project.pk,
-        report=monthly_report.pk,
+        kwargs={
+            "project": monthly_report.project.pk,
+            "report": monthly_report.pk,
+        },
     )
+
+    # Return the URL in a JSON response
+    response_data = {"redirect_url": url}
+    return JsonResponse(response_data)

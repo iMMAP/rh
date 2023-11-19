@@ -1,5 +1,6 @@
 import base64
 from io import BytesIO
+import json
 
 from django.http import JsonResponse
 from django.utils import timezone
@@ -7,6 +8,7 @@ from django.views import View
 from openpyxl import Workbook
 from openpyxl.styles import Font, NamedStyle
 from openpyxl.utils import get_column_letter
+
 
 from .models import Project
 
@@ -304,3 +306,57 @@ class ProjectExportExcelView(View):
 
             for col_idx, value in enumerate(row, start=1):
                 sheet.cell(row=2, column=col_idx, value=value)
+
+
+class ProjectFilterExportView(View):
+    def post(self, request):
+        try:
+            selectedData = json.loads(request.POST.get("exportData"))
+
+            print(selectedData)
+
+            workbook = Workbook()
+            sheet = workbook.active
+            sheet.title = "Project"
+
+            columns = []
+
+            for k in selectedData:
+                columns += ({"header": k, "type": "string", "width": 20},)
+
+            for idx, column in enumerate(columns, start=1):
+                cell = sheet.cell(row=1, column=idx, value=column["header"])
+                cell.style = header_style
+
+                column_letter = get_column_letter(idx)
+                if column["type"] == "number":
+                    sheet.column_dimensions[column_letter].number_format = "General"
+                elif column["type"] == "date":
+                    sheet.column_dimensions[column_letter].number_format = "mm-dd-yyyy"
+
+                sheet.column_dimensions[column_letter].width = column["width"]
+            row = []
+            for key, value in selectedData.items():
+                if isinstance(value, list):
+                    row += (",".join([listvalue for listvalue in selectedData[key]]),)
+                else:
+                    row += (value,)
+
+            for col_idx, value in enumerate(row, start=1):
+                sheet.cell(row=2, column=col_idx, value=value)
+
+            sheet.freeze_panes = sheet["A2"]
+            excel_file = BytesIO()
+            workbook.save(excel_file)
+            excel_file.seek(0)
+
+            response = {
+                "file_url": "data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,"
+                + base64.b64encode(excel_file.read()).decode("utf-8"),
+                "file_name": "export.xlsx",
+            }
+
+            return JsonResponse(response)
+        except Exception as e:
+            response = {"error": str(e)}
+        return JsonResponse(response, status=500)

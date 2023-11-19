@@ -49,6 +49,8 @@ export default function initExportAndSW() {
       const routeUrl = $(this).find("a").data("url");
       console.log(routeUrl)
       let exportData = {};
+      let userData = [];
+      let currencyData = [];
       let donorData = [];
       let clusterData = [];
       let activityDomainData = [];
@@ -85,12 +87,25 @@ export default function initExportAndSW() {
           programPartnerData.push(checkProgram[i].value);
         }
       }
+      const checkUser = document.querySelector(".input-user");
+      if(checkUser.checked == true) {
+        userData.push(checkUser.name);
+      }
+      const checkCurrency = document.querySelector(".input-currency");
+      if(checkCurrency.checked = true){
+        currencyData.push(checkCurrency.name)
+      }
+      console.log(userData,currencyData);
+
+      if(userData.length != 0) {exportData['focal_point'] = userData;}
+      
       const checkedItem = document.querySelectorAll(".input-check");
       for(let i = 0; i < checkedItem.length; i++) {
         if(checkedItem[i].checked == true) {
           exportData[checkedItem[i].name] = checkedItem[i].name;
         }
       }
+      if(currencyData.length != 0) {exportData['currency'] = currencyData;}
       if(donorData.length != 0) {exportData['donors'] = donorData;}
       if(clusterData.length != 0){exportData['clusters'] = clusterData;}
       if(activityDomainData.length != 0){exportData['activity_domains'] = activityDomainData;}

@@ -11,7 +11,7 @@ from openpyxl.styles import Font, NamedStyle
 from openpyxl.utils import get_column_letter
 
 
-from .models import ActivityDomain, Cluster, Donor, Organization, Project
+from .models import ActivityDomain, Cluster, Currency, Donor, Organization, Project, User
 
 #############################################
 ############### Export Views #################
@@ -303,11 +303,10 @@ class ProjectFilterExportView(View):
                 if not isinstance(values, list):
                     projectFields.insert(i, keys)
                     i += 1
-
             workbook = Workbook()
             sheet = workbook.active
             sheet.title = "Project"
-
+            # defining columns
             columns = []
             for keys, values in selectedData.items():
                 columns += ({"header": keys, "type": "string", "width": 20},)
@@ -324,13 +323,26 @@ class ProjectFilterExportView(View):
 
                 sheet.column_dimensions[column_letter].width = column["width"]
             row = []
-            if projectFields:
+            # retriving data from database accordeing to selected field by user and defining rows
+            try:
+                user = User.objects.values_list("username", flat=True).get(id__in=selectedData["focal_point"])
+                row += (user,)
+            except Exception:
+                pass
+            try:
                 project = Project.objects.values_list(*projectFields).get(id=projectId)
-            for field in project:
-                if isinstance(field, datetime.datetime):
-                    row += (field.astimezone(timezone.utc).replace(tzinfo=None),)
-                else:
-                    row += (field,)
+                for field in project:
+                    if isinstance(field, datetime.datetime):
+                        row += (field.astimezone(timezone.utc).replace(tzinfo=None),)
+                    else:
+                        row += (field,)
+            except Exception:
+                pass
+            try:
+                currency = Currency.objects.values_list("name", flat=True).get(id__in=selectedData["currency"])
+                row += (currency,)
+            except Exception:
+                pass
             try:
                 donorData = Donor.objects.values_list("name", flat=True).filter(id__in=selectedData["donors"])
                 row += (",".join([donor for donor in donorData]),)

@@ -105,7 +105,7 @@
                                                 <label for="budgetReceived">Received Budget</label>
                                             </div>
                                             <div class="input-holder">
-                                                <input type="checkbox" id="user" class="input-check" name="user">
+                                                <input type="checkbox" id="user" class="input-user" name="{{project_filter.user.id}}">
                                                 <label for="user">Focal Point</label>
                                             </div>
                                             <div class="input-holder">
@@ -137,8 +137,8 @@
                                             </div>
                                             <div class="input-holder">
                                                 <input type="checkbox" id="budgetCurrency" 
-                                                class="input-check" name="budget_currency">
-                                                <label for="budgetCurrency">Budget Currency</label>
+                                                class="input-currency" name="{{project_filter.budget_currency.id}}">
+                                                <label for="budgetCurrency">Budget Currency </label>
                                             </div>
                                             <div class="input-holder">
                                                 <input type="checkbox" id="endDate" 

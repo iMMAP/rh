@@ -42,6 +42,7 @@ jobs:
             python3 --version
             cd rh/
             source .venv/bin/activate
+            python3 --version
             git pull origin main && poetry install --without dev && make migrate && make npm-install && make collectstatic && make npm-build
           "
       

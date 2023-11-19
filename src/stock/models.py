@@ -3,28 +3,6 @@ from django.db import models
 from rh.models import Cluster, Location
 
 
-class StockType(models.Model):
-    name = models.CharField(max_length=255, blank=True, null=True)
-
-    def __str__(self):
-        return self.name
-
-    class Meta:
-        verbose_name = "Stock Type"
-        verbose_name_plural = "Stock Types"
-
-
-class StockUnit(models.Model):
-    name = models.CharField(max_length=255, blank=True, null=True)
-
-    def __str__(self):
-        return self.name
-
-    class Meta:
-        verbose_name = "Stock Unit"
-        verbose_name_plural = "Stock Units"
-
-
 class WarehouseLocation(models.Model):
     province = models.ForeignKey(
         Location,
@@ -48,6 +26,35 @@ class WarehouseLocation(models.Model):
     class Meta:
         verbose_name = "Warehouse Location Plan"
         verbose_name_plural = "Warehouse Locations"
+
+
+# class StockItems(models.Nodel):
+#     countries = models.ManyToManyField(Location, blank=True)
+#     cluster = models.ForeignKey(Cluster, on_delete=models.SET_NULL, null=True, blank=True)
+#     stock_items= models.CharField(max_length=255, blank=True, null=True)
+
+
+class StockType(models.Model):
+    cluster = models.ForeignKey(Cluster, on_delete=models.SET_NULL, null=True, blank=True)
+    stock_items = models.CharField(max_length=255, blank=True, null=True)
+
+    def __str__(self):
+        return self.stock_items
+
+    class Meta:
+        verbose_name = "Stock Type"
+        verbose_name_plural = "Stock Types"
+
+
+class StockUnit(models.Model):
+    name = models.CharField(max_length=255, blank=True, null=True)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = "Stock Unit"
+        verbose_name_plural = "Stock Units"
 
 
 class StockLocationDetails(models.Model):
@@ -86,8 +93,8 @@ class StockLocationDetails(models.Model):
         return f"{self.warehouse_location} Stock Details"
 
     class Meta:
-        verbose_name = "Stock Detail"
-        verbose_name_plural = "Stock Details"
+        verbose_name = "Stock Item"
+        verbose_name_plural = "Stock Item"
 
 
 class StockReports(models.Model):

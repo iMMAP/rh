@@ -43,7 +43,7 @@ class Location(models.Model):
     updated_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
 
     def __str__(self):
-        return self.name
+        return f"({self.code}) {self.name}"
 
 
 class Cluster(models.Model):

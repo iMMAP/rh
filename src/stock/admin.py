@@ -35,10 +35,18 @@ def get_app_list(self, request):
 # Override the get_app_list of AdminSite
 admin.AdminSite.get_app_list = get_app_list
 
+
 #############################################
 ########### Stock Types Model Admin #############
 #############################################
-admin.site.register(StockType)
+class StockTypeAdmin(admin.ModelAdmin):
+    list_display = ("stock_items", "cluster")
+    search_fields = ("Stock Items", "cluster")
+    list_filter = ("cluster",)
+
+
+admin.site.register(StockType, StockTypeAdmin)
+
 
 #############################################
 ########### Stock Units Model Admin #############

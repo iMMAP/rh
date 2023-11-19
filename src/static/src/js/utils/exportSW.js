@@ -88,14 +88,14 @@ export default function initExportAndSW() {
       const checkedItem = document.querySelectorAll(".input-check");
       for(let i = 0; i < checkedItem.length; i++) {
         if(checkedItem[i].checked == true) {
-          exportData[checkedItem[i].name] = checkedItem[i].value;
+          exportData[checkedItem[i].name] = checkedItem[i].name;
         }
       }
-      if(donorData != '') {exportData['Donors']=donorData; alert("helo");}
-      if(clusterData != '') {exportData['Clusters'] = clusterData;}
-      if(activityDomainData != ''){exportData['Activity_domains'] = activityDomainData;}
-      if(implementingPartnerData != ''){exportData['Implementing_partners'] = implementingPartnerData;}
-      if(programPartnerData != ''){exportData['Program_partners'] = programPartnerData;}
+      if(donorData.length != 0) {exportData['donors'] = donorData;}
+      if(clusterData.length != 0){exportData['clusters'] = clusterData;}
+      if(activityDomainData.length != 0){exportData['activity_domains'] = activityDomainData;}
+      if(implementingPartnerData.length != 0){exportData['implementing_partners'] = implementingPartnerData;}
+      if(programPartnerData.length != 0){exportData['programme_partners'] = programPartnerData;}
       console.log(exportData);
       $.post({
         url: routeUrl,

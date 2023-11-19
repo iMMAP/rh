@@ -1,4 +1,5 @@
 import base64
+import datetime
 from io import BytesIO
 import json
 
@@ -10,7 +11,7 @@ from openpyxl.styles import Font, NamedStyle
 from openpyxl.utils import get_column_letter
 
 
-from .models import Project
+from .models import ActivityDomain, Cluster, Currency, Donor, Organization, Project, User
 
 #############################################
 ############### Export Views #################
@@ -309,20 +310,22 @@ class ProjectExportExcelView(View):
 
 
 class ProjectFilterExportView(View):
-    def post(self, request):
+    def post(self, request, projectId):
         try:
             selectedData = json.loads(request.POST.get("exportData"))
-
-            print(selectedData)
-
+            i = 0
+            projectFields = []
+            for keys, values in selectedData.items():
+                if not isinstance(values, list):
+                    projectFields.insert(i, keys)
+                    i += 1
             workbook = Workbook()
             sheet = workbook.active
             sheet.title = "Project"
-
+            # defining columns
             columns = []
-
-            for k in selectedData:
-                columns += ({"header": k, "type": "string", "width": 20},)
+            for keys, values in selectedData.items():
+                columns += ({"header": keys, "type": "string", "width": 20},)
 
             for idx, column in enumerate(columns, start=1):
                 cell = sheet.cell(row=1, column=idx, value=column["header"])
@@ -336,11 +339,57 @@ class ProjectFilterExportView(View):
 
                 sheet.column_dimensions[column_letter].width = column["width"]
             row = []
-            for key, value in selectedData.items():
-                if isinstance(value, list):
-                    row += (",".join([listvalue for listvalue in selectedData[key]]),)
-                else:
-                    row += (value,)
+            # retriving data from database accordeing to selected field by user and defining rows
+            try:
+                user = User.objects.values_list("username", flat=True).get(id__in=selectedData["focal_point"])
+                row += (user,)
+            except Exception:
+                pass
+            try:
+                project = Project.objects.values_list(*projectFields).get(id=projectId)
+                for field in project:
+                    if isinstance(field, datetime.datetime):
+                        row += (field.astimezone(timezone.utc).replace(tzinfo=None),)
+                    else:
+                        row += (field,)
+            except Exception:
+                pass
+            try:
+                currency = Currency.objects.values_list("name", flat=True).get(id__in=selectedData["currency"])
+                row += (currency,)
+            except Exception:
+                pass
+            try:
+                donorData = Donor.objects.values_list("name", flat=True).filter(id__in=selectedData["donors"])
+                row += (",".join([donor for donor in donorData]),)
+            except Exception:
+                pass
+            try:
+                clusterData = Cluster.objects.values_list("title", flat=True).filter(id__in=selectedData["clusters"])
+                row += (",".join([cluster for cluster in clusterData]),)
+            except Exception:
+                pass
+            try:
+                activitDomain = ActivityDomain.objects.values_list("name", flat=True).filter(
+                    id__in=selectedData["activity_domains"]
+                )
+                row += (",".join([activity for activity in activitDomain]),)
+            except Exception:
+                pass
+            try:
+                implementingPartner = Organization.objects.values_list("code", flat=True).filter(
+                    id__in=selectedData["implementing_partners"]
+                )
+                row += (",".join([implement for implement in implementingPartner]),)
+            except Exception:
+                pass
+            try:
+                programPartner = Organization.objects.values_list("code", flat=True).filter(
+                    id__in=selectedData["programme_partners"]
+                )
+                row += (",".join([program for program in programPartner]),)
+            except Exception:
+                pass
 
             for col_idx, value in enumerate(row, start=1):
                 sheet.cell(row=2, column=col_idx, value=value)
@@ -360,3 +409,5 @@ class ProjectFilterExportView(View):
         except Exception as e:
             response = {"error": str(e)}
         return JsonResponse(response, status=500)
+        # data = {"Message: ":"success", "status: ":200}
+        # return JsonResponse(data, safe=False)

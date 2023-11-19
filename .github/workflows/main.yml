@@ -3,7 +3,7 @@ name: Continuous Integration
 on:
   push:
     branches:
-      - cd_aws
+      - main
 
 concurrency:
   group: main

@@ -2,82 +2,101 @@ import Swal from 'sweetalert2'
 
 export default function initSWPopup() {
 
-    function showConfirmModal(event) {
+    function showActionConfirmPopup(event) {
       	// Prevent the default behavior of the click event
       	event.preventDefault();
       	event.stopPropagation();
 
       	// Get the relevant data attributes from the clicked element
 		var dataURL = event.currentTarget.dataset.url;
-		var returnURL = event.currentTarget.dataset.returnUrl;
-		var name = event.currentTarget.dataset.recordName;
+		var name = event.currentTarget.dataset.name;
 		var popupType = event.currentTarget.dataset.type;
 
       	// Initialize variables to be used in the SweetAlert2 modal
-		var title, text, icon, dangerMode, successMessage;
+		var title, text, icon, successMessage, confirmButtonText;
 
 		// Set the modal variables based on the type of popup requested
 		if (popupType === "copy") {
 			title = `Are you sure you want to duplicate ${name}?`;
 			text = "";
 			icon = "warning";
-			dangerMode = true;
+			confirmButtonText = 'Yes, duplicate it'
 			successMessage = `Done! ${name} has been duplicated successfully!`;
 		} else if (popupType === "delete") {
 			title = `Are you sure you want to delete this ${name}?`;
 			text = "Once deleted, you will not be able to recover this record!";
 			icon = "warning";
-			dangerMode = true;
+			confirmButtonText = 'Yes, delete it'
 			successMessage = `Done! ${name} has been deleted successfully!`;
 		} else if (popupType === "archive") {
 			title = `Are you sure you want to archive ${name}?`;
 			text =
 			"Archiving the selected record will deactivate it and make it unavailable to users. Please contact the administrator if you need to access the archived records in the future!";
 			icon = "warning";
-			dangerMode = true;
+			confirmButtonText = 'Yes, archive it'
 			successMessage = `Done! ${name} has been archived successfully!`;
 		} else if (popupType === "unarchive") {
 			title = `Are you sure you want to unarchive ${name}?`;
 			text =
-			"Unarchiving the selected record will be reactivate in draft state.";
+			"Unarchiving the selected record will be reactivate in Draft/Todo state.";
 			icon = "warning";
-			dangerMode = true;
+			confirmButtonText = 'Yes, unarchive it'
 			successMessage = `Done! ${name} has been unarchived successfully!`;
 		}
 
-		// Display the SweetAlert2 modal with the appropriate variables
+		
+
 		Swal.fire({
 			title: title,
 			text: text,
 			icon: icon,
-			buttons: true,
-			dangerMode: dangerMode,
-		}).then((willDelete) => {
-			// If the user confirms the action in the modal, send an AJAX request
-			if (willDelete) {
-				$.ajax({
-					method: "GET",
-					url: dataURL,
-					success: function (data) {
-					// If the AJAX request is successful, display a success message and redirect
-					if (data.success) {
-						Swal.fire(successMessage, {
-						icon: "success",
-						}).then(() => {
-						if (popupType === "copy") {
-							if (data.returnURL) {
-							returnURL = data.returnURL;
-							}
-						}
-						window.location.href = returnURL;
-						});
-					}
-				},
-				error: function (error_data) {
-					// If the AJAX request fails, display an error message
-					Swal.fire(`Something went wrong! ${error_data}`);
-					},
+			showCancelButton: true,
+			confirmButtonColor: "#3085d6",
+			cancelButtonColor: "#d33",
+			confirmButtonText: confirmButtonText,
+			customClass: {
+				confirmButton: 'btn btn-red',
+				cancelButton: 'btn btn-danger',
+				loader: 'custom-loader',
+			},
+			preConfirm: async (message) => {
+				try {
+					const response = await $.ajax({
+						method: "GET",
+						url: dataURL,
+						data: {'message': message},
+						success: function (data) {
+							return data
+						},
+						error: function (error) {
+							Swal.showValidationMessage(`
+								Request failed: ${error}
+							`);
+						},
+					});
+					return response
+				} catch (error) {
+					Swal.showValidationMessage(`
+						Request failed: ${error}
+					`);
+			  	}
+			},
+			allowOutsideClick: () => !Swal.isLoading()
+		}).then((result) => {
+			if (result.isConfirmed) {
+				// Show success notification first
+				Swal.fire({
+					position: "top-end",
+					icon: "success",
+					title: successMessage,
+					showConfirmButton: false,
+					timer: 1500
 				});
+	
+				// Delay the page reload to allow the notification to be shown
+				setTimeout(() => {
+					window.location.href = result.value.redirect_url;
+				}, 1500); // Adjust the delay time as needed
 			}
 		});
 	}
@@ -162,8 +181,8 @@ export default function initSWPopup() {
 	}
 
 	// Attach the click event listener to all elements with class "show_confirm"
-	$(".show_sw_popup").on("click", function(event) {
-		showConfirmModal(event)
+	$(".show-sw-action-popup").on("click", function(event) {
+		showActionConfirmPopup(event)
 	});
 
 	$(".show-sw-confirm-button").on("click", function(event) {

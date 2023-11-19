@@ -1,0 +1,714 @@
+activity_description_id,activity_description_name,activity_type_id,activity_type_name,cluster_id
+piped_water_network,Piped Water Network - New / REHAB,water,Water Activities,wash
+rainwater_system,Rainwater Harvesting System - NEW / REHAB,water,Water Activities,wash
+hand_dug_well,Hand Dug Well - NEW / REHAB,water,Water Activities,wash
+shallow_well,Shallow Well with Hand Pump - NEW / REHAB,water,Water Activities,wash
+reverse_osmosis_system,Reverse Osmosis System - NEW / REHAB,water,Water Activities,wash
+solar_pumping_system,Solar Pumping System,water,Water Activities,wash
+piped_extension,Extension from Existing Piped System,water,Water Activities,wash
+borehole,Borehole with Hand Pump - NEW / REHAB,water,Water Activities,wash
+family_water_kit_distribution,Family Water Kit Distribution,water,Water Activities,wash
+water_quality_testing,Water Quality Testing,water,Water Activities,wash
+gravity_fed_water_system,Gravity-Fed Water System,water,Water Activities,wash
+water_supply_school,Water Supply in School,water,Water Activities,wash
+water_tank,Water Tank ( Storage Facility ) - NEW / REHAB,water,Water Activities,wash
+water_tankering,Water Tankering,water,Water Activities,wash
+education_water,Water Training & Capacity Building,water,Water Activities,wash
+water_supply_community,Water Supply in Community,water,Water Activities,wash
+water_kiosk,Water Kiosk,water,Water Activities,wash
+water_supply_health_facility,Water Supply in Health Facility,water,Water Activities,wash
+water_treatment,"Water Treatment  ( Aquatab, Chlorination, PUR sachets etc. )",water,Water Activities,wash
+latrine_stalls_household,Latrine Stalls - Household NEW / REHAB,sanitation,Sanitation Activities,wash
+latrine_stalls_communal,Latrine Stalls - Communal NEW / REHAB,sanitation,Sanitation Activities,wash
+latrine_stalls_desludged,Latrine Stalls - Desludged,sanitation,Sanitation Activities,wash
+latrine_stalls_decommissioned,Latrine Stalls - Decommissioned,sanitation,Sanitation Activities,wash
+latrine_cleaning_kit,Latrine Cleaning Kit,sanitation,Sanitation Activities,wash
+latrine_stalls_school,Latrine Stalls - School NEW / REHAB,sanitation,Sanitation Activities,wash
+latrine_stalls_health_facility,Latrine Stalls - Health Facility NEW / REHAB,sanitation,Sanitation Activities,wash
+water_filtration,"Water Filtration ( Bio-sand, Filters etc. )",water,Water Activities,wash
+septic_tank,Septic Tank - NEW / REHAB,sanitation,Sanitation Activities,wash
+sewer_line,Sewer Line - NEW / REHAB,sanitation,Sanitation Activities,wash
+drainage_provision,Provision of Drainage,sanitation,Sanitation Activities,wash
+solid_waste_management,Solid Waste Management,sanitation,Sanitation Activities,wash
+education_hygiene_promotion_school,Hygiene Promotion - School,hygiene,Hygiene Activities,wash
+education_vector_control_awareness,Vector Control Awareness Campaign,sanitation,Sanitation Activities,wash
+education_hygiene_promotion_household_community,Hygiene Promotion - Household / Community,hygiene,Hygiene Activities,wash
+family_hygiene_kits_distributed,Family Hygiene Kits Distributed,hygiene,Hygiene Activities,wash
+hand_washing_facilities,Hand Washing Facilities - NEW / REHAB,hygiene,Hygiene Activities,wash
+hygiene_promotion_health_facilities,Hygiene Promotion - Health Facilities,hygiene,Hygiene Activities,wash
+washing_facilities,Bathing / Washing Facilities - NEW / REHAB,sanitation,Sanitation Activities,wash
+disinfection_common_places_chlorine,Disinfection of Common Places with Chlorine,hygiene,Hygiene Activities,wash
+assessment_wash_school,WASH Assessment in School,assessment,WASH Assessment,wash
+assessment_wash_community,WASH Assessment in Community,assessment,WASH Assessment,wash
+evaluation_baseline,Baseline Survey,evaluation,WASH Evaluation,wash
+evaluation_endline,Endline Survey,evaluation,WASH Evaluation,wash
+evaluation_crm,CRM Survey,evaluation,WASH Evaluation,wash
+evaluation_fgd,FGD Survey,evaluation,WASH Evaluation,wash
+evaluation_kap,KAP Survey,evaluation,WASH Evaluation,wash
+evaluation_kii,KII Survey,evaluation,WASH Evaluation,wash
+evaluation_csi,CSI Survey,evaluation,WASH Evaluation,wash
+evaluation_results_monitoring,Results Monitoring Survey,evaluation,WASH Evaluation,wash
+assessment_wash_health_facility,WASH Assessment in Health Facility,assessment,WASH Assessment,wash
+evaluation_pdm,PDM Survey,evaluation,WASH Evaluation,wash
+assistance_through_cash_distribution,Assistance through Cash distribution,cash_voucher,Cash and/or Voucher Activities,wash
+using_the_wash_gbv_checklist,Using the WASH GBV Checklist,wash_gbv_mitigation,WASH for GBV Mitigation,wash
+assistance_through_voucher_distribution,Assistance through Voucher distribution,cash_voucher,Cash and/or Voucher Activities,wash
+covid-19_mitigation_measures_in_placed,COVID-19 Mitigation Measures in placed,accountability_quality_assurance,Accountability and Quality Assurance,wash
+gbv_risk_discussion_with_female_before_assistance,GBV risk discussion with Female (Before Assistance),wash_gbv_mitigation,WASH for GBV Mitigation,wash
+receipt_for_technical_quality_assurance_by_the_authorities,Receipt for technical quality assurance by the authorities,accountability_quality_assurance,Accountability and Quality Assurance,wash
+equitable_access_to_wash_facilities_and_services,Equitable Access to WASH Facilities and Services,affected_population_accountability,Accountability to Affected Population (AAP),wash
+effective_mechanisms_for_representative_and_participatory_input,Effective Mechanisms for Representative and Participatory Input,affected_population_accountability,Accountability to Affected Population (AAP),wash
+equitable_access_to_wash_facilities_services,Equitable Access to WASH Facilities and Services,affected_population_accountability,Accountability to Affected Population (AAP),wash
+effective_mechanisms_for_input,Effective Mechanisms for Representative and Participatory Input,affected_population_accountability,Accountability to Affected Population (AAP),wash
+nwa_refugees_registration,NWA Refugee Registration,protection_interventions,Protection Interventions,rnr_chapter
+nwa_refugees_food,NWA Refugee Food Provision,protection_interventions,Protection Interventions,rnr_chapter
+returnee_referrals,Returnee Referrals,essential_services,Essential Services,rnr_chapter
+returnee_government_id,Returnee Gov. ID Provision,essential_services,Essential Services,rnr_chapter
+returnee_post_arrival_assistance,Returnee Post-Arrival Assistance,essential_services,Essential Services,rnr_chapter
+vunerable_population_assistance,Vulnerable Population Assistance,immediate_needs,Immediate Needs,rnr_chapter
+nwa_refugees_targeted_assistance,NWA Refugee Targeted Assistance,protection_interventions,Protection Interventions,rnr_chapter
+returnee_registered,Returnee Registration,essential_services,Essential Services,rnr_chapter
+psychosocial_and_mental_health_support,Psychosocial and mental health support,cpie,CPiE,protection
+awareness_raising_and_advocacy,Awareness raising and advocacy,cpie,CPiE,protection
+community_based_child_protection_system,Community Based Child Protection System,cpie,CPiE,protection
+training_capacity_building,Training/ Capacity building,cpie,CPiE,protection
+child_protection_supplies_and_emergency_kits,Child protection supplies and emergency kits,cpie,CPiE,protection
+social_economic_and_education_reintegration,"Social, economic and education reintegration",cpie,CPiE,protection
+adolescents_programming,Adolescents programming,cpie,CPiE,protection
+integrated_case_management_services,Integrated case management services,cpie,CPiE,protection
+case_management,Case Management,cpie,CPiE,protection
+children_in_conflict,Children in conflict,cpie,CPiE,protection
+"community_work,_advocacy_and_awareness","Community work, advocacy and awareness",cpie,CPiE,protection
+psychosocial_support_for_children,Psychosocial support for children,cpie,CPiE,protection
+case_management_and_referrals_for_at-risk_children,Case Management and Referrals for At-Risk Children,cpie,CPiE,protection
+community-based_awareness_raising_on_child_protection,Community-Based Awareness Raising on Child Protection,cpie,CPiE,protection
+advocacy_and_response_to_child_recruitment,Advocacy and Response to Child Recruitment,cpie,CPiE,protection
+victim_assistance_for_children_in_conflict,Victim Assistance for Children in Conflict,cpie,CPiE,protection
+health_assistance,Health assistance,gbv,GBV,protection
+legal_support,Legal Support,gbv,GBV,protection
+training_for_child_protection_specialists_on_child_protection_standards,Training for Child Protection Specialists on Child Protection Standards,cpie,CPiE,protection
+awareness_raising_and_advocacy,Awareness raising and advocacy,gbv,GBV,protection
+distribution_of_dignity_kits_to_women_and_girls,Distribution of dignity kits to women and girls,gbv,GBV,protection
+psychosocial_and_mental_health_assistance,Psychosocial and mental health assistance,gbv,GBV,protection
+training_capacity_building,Training/ Capacity building,gbv,GBV,protection
+integrated_case_management_services,Integrated case management services,gbv,GBV,protection
+livelihoods_and_recovery,Livelihoods and recovery,gbv,GBV,protection
+multi-sectoral_gbv_response_through_family_protection_centres_fpcs,Multi-sectoral GBV response through Family Protection Centres (FPCs),gbv,GBV,protection
+gbv_assessment,GBV Assessment,gbv,GBV,protection
+case_management_by_case_management_committees,Case management by case management committees,gbv,GBV,protection
+referrals_for_other_gbv_services,Referrals for other GBV services,gbv,GBV,protection
+referrals_for_gbv_case_management,Referrals for GBV case management,gbv,GBV,protection
+multi-sectoral_gbv_response_through_women_friendly_health_spaces_wfhss,Multi-sectoral GBV response through Women Friendly Health Spaces (WFHSs),gbv,GBV,protection
+placement_of_pss_counselors_in_health_facilities,Placement of PSS counselors in health facilities,gbv,GBV,protection
+pss_services_by_counselors_in_health_facilities,PSS services by counselors in health facilities,gbv,GBV,protection
+provision_of_pep_kits_to_health_facilities,Provision of PEP kits to health facilities,gbv,GBV,protection
+capacity_building_of_caregivers_on_gbv_services_including_pss,Capacity building of caregivers on GBV services including PSS,gbv,GBV,protection
+formation_of_pss_outreach_teams,Formation of PSS outreach teams,gbv,GBV,protection
+gbv_awareness_raising_through_community_dialogues,GBV awareness raising through community dialogues,gbv,GBV,protection
+advocacy_on_gbv_upward_and_downstream,Advocacy on GBV (upward and downstream),gbv,GBV,protection
+leadership_training_for_women_and_girls,Leadership training for women and girls,gbv,GBV,protection
+provision_of_dignity_kits,Provision of Dignity kits,gbv,GBV,protection
+pss_services_by_pss_outreach_teams,PSS services by PSS Outreach teams,gbv,GBV,protection
+gbv_services_to_gbv_survivors,GBV Services to GBV Survivors,gbv,GBV,protection
+vocational_training_for_women_and_girls,Vocational training for women and girls,gbv,GBV,protection
+establishment_of_women-friendly_health_spaces,Establishment of Women-Friendly Health Spaces,gbv,GBV,protection
+gbv_and_pss_services_through_women-friendly_health_spaces,GBV and PSS Services Through Women-Friendly Health Spaces,gbv,GBV,protection
+protection_monitoring,Protection Monitoring,gp,GP,protection
+provision_of_dignity_kits_to_gbv_survivors,Provision of Dignity Kits to GBV Survivors,gbv,GBV,protection
+psn_identification_assistance_and_referrals,"PSN Identification, assistance and Referrals",gp,GP,protection
+community_based_protection,Community-Based Protection,gp,GP,protection
+protection_monitoring_household_survey_or_community_level,Protection monitoring (household survey or community level),gp,GP,protection
+psychosocial_support_pss,Psychosocial Support (PSS),gp,GP,protection
+protection_monitoring_reports,Protection monitoring (Reports),gp,GP,protection
+legal_counselling_or_legal_assistance_civil_and_identity_documentation,Legal counselling or legal assistance (civil and identity documentation),gp,GP,protection
+cash_for_protection_outcomes_unrestricted,Cash for Protection outcomes (unrestricted),gp,GP,protection
+persons_with_specific_needs_psn_case_identification_and_referrals_to_specialized_services,Persons with Specific Needs (PSN) Case identification and referrals to specialized services,gp,GP,protection
+community-based_protection_projects,Community-based Protection projects,gp,GP,protection
+"individual_protection_assistance_ipa,_in-kind_or_cash_restricted","Individual Protection Assistance (IPA), in-kind or cash (restricted)",gp,GP,protection
+"capacity_building_training_on_protection_mainstreaming,_cbpm,_ihl,_drr,_advocacy_etc..","Capacity Building (training on protection mainstreaming, CBPM, IHL, DRR, advocacy etc..)",gp,GP,protection
+protection_sensitisation_and_advocacy,Protection Sensitisation and Advocacy,gp,GP,protection
+awareness_raising_and_dissemination_of_information,Awareness Raising and Dissemination of information,gp,GP,protection
+direct_or_referral_protection_assistance_for_people_with_specific_needs_or_heightened_vulnerability,Direct or Referral Protection Assistance for People with Specific Needs or Heightened Vulnerability,gp,GP,protection
+community-based_protection-related_activities,Community-Based Protection-Related Activities,gp,GP,protection
+protection_negotiation_and_advocacy_for_re-opening_of_conflict-affected_schools,Protection Negotiation and Advocacy for Re-Opening of Conflict-Affected Schools,gp,GP,protection
+post-arrival_assistance_to_returnees,Post-Arrival Assistance to Returnees,gp,GP,protection
+information_counselling_and_legal_assistance,"Information, Counselling and Legal Assistance",hlp,HLP,protection
+information_sharing_on_hlp_durable_solutions,"Information Sharing on HLP, Durable Solutions",hlp,HLP,protection
+training_capacity_building,Training/ Capacity building,hlp,HLP,protection
+information_sharing_on_hlp_durable_solutions_legal_identity,"Information Sharing on HLP, Durable Solutions, Legal Identity",hlp,HLP,protection
+counselling_and_or_legal_assistance_on_hlp_legal_identity,"Counselling and/or Legal Assistance on HLP, Legal Identity",hlp,HLP,protection
+counselling_and_or_legal_assistance_on_hlp,Counselling and/or Legal Assistance on HLP,hlp,HLP,protection
+capacity_building_of_duty-bearers_on_hlp,Capacity Building of Duty-Bearers on HLP,hlp,HLP,protection
+capacity_building_of_duty-bearers_on_hlp_legal_identity,"Capacity Building of Duty-Bearers on HLP, legal identity",hlp,HLP,protection
+land_identification_allocation,Land Identification & Allocation,hlp,HLP,protection
+provision_of_land_clearance,Provision of land clearance,ma,MA,protection
+provision_of_explosive_ordnance_disposal_eod,Provision of Explosive Ordnance Disposal (EOD),ma,MA,protection
+provision_of_explosive_ordnance_risk_education_eore,Provision of Explosive Ordnance Risk Education (EORE),ma,MA,protection
+explosive_hazard_clearance_people_benefitting,Explosive Hazard Clearance (People Benefitting),ma,MA,protection
+explosive_hazard_clearance_square_metres_cleared,Explosive Hazard Clearance (Square Metres Cleared),ma,MA,protection
+explosive_ordnance_disposal_eod_survey,Explosive Ordnance Disposal (EOD) & Survey,ma,MA,protection
+explosive_ordnance_risk_education_eore,Explosive Ordnance Risk Education (EORE),ma,MA,protection
+targeted_assistance_or_referral_of_persons_with_disabilities,Targeted Assistance or Referral of Persons with Disabilities,ma,MA,protection
+psycho_social_provision,Provision of psychosocial support,cpie,CPiE,protection
+case_management_referral_cpie,Case Management & Referral,cpie,CPiE,protection
+community_based_awareness_cpie,Community Based Awareness Raising on Child Protection,cpie,CPiE,protection
+advocacy_response_child_recruitment,Advocacy & Response to the child recruitment,cpie,CPiE,protection
+cpie_safe_space,Safe Space for Children,cpie,CPiE,protection
+provision_dignity_kit,Provision of Dignity Kits,gbv,GBV,protection
+victims_assistance_provision,Provision of victims' assistance,cpie,CPiE,protection
+provision_package,"Provision of Survivor Centred Multi-Sectoral Services (Health, Legal, Material, PSS) ",gbv,GBV,protection
+psycho_social_outreach,Psycho Social Responsive Outreach,gbv,GBV,protection
+awareness_community_mobilization,Community Mobilization / Awareness,gbv,GBV,protection
+training_cpie,Training / Capacity Building,cpie,CPiE,protection
+familiy_tracing_reunification_provision,Provision of family tracing & reunification services,cpie,CPiE,protection
+community_sensitisation,Community Sensitization,gp,GP,protection
+protection_mainstreaming,"Coordination, Advocacy & Protection Mainstreaming",gp,GP,protection
+identification_families_specific_needs,"Identification, Referral, Support to Individuals and Families with Specific Needs",gp,GP,protection
+assessment_protection,Protection Monitoring & Needs Assessments,gp,GP,protection
+cash_grant_transit_centres_refugee_returnees,Cash Grant and Transit Centres for Refugee Returnees,gp,GP,protection
+gp_referrals,Referral Services,gp,GP,protection
+post_arrival_assistance_undocumented_returnees,Post-arrival Assistance to Undocumented Returnees,gp,GP,protection
+awareness_advocacy_tenure,Security of Tenure Assistance Activities & Advocacy,hlp,HLP,protection
+awareness_advocacy_settlement,Settlement Profiling for Durable Solutions,hlp,HLP,protection
+dispute_resolution,HLP Disputes Resolution,hlp,HLP,protection
+awareness_information_hpl,"Provision of information, legal assistance and counselling on HLP",hlp,HLP,protection
+awareness_information_lcd,"Provision of information, legal assistance and counselling on LCD",hlp,HLP,protection
+housing_property_damage_assessment,Conducting Housing and Property Damage Assessments,hlp,HLP,protection
+training_public_sector_caregivers,Training / Capacity Building of Public Sector Caregivers,gbv,GBV,protection
+ma_mine_surveys,Mine Surveys,ma,MA,protection
+education_mine_risk,Mine Risk Education ( MRE ),ma,MA,protection
+ma_demining,Demining / EOD including Hotline Response,ma,MA,protection
+protection_specialized_in_kind_returnees_assistance,Protection Specialized In-Kind Assistance to Returnees,gp,GP,protection
+ma_mine_awareness,Mine Awareness,ma,MA,protection
+ma_pwd_rights_awareness_provision,Provision of awareness on the rights of PwD,ma,MA,protection
+monitoring_documentation_protection_incidents,Monitoring and Documentation of Protection Incidents,gp,GP,protection
+ma_referral_services,Referral Services,ma,MA,protection
+ma_pwd_assistance,Providing targeted assistance of PwDs,ma,MA,protection
+ma_explosive_hazards_surveys,Conduct explosive hazards area surveys,ma,MA,protection
+ma_awareness_ihl_provision,"Provide awareness of IHL to Government, AGEs and humanitarian actors",ma,MA,protection
+children_6_59_screening,Children 6-59 Months Screenings,acute_malnutrition,Acute Malnutrition,nutrition
+mam_0_59_admissions,MAM 0-59 Months Admissions,acute_malnutrition,Acute Malnutrition,nutrition
+mam_6_59_screening,MAM 6-59 Months Screenings,acute_malnutrition,Acute Malnutrition,nutrition
+mam_6_59_admissions,MAM 6-59 Months Admissions,acute_malnutrition,Acute Malnutrition,nutrition
+mam_6_59_referrals,MAM 6-59 Months Referrals,acute_malnutrition,Acute Malnutrition,nutrition
+odp_mam_children_discharged_cured_a,ODP MAM Children Discharged Cured (A),acute_malnutrition,Acute Malnutrition,nutrition
+sam_0_59_screening,SAM 0-59 Months Screenings,acute_malnutrition,Acute Malnutrition,nutrition
+sam_0_59_admissions,SAM 0-59 Months Admissions,acute_malnutrition,Acute Malnutrition,nutrition
+sam_0_59_referrals,SAM 0-59 Months Referrals,acute_malnutrition,Acute Malnutrition,nutrition
+odp_sam_children_discharged_cured_a,ODP SAM Children Discharged Cured (A),acute_malnutrition,Acute Malnutrition,nutrition
+plw_screening,PLW Screenings,acute_malnutrition,Acute Malnutrition,nutrition
+plw_referrals,PLW Referrals,acute_malnutrition,Acute Malnutrition,nutrition
+plw_admissions,PLW Admissions,acute_malnutrition,Acute Malnutrition,nutrition
+odp_am_plw_admissions,ODP-AM PLW Admissions,acute_malnutrition,Acute Malnutrition,nutrition
+deworming_24_59_months,Deworming 24-59 Months,nutrition_programmes,Nutrition Programmes,nutrition
+bsfp_recieved_6_23_months,BSFP Received 6-23 Months,nutrition_programmes,Nutrition Programmes,nutrition
+bsfp_recieved_plw,BSFP Received PLW,nutrition_programmes,Nutrition Programmes,nutrition
+nutrition_health_education_session,Nutrition and Health Education Session,nutrition_education_training,Nutrition Training,nutrition
+vitamin_supplements_0_59_months,Vitamin A Supplementation 0-59 Months,nutrition_programmes,Nutrition Programmes,nutrition
+training_nutrition_emergencies,Nutrition in Emergencies,nutrition_education_training,Nutrition Training,nutrition
+education_infant_young_children_feeding,Infant Young Children Feeding (IYCF) Counselling/Coaching,nutrition_education_training,Nutrition Training,nutrition
+vitamin_supplements_6_59_months,Vitamin A Supplementation 6-59 Months,nutrition_emergency,Nutrition Emergency,nutrition
+deworming_24_59_months_emergency,Deworming 24-59 Months,nutrition_emergency,Nutrition Emergency,nutrition
+bsfp_recieved_6_59_months,BSFP Received 6-59 Months,nutrition_emergency,Nutrition Emergency,nutrition
+training_cluster_approach,Cluster Approach,nutrition_education_training,Nutrition Training,nutrition
+bsfp_recieved_plw_emergency,BSFP Received PLW,nutrition_emergency,Nutrition Emergency,nutrition
+education_infant_young_children_feeding_emergency,Infant Young Children Feeding (IYCF) Counselling/Coaching,nutrition_emergency,Nutrition Emergency,nutrition
+muac_oedema_acute_malnutrition_screening,MUAC/Oedema Acute Malnutrition Screening,nutrition_emergency,Nutrition Emergency,nutrition
+muac_lt_11_5_cm_referral,MUAC < 11.5 cm IPD/OPD SAM & OPD-MAM Referral,nutrition_emergency,Nutrition Emergency,nutrition
+oedema_referral,Oedema IPD/OPD SAM & OPD-MAM Referral,nutrition_emergency,Nutrition Emergency,nutrition
+muac_gt_11_5_lt_12_5_cm_referral,MUAC > 11.5 cm to <12.5 cm IPD/OPD SAM & OPD-MAM Referral,nutrition_emergency,Nutrition Emergency,nutrition
+micronutrients_recieved_6_59_months,Micronutrients Received 6-59 Months,nutrition_emergency,Nutrition Emergency,nutrition
+opd_consultation,OPD Consultation,primary_health_care,Primary Health Care,health
+phc_referrals,OPD Referrals,primary_health_care,Primary Health Care,health
+psycho_social,Psycho Social Support,primary_health_care,Primary Health Care,health
+number_of_physical_rehabilitation_session,Number of Physical Rehabilitation Session,primary_health_care,Primary Health Care,health
+antenatal_care,Antenatal Care,primary_health_care,Primary Health Care,health
+postnatal_care,Postnatal Care,primary_health_care,Primary Health Care,health
+skilled_birth_attendant,Skilled Birth Attendant,primary_health_care,Primary Health Care,health
+penta_3,Vaccination ( Penta3 ),primary_health_care,Primary Health Care,health
+measles,Vaccination ( Measles ),primary_health_care,Primary Health Care,health
+rape_management_referrals,Rape Management & Referrals,primary_health_care,Primary Health Care,health
+training_phc,Training Health Providers,primary_health_care,Primary Health Care,health
+education_phc,Health Education & Awareness,primary_health_care,Primary Health Care,health
+fatp_stabilization_referrals_conflict,FATP - Stabilization & Referrals ( Conflict ),trauma_care,Trauma Care,health
+fatp_stabilization,FATP - Stabilization ( Conflict ),trauma_care,Trauma Care,health
+fatp_stabilization_civilian,FATP - Stabilization ( Non-Conflict ),trauma_care,Trauma Care,health
+fatp_stabilization_referrals_civilian,FATP - Stabilization & Referrals ( Non-Conflict ),trauma_care,Trauma Care,health
+tcu_minor_surgeries,TCU - Minor Surgeries,trauma_care,Trauma Care,health
+opd_consultation_surgery,OPD + Consultation Surgery,trauma_care,Trauma Care,health
+physical_rehabilitation,Physical Rehabilitation,trauma_care,Trauma Care,health
+training_tcu,Training Health Providers,trauma_care,Trauma Care,health
+tcu_major_surgeries,TCU - Major Surgeries,trauma_care,Trauma Care,health
+education_tcu,Health Education & Awareness,trauma_care,Trauma Care,health
+human_resources,Human Resources,trauma_care,Trauma Care,health
+new_fatp_trauma_center,Establishment of new FATP/Trauma Center,trauma_care,Trauma Care,health
+emergency_obstetric_neonatal_care,Emergency Obstetric Neonatal Care,mch,Mother & Child Health Care (MCH),health
+antenatal_care_mch,Antenatal Care,mch,Mother & Child Health Care (MCH),health
+postnatal_care_mch,Postnatal Care,mch,Mother & Child Health Care (MCH),health
+education_mch,Health Education & Awareness,mch,Mother & Child Health Care (MCH),health
+training_mch,Training Health Providers,mch,Mother & Child Health Care (MCH),health
+childhood_illness_ari_diarrhoea,Childhood Illness (ARI and Diarrhoea),mch,Mother & Child Health Care (MCH),health
+antenatal_postnatal_visit,Antenatal and Postnatal Visit,mch,Mother & Child Health Care (MCH),health
+skilled_birth_attendant_mch,Skilled Birth Attendant,mch,Mother & Child Health Care (MCH),health
+penta_3_vaccination,Vaccination ( Penta3 ),vaccination,Vaccination/Immunization,health
+diarrhea_treatment,Diarrhea Treatment,infectious_diseases,Infectious Diseases,health
+measles_vaccination,Vaccination ( Measles ),vaccination,Vaccination/Immunization,health
+education_health,Health Education & Awareness,health_education_training,"Health Education, Training & Awareness",health
+training_health,Training Health Providers,health_education_training,"Health Education, Training & Awareness",health
+risk_community_engagement,Risk Communication and Community Engagement,covid_19,COVID-19,health
+surveillance,Surveillance,covid_19,COVID-19,health
+maintaining_health_care_activities_mht,Maintaining Health Care Activities - through Mobile Health Teams,covid_19,COVID-19,health
+Establishment of Isolation Centers,Establishment of Isolation Centers,covid_19,COVID-19,health
+tent_distribution_2_tarps_package,Distribution of a Tent + 2 tarps-in-kind,emergency_shelter_kit,Emergency Shelter Kit,esnfi
+local_materials_tarps_tools_package,"Distribution, installation of tools, materials, tarps for localised emergency shelter",emergency_shelter,Emergency Shelter (Localised Solution),esnfi
+tent_distribution_2_tarps_package,Distribution of a Tent + 2 tarps-in-kind,standard_emergency_shelter_kit,Standard Emergency Shelter Kit,esnfi
+local_materials_tarps_tools_package,"Distribution, installation of tools, materials, tarps in-kind for localised emergnecy shelter.",emergency_shelter_kit,Emergency Shelter Kit,esnfi
+infrastructure_extension_settlement_space_covid_facilities,Infrastructure activities to extend settlement space for Covid related facilities,emergency_shelter,Emergency Shelter (Localised Solution),esnfi
+rental_support_6_month_package,Rental Support for 6 Months,rental_support,Rental Support,esnfi
+rental_support_3_month_package,Rental Support for 3 Months,rental_support,Rental Support,esnfi
+existing_shelter_upgrade_repair_package,Upgrade/repair of damaged or existing shelters,shelter_repair_upgrade,Upgrade/Repair of Shelters,esnfi
+existing_shelter_upgrade_package,Upgrade/repair of damaged or existing shelters,shelter_repair_upgrade,Upgrade/Repair of Shelters,esnfi
+standard_nfi_kit_distribution,Distribution of Standard Emergency NFI Kit,standard_emergency_nfi_kit,Standard Emergency NFI Kit,esnfi
+emergency_shelter_self_construction_repair_toolkit_distribution,Distribution of Emergency Shelter Self Construction / Repair Toolkit,emergency_shelter_self_construction_repair_toolkit,Emergency Shelter Self Construction / Repair Toolkit,esnfi
+standard_nfi_package,NFI Package,nfi_package,NFI Package,esnfi
+transitional_shelter_construction_2_room,Construction of 2 room transitional shelter,transitional_shelter,Transitional Shelter,esnfi
+existing_shelter_upgrade_package_toolkit,Upgrade/repair of damaged or existing shelters plus distribution reconstruction toolkit,shelter_repair_upgrade,Upgrade/Repair of Shelters,esnfi
+permanent_shelter_construction_1_room,Construction of 1 room permanent shelter,permanent_shelter,Permanent Shelter,esnfi
+transitional_shelter_package_1_room_cost usd_1250-2000,Construction of 1 room transitional shelter,transitional_shelter,Transitional Shelter,esnfi
+shelter_extension_kits_overcrowding_reduction,Shelter extension kits to reduce overcrowding,transitional_shelter,Transitional Shelter,esnfi
+transitional_shelter_construction_1_room,Construction of 1 room transitional shelter,transitional_shelter,Transitional Shelter,esnfi
+permanent_shelter_construction_2_room,Construction of 2 room permanent shelter,permanent_shelter,Permanent Shelter,esnfi
+permanent_shelter_package_2_room_cost usd_2000-3500,Construction of 2 room permanent shelter,transitional_shelter,Transitional Shelter,esnfi
+transitional_shelter_package_2_room_cost_usd_1250-2000,Construction of 2 room transitional shelter,transitional_shelter,Transitional Shelter,esnfi
+winterization_package_heating_fuel,Provision of standard winterization package for fuel and heating,standard_winterization_package,Standard Winterization Package,esnfi
+winterization_package_winter_clothing_kit,Provision of standard winter clothing kit,standard_winter_clothing_kit,Standard Winter Clothing Kit,esnfi
+permanent_shelter_package_1_room_cost usd_2000-3500,Construction of 1 room permanent shelter,transitional_shelter,Transitional Shelter,esnfi
+school_aged_children_winter_clothing_kits,School-aged children to receive winter clothing kits,standard_winterization_package,Standard Winterization Package,esnfi
+winterization_package_winter_clothing_kit,Provision of standard winter clothing kit,winterization_package,Winterization Package,esnfi
+training_awareness_drr,DRR Training / Awareness,esnfi_education_training,Capacity Building/Technical Support,esnfi
+training_upgrading_repair_shelter,Upgrading / Repair of Shelter Training,esnfi_education_training,Capacity Building/Technical Support,esnfi
+winterization_package_heating_fuel,Provision of standard winterization package for fuel and heating,winterization_package,Winterization Package,esnfi
+shelter_units_health_facilities,Shelter units for health facilities,shelter_support_health_facilities,Shelter Support to Health Facilities,esnfi
+shelter_units_quarantine_facilities,Shelter units for quarantine facilities,shelter_support_health_facilities,Shelter Support to Health Facilities,esnfi
+heating_supplies_school_support,Schools supported with heating supplies,standard_winterization_package,Standard Winterization Package,esnfi
+shelter_units_home_isolation,Shelter units for self / home isolation spaces,shelter_support_health_facilities,Shelter Support to Health Facilities,esnfi
+Risk communication and information campaigns on COVID-19,Risk communication and information campaigns on COVID-19,risk_communication,Risk Communication,esnfi
+rental_support_3_month_package,Rental Support for 3 Month,rental_support_3_month,Rental Support for 3 Month,esnfi
+existing_shelter_upgrade_package,Upgrade of Existing Shelter,existing_shelter_upgrade,Upgrade of Existing Shelter,esnfi
+tent_distribution_2_tarps_package,Distribution of a Tent + 2 tarps-in-kind,emergency_shelter_kit_2tarps_1tent,Emergency Shelter Kit (2 Tarpaulin + 1 Tent),esnfi
+winterization_package,Winterization Package,winterization_package,Winterization Package,esnfi
+assessment_fully_destroyed,Fully destroyed,damaged_destroyed_shelter_assessment,Assessment of Damaged/Destroyed  Shelter,esnfi
+assessment_minimal_damaged,Minimal Damage (Windows damaged etc),damaged_destroyed_shelter_assessment,Assessment of Damaged/Destroyed  Shelter,esnfi
+assessment_partially_damaged,Partially Damaged (Some internal walls collapsed; roof leaking; doors broken;),damaged_destroyed_shelter_assessment,Assessment of Damaged/Destroyed  Shelter,esnfi
+transitional_shelter_package,Transitional Shelter,transitional_shelter,Transitional Shelter,esnfi
+establishment_new_cbs_alc_non_formal,Establishment of New CBS/ALC (non-formal),school_establishment,Formal & Non-Formal School Establishment,eiewg
+establishment_temporary_classroom_formal,Establishment of Temporary Classroom (formal),school_establishment,Formal & Non-Formal School Establishment,eiewg
+nfi_package,NFI Package,nfi_package,NFI Package,esnfi
+catch_up_classes_dari_pashtu,Catch-up Classes (Dari/Pashtu),school_establishment,Formal & Non-Formal School Establishment,eiewg
+establishment_maintainance_cbe_alc_tc,Establishment/maintainance of CBE/ALCs/TCs,school_establishment,Formal & Non-Formal School Establishment,eiewg
+tents_24sqm,Tents (24 sq.m),school_establishment,Formal & Non-Formal School Establishment,eiewg
+learning_supplies_provision,Provision of learning supplies,teaching_learning_supplies,Teaching & Learning Materials Supplies,eiewg
+classrom_equipment_teaching_materials_provision,Provision of classroom equipment and teaching materials,teaching_learning_supplies,Teaching & Learning Materials Supplies,eiewg
+recreational_kit,Recreational Kit,teaching_learning_supplies,Teaching & Learning Materials Supplies,eiewg
+school_in_box_kit,School in Box Kit,teaching_learning_supplies,Teaching & Learning Materials Supplies,eiewg
+eie_kit,EiE Kit,teaching_learning_supplies,Teaching & Learning Materials Supplies,eiewg
+classroom_kits,Classroom Kits,teaching_learning_supplies,Teaching & Learning Materials Supplies,eiewg
+student_bag,Student Bag,teaching_learning_supplies,Teaching & Learning Materials Supplies,eiewg
+students_kits,Students Kits,teaching_learning_supplies,Teaching & Learning Materials Supplies,eiewg
+tents_72sqm,Tents (72 sq.m),school_establishment,Formal & Non-Formal School Establishment,eiewg
+top_up_kits,Top up Kits,teaching_learning_supplies,Teaching & Learning Materials Supplies,eiewg
+teacher_kits,Teacher Kits,teaching_learning_supplies,Teaching & Learning Materials Supplies,eiewg
+reading_kits,Reading Kits,teaching_learning_supplies,Teaching & Learning Materials Supplies,eiewg
+text_book_distribution,Text Book Distribution,teaching_learning_supplies,Teaching & Learning Materials Supplies,eiewg
+education_personnel_eiewg_training,Training EiEWG to Education Personnel,capacity_building,Capacity Building,eiewg
+school_management_sura_training,School Management SURA Training,capacity_building,Capacity Building,eiewg
+startup_kit,Startup Kit,teaching_learning_supplies,Teaching & Learning Materials Supplies,eiewg
+latrines_male_female_latrines,Latrines (Male & Female Latrines),wash_in_school,WASH in School,eiewg
+teachers_training,Teachers Training,capacity_building,Capacity Building,eiewg
+hygiene_promotion,Hygiene Promotion,wash_in_school,WASH in School,eiewg
+quick_fix_repair_of_schools,Quick Fixing/Repairing of Schools,quick_fix_repair_of_schools,Quick Fixing/Repairing of Schools,eiewg
+potable_water_drinking_water_supply,Potable Water/Drinking Water Supply,wash_in_school,WASH in School,eiewg
+psycho_social_support,Psycho-Social Support (PSS),protection_activities,Protection Activities,eiewg
+social_mobilization,Social Mobilization,protection_activities,Protection Activities,eiewg
+mine_reduction_education_mre,Mine Reduction Education (MRE),protection_activities,Protection Activities,eiewg
+community_sms_sensitization,Community/SMS sensitization,education_awareness,Education Awareness,eiewg
+teachers_recruitment,Teachers Recruitment,capacity_building,Capacity Building,eiewg
+provision_washing_facilities,Provision of School WASH Facilities,teaching_learning_supplies,Teaching & Learning Materials Supplies,education
+provision_education_materials,"Provision of Information, Education Communication Materials (IEC)",teaching_learning_supplies,Teaching & Learning Materials Supplies,education
+provision_school_feeding,Provision of School Feeding,teaching_learning_supplies,Teaching & Learning Materials Supplies,education
+provision_learning_stationary,Provision of Learning Stationary,teaching_learning_supplies,Teaching & Learning Materials Supplies,education
+school_campaign,Back to School Campaign,education_awareness,Education Awareness,education
+provision_education_kit,Provision of Early Childhood Care and Education Kit,teaching_learning_supplies,Teaching & Learning Materials Supplies,education
+teacher_training_psychosocial_first_aid,Train Teachers in Psychosocial First Aid (PFA),teacher_training,Teacher Training,education
+mpc_cash_modified_transfer_value,Modified Transfer Value,cvwg_multi_purpose_cash,Multi-Purpose Cash,cvwg
+establishment_temporary_classroom,Establishment of Temporary Classrooms (TCs),school_establishment,Formal & Non-Formal School Establishment,education
+mpc_cash_harmonized_meb_based_transfer_value,Harmonized MEB Based Transfer Value,cvwg_multi_purpose_cash,Multi-Purpose Cash,cvwg
+mpc_cash_protection_grant,Specialized Protection Cash Grant,cvwg_multi_purpose_cash,Multi-Purpose Cash,cvwg
+mpc_cash_grant_other,Other MPC Grant,cvwg_multi_purpose_cash,Multi-Purpose Cash,cvwg
+mpc_cash_post_arrival_grant,Post-Arrival Cash Grant (Returnees only),cvwg_multi_purpose_cash,Multi-Purpose Cash,cvwg
+mpc_cash_smeb,Survival Minimum Expenditure Basket (SMEB),cvwg_multi_purpose_cash,Multi-Purpose Cash,cvwg
+food_assistance_cbt,Food Assistance - CBT,food_assistance,Food Assistance,fsac
+food_assistance_in_kind,Food Assistance - in Kind,food_assistance,Food Assistance,fsac
+food_assistance,Food Assistance,food_assistance,Food Assistance,fsac
+livelihood_support_cbt,Livelihood Support - CBT,livelihood_support,Livelihood Support,fsac
+livelihood_support_in_kind,Livelihood Support - in Kind,livelihood_support,Livelihood Support,fsac
+livelihood_support_cash_for_work,Cash for Work,livelihood_support,Livelihood Support,fsac
+livelihood_support_agriculture,Agriculture,livelihood_support,Livelihood Support,fsac
+livelihood_support,Livelihood Support,livelihood_support,Livelihood Support,fsac
+livelihood_support_livestock,Livestock,livelihood_support,Livelihood Support,fsac
+seed_distribution_wheat_in_kind,Wheat Seed Distribution - In Kind,agriculture_livelihood_support,Agriculture Based Livelihood Support,fsac
+seed_distribution_vegtable_in_kind,Vegetable Seed Distribution - In Kind,agriculture_livelihood_support,Agriculture Based Livelihood Support,fsac
+seed_distribution_vegtable_cbt,Vegetable Seed Distribution - CBT,agriculture_livelihood_support,Agriculture Based Livelihood Support,fsac
+seed_distribution_wheat_cbt,Wheat Seed Distribution - CBT,agriculture_livelihood_support,Agriculture Based Livelihood Support,fsac
+seed_distribution_other_in_kind,Other Seed Distribution - In Kind,agriculture_livelihood_support,Agriculture Based Livelihood Support,fsac
+seed_distribution_other_cbt,Other Seed Distribution - CBT,agriculture_livelihood_support,Agriculture Based Livelihood Support,fsac
+kitchen_gardening,Kitchen Gardening,agriculture_livelihood_support,Agriculture Based Livelihood Support,fsac
+hand_tools_distribution,Hand Tools Distribution,livelihood_support,Livelihood Support,fsac
+fertalizer_distribution_in_kind,Fertilizer Distribution - In Kind,agriculture_livelihood_support,Agriculture Based Livelihood Support,fsac
+fertalizer_distribution_cbt,Fertilizer Distribution - CBT,agriculture_livelihood_support,Agriculture Based Livelihood Support,fsac
+vocational_skills_training_in_cbt,Vocational Skills Training - CBT,non_agriculture_livelihood_support,Non-Agriculture Based Livelihood Support,fsac
+vocational_skills_training_in_kind,Vocational Skills Training - In Kind,non_agriculture_livelihood_support,Non-Agriculture Based Livelihood Support,fsac
+asset_creation_in_kind,Asset Creation - In Kind,non_agriculture_livelihood_support,Non-Agriculture Based Livelihood Support,fsac
+animal_vaccination_ppr,Animal Vaccination PPR,livestock_support,Livestock Based Support,fsac
+animal_vaccination_fmd,Animal Vaccination FMD,livestock_support,Livestock Based Support,fsac
+asset_creation_in_cbt,Asset Creation - CBT,non_agriculture_livelihood_support,Non-Agriculture Based Livelihood Support,fsac
+animal_vaccination_deworming,Animal Vaccination / Deworming,livestock_support,Livestock Based Support,fsac
+poultry,Poultry,livestock_support,Livestock Based Support,fsac
+animal_feed_fodder_distribution_cbt,Animal Feed / Fodder Distribution - CBT,livestock_support,Livestock Based Support,fsac
+food_assistanse_within_week_resolved_calls,Food Assitance within a week Resolved Calls,affected_population_accountability,Accountability to Affected Population,fsac
+fsac_partners_assessments,Partners Assessment,fsac_assessments,FSAC Assessment,fsac
+animal_feed_fodder_distribution_in_kind,Animal Feed / Fodder Distribution - In Kind,livestock_support,Livestock Based Support,fsac
+fsac_cash_commodity_voucher,Commodity Voucher,food_assistance,Food Assistance,fsac
+fsac_in_kind,in Kind Food,food_assistance,Food Assistance,fsac
+fsac_cash_value_voucher,Value Voucher,food_assistance,Food Assistance,fsac
+fsac_cash,Cash for Food ( Unrestricted ),food_assistance,Food Assistance,fsac
+integrated_management_childhood_illness_imci_under_5_age_mch,Integrated Management Childhood Illness (IMCI) under 5 age,mch,Mother & Child Health Care (MCH),health
+tt_plus_vaccination_mch,Vaccination ( TT+ ),mch,Mother & Child Health Care (MCH),health
+tt_2_vaccination_mch,Vaccination ( TT2 ),mch,Mother & Child Health Care (MCH),health
+tt_1_vaccination_mch,Vaccination ( TT1 ),mch,Mother & Child Health Care (MCH),health
+winterization_package_blankets,Provision of blankets,standard_winterization_packages_blankets_clothing_heating,Standard Winterization Packages (blankets/clothing/heating),esnfi
+winterization_package_winter_clothing_kit,Provision of standard winter clothing kit,standard_winterization_packages_blankets_clothing_heating,Standard Winterization Packages (blankets/clothing/heating),esnfi
+winterization_package_heating_fuel,Provision of standard winterization package for fuel and heating,standard_winterization_packages_blankets_clothing_heating,Standard Winterization Packages (blankets/clothing/heating),esnfi
+hand_dug_well_new,Hand Dug Well - NEW,water,Water Activities,wash
+hand_dug_well_rehab,Hand Dug Well - REHAB,water,Water Activities,wash
+borehole_new,Borehole with Hand Pump - NEW,water,Water Activities,wash
+piped_water_network_new,Piped Water Network - NEW,water,Water Activities,wash
+piped_water_network_rehab,Piped Water Network - REHAB,water,Water Activities,wash
+rainwater_system_new,Rainwater Harvesting System - NEW,water,Water Activities,wash
+borehole_rehab,Borehole with Hand Pump - REHAB,water,Water Activities,wash
+shallow_well_rehab,Shallow Well with Hand Pump - REHAB,water,Water Activities,wash
+rainwater_system_rehab,Rainwater Harvesting System - REHAB,water,Water Activities,wash
+reverse_osmosis_system_new,Reverse Osmosis System - NEW,water,Water Activities,wash
+reverse_osmosis_system_rehab,Reverse Osmosis System - REHAB,water,Water Activities,wash
+gravity_fed_water_system_new,Gravity-Fed Water System - NEW,water,Water Activities,wash
+solar_pumping_system_new,Solar Pumping System - NEW,water,Water Activities,wash
+solar_pumping_system_rehab,Solar Pumping System - REHAB,water,Water Activities,wash
+gravity_fed_water_system_rehab,Gravity-Fed Water System - REHAB,water,Water Activities,wash
+water_kiosk_new,Water Kiosk - NEW,water,Water Activities,wash
+water_kiosk_rehab,Water Kiosk - REHAB,water,Water Activities,wash
+water_supply_health_facility_new,Water Supply in Health Facility - NEW,water,Water Activities,wash
+water_supply_community_new,Water Supply in Community - NEW,water,Water Activities,wash
+water_tank_new,Water Tank ( Storage Facility ) - NEW,water,Water Activities,wash
+water_supply_community_rehab,Water Supply in Community - REHAB,water,Water Activities,wash
+water_supply_school_new,Water Supply in School - NEW,water,Water Activities,wash
+water_supply_school_rehab,Water Supply in School - REHAB,water,Water Activities,wash
+water_tank_rehab,Water Tank ( Storage Facility ) - REHAB,water,Water Activities,wash
+water_supply_health_facility_rehab,Water Supply in Health Facility - REHAB,water,Water Activities,wash
+latrine_stalls_communal_new,Latrine Stalls - Communal - NEW,sanitation,Sanitation Activities,wash
+latrine_stalls_school_new,Latrine Stalls - School - NEW,sanitation,Sanitation Activities,wash
+latrine_stalls_household_new,Latrine Stalls - Household - NEW,sanitation,Sanitation Activities,wash
+shallow_well_new,Shallow Well with Hand Pump - NEW,water,Water Activities,wash
+latrine_stalls_health_facility_new,Latrine Stalls - Health Facility - NEW,sanitation,Sanitation Activities,wash
+latrine_stalls_household_rehab,Latrine Stalls - Household - REHAB,sanitation,Sanitation Activities,wash
+latrine_stalls_health_facility_rehab,Latrine Stalls - Health Facility - REHAB,sanitation,Sanitation Activities,wash
+latrine_stalls_school_rehab,Latrine Stalls - School - REHAB,sanitation,Sanitation Activities,wash
+septic_tank_rehab,Septic Tank - REHAB,sanitation,Sanitation Activities,wash
+sewer_line_rehab,Sewer Line - REHAB,sanitation,Sanitation Activities,wash
+latrine_stalls_communal_rehab,Latrine Stalls - Communal - REHAB,sanitation,Sanitation Activities,wash
+washing_facilities_new,Bathing / Washing Facilities - NEW,sanitation,Sanitation Activities,wash
+sewer_line_new,Sewer Line - NEW,sanitation,Sanitation Activities,wash
+washing_facilities_rehab,Bathing / Washing Facilities - REHAB,sanitation,Sanitation Activities,wash
+hand_washing_facilities_new,Hand Washing Facilities - NEW,hygiene,Hygiene Activities,wash
+hand_washing_facilities_rehab,Hand Washing Facilities - REHAB,hygiene,Hygiene Activities,wash
+septic_tank_new,Septic Tank - NEW,sanitation,Sanitation Activities,wash
+family_hygiene_kits_distributed,Family Hygiene Kits Distributed,wash_supplies,WASH Supplies,wash
+wash_package_kit_distribution,# SAM/MAM children received WASH package/kit at household level,wash_supplies,WASH Supplies,wash
+family_water_kit_distribution,Family Water Kit Distribution,wash_supplies,WASH Supplies,wash
+psea_focal_points_available,PSEA Focal Points Available,wash_psea,WASH PSEA,wash
+tent_distribution_2_tarps,Distribution of Tents + 2 tarps,standard_emergency_shelter_assistance,Standard Emergency Shelter Assistance,esnfi
+shelter_self_construction_repair_kit,Shelter Repair/Reconstruction Kit,standard_emergency_shelter_assistance,Standard Emergency Shelter Assistance,esnfi
+rental_support_3_months,Rental Support for 3 months,standard_emergency_shelter_assistance,Standard Emergency Shelter Assistance,esnfi
+standard_emergency_nfi_kit,Standard Emergency NFI Kit,standard_emergency_nfi_kit,Standard Emergency NFI Kit,esnfi
+repair_upgrade_of_shelters_with_minor_damage,Repair/Upgrade of shelters with minor damage,shelter_repair_upgrade,Upgrade/Repair of Shelters,esnfi
+repair_upgrade_of_shelters_with_severe_damage,Repair/Upgrade of shelters with severe damages,shelter_repair_upgrade,Upgrade/Repair of Shelters,esnfi
+extension_of_existing_shelters,Extensions of existing shelters,shelter_repair_upgrade,Upgrade/Repair of Shelters,esnfi
+transitional_shelter_construction_1_room,Construction of an average sized family transitional shelter (1 bedroomed),transitional_shelter,Transitional Shelter,esnfi
+transitional_shelter_construction_2_room,Construction of an average sized family transitional shelter (2 bedroomed),transitional_shelter,Transitional Shelter,esnfi
+permanent_shelter_construction_1_room,Construction of an average sized family permanent shelter (1 bedroomed),permanent_shelter,Permanent Shelter,esnfi
+permanent_shelter_construction_2_room,Construction of an average sized family permanent shelter (2 bedroomed),permanent_shelter,Permanent Shelter,esnfi
+winterization_heating_and_fuel_assistance,Winterization heating and fuel assistance,standard_winterization_assistance,Standard Winterization Assistance,esnfi
+winter_clothing_package,Winter Clothing Package,standard_winterization_assistance,Standard Winterization Assistance,esnfi
+blanket_package,Blanket Package,standard_winterization_assistance,Standard Winterization Assistance,esnfi
+training_on_upgrading_repairs_of_shelters,Training on Upgrading/Repairs of shelters,esnfi_education_training,Capacity Building/Technical Support,esnfi
+training_on_construction_of_transitional_shelters,Training on construction of Transitional Shelters,esnfi_education_training,Capacity Building/Technical Support,esnfi
+training_on_construction_of_permanent_shelters,Training on construction of Permanent Shelters,esnfi_education_training,Capacity Building/Technical Support,esnfi
+"social,_economic_and_education_reintegration","Social, economic and education reintegration",cpie,CPiE,protection
+six_grave_child_rights_violations,Six grave Child Rights Violations,cpie,CPiE,protection
+emergency_supplies_distribution,Emergency Supplies Distribution,cpie,CPiE,protection
+capacity_of_frontline_providers_to_respond_to_gbv_is_built,Capacity of frontline providers to respond to GBV is built,gbv,GBV,protection
+provision_of_cash_for_protection_aligned_on_meb,Provision of Cash for Protection ( aligned on MEB),gp,GP,protection
+community-based_protection_activities,Community-Based Protection activities,gp,GP,protection
+provision_of_individual_protection_assistance_ipa:_in-kind,Provision of Individual Protection Assistance (IPA): In-kind,gp,GP,protection
+provision_of_psycho-social_support_pss_assistance,Provision of Psycho-Social Support (PSS) Assistance,gp,GP,protection
+provision_of_individual_protection_assistance_ipa:_emergency_cash_assistance,Provision of Individual Protection Assistance (IPA): emergency cash assistance,gp,GP,protection
+provision_of_legal_counselling_and_assistance_identity_and_civil_documentation,Provision of Legal Counselling and Assistance (Identity and Civil documentation),gp,GP,protection
+"information,_counselling_and_legal_assistance","Information, Counselling and Legal Assistance",hlp,HLP,protection
+anti_counter_trafficking,Anti/counter Trafficking,gp,GP,protection
+land_identification_and_allocation,Land identification and allocation,hlp,HLP,protection
+provision_primary_health_care_services,Provision of Primary Health Care Services,primary_health_care_services,Primary Health Care Services,health
+victim_assistance,Victim Assistance,ma,MA,protection
+physical_rehabilitation,Physical Rehabilitation,primary_health_care_services,Primary Health Care Services,health
+access_health_care_services,Access to Health Care Services,primary_health_care_services,Primary Health Care Services,health
+training_health_care_providers,Training of Health Care Providers,health_training,Training,health
+provision_covid_19_services,Provision of COVID-19 Services,health_training,Training,health
+provide_health_services_to_GBV_survivors,Provide health services to GBV survivors,sexual_violence,Sexual violence,health
+provision_mental_health_psychosocial_support_services,Provision of Mental Health and Psychosocial Support (MHPSS) Services,mental_health_psychosocial_support,Mental Health and Psychosocial Support (MHPSS),health
+provision_maternal_newborn_child_health_services,"Provision of Maternal, Newborn and Child Health (MNCH) Services",maternal_newborn_child_health,"Maternal, Newborn and Child Health (MNCH)",health
+provision_trauma_care_services,Provision of Trauma Care Services,trauma_care,Trauma Care,health
+education_hprc,Health Education & Awareness,health_promotion_risk_communication,Health Promotion and Risk Communication,health
+provision_covid_19_services,Provision of COVID-19 Services,health_promotion_risk_communication,Health Promotion and Risk Communication,health
+provision_covid_19_services,Provision of COVID-19 Services,surveillance,Surveillance,health
+measles_coverage,Measles Coverage,vaccination,Vaccination/Immunization,health
+penta3_coverage,Penta3 Coverage,vaccination,Vaccination/Immunization,health
+provision_covid_19_services,Provision of COVID-19 Services,covid_19,COVID-19,health
+provision_essential_supplies,Provision of Essential Supplies,essential_supplies,Essential Supplies,health
+food_assistance_in_kind_ipc4_75,Food Assistance - in Kind - IPC4 (75% ration),food_assistance,Food Assistance,fsac
+food_assistance_in_kind_ipc3_50,Food Assistance - in Kind - IPC3 (50% ration),food_assistance,Food Assistance,fsac
+food_assistance_cbt_ipc4_75,Food Assistance - CBT - IPC4 (75% ration),food_assistance,Food Assistance,fsac
+food_assistance_cbt_ipc3_50,Food Assistance - CBT - IPC3 (50% ration),food_assistance,Food Assistance,fsac
+livelihood_support_unconditional_cash,Unconditional Cash Transfer,livelihood_support,Livelihood Support,fsac
+establishment_and_management_of_the_community_centers,Establishment and Management of the Community Centers,cccm_mechanisms,CCCM Mechanisms,cccm
+multi-sectorial_service_coordination_in_isets_and_idp_sites,Multi-sectorial service coordination in ISETs and IDP Sites,cccm_service_coordination,CCCM Service Coordination,cccm
+cccm_referral_and_escalation_systems_established,CCCM Referral and Escalation Systems Established,cccm_referral_mechanism,CCCM Referral Mechanism,cccm
+"cccm_mobile_site_managers_staff_with_cccm_training_tot,_protection,_psea_and_gbv_risk_mitigation_training","CCCM Mobile Site Managers/Staff with CCCM Training (ToT), Protection, PSEA and GBV Risk Mitigation Training",cccm_training_capacity_building_activites,CCCM Training/Capacity Building Activites,cccm
+population_profiling_and_registration_in_isets_and_idp_sites,Population Profiling and Registration in ISETs and IDP Sites,population_information_management,Population Information Management,cccm
+establish_mobile_cccm_team_per_site_area,Establish Mobile CCCM Team per site/area,mobile_site_management,Mobile Site Management,cccm
+isets_and_idp_sites_with_app_psea_feedback_mechanism,ISETs and IDP sites with APP/PSEA - Feedback Mechanism,feedback_mechanisms,Feedback Mechanisms,cccm
+monthly_needs_assessments_in_isets_idp_sites,Monthly needs assessments in ISETs/IDP Sites,service_monitoring,Service Monitoring,cccm
+education,Education,service_provision,Service Provision,cccm
+food_and_nutrition,Food and Nutrition,service_provision,Service Provision,cccm
+"isets_idp_sites_with_representative_governance_structures,_community_focal_points_and_committees","ISETs / IDP Sites with Representative Governance Structures, Community Focal Points and Committees",participation,Participation,cccm
+health,Health,service_provision,Service Provision,cccm
+protection,Protection,service_provision,Service Provision,cccm
+shelter,Shelter,service_provision,Service Provision,cccm
+intention_return_surveys,Intention / Return Surveys,return_relocation_integration,Return/ Relocation/ Integration,cccm
+wash,WASH,service_provision,Service Provision,cccm
+esnfi,ESNFI,service_provision,Service Provision,cccm
+"provision_of_displacement_sites_with_active_relocation,_resettlement_or_return_programmes","Provision of Displacement Sites with Active relocation, Resettlement or Return Programmes",return_relocation_integration,Return/ Relocation/ Integration,cccm
+risk_communication_and_information_campaigns_on_flood_risk_mitigation,Risk communication and information campaigns on Flood Risk Mitigation,sharing_information,Sharing Information,cccm
+conduct_safety_audits_rapid_gender_assesssments,Conduct safety audits/rapid gender assesssments,site_care_and_maintenance,Site Care and Maintenance,cccm
+risk_communication_and_information_campaigns_on_covid-19,Risk communication and information campaigns on COVID-19,sharing_information,Sharing Information,cccm
+ensure_care_and_maintenance_of_the_isets_and_idp_siteÃ¢â‚¬â„¢s_infrastructure,Ensure care and maintenance of the ISETs and IDP siteÃ¢â‚¬â„¢s infrastructure,site_care_and_maintenance,Site Care and Maintenance,cccm
+use_of_wash_cluster_perception_indicators,Use of WASH Cluster Perception Indicators,accountability_quality_assurance,Accountability and Quality Assurance,wash
+wash_assistance_after_consultation_on_gbv_risks,WASH Assistance After consultation on GBV Risks,wash_gbv_mitigation,WASH for GBV Mitigation,wash
+use_of_wash_Ã¢â‚¬â€¹gbv_checklist,Use of WASH Ã¢â‚¬â€¹GBV Checklist,wash_gbv_mitigation,WASH for GBV Mitigation,wash
+camp-coordination-and-camp-management-working-group,Camp Coordination and Camp Management Working Group,hrp-2023-cccm-mechanisms,(HRP 2023) CCCM Mechanisms,coordination
+accountability-to-affected-people-wg,Accountability to affected People WG,hrp-2023-coordination-and-common-services-,(HRP 2023) Coordination and Common Services ,coordination
+gender-in-humanitarian-action-tf,Gender in Humanitarian Action TF,hrp-2023-coordination-and-common-services-,(HRP 2023) Coordination and Common Services ,coordination
+disability-inclusion-wg,Disability Inclusion WG,hrp-2023-coordination-and-common-services-,(HRP 2023) Coordination and Common Services ,coordination
+coordination-common-services-and-information-management,"Coordination, common services and information management",hrp-2023-coordination-and-common-services-,(HRP 2023) Coordination and Common Services ,coordination
+assessments,Assessments,hrp-2023-coordination-and-common-services-,(HRP 2023) Coordination and Common Services ,coordination
+protection-from-sexual-exploitation-and-abuse-tf,Protection from Sexual Exploitation and Abuse TF,hrp-2023-coordination-and-common-services-,(HRP 2023) Coordination and Common Services ,coordination
+establish-and-train-shuras-on-roles-and-responsibilities-community-mobilization-and-preparedness-planning,"Establish and train Shuras on roles and responsibilities, community mobilization and preparedness planning",hrp-2023-curricula,(HRP 2023) Curricula,education
+teacher-training-activities-on-standardized-teacher-training-manual-including-pssdisability-and-inclusion,"Teacher training activities on standardized Teacher training manual, including PSS/disability and inclusion",hrp-2023-curricula,(HRP 2023) Curricula,education
+establishmaintain-community-based-classes-cbcs,Establish/maintain Community-Based Classes (CBCs).,hrp-2023-equal-access,(HRP 2023) Equal Access,education
+support-shock-affected-vulnerable-boys-and-girls-with-emergency-education-support,Support shock-affected vulnerable boys and girls with emergency education support.,hrp-2023-equal-access,(HRP 2023) Equal Access,education
+alternative-learning-modalities-developed-and-implemented,Alternative learning modalities developed and implemented,hrp-2023-equal-access,(HRP 2023) Equal Access,education
+recruitment-deployment-and-payment-of-teachers,"Recruitment, deployment and payment of teachers.",hrp-2023-recruitment-and-selection,(HRP 2023) Recruitment and Selection,education
+winterization-support-in-cbe-alc-mbe-and-tls,"Winterization Support in CBE, ALC, MBE and TLS",hrp-2023-winterization,(HRP 2023) Winterization,education
+cccm-wg-mobile-site-management,CCCM WG: Mobile Site Management,hrp-2023-cccm-assistance,(HRP 2023) CCCM Assistance,esnfi
+cccm-wg-site-care-and-maintenance,CCCM WG: Site Care and Maintenance,hrp-2023-cccm-assistance,(HRP 2023) CCCM Assistance,esnfi
+nfi-assistance,NFI Assistance,hrp-2023-nfi-assistance,(HRP 2023) NFI Assistance,esnfi
+shelter-repair-reconstruction-toolkit,Shelter repair reconstruction toolkit,hrp-2023-shelter-assistance,(HRP 2023) Shelter Assistance,esnfi
+shelter-repair-reconstruction-for-minor-damages,Shelter repair / reconstruction for minor damages,hrp-2023-shelter-assistance,(HRP 2023) Shelter Assistance,esnfi
+shelter-repair-reconstruction-for-severe-damages,Shelter repair / reconstruction for severe damages,hrp-2023-shelter-assistance,(HRP 2023) Shelter Assistance,esnfi
+emergency-shelter-kit-tent-2-pcs-of-plastic-tarpaulin,Emergency shelter kit (tent+ 2 pcs of plastic tarpaulin),hrp-2023-shelter-assistance,(HRP 2023) Shelter Assistance,esnfi
+emergency-shelter-assistance-cash-for-rent,Emergency shelter assistance (cash for rent),hrp-2023-shelter-assistance,(HRP 2023) Shelter Assistance,esnfi
+transitional-shelter-support,Transitional Shelter Support,hrp-2023-shelter-assistance,(HRP 2023) Shelter Assistance,esnfi
+assistance-to-cover-winterization-needs-blankets-or-quilts,Assistance to cover winterization needs (Blankets or Quilts),hrp-2023-winterization-assistance,(HRP 2023) Winterization Assistance,esnfi
+assistance-to-cover-winterization-needs-heater-fuel,Assistance to cover winterization needs (Heater & Fuel),hrp-2023-winterization-assistance,(HRP 2023) Winterization Assistance,esnfi
+assistance-to-cover-winterization-needs-winter-clothing,Assistance to cover winterization needs (Winter Clothing),hrp-2023-winterization-assistance,(HRP 2023) Winterization Assistance,esnfi
+livelihoods-support-backyard-vegetable-cultivation-1-month,Livelihoods support: backyard vegetable cultivation (1 month),hrp-2023-agriculture-based-livelihood-support,(HRP 2023) Agriculture Based Livelihood Support,fsac
+livelihoods-support-summer-cultivation-package-1-month,Livelihoods support: summer cultivation package (1 month),hrp-2023-agriculture-based-livelihood-support,(HRP 2023) Agriculture Based Livelihood Support,fsac
+livelihoods-support-winter-wheat-cultivation-package-1-month,Livelihoods support: winter wheat cultivation package (1 month),hrp-2023-agriculture-based-livelihood-support,(HRP 2023) Agriculture Based Livelihood Support,fsac
+food-assistance-for-cross-border-returnees-4-months,Food assistance for cross-border returnees (4 months),hrp-2023-food-assistance,(HRP 2023) Food Assistance,fsac
+food-assistance-for-idps-3-months,Food assistance for IDPs (3 months),hrp-2023-food-assistance,(HRP 2023) Food Assistance,fsac
+food-assistance-for-natural-disaster-affected-2-months,Food assistance for natural disaster-affected (2 months),hrp-2023-food-assistance,(HRP 2023) Food Assistance,fsac
+food-assistance-for-pakistani-refugees-6-months,Food assistance for Pakistani refugees (6 months),hrp-2023-food-assistance,(HRP 2023) Food Assistance,fsac
+food-assistance-for-people-in-ipc-phase-3-jan-apr-nov-dec-6-months,"Food assistance for people in IPC Phase 3 (Jan-Apr, Nov-Dec, 6 months)",hrp-2023-food-assistance,(HRP 2023) Food Assistance,fsac
+food-assistance-for-people-in-ipc-phase-3-may-oct-2-months,"Food assistance for people in IPC Phase 3 (May-Oct, 2 months)",hrp-2023-food-assistance,(HRP 2023) Food Assistance,fsac
+food-assistance-for-people-in-ipc-phase-4-jan-apr-nov-dec-6-months,"Food assistance for people in IPC Phase 4 (Jan-Apr, Nov-Dec, 6 months)",hrp-2023-food-assistance,(HRP 2023) Food Assistance,fsac
+food-assistance-for-people-in-ipc-phase-4-may-oct-6-months,"Food assistance for people in IPC Phase 4 (May-Oct, 6 months)",hrp-2023-food-assistance,(HRP 2023) Food Assistance,fsac
+livelihoods-support-for-natural-disaster-affected-1month,Livelihoods support for natural disaster-affected (1month),hrp-2023-livelihood-support,(HRP 2023) Livelihood Support,fsac
+livelihoods-support-for-asset-creation-6-months,Livelihoods support for asset creation (6 months),hrp-2023-livelihood-support,(HRP 2023) Livelihood Support,fsac
+livelihoods-support-backyard-poultry-package-1-month,Livelihoods support: backyard poultry package (1 month),hrp-2023-livestock-based-support,(HRP 2023) Livestock Based Support,fsac
+livelihoods-support-livestock-protection-package-1-month,Livelihoods support: livestock protection package (1 month),hrp-2023-livestock-based-support,(HRP 2023) Livestock Based Support,fsac
+containment-of-plant-pest-and-animal-disease-outbreaks,Containment of plant pest and animal disease outbreaks,hrp-2023-livestock-based-support,(HRP 2023) Livestock Based Support,fsac
+unconditional-cash-transfer,Unconditional cash transfer,hrp-2023-non-agriculture-based-livelihood-support,(HRP 2023) Non-Agriculture Based Livelihood Support,fsac
+bsfp-in-children-6-59-months,BSFP in children 6-59 months,hrp-2023-infant-and-young-child-feeding,(HRP 2023) Infant and Young Child Feeding,nutrition
+integrated-package-in-prioritized-provinces,Integrated package in prioritized provinces,hrp-2023-infant-and-young-child-feeding,(HRP 2023) Infant and Young Child Feeding,nutrition
+bsfp-in-plw,BSFP in PLW,hrp-2023-infant-and-young-child-feeding,(HRP 2023) Infant and Young Child Feeding,nutrition
+am-treatment-of-plw-in-opd,AM treatment of PLW in OPD,hrp-2023-infant-and-young-child-feeding,(HRP 2023) Infant and Young Child Feeding,nutrition
+miycn-counselling,MIYCN counselling,hrp-2023-infant-and-young-child-feeding,(HRP 2023) Infant and Young Child Feeding,nutrition
+mnp-in-children-6-23-months,MNP in children 6-23 months,hrp-2023-prevention-and-control-of-micronutrients-deficiencies,(HRP 2023) Prevention and Control of Micronutrients Deficiencies,nutrition
+vitamin-a-supplementation-in-children-6-59-months,Vitamin A supplementation in children 6-59 months,hrp-2023-prevention-and-control-of-micronutrients-deficiencies,(HRP 2023) Prevention and Control of Micronutrients Deficiencies,nutrition
+community-screening-of-children-6-59-months,Community screening of children 6-59 months,hrp-2023-prevention-and-management-of-acute-malnutrition,(HRP 2023) Prevention and Management of Acute Malnutrition,nutrition
+community-based-sentinel-sites,Community based sentinel sites,hrp-2023-prevention-and-management-of-acute-malnutrition,(HRP 2023) Prevention and Management of Acute Malnutrition,nutrition
+coordination,Coordination,hrp-2023-prevention-and-management-of-acute-malnutrition,(HRP 2023) Prevention and Management of Acute Malnutrition,nutrition
+sam-treatment-of-children-0-59-months-in-ipd,SAM treatment of children 0-59 months in IPD,hrp-2023-prevention-and-management-of-acute-malnutrition,(HRP 2023) Prevention and Management of Acute Malnutrition,nutrition
+mam-treatment-of-children-6-59-months-in-opd,MAM treatment of children 6-59 months in OPD,hrp-2023-prevention-and-management-of-acute-malnutrition,(HRP 2023) Prevention and Management of Acute Malnutrition,nutrition
+sam-treatment-of-children-6-59-months-in-opd,SAM treatment of children 6-59 months in OPD,hrp-2023-prevention-and-management-of-acute-malnutrition,(HRP 2023) Prevention and Management of Acute Malnutrition,nutrition
+operational-research,Operational research,hrp-2023-prevention-and-management-of-acute-malnutrition,(HRP 2023) Prevention and Management of Acute Malnutrition,nutrition
+smart-surveys,SMART surveys,hrp-2023-prevention-and-management-of-acute-malnutrition,(HRP 2023) Prevention and Management of Acute Malnutrition,nutrition
+provision-of-primary-health-care-consultations,1.1 Provision of primary health care consultations,primary_health_care_services,Primary Health Care,health
+provision-of-primary-health-care-referral-services,1.2 Provision of primary health care referral services,primary_health_care_services,Primary Health Care,health
+support-delivery-of-disability-and-physical-rehabilitation-services,1.3 Support delivery of disability and physical rehabilitation services,primary_health_care_services,Primary Health Care,health
+diarrhea-and-oral-rehydration-solution-ors-treatment-,1.4 Diarrhea and oral rehydration solution (ORS) Treatment ,primary_health_care_services,Primary Health Care,health
+support-delivery-of-primary-health-care-services-including-non-communicable-diseases,1.5 Support delivery of primary health care services including non-communicable diseases,primary_health_care_services,Primary Health Care,health
+access-to-health-care-services,1.6 Access to health care services,primary_health_care_services,Primary Health Care,health
+provision-of-outpatient-secondary-health-care-services,2.1 Provision of outpatient secondary health care services,secondary-health-care-services,Secondary health care services,health
+provision-of-inpatient-secondary-health-care-services,2.2 Provision of inpatient secondary health care services,secondary-health-care-services,Secondary health care services,health
+training-of-health-care-providers-on-prevention-of-sexual-exploitation-abuse-psea,3.1 Training of health care providers on Prevention of Sexual Exploitation & Abuse (PSEA),health_training,Training,health
+training-of-health-care-providers-on-health-response-to-survivors-of-violence,3.2 Training of health care providers on health response to survivors of violence,health_training,Training,health
+training-of-health-care-providers-on-trauma-care,3.3 Training of health care providers on trauma care,health_training,Training,health
+training-of-health-care-providers-on-maternal-and-child-health-mch,3.4 Training of health care providers on Maternal and Child Health (MCH),health_training,Training,health
+training-of-health-care-providers-on-surveillance-and-outbreak-investigation-and-response-,3.5 Training of health care providers  on surveillance and outbreak investigation and response ,health_training,Training,health
+training-of-health-care-providers-on-covid-19-case-management,3.6 Training of health care providers on COVID-19 case management,health_training,Training,health
+training-of-health-care-providers-on-infection-prevention-and-control-ipc,3.7 Training of health care providers on Infection Prevention and Control (IPC),health_training,Training,health
+training-of-health-care-providers-on-mhpss,3.8 Training of health care providers on MHPSS,health_training,Training,health
+training-of-health-care-providers-on-acute-watery-diarrhea-awd-case-management,3.9 Training of health care providers  on Acute Watery Diarrhea (AWD) case management,health_training,Training,health
+training-of-health-care-providers-on-ipd-sam,3.10 Training of health care providers on IPD-SAM,health_training,Training,health
+training-of-health-care-providers-on-other-areas,3.11 Training of health care providers on other areas,health_training,Training,health
+training-of-community-health-care-workers-hcws,3.12 Training of community health care workers (HCWs),health_training,Training,health
+provision-of-mental-health-and-psychosocial-support-mhpss-consultations,4.1 Provision of Mental Health and Psychosocial Support (MHPSS) consultations,mental_health_psychosocial_support,Mental Health and Psychosocial Support (MHPSS),health
+provision-of-ante-natal-care-anc-visits-,5.1 Provision of Ante-Natal Care (ANC) visits ,maternal_newborn_child_health,"Maternal, Newborn and Child Health (MNCH)",health
+provision-of-post-natal-care-pnc-visits,5.2 Provision of Post-Natal Care (PNC) visits,maternal_newborn_child_health,"Maternal, Newborn and Child Health (MNCH)",health
+provision-of-skilled-birth-services,5.3 Provision of skilled birth services,maternal_newborn_child_health,"Maternal, Newborn and Child Health (MNCH)",health
+provision-of-tt2-vaccination-services-to-women,5.4 Provision of TT2 vaccination services to women,maternal_newborn_child_health,"Maternal, Newborn and Child Health (MNCH)",health
+provision-of-tt2-vaccination-services-to-pregnant-women,5.5 Provision of TT2 vaccination services to pregnant women,maternal_newborn_child_health,"Maternal, Newborn and Child Health (MNCH)",health
+provision-of-trauma-care-services-treated-conflict,6.1 Provision of trauma care services treated (conflict),trauma_care,Trauma Care,health
+provision-of-trauma-care-services-referred-conflict,6.2 Provision of trauma care services referred (conflict),trauma_care,Trauma Care,health
+provision-of-trauma-care-services-treated-non-conflict,6.3 Provision of trauma care services treated (non-conflict),trauma_care,Trauma Care,health
+provision-of-trauma-care-services-referred-non-conflict,6.4 Provision of trauma care services referred (non-conflict),trauma_care,Trauma Care,health
+panta3-vaccination-coverage,7.1 Panta3 vaccination coverage,vaccination,Vaccination/Immunization,health
+measles-vaccination-coverage,7.2 Measles vaccination coverage,vaccination,Vaccination/Immunization,health
+provision-of-essential-supplies-awd_cholera-kit,8.1 Provision of essential supplies [AWD_Cholera Kit],essential_supplies,Essential Supplies,health
+provision-of-essential-supplies-dignity-kit,8.2 Provision of essential supplies [Dignity Kit],essential_supplies,Essential Supplies,health
+provision-of-essential-supplies-hygiene-kit,8.3 Provision of essential supplies [Hygiene Kit],essential_supplies,Essential Supplies,health
+provision-of-essential-supplies-ped-sam-kit,8.4 Provision of essential supplies [PED-SAM Kit],essential_supplies,Essential Supplies,health
+provision-of-essential-supplies-measles-kit,8.5 Provision of essential supplies [Measles Kit],essential_supplies,Essential Supplies,health
+provision-of-essential-supplies-interagency-emergency-health-kit-iehk,8.6 Provision of essential supplies [Interagency Emergency Health Kit (IEHK)],essential_supplies,Essential Supplies,health
+provision-of-essential-supplies-ncd-kits,8.7 Provision of essential supplies [NCD Kits],essential_supplies,Essential Supplies,health
+provision-of-essential-supplies-pneumonia-kit,8.8 Provision of essential supplies [Pneumonia Kit],essential_supplies,Essential Supplies,health
+provision-of-essential-supplies-reproductive-health-kit-rh,8.9 Provision of essential supplies [Reproductive Health Kit (RH)],essential_supplies,Essential Supplies,health
+provision-of-essential-supplies-trauma-and-emergency-surgery-kit-tesk,8.10 Provision of essential supplies [Trauma and Emergency Surgery Kit  (TESK)],essential_supplies,Essential Supplies,health
+provision-of-essential-supplies-other-kit,8.11 Provision of essential supplies [Other Kit],essential_supplies,Essential Supplies,health
+health-education-awareness-at-health-facility,9.1 Health education & awareness at health facility,health_promotion_risk_communication,Health Promotion and Risk Communication,health
+health-education-awareness-at-community,9.2 Health education & awareness at community,health_promotion_risk_communication,Health Promotion and Risk Communication,health
+support-rcce-activities-for-communicable-diseases-outbreak,9.3 Support RCCE activities for communicable diseases outbreak,health_promotion_risk_communication,Health Promotion and Risk Communication,health
+wash-assessment-in-community,WASH Assessment in Community,assessment,WASH Assessment,wash
+wash-assessment-in-school,WASH Assessment in School,assessment,WASH Assessment,wash
+wash-assessment-in-hcf,WASH Assessment in HCF,assessment,WASH Assessment,wash
+kap-survey,KAP Survey,assessment,WASH Assessment,wash
+baseline-survey,Baseline Survey,assessment,WASH Assessment,wash
+consultation-on-wash-gbv-risks,Consultation on WASH GBV Risks,wash-consultations,WASH Consultations,wash
+consultation-on-wash-for-pwd,Consultation on WASH for PWD,wash-consultations,WASH Consultations,wash
+pseah-wash-consultations,PSEAH WASH Consultations,wash-consultations,WASH Consultations,wash
+pdm-survey,PDM Survey,evaluation,WASH Evaluation,wash
+fcm-compaints-addressed,FCM compaints addressed,evaluation,WASH Evaluation,wash
+use-of-wash-gbv-checklist,Use of WASH GBV Checklist,wash_gbv_mitigation,WASH for GBV Mitigation,wash
+assistance-through-cashvoucher-distribution-for-safe-water,Assistance through Cash/voucher distribution for safe water,water,Water Activities,wash
+drill-new-borehole-with-hand-pump,Drill new borehole with Hand Pump,water,Water Activities,wash
+rehabilitate-borehole-with-hand-pump,Rehabilitate borehole with Hand Pump,water,Water Activities,wash
+construct-new-dug-wells-with-hand-pump,Construct new dug wells with Hand Pump,water,Water Activities,wash
+rehabilitate-dug-wells-with-hand-pump,Rehabilitate dug wells with Hand Pump,water,Water Activities,wash
+construct-deep-boreholes-with-solar-powered-piped-system---hh,Construct deep boreholes with solar powered piped system - HH,water,Water Activities,wash
+rehabilitate-deep-boreholes-with-solar-powered-piped-system---hh,Rehabilitate deep boreholes with solar powered piped system - HH,water,Water Activities,wash
+construct-deep-boreholes-with-any-other-type-of-pumps---hh,Construct deep boreholes with any other type of pumps - HH,water,Water Activities,wash
+rehabilitate-deep-boreholes-with-any-other-type-of-pumps---hh,Rehabilitate deep boreholes with any other type of pumps - HH,water,Water Activities,wash
+construct-deep-boreholes-with-solar-powered-piped-system---public-taps,Construct deep boreholes with solar powered piped system - public taps,water,Water Activities,wash
+rehabilitate-deep-boreholes-with-solar-powered-piped-system---public-taps,Rehabilitate deep boreholes with solar powered piped system - public taps,water,Water Activities,wash
+construct-deep-boreholes-with-any-other-type-of-pumps---public-taps,Construct deep boreholes with any other type of pumps - public taps,water,Water Activities,wash
+rehabilitate-deep-boreholes-with-any-other-type-of-pumps---public-taps,Rehabilitate deep boreholes with any other type of pumps - public taps,water,Water Activities,wash
+construct-gravity-fedspring-piped-system---hh,Construct Gravity-fed/spring piped system - HH,water,Water Activities,wash
+rehabilitate-gravity-fedspring-piped-system---hh,Rehabilitate Gravity-fed/spring piped system - HH,water,Water Activities,wash
+construct-gravity-fedspring-piped-system---public-taps,Construct Gravity-fed/spring piped system - public taps,water,Water Activities,wash
+rehabilitate-gravity-fedspring-piped-system---public-taps,Rehabilitate Gravity-fed/spring piped system - public taps,water,Water Activities,wash
+construct-water-reservoirs-for-conservation-of-rainwater,Construct water reservoirs for conservation of rainwater,water,Water Activities,wash
+rehabilitate-water-reservoirs-for-conservation-of-rainwater,Rehabilitate water reservoirs for conservation of rainwater,water,Water Activities,wash
+extension-from-existing-piped-system,Extension from Existing Piped System,water,Water Activities,wash
+water-tankering,Water Tankering,water,Water Activities,wash
+water-system-chlorination,Water System chlorination,water,Water Activities,wash
+water-quality-testing,Water Quality Testing,water,Water Activities,wash
+fuel-provision-for-water-systems,Fuel provision for water systems,water,Water Activities,wash
+water-systems-spare-parts-provision,Water systems spare parts provision,water,Water Activities,wash
+bulk-water-storage-installation-with-tapstands,Bulk water storage installation with tapstands,water,Water Activities,wash
+water-filtration-bio-sand-filters-etc-,"Water Filtration ( Bio-sand, Filters etc. )",water,Water Activities,wash
+water-supply-in-schools,Water supply in schools,water,Water Activities,wash
+water-supply-in-hcf,Water Supply in HCF,water,Water Activities,wash
+finalize-water-safety-planning-wsps-to-improve-water-quality-at-source-and-household-level,Finalize Water Safety Planning (WSPs) to improve water quality at source and household level,water,Water Activities,wash
+assistance-through-cashvoucher-distribution-for-wash-supplies,Assistance through Cash/voucher distribution for wash supplies,wash_supplies,WASH Supplies,wash
+number-sammam-children-received-wash-packagekit-at-household-level,# SAM/MAM children received WASH package/kit at household level,wash_supplies,WASH Supplies,wash
+number-pregnant-and-lactating-women-plw-received-wash-packagekit-at-household-level,# Pregnant and Lactating women (PLW) received WASH package/kit at household level,wash_supplies,WASH Supplies,wash
+family-hygiene-kits-distribution,Family Hygiene Kits Distribution,wash_supplies,WASH Supplies,wash
+family-hygiene-consumables-kits-distribution,Family Hygiene Consumables Kits Distribution,wash_supplies,WASH Supplies,wash
+family-water-kit-distribution,Family Water Kit Distribution,wash_supplies,WASH Supplies,wash
+water-treatment-aquatab-chlorination-pur-sachets-etc-distribution,"Water Treatment  (Aquatab, Chlorination, PUR sachets etc. ) Distribution",wash_supplies,WASH Supplies,wash
+soap-distribution,Soap distribution,wash_supplies,WASH Supplies,wash
+hh-water-storage-items-distribution,HH Water storage items distribution,wash_supplies,WASH Supplies,wash
+dignity-kits-distribution-mhm,Dignity kits distribution (MHM),wash_supplies,WASH Supplies,wash
+hygiene-promotion-at-hh-level,Hygiene promotion at HH level,hygiene,Hygiene Activities,wash
+hygiene-promotion-at-community-level,Hygiene promotion at community level,hygiene,Hygiene Activities,wash
+hygiene-promotion-in-schools,Hygiene promotion in schools,hygiene,Hygiene Activities,wash
+hygiene-promotion-in-hcf,Hygiene promotion in HCF,hygiene,Hygiene Activities,wash
+mass-communication-hp-campaigns,Mass communication HP campaigns,hygiene,Hygiene Activities,wash
+iec-material-distribution,IEC material distribution,hygiene,Hygiene Activities,wash
+construct-handwashing-facilities-in-hh,Construct handwashing facilities in HH,sanitation,Sanitation Activities,wash
+construct-handwashing-facilities-in-public-spaces,Construct handwashing facilities in public spaces,sanitation,Sanitation Activities,wash
+construct-handwashing-facilities-in-schools,Construct handwashing facilities in schools,sanitation,Sanitation Activities,wash
+construct-handwashing-facilities-in-hcf,Construct handwashing facilities in HCF,sanitation,Sanitation Activities,wash
+construct-communal-latrines-with-hadwashing-facilities,Construct communal latrines with hadwashing facilities,sanitation,Sanitation Activities,wash
+rehabilitate-communal-latrines-with-hadwashing-facilities,Rehabilitate communal latrines with hadwashing facilities,sanitation,Sanitation Activities,wash
+construct-hh-latrines-with-handwashing-facilities,Construct HH latrines with handwashing facilities,sanitation,Sanitation Activities,wash
+rehabilitate-hh-latrines-with-handwashing-facilities,Rehabilitate HH latrines with handwashing facilities,sanitation,Sanitation Activities,wash
+construct-latrines-with-hadwashing-facilities-in-schools,Construct latrines with hadwashing facilities in schools,sanitation,Sanitation Activities,wash
+rehabilitate-latrines-with-hadwashing-facilities-in-schools,Rehabilitate latrines with hadwashing facilities in schools,sanitation,Sanitation Activities,wash
+construct-latrines-with-hadwashing-facilities-in-hcf,Construct latrines with hadwashing facilities in HCF,sanitation,Sanitation Activities,wash
+rehabilitate-latrines-with-hadwashing-facilities-in-hcf,Rehabilitate latrines with hadwashing facilities in HCF,sanitation,Sanitation Activities,wash
+clts-for-construction-of-improved-facilities,CLTS for construction of improved facilities,sanitation,Sanitation Activities,wash
+clts-for-rehabilitation-of-improved-facilities,CLTS for rehabilitation of improved facilities,sanitation,Sanitation Activities,wash
+construct-bathing-washing-facilities-,Construct Bathing / Washing Facilities ,sanitation,Sanitation Activities,wash
+rehabilitate-bathing-washing-facilities,Rehabilitate  Bathing / Washing Facilities,sanitation,Sanitation Activities,wash
+training-water-user-committees,Training water user committees,capacity-building,Capacity Building,wash
+training-water-utility-staff,Training water utility staff,capacity-building,Capacity Building,wash
+training-hygiene-promoters,Training Hygiene Promoters,capacity-building,Capacity Building,wash
+training-hcfs-staff-on-wash-om-including-disinfection,Training HCFs staff on WASH O&M including disinfection,capacity-building,Capacity Building,wash
+training-school-staff-on-wash-om-including-disinfection,Training school staff on WASH O&M including disinfection,capacity-building,Capacity Building,wash
+solid-waste-management-in-community,Solid Waste Management in community,sanitation,Sanitation Activities,wash
+solid-waste-management-in-schools,Solid Waste Management in Schools,sanitation,Sanitation Activities,wash
+solid-waste-management-in-hcf,Solid Waste Management in HCF,sanitation,Sanitation Activities,wash
+provision-of-incinerator-in-hcf,Provision of incinerator in HCF,sanitation,Sanitation Activities,wash
+vector-control-awareness-campaign,Vector Control Awareness Campaign,sanitation,Sanitation Activities,wash
+desludge-communalinstitutional-latrines,Desludge communal/institutional latrines,sanitation,Sanitation Activities,wash
+certify-communities-as-free-of-open-defecation-following-the-clts-protocol,Certify communities as free of open defecation following the CLTS protocol,sanitation,Sanitation Activities,wash
+conduct-clean-up-campaigns-in-emergency,Conduct clean up campaigns in emergency,sanitation,Sanitation Activities,wash
+hrp-2023-clearance-of-mines-and-other-explosive-remnants-of-war-erw,(HRP 2023) Clearance of Mines and other Explosive Remnants of War (ERW),ma,MA,protection
+hrp-2023-victim-assistance,(HRP 2023) Victim Assistance,ma,MA,protection
+hrp-2023-access-to-land,(HRP 2023) Access to Land,hlp,HLP,protection
+hrp-2023-general-protection,(HRP 2023) General Protection,gp,GP,protection
+hrp-2023-data-collection-storage-and-sharing,"(HRP 2023) Data collection, storage and sharing",gbv,GBV,protection
+hrp-2023-multi-sectoral-engagement-health-legaljustice-security-psychosocial,"(HRP 2023) Multi sectoral engagement (health, legal/justice, security, psychosocial)",gbv,GBV,protection
+hrp-2023-unaccompanied-and-separated-children,(HRP 2023) Unaccompanied and separated children,cpie,CPiE,protection
+hrp-2023-capacity-building,(HRP 2023) Capacity building,cpie,CPiE,protection
+hrp-2023-case-management,(HRP 2023) Case management,cpie,CPiE,protection
+hrp-2023-psychosocial-distress-and-mental-disorders,(HRP 2023) Psychosocial distress and mental disorders,cpie,CPiE,protection

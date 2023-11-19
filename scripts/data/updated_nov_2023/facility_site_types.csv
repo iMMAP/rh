@@ -1,0 +1,31 @@
+cluster,name
+cccm,IDP camp site
+cccm,host community site
+cccm,refugee site
+cccm,refugee returnee site
+cccm,IDP returnee site
+education,school/learning space
+health,hospital/health centre
+health,mobile health centre /clinic
+health,temporary health centre/clinic
+nutrition,hospital/health centre
+nutrition,malnutrition screening site
+nutrition,nutrition distribution site
+esnfi,shelter distribution site
+esnfi,camp site
+esnfi,housing construction site
+wash,school/learning space
+wash,hospital/health centre
+wash,outreach site
+wash,toilet
+wash,bathroom
+wash,water point
+wash,WASH distribution site
+wash,waste collection/disposal point
+wash,waste treatment point
+protection,Child Friendly Space
+protection,Family Protection Centre
+protection,MHPSS Site
+protection,Women Friendly Space
+protection,EOD Site
+protection,Housing Site

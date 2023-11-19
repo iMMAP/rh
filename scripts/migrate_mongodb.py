@@ -5,24 +5,21 @@ from datetime import datetime
 import pandas as pd
 
 # SET THE FILE PATHS
-SQLITE_DB_PATH = "../db.sqlite3"
+SQLITE_DB_PATH = "db.sqlite3"
 
 # CSV DATA FILES
-CURRENCIES_CSV = "./data/currencies.csv"
-LOCATIONS_CSV = "./data/af_loc.csv"
-ORGANIZATIONS_CSV = "./data/organizations.csv"
-BENEFICIARY_TYPES_CSV = "./data/beneficiary_types.csv"
-DONORS_CSV = "./data/donors.csv"
-INDICATORS_CSV = "./data/Indicators.csv"
-ACTIVITIES_CSV = "./data/activities.csv"
-USERS_CSV = "./data/user.csv"
-
-CLUSTERS = "./data/new_db/clusters.csv"
-ACTIVITY_DOMAIN_CSV = "./data/new_db/activity_domains.csv"
-ACTIVITY_DESCRIPTION_CSV = "./data/new_db/activity_types.csv"
-ACTIVITY_DETAIL_CSV = "./data/new_db/activity_details.csv"
-INDICATORS_CSV_OLD_DB = "./data/new_db/indicators.csv"
-FACILITIES = "./data/new_db/facility_site_types.csv"
+CURRENCIES_CSV = "scripts/data/updated_nov_2023/currencies.csv"
+LOCATIONS_CSV = "scripts/data/updated_nov_2023/af_loc.csv"
+CLUSTERS = "scripts/data/updated_nov_2023/clusters.csv"
+INDICATORS_CSV = "scripts/data/updated_nov_2023/indicators.csv"
+ACTIVITY_DOMAIN_CSV = "scripts/data/updated_nov_2023/activity_domains.csv"
+ACTIVITY_DESCRIPTION_CSV = "scripts/data/updated_nov_2023/activity_types.csv"
+ACTIVITY_DETAIL_CSV = "scripts/data/updated_nov_2023/activity_details.csv"
+BENEFICIARY_TYPES_CSV = "scripts/data/updated_nov_2023/beneficiary_types.csv"
+ORGANIZATIONS_CSV = "scripts/data/updated_nov_2023/organizations.csv"
+DONORS_CSV = "scripts/data/updated_nov_2023/donors.csv"
+USERS_CSV = "scripts/data/updated_nov_2023/user.csv"
+FACILITIES = "scripts/data/updated_nov_2023/facility_site_types.csv"
 
 
 def get_sqlite_client(dbname):
@@ -644,90 +641,6 @@ def import_users_from_csv(conn, users_csv):
             conn.rollback()
 
 
-def import_activities_from_csv(conn, activities_csv):
-    """
-    Import Activities from CSV file.
-    """
-    # conn.row_factory = sqlite3.Row
-    c = conn.cursor()
-
-    df = pd.read_csv(activities_csv)
-    df["fields"] = df["fields"].fillna("")
-
-    if len(df) > 0:
-        table = "rh_activity"
-
-        df.to_sql("tmp_activity", conn, if_exists="replace", index=False)
-
-        try:
-            c.execute(
-                """select active, activity_date, HRP_Code, Core_Indicator_Yes_No, code, name, 
-                subdomain_code, subdomain_name, start_date, end_date, _id, admin0pcode, 
-                cluster_id, indicator_id from tmp_activity"""
-            )
-            activities = c.fetchall()
-            for activity in activities:
-                activity = list(activity)
-                active = activity[0]
-                if active is None:
-                    activity[0] = True
-
-                indicator = activity[-1]
-                if indicator:
-                    c.execute(f"select id from rh_indicator where code='{indicator}'")
-                    indicator = c.fetchone()
-                    if indicator:
-                        activity[-1] = indicator[0]
-
-                cluster = activity.pop(-2)
-                location = activity.pop(-2)
-                activity = tuple(activity)
-
-                aquery = f"""
-                        insert into 
-                        {table}(active, activity_date, hrp_code, code_indicator, code, name, 
-                        subdomain_code, subdomain_name, start_date, end_date, old_id, indicator_id) 
-                        values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-                    """
-
-                c.execute(aquery, activity)
-                activity_id = c.lastrowid
-
-                lquery = f"""select id from rh_location where code='{location}'"""
-                c.execute(lquery)
-
-                location_id = c.fetchone()
-
-                if activity_id and location_id:
-                    alquery = f"""
-                        insert into 
-                        rh_activity_locations(activity_id, location_id) 
-                        values({activity_id}, {location_id[0]})
-                    """
-                    c.execute(alquery)
-
-                cquery = f"""
-                select id 
-                from rh_cluster 
-                where code='{cluster}' or title='{cluster}' or name='{cluster}'
-                """
-                c.execute(cquery)
-
-                cluster_id = c.fetchone()
-
-                if activity_id and cluster_id:
-                    alquery = f"""
-                        insert into 
-                        rh_activity_clusters(activity_id, cluster_id) 
-                        values({activity_id}, {cluster_id[0]})
-                    """
-                    c.execute(alquery)
-
-            c.execute("DROP TABLE tmp_activity;")
-        except Exception as ex:
-            conn.rollback()
-
-
 def import_facilities_from_csv(conn, facilities_csv):
     """
     Import Facility types from CSV
@@ -784,7 +697,7 @@ try:
 
     import_donors_from_csv(connection, DONORS_CSV)
 
-    import_indicators_from_csv(connection, INDICATORS_CSV_OLD_DB)
+    import_indicators_from_csv(connection, INDICATORS_CSV)
 
     import_users_from_csv(connection, USERS_CSV)
 

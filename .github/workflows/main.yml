@@ -39,7 +39,6 @@ jobs:
       - name: Run deploy
         run: |
           ssh target "
-            python --version
             python3 --version
             cd rh/
             source .venv/bin/activate

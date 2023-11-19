@@ -4,6 +4,10 @@
 
 
 {% block project_body %}
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.9.0/dist/sweetalert2.min.css">
+
+
 <div class="breadcrumbs-nav-panel">
     <div class="holder">
         <ul class="breadcrumbs">
@@ -22,9 +26,6 @@
                         Completed Projects
                     {% endif %}
                 </a>
-            </li>
-            <li>
-                <a href="{% url 'view_project' project.id %}">{{ project.code }}</a>
             </li>
             <li>
                 <a href="{% url 'view_project' project.id %}">{{ project.code }}</a>
@@ -186,6 +187,11 @@
                     <li class="">
                         <a href="#reports_complete">Progress Update Complete</a>
                     </li>
+                    {% if project_report_archive %}
+                    <li class="">
+                        <a href="#reports_archive">Progress Update Archived</a>
+                    </li>
+                    {% endif %}
                 </ul>
             </div>
             <div>
@@ -284,9 +290,61 @@
             </tbody>
         </table>
     </div>
+    {% if project_report_archive %}
+    <div id="reports_archive">
+        <table class="table responsive-table report-table">
+            <thead>
+                <tr>
+                    <th class="month-col">
+                        <strong class="table-title">Month</strong>
+                    </th>
+
+                    <th class="progress-col">
+                        <strong class="table-title">Progress</strong>
+                    </th>
+
+                    <th class="date-col">
+                        <strong class="table-title">Due date</strong>
+                    </th>
+
+                    <th class="locations-col">
+                        <strong class="table-title">Locations</strong>
+                    </th>
+
+                    <th class="locations-col">
+                        <strong class="table-title">Locations</strong>
+                    </th>
+
+                    <th class="notes-col">
+                        <strong class="table-title">Notes</strong>
+                    </th>
+
+                    <th class="month-col">
+                        <strong class="table-title">Status</strong>
+                    </th>
+
+                    <!-- <th class="edit-col">
+                        <strong class="table-title"></strong>
+                    </th> -->
+                </tr>
+            </thead>
+            <tbody>
+            {% for report in project_report_archive %}
+            {% include "project_reports/views/table_details.html" %}
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endif %}
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.9.0/dist/sweetalert2.all.min.js"></script>
+
 {% compress js %}
 	<script defer src="{% static 'project_reports/js/monthly_report.js' %}"></script>
 {% endcompress js %}
+
+
+
 {% endblock project_body %}
 

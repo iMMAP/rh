@@ -10,6 +10,56 @@
                 <strong class="h5">{{ monthly_report.report_date | date:"F Y" }}</strong>
                 <ul class="buttons-list-inline">
                     <li>
+                        <a href="#" 
+                        data-url="{% url 'delete_project_monthly_report' monthly_report.pk %}"
+                        data-type="delete" 
+                        data-name="Report" 
+                        class="btn btn-gray show-sw-action-popup">
+                            <span class="btn-text">Delete</span>
+                            <span class="icon-trashbin-outline"></span>
+                        </a>
+                    </li>
+                    {% if monthly_report.active %}
+                    <li>
+                        <a href="#" 
+                        data-url="{% url 'archive_project_monthly_report' monthly_report.pk %}"
+                        data-type="archive" 
+                        data-name="Report" 
+                        class="btn btn-gray show-sw-action-popup">
+                            <span class="btn-text">Archive</span>
+                            <svg xmlns="http://www.w3.org/2000/svg"
+                                class="project-view archive-icon"
+                                width="15"
+                                height="15"
+                                viewBox="0 0 24 24">
+                            <path fill="currentColor" d="M20 21H4V10h2v9h12v-9h2v11M3 3h18v6H3V3m2 2v2h14V5m-8.5 6v3H8l4 4l4-4h-2.5v-3" />
+                        </svg>
+                        </a>
+                    </li>
+                    {% else %}
+                    <li>
+                        <a href="#" 
+                        data-url="{% url 'unarchive_project_monthly_report' monthly_report.pk %}"
+                        data-type="unarchive" 
+                        data-name="Report" 
+                        class="btn btn-gray show-sw-action-popup">
+                            <span class="btn-text">Unarchive</span>
+                            <svg xmlns="http://www.w3.org/2000/svg"
+                                class="project-view-icon"
+                                width="15"
+                                height="15"
+                                viewBox="0 0 36 36">
+                            <path fill="currentColor" d="M29 32H7V22H5v10a2 2 0 0 0 2 2h22a2 2 0 0 0 2-2V22h-2Z" class="clr-i-outline clr-i-outline-path-1" />
+                            <path fill="currentColor" d="M14 24a1 1 0 0 0 1 1h6a1 1 0 0 0 0-2h-6a1 1 0 0 0-1 1Z" class="clr-i-outline clr-i-outline-path-2" />
+                            <path fill="currentColor" d="M15 18H6v-4h9v-2H5.5A1.5 1.5 0 0 0 4 13.5V20h11.78a3 3 0 0 1-.78-2Z" class="clr-i-outline clr-i-outline-path-3" />
+                            <path fill="currentColor" d="M30.5 12H21v2h9v4h-9a3 3 0 0 1-.78 2H32v-6.5a1.5 1.5 0 0 0-1.5-1.5Z" class="clr-i-outline clr-i-outline-path-4" />
+                            <path fill="currentColor" d="m13 9.55l4-3.95V18a1 1 0 1 0 2 0V5.6l4 3.95a1 1 0 1 0 1.41-1.42L18 1.78l-6.39 6.35A1 1 0 0 0 13 9.55Z" class="clr-i-outline clr-i-outline-path-5" />
+                            <path fill="none" d="M0 0h36v36H0z" />
+                        </svg>
+                        </a>
+                    </li>
+                    {% endif %}
+                    <li>
                         <a href="{% url 'update_project_monthly_report_progress' project=project.id report=monthly_report.pk %}" class="btn btn-red">
                             Edit
                         </a>
@@ -29,6 +79,14 @@
                                 <span class="text-read-only">{{ monthly_report.report_date | date:"F Y" }}</span>
                                 </div>
                             </div>
+                            <div class="field-col">
+                                <div class="input-field">
+                                    <label>Report Due Date</label>
+                                    <span class="text-read-only">{{ monthly_report.report_due_date }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="multiple-fields-row two-items">
                             {% if monthly_report.submitted_on %}
                                 <div class="field-col">
                                     <div class="input-field">
@@ -39,20 +97,26 @@
                                     </div>
                                 </div>
                             {% endif %}
-                        </div>
-                        <div class="multiple-fields-row two-items">
-                            <div class="field-col">
-                                <div class="input-field">
-                                    <label>Report Due Date</label>
-                                    <span class="text-read-only">{{ monthly_report.report_due_date | date:"F Y" }}</span>
-                                </div>
-                            </div>
-                            {% if monthly_report.approved_on %}
+                            {% if monthly_report.approved_on and monthly_report.state == 'complete' %}
                                 <div class="field-col">
                                     <div class="input-field">
-                                    <label>Approved On</label>
+                                    <label>
+                                        Approved On
+                                    </label>
                                     <span class="text-read-only">
                                         {{ monthly_report.approved_on }}
+                                    </span>
+                                    </div>
+                                </div>
+                            {% endif %}
+                            {% if monthly_report.rejected_on and monthly_report.state == 'reject' %}
+                                <div class="field-col">
+                                    <div class="input-field">
+                                    <label>
+                                        Rejected On
+                                    </label>
+                                    <span class="text-read-only">
+                                        {{ monthly_report.rejected_on }}
                                     </span>
                                     </div>
                                 </div>
@@ -264,7 +328,7 @@
             </div>
         </div>
         
-        {% if monthly_report.comments %}
+        {% if monthly_report.comments and monthly_report.state == 'reject' %}
         <div class="monthly-reporting">
             <div class="row">
                 <div class="col">
@@ -279,14 +343,22 @@
         
         <div class="monthly-progress-submit-holder text-center">
             {% if monthly_report.state in "pending,todo,reject" %}
-                <a href='{% url "submit_monthly_report" monthly_report.pk %}' class="btn btn-red">
+                <a  data-url="{% url 'submit_monthly_report' monthly_report.pk %}"
+                    data-button="Submit Report" 
+                    class="btn btn-red show-sw-confirm-button">
                     <span class="btn-text">Submit Monthly Report</span>
                 </a>
             {% elif monthly_report.state == "submit" %}
-                <a href='{% url "approve_monthly_report" monthly_report.pk %}' class="btn btn-red">
+                <a data-url="{% url 'approve_monthly_report' monthly_report.pk %}" 
+                    data-button="Approve Report"
+                    class="btn btn-red show-sw-confirm-button"
+                >
                     <span class="btn-text">Approve Monthly Report</span>
                 </a>
-                <a href='{% url "reject_monthly_report" monthly_report.pk %}' class="btn btn-gray">
+                <a data-url="{% url 'reject_monthly_report' monthly_report.pk %}" 
+                    data-button="Reject Report"
+                    class="btn btn-gray show-sw-confirm-button"
+                >
                     <span class="btn-text">Reject Monthly Report</span>
                 </a>
             {% endif %}

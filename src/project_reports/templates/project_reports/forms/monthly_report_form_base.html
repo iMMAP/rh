@@ -36,10 +36,14 @@
     </ul>
       <ul class="buttons-list-inline">
         <li>
-          <a href="#" class="btn btn-gray">
-            <span class="btn-text">Copy last month</span>
-            <span class="icon-copy-outline"></span>
-          </a>
+			<a href="#" 
+				data-url="{% url 'copy_project_monthly_report' monthly_report.pk %}"
+				data-type="copy" 
+				data-name="Report" 
+				class="btn btn-gray show-sw-action-popup">
+				<span class="btn-text">Copy last month Report</span>
+				<span class="icon-copy-outline"></span>
+			</a>
         </li>
         <li>
           <a href="#" class="btn btn-red">

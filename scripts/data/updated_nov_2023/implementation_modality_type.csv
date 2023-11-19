@@ -1,0 +1,5 @@
+mpc_delivery_type_id,mpc_delivery_type_name
+in-kind,In-Kind
+cash,Cash in Envelope
+voucher,Voucher
+distribution,Distribution

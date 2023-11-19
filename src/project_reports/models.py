@@ -1,5 +1,4 @@
 from django.db import models
-
 from rh.models import ActivityPlan, Disaggregation, Indicator, Location, LocationType, Project
 
 # ##############################################
@@ -27,6 +26,7 @@ class ProjectMonthlyReport(models.Model):
     comments = models.TextField(blank=True, null=True)
     submitted_on = models.DateTimeField(blank=True, null=True)
     approved_on = models.DateTimeField(blank=True, null=True)
+    rejected_on = models.DateTimeField(blank=True, null=True)
 
     def __str__(self):
         name = "Monthly Report"

@@ -7,9 +7,9 @@ from django.forms.models import inlineformset_factory
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.template.loader import render_to_string
+from django.urls import reverse
 from django.utils import timezone
 from django.views.decorators.cache import cache_control
-
 from rh.models import Indicator, Location, Project
 
 from .forms import (
@@ -18,7 +18,7 @@ from .forms import (
     ProjectMonthlyReportForm,
     TargetLocationReportFormSet,
 )
-from .models import ActivityPlanReport, ProjectMonthlyReport
+from .models import ActivityPlanReport, DisaggregationLocationReport, ProjectMonthlyReport, TargetLocationReport
 
 
 @cache_control(no_store=True)
@@ -27,8 +27,10 @@ def index_project_report_view(request, project):
     """Project Monthly Report View"""
     project = get_object_or_404(Project, pk=project)
     project_reports = ProjectMonthlyReport.objects.all()
-    project_reports_todo = project_reports.filter(state__in=["todo", "pending"])
-    project_report_complete = project_reports.filter(state="complete")
+    active_project_reports = project_reports.filter(active=True)
+    project_report_archive = project_reports.filter(active=False)
+    project_reports_todo = active_project_reports.filter(state__in=["todo", "pending", "submit", "reject"])
+    project_report_complete = active_project_reports.filter(state="complete")
     project_state = project.state
     parent_page = {
         "in-progress": "active_projects",
@@ -39,9 +41,10 @@ def index_project_report_view(request, project):
     context = {
         "project": project,
         "parent_page": parent_page,
-        "project_reports": project_reports,
+        "project_reports": active_project_reports,
         "project_reports_todo": project_reports_todo,
         "project_report_complete": project_report_complete,
+        "project_report_archive": project_report_archive,
         "project_view": False,
         "financial_view": False,
         "reports_view": True,
@@ -82,6 +85,7 @@ def create_project_monthly_report_view(request, project):
         if form.is_valid():
             report = form.save(commit=False)
             report.project = project
+            report.active = True
             report.save()
             return redirect(
                 "create_project_monthly_report_progress",
@@ -98,6 +102,190 @@ def create_project_monthly_report_view(request, project):
         "reports_view": True,
     }
     return render(request, "project_reports/forms/monthly_report_form.html", context)
+
+
+def copy_project_monthly_report_view(request, report):
+    """Copy report view"""
+    monthly_report = get_object_or_404(ProjectMonthlyReport, pk=report)
+
+    if monthly_report:
+        # Create a new monthly report by duplicating the current report.
+        new_monthly_report = get_object_or_404(ProjectMonthlyReport, pk=report)
+        new_monthly_report.pk = None  # Generate a new primary key for the new monthly report.
+        new_monthly_report.save()  # Save the new monthly report to the database.
+
+        # Modify the state of the new monthly report.
+        new_monthly_report.state = "todo"
+
+        # Check if the new monthly report was successfully created.
+        if new_monthly_report:
+            # Get all activity plans reports associated with the current monthly report.
+            activity_plan_reports = monthly_report.activityplanreport_set.all()
+
+            # Iterate through each activity plan  report and copy it to the new monthly report.
+            for plan_report in activity_plan_reports:
+                new_plan_report = copy_monthly_report_activity_plan(new_monthly_report, plan_report)
+                location_reports = plan_report.targetlocationreport_set.all()
+
+                # Iterate through target locations reports and copy them to the new plan report.
+                for location_report in location_reports:
+                    new_location_report = copy_target_location_report(new_plan_report, location_report)
+                    disaggregation_location_reports = location_report.disaggregationlocationreport_set.all()
+
+                    # Iterate through disaggregation locations reports and copy them to the new location report.
+                    for disaggregation_location_report in disaggregation_location_reports:
+                        copy_disaggregation_location_reports(new_location_report, disaggregation_location_report)
+
+        # Save the changes made to the new monthly report.
+        new_monthly_report.save()
+
+        url = reverse(
+            "project_reports_home",
+            kwargs={
+                "project": new_monthly_report.project.pk,
+            },
+        )
+
+        # Return the URL in a JSON response
+        response_data = {"redirect_url": url}
+        return JsonResponse(response_data)
+
+
+def copy_monthly_report_activity_plan(monthly_report, plan_report):
+    """Copy activity plan reports"""
+    try:
+        # Duplicate the original activity plan report by retrieving it with the provided primary key.
+        new_plan_report = get_object_or_404(ActivityPlanReport, pk=plan_report.pk)
+        new_plan_report.pk = None  # Generate a new primary key for the duplicated plan report.
+        new_plan_report.save()  # Save the duplicated plan report to the database.
+
+        # Associate the duplicated plan report with the new monthly report.
+        new_plan_report.monthly_report = monthly_report
+
+        # Set the plan report as active
+        new_plan_report.active = True
+
+        # Copy indicator from the current plan report to the duplicated plan report.
+        new_plan_report.indicator = plan_report.indicator
+
+        # Save the changes made to the duplicated plan report.
+        new_plan_report.save()
+
+        # Return the duplicated plan report.
+        return new_plan_report
+    except Exception as _:
+        # If an exception occurs, return False to indicate the copy operation was not successful.
+        return False
+
+
+def copy_target_location_report(plan_report, location_report):
+    """Copy Target Locations"""
+    try:
+        # Duplicate the original target location report report report
+        # by retrieving it with the provided primary key.
+        new_location_report = get_object_or_404(TargetLocationReport, pk=location_report.pk)
+        new_location_report.pk = (
+            None  # Generate a new primary key for the duplicated location.
+        )
+        new_location_report.save()  # Save the duplicated location to the database.
+
+        # Associate the duplicated location with the new activity plan report.
+        new_location_report.activity_plan_report = plan_report
+
+        new_location_report.save()
+
+        # Return the duplicated location.
+        return new_location_report
+    except Exception as _:
+        # If an exception occurs, return False to indicate the copy operation was not successful.
+        return False
+
+
+def copy_disaggregation_location_reports(location_report, disaggregation_location_report):
+    """Copy Disaggregation Locations"""
+    try:
+        # Duplicate the original disaggregation location by retrieving it with the provided
+        # primary key.
+        new_disaggregation_location_report = get_object_or_404(
+            DisaggregationLocationReport, pk=disaggregation_location_report.pk
+        )
+        new_disaggregation_location_report.pk = (
+            None  # Generate a new primary key for the duplicated location report.
+        )
+        new_disaggregation_location_report.save()  # Save the duplicated location report to the database.
+
+        # Associate the duplicated disaggregation location report with the new target location report.
+        new_disaggregation_location_report.target_location_report = location_report
+
+        # Save the changes made to the duplicated disaggregation location report.
+        new_disaggregation_location_report.save()
+
+        # Return True to indicate that the copy operation was successful.
+        return True
+    except Exception as _:
+        # If an exception occurs, return False to indicate the copy operation was not successful.
+        return False
+
+
+def delete_project_monthly_report_view(request, report):
+    """Delete View for Project Reports"""
+    monthly_report = get_object_or_404(ProjectMonthlyReport, pk=report)
+    project = monthly_report.project
+    # TODO: Check access rights before deleting
+    if monthly_report:
+        monthly_report.delete()
+    # Generate the URL using reverse
+    url = reverse(
+        "project_reports_home",
+        kwargs={
+            "project": project.pk,
+        },
+    )
+
+    # Return the URL in a JSON response
+    response_data = {"redirect_url": url}
+    return JsonResponse(response_data)
+
+
+def archive_project_monthly_report_view(request, report):
+    """Archive View for Project Reports"""
+    monthly_report = get_object_or_404(ProjectMonthlyReport, pk=report)
+    project = monthly_report.project
+    if monthly_report:
+        monthly_report.active = False
+        monthly_report.save()
+    # Generate the URL using reverse
+    url = reverse(
+        "project_reports_home",
+        kwargs={
+            "project": project.pk,
+        },
+    )
+
+    # Return the URL in a JSON response
+    response_data = {"redirect_url": url}
+    return JsonResponse(response_data)
+
+
+def unarchive_project_monthly_report_view(request, report):
+    """Unarchive View for Project Reports"""
+    monthly_report = get_object_or_404(ProjectMonthlyReport, pk=report)
+    project = monthly_report.project
+    if monthly_report:
+        monthly_report.active = True
+        monthly_report.state = "todo"
+        monthly_report.save()
+    # Generate the URL using reverse
+    url = reverse(
+        "project_reports_home",
+        kwargs={
+            "project": project.pk,
+        },
+    )
+
+    # Return the URL in a JSON response
+    response_data = {"redirect_url": url}
+    return JsonResponse(response_data)
 
 
 @cache_control(no_store=True)
@@ -602,36 +790,67 @@ def get_disaggregations_report_empty_forms(request):
 
 def submit_monthly_report_view(request, report):
     monthly_report = get_object_or_404(ProjectMonthlyReport, pk=report)
+    # TODO: Handle with access rights and groups
     monthly_report.state = "submit"
     monthly_report.submitted_on = timezone.now()
     monthly_report.save()
-    return redirect(
+    # Generate the URL using reverse
+    url = reverse(
         "view_monthly_report",
-        project=monthly_report.project.pk,
-        report=monthly_report.pk,
+        kwargs={
+            "project": monthly_report.project.pk,
+            "report": monthly_report.pk,
+        },
     )
+
+    # Return the URL in a JSON response
+    response_data = {"redirect_url": url}
+    return JsonResponse(response_data)
 
 
 def approve_monthly_report_view(request, report):
     monthly_report = get_object_or_404(ProjectMonthlyReport, pk=report)
+    # TODO: Handle with access rights and groups
     monthly_report.state = "complete"
     monthly_report.approved_on = timezone.now()
     monthly_report.save()
-    return redirect(
+    # Generate the URL using reverse
+    url = reverse(
         "view_monthly_report",
-        project=monthly_report.project.pk,
-        report=monthly_report.pk,
+        kwargs={
+            "project": monthly_report.project.pk,
+            "report": monthly_report.pk,
+        },
     )
+
+    # Return the URL in a JSON response
+    response_data = {"redirect_url": url}
+    return JsonResponse(response_data)
 
 
 def reject_monthly_report_view(request, report):
     # TODO: Provide a popup reasone for rejection field here.
     monthly_report = get_object_or_404(ProjectMonthlyReport, pk=report)
+    message = ""
+    if request.GET.get("message", ""):
+        message = request.GET.get("message")
+
+    # TODO: Handle with access rights and groups
     monthly_report.state = "reject"
-    monthly_report.submitted_on = timezone.now()
+    monthly_report.rejected_on = timezone.now()
+    monthly_report.comments = message
+
     monthly_report.save()
-    return redirect(
+
+    # Generate the URL using reverse
+    url = reverse(
         "view_monthly_report",
-        project=monthly_report.project.pk,
-        report=monthly_report.pk,
+        kwargs={
+            "project": monthly_report.project.pk,
+            "report": monthly_report.pk,
+        },
     )
+
+    # Return the URL in a JSON response
+    response_data = {"redirect_url": url}
+    return JsonResponse(response_data)

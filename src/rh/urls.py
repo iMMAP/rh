@@ -142,13 +142,8 @@ urlpatterns = [
     ),
     # Filter Export
     path(
-        "export-filter/",
+        "export-filter/<int:projectId>",
         export_views.ProjectFilterExportView.as_view(),
         name="export_project_filter",
     ),
-    # path(
-    #     "project/view_project/1/export-filter/",
-    #     user_views.ProjectFilterExportView,
-    #     name="export_project_filter",
-    #     ),
 ]

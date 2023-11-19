@@ -89,64 +89,67 @@
                                     <div class="multiple-fields-row two-items">
                                         <div class="field-col">
                                             <div class="input-holder">
-                                                <input type="checkbox" id="title" class="input-check" name="title" value="{{project_filter.title}}">
+                                                <input type="checkbox" id="title" class="input-check" name="title">
                                                 <label for="title">Title</label>
                                             </div>
                                             <div class="input-holder">
-                                                <input type="checkbox" id="code" class="input-check" name="code" value="{{project_filter.code}}">
+                                                <input type="checkbox" id="code" class="input-check" name="code">
                                                 <label for="code">Code</label>
                                             </div>
                                             <div class="input-holder">
-                                                <input type="checkbox" id="budget" class="input-check" name="budget" value="{{project_filter.budget}}">
+                                                <input type="checkbox" id="budget" class="input-check" name="budget">
                                                 <label for="budget">Budget</label>
                                             </div>
                                             <div class="input-holder">
-                                                <input type="checkbox" id="budgetReceived" class="input-check" name="budget_received" value="{{project_filter.budget_received}}">
+                                                <input type="checkbox" id="budgetReceived" class="input-check" name="budget_received">
                                                 <label for="budgetReceived">Received Budget</label>
                                             </div>
                                             <div class="input-holder">
-                                                <input type="checkbox" id="user" class="input-check" name="user" value="{{project_filter.user}}">
+                                                <input type="checkbox" id="user" class="input-user" name="{{project_filter.user.id}}">
                                                 <label for="user">Focal Point</label>
                                             </div>
                                             <div class="input-holder">
-                                                <input type="checkbox" id="startDate" class="input-check" name="start_date" value="{{ project_filter.start_date }}">
+                                                <input type="checkbox" id="startDate" class="input-check" name="start_date">
                                                 <label for="startDate">Start Date</label>
                                             </div>
-
                                         </div>
                                         
                                         <div class="field-col">
                                             <div class="input-holder">
                                                 <input type="checkbox" id="state" 
-                                                class="input-check" name="state" value="{{project_filter.state}}">
+                                                class="input-check" name="state">
                                                 <label for="state">State</label>
                                             </div>
                                             <div class="input-holder">
                                                 <input type="checkbox" id="budgetGap" 
-                                                class="input-check" name="is_hrp_project" value="{{project_filter.budget_gap}}">
+                                                class="input-check" name="budget_gap">
                                                 <label for="budgetGap">Budget Gap</label>
                                             </div>
                                             <div class="input-holder">
                                                 <input type="checkbox" id="isHRPProject" 
-                                                class="input-check" name="is_hrp_project" value="{{project_filter.is_hrp_project}}">
+                                                class="input-check" name="is_hrp_project">
                                                 <label for="isHRPProject">Is HRP Project</label>
                                             </div>
                                             <div class="input-holder">
                                                 <input type="checkbox" id="hrpCode" 
-                                                class="input-check" name="hrp_code" value="{{project_filter.hrp_code}}">
+                                                class="input-check" name="hrp_code">
                                                 <label for="hrpCode">HRP Code</label>
                                             </div>
                                             <div class="input-holder">
                                                 <input type="checkbox" id="budgetCurrency" 
-                                                class="input-check" name="budget_currency" value="{{project_filter.budget_currency}}">
-                                                <label for="budgetCurrency">Budget Currency</label>
+                                                class="input-currency" name="{{project_filter.budget_currency.id}}">
+                                                <label for="budgetCurrency">Budget Currency </label>
                                             </div>
                                             <div class="input-holder">
                                                 <input type="checkbox" id="endDate" 
-                                                class="input-check" name="end_date" value="{{ project_filter.end_date }}">
+                                                class="input-check" name="end_date">
                                                 <label for="endDate">End Date</label>
                                             </div>
                                         </div>
+                                    </div>
+                                    <div class="input-holder">
+                                        <input type="checkbox" id="description" class="input-check" name="description">
+                                        <label for="description">Description</label>
                                     </div>
                                     
                                 <div class="project-title report-title">
@@ -155,7 +158,7 @@
                                 <div class="select-field">
                                     {% for donor in project_filter.donors.all %}
                                         <input type="checkbox" id="donor-{{forloop.counter}}" 
-                                        class="input-check-donor" name="donors" value="{{donor.name }}">
+                                        class="input-check-donor" name="donors" value="{{donor.id}}">
                                         <label for="donor-{{forloop.counter}}">{{donor.name}}</label><br>
                                     {% endfor %}
                                 </div>
@@ -165,7 +168,7 @@
                                 <div class="select-field ">
                                     {% for cluster in project_filter.clusters.all %}
                                         <input type="checkbox" id="cluster-{{forloop.counter}}" 
-                                        class="input-check-cluster" name="clusters" value="{{cluster.title}}">
+                                        class="input-check-cluster" name="clusters" value="{{cluster.id}}">
                                         <label for="cluster-{{forloop.counter}}"> {{ cluster.title }}</label><br>
                                     {% endfor %}
                                 </div>
@@ -175,7 +178,7 @@
                                 <div class="select-field">
                                     {% for activity_domain in project_filter.activity_domains.all %}
                                         <input type="checkbox" id="activityDomain-{{forloop.counter}}" 
-                                        class="input-check-activityDomain" name="activity_domains" value="{{activity_domain.name}}">
+                                        class="input-check-activityDomain" name="activity_domains" value="{{activity_domain.id}}">
                                         <label for="activityDomain-{{forloop.counter}}">{{activity_domain.name}}</label><br>
                                     {% endfor %}
                                 </div>
@@ -186,7 +189,7 @@
                                 <div class="select-field">
                                     {% for implementing in project_filter.implementing_partners.all %}
                                         <input type="checkbox" id="implementingPartner-{{forloop.counter}}" 
-                                        class="input-check-implement" name="activity_domains" value="{{implementing.code}}({{implementing.type}})">
+                                        class="input-check-implement" name="activity_domains" value="{{implementing.id}}">
                                         <label for="implementingPartner-{{forloop.counter}}">{{implementing.code}}</label><br>
                                     {% endfor %}
                                 </div>
@@ -196,7 +199,7 @@
                                 <div class="select-field">
                                     {% for program in project_filter.programme_partners.all %}
                                         <input type="checkbox" id="programPartner-{{forloop.counter}}" 
-                                        class="input-check-program" name="programme_partners" value="{{program.code}}">
+                                        class="input-check-program" name="programme_partners" value="{{program.id}}">
                                         <label for="programPartner-{{forloop.counter}}">{{program.code}}</label><br>
                                     {% endfor %}
                                 </div>
@@ -211,7 +214,7 @@
                                         </div>
                                         <div class="field-col">
                                             <button id="downloadFilterForm">
-                                                <a href="#" class="btn btn-red" data-url="{% url 'export_project_filter' %}">Download</a>
+                                                <a href="#" class="btn btn-red" data-url="{% url 'export_project_filter' project_filter.id %}">Download</a>
                                             </button>
                                         </div>
                                     </div>

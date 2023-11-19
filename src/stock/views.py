@@ -146,7 +146,7 @@ def stock_report_view(request, pk):
         "warehouse_location_stocks": warehouse_location_stocks,
     }
 
-    return render(request, "stocks/stock_report_form.html", context)
+    return render(request, "stock/stock_report_form.html", context)
 
 
 @cache_control(no_store=True)

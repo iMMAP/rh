@@ -20,6 +20,26 @@ urlpatterns = [
         name="create_project_monthly_report",
     ),
     path(
+        "project/monthly_progress/copy/<str:report>/",
+        user_views.copy_project_monthly_report_view,
+        name="copy_project_monthly_report",
+    ),
+    path(
+        "project/monthly_progress/delete/<str:report>/",
+        user_views.delete_project_monthly_report_view,
+        name="delete_project_monthly_report",
+    ),
+    path(
+        "project/monthly_progress/archive/<str:report>/",
+        user_views.archive_project_monthly_report_view,
+        name="archive_project_monthly_report",
+    ),
+    path(
+        "project/monthly_progress/unarchive/<str:report>/",
+        user_views.unarchive_project_monthly_report_view,
+        name="unarchive_project_monthly_report",
+    ),
+    path(
         "project/monthly_progress/create_progress/<str:project>/<str:report>/",
         user_views.create_project_monthly_report_progress_view,
         name="create_project_monthly_report_progress",

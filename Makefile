@@ -2,6 +2,10 @@
 install:
 	poetry install
 
+.PHONY: install-no-dev
+install-no-dev:
+	poetry install --without dev
+
 .PHONY: install-pre-commit
 install-pre-commit:
 	poetry run pre-commit uninstall && poetry run pre-commit install
@@ -56,3 +60,7 @@ format-templates:
 .PHONY: lint-templates
 lint-templates:
 	djlint --profile=django src
+
+.PHONY: collectstatic
+collectstatic:
+	poetry run python src/manage.py collectstatic --no-input --ignore=node_modules --ignore=*.scss --ignore=*.json --ignore=vite.config.js 

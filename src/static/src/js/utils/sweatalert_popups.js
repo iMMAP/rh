@@ -1,4 +1,5 @@
 import Swal from 'sweetalert2'
+import '../../styles/style.scss'
 
 export default function initSWPopup() {
 
@@ -20,7 +21,7 @@ export default function initSWPopup() {
 			title = `Are you sure you want to duplicate ${name}?`;
 			text = "";
 			icon = "warning";
-			confirmButtonText = 'Yes, duplicate it'
+			confirmButtonText = 'Yes, duplicate'
 			successMessage = `Done! ${name} has been duplicated successfully!`;
 		} else if (popupType === "delete") {
 			title = `Are you sure you want to delete this ${name}?`;
@@ -44,15 +45,11 @@ export default function initSWPopup() {
 			successMessage = `Done! ${name} has been unarchived successfully!`;
 		}
 
-		
-
 		Swal.fire({
 			title: title,
 			text: text,
 			icon: icon,
 			showCancelButton: true,
-			confirmButtonColor: "#3085d6",
-			cancelButtonColor: "#d33",
 			confirmButtonText: confirmButtonText,
 			customClass: {
 				confirmButton: 'btn btn-red',

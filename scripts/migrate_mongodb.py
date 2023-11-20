@@ -5,21 +5,21 @@ from datetime import datetime
 import pandas as pd
 
 # SET THE FILE PATHS
-SQLITE_DB_PATH = "db.sqlite3"
+SQLITE_DB_PATH = "../db.sqlite3"
 
 # CSV DATA FILES
-CURRENCIES_CSV = "scripts/data/updated_nov_2023/currencies.csv"
-LOCATIONS_CSV = "scripts/data/updated_nov_2023/af_loc.csv"
-CLUSTERS = "scripts/data/updated_nov_2023/clusters.csv"
-INDICATORS_CSV = "scripts/data/updated_nov_2023/indicators.csv"
-ACTIVITY_DOMAIN_CSV = "scripts/data/updated_nov_2023/activity_domains.csv"
-ACTIVITY_DESCRIPTION_CSV = "scripts/data/updated_nov_2023/activity_types.csv"
-ACTIVITY_DETAIL_CSV = "scripts/data/updated_nov_2023/activity_details.csv"
-BENEFICIARY_TYPES_CSV = "scripts/data/updated_nov_2023/beneficiary_types.csv"
-ORGANIZATIONS_CSV = "scripts/data/updated_nov_2023/organizations.csv"
-DONORS_CSV = "scripts/data/updated_nov_2023/donors.csv"
-USERS_CSV = "scripts/data/updated_nov_2023/user.csv"
-FACILITIES = "scripts/data/updated_nov_2023/facility_site_types.csv"
+CURRENCIES_CSV = "./data/updated_nov_2023/currencies.csv"
+LOCATIONS_CSV = "./data/updated_nov_2023/af_loc.csv"
+CLUSTERS = "./data/updated_nov_2023/clusters.csv"
+INDICATORS_CSV = "./data/updated_nov_2023/indicators.csv"
+ACTIVITY_DOMAIN_CSV = "./data/updated_nov_2023/activity_domains.csv"
+ACTIVITY_DESCRIPTION_CSV = "./data/updated_nov_2023/activity_types.csv"
+ACTIVITY_DETAIL_CSV = "./data/updated_nov_2023/activity_details.csv"
+BENEFICIARY_TYPES_CSV = "./data/updated_nov_2023/beneficiary_types.csv"
+ORGANIZATIONS_CSV = "./data/updated_nov_2023/organizations.csv"
+DONORS_CSV = "./data/updated_nov_2023/donors.csv"
+USERS_CSV = "./data/updated_nov_2023/user.csv"
+FACILITIES = "./data/updated_nov_2023/facility_site_types.csv"
 
 
 def get_sqlite_client(dbname):

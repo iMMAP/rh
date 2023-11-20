@@ -35,12 +35,12 @@
         </li>
     </ul>
       <ul class="buttons-list-inline">
-		{% if monthly_report.pk %}
+		{% if monthly_report.pk  %}
 			<li>
 				<a href="#" 
 					data-url="{% url 'copy_project_monthly_report' monthly_report.pk %}"
 					data-type="copy" 
-					data-name="Report" 
+					data-name="last month activities" 
 					class="btn btn-gray show-sw-action-popup">
 					<span class="btn-text">Copy last month activities</span>
 					<span class="icon-copy-outline"></span>

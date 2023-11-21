@@ -17,8 +17,7 @@ import initCopyInputValue from "./components/initCopyInputValue";
 import initAccordion from "./components/initAccordion";
 import initTooltip from "./components/initTooltip";
 import initExport from './utils/export';
-import initSWPopup from './utils/sweatalert_popups';
-import Swal from 'sweetalert2';
+import initSWPopup from './utils/sweatalertPopups';
 
 ready(() => {
   window.ResizeObserver = ResizeObserver;

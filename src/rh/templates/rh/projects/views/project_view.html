@@ -273,19 +273,18 @@
                 </div> -->
                 <a href="#"
                     data-url="{% url 'copy_project' project.pk %}"
-                    data-return-url="{% url parent_page %}"
-                    data-type="copy"
-                    data-record-name="project"
-                    class="btn btn-gray show_sw_popup"><span class="btn-text">Duplicate</span><span class="icon-copy-outline"></span>
+                    data-type="copy" 
+                    data-name="project" 
+                    class="btn btn-gray show-sw-action-popup">
+                    <span class="btn-text">Duplicate</span>
+                    <span class="icon-copy-outline"></span>
                 </a>
                 {% if project.active %}
                     <a href="#"
                         data-url="{% url 'archive_project' project.pk %}"
-                        data-return-url="{% url parent_page %}"
-                        data-type="archive"
-                        data-record-name="project"
-                        class="btn btn-gray show_confirm"
-                        title="Archive this project!">
+                        data-type="archive" 
+                        data-name="project" 
+                        class="btn btn-gray show-sw-action-popup">
                         <span class="btn-text">Archive</span>
                         <svg xmlns="http://www.w3.org/2000/svg"
                                 class="project-view archive-icon"
@@ -298,11 +297,9 @@
                 {% else %}
                     <a href="#"
                         data-url="{% url 'unarchive_project' project.pk %}"
-                        data-return-url="{% url 'draft_projects' %}"
-                        data-type="unarchive"
-                        data-record-name="project"
-                        class="btn btn-gray show_confirm"
-                        title="Unarchive this project!">
+                        data-type="unarchive" 
+                        data-name="project" 
+                        class="btn btn-gray show-sw-action-popup">
                         <span class="btn-text">Unarchive</span>
                         <svg xmlns="http://www.w3.org/2000/svg"
                                 class="project-view-icon"
@@ -320,10 +317,11 @@
                 {% endif %}
                 <a href="#"
                     data-url="{% url 'delete_project' project.pk %}"
-                    data-return-url="{% url parent_page %}"
-                    data-type="delete"
-                    data-record-name="project"
-                    class="btn btn-gray show_confirm"><span class="btn-text">Delete</span><span class="icon-trashbin-outline"></span>
+                    data-type="delete" 
+                    data-name="project" 
+                    class="btn btn-gray show-sw-action-popup">
+                    <span class="btn-text">Delete</span>
+                    <span class="icon-trashbin-outline"></span>
                 </a>
             </div>
         </div>

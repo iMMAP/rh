@@ -93,7 +93,7 @@
                         <span class="text-read-only">{{ project.code }}</span>
                     </div>
                 </div>
-                <div class="select-field is-required">
+                <div class="select-field ">
                     <span class="label">Clusters</span>
                     <span class="text-read-only m2m-badges">
                         {% for cluster in project.clusters.all %}
@@ -101,7 +101,7 @@
                         {% endfor %}
                     </span>
                 </div>
-                <div class="select-field is-required">
+                <div class="select-field ">
                     <span class="label">Project donor</span>
                     <span class="text-read-only m2m-badges">
                         {% for donor in project.donors.all %}
@@ -109,7 +109,7 @@
                         {% endfor %}
                     </span>
                 </div>
-                <div class="select-field is-required">
+                <div class="select-field ">
                     <span class="label">Implementing Partners</span>
                     <span class="text-read-only m2m-badges">
                         {% for implementing_partner in project.implementing_partners.all %}
@@ -117,7 +117,7 @@
                         {% endfor %}
                     </span>
                 </div>
-                <div class="select-field is-required">
+                <div class="select-field ">
                     <span class="label">Programme Partners</span>
                     <span class="text-read-only m2m-badges">
                         {% for programme_partner in project.programme_partners.all %}
@@ -148,7 +148,7 @@
                     </div>
                     <div class="field-col">
                         <span class="label">Currency</span>
-                        <div class="select-field is-required">
+                        <div class="select-field ">
                             <span class="text-read-only">{{ project.budget_currency }}</span>
                         </div>
                     </div>
@@ -207,7 +207,7 @@
                 </div>
             </div>
             <div class="col col-lg">
-                <div class="select-field is-required">
+                <div class="select-field ">
                     <span class="label">Activity Domains</span>
                     <span class="text-read-only m2m-badges">
                         {% for activity_domain in project.activity_domains.all %}
@@ -228,7 +228,7 @@
                         </span>
                     </div>
                 </div>
-                <div class="input-field is-required">
+                <div class="input-field ">
                     <span class="label">Project description &amp; objectives</span>
                     <div class="input-holder">{{ project.description | linebreaksbr }}
                     </div>
@@ -317,7 +317,7 @@
                             </div>
                         </div>
                         <div class="col col-lg">
-                            <div class="input-field is-required">
+                            <div class="input-field">
                                 <span class="label">Activity Description</span>
                                 <div class="input-holder">
                                     <span class="text-read-only">{{ activity_plan.description | linebreaksbr }}</span>
@@ -358,7 +358,7 @@
                                                 <div class="col col-lg">
                                                     <div class="multiple-fields-row three-items">
                                                         <div class="field-col">
-                                                            <div class="select-field is-required">
+                                                            <div class="select-field">
                                                                 <span class="label">Province</span>
                                                                 <span class="text-read-only">{{ target_location.province }}</span>
                                                             </div>
@@ -465,7 +465,12 @@
 
     <div class="plan-submit-holder">
         <a href="{% url 'create_project_activity_plan' project.pk %}" class="btn btn-gray-outline">Back</a>
-        <a href="{% url 'project_submit' project.pk %}" class="btn btn-red">Submit</a>
+        <a href="#" 
+            data-url="{% url 'project_submit' project.pk %}"
+            data-button="Submit Project" 
+            class="btn btn-red show-sw-confirm-button">
+            Submit Project
+        </a>
     </div>
 </div>
 {% endblock project_contents %}

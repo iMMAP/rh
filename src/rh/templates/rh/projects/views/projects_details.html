@@ -52,45 +52,39 @@
                 <li>
                     <button>
                         <a href="#"
-                           data-url="{% url 'copy_project' project.pk %}"
-                           data-return-url="{% url 'draft_projects' %}"
-                           data-type="copy"
-                           data-record-name="project"
-                           class="text-decoration-none show_confirm"
-                           title="Duplicate this project!">
+                            data-url="{% url 'copy_project' project.pk %}"
+                            data-type="copy" 
+                            data-name="project" 
+                            class="show-sw-action-popup">
                             <span class="project-detail icon-copy"></span>
                         </a>
                     </button>
                 </li>
                 <li>
-                    <button>
+                    <button class="button-archive-unarchive">
                         {% if project.active %}
                             <a href="#"
-                               data-url="{% url 'archive_project' project.pk %}"
-                               data-return-url="{% url 'draft_projects' %}"
-                               data-type="archive"
-                               data-record-name="project"
-                               class="text-decoration-none show_confirm"
-                               title="Archive this project!">
+                            data-url="{% url 'archive_project' project.pk %}"
+                            data-type="archive" 
+                            data-name="project" 
+                            class="show-sw-action-popup">
                                 <svg xmlns="http://www.w3.org/2000/svg"
                                      class="archive-icon"
-                                     width="22"
-                                     height="22"
+                                     width="16"
+                                     height="16"
                                      viewBox="0 0 24 24">
                                     <path fill="currentColor" d="M3 3h18v4H3V3m1 18V8h16v13H4m10-7v-3h-4v3H7l5 5l5-5h-3Z" />
                                 </svg>
                             </a>
                         {% else %}
                             <a href="#"
-                               data-url="{% url 'unarchive_project' project.pk %}"
-                               data-return-url="{% url 'draft_projects' %}"
-                               data-type="unarchive"
-                               data-record-name="project"
-                               class="text-decoration-none show_confirm"
-                               title="Unarchive this project!">
+                                data-url="{% url 'unarchive_project' project.pk %}"
+                                data-type="unarchive" 
+                                data-name="project" 
+                                class="show-sw-action-popup">
                                 <svg xmlns="http://www.w3.org/2000/svg"
-                                     width="22"
-                                     height="22"
+                                     width="16"
+                                     height="16"
                                      viewBox="0 0 36 36">
                                     <path fill="currentColor" d="M18 21a3 3 0 0 1-2.22-1H5v12a2 2 0 0 0 2 2h22a2 2 0 0 0 2-2V20H20.21A3 3 0 0 1 18 21Zm4 3a1 1 0 0 1-1 1h-6a1 1 0 0 1 0-2h6a1 1 0 0 1 1 1Z" class="clr-i-solid clr-i-solid-path-1" />
                                     <path fill="currentColor" d="M15 12H5.5A1.5 1.5 0 0 0 4 13.5V18h11Z" class="clr-i-solid clr-i-solid-path-2" />
@@ -105,18 +99,17 @@
                 <li>
                     <button>
                         <a href="#"
-                           data-url="{% url 'delete_project' project.pk %}"
-                           data-return-url="{% url 'draft_projects' %}"
-                           data-type="delete"
-                           data-record-name="project"
-                           class="text-decoration-none show_confirm"
-                           title="Delete this project!"><span class="project-detail icon-trashbin"></span></a>
+                            data-url="{% url 'delete_project' project.pk %}"
+                            data-type="delete" 
+                            data-name="project" 
+                            class="show-sw-action-popup">
+                            <span class="project-detail icon-trashbin"></span></a>
                     </button>
                 </li>
             </ul>
             <a href="table-slide-{{ forloop.counter0 }}"
                class="table-slide-opener"
-               onclick="event.stopPropagation();">
+               >
                 <span class="icon-chevron-down"></span>
             </a>
         </div>

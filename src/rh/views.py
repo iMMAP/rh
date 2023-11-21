@@ -734,7 +734,13 @@ def submit_project(request, pk):
         plan.state = "in-progress"
         plan.save()
 
-    return redirect("active_projects")
+    url = reverse(
+        "active_projects",
+    )
+
+    # Return the URL in a JSON response
+    response_data = {"redirect_url": url}
+    return JsonResponse(response_data)
 
 
 @cache_control(no_store=True)
@@ -770,7 +776,15 @@ def archive_project(request, pk):
         project.active = False
         project.save()
 
-    return JsonResponse({"success": True})
+    url = reverse(
+        "draft_projects",
+    )
+
+    # Return the URL in a JSON response
+    response_data = {"redirect_url": url}
+    return JsonResponse(response_data)
+
+    # return JsonResponse({"success": True})
 
 
 @cache_control(no_store=True)
@@ -806,7 +820,12 @@ def unarchive_project(request, pk):
         project.active = True
         project.save()
 
-    return JsonResponse({"success": True})
+    url = reverse(
+        "draft_projects",
+    )
+    # Return the URL in a JSON response
+    response_data = {"redirect_url": url}
+    return JsonResponse(response_data)
 
 
 @cache_control(no_store=True)
@@ -816,7 +835,13 @@ def delete_project(request, pk):
     project = get_object_or_404(Project, pk=pk)
     if project:
         project.delete()
-    return JsonResponse({"success": True})
+    url = reverse(
+        "draft_projects",
+    )
+
+    # Return the URL in a JSON response
+    response_data = {"redirect_url": url}
+    return JsonResponse(response_data)
 
 
 @cache_control(no_store=True)
@@ -865,8 +890,11 @@ def copy_project(request, pk):
         # Save the changes made to the new project.
         new_project.save()
 
-    # Return a JSON response indicating success and providing a return URL to view the new project.
-    return JsonResponse({"success": True, "returnURL": reverse("view_project", args=[new_project.pk])})
+        url = reverse("view_project", args=[new_project.pk])
+
+        # Return the URL in a JSON response
+        response_data = {"redirect_url": url}
+        return JsonResponse(response_data)
 
 
 def copy_project_activity_plan(project, plan):
@@ -983,7 +1011,12 @@ def copy_activity_plan(request, project, plan):
         new_plan.title = f"[COPY] - {activity_plan.title}"
         new_plan.indicators.set(activity_plan.indicators.all())
         new_plan.save()
-    return JsonResponse({"success": True})
+
+    url = reverse("create_project_activity_plan", args=[project.pk])
+
+    # Return the URL in a JSON response
+    response_data = {"redirect_url": url}
+    return JsonResponse(response_data)
 
 
 @cache_control(no_store=True)
@@ -993,7 +1026,12 @@ def delete_activity_plan(request, pk):
     activity_plan = get_object_or_404(ActivityPlan, pk=pk)
     if activity_plan:
         activity_plan.delete()
-    return JsonResponse({"success": True})
+
+    url = reverse("create_project_activity_plan", args=[activity_plan.project.pk])
+
+    # Return the URL in a JSON response
+    response_data = {"redirect_url": url}
+    return JsonResponse(response_data)
 
 
 @cache_control(no_store=True)

@@ -1,5 +1,5 @@
 import calendar
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
@@ -86,6 +86,7 @@ def create_project_monthly_report_view(request, project):
             report = form.save(commit=False)
             report.project = project
             report.active = True
+            report.state = "pending"
             report.save()
             return redirect(
                 "create_project_monthly_report_progress",
@@ -109,22 +110,29 @@ def copy_project_monthly_report_view(request, report):
     monthly_report = get_object_or_404(ProjectMonthlyReport, pk=report)
 
     if monthly_report:
-        # Create a new monthly report by duplicating the current report.
-        new_monthly_report = get_object_or_404(ProjectMonthlyReport, pk=report)
-        new_monthly_report.pk = None  # Generate a new primary key for the new monthly report.
-        new_monthly_report.save()  # Save the new monthly report to the database.
+        # Calculate the first day of the current month
+        today = datetime.now()
+        first_day_of_current_month = today.replace(day=1)
 
-        # Modify the state of the new monthly report.
-        new_monthly_report.state = "todo"
+        # Calculate the first day of the last month
+        first_day_of_last_month = (first_day_of_current_month - timedelta(days=1)).replace(day=1)
+
+        # Filter the reports for the last month and find the latest submitted report
+        last_month_report = ProjectMonthlyReport.objects.filter(
+            report_date__gte=first_day_of_last_month,
+            report_date__lt=first_day_of_current_month,
+            state="complete",  # Filter by the "Submitted" state
+            approved_on__isnull=False,  # Ensure the report has a submission date
+        ).latest("approved_on")
 
         # Check if the new monthly report was successfully created.
-        if new_monthly_report:
+        if monthly_report and last_month_report:
             # Get all activity plans reports associated with the current monthly report.
-            activity_plan_reports = monthly_report.activityplanreport_set.all()
+            activity_plan_reports = last_month_report.activityplanreport_set.all()
 
             # Iterate through each activity plan  report and copy it to the new monthly report.
             for plan_report in activity_plan_reports:
-                new_plan_report = copy_monthly_report_activity_plan(new_monthly_report, plan_report)
+                new_plan_report = copy_monthly_report_activity_plan(monthly_report, plan_report)
                 location_reports = plan_report.targetlocationreport_set.all()
 
                 # Iterate through target locations reports and copy them to the new plan report.
@@ -137,12 +145,14 @@ def copy_project_monthly_report_view(request, report):
                         copy_disaggregation_location_reports(new_location_report, disaggregation_location_report)
 
         # Save the changes made to the new monthly report.
-        new_monthly_report.save()
+        monthly_report.state = "todo"
+        monthly_report.save()
 
         url = reverse(
-            "project_reports_home",
+            "update_project_monthly_report_progress",
             kwargs={
-                "project": new_monthly_report.project.pk,
+                "project": monthly_report.project.pk,
+                "report": monthly_report.pk,
             },
         )
 
@@ -520,6 +530,7 @@ def create_project_monthly_report_progress_view(request, project, report):
 @login_required
 def update_project_monthly_report_progress_view(request, project, report):
     """Update View"""
+
     (
         project,
         project_state,
@@ -527,6 +538,15 @@ def update_project_monthly_report_progress_view(request, project, report):
         target_locations,
         monthly_report_instance,
     ) = get_project_and_report_details(project, report)
+
+    activity_plan_reports = monthly_report_instance.activityplanreport_set.all()
+
+    if not activity_plan_reports:
+        return redirect(
+            "create_project_monthly_report_progress",
+            project=project.pk,
+            report=monthly_report_instance.pk,
+        )
 
     (
         target_location_provinces,

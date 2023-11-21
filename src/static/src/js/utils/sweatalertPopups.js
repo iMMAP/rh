@@ -120,6 +120,10 @@ export default function initSWPopup() {
 			message = 'Report has been approved!'
 			title = 'Are you sure you want to approve report?'
 		}
+		if (dataButtonText == 'Submit Project'){
+			message = 'Project has been submitted!'
+			title = 'Are you sure you want to submit this project?'
+		}
 		Swal.fire({
 			title: title,
 			input: textInput,

@@ -11,19 +11,17 @@
                 <div id="{{ form.prefix }}-actions">
                     <button href="#"
                             data-url="{% url 'copy_plan' project=project.pk plan=form.instance.pk %}"
-                            data-return-url="{% url 'create_project_activity_plan' project=project.pk %}"
-                            data-type="copy"
-                            data-record-name="activity"
-                            class="btn btn-gray-outline show_confirm">
+                            data-type="copy" 
+                            data-name="activity" 
+                            class="btn btn-gray-outline show-sw-action-popup">
                         <span class="icon-copy"></span>
                         <span class="btn-text">Duplicate</span>
                     </button>
                     <button href="#"
                             data-url="{% url 'delete_plan' form.instance.pk %}"
-                            data-return-url="{% url 'create_project_activity_plan' project=project.pk %}"
-                            data-type="delete"
-                            data-record-name="activity"
-                            class="btn btn-gray-outline show_confirm">
+                            data-type="delete" 
+                            data-name="activity" 
+                            class="btn btn-gray-outline show-sw-action-popup">
                         <span class="icon-trashbin"></span>
                         <span class="btn-text">Delete</span>
                     </button>

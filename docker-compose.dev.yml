@@ -5,6 +5,7 @@ services:
     container_name: django
     build:
       context: .
+      dockerfile: Dockerfile.python
     command: poetry run python src/manage.py runserver 0.0.0.0:8000
     volumes:
       - ./src:/usr/src/rh/src

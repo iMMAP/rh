@@ -57,6 +57,7 @@ class ActivityPlanReportForm(forms.ModelForm):
 
         widgets = {
             "activity_plan": forms.widgets.HiddenInput(),
+            "report_types": forms.SelectMultiple(attrs={"class": "js_multiselect"}),
         }
 
     def __init__(self, *args, **kwargs):

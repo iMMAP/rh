@@ -44,9 +44,9 @@ class ActivityPlanReport(models.Model):
 
     monthly_report = models.ForeignKey(ProjectMonthlyReport, on_delete=models.CASCADE, null=True, blank=True)
     activity_plan = models.ForeignKey(ActivityPlan, on_delete=models.CASCADE, null=True, blank=True)
-    indicator = models.ForeignKey(Indicator, on_delete=models.CASCADE)
+    indicator = models.ForeignKey(Indicator, on_delete=models.SET_NULL, null=True)
 
-    report_types = models.ManyToManyField(ReportType, null=True, blank=True)
+    report_types = models.ManyToManyField(ReportType)
 
     class Meta:
         verbose_name = "Activity Plan Report"

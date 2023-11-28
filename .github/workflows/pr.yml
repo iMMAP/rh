@@ -27,6 +27,7 @@ jobs:
     - name: Install Dependencies
       run: |
         make install
+        pip install ruff
     - name: Ruff Linting
       run: |
         make lint

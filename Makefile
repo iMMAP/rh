@@ -6,13 +6,9 @@ install:
 install-no-dev:
 	poetry install --without dev
 
-.PHONY: install-pre-commit
-install-pre-commit:
-	poetry run pre-commit uninstall && poetry run pre-commit install
-
 .PHONY: lint
 lint:
-	poetry run pre-commit run --all-files
+	ruff check --output-format=github ./src && ruff format ./src
 
 .PHONY: migrate
 migrate:
@@ -43,7 +39,7 @@ superuser:
 	poetry run python src/manage.py createsuperuser
 
 .PHONY: update
-update: install migrate install-pre-commit;
+update: install migrate;
 
 .PHONY: test
 test:

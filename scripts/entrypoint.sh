@@ -9,11 +9,6 @@ make npm-install &
 
 ls -la
 
-make vite &
-
-
-wait -n
-
 exec "$@"
 
 # RUN_MANAGE_PY='poetry run python -m rh.manage'

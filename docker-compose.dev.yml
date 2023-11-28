@@ -4,8 +4,8 @@ services:
   django:
     container_name: django
     build:
-      context: ./docker
-      dockerfile: Dockerfile.python
+      context: .
+      dockerfile: ./docker/Dockerfile.python
     command: poetry run python src/manage.py runserver 0.0.0.0:8000
     volumes:
       - ./src:/usr/src/rh/src
@@ -20,8 +20,8 @@ services:
   npm:
     container_name: npm
     build: 
-      context: ./docker
-      dockerfile: Dockerfile.npm
+      context: .
+      dockerfile: ./docker/Dockerfile.npm
     volumes:
       - ./src:/usr/src/rh/src
     ports:

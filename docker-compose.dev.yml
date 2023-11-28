@@ -26,7 +26,7 @@ services:
       - ./src:/usr/src/rh/src
     ports:
       - 5173:5173
-    entrypoint: ["npm"]
+    entrypoint: ["make","vite-host"]
 
   db:
     container_name: postgres_db

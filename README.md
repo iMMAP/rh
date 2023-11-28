@@ -2,6 +2,21 @@
 
 ## Setup the project locally
 
+### Using Docker
+```shell
+# Django app
+docker-compose run --rm django make serve
+docker-compose run --rm django make migrate
+docker-compose run --rm django make migrations
+
+# Vite app on the static
+docker-compose run --rm npm make vite-host
+docker-compose run --rm --service-ports make vite-host
+#
+docker-compose run --rm npm make npm-install
+docker-compose run --rm npm make npm-build
+```
+
 ### Install poetry
 Make sure Poetry is installed on your machine
 ```shell

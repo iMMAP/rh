@@ -12,7 +12,7 @@
     "django-vite-plugin": "^3.0.0",
     "sass": "^1.69.4",
     "select2": "^4.1.0-rc.0",
-    "vite": "^5.0.2"
+    "vite": "^4.0.2"
   },
   "dependencies": {
     "choices.js": "^10.2.0",

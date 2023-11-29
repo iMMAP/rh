@@ -1,0 +1,46 @@
+version: '3.10'
+
+services:
+  django:
+    container_name: django
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile.python
+    command: poetry run python src/manage.py runserver 0.0.0.0:8000
+    volumes:
+      - ./src:/usr/src/rh/src
+    ports:
+      - 8000:8000
+    depends_on:
+      - db
+    env_file: .env
+    environment:
+      - DJANGO_SETTINGS_MODULE=core.settings.local
+
+  npm:
+    container_name: npm
+    build: 
+      context: .
+      dockerfile: ./docker/Dockerfile.npm
+    volumes:
+      - ./src:/usr/src/rh/src
+    ports:
+      - 5173:5173
+    entrypoint: ["make","vite-host"]
+
+  db:
+    container_name: postgres_db
+    image: postgres:14.2-alpine
+    restart: unless-stopped
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_DB: rh
+      POSTGRES_USER: rh_user
+      POSTGRES_PASSWORD: rh_1234
+    volumes:
+      - postgresql-data:/var/lib/postgresql/data
+
+volumes:
+  postgresql-data:
+    driver: local

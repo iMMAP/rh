@@ -26,6 +26,10 @@ serve:
 vite:
 	cd src/static && npm run dev
 
+.PHONY: vite-host
+vite-host:
+	cd src/static && npm run dev -- --host
+
 .PHONY: npm-install
 npm-install:
 	cd src/static && npm install
@@ -60,3 +64,7 @@ lint-templates:
 .PHONY: collectstatic
 collectstatic:
 	poetry run python src/manage.py collectstatic --no-input --ignore=node_modules --ignore=*.scss --ignore=*.json --ignore=vite.config.js 
+
+.PHONY: run-dependencies
+run-dependencies:
+	docker-compose -f docker-compose.dev.yml up -d --build

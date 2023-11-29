@@ -26,6 +26,10 @@ serve:
 vite:
 	cd src/static && npm run dev
 
+.PHONY: vite-host
+vite-host:
+	cd src/static && npm run dev -- --host
+
 .PHONY: npm-install
 npm-install:
 	cd src/static && npm install

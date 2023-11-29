@@ -5,7 +5,7 @@ services:
     container_name: django
     build:
       context: .
-      dockerfile: Dockerfile.python
+      dockerfile: ./docker/Dockerfile.python
     command: poetry run python src/manage.py runserver 0.0.0.0:8000
     volumes:
       - ./src:/usr/src/rh/src
@@ -16,8 +16,20 @@ services:
     env_file: .env
     environment:
       - DJANGO_SETTINGS_MODULE=core.settings.local
-  
+
+  npm:
+    container_name: npm
+    build: 
+      context: .
+      dockerfile: ./docker/Dockerfile.npm
+    volumes:
+      - ./src:/usr/src/rh/src
+    ports:
+      - 5173:5173
+    entrypoint: ["make","vite-host"]
+
   db:
+    container_name: postgres_db
     image: postgres:14.2-alpine
     restart: unless-stopped
     ports:

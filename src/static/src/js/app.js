@@ -18,7 +18,7 @@ import initAccordion from "./components/initAccordion";
 import initTooltip from "./components/initTooltip";
 import initExport from './utils/export';
 import initSWPopup from './utils/sweatalertPopups';
-
+import initExportSW from './utils/exportSW';
 ready(() => {
   window.ResizeObserver = ResizeObserver;
   HTML.classList.add("is-loaded");
@@ -36,7 +36,7 @@ ready(() => {
   initCopyInputValue();
   initAccordion();
   initTooltip();
-
+  initExportSW();
   initExport();
   initSWPopup();
 });

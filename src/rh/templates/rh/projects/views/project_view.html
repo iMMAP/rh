@@ -81,11 +81,23 @@
                                     </a>
                                 </button>
                             </div>
-                            <div class="project-title report-title">
-                                Project
+                            <div >
+                                <span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="17" height="17" viewBox="0,0,248,248">
+                                        <g transform=""><g fill="#a52824" fill-rule="nonzero" stroke="none" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" font-family="none" font-weight="none" font-size="none" text-anchor="none" style="mix-blend-mode: normal"><g transform="translate(-21.33333,22.4) scale(5.33333,5.33333)"><path d="M24,4c-11.028,0 -20,8.972 -20,20c0,11.028 8.972,20 20,20c11.028,0 20,-8.972 20,-20c0,-11.028 -8.972,-20 -20,-20zM25.5,33.5c0,0.828 -0.672,1.5 -1.5,1.5c-0.828,0 -1.5,-0.672 -1.5,-1.5v-11c0,-0.828 0.672,-1.5 1.5,-1.5c0.828,0 1.5,0.672 1.5,1.5zM24,18c-1.105,0 -2,-0.895 -2,-2c0,-1.105 0.895,-2 2,-2c1.105,0 2,0.895 2,2c0,1.105 -0.895,2 -2,2z"></path></g></g></g>
+                                    </svg>
+                                </span>
+                                <span class="text">The project fields will be exported according to the selectiong order in CSV file..</span>
                             </div>
-                            <div class="block-body" data-simplebar>
-                        
+                            <div class="project-title project-accordion-handler btn btn-gray " style="position: relative;">
+                                <span class="accordion-title">Project Planing </span>
+                                <span class="accordion-arrows">
+                                    <span class="accordion-arrow-up">&#x25B2;</span>
+                                    <span class="accordion-arrow-down">&#x25BC;</span>
+                                </span>
+                            </div>
+                            <div class="block-body project-accContainer hidden" data-simplebar>
+                                
                                     <div class="multiple-fields-row two-items">
                                         <div class="field-col">
                                             <div class="input-holder">
@@ -203,6 +215,102 @@
                                         <label for="programPartner-{{forloop.counter}}">{{program.code}}</label><br>
                                     {% endfor %}
                                 </div>
+                            </div>
+                            <div class="project-title activity-accordion-handler btn btn-gray " style="position: relative;">
+                                <span class="accordion-title">Activity Planing</span>
+                                <span class="badge">{{ activity_plans | length }}</span>
+                                <span class="accordion-arrows">
+                                    <span class="activity-arrow-up">&#x25B2;</span>
+                                    <span class="activity-arrow-down">&#x25BC;</span>
+                                </span>
+                            </div>
+                            <div class="activity-accContainer hidden">
+                                {% for activityPlan in activity_plans%}
+                                <div class="input-holder">
+                                    <label for="activityDomain" class="text-read-only">Activity Domain</label>
+                                    <input type="checkbox" id="activityDomain"> 
+                                    <label for="activityDomain" class="label">{{activityPlan.activity_domain}}</label>
+                                </div>
+                                <div class="input-holder">
+                                    <label for="activityType" class="text-read-only">Activity Type</label>
+                                    <input type="checkbox" id="activityType"> 
+                                    <label for="activityType" class="label">{{activityPlan.activity_type}}</label>
+                                </div>
+                                {% if activityPlan.activity_detail %}
+                                <div class="input-holder">
+                                    <label for="activityDetail" class="text-read-only">Activity Details</label>
+                                    <input type="checkbox" id="activityDetail"> 
+                                    <label for="activityDetail" class="label">{{activityPlan.activity_detail}}</label>
+                                </div>
+                                {% endif %}
+                                {% for indicator in activityPlan.indicators.all %}
+                                <div class="input-holder">
+                                    <label for="indicator-{{forloop.counter}}" class="text-read-only">Indicators</label>
+                                    <input type="checkbox" id="indicator-{{forloop.counter}}"> 
+                                    <label for="indicator-{{forloop.counter}}" class="label">{{indicator.name}}</label>
+                                </div>
+                                {% endfor %}
+                                <div class="multiple-fields-row two-items">
+                                    <div class="field-col">
+                                        <div class="input-holder">
+                                            <label for="Beneficiary" class="text-read-only">Beneficiary</label>
+                                            <input type="checkbox" id="Beneficiary"> 
+                                            <label for="Beneficiary" class="label">{{activityPlan.beneficiary}}</label>
+                                        </div>
+                                    </div>
+                                    <div class="field-col">
+                                        <div class="input-holder">
+                                            <label for="BeneficiaryCategory" class="text-read-only">Beneficiary Category</label>
+                                            <input type="checkbox" id="BeneficiaryCategory"> 
+                                            <label for="BeneficiaryCategory" class="label">{{activityPlan.beneficiary_category}}</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="input-holder">
+                                        <label for="ActivityDescription" class="text-read-only">Activity Description</label>
+                                        <input type="checkbox" id="ActivityDescription"> 
+                                        <label for="ActivityDescription" class="label">{{activityPlan.description | linebreaksbr }}</label>
+                                    </div> 
+                                <div class="report-title target-location-container">
+                                    <span class="project-title">Target Location</span>
+                                    <span></span>
+                                </div>
+                                <div class="multiple-fields-row two-items">
+                                    {% for targetLocation in activityPlan.targetlocation_set.all %} 
+                                    <div class="field-col">
+                                        <label for="province" class="text-read-only">Province</label>
+                                        <input type="checkbox" id="province"> 
+                                        <label for="province" class="label">{{targetLocation.province | linebreaksbr }}</label>
+                                    </div>
+                                    <div class="field-col">
+                                        <label for="district" class="text-read-only">District</label>
+                                        <input type="checkbox" id="district"> 
+                                        <label for="district" class="label">{{targetLocation.district | linebreaksbr }}</label>
+                                    </div>
+                                    <div class="field-col">
+                                        <label for="locationType" class="text-read-only">Location Type</label>
+                                        <input type="checkbox" id="locationType"> 
+                                        <label for="locationType" class="label">{{targetLocation.location_type | linebreaksbr }}</label>
+                                    </div>
+                                    <div class="field-col">
+                                        <label for="siteName" class="text-read-only">Site Name</label>
+                                        <input type="checkbox" id="siteName"> 
+                                        <label for="siteName" class="label">{{targetLocation.site_name | linebreaksbr }}</label>
+                                    </div>
+                                    <div class="field-col">
+                                        <label for="latitude" class="text-read-only">Site Latitude</label>
+                                        <input type="checkbox" id="latitude"> 
+                                        <label for="latitude" class="label">{{targetLocation.site_lat | linebreaksbr }}</label>
+                                    </div>
+                                    <div class="field-col">
+                                        <label for="Longitude" class="text-read-only">Site Longitude</label>
+                                        <input type="checkbox" id="Longitude"> 
+                                        <label for="Longitude" class="label">{{targetLocation.site_long | linebreaksbr }}</label>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                                <hr>
+                                {% endfor %}
                             </div>
                             <div class="block-footer">
                                 <div class="btn-wrapper">

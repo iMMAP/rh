@@ -2,6 +2,7 @@ from django import forms
 from django.forms.models import inlineformset_factory
 
 from .models import ActivityPlanReport, DisaggregationLocationReport, ProjectMonthlyReport, TargetLocationReport
+from rh.models import Indicator
 
 
 class ProjectMonthlyReportForm(forms.ModelForm):
@@ -62,8 +63,14 @@ class ActivityPlanReportForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.fields["indicator"].widget.attrs.update({"class": "report_indicator", "required": ""})
+        (self.fields["indicator"].widget.attrs.update({"class": "report_indicator", "required": ""}),)
 
 
 class RejectMonthlyReportForm(forms.Form):
     rejection_reason = forms.CharField(widget=forms.Textarea)
+
+
+class IndicatorsForm(forms.ModelForm):
+    class Meta:
+        model = Indicator
+        fields = "__all__"

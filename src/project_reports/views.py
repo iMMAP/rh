@@ -1,5 +1,6 @@
 import calendar
 from datetime import datetime, timedelta
+import json
 
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
@@ -17,8 +18,10 @@ from .forms import (
     DisaggregationReportFormSet,
     ProjectMonthlyReportForm,
     TargetLocationReportFormSet,
+    IndicatorsForm,
 )
 from .models import ActivityPlanReport, DisaggregationLocationReport, ProjectMonthlyReport, TargetLocationReport
+from rh.models import ImplementationModalityType
 
 
 @cache_control(no_store=True)
@@ -429,7 +432,7 @@ def create_project_monthly_report_progress_view(request, project, report):
                         "activity_plan": activity_plan,
                         "project_id": project,
                     }
-                form.fields["indicator"].queryset = activity_plan.indicators.all()
+                form.fields["indicator"].queryset = activity_plan.indicators.select_related("package_type").all()
 
     if request.method == "POST":
         if activity_report_formset.is_valid():
@@ -521,6 +524,7 @@ def create_project_monthly_report_progress_view(request, project, report):
         "project_view": False,
         "financial_view": False,
         "reports_view": True,
+        "indicator_form": IndicatorsForm,
     }
 
     return render(request, "project_reports/forms/monthly_report_progress_form.html", context)
@@ -676,7 +680,6 @@ def update_project_monthly_report_progress_view(request, project, report):
         "done": "completed_projects",
         "archive": "archived_projects",
     }.get(project_state, None)
-
     combined_formset = zip(activity_report_formset.forms, location_report_formsets)
 
     context = {
@@ -874,3 +877,27 @@ def reject_monthly_report_view(request, report):
     # Return the URL in a JSON response
     response_data = {"redirect_url": url}
     return JsonResponse(response_data)
+
+
+def get_indicator_reference(request):
+    if request.method == "POST":
+        indicator = json.loads(request.POST.get("id"))
+        im = ImplementationModalityType.objects.all().values()
+        print(im)
+        indicator_refereces = (
+            Indicator.objects.select_related(
+                "package_type",
+                "unit_type",
+                "grant_type",
+                "transfer_category",
+                "transfer_mechanism_type",
+                "implement_modility_type",
+                "location_type",
+                "currency",
+            )
+            .filter(id=indicator)
+            .values()
+        )
+        print(indicator_refereces)
+        data = {"data": list(indicator_refereces), "message": "success", "status": 200}
+        return JsonResponse(data, safe=False)

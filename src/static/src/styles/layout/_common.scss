@@ -8,6 +8,37 @@
     transition: none !important;
   }
 }
+hr{
+  border: 1px solid #d1d3d4;
+}
+.hidden{
+  display: none;
+}
+.accordion-title{
+  padding: 8px;
+}
+::-webkit-scrollbar{
+  width: 3px;
+  color: $red-be;
+}
+::-webkit-scrollbar-thumb{
+  background: $red-be;
+  border-radius: 8px;
+}
+.activity-accContainer, .project-accContainer{
+  overflow-y: scroll;
+  overflow-x:hidden;
+}
+.accordion-arrows{
+  color: $red-be;
+  text-shadow: white;
+  position: absolute;
+  top: 30%;
+  right: 5%;
+}
+.target-location-container {
+  margin: 8px 0;
+}
 
 .container {
   max-width: $container-max-width + $gutter * 2;

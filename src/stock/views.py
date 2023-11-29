@@ -51,15 +51,27 @@ def stock_index_view(request):
             return redirect("stocks")
     formset = WarehouseLocationFormset(queryset=WarehouseLocation.objects.all())
 
-    stock_reports = StockReports.objects.filter(submitted=False)
-    submitted_stock_reports = StockReports.objects.filter(submitted=True)
+    # stock_reports = StockReports.objects.filter(submitted=False)
+    # submitted_stock_reports = StockReports.objects.filter(submitted=True)
     context = {
         "warehouse_location_formset": formset,
-        "stock_reports": stock_reports,
-        "submitted_stock_reports": submitted_stock_reports,
+        # "stock_reports": stock_reports,
+        # "submitted_stock_reports": submitted_stock_reports,
     }
 
     return render(request, "stock/stocks_index.html", context)
+
+
+@cache_control(no_store=True)
+@login_required
+def stock_report(request):
+    stock_reports = StockReports.objects.filter(submitted=False)
+    submitted_stock_reports = StockReports.objects.filter(submitted=True)
+    context = {
+        "stock_reports": stock_reports,
+        "submitted_stock_reports": submitted_stock_reports,
+    }
+    return render(request, "stock/stock_report.html", context)
 
 
 @cache_control(no_store=True)

@@ -26,14 +26,6 @@ RUN apt-get install -y pkg-config cmake-data libpq-dev
 
 RUN pip install virtualenvwrapper poetry psycopg2-binary
 
-# Install NodeJs - Install the latest version
-RUN apt-get install -y nodejs npm
-#Upgrading node version to latest stable
-RUN npm cache clean -f
-RUN npm install -g n
-RUN n stable
-RUN ln -sf /usr/local/n/versions/node/20/bin/node /usr/bin/node
-
 # Copy project files
 COPY ["README.md", "Makefile", "poetry.lock","pyproject.toml","/usr/src/rh/"]
 COPY ./src /usr/src/rh/src

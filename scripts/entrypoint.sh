@@ -1,13 +1,8 @@
 #!/usr/bin/env bash
-
 set -e
 
 echo "Apply database migrations"
-make migrate
-
-make npm-install &
-
-ls -la
+make migrate &
 
 exec "$@"
 

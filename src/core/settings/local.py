@@ -74,4 +74,7 @@ DJANGO_VITE_PLUGIN = {
     "BUILD_URL_PREFIX": "/" + STATIC_URL + "build",
     "DEV_MODE": True,
     "STATIC_LOOKUP": False,
+    "SERVER":{
+        "HOST":"0.0.0.0"
+    }
 }

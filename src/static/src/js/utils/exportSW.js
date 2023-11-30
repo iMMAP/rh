@@ -56,6 +56,14 @@ export default function initExportAndSW() {
       let activityDomainData = [];
       let implementingPartnerData = [];
       let programPartnerData = [];
+      let activityDomain = [];
+      let activityType = [];
+      let activityDetail = [];
+      let beneficiary = [];
+      let BCategory = [];
+      let indicator = [];
+      let activityDescription = []
+      let targetLocation = [];
 
       const checkedDonor = document.querySelectorAll(".input-check-donor");
       for(let i = 0; i < checkedDonor.length; i++){
@@ -95,7 +103,7 @@ export default function initExportAndSW() {
       if(checkCurrency.checked = true){
         currencyData.push(checkCurrency.name)
       }
-      console.log(userData,currencyData);
+   
 
       if(userData.length != 0) {exportData['focal_point'] = userData;}
       
@@ -105,33 +113,84 @@ export default function initExportAndSW() {
           exportData[checkedItem[i].name] = checkedItem[i].name;
         }
       }
-      if(currencyData.length != 0) {exportData['currency'] = currencyData;}
-      if(donorData.length != 0) {exportData['donors'] = donorData;}
-      if(clusterData.length != 0){exportData['clusters'] = clusterData;}
-      if(activityDomainData.length != 0){exportData['activity_domains'] = activityDomainData;}
-      if(implementingPartnerData.length != 0){exportData['implementing_partners'] = implementingPartnerData;}
-      if(programPartnerData.length != 0){exportData['programme_partners'] = programPartnerData;}
-      console.log(exportData);
-      $.post({
-        url: routeUrl,
-        method: "POST",
-        data:{
-        "exportData":JSON.stringify(exportData),
-        csrfmiddlewaretoken:csrfToken,
-        },
-        success: function (response){
-          var link = document.createElement("a");
-          link.href = response.file_url;
-          link.download = response.file_name;
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
-          console.log(response);
-        },
-        error: function (error){
-          console.log("No Record Found");
-        },
-      });
+      // ACTIVITY PLANNING
+      const domainCheck = document.querySelectorAll(".domain-check");
+      for(let i = 0; i < domainCheck.length; i++){
+        if(domainCheck[i].checked == true) {
+          activityDomain.push(domainCheck[i].value);
+        }
+      }
+      const typeCheck = document.querySelectorAll(".type-check");
+      for(let i = 0; i < typeCheck.length; i++){
+        if(typeCheck[i].checked == true) {
+          activityType.push(typeCheck[i].value);
+        }
+      }
+      const detailCheck = document.querySelectorAll(".detail-check");
+      for(let i = 0; i < detailCheck.length; i++) {
+        if(detailCheck[i].checked == true) {
+          activityDetail.push(detailCheck[i].value);
+        }
+      }
+      const checkedIndicator = document.querySelectorAll(".checkedIndicator");
+      for(let i = 0; i < checkedIndicator.length; i++) {
+        if(checkedIndicator[i].checked == true){
+          indicator.push(checkedIndicator[i].value);
+        }
+      }
+      const checkBeneficiary = document.querySelectorAll(".beneficiary-check");
+      for(let i = 0; i < checkBeneficiary.length; i++) {
+        if(checkBeneficiary[i].checked == true){
+          beneficiary.push(checkBeneficiary[i].value);
+        }
+      }
+      const checkBCategory = document.querySelectorAll(".beneficiary-category-check");
+      for(let i = 0; i < checkBCategory.length; i++) {
+        if(checkBCategory[i].checked == true){
+          BCategory.push(checkBCategory[i].value);
+        }
+      }
+      const descriptionCheck = document.querySelectorAll(".description");
+      for(let i = 0; i < descriptionCheck.length; i++) {
+        if(descriptionCheck[i].checked == true){
+          activityDescription.push(descriptionCheck[i].value);
+        }
+      }
+
+      console.log("activityDomain",activityDomain);
+      console.log("Indicator",indicator);
+      console.log("ActivityType",activityType);
+      console.log("activityDetail",activityDetail);
+      console.log("beneficiary",beneficiary);
+      console.log("BCategory",BCategory);
+      console.log("activityDescription",activityDescription);
+      // if(currencyData.length != 0) {exportData['currency'] = currencyData;}
+      // if(donorData.length != 0) {exportData['donors'] = donorData;}
+      // if(clusterData.length != 0){exportData['clusters'] = clusterData;}
+      // if(activityDomainData.length != 0){exportData['activity_domains'] = activityDomainData;}
+      // if(implementingPartnerData.length != 0){exportData['implementing_partners'] = implementingPartnerData;}
+      // if(programPartnerData.length != 0){exportData['programme_partners'] = programPartnerData;}
+      // console.log(exportData);
+      // $.post({
+      //   url: routeUrl,
+      //   method: "POST",
+      //   data:{
+      //   "exportData":JSON.stringify(exportData),
+      //   csrfmiddlewaretoken:csrfToken,
+      //   },
+      //   success: function (response){
+      //     var link = document.createElement("a");
+      //     link.href = response.file_url;
+      //     link.download = response.file_name;
+      //     document.body.appendChild(link);
+      //     link.click();
+      //     document.body.removeChild(link);
+      //     console.log(response);
+      //   },
+      //   error: function (error){
+      //     console.log("No Record Found");
+      //   },
+      // });
     });
 
     //filter the project field and download 

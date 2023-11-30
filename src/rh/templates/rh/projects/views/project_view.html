@@ -52,8 +52,6 @@
                         <span class="btn-text">Export</span>
                         <span class="icon-download"></span>
                     </a>
-                    <!-- FIXME: FIX the filter selections -->
-                    <!-- <form action="" class="filter-form"  > -->
                         <div class="filter-options">
                             <div class="block-top">
                                 <span class="title">Export</span>
@@ -83,11 +81,12 @@
                             </div>
                             <div >
                                 <span>
-                                    <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="17" height="17" viewBox="0,0,248,248">
-                                        <g transform=""><g fill="#a52824" fill-rule="nonzero" stroke="none" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" font-family="none" font-weight="none" font-size="none" text-anchor="none" style="mix-blend-mode: normal"><g transform="translate(-21.33333,22.4) scale(5.33333,5.33333)"><path d="M24,4c-11.028,0 -20,8.972 -20,20c0,11.028 8.972,20 20,20c11.028,0 20,-8.972 20,-20c0,-11.028 -8.972,-20 -20,-20zM25.5,33.5c0,0.828 -0.672,1.5 -1.5,1.5c-0.828,0 -1.5,-0.672 -1.5,-1.5v-11c0,-0.828 0.672,-1.5 1.5,-1.5c0.828,0 1.5,0.672 1.5,1.5zM24,18c-1.105,0 -2,-0.895 -2,-2c0,-1.105 0.895,-2 2,-2c1.105,0 2,0.895 2,2c0,1.105 -0.895,2 -2,2z"></path></g></g></g>
-                                    </svg>
+                                    <svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 590 412">
+                                        <path fill="#b56362" d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zm0-384c13.3 0 24 10.7 24 24V264c0 13.3-10.7 24-24 24s-24-10.7-24-24V152c0-13.3 10.7-24 24-24zM224 352a32 32 0 1 1 64 0 32 32 0 1 1 -64 0z"/>
+                                    </svg> 
                                 </span>
-                                <span class="text">The project fields will be exported according to the selectiong order in CSV file..</span>
+                                <span class="text">The project fields will be exported 
+                                    according to the selectiong order in CSV file..</span>
                             </div>
                             <div class="project-title project-accordion-handler btn btn-gray " style="position: relative;">
                                 <span class="accordion-title">Project Planing </span>
@@ -226,54 +225,83 @@
                             </div>
                             <div class="activity-accContainer hidden">
                                 {% for activityPlan in activity_plans%}
+                                <span>
+                                    <p  class="circle-bage">{{forloop.counter}}</p>
+                                </span>
                                 <div class="input-holder">
-                                    <label for="activityDomain" class="text-read-only">Activity Domain</label>
-                                    <input type="checkbox" id="activityDomain"> 
-                                    <label for="activityDomain" class="label">{{activityPlan.activity_domain}}</label>
+                                    <label  class="text-read-only">Activity Domain</label>
+                                    <input type="checkbox" 
+                                    class="domain-check" id="activityDomain-{{activityPlan.id}}" 
+                                    value="{{activityPlan.activity_domain.id}}"
+                                    name="activity_domain"> 
+                                    <label for="activityDomain-{{activityPlan.id}}" class="label">{{activityPlan.activity_domain}}</label>
                                 </div>
                                 <div class="input-holder">
-                                    <label for="activityType" class="text-read-only">Activity Type</label>
-                                    <input type="checkbox" id="activityType"> 
-                                    <label for="activityType" class="label">{{activityPlan.activity_type}}</label>
+                                    <label for="activityType-{{forloop.counter}}" class="text-read-only">Activity Type</label>
+                                    <input type="checkbox" 
+                                    class="type-check" id="activityType-{{forloop.counter}}" 
+                                    value="{{activityPlan.activity_type.id}}"
+                                    name="activity_type">
+                                    <label for="activityType-{{forloop.counter}}" class="label">{{activityPlan.activity_type}}</label>
                                 </div>
                                 {% if activityPlan.activity_detail %}
                                 <div class="input-holder">
-                                    <label for="activityDetail" class="text-read-only">Activity Details</label>
-                                    <input type="checkbox" id="activityDetail"> 
-                                    <label for="activityDetail" class="label">{{activityPlan.activity_detail}}</label>
+                                    <label for="activityDetail-{{forloop.counter}}" class="text-read-only">Activity Details</label>
+                                    <input type="checkbox" 
+                                    class="detail-check" id="activityDetail-{{forloop.counter}}" 
+                                    value="{{activityPlan.activity_detail.id}}"
+                                    name="activity_detail"> 
+                                    <label for="activityDetail-{{forloop.counter}}" class="label">{{activityPlan.activity_detail}}</label>
                                 </div>
                                 {% endif %}
                                 {% for indicator in activityPlan.indicators.all %}
                                 <div class="input-holder">
-                                    <label for="indicator-{{forloop.counter}}" class="text-read-only">Indicators</label>
-                                    <input type="checkbox" id="indicator-{{forloop.counter}}"> 
-                                    <label for="indicator-{{forloop.counter}}" class="label">{{indicator.name}}</label>
+                                    <label for="indicator-{{indicator.id}}" class="text-read-only">Indicators</label>
+                                    <input type="checkbox" class="checkedIndicator" id="indicator-{{indicator.id}}" 
+                                    value="{{indicator.id}}">
+                                    <label for="indicator-{{indicator.id}}" class="label">{{indicator.name}}</label>
                                 </div>
                                 {% endfor %}
                                 <div class="multiple-fields-row two-items">
                                     <div class="field-col">
                                         <div class="input-holder">
-                                            <label for="Beneficiary" class="text-read-only">Beneficiary</label>
-                                            <input type="checkbox" id="Beneficiary"> 
-                                            <label for="Beneficiary" class="label">{{activityPlan.beneficiary}}</label>
+                                            <label for="Beneficiary-{{forloop.counter}}" class="text-read-only">Beneficiary</label>
+                                            <input type="checkbox" 
+                                            class="beneficiary-check" id="Beneficiary-{{forloop.counter}}" 
+                                            value="{{activityPlan.beneficiary.id}}"
+                                            name="beneficiary"> 
+                                            <label for="Beneficiary-{{forloop.counter}}" class="label">{{activityPlan.beneficiary}}</label>
                                         </div>
                                     </div>
                                     <div class="field-col">
                                         <div class="input-holder">
-                                            <label for="BeneficiaryCategory" class="text-read-only">Beneficiary Category</label>
-                                            <input type="checkbox" id="BeneficiaryCategory"> 
-                                            <label for="BeneficiaryCategory" class="label">{{activityPlan.beneficiary_category}}</label>
+                                            <label for="BeneficiaryCategory-{{forloop.counter}}" class="text-read-only">Beneficiary Category</label>
+                                            <input type="checkbox" 
+                                            class="beneficiary-category-check" id="BeneficiaryCategory-{{forloop.counter}}" 
+                                            value="{{activityPlan.beneficiary_category}}"
+                                            name="beneficiary_category"> 
+                                            <label for="BeneficiaryCategory-{{forloop.counter}}" class="label">{{activityPlan.beneficiary_category}}</label>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="input-holder">
-                                        <label for="ActivityDescription" class="text-read-only">Activity Description</label>
-                                        <input type="checkbox" id="ActivityDescription"> 
-                                        <label for="ActivityDescription" class="label">{{activityPlan.description | linebreaksbr }}</label>
+                                        <label for="Description-{{forloop.counter}}" class="text-read-only">Activity Description</label>
+                                        <input type="checkbox" 
+                                        class="description-check" id="Description-{{forloop.counter}}" 
+                                        value="{{activityPlan.description | linebreaksbr }}"
+                                        name="description"> 
+                                        <label for="Description-{{forloop.counter}}" class="label">{{activityPlan.description | linebreaksbr }}</label>
                                     </div> 
-                                <div class="report-title target-location-container">
-                                    <span class="project-title">Target Location</span>
-                                    <span></span>
+                                <div class="target-location-container">
+                                    
+                                    <span class="target-location-badge">
+                                        <span>
+                                            <svg xmlns="http://www.w3.org/2000/svg" height="15" width="15" viewBox="0 0 590 350">
+                                                <path fill="#ffffff" d="M345 39.1L472.8 168.4c52.4 53 52.4 138.2 0 191.2L360.8 472.9c-9.3 9.4-24.5 9.5-33.9 .2s-9.5-24.5-.2-33.9L438.6 325.9c33.9-34.3 33.9-89.4 0-123.7L310.9 72.9c-9.3-9.4-9.2-24.6 .2-33.9s24.6-9.2 33.9 .2zM0 229.5V80C0 53.5 21.5 32 48 32H197.5c17 0 33.3 6.7 45.3 18.7l168 168c25 25 25 65.5 0 90.5L277.3 442.7c-25 25-65.5 25-90.5 0l-168-168C6.7 262.7 0 246.5 0 229.5zM144 144a32 32 0 1 0 -64 0 32 32 0 1 0 64 0z"/>
+                                            </svg>
+                                        </span>
+                                        Target Location
+                                    </span>
                                 </div>
                                 <div class="multiple-fields-row two-items">
                                     {% for targetLocation in activityPlan.targetlocation_set.all %} 

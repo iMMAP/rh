@@ -60,7 +60,7 @@ STORAGES = {
     },
     "staticfiles": {
         # "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage", # with cashing
-        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",  # No Caching
+        "BACKEND": "whitenoise.storage.CompressedStaticFilesStorage",  # No Caching
     },
 }
 

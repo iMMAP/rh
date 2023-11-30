@@ -21,6 +21,16 @@ DB = env("DB", default="sqlite")
 
 DATABASES["default"] = DATABASES[DB]
 
+STORAGES = {
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    },
+    "staticfiles": {
+        # "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage", # with cashing
+        "BACKEND": "whitenoise.storage.CompressedStaticFilesStorage",  # No Caching
+    },
+}
+
 
 DJANGO_VITE_PLUGIN = {
     "BUILD_DIR": "static-cdn/build",

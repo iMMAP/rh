@@ -48,7 +48,7 @@ RUN poetry install --no-root
 
 # RUN source .venv/bin/activate
 
-WORKDIR make npm-install
+RUN make npm-install
 
 EXPOSE 5173
 # Set up the entrypoint

@@ -56,14 +56,6 @@ export default function initExportAndSW() {
       let activityDomainData = [];
       let implementingPartnerData = [];
       let programPartnerData = [];
-      let activityDomain = [];
-      let activityType = [];
-      let activityDetail = [];
-      let beneficiary = [];
-      let BCategory = [];
-      let indicator = [];
-      let activityDescription = []
-      let targetLocation = [];
 
       const checkedDonor = document.querySelectorAll(".input-check-donor");
       for(let i = 0; i < checkedDonor.length; i++){
@@ -100,7 +92,7 @@ export default function initExportAndSW() {
         userData.push(checkUser.name);
       }
       const checkCurrency = document.querySelector(".input-currency");
-      if(checkCurrency.checked = true){
+      if(checkCurrency.checked == true){
         currencyData.push(checkCurrency.name)
       }
    
@@ -114,6 +106,13 @@ export default function initExportAndSW() {
         }
       }
       // ACTIVITY PLANNING
+      let activityDomain = [];
+      let activityType = [];
+      let activityDetail = [];
+      let beneficiary = [];
+      let BCategory = [];
+      let indicator = [];
+      let activityDescription = [];
       const domainCheck = document.querySelectorAll(".domain-check");
       for(let i = 0; i < domainCheck.length; i++){
         if(domainCheck[i].checked == true) {
@@ -156,41 +155,91 @@ export default function initExportAndSW() {
           activityDescription.push(descriptionCheck[i].value);
         }
       }
-
-      console.log("activityDomain",activityDomain);
-      console.log("Indicator",indicator);
-      console.log("ActivityType",activityType);
-      console.log("activityDetail",activityDetail);
-      console.log("beneficiary",beneficiary);
-      console.log("BCategory",BCategory);
-      console.log("activityDescription",activityDescription);
-      // if(currencyData.length != 0) {exportData['currency'] = currencyData;}
-      // if(donorData.length != 0) {exportData['donors'] = donorData;}
-      // if(clusterData.length != 0){exportData['clusters'] = clusterData;}
+      // Target Location fields
+      let province =[];
+      let district = [];
+      let locationType = [];
+      let siteName = [];
+      let siteLat = [];
+      let siteLong = []
+      const provinceCheck = document.querySelectorAll(".province-check");
+      for(let i=0; i<provinceCheck.length; i++) {
+        if(provinceCheck[i].checked == true) {
+          province.push(provinceCheck[i].value);
+        }
+      }
+      const districtCheck = document.querySelectorAll(".district-check");
+      for(let i=0; i<districtCheck.length; i++){
+        if(districtCheck[i].checked == true){
+          district.push(districtCheck[i].value);
+        }
+      }
+      const locationtypeCheck = document.querySelectorAll(".location-type-check");
+      for(let i=0; i<locationtypeCheck.length; i++){
+        if(locationtypeCheck[i].checked == true) {
+          locationType.push(locationtypeCheck[i].value)
+        }
+      }
+      const siteNameCheck = document.querySelectorAll(".site-name-check");
+      for(let i=0; i<siteNameCheck.length; i++){
+        if(siteNameCheck[i].checked == true) {
+          siteName.push(siteNameCheck[i].value)
+        }
+      }
+      const siteLatCheck = document.querySelectorAll(".site-lat-check");
+      for(let i=0; i<siteLatCheck.length; i++){
+        if(siteLatCheck[i].checked == true) {
+          siteLat.push(siteLatCheck[i].value)
+        }
+      }
+      const siteLongCheck = document.querySelectorAll(".site-long-check");
+      for(let i=0; i<siteLongCheck.length; i++){
+        if(siteLongCheck[i].checked == true) {
+          siteLong.push(siteLongCheck[i].value)
+        }
+      }
+      
+      if(currencyData.length > 0) {exportData['currency'] = currencyData;}
+      if(donorData.length != 0) {exportData['donors'] = donorData;}
+      if(clusterData.length != 0){exportData['clusters'] = clusterData;}
       // if(activityDomainData.length != 0){exportData['activity_domains'] = activityDomainData;}
-      // if(implementingPartnerData.length != 0){exportData['implementing_partners'] = implementingPartnerData;}
-      // if(programPartnerData.length != 0){exportData['programme_partners'] = programPartnerData;}
-      // console.log(exportData);
-      // $.post({
-      //   url: routeUrl,
-      //   method: "POST",
-      //   data:{
-      //   "exportData":JSON.stringify(exportData),
-      //   csrfmiddlewaretoken:csrfToken,
-      //   },
-      //   success: function (response){
-      //     var link = document.createElement("a");
-      //     link.href = response.file_url;
-      //     link.download = response.file_name;
-      //     document.body.appendChild(link);
-      //     link.click();
-      //     document.body.removeChild(link);
-      //     console.log(response);
-      //   },
-      //   error: function (error){
-      //     console.log("No Record Found");
-      //   },
-      // });
+      if(implementingPartnerData.length != 0){exportData['implementing_partners'] = implementingPartnerData;}
+      if(programPartnerData.length != 0){exportData['programme_partners'] = programPartnerData;}
+      if(activityDomain.length != 0){exportData['activity_domain'] = activityDomain;}
+      if(activityType.length != 0){exportData['activity_type'] = activityType;}
+      if(activityDetail.length != 0){exportData['activity_detail'] = activityDetail;}
+      if(activityDescription.length != 0){exportData['activity_description'] = activityDescription;}
+      if(indicator.length != 0){exportData['indicator'] = indicator;}
+      if(beneficiary.length != 0){exportData['beneficiary'] =beneficiary;}
+      if(BCategory.length != 0){exportData['beneficiary_category'] =BCategory;}
+
+      if(province.length != 0){exportData['province'] = province;}
+      if(district.length > 0){exportData['district'] = district;}
+      if(locationType.length !=0){exportData['location_type'] = locationType;}
+      if(siteName.length != 0){exportData['site_name'] = siteName;}
+      if(siteLat.length != 0){exportData['site_latitude'] = siteLat;}
+      if(siteLong.length != 0){exportData['site_longitude'] = siteLong;}
+      console.log(exportData);
+      $.post({
+        url: routeUrl,
+        method: "POST",
+        data:{
+        "exportData":JSON.stringify(exportData),
+        csrfmiddlewaretoken:csrfToken,
+        },
+        success: function (response){
+          var link = document.createElement("a");
+          link.href = response.file_url;
+          link.download = response.file_name;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          console.log(response);
+        },
+        error: function (error){
+          console.log("something went wrong! please try again ");
+        },
+      });
     });
 
     //filter the project field and download 

@@ -305,35 +305,59 @@
                                 </div>
                                 <div class="multiple-fields-row two-items">
                                     {% for targetLocation in activityPlan.targetlocation_set.all %} 
+                                    
                                     <div class="field-col">
-                                        <label for="province" class="text-read-only">Province</label>
-                                        <input type="checkbox" id="province"> 
-                                        <label for="province" class="label">{{targetLocation.province | linebreaksbr }}</label>
+                                        <label for="province-{{targetLocation.province.id}}" class="text-read-only">Province</label>
+                                        <input type="checkbox" id="province-{{targetLocation.province.id}}" class="province-check"
+                                        value="{{targetLocation.province.id}}"
+                                        name="province"> 
+                                        <label for="province-{{targetLocation.province.id}}" class="label">{{targetLocation.province | linebreaksbr }}</label>
                                     </div>
                                     <div class="field-col">
-                                        <label for="district" class="text-read-only">District</label>
-                                        <input type="checkbox" id="district"> 
-                                        <label for="district" class="label">{{targetLocation.district | linebreaksbr }}</label>
+                                        <label for="district-{{targetLocation.district.id}}" class="text-read-only">District</label>
+                                        <input type="checkbox" id="district-{{targetLocation.district.id}}" class="district-check"
+                                        value="{{targetLocation.district.id}}"
+                                        name="district"> 
+                                        <label for="district-{{targetLocation.district.id}}" class="label">{{targetLocation.district | linebreaksbr }}</label>
                                     </div>
                                     <div class="field-col">
-                                        <label for="locationType" class="text-read-only">Location Type</label>
-                                        <input type="checkbox" id="locationType"> 
-                                        <label for="locationType" class="label">{{targetLocation.location_type | linebreaksbr }}</label>
+                                        <label for="locationType-{{targetLocation.location_type.id}}" class="text-read-only">Location Type</label>
+                                        <input type="checkbox" id="locationType-{{targetLocation.location_type.id}}" 
+                                        class="location-type-check"
+                                        value="{{targetLocation.location_type.id}}"
+                                        name="location_type"> 
+                                        <label for="locationType-{{targetLocation.location_type.id}}" 
+                                        class="label">{{targetLocation.location_type | linebreaksbr }}</label>
                                     </div>
                                     <div class="field-col">
-                                        <label for="siteName" class="text-read-only">Site Name</label>
-                                        <input type="checkbox" id="siteName"> 
-                                        <label for="siteName" class="label">{{targetLocation.site_name | linebreaksbr }}</label>
+                                        <label for="siteName-{{targetLocation.site_name.id}}" 
+                                        class="text-read-only">Site Name</label>
+                                        <input type="checkbox" id="siteName-{{targetLocation.site_name.id}}" 
+                                        class="site-name-check"
+                                        value="{{targetLocation.site_name.id}}"
+                                        name="site_name"> 
+                                        <label for="siteName-{{targetLocation.site_name.id}}" 
+                                        class="label">{{targetLocation.site_name | linebreaksbr }}</label>
                                     </div>
                                     <div class="field-col">
-                                        <label for="latitude" class="text-read-only">Site Latitude</label>
-                                        <input type="checkbox" id="latitude"> 
-                                        <label for="latitude" class="label">{{targetLocation.site_lat | linebreaksbr }}</label>
+                                        <label for="latitude-{{targetLocation.site_lat.id}}" 
+                                        class="text-read-only">Site Latitude</label>
+                                        <input type="checkbox" id="latitude-{{targetLocation.site_lat.id}}" 
+                                        class="site-lat-check"
+                                        value="{{targetLocation.site_lat.id}}"
+                                        name="site_latitude"> 
+                                        <label for="latitude-{{targetLocation.site_lat.id}}" 
+                                        class="label">{{targetLocation.site_lat | linebreaksbr }}</label>
                                     </div>
                                     <div class="field-col">
-                                        <label for="Longitude" class="text-read-only">Site Longitude</label>
-                                        <input type="checkbox" id="Longitude"> 
-                                        <label for="Longitude" class="label">{{targetLocation.site_long | linebreaksbr }}</label>
+                                        <label for="Longitude-{{targetLocation.site_long.id}}" 
+                                        class="text-read-only">Site Longitude</label>
+                                        <input type="checkbox" id="Longitude-{{targetLocation.site_long.id}}" 
+                                        class="site-long-check"
+                                        value="{{targetLocation.site_long.id}}"
+                                        name="site_longitude"> 
+                                        <label for="Longitude-{{targetLocation.site_long.id}}" 
+                                        class="label">{{targetLocation.site_long | linebreaksbr }}</label>
                                     </div>
                                     {% endfor %}
                                 </div>

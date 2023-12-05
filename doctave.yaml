@@ -1,0 +1,14 @@
+---
+title: "ReportHub"
+base_path: /rh
+
+logo: immap-logo.svg
+
+colors:
+  main: #af4744
+
+navigation:
+  - path: docs/bestpractices.md
+  - path: docs/cleanarchitecture.md
+  - path: docs/Models
+    children: "*"

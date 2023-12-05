@@ -232,7 +232,7 @@
                                     <label  class="text-read-only">Activity Domain</label>
                                     <input type="checkbox" 
                                     class="domain-check" id="activityDomain-{{activityPlan.id}}" 
-                                    value="{{activityPlan.activity_domain.id}}"
+                                    value="{{activityPlan.activity_domain.name}}"
                                     name="activity_domain"> 
                                     <label for="activityDomain-{{activityPlan.id}}" class="label">{{activityPlan.activity_domain}}</label>
                                 </div>
@@ -240,7 +240,7 @@
                                     <label for="activityType-{{forloop.counter}}" class="text-read-only">Activity Type</label>
                                     <input type="checkbox" 
                                     class="type-check" id="activityType-{{forloop.counter}}" 
-                                    value="{{activityPlan.activity_type.id}}"
+                                    value="{{activityPlan.activity_type.name}}"
                                     name="activity_type">
                                     <label for="activityType-{{forloop.counter}}" class="label">{{activityPlan.activity_type}}</label>
                                 </div>
@@ -249,7 +249,7 @@
                                     <label for="activityDetail-{{forloop.counter}}" class="text-read-only">Activity Details</label>
                                     <input type="checkbox" 
                                     class="detail-check" id="activityDetail-{{forloop.counter}}" 
-                                    value="{{activityPlan.activity_detail.id}}"
+                                    value="{{activityPlan.activity_detail.name}}"
                                     name="activity_detail"> 
                                     <label for="activityDetail-{{forloop.counter}}" class="label">{{activityPlan.activity_detail}}</label>
                                 </div>
@@ -258,7 +258,7 @@
                                 <div class="input-holder">
                                     <label for="indicator-{{indicator.id}}" class="text-read-only">Indicators</label>
                                     <input type="checkbox" class="checkedIndicator" id="indicator-{{indicator.id}}" 
-                                    value="{{indicator.id}}">
+                                    value="{{indicator.name}}">
                                     <label for="indicator-{{indicator.id}}" class="label">{{indicator.name}}</label>
                                 </div>
                                 {% endfor %}
@@ -288,7 +288,7 @@
                                         <label for="Description-{{forloop.counter}}" class="text-read-only">Activity Description</label>
                                         <input type="checkbox" 
                                         class="description-check" id="Description-{{forloop.counter}}" 
-                                        value="{{activityPlan.description | linebreaksbr }}"
+                                        value="{{activityPlan.description.name| linebreaksbr }}"
                                         name="description"> 
                                         <label for="Description-{{forloop.counter}}" class="label">{{activityPlan.description | linebreaksbr }}</label>
                                     </div> 
@@ -309,14 +309,14 @@
                                     <div class="field-col">
                                         <label for="province-{{targetLocation.province.id}}" class="text-read-only">Province</label>
                                         <input type="checkbox" id="province-{{targetLocation.province.id}}" class="province-check"
-                                        value="{{targetLocation.province.id}}"
+                                        value="{{targetLocation.province.name}}"
                                         name="province"> 
                                         <label for="province-{{targetLocation.province.id}}" class="label">{{targetLocation.province | linebreaksbr }}</label>
                                     </div>
                                     <div class="field-col">
                                         <label for="district-{{targetLocation.district.id}}" class="text-read-only">District</label>
                                         <input type="checkbox" id="district-{{targetLocation.district.id}}" class="district-check"
-                                        value="{{targetLocation.district.id}}"
+                                        value="{{targetLocation.district.name}}"
                                         name="district"> 
                                         <label for="district-{{targetLocation.district.id}}" class="label">{{targetLocation.district | linebreaksbr }}</label>
                                     </div>
@@ -324,7 +324,7 @@
                                         <label for="locationType-{{targetLocation.location_type.id}}" class="text-read-only">Location Type</label>
                                         <input type="checkbox" id="locationType-{{targetLocation.location_type.id}}" 
                                         class="location-type-check"
-                                        value="{{targetLocation.location_type.id}}"
+                                        value="{{targetLocation.location_type}}"
                                         name="location_type"> 
                                         <label for="locationType-{{targetLocation.location_type.id}}" 
                                         class="label">{{targetLocation.location_type | linebreaksbr }}</label>
@@ -334,7 +334,7 @@
                                         class="text-read-only">Site Name</label>
                                         <input type="checkbox" id="siteName-{{targetLocation.site_name.id}}" 
                                         class="site-name-check"
-                                        value="{{targetLocation.site_name.id}}"
+                                        value="{{targetLocation.site_name}}"
                                         name="site_name"> 
                                         <label for="siteName-{{targetLocation.site_name.id}}" 
                                         class="label">{{targetLocation.site_name | linebreaksbr }}</label>
@@ -344,7 +344,7 @@
                                         class="text-read-only">Site Latitude</label>
                                         <input type="checkbox" id="latitude-{{targetLocation.site_lat.id}}" 
                                         class="site-lat-check"
-                                        value="{{targetLocation.site_lat.id}}"
+                                        value="{{targetLocation.site_lat}}"
                                         name="site_latitude"> 
                                         <label for="latitude-{{targetLocation.site_lat.id}}" 
                                         class="label">{{targetLocation.site_lat | linebreaksbr }}</label>
@@ -354,7 +354,7 @@
                                         class="text-read-only">Site Longitude</label>
                                         <input type="checkbox" id="Longitude-{{targetLocation.site_long.id}}" 
                                         class="site-long-check"
-                                        value="{{targetLocation.site_long.id}}"
+                                        value="{{targetLocation.site_long}}"
                                         name="site_longitude"> 
                                         <label for="Longitude-{{targetLocation.site_long.id}}" 
                                         class="label">{{targetLocation.site_long | linebreaksbr }}</label>

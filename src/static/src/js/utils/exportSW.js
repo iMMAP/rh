@@ -202,7 +202,7 @@ export default function initExportAndSW() {
       if(currencyData.length > 0) {exportData['currency'] = currencyData;}
       if(donorData.length != 0) {exportData['donors'] = donorData;}
       if(clusterData.length != 0){exportData['clusters'] = clusterData;}
-      // if(activityDomainData.length != 0){exportData['activity_domains'] = activityDomainData;}
+    
       if(implementingPartnerData.length != 0){exportData['implementing_partners'] = implementingPartnerData;}
       if(programPartnerData.length != 0){exportData['programme_partners'] = programPartnerData;}
       if(activityDomain.length != 0){exportData['activity_domain'] = activityDomain;}

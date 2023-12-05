@@ -31,6 +31,8 @@ from .models import (
     UnitType,
 )
 
+from import_export.admin import ExportActionModelAdmin,ImportExportActionModelAdmin
+
 admin.site.register(Currency)
 admin.site.register(LocationType)
 admin.site.register(FacilitySiteType)
@@ -133,7 +135,7 @@ class BeneficiaryTypeAdmin(admin.ModelAdmin):
 admin.site.register(BeneficiaryType, BeneficiaryTypeAdmin)
 
 
-class DisaggregationAdmin(admin.ModelAdmin):
+class DisaggregationAdmin(ImportExportActionModelAdmin,admin.ModelAdmin):
     list_display = ("name", "indicators_count", "clusters_count")
     search_fields = (
         "code",

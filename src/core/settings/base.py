@@ -31,6 +31,7 @@ INSTALLED_APPS = [
     "django_filters",
     "smart_selects",
     "django_vite_plugin",
+    "import_export",
     # RH apps
     "rh.apps.RhConfig",
     "users.apps.UsersConfig",

@@ -5,7 +5,7 @@ base_path: /rh
 logo: immap-logo.svg
 
 colors:
-  main: #af4744
+  main: "#af4744"
 
 navigation:
   - path: docs/bestpractices.md

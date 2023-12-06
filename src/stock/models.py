@@ -70,8 +70,7 @@ class StockLocationDetails(models.Model):
     cluster = models.ForeignKey(Cluster, on_delete=models.SET_NULL, null=True, blank=True)
     stock_purpose = models.CharField(max_length=255, choices=PURPOSE_TYPES, default="", null=True, blank=True)
     targeted_groups = models.CharField(max_length=255, choices=TARGET_GROUP_TYPES, default="", null=True, blank=True)
-    stock_type = models.ManyToManyField(StockType, blank=True)
-    # stock_type = models.ForeignKey(StockType, on_delete=models.SET_NULL, null=True, blank=True)
+    stock_type = models.ForeignKey(StockType, on_delete=models.SET_NULL, null=True, blank=True)
     status = models.CharField(max_length=255, choices=STATUS_TYPES, default="", null=True, blank=True)
     stock_unit = models.ForeignKey(
         StockUnit,

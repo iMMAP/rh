@@ -49,12 +49,12 @@
                                 aria-expanded="false"
                                 aria-controls="collapse_{{ warehouse_location.id }}_{{ forloop.counter0 }}">
                           {% if form.instance.id %}
-                            <i class="fa fa-list" aria-hidden="true"></i> &nbsp; {{
-                            form.instance.stock_type }}, {{
-                            form.instance.targeted_groups }}
+                            <i class="fa fa-list" aria-hidden="true"></i> &nbsp; Edit Stock
+
                           {% else %}
                             <i class="fa fa-plus-square"></i>&nbsp; Add Stock
                           {% endif %}
+                          
                         </button>
                       </h2>
                       <div id="collapse_{{ warehouse_location.id }}_{{ forloop.counter0 }}"
@@ -63,20 +63,83 @@
                            data-bs-parent="#stock_details_{{ warehouse_location.id }}_{{ forloop.counter0 }}">
                         <div class="accordion-body"
                              id="accordion_body_{{ warehouse_location.id }}_{{ forloop.counter0 }}">
-                          <div class="row">
-                            <div class="col">
-                              {{ form.cluster }} {{ form.stock_type }} {{
-                              form.qty_in_stock }}
+                            
+                             <div class="multiple-fields-row three-items">
+                              
+                              <div class="field-col">
+                                
+                                <div class="select-field">
+                                  <label>
+                                    Cluster
+                                  </label>
+                                  {{ form.cluster }} 
+                                </div>
+
+                                <div class="select-field">
+                                  <label>
+                                    Stock Type
+                                  </label>
+                                  {{ form.stock_type }} 
+                                </div>
+
+                                <div class="input-field">
+                                  <label>
+                                    No. in Stock
+                                  </label>
+                                  {{ form.qty_in_stock  }} 
+                                </div>
+                              </div>
+
+                              <div class="field-col">
+                                
+                                <div class="select-field">
+                                  <label>
+                                    Stock Purpose
+                                  </label>
+                                  {{ form.stock_purpose }}
+                                </div>
+
+                                <div class="select-field">
+                                  <label>
+                                    Status
+                                  </label>
+                                  {{ form.status }} 
+                                </div>
+
+                                <div class="input-field">
+                                  <label>
+                                    No. in Pipline
+                                  </label>
+                                  {{ form.qty_in_pipeline }} 
+                                </div>
+                              </div>
+
+                              <div class="field-col">
+                                
+                                <div class="select-field">
+                                  <label>
+                                    Targeted Groups
+                                  </label>
+                                  {{ form.targeted_groups }} 
+                                </div>
+
+                                <div class="select-field">
+                                  <label>
+                                    Units
+                                  </label>
+                                  {{ form.stock_unit }} 
+                                </div>
+
+                                <div class="input-field">
+                                  <label>
+                                    Beneficiary Coverage
+                                  </label>
+                                  {{ form.beneficiary_coverage }} 
+                                </div>
+                              </div>
+
                             </div>
-                            <div class="col">
-                              {{ form.stock_purpose }} {{ form.status }} {{
-                              form.qty_in_pipeline }}
-                            </div>
-                            <div class="col">
-                              {{ form.targeted_groups }} {{ form.stock_unit }} {{
-                              form.beneficiary_coverage }}
-                            </div>
-                          </div>
+
                           <div class="mb-3 mt-3 text-end">
                             <input type="submit" class="btn btn-outline-primary" value="Save Stock" />
                             {% if form.instance.id %}

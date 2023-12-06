@@ -8,7 +8,54 @@
     transition: none !important;
   }
 }
-
+hr{
+  border: 1px solid #d1d3d4;
+}
+.hidden{
+  display: none;
+}
+.accordion-title{
+  padding: 8px;
+}
+::-webkit-scrollbar{
+  width: 3px;
+  height: 3px;
+  color: $red;
+  background-color: rgb(214, 214, 214);
+}
+::-webkit-scrollbar-thumb{
+  background: $red-be;
+  border-radius: 8px;
+}
+.activity-accContainer, .project-accContainer{
+  overflow-y: scroll;
+  overflow-x:scroll;
+}
+.accordion-arrows{
+  color: $red-be;
+  text-shadow: white;
+  position: absolute;
+  top: 30%;
+  right: 5%;
+}
+.target-location-container {
+  margin: 8px 0;
+}
+.circle-bage{
+  background-color: #6b6d70;
+  color: white;
+  padding: 1px 6px;
+  border-radius: 10px;
+  font-weight: 500;
+  display: inline-block;
+}
+.target-location-badge{
+  background-color:$red;
+  padding: 1px 8px;
+  color: white;
+  font-weight: 600;
+  border-color: $red-a5;
+}
 .container {
   max-width: $container-max-width + $gutter * 2;
   margin-left: auto;

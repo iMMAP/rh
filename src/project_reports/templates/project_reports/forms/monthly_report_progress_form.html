@@ -70,6 +70,7 @@
 												{{ activity_report_form.instance.activity_plan.activity_domain.name }}
 											{% else %}
 												{{ activity_report_form.initial.activity_plan.activity_domain.name }}
+												
 											{% endif %}
 										</span>
 									</div>
@@ -109,6 +110,7 @@
 								<div class="select-field">
 									<label>Indicator</label>
 									{{ activity_report_form.indicator }}
+									
 								</div>
 							</div>
 						</div>
@@ -121,7 +123,58 @@
 							</div>
 						</div>
 					</div>
-
+					{% for indicator in activity_report_form.initial.activity_plan.indicators.all %}
+					<div class="multiple-fields-row two-items">
+						<div class="field-col">
+							<div class="select-field">
+								<label for="packageType">Package Type</label>
+								{{indicator_form.package_type}}
+							</div>
+						</div>
+						<div class="field-col">
+							<div class="select-field">
+								<label for="packageType">Unit Type</label>
+								{{indicator_form.unit_type}}
+							</div>
+						</div>
+						<div class="field-col">
+							<div class="select-field">
+								<label for="packageType">Transfer mechanism Type</label>
+								{{indicator_form.transfer_mechanism_type}}
+							</div>
+						</div>
+						<div class="field-col">
+							<div class="select-field">
+								<label for="packageType">Implementation Modility Type</label>
+								{{indicator_form.implement_modility_type}}
+							</div>
+						</div>
+						<div class="field-col">
+							<div class="select-field">
+								<label for="packageType">Transfer category</label>
+								{{indicator_form.transfer_category}}
+							</div>
+						</div>
+						<div class="field-col">
+							<div class="select-field">
+								<label for="packageType">grant Type</label>
+								{{indicator_form.grant_type}}
+							</div>
+						</div>
+						<div class="field-col">
+							<div class="select-field">
+								<label for="packageType">Currency</label>
+								{{indicator_form.currency}}
+							</div>
+						</div>
+						<div class="field-col">
+							<div class="select-field">
+								<label for="packageType">Location Type</label>
+								{{indicator_form.location_type}}
+							</div>
+						</div>
+					</div>
+					{% endfor %}
 					<div class="row monthly-reporting" id="report_locations-{{activity_report_form.prefix}}">
 						<div class="col col-lg">
 							<div class="target-location-block target-location-accordion">

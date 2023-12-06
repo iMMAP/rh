@@ -11,7 +11,9 @@ from openpyxl.styles import Font, NamedStyle
 from openpyxl.utils import get_column_letter
 
 
-from .models import ActivityDomain, Cluster, Currency, Donor, Organization, Project, User
+from .models import (
+    Project,
+)
 
 #############################################
 ############### Export Views #################
@@ -311,6 +313,8 @@ class ProjectExportExcelView(View):
 
 class ProjectFilterExportView(View):
     def post(self, request, projectId):
+        project = Project.objects.get(id=projectId)
+
         try:
             selectedData = json.loads(request.POST.get("exportData"))
             i = 0
@@ -323,6 +327,7 @@ class ProjectFilterExportView(View):
             sheet = workbook.active
             sheet.title = "Project"
             # defining columns
+
             columns = []
             for keys, values in selectedData.items():
                 columns += ({"header": keys, "type": "string", "width": 20},)
@@ -341,53 +346,190 @@ class ProjectFilterExportView(View):
             row = []
             # retriving data from database accordeing to selected field by user and defining rows
             try:
-                user = User.objects.values_list("username", flat=True).get(id__in=selectedData["focal_point"])
-                row += (user,)
+                if len(selectedData["focal_point"]) > 0:
+                    row += (project.user.username,)
             except Exception:
                 pass
             try:
-                project = Project.objects.values_list(*projectFields).get(id=projectId)
-                for field in project:
-                    if isinstance(field, datetime.datetime):
-                        row += (field.astimezone(timezone.utc).replace(tzinfo=None),)
-                    else:
-                        row += (field,)
+                if len(projectFields) > 0:
+                    selected_feild = Project.objects.values_list(*projectFields).get(id=projectId)
+                    for field in selected_feild:
+                        if isinstance(field, datetime.datetime):
+                            row += (field.astimezone(timezone.utc).replace(tzinfo=None),)
+                        else:
+                            row += (field,)
+                else:
+                    pass
+            except Exception:
+                pass
+
+            try:
+                if len(selectedData["currency"]) > 0:
+                    row += (project.budget_currency.name,)
             except Exception:
                 pass
             try:
-                currency = Currency.objects.values_list("name", flat=True).get(id__in=selectedData["currency"])
-                row += (currency,)
-            except Exception:
-                pass
-            try:
-                donorData = Donor.objects.values_list("name", flat=True).filter(id__in=selectedData["donors"])
+                donorData = project.donors.values_list("name", flat=True).filter(id__in=selectedData["donors"])
                 row += (",".join([donor for donor in donorData]),)
             except Exception:
                 pass
             try:
-                clusterData = Cluster.objects.values_list("title", flat=True).filter(id__in=selectedData["clusters"])
+                clusterData = project.clusters.values_list("title", flat=True).filter(id__in=selectedData["clusters"])
                 row += (",".join([cluster for cluster in clusterData]),)
             except Exception:
                 pass
+
             try:
-                activitDomain = ActivityDomain.objects.values_list("name", flat=True).filter(
-                    id__in=selectedData["activity_domains"]
-                )
-                row += (",".join([activity for activity in activitDomain]),)
-            except Exception:
-                pass
-            try:
-                implementingPartner = Organization.objects.values_list("code", flat=True).filter(
+                implementingPartner = project.implementing_partners.values_list("code", flat=True).filter(
                     id__in=selectedData["implementing_partners"]
                 )
                 row += (",".join([implement for implement in implementingPartner]),)
             except Exception:
                 pass
             try:
-                programPartner = Organization.objects.values_list("code", flat=True).filter(
+                programPartner = project.programme_partners.values_list("code", flat=True).filter(
                     id__in=selectedData["programme_partners"]
                 )
                 row += (",".join([program for program in programPartner]),)
+            except Exception:
+                pass
+
+            activity_plans = project.activityplan_set.all()
+            try:
+                row += (
+                    ",".join(
+                        [
+                            plan.activity_domain.name
+                            for plan in activity_plans
+                            if plan.activity_domain.name in selectedData["activity_domain"]
+                        ]
+                    ),
+                )
+            except Exception:
+                pass
+
+            try:
+                row += (
+                    ",".join(
+                        [
+                            plan.activity_type.name
+                            for plan in activity_plans
+                            if plan.activity_type.name in selectedData["activity_type"]
+                        ]
+                    ),
+                )
+            except Exception:
+                pass
+
+            try:
+                row += (
+                    ",".join(
+                        [
+                            plan.activity_detail.name
+                            for plan in activity_plans
+                            if plan.activity_detail.name in selectedData["activity_detail"]
+                        ]
+                    ),
+                )
+            except Exception:
+                pass
+
+            try:
+                inds = []
+                for plan in activity_plans:
+                    for indicator in plan.indicators.all():
+                        if indicator.name in selectedData["indicator"]:
+                            value = str(indicator.name)
+                            inds += (",".join([value]),)
+                row += (",".join([i for i in inds]),)
+            except Exception:
+                pass
+
+            try:
+                row += (",".join([ben.name for ben in activity_plans if ben.name in selectedData["beneficiary"]]),)
+            except Exception:
+                pass
+            try:
+                row += (",".join([b_category for b_category in selectedData["beneficiary_category"]]),)
+            except Exception:
+                pass
+            try:
+                row += (
+                    ",".join(
+                        [desc.name for desc in activity_plans if desc.name in selectedData["activity_description"]]
+                    ),
+                )
+            except Exception:
+                pass
+            # # Target location
+            targetLocation = project.targetlocation_set.all()
+
+            try:
+                row += (
+                    ",".join(
+                        [
+                            target.province.name
+                            for target in targetLocation
+                            if target.province.name in selectedData["province"]
+                        ]
+                    ),
+                )
+            except Exception:
+                pass
+            try:
+                row += (
+                    ",".join(
+                        [
+                            target.district.name
+                            for target in targetLocation
+                            if target.district.name in selectedData["district"]
+                        ]
+                    ),
+                )
+            except Exception:
+                pass
+            try:
+                row += (
+                    ",".join(
+                        [
+                            target.location_type.name
+                            for target in targetLocation
+                            if target.location_type.name in selectedData["location_type"]
+                        ]
+                    ),
+                )
+            except Exception:
+                pass
+            try:
+                row += (
+                    ",".join(
+                        [target.site_name for target in targetLocation if target.site_name in selectedData["site_name"]]
+                    ),
+                )
+            except Exception:
+                pass
+            try:
+                row += (
+                    ",".join(
+                        [
+                            target.site_lat
+                            for target in targetLocation
+                            if target.site_lat in selectedData["site_latitude"]
+                        ]
+                    ),
+                )
+            except Exception:
+                pass
+            try:
+                row += (
+                    ",".join(
+                        [
+                            target.site_long
+                            for target in targetLocation
+                            if target.site_long in selectedData["site_longitude"]
+                        ]
+                    ),
+                )
             except Exception:
                 pass
 
@@ -409,5 +551,3 @@ class ProjectFilterExportView(View):
         except Exception as e:
             response = {"error": str(e)}
         return JsonResponse(response, status=500)
-        # data = {"Message: ":"success", "status: ":200}
-        # return JsonResponse(data, safe=False)

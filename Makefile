@@ -47,7 +47,7 @@ update: install migrate;
 
 .PHONY: test
 test:
-	poetry run python src/manage.py test
+	poetry run python src/manage.py test src
 
 .PHONY: db-seed
 db-seed:

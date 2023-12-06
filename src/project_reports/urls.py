@@ -111,4 +111,9 @@ urlpatterns = [
         user_views.get_disaggregations_report_empty_forms,
         name="get_disaggregations_report_empty_forms",
     ),
+    path(
+        "ajax/get_indicator_reference/",
+        user_views.get_indicator_reference,
+        name="get_indicator_reference",
+    ),
 ]

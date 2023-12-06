@@ -92,10 +92,10 @@ export default function initExportAndSW() {
         userData.push(checkUser.name);
       }
       const checkCurrency = document.querySelector(".input-currency");
-      if(checkCurrency.checked = true){
+      if(checkCurrency.checked == true){
         currencyData.push(checkCurrency.name)
       }
-      console.log(userData,currencyData);
+   
 
       if(userData.length != 0) {exportData['focal_point'] = userData;}
       
@@ -105,13 +105,120 @@ export default function initExportAndSW() {
           exportData[checkedItem[i].name] = checkedItem[i].name;
         }
       }
+      // ACTIVITY PLANNING
+      let activityDomain = [];
+      let activityType = [];
+      let activityDetail = [];
+      let beneficiary = [];
+      let BCategory = [];
+      let indicator = [];
+      let activityDescription = [];
+      const domainCheck = document.querySelectorAll(".domain-check");
+      for(let i = 0; i < domainCheck.length; i++){
+        if(domainCheck[i].checked == true) {
+          activityDomain.push(domainCheck[i].value);
+        }
+      }
+      const typeCheck = document.querySelectorAll(".type-check");
+      for(let i = 0; i < typeCheck.length; i++){
+        if(typeCheck[i].checked == true) {
+          activityType.push(typeCheck[i].value);
+        }
+      }
+      const detailCheck = document.querySelectorAll(".detail-check");
+      for(let i = 0; i < detailCheck.length; i++) {
+        if(detailCheck[i].checked == true) {
+          activityDetail.push(detailCheck[i].value);
+        }
+      }
+      const checkedIndicator = document.querySelectorAll(".checkedIndicator");
+      for(let i = 0; i < checkedIndicator.length; i++) {
+        if(checkedIndicator[i].checked == true){
+          indicator.push(checkedIndicator[i].value);
+        }
+      }
+      const checkBeneficiary = document.querySelectorAll(".beneficiary-check");
+      for(let i = 0; i < checkBeneficiary.length; i++) {
+        if(checkBeneficiary[i].checked == true){
+          beneficiary.push(checkBeneficiary[i].value);
+        }
+      }
+      const checkBCategory = document.querySelectorAll(".beneficiary-category-check");
+      for(let i = 0; i < checkBCategory.length; i++) {
+        if(checkBCategory[i].checked == true){
+          BCategory.push(checkBCategory[i].value);
+        }
+      }
+      const descriptionCheck = document.querySelectorAll(".description");
+      for(let i = 0; i < descriptionCheck.length; i++) {
+        if(descriptionCheck[i].checked == true){
+          activityDescription.push(descriptionCheck[i].value);
+        }
+      }
+      // Target Location fields
+      let province =[];
+      let district = [];
+      let locationType = [];
+      let siteName = [];
+      let siteLat = [];
+      let siteLong = []
+      const provinceCheck = document.querySelectorAll(".province-check");
+      for(let i=0; i<provinceCheck.length; i++) {
+        if(provinceCheck[i].checked == true) {
+          province.push(provinceCheck[i].value);
+        }
+      }
+      const districtCheck = document.querySelectorAll(".district-check");
+      for(let i=0; i<districtCheck.length; i++){
+        if(districtCheck[i].checked == true){
+          district.push(districtCheck[i].value);
+        }
+      }
+      const locationtypeCheck = document.querySelectorAll(".location-type-check");
+      for(let i=0; i<locationtypeCheck.length; i++){
+        if(locationtypeCheck[i].checked == true) {
+          locationType.push(locationtypeCheck[i].value)
+        }
+      }
+      const siteNameCheck = document.querySelectorAll(".site-name-check");
+      for(let i=0; i<siteNameCheck.length; i++){
+        if(siteNameCheck[i].checked == true) {
+          siteName.push(siteNameCheck[i].value)
+        }
+      }
+      const siteLatCheck = document.querySelectorAll(".site-lat-check");
+      for(let i=0; i<siteLatCheck.length; i++){
+        if(siteLatCheck[i].checked == true) {
+          siteLat.push(siteLatCheck[i].value)
+        }
+      }
+      const siteLongCheck = document.querySelectorAll(".site-long-check");
+      for(let i=0; i<siteLongCheck.length; i++){
+        if(siteLongCheck[i].checked == true) {
+          siteLong.push(siteLongCheck[i].value)
+        }
+      }
+      
       if(currencyData.length != 0) {exportData['currency'] = currencyData;}
       if(donorData.length != 0) {exportData['donors'] = donorData;}
       if(clusterData.length != 0){exportData['clusters'] = clusterData;}
-      if(activityDomainData.length != 0){exportData['activity_domains'] = activityDomainData;}
+    
       if(implementingPartnerData.length != 0){exportData['implementing_partners'] = implementingPartnerData;}
       if(programPartnerData.length != 0){exportData['programme_partners'] = programPartnerData;}
-      console.log(exportData);
+      if(activityDomain.length != 0){exportData['activity_domain'] = activityDomain;}
+      if(activityType.length != 0){exportData['activity_type'] = activityType;}
+      if(activityDetail.length != 0){exportData['activity_detail'] = activityDetail;}
+      if(activityDescription.length != 0){exportData['activity_description'] = activityDescription;}
+      if(indicator.length != 0){exportData['indicator'] = indicator;}
+      if(beneficiary.length != 0){exportData['beneficiary'] =beneficiary;}
+      if(BCategory.length != 0){exportData['beneficiary_category'] =BCategory;}
+
+      if(province.length != 0){exportData['province'] = province;}
+      if(district.length > 0){exportData['district'] = district;}
+      if(locationType.length !=0){exportData['location_type'] = locationType;}
+      if(siteName.length != 0){exportData['site_name'] = siteName;}
+      if(siteLat.length != 0){exportData['site_latitude'] = siteLat;}
+      if(siteLong.length != 0){exportData['site_longitude'] = siteLong;}
       $.post({
         url: routeUrl,
         method: "POST",
@@ -126,10 +233,11 @@ export default function initExportAndSW() {
           document.body.appendChild(link);
           link.click();
           document.body.removeChild(link);
-          console.log(response);
+          
         },
         error: function (error){
-          console.log("No Record Found");
+          swal(`Something went wrong! ${error}`);
+          
         },
       });
     });

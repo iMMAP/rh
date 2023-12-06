@@ -199,7 +199,7 @@ export default function initExportAndSW() {
         }
       }
       
-      if(currencyData.length > 0) {exportData['currency'] = currencyData;}
+      if(currencyData.length != 0) {exportData['currency'] = currencyData;}
       if(donorData.length != 0) {exportData['donors'] = donorData;}
       if(clusterData.length != 0){exportData['clusters'] = clusterData;}
     
@@ -219,7 +219,6 @@ export default function initExportAndSW() {
       if(siteName.length != 0){exportData['site_name'] = siteName;}
       if(siteLat.length != 0){exportData['site_latitude'] = siteLat;}
       if(siteLong.length != 0){exportData['site_longitude'] = siteLong;}
-      console.log(exportData);
       $.post({
         url: routeUrl,
         method: "POST",
@@ -234,10 +233,11 @@ export default function initExportAndSW() {
           document.body.appendChild(link);
           link.click();
           document.body.removeChild(link);
-          console.log(response);
+          
         },
         error: function (error){
-          console.log("something went wrong! please try again ");
+          swal(`Something went wrong! ${error}`);
+          
         },
       });
     });

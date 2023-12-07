@@ -8,42 +8,59 @@ $(function () {
         const url = $(this).data('url');
         window.location.href = url;
 	});
-    
-});
-
-const accHandler = document.querySelector(".project-accordion-handler");
-let arrowUp = document.querySelector(".accordion-arrow-up");
-let arrowDown = document.querySelector(".accordion-arrow-down");
-arrowUp.classList.add("hidden");
-accHandler.addEventListener("click", function(){
-
-    let content = document.querySelector(".project-accContainer");
-    content.classList.toggle("hidden");
-    if(arrowUp.classList.contains("hidden")){
-        arrowDown.classList.add("hidden");
-        arrowUp.classList.remove("hidden");
+    // toggle between accordion arrow
+    $("#activityAcc").on("click", function(){
+        let up =$(".activity-arrow-up");
+        let down =$(".activity-arrow-down");
+        if(up.hasClass("hidden")){
+            up.removeClass("hidden");
+            down.addClass("hidden");
+        } else {
+            up.addClass("hidden");
+            down.removeClass("hidden");
+        }
+    });
+    $("#projectAcc").on("click", function(){
+        let arrowUp = $(".accordion-arrow-up");
+        let arrowDown = $(".accordion-arrow-down");
         
-    } else {
-        arrowDown.classList.remove("hidden");
-        arrowUp.classList.add("hidden");
-    }
-    
-});
-const activityAccordion = document.querySelector(".activity-accordion-handler");
-let accarrowUp = document.querySelector(".activity-arrow-up");
-let accarrowDown = document.querySelector(".activity-arrow-down");
-accarrowUp.classList.add("hidden");
-activityAccordion.addEventListener("click", function(){
+        if(arrowUp.hasClass("hidden")){
+            arrowUp.removeClass("hidden");
+            arrowDown.addClass("hidden");
+        } else {
+            arrowUp.addClass("hidden");
+            arrowDown.removeClass("hidden");
+        }
+    });
+   
 
-    let content = document.querySelector(".activity-accContainer");
-    content.classList.toggle("hidden");
-    if(accarrowUp.classList.contains("hidden")){
-        accarrowDown.classList.add("hidden");
-        accarrowUp.classList.remove("hidden");
-      
-    } else {
-        accarrowDown.classList.remove("hidden");
-        accarrowUp.classList.add("hidden");
-    }
+});
+
+// Filter accordion 
+const accordionItems = document.querySelectorAll(".accordion-item");
+accordionItems.forEach(item =>{
+    const title = item.querySelector(".accordion-title");
+    const content = item.querySelector(".accordion-content");
+    title.addEventListener("click",()=>{
+        
+        for(let i = 0; i<accordionItems.length; i++){
+            if(accordionItems[i] != item){
+                accordionItems[i].classList.remove("active");
+            } else {item.classList.toggle("active");}
+        } 
+    });
     
 });
+
+
+// const exportClickHandler = document.querySelector(".radio-select");
+// exportClickHandler.addEventListener("change", function(e){
+//     let project_idList = [];
+//         const projectSelected = document.querySelectorAll(".project-checkbox");
+//         for(let i =0; i<projectSelected.length; i++){
+//             if(projectSelected[i].checked == true){
+//                 project_idList.push(projectSelected[i].value)
+//             }
+//         }
+//         console.log(project_idList);
+// });

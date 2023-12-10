@@ -19,6 +19,11 @@ class UserFactory(DjangoModelFactory):
     is_superuser = 0
     is_staff = 0
     password = make_password("12345678")
+    
+    first_name = factory.Faker('first_name')
+    last_name = factory.Faker('last_name')
+    last_name = factory.Faker('name')
+    
 
     @factory.lazy_attribute
     def username(self):
@@ -27,11 +32,3 @@ class UserFactory(DjangoModelFactory):
     @factory.lazy_attribute
     def email(self):
         return f"{self.username}@gmail.com"
-
-    @factory.lazy_attribute
-    def name(self):
-        return f"{self.first_name} {self.last_name}"
-
-    @factory.lazy_attribute
-    def avatar(self):
-        return f"https://avatars.dicebear.com/api/bottts/{self.username}.svg"

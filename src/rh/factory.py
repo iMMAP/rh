@@ -14,6 +14,10 @@ from .models import (
     ActivityDomain,
     ActivityType,
     ActivityDetail,
+    ActivityPlan,
+    LocationType,
+TargetLocation,
+DisaggregationLocation
 )
 from users.factory import UserFactory
 
@@ -236,3 +240,53 @@ class ProjectFactory(DjangoModelFactory):
     user = factory.SubFactory(UserFactory)
     description = factory.Faker("paragraph")
     old_id = factory.Faker("word")
+
+
+
+class ActivityPlanFactory(DjangoModelFactory):
+    class Meta:
+        model = ActivityPlan
+
+    project = factory.SubFactory(ProjectFactory)
+    title = factory.Faker('sentence', nb_words=4)
+    activity_domain = factory.SubFactory(ActivityDomainFactory)
+    activity_type = factory.SubFactory(ActivityTypeFactory)
+    activity_detail = factory.SubFactory(ActivityDetailFactory)
+    beneficiary = factory.SubFactory(BeneficiaryTypeFactory)
+    hrp_beneficiary = factory.SubFactory(BeneficiaryTypeFactory)
+    # Add other fields if necessary
+    
+    
+    
+class LocationTypeFactory(DjangoModelFactory):
+    class Meta:
+        model = LocationType
+
+    name = factory.Faker('word')
+    
+class TargetLocationFactory(DjangoModelFactory):
+    class Meta:
+        model = TargetLocation
+
+    project = factory.SubFactory(ProjectFactory)
+    activity_plan = factory.SubFactory(ActivityPlanFactory)
+    title = factory.Faker('sentence', nb_words=4)
+    country = factory.SubFactory(LocationFactory)
+    province = factory.SubFactory(LocationFactory)
+    district = factory.SubFactory(LocationFactory)
+    zone = factory.SubFactory(LocationFactory)
+    location_type = factory.SubFactory(LocationTypeFactory)
+    implementing_partner = factory.SubFactory(OrganizationFactory)
+    site_name = factory.Faker('word')
+    site_lat = factory.Faker('latitude')
+    site_long = factory.Faker('longitude')
+    # Add other fields if necessary
+    
+class DisaggregationLocationFactory(DjangoModelFactory):
+    class Meta:
+        model = DisaggregationLocation
+
+    active = factory.Faker('boolean')
+    target_location = factory.SubFactory(TargetLocationFactory)
+    disaggregation = factory.SubFactory(DisaggregationFactory)
+    target = factory.Faker('random_int')

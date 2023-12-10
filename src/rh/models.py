@@ -320,7 +320,7 @@ class Indicator(models.Model):
     """Indicators"""
 
     activity_types = models.ManyToManyField(ActivityType)
-    
+
     code = models.CharField(max_length=600, blank=True, null=True)
     name = models.CharField(max_length=600, blank=True, null=True)
     numerator = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)

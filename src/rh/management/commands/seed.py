@@ -15,8 +15,7 @@ from rh.factory import (
     ActivityDetailFactory,
     DisaggregationFactory,
     ProjectFactory,
-    IndicatorFactory
-
+    IndicatorFactory,
 )
 
 # from users.factory import ProfileFactory
@@ -57,7 +56,6 @@ class Command(BaseCommand):
 
         # Fake projects
         ProjectFactory.create_batch(amount)
-
 
     def handle(self, *args, **options):
         amount = options.get("amount") or 10

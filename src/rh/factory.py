@@ -369,7 +369,6 @@ class IndicatorFactory(DjangoModelFactory):
             activity_types = ActivityType.objects.all()
             for activity_type in activity_types:
                 self.activity_types.add(activity_type)
-    
 
     @factory.lazy_attribute
     def code(self):
@@ -516,7 +515,7 @@ class TargetLocationFactory(DjangoModelFactory):
     project = factory.SubFactory(ProjectFactory)
 
     # activity_plan = factory.SubFactory(ActivityPlanFactory)
-    activity_plan = factory.SubFactory(ActivityPlanFactory, project=factory.SelfAttribute('..project'))
+    activity_plan = factory.SubFactory(ActivityPlanFactory, project=factory.SelfAttribute("..project"))
 
     title = factory.Faker("sentence", nb_words=4)
 

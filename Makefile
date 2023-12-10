@@ -68,3 +68,12 @@ collectstatic:
 .PHONY: run-dependencies
 run-dependencies:
 	docker-compose -f docker-compose.dev.yml up -d --build
+
+
+.PHONY: shell
+shell:
+	poetry run python src/manage.py shell
+
+.PHONY: shell_plus
+shell_plus:
+	poetry run python src/manage.py shell_plus

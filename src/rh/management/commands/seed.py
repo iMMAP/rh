@@ -34,7 +34,9 @@ class Command(BaseCommand):
 
     def _generate_data(self, amount):
         password = "bcrypt$$2b$12$eRuG.5HPTy3ZaFrQmFMox.3Zvf0p5pj8Z0qYDh/j1Cetr93Jm005a"  # admin
-        User.objects.update_or_create(username="admin", email="admin@admin.com", password=password, is_superuser=1)
+        User.objects.update_or_create(
+            username="admin", email="admin@admin.com", password=password, is_superuser=1, is_stuff=1
+        )
 
         # Fake Locations
         CountryFactory.create_batch(amount)

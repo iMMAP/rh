@@ -8,7 +8,8 @@ colors:
   main: "#af4744"
 
 navigation:
-  - path: docs/bestpractices.md
-  - path: docs/cleanarchitecture.md
+  - path: docs/best-practices.md
+  - path: docs/clean-architecture.md
   - path: docs/Models
     children: "*"
+  - path: docs/external-services.md

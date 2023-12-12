@@ -15,6 +15,8 @@ sentry_sdk.init(
     profiles_sample_rate=1.0,
 )
 
+APP_ENV = "production"
+
 DATABASES = {
     "sqlite": {
         "ENGINE": "django.db.backends.sqlite3",

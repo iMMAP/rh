@@ -1,0 +1,8 @@
+name,type,updated,created
+Men,Gender
+Women,Gender
+Boys,Gender
+Girls,Gender
+Men(18-40),Age
+Women(18-40),Age
+Children(5-16),Age

@@ -10,6 +10,6 @@ colors:
 navigation:
   - path: docs/best-practices.md
   - path: docs/clean-architecture.md
+  - path: docs/external-services.md
   - path: docs/Models
     children: "*"
-  - path: docs/external-services.md

@@ -3,6 +3,8 @@ import logging
 
 from .base import *
 
+APP_ENV = "local"
+
 LOCAL_INSTALLED_APPS = [
     "debug_toolbar",
     "django_extensions",

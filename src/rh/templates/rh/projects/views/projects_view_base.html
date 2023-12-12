@@ -122,8 +122,25 @@
                     </a>
                     <div class="export-formats">
                         <span class="title">File format</span>
-                        <ul class="formats-list">
-                            <li>
+                        <div class="format-list">
+                            <div class="export-link-holder">
+                                <a class="export-link" href="{% url 'export_porjcet_list' 'csv' %}">
+                                    CSV
+                                </a>
+                            </div>
+                            <div class="export-link-holder">
+                                <a class="export-link" href="{% url 'export_porjcet_list' 'xls' %}">
+                                    Excel
+                                </a>
+                            </div>
+                            <div class="export-link-holder">
+                                <a class="export-link" href="{% url 'export_porjcet_list' 'json' %}" >
+                                    JSON
+                                </a>
+                            </div>
+                        </div>
+                        <!--<ul class="formats-list">
+                             <li>
                                 <div class="input-check-holder">
                                     <input type="radio" id="radio1" name="exportFormat" />
                                     <label for="radio1">
@@ -133,15 +150,15 @@
                                 </div>
                             </li>
                             <li>
-                        
-                                <div class="input-check-holder">
-                                    <input type="radio" id="radio2" class="radio-select" name="exportFormat" />
-                                    <label for="radio2">
-                                        <span class="input"></span>
-                                        <span class="text">CVS</span>
-                                    </label>
-                                </div>
-                                
+                                <a href="">
+                                    <div class="input-check-holder">
+                                        <input type="radio" id="radio2" name="exportFormat" />
+                                        <label for="radio2">
+                                            <span class="input"></span>
+                                            <span class="text">CVS</span>
+                                        </label>
+                                    </div>
+                                </a>  
                             </li>
                             <li>
                                 <div class="input-check-holder">
@@ -160,8 +177,8 @@
                                         <span class="text">PDF</span>
                                     </label>
                                 </div>
-                            </li>
-                        </ul>
+                            </li> 
+                        </ul>-->
                     </div>
                 </div>
             </div>

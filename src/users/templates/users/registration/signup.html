@@ -20,17 +20,6 @@
                     </div>
                 </div>
             </div>
-            {% if messages %}
-                {% for message in messages %}
-                    <div class="section-message-alert">
-                        <div class="description">
-                            <div class="text">
-                                <p class="error-message">{{ message }}</p>
-                            </div>
-                        </div>
-                    </div>
-                {% endfor %}
-            {% endif %}
             <form method="post" class="login-form">
                 {% csrf_token %}
                 <div class="form-holder">
@@ -38,12 +27,14 @@
                         <div class="input-field is-required">
                             {{ field.label_tag }}
                             <div class="input-holder">{{ field }}</div>
+                            <span class="sign-up-field-error">{{field.errors}}</span>
                         </div>
                     {% endfor %}
                     {% for field in p_form %}
                         <div class="input-field is-required">
                             {{ field.label_tag }}
                             <div class="input-holder">{{ field }}</div>
+                            <span class="sign-up-field-error">{{field.errors}}</span>
                         </div>
                     {% endfor %}
                     <div class="input-check-holder">

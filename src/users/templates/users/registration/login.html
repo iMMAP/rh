@@ -14,17 +14,7 @@
                     </div>
                 </div>
             </div>
-            {% if messages %}
-                {% for message in messages %}
-                    <div class="section-message-alert">
-                        <div class="description">
-                            <div class="text">
-                                <p class="error-message">{{ message }}</p>
-                            </div>
-                        </div>
-                    </div>
-                {% endfor %}
-            {% endif %}
+            
             <form method="post" action="#" class="login-form">
                 <div class="form-holder">
                     {% csrf_token %}
@@ -65,3 +55,4 @@
         </div>
     </div>
 {% endblock content %}
+

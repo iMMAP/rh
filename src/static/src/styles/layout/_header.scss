@@ -1,6 +1,16 @@
 // -----------------------------------------------------------------------------
 // This file contains all styles related to the header of the site
 // -----------------------------------------------------------------------------
+.container{
+  position: relative;
+}
+.section-message-alert{
+  position: absolute;
+  right: 50;
+  top: 0;
+}
+
+
 
 .nav-active {
   overflow: hidden;

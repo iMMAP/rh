@@ -146,4 +146,9 @@ urlpatterns = [
         export_views.ProjectFilterExportView.as_view(),
         name="export_project_filter",
     ),
+    path(
+        "project/active/bulk_export/<flag>",
+        user_views.ProjectListView,
+        name="export_porjcet_list",
+    ),
 ]

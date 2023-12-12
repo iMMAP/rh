@@ -12,7 +12,7 @@ concurrency:
 jobs:
   quality-assurance:
     name: Quality Assurance
-    uses: ./.github/workflows/pr.yml
+    uses: ./.github/workflows/quality_assurance.yml
 
   deploy:
     name: Deploy
@@ -47,5 +47,6 @@ jobs:
             node -v
             npm -v
             git pull origin main && poetry install --without dev && make migrate && make npm-install && make collectstatic && make npm-build
+            sudo systemctl restart nginx && sudo systemctl restart gunicorn.service
           "
       

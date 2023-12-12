@@ -28,12 +28,6 @@ class WarehouseLocation(models.Model):
         verbose_name_plural = "Warehouse Locations"
 
 
-# class StockItems(models.Nodel):
-#     countries = models.ManyToManyField(Location, blank=True)
-#     cluster = models.ForeignKey(Cluster, on_delete=models.SET_NULL, null=True, blank=True)
-#     stock_items= models.CharField(max_length=255, blank=True, null=True)
-
-
 class StockType(models.Model):
     cluster = models.ForeignKey(Cluster, on_delete=models.SET_NULL, null=True, blank=True)
     stock_items = models.CharField(max_length=255, blank=True, null=True)

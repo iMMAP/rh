@@ -197,9 +197,7 @@ def copy_target_location_report(plan_report, location_report):
         # Duplicate the original target location report report report
         # by retrieving it with the provided primary key.
         new_location_report = get_object_or_404(TargetLocationReport, pk=location_report.pk)
-        new_location_report.pk = (
-            None  # Generate a new primary key for the duplicated location.
-        )
+        new_location_report.pk = None  # Generate a new primary key for the duplicated location.
         new_location_report.save()  # Save the duplicated location to the database.
 
         # Associate the duplicated location with the new activity plan report.
@@ -222,9 +220,7 @@ def copy_disaggregation_location_reports(location_report, disaggregation_locatio
         new_disaggregation_location_report = get_object_or_404(
             DisaggregationLocationReport, pk=disaggregation_location_report.pk
         )
-        new_disaggregation_location_report.pk = (
-            None  # Generate a new primary key for the duplicated location report.
-        )
+        new_disaggregation_location_report.pk = None  # Generate a new primary key for the duplicated location report.
         new_disaggregation_location_report.save()  # Save the duplicated location report to the database.
 
         # Associate the duplicated disaggregation location report with the new target location report.
@@ -442,6 +438,7 @@ def create_project_monthly_report_progress_view(request, project, report):
                     activity_report = activity_report_form.save(commit=False)
                     activity_report.monthly_report = monthly_report_instance
                     activity_report.save()
+                    activity_report_form.save_m2m()
 
                     # Process target location forms and their disaggregation forms
                     for location_report_formset in location_report_formsets:

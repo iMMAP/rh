@@ -1,5 +1,21 @@
 # ruff: noqa
 from .base import *
+import sentry_sdk
+
+SENTRY_DSN = env("SENTRY_DSN", default="")
+
+sentry_sdk.init(
+    dsn=SENTRY_DSN,
+    # Set traces_sample_rate to 1.0 to capture 100%
+    # of transactions for performance monitoring.
+    traces_sample_rate=1.0,
+    # Set profiles_sample_rate to 1.0 to profile 100%
+    # of sampled transactions.
+    # We recommend adjusting this value in production.
+    profiles_sample_rate=1.0,
+)
+
+APP_ENV = "production"
 
 DATABASES = {
     "sqlite": {
@@ -20,6 +36,16 @@ DATABASES = {
 DB = env("DB", default="sqlite")
 
 DATABASES["default"] = DATABASES[DB]
+
+STORAGES = {
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    },
+    "staticfiles": {
+        # "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage", # with cashing
+        "BACKEND": "whitenoise.storage.CompressedStaticFilesStorage",  # No Caching
+    },
+}
 
 
 DJANGO_VITE_PLUGIN = {

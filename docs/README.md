@@ -1,9 +1,5 @@
 # ReportHub from iMMAP
 
-
-Documentation: [Technical Documentation](https://immap.github.io/rh/)
-
-
 ## Setup the project locally
 
 ## Using Docker

@@ -3,6 +3,8 @@ import logging
 
 from .base import *
 
+APP_ENV = "local"
+
 LOCAL_INSTALLED_APPS = [
     "debug_toolbar",
     "django_extensions",
@@ -60,7 +62,7 @@ STORAGES = {
     },
     "staticfiles": {
         # "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage", # with cashing
-        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",  # No Caching
+        "BACKEND": "whitenoise.storage.CompressedStaticFilesStorage",  # No Caching
     },
 }
 
@@ -74,4 +76,5 @@ DJANGO_VITE_PLUGIN = {
     "BUILD_URL_PREFIX": "/" + STATIC_URL + "build",
     "DEV_MODE": True,
     "STATIC_LOOKUP": False,
+    "SERVER": {"HOST": "0.0.0.0"},
 }

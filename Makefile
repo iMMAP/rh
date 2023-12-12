@@ -6,13 +6,9 @@ install:
 install-no-dev:
 	poetry install --without dev
 
-.PHONY: install-pre-commit
-install-pre-commit:
-	poetry run pre-commit uninstall && poetry run pre-commit install
-
 .PHONY: lint
 lint:
-	poetry run pre-commit run --all-files
+	ruff check --output-format=github ./src && ruff format ./src
 
 .PHONY: migrate
 migrate:
@@ -30,6 +26,10 @@ serve:
 vite:
 	cd src/static && npm run dev
 
+.PHONY: vite-host
+vite-host:
+	cd src/static && npm run dev -- --host
+
 .PHONY: npm-install
 npm-install:
 	cd src/static && npm install
@@ -43,11 +43,11 @@ superuser:
 	poetry run python src/manage.py createsuperuser
 
 .PHONY: update
-update: install migrate install-pre-commit;
+update: install migrate;
 
 .PHONY: test
 test:
-	poetry run python src/manage.py test
+	poetry run python src/manage.py test src
 
 .PHONY: db-seed
 db-seed:
@@ -64,3 +64,20 @@ lint-templates:
 .PHONY: collectstatic
 collectstatic:
 	poetry run python src/manage.py collectstatic --no-input --ignore=node_modules --ignore=*.scss --ignore=*.json --ignore=vite.config.js 
+
+.PHONY: run-dependencies
+run-dependencies:
+	docker-compose -f docker-compose.dev.yml up -d --build
+
+
+.PHONY: shell
+shell:
+	poetry run python src/manage.py shell
+
+.PHONY: shell_plus
+shell_plus:
+	poetry run python src/manage.py shell_plus
+
+.PHONY: seed
+seed:
+	poetry run python src/manage.py seed

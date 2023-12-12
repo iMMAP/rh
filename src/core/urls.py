@@ -26,5 +26,6 @@ urlpatterns = [
     path("", include("django.contrib.auth.urls")),
     path("admin/", admin.site.urls),
     path("chaining/", include("smart_selects.urls")),
+    path("", include("django_vite_plugin.urls")),
     path("__debug__/", include("debug_toolbar.urls")),
 ]

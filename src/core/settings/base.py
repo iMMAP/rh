@@ -31,6 +31,7 @@ INSTALLED_APPS = [
     "django_filters",
     "smart_selects",
     "django_vite_plugin",
+    "import_export",
     # RH apps
     "rh.apps.RhConfig",
     "users.apps.UsersConfig",
@@ -42,6 +43,7 @@ USE_DJANGO_JQUERY = True
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -64,6 +66,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "rh.context_processors.env_variables",
             ],
         },
     },

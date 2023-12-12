@@ -15,6 +15,7 @@
     "vite": "^4.0.2"
   },
   "dependencies": {
+    "@sentry/browser": "^7.86.0",
     "choices.js": "^10.2.0",
     "include-media": "^2.0.0",
     "jquery": "^3.7.1",

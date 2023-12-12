@@ -19,6 +19,11 @@ import initTooltip from "./components/initTooltip";
 import initExport from './utils/export';
 import initSWPopup from './utils/sweatalertPopups';
 import initExportSW from './utils/exportSW';
+
+import * as Sentry from "@sentry/browser";
+
+
+
 ready(() => {
   window.ResizeObserver = ResizeObserver;
   HTML.classList.add("is-loaded");
@@ -39,4 +44,17 @@ ready(() => {
   initExportSW();
   initExport();
   initSWPopup();
+
+
+  // Sentry feedback form
+  Sentry.init({
+    dsn: "https://c2be26cb81341d42992ae0ad9b338f9b@o4506381004701696.ingest.sentry.io/4506381006667776",
+  
+    integrations: [
+      new Sentry.Feedback({
+        // Additional SDK configuration goes in here, for example:
+        colorScheme: "light",
+      }),
+    ],
+  });
 });

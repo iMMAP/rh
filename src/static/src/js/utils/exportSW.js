@@ -338,5 +338,35 @@ export default function initExportAndSW() {
     }
     // Attach the click event listener to all elements with class "show_confirm"
     $(".show_confirm").click(showConfirmModal);
+
+    $(".radio-select").on("click", function(e){
+      e.preventDefault();
+      e.stopPropagation();
+      let url_link = $(this).data("url");
+      console.log(url_link);
+      let project_list = [];
+      let projectID = $(".project-checkbox");
+      for(let i=0; i<projectID.length; i++){
+        if(projectID.is(':checked')){
+          project_list.push(projectID[i].value);
+        }
+      }
+      console.log(project_list);
+      $.post({
+        url:url_link,
+        method:"POST",
+        data:{
+          "projectList":JSON.stringify(project_list),
+          csrfmiddlewaretoken:csrfToken,
+          },
+          success: function(response){
+            console.log(response);
+          },
+          error: function(error){
+            console.log(error);
+          },
+      });
+    });
+
   });
 }

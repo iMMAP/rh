@@ -385,7 +385,7 @@ class Project(models.Model):
     budget = models.IntegerField(null=True, blank=True)
     budget_received = models.IntegerField(null=True, blank=True)
     budget_gap = models.IntegerField(null=True, blank=True)
-    budget_currency = models.ForeignKey("Currency", on_delete=models.SET_NULL, null=True, blank=True)
+    budget_currency = models.ForeignKey(Currency, on_delete=models.SET_NULL, null=True, blank=True)
     created_at = models.DateField(auto_now_add=True, blank=True, null=True)
     updated_at = models.DateField(auto_now=True, blank=True, null=True)
 

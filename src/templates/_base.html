@@ -60,6 +60,7 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" integrity="sha512-nMNlpuaDPrqlEls3IX/Q56H36qvBASwb3ipuo3MxeWbsQB1881ox0cRv7UPTgBlriqoynt35KjEwgGUeUXIPnw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     </head>
     <body>
+        
         <div class="wrapper" id="wrapper">
             <div class="wrapper-inner">
                 <header class="header logged-in" id="header">
@@ -116,11 +117,28 @@
                         {% endif %}
                     </div>
                 </header>
-                <main id="main" class="main">
+                <main id="main" class="main" style="position: relative;">
                     <div class="base-section">
                         {% block content %}
                         {% endblock content %}
                     </div>
+                    <!-- MESSAGE SECTION STARTS -->
+                    {% if messages %}
+                        <div class="message-container">
+                        {% for message in messages %}
+                            {% if message.tags == 'success' %}
+                            <div class="message-success-alert">
+                                <p>{{message}}</p>
+                            </div>
+                            {% elif message.tags == 'error' %}
+                            <div class="message-danger-alert">
+                                <p>{{message}}</p>
+                            </div>
+                            {% endif %}
+                        {% endfor %}
+                        </div>
+                    {% endif %}
+                    <!-- MESSAGE SECTION ENDS -->
                 </main>
                 <footer class="footer">
                     <div class="container">
@@ -229,7 +247,7 @@
         <!-- Full Pack relative to location of manage.py file -->
         {% vite 'static/src/js/app.js' %}
         {% vite 'static/rh/js/all_projects.js' %}
-    
+        {% vite 'users/static/users/users.js' %}
         {% block scripts %}
         {% endblock scripts %}
 

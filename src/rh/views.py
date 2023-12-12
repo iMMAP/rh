@@ -12,6 +12,7 @@ from django.urls import reverse
 from django.views.decorators.cache import cache_control
 
 from project_reports.models import ProjectMonthlyReport as Report
+from rh.admin import ProjectResource
 
 from .filters import ProjectsFilter
 from .forms import ActivityPlanFormSet, BudgetProgressForm, DisaggregationFormSet, ProjectForm, TargetLocationFormSet
@@ -833,11 +834,12 @@ def unarchive_project(request, pk):
 def delete_project(request, pk):
     """Delete Project View"""
     project = get_object_or_404(Project, pk=pk)
-    if project:
-        project.delete()
-    url = reverse(
-        "draft_projects",
-    )
+    if project.state != "archive":
+        if project:
+            project.delete()
+        url = reverse(
+            "draft_projects",
+        )
 
     # Return the URL in a JSON response
     response_data = {"redirect_url": url}
@@ -1149,3 +1151,22 @@ def delete_budget_progress(request, pk):
     if budget_progress:
         budget_progress.delete()
     return JsonResponse({"success": True})
+
+
+def ProjectListView(request, flag):
+    # project_list =json.loads(request.POST.get("projectList"))
+    qs = Project.objects.all()
+    print(qs)
+    dataset = ProjectResource().export(qs)
+    # getting the file format
+    # format = request.POST.get("format")
+    format = flag
+    if format == "xls":
+        ds = dataset.xls
+    elif format == "csv":
+        ds = dataset.csv
+    else:
+        ds = dataset.json
+    response = HttpResponse(ds, content_type=f"{format}")
+    response["Content-Disposition"] = f"attachment; filename=project.{format}"
+    return response

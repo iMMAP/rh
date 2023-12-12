@@ -8,6 +8,9 @@
     transition: none !important;
   }
 }
+//--------------------------------
+//Random added style start
+//----------------------------------
 hr{
   border: 1px solid #d1d3d4;
 }
@@ -29,11 +32,9 @@ hr{
 }
 .accordion{
   overflow-y: scroll;
-  
 }
 .accordion-item.active .accordion-content{
   display: block;
-  
 }
 
 ::-webkit-scrollbar{
@@ -57,7 +58,38 @@ hr{
 .hidden{
   display: none;
 }
-
+.sign-up-field-error{
+  color:$red-be;
+  padding: 0;
+  margin: 0;
+  font-weight: 500;
+  font-size: small;
+}
+ul{
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+.export-link{
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+}
+.export-link-holder:hover .export-link{
+  text-decoration: none;
+  color: $red-be;
+  font-weight: 600;
+}
+.export-link-holder{
+  padding:5px 5px 5px 5px;
+  transition: all 0.5s ease;
+}
+.export-link-holder:hover{
+  background-color: rgba($gray-d1, 0.3);
+  border-radius: 4px;
+  
+  text-decoration: none;
+}
 .target-location-container {
   margin: 8px 0;
 }
@@ -76,6 +108,38 @@ hr{
   font-weight: 600;
   border-color: $red-a5;
 }
+
+.message-container{
+  position: absolute;
+  left: 37%;
+  top: 10%;
+  z-index: 2;
+  width: 25%;
+  text-align: center;
+  margin: 0;
+  padding: 0;
+  transition: all 0.5s ease-in-out;
+}
+.message-success-alert{
+  background-color: #d4edda;
+  border: 1px solid #d4edda;
+  color: #35712F;
+  border-radius: 32px;
+  padding: 4px 20px;
+  box-shadow: 8px 8px 7px rgb(236, 236, 236);
+}
+.message-danger-alert{
+  background-color: #f8d7da;
+  border: 1px solid #f8d7da;
+  color: $red-be;
+  border-radius: 32px;
+  padding: 4px 20px;
+  box-shadow: 8px 8px 7px rgb(236, 236, 236);
+}
+
+//------------------------
+// Random added style end
+//-------------------------
 .container {
   max-width: $container-max-width + $gutter * 2;
   margin-left: auto;

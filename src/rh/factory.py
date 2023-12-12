@@ -161,7 +161,6 @@ class BeneficiaryTypeFactory(DjangoModelFactory):
     code = factory.Faker("word")
     country = factory.SubFactory(CountryFactory)
     is_hrp_beneficiary = factory.Faker("boolean")
-    is_regular_beneficiary = factory.Faker("boolean")
     start_date = factory.Faker("date_time_this_decade", tzinfo=pytz.UTC)
     end_date = factory.Faker("date_time_this_decade", tzinfo=pytz.UTC)
     description = factory.Faker("sentence")

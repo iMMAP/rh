@@ -72,8 +72,7 @@ class BeneficiaryType(models.Model):
         on_delete=models.SET_NULL,
     )
     clusters = models.ManyToManyField(Cluster)
-    is_hrp_beneficiary = models.BooleanField(default=False)
-    is_regular_beneficiary = models.BooleanField(default=False)
+    is_hrp_beneficiary = models.BooleanField(default=False,null=True)
     start_date = models.DateTimeField(blank=True, null=True)
     end_date = models.DateTimeField(blank=True, null=True)
     description = models.CharField(max_length=DESCRIPTION_MAX_LENGTH, blank=True, null=True)

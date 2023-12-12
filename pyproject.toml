@@ -71,6 +71,7 @@ virtualenv = "^20.24.6"
 django-debug-toolbar = "^4.2.0"
 django-import-export = "^3.3.3"
 factory-boy = "^3.3.0"
+sentry-sdk = {extras = ["django"], version = "^1.38.0"}
 
 
 [tool.poetry.group.dev.dependencies]

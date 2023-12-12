@@ -12,7 +12,7 @@ from django.urls import reverse
 from django.views.decorators.cache import cache_control
 
 from project_reports.models import ProjectMonthlyReport as Report
-from rh.admin import ProjectResource
+from rh.resources import ProjectResource
 
 from .filters import ProjectsFilter
 from .forms import ActivityPlanFormSet, BudgetProgressForm, DisaggregationFormSet, ProjectForm, TargetLocationFormSet

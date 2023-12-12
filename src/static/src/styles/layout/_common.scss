@@ -74,6 +74,10 @@ ul{
   text-decoration: none;
   font-size: 14px;
   font-weight: 500;
+  padding: 0px 15px 10px;
+}
+.export-formats .title{
+  padding:  8px 15px 0px;
 }
 .export-link-holder:hover .export-link{
   text-decoration: none;
@@ -81,14 +85,13 @@ ul{
   font-weight: 600;
 }
 .export-link-holder{
-  padding:5px 5px 5px 5px;
+  padding: 8px 6px;
   transition: all 0.5s ease;
 }
 .export-link-holder:hover{
-  background-color: rgba($gray-d1, 0.3);
-  border-radius: 4px;
-  
+  background-color: #e0cacc;
   text-decoration: none;
+
 }
 .target-location-container {
   margin: 8px 0;

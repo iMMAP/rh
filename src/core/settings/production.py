@@ -1,6 +1,8 @@
 # ruff: noqa
 from .base import *
 
+APP_ENV = "production"
+
 DATABASES = {
     "sqlite": {
         "ENGINE": "django.db.backends.sqlite3",

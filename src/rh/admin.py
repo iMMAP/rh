@@ -2,7 +2,6 @@ from django import forms
 from django.contrib import admin
 from django.contrib.admin.widgets import FilteredSelectMultiple
 from django.db.models import Count
-
 from .models import (
     ActivityDetail,
     ActivityDomain,

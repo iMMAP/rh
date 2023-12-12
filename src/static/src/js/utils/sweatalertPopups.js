@@ -12,7 +12,10 @@ export default function initSWPopup() {
 		var dataURL = event.currentTarget.dataset.url;
 		var name = event.currentTarget.dataset.name;
 		var popupType = event.currentTarget.dataset.type;
-
+		var dataVerify = event.currentTarget.dataset.verify;
+		var unable = false;
+		var confirmButtonClass = 'btn btn-red';
+		var cancelButton = 'btn btn-danger';
       	// Initialize variables to be used in the SweetAlert2 modal
 		var title, text, icon, successMessage, confirmButtonText;
 
@@ -24,11 +27,23 @@ export default function initSWPopup() {
 			confirmButtonText = 'Yes, duplicate'
 			successMessage = `Done! ${name} has been duplicated successfully!`;
 		} else if (popupType === "delete") {
-			title = `Are you sure you want to delete this ${name}?`;
-			text = "Once deleted, you will not be able to recover this record!";
-			icon = "warning";
-			confirmButtonText = 'Yes, delete it'
-			successMessage = `Done! ${name} has been deleted successfully!`;
+			if(dataVerify === 'archive')
+			{
+				title = "Unable to Delete the Project";
+				text = "You can not delete the archived project !";
+				icon = "warning";
+				unable = true;
+				confirmButtonClass = 'hidden';
+				cancelButton = 'btn btn-red';
+				successMessage = "Permission Denied !";
+			} else {
+				title = `Are you sure you want to delete this ${name}?`;
+				text = "Once deleted, you will not be able to recover this record!";
+				icon = "warning";
+				confirmButtonText = 'Yes, delete it';
+				
+				successMessage = `Done! ${name} has been deleted successfully!`;
+			}
 		} else if (popupType === "archive") {
 			title = `Are you sure you want to archive ${name}?`;
 			text =
@@ -44,7 +59,6 @@ export default function initSWPopup() {
 			confirmButtonText = 'Yes, unarchive it'
 			successMessage = `Done! ${name} has been unarchived successfully!`;
 		}
-
 		Swal.fire({
 			title: title,
 			text: text,
@@ -52,8 +66,8 @@ export default function initSWPopup() {
 			showCancelButton: true,
 			confirmButtonText: confirmButtonText,
 			customClass: {
-				confirmButton: 'btn btn-red',
-				cancelButton: 'btn btn-danger',
+				confirmButton: confirmButtonClass,
+				cancelButton: cancelButton,
 				loader: 'custom-loader',
 			},
 			preConfirm: async (message) => {
@@ -73,9 +87,14 @@ export default function initSWPopup() {
 					});
 					return response
 				} catch (error) {
+					if(unable){
+						Swal.showValidationMessage(`
+						Request Failed !!!`);
+					} else {
 					Swal.showValidationMessage(`
 						Request failed: ${error}
 					`);
+				}
 			  	}
 			},
 			allowOutsideClick: () => !Swal.isLoading()

@@ -32,6 +32,7 @@ $(function () {
             arrowDown.removeClass("hidden");
         }
     });
+
    
 
 });
@@ -52,15 +53,3 @@ accordionItems.forEach(item =>{
     
 });
 
-
-// const exportClickHandler = document.querySelector(".radio-select");
-// exportClickHandler.addEventListener("change", function(e){
-//     let project_idList = [];
-//         const projectSelected = document.querySelectorAll(".project-checkbox");
-//         for(let i =0; i<projectSelected.length; i++){
-//             if(projectSelected[i].checked == true){
-//                 project_idList.push(projectSelected[i].value)
-//             }
-//         }
-//         console.log(project_idList);
-// });

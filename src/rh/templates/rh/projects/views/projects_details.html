@@ -100,7 +100,8 @@
                     <button>
                         <a href="#"
                             data-url="{% url 'delete_project' project.pk %}"
-                            data-type="delete" 
+                            data-type="delete"
+                            data-verify="{{project.state}}" 
                             data-name="project" 
                             class="show-sw-action-popup">
                             <span class="project-detail icon-trashbin"></span></a>

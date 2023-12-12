@@ -116,11 +116,11 @@ def register_view(request):
                 user_profile.save()
                 p_form.save_m2m()
                 return send_account_activation_email(request, user, email)
-        else:
-            for error in list(u_form.errors.values()):
-                messages.error(request, error)
-            for error in list(p_form.errors.values()):
-                messages.error(request, error)
+        # else:
+        #     for error in list(u_form.errors.values()):
+        #         messages.error(request, error)
+        #     for error in list(p_form.errors.values()):
+        #         messages.error(request, error)
     else:
         u_form = UserRegisterForm()
         p_form = ProfileCreateForm()

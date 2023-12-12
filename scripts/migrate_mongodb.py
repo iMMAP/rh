@@ -20,6 +20,7 @@ ORGANIZATIONS_CSV = "./data/updated_nov_2023/organizations.csv"
 DONORS_CSV = "./data/updated_nov_2023/donors.csv"
 USERS_CSV = "./data/updated_nov_2023/user.csv"
 FACILITIES = "./data/updated_nov_2023/facility_site_types.csv"
+DISS_CSV = "./data/updated_nov_2023/dissaggregation.csv"
 
 
 def get_sqlite_client(dbname):
@@ -678,6 +679,70 @@ def import_facilities_from_csv(conn, facilities_csv):
             conn.rollback()
 
 
+def import_dissaggregation_from_csv(conn, diss_csv):
+    """
+    Import disaggregation types from CSV
+    """
+    c = conn.cursor()
+    df = pd.read_csv(diss_csv)
+
+    now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+
+    df['updated'] = now
+    df['created'] = now
+
+    if len(df) > 0:
+        table = "rh_disaggregation"
+
+        df.to_sql("tmp_diss", conn, if_exists="replace", index=False)
+
+        try:
+            now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            c.execute(
+                f"""
+                    insert into 
+                    {table}(name, type,updated,created) 
+                    select 
+                    name,type,updated,created
+                    from tmp_diss"""
+            )
+            c.execute("DROP TABLE tmp_diss;")
+        except Exception as exception:
+            print(f"Error: {exception}")
+            conn.rollback()
+
+        try:
+            # Retrieve all IDs from the cluster table
+            c.execute('SELECT id FROM rh_cluster')
+            cluster_ids = c.fetchall()
+
+            c.execute('SELECT id FROM rh_indicator')
+            indicator_ids = c.fetchall()
+
+            # Retrieve all IDs from the disaggregation table
+            c.execute('SELECT id FROM rh_disaggregation')
+            disaggregation_ids = c.fetchall()
+
+            # Insert the IDs into the cluster_disaggregation table
+            for cluster_id in cluster_ids:
+                for disaggregation_id in disaggregation_ids:
+                    c.execute('''
+                    INSERT INTO rh_disaggregation_clusters (disaggregation_id, cluster_id)
+                    VALUES (?, ?)
+                    ''', (disaggregation_id[0],cluster_id[0]))
+
+            # Insert the IDs into the cluster_disaggregation table
+            for indicator_id in indicator_ids:
+                for disaggregation_id in disaggregation_ids:
+                    c.execute('''
+                    INSERT INTO rh_disaggregation_indicators (disaggregation_id, indicator_id)
+                    VALUES (?, ?)
+                    ''', (disaggregation_id[0],indicator_id[0]))
+        except Exception as e:
+            print(f"Error in diss and cluster: {exception}")
+            conn.rollback()
+
+
 connection = get_sqlite_client(SQLITE_DB_PATH)
 
 # Try to import the data from different sources.
@@ -705,6 +770,8 @@ try:
     import_facilities_from_csv(connection, FACILITIES)
 
     import_beneficiary_types_from_csv(connection,BENEFICIARY_TYPES_CSV)
+
+    import_dissaggregation_from_csv(connection,DISS_CSV)
 
     connection.commit()
 

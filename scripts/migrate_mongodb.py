@@ -404,6 +404,7 @@ def import_beneficiary_types_from_csv(conn, beneficiary_type_csv):
             )
             c.execute("DROP TABLE tmp_beneficiarytype;")
         except Exception as exception:
+            print(exception)
             conn.rollback()
 
 
@@ -702,6 +703,8 @@ try:
     import_users_from_csv(connection, USERS_CSV)
 
     import_facilities_from_csv(connection, FACILITIES)
+
+    import_beneficiary_types_from_csv(connection,BENEFICIARY_TYPES_CSV)
 
     connection.commit()
 

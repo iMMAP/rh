@@ -77,3 +77,7 @@ shell:
 .PHONY: shell_plus
 shell_plus:
 	poetry run python src/manage.py shell_plus
+
+.PHONY: seed
+seed:
+	poetry run python src/manage.py seed

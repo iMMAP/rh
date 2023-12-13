@@ -1,3 +1,4 @@
+# from itertools import chain
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
@@ -1155,8 +1156,17 @@ def delete_budget_progress(request, pk):
 
 def ProjectListView(request, flag):
     # project_list =json.loads(request.POST.get("projectList"))
-    qs = Project.objects.all()
-    print(qs)
+    project = Project.objects.filter(user=request.user.id)
+    project_id = []
+    i = 0
+    for pid in project:
+        project_id.insert(i, pid.id)
+        i += 1
+
+    # activity_plans = ActivityPlan.objects.filter(project__in=project_id)
+
+    qs = project
+    print(qs.val)
     dataset = ProjectResource().export(qs)
     # getting the file format
     # format = request.POST.get("format")

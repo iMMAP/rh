@@ -2,12 +2,17 @@ from import_export import resources, fields
 from django.contrib.auth.models import User
 from import_export.widgets import ManyToManyWidget, ForeignKeyWidget
 from .models import (
+    # ActivityDetail,
     ActivityDomain,
+    # ActivityType,
+    # BeneficiaryType,
     Cluster,
     Currency,
     Donor,
+    # Indicator,
     Organization,
     Project,
+    ActivityPlan,
 )
 
 
@@ -29,6 +34,9 @@ class ProjectResource(resources.ModelResource):
             "description",
             "start_date",
             "end_date",
+            "activity_type",
+            "activity_detail",
+            "indicators",
         )
 
     user = fields.Field(column_name="user", attribute="user", widget=ForeignKeyWidget(User, field="username"))
@@ -46,14 +54,15 @@ class ProjectResource(resources.ModelResource):
     donor = fields.Field(
         column_name="donors", attribute="donors", widget=ManyToManyWidget(Donor, field="code", separator=",")
     )
-    organization = fields.Field(
-        column_name="implementing_partners",
-        attribute="implementing_partners",
+
+    organ = fields.Field(
+        column_name="programme_partners",
+        attribute="programme_partners",
         widget=ManyToManyWidget(Organization, field="code", separator=","),
     )
     organization = fields.Field(
-        column_name="programme_partners",
-        attribute="programme_partners",
+        column_name="implementing_partners",
+        attribute="implementing_partners",
         widget=ManyToManyWidget(Organization, field="code", separator=","),
     )
 
@@ -82,3 +91,29 @@ class ProjectResource(resources.ModelResource):
             return "yes"
         else:
             return "no"
+
+
+class ActivityPlanResource(resources.ModelResource):
+    class Meta:
+        model = ActivityPlan
+
+    # activitytype = fields.Field(
+    #     column_name='activity_type',
+    #     attribute='activity_type',
+    #     widget=ForeignKeyWidget(ActivityType, field='name', separator=',')
+    # )
+    # activitydetail = fields.Field(
+    #     column_name='activity_detail',
+    #     attribute='activity_detail',
+    #     widget=ForeignKeyWidget(ActivityDetail, field='name', separator=',')
+    # )
+    # indicator = fields.Field(
+    #     column_name='indicators',
+    #     attribute='indicators',
+    #     widget=ForeignKeyWidget(Indicator, field='name', separator=',')
+    # )
+    # beneficiarytype = fields.Field(
+    #     column_name='beneficiary',
+    #     attribute='beneficiary',
+    #     widget=ForeignKeyWidget(BeneficiaryType, field='name', separator=',')
+    # )

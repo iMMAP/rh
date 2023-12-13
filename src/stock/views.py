@@ -64,14 +64,14 @@ def stock_index_view(request):
 
 @cache_control(no_store=True)
 @login_required
-def stock_report(request):
+def all_stock_report(request):
     stock_reports = StockReports.objects.filter(submitted=False)
     submitted_stock_reports = StockReports.objects.filter(submitted=True)
     context = {
         "stock_reports": stock_reports,
         "submitted_stock_reports": submitted_stock_reports,
     }
-    return render(request, "stock/stock_report.html", context)
+    return render(request, "stock/all_stock_report.html", context)
 
 
 @cache_control(no_store=True)

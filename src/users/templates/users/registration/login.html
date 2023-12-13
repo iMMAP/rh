@@ -20,9 +20,9 @@
                     {% csrf_token %}
                     {% if request.GET.next %}<input type="hidden" name="next" id="rh_next" value="{{ request.GET.next }}" />{% endif %}
                     <div class="input-field is-required">
-                        <label for="id_email">Email</label>
+                        <label for="id_email">Email/Username</label>
                         <div class="input-holder">
-                            <input type="email"
+                            <input type="text"
                                    name="email"
                                    id="id_email"
                                    class="form-control"

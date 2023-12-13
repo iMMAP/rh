@@ -1,184 +1,148 @@
-_id,admin0pcode,beneficiary_type_id,beneficiary_type_name,description,end_date,start_date,year
-622ec0535fe2c737c6af4a8d,AF,access_to_services_rural,Underserved Community - Rural,,,1/1/2022,2022
-622ec0535fe2c737c6af4a9e,AF,access_to_services_urban,Underserved Community - Urban or Peri Urban,,,1/1/2022,2022
-622ec0535fe2c737c6af4a09,AF,access_to_services,Access to Services,,,1/1/2021,2021
-622ec0535fe2c737c6af49f4,AF,acutely_vulnerable_humanitarian needs,Acutely Vulnerable People with Humanitarian Needs,,,1/1/2021,2021
-622ec0535fe2c737c6af49e7,AF,afghan_refugee_returnees_documented_border_iran,Afghan Refugee Returnees from Iran (Documented) - Border,,,1/1/2021,2021
-622ec0535fe2c737c6af49e6,AF,afghan_refugee_returnees_documented_border_pakistan,Afghan Refugee Returnees from Pakistan (Documented) - Border,,,1/1/2021,2021
-622ec0535fe2c737c6af49e9,AF,afghan_refugee_returnees_documented_settlement_iran,Afghan Refugee Returnees from Iran (Documented) - Settlement,,,1/1/2021,2021
-622ec0535fe2c737c6af49e8,AF,afghan_refugee_returnees_documented_settlement_pakistan,Afghan Refugee Returnees from Pakistan (Documented) - Settlement,,,1/1/2021,2021
-622ec0535fe2c737c6af49eb,AF,afghan_refugee_returnees_undocumented_border_iran,Afghan Returnees from Iran (Undocumented) - Border,,,1/1/2021,2021
-622ec0535fe2c737c6af49ea,AF,afghan_refugee_returnees_undocumented_border_pakistan,Afghan Returnees from Pakistan (Undocumented) - Border,,,1/1/2021,2021
-622ec0535fe2c737c6af49ed,AF,afghan_refugee_returnees_undocumented_settlement_iran,Afghan Returnees from Iran (Undocumented) - Settlement,,,1/1/2021,2021
-622ec0535fe2c737c6af49ec,AF,afghan_refugee_returnees_undocumented_settlement_pakistan,Afghan Returnees from Pakistan (Undocumented) - Settlement,,,1/1/2021,2021
-622ec0535fe2c737c6af4aa5,AF,conflict_affected_non_displaced,Conflict affected (non-displaced),Conflict affected (non-displaced),,1/1/2022,2022
-622ec0535fe2c737c6af4a86,AF,conflict_affected_rural,Conflict Affected Community - Rural,,,1/1/2022,2022
-622ec0535fe2c737c6af4a97,AF,conflict_affected_urban,Conflict Affected Community - Urban or Peri Urban,,,1/1/2022,2022
-622ec0535fe2c737c6af4a0b,AF,conflict_affected,Conflict Affected,,,1/1/2021,2021
-622ec0535fe2c737c6af4abe,AF,conflict_idp_2021,Conflict IDPs (displaced in 2021),Conflict IDPs (displaced in 2021),,1/1/2022,2022
-622ec0535fe2c737c6af4abf,AF,conflict_idp_2022,Conflict IDPs (displaced in 2022),Conflict IDPs (displaced in 2022),,1/1/2022,2022
-622ec0535fe2c737c6af49ef,AF,covid_19_affected_people,COVID-19 Affected People,,,1/1/2021,2021
-622ec0535fe2c737c6af4aa8,AF,cross_border_returnees,Cross Border Returnees,Cross Border Returnees,,1/1/2022,2022
-622ec0535fe2c737c6af4a29,AF,displaced_refugees,Displaced & Refugees,,,1/1/2021,2021
-622ec0535fe2c737c6af4a2a,AF,displaced_returnees,Displaced & Returnees,,,1/1/2021,2021
-622ec0535fe2c737c6af4a84,AF,drought_affected_displaced_2022_rural,Drought Affected Displaced (2022) - Rural,,,1/1/2022,2022
-622ec0535fe2c737c6af4a95,AF,drought_affected_displaced_2022_urban,Drought Affected Displaced (2022) - Urban or Peri Urban,,,1/1/2022,2022
-622ec0535fe2c737c6af4a12,AF,drought_affected_displaced_response,Drought Affected Displaced ( Response ),,,1/1/2021,2021
-622ec0535fe2c737c6af4a91,AF,drought_affected_non_displaced_response_rural,Drought Affected Non Displaced ( Response ) - Rural,,,1/1/2022,2022
-622ec0535fe2c737c6af4aa2,AF,drought_affected_non_displaced_response_urban,Drought Affected Non Displaced ( Response ) - Urban or Peri Urban,,,1/1/2022,2022
-622ec0535fe2c737c6af4a11,AF,drought_affected_non_displaced_response,Drought Affected Non Displaced ( Response ),,,1/1/2021,2021
-622ec0535fe2c737c6af4ab6,AF,drought_affected_non_displaced_response,Drought affected non-displaced,,,1/1/2022,2022
-622ec0535fe2c737c6af4a8a,AF,flood_affected_displaced_2022_rural,Flood Affected Displaced (2022) - Rural,,,1/1/2022,2022
-622ec0535fe2c737c6af4a96,AF,flood_affected_displaced_2022_urban,Flood Affected Displaced (2022) - Urban or Peri Urban,,,1/1/2022,2022
-622ec0535fe2c737c6af4a14,AF,flood_affected_displaced_response,Flood Affected Displaced ( Response ),,,1/1/2021,2021
-622ec0535fe2c737c6af4a92,AF,flood_affected_non_displaced_response_rural,Flood Affected Non Displaced ( Response ) - Rural,,,1/1/2022,2022
-622ec0535fe2c737c6af4aa4,AF,flood_affected_non_displaced_response_urban,Flood Affected Non Displaced ( Response ) - Urban or Peri Urban,,,1/1/2022,2022
-622ec0535fe2c737c6af4a13,AF,flood_affected_non_displaced_response,Flood Affected Non Displaced ( Response ),,,1/1/2021,2021
-622ec0535fe2c737c6af4ab9,AF,flood_affected_non_displaced_response,Flood affected non-displaced,,,1/1/2022,2022
-622ec0535fe2c737c6af4abb,AF,health_workers,Health Workers,,,1/1/2022,2022
-622ec0535fe2c737c6af4a8b,AF,host_communities_conflict_idps_rural,Communities Hosting Conflict IDPs - Rural,,,1/1/2022,2022
-622ec0535fe2c737c6af4aa0,AF,host_communities_conflict_idps_urban,Communities Hosting Conflict IDPs - Urban or Peri Urban,,,1/1/2022,2022
-622ec0535fe2c737c6af4a89,AF,host_communities_disaster_idps_rural,Communities Hosting Natural Disasater IDPs - Rural,,,1/1/2022,2022
-622ec0535fe2c737c6af4a9b,AF,host_communities_disaster_idps_urban,Communities Hosting Natural Disasater IDPs - Urban or Peri Urban,,,1/1/2022,2022
-622ec0535fe2c737c6af4a8e,AF,host_communities_refugees_rural,Communities Hosting Refugees - Rural,,,1/1/2022,2022
-622ec0535fe2c737c6af4a9d,AF,host_communities_refugees_urban,Communities Hosting Refugees - Urban or Peri Urban,,,1/1/2022,2022
-622ec0535fe2c737c6af4a8c,AF,host_communities_returnees_rural,Communities Hosting Returnees - Rural,,,1/1/2022,2022
-622ec0535fe2c737c6af4a9c,AF,host_communities_returnees_urban,Communities Hosting Returnees - Urban or Peri Urban,,,1/1/2022,2022
-622ec0535fe2c737c6af4aae,AF,host_community,Host community,Host community,,1/1/2022,2022
-622ec0535fe2c737c6af4a82,AF,idp_conflict_2022_rural,Conflict IDPs (2022) - Rural,,,1/1/2022,2022
-622ec0535fe2c737c6af4a93,AF,idp_conflict_2022_urban,Conflict IDPs (2022) - Urban or Peri Urban,,,1/1/2022,2022
-622ec0535fe2c737c6af4a20,AF,idp_conflict_natural_disaster,Internally Displaced (Conflict or Natural Disaster),,,1/1/2021,2021
-622ec0535fe2c737c6af4ab2,AF,idp_conflict,Conflict affected IDPs,,,1/1/2022,2022
-622ec0535fe2c737c6af4a0c,AF,idp_conflict,Conflict IDPs,,,1/1/2021,2021
-622ec0535fe2c737c6af49df,AF,idp_conflict,People Displaced Due to Conflict,,,1/1/2021,2021
-622ec0535fe2c737c6af4ab5,AF,idp_drought_affected,Drought affected IDPs,,,1/1/2022,2022
-622ec0535fe2c737c6af4ab7,AF,idp_flood_affected,Flood affected IDPs,,,1/1/2022,2022
-622ec0535fe2c737c6af4ab8,AF,idp_natural_disaster,Natural disaster IDPs,,,1/1/2022,2022
-622ec0535fe2c737c6af49e0,AF,idp_natural_disaster,People Displaced Due to Natural Disaster,,,1/1/2021,2021
-622ec0535fe2c737c6af4a85,AF,idp_other_natural_disaster_2022_rural,"Other Natural Disaster (Avalanche,Landslide,Earthquake,etc.) IDPs (2022) - Rural",,,1/1/2022,2022
-622ec0535fe2c737c6af4a94,AF,idp_other_natural_disaster_2022_urban,"Other Natural Disaster (Avalanche,Landslide,Earthquake,etc.) IDPs (2022) - Urban or Peri Urban",,,1/1/2022,2022
-622ec0535fe2c737c6af4aba,AF,idp_other,Other IDPs,,,1/1/2022,2022
-622ec0535fe2c737c6af4a88,AF,idp_protracted_rural,Conflict IDPs (Prolonged) - Rural,,,1/1/2022,2022
-622ec0535fe2c737c6af4a9a,AF,idp_protracted_urban,Conflict IDPs (Prolonged) - Urban or Peri Urban,,,1/1/2022,2022
-622ec0535fe2c737c6af4a10,AF,idp_protracted,Protracted IDPs,,,1/1/2021,2021
-622ec0535fe2c737c6af4aaf,AF,idp_returnees,IDPs returnees,,,1/1/2022,2022
-622ec0535fe2c737c6af4a2f,AF,ipds_returenees_host_community,IDPs + Returnees + Host Community,,,1/1/2021,2021
-622ec0535fe2c737c6af4acc,AF,multiple_shocks_ipc_3_affected,Multiple shocks (IPC phase 3) affected population,,,1/1/2022,2022
-622ec0535fe2c737c6af4aca,AF,multiple_shocks_ipc_4_affected,Multiple shocks (IPC phase 4) affected population,,,1/1/2022,2022
-622ec0535fe2c737c6af49e4,AF,natural_disaster_affected_avalanche,Natural Disaster Affected (Avalanche),,,1/1/2021,2021
-622ec0535fe2c737c6af49e1,AF,natural_disaster_affected_earthquake,Natural Disaster Affected (Earthquake),,,1/1/2021,2021
-622ec0535fe2c737c6af49e3,AF,natural_disaster_affected_flood,Natural Disaster Affected (Flood),,,1/1/2021,2021
-622ec0535fe2c737c6af4aa6,AF,natural_disaster_affected_non_displaced,Natural Disaster affected (non-displaced),Natural Disaster affected (Non-displaced),,1/1/2022,2022
-622ec0535fe2c737c6af4ac5,AF,natural_disaster_affected_non_displaced,Natural Disaster-Affected (non-displaced),Natural disaster-affected (non-displaced),,1/1/2022,2022
-622ec0535fe2c737c6af4a87,AF,natural_disaster_affected_rural,Natural Disaster Affected Community People - Rural,,,1/1/2022,2022
-622ec0535fe2c737c6af4a98,AF,natural_disaster_affected_urban,Natural Disaster Affected Community People - Urban or Peri Urban,,,1/1/2022,2022
-622ec0535fe2c737c6af49e5,AF,natural_disaster_affected_wls,Natural Disaster Affected (Winter / Lean Season),,,1/1/2021,2021
-622ec0535fe2c737c6af4a36,AF,natural_disaster_affected,Natural Disaster Affected,,,1/1/2021,2021
-622ec0535fe2c737c6af4ac8,AF,natural_disaster_idp_2021,Natural Disaster IDPs (displaced in 2021),Natural Disaster IDPs (displaced in 2021),,1/1/2022,2022
-622ec0535fe2c737c6af4ac9,AF,natural_disaster_idp_2022,Natural Disaster IDPs (displaced in 2022),Natural Disaster IDPs (displaced in 2022),,1/1/2022,2022
-622ec0535fe2c737c6af4aa7,AF,natural_disaster_idp,Natural Disaster IDPs (displaced),Natural Disaster IDPs (Displaced),,1/1/2022,2022
-622ec0535fe2c737c6af4abd,AF,natural_disaster_non_displaced,Natural disaster non-displaced,,,1/1/2022,2022
-622ec0535fe2c737c6af49f7,AF,new_cross_border_returnees_humanitarian_needs,New Cross-Border Returnees with Humanitarian Needs,,,1/1/2021,2021
-622ec0535fe2c737c6af49f0,AF,new_idps_conflict_natural_disaster,New IDPs (Conflict + Natural Disaster),,,1/1/2021,2021
-622ec0535fe2c737c6af49f1,AF,newly_shock_affected_humanitarian_needs,Newly Shock-Affected People with Humanitarian Needs,,,1/1/2021,2021
-622ec0535fe2c737c6af4abc,AF,other_beneficiaries,Other beneficiaries,,,1/1/2022,2022
-622ec0535fe2c737c6af4aaa,AF,prolonged_idp_2021_2020,Prolonged IDPs (displaced in 2021-2020),Prolonged IDPs (displaced in 2021-2020),,1/1/2022,2022
-622ec0535fe2c737c6af4aab,AF,protracted_idp_2019,Protracted IDPs (displaced in 2019 and before),Protracted IDPs (displaced in 2019 and before),,1/1/2022,2022
-622ec0535fe2c737c6af4a90,AF,refugee_pakistani_rural,Pakistani Refugees - Rural,,,1/1/2022,2022
-622ec0535fe2c737c6af4aa1,AF,refugee_pakistani_urban,Pakistani Refugees - Urban or Peri Urban,,,1/1/2022,2022
-622ec0535fe2c737c6af4a0a,AF,refugee_pakistani,Pakistani Refugees,,,1/1/2021,2021
-622ec0535fe2c737c6af4a24,AF,refugee_returnees_border_encashment,Refugee Returnees - at border or in encashment centres,,,1/1/2021,2021
-622ec0535fe2c737c6af4ac3,AF,refugee_returnees_border_or_ec,Refugee Returnees (at border or EC),Refugee returnees (at border or EC),,1/1/2022,2022
-622ec0535fe2c737c6af4a25,AF,refugee_returnees_return_place,Refugee Returnees - in their place of return,,,1/1/2021,2021
-622ec0535fe2c737c6af4ac2,AF,refugee_returnees_settlement_place_of_return,Refugee Returnees (at settlement or place of return),Refugee returnees (at settlement or place of return),,1/1/2022,2022
-622ec0535fe2c737c6af4ac6,AF,refugees_asylum_seekers,Refugees & Asylum Seekers,Refugees & asylum seekers,,1/1/2022,2022
-622ec0535fe2c737c6af4aa9,AF,refugees_asylum_seekers,Refugees and Asylum Seekers,Refugee and Asylum Seekers,,1/1/2022,2022
-622ec0535fe2c737c6af4ab0,AF,refugees,Refugees and asylum seekers,,,1/1/2022,2022
-622ec0535fe2c737c6af4a99,AF,returnee_documented_rural,Afghan Refugee Returnees (Documented) - Rural,,,1/1/2022,2022
-622ec0535fe2c737c6af4a9f,AF,returnee_documented_urban,Afghan Refugee Returnees (Documented) - Urban or Peri Urban,,,1/1/2022,2022
-622ec0535fe2c737c6af4a07,AF,returnee_documented,Afghan Refugee Returnees (Documented),,,1/1/2021,2021
-622ec0535fe2c737c6af4a2c,AF,returnee_refugees,Returnees & Refugees,,,1/1/2021,2021
-622ec0535fe2c737c6af4a8f,AF,returnee_undocumented_rural,Afghan Returnees (Undocumented) - Rural,,,1/1/2022,2022
-622ec0535fe2c737c6af4aa3,AF,returnee_undocumented_urban,Afghan Returnees (Undocumented) - Urban or Peri Urban,,,1/1/2022,2022
-622ec0535fe2c737c6af4a08,AF,returnee_undocumented,Afghan Returnees (Undocumented),,,1/1/2021,2021
-622ec0535fe2c737c6af4ab1,AF,returnees,Afghan refugee returnees,,,1/1/2022,2022
-622ec0535fe2c737c6af4a21,AF,shock_affected_non_displaced_conflict_natural_disaster,Shock-Affected Non-Displaced (Conflict or Natural Disaster),,,1/1/2021,2021
-622ec0535fe2c737c6af4a22,AF,undocumented_returnees_border_encashment,Undocumented Returnees - at border or in encashment centres,,,1/1/2021,2021
-622ec0535fe2c737c6af4ac1,AF,undocumented_returnees_border_or_ec,Undocumented Returnees (at border or EC),Undocumented returnees (at border or EC),,1/1/2022,2022
-622ec0535fe2c737c6af4a23,AF,undocumented_returnees_return_place,Undocumented Returnees - in their place of return,,,1/1/2021,2021
-622ec0535fe2c737c6af4ac0,AF,undocumented_returnees_settlement_place_of_return,Undocumented Returnees (at settlement or place of return),Undocumented returnees (at settlement or place of return),,1/1/2022,2022
-622ec0535fe2c737c6af4ac7,AF,vulnerable_people_humanitarian_needs,"Vulnerable People with Humanitarian Needs (including host community,protracted IDPs etc.)","Vulnerable people with humanitarian needs (including host community,protracted IDPs etc.)",,1/1/2022,2022
-622ec0535fe2c737c6af4aac,AF,vulnerable_people_returnees_areas_of_origin,Vulnerable people returning to areas of origin,Vulnerable people returning to areas of origin,,1/1/2022,2022
-622ec0535fe2c737c6af4a26,AF,vulnerable_people,Vulnerable People with Humanitarian Needs,,,1/1/2021,2021
-622ec0535fe2c737c6af4851,ALL,conflict_idps,Conflict IDPs,,,,1
-622ec0535fe2c737c6af484e,ALL,drought_idps,Drought IDPs,,,,1
-622ec0535fe2c737c6af484f,ALL,flood_idps,Flood IDPs,,,,1
-622ec0535fe2c737c6af4854,ALL,host_communities,Host Communities,,,,1
-622ec0535fe2c737c6af484d,ALL,idps,IDPs,,,,1
-622ec0535fe2c737c6af4850,ALL,natural_disaster_idps,Natural Disaster IDPs,,,,1
-622ec0535fe2c737c6af4852,ALL,refugees,Refugees,,,,1
-622ec0535fe2c737c6af4853,ALL,returnees,Returnees,,,,1
-622ec0535fe2c737c6af4855,ALL,stakeholders,Stakeholders,,,,1
-,ALL,,HRP Carryover,,,,
-,ALL,,Conflict-affected (non-displaced),,,,
-,ALL,,Natural disaster-affected (non-displaced),,,,
-,ALL,,New returnees in (at border or EC),,,,
-,ALL,,New returnees in (at place of return),,,,
-,ALL,,New cross-border returnees in (at border or EC),,,,
-,ALL,,New cross-border returnees in (at province of return),,,,
-,ALL,non_hrp,Response activity outside of the HRP,,,,
-,ALL,vulnerable_people_humanitarian_needs,Vulnerable people with humanitarian needs,,,,
-622ec0535fe2c737c6af4a33,CB,government_officials,Government Officials,,,,1
-622ec0535fe2c737c6af4a34,CB,humanitarian_workers,Humanitarian Workers,,,,1
-622ec0535fe2c737c6af4a35,CB,private_sector,Private Sector,,,,1
-622ec0535fe2c737c6af4a37,CB,service_provider,Service Provider,,,,1
-622ec0535fe2c737c6af4a38,COL,afectados_por_deslizamientos,Afectados por deslizamientos,,,,1
-622ec0535fe2c737c6af4a39,COL,afectados_por_inundaciones,Afectados por inundaciones,,,,1
-622ec0535fe2c737c6af4a3a,COL,afectados_por_otro_tipo_de_desastres_naturales,Afectados por otro tipo de desastres naturales,,,,1
-622ec0535fe2c737c6af4a3c,COL,afectados_por_sequias,Afectados por sequias,,,,1
-622ec0535fe2c737c6af4a3b,COL,afectados_por_vendavales,Afectados por vendavales,,,,1
-622ec0535fe2c737c6af4a3d,COL,host_communities,Comunidades receptoras,,,,1
-622ec0535fe2c737c6af4a3f,COL,lideres_lideresas_sociales_amenazados,L√≠deres / lideresas sociales amenazados,,,,1
-622ec0535fe2c737c6af4a3e,COL,migrantes,Migrantes,,,,1
-622ec0535fe2c737c6af4a41,COL,mujeres_lactantes_gestantes,Mujeres lactantes / gestantes,,,,1
-622ec0535fe2c737c6af4a53,COL,otros,Otros,,,,1
-622ec0535fe2c737c6af4a40,COL,personas_confinadas,Personas confinadas,,,,1
-622ec0535fe2c737c6af4a42,COL,personas_desplazadas_internamente,Personas desplazadas internamente (individual),,,,1
-622ec0535fe2c737c6af4a43,COL,personas_desplazadas_internamente,Personas desplazadas internamente (masivo),,,,1
-622ec0535fe2c737c6af4a44,COL,poblacion_con_doble_afectacion_conflicto_y_desastres,Poblaci√≥n con doble afectaci√≥n (conflicto y desastres),,,,1
-622ec0535fe2c737c6af4a4d,COL,poblacion_con_multiples_afectaciones,Poblaci√≥n con m√∫ltiples afectaciones,,,,1
-622ec0535fe2c737c6af4a45,COL,poblacion_en_situacion_de_discapacidad,Poblaci√≥n en situaci√≥n de discapacidad,,,,1
-622ec0535fe2c737c6af4a46,COL,poblacion_lgbttti,Poblaci√≥n LGBTTTI,,,,1
-622ec0535fe2c737c6af4a47,COL,poblacion_vulnerable,Poblaci√≥n vulnerable,,,,1
-622ec0535fe2c737c6af4a48,COL,refugees,Refugiados,,,,1
-622ec0535fe2c737c6af4a49,COL,returnees,Retornados,,,,1
-622ec0535fe2c737c6af4a4c,COL,sex_crimes_victims,V√≠ctimas de Delitos Sexuales,,,,1
-622ec0535fe2c737c6af4a4a,COL,solicitantes_de_asilo,Solicitantes de asilo,,,,1
-622ec0535fe2c737c6af4a4b,COL,victimas_de_aei,V√≠ctimas de AEI,,,,1
-622ec0535fe2c737c6af4a4f,COL,victimas_de_map_muse_aei_en_general,V√≠ctimas de MAP / MUSE / AEI en general,,,,1
-622ec0535fe2c737c6af4a4e,COL,victimas_de_map,V√≠ctimas de MAP,,,,1
-622ec0535fe2c737c6af4a51,COL,victimas_de_muse,V√≠ctimas de MUSE,,,,1
-622ec0535fe2c737c6af4a56,COL,victimas_de_otras_violencias_basadas_en_genero,V√≠ctimas de otras violencias basadas en g√©nero,,,,1
-622ec0535fe2c737c6af4a52,COL,victimas_de_reclutamiento_forzado,V√≠ctimas de reclutamiento forzado,,,,1
-622ec0535fe2c737c6af4a50,COL,victimas_del_conflicto_armado_en_general,V√≠ctimas del conflicto armado en general,,,,1
-622ec0535fe2c737c6af4a61,ET,conflict_affected,Conflict Affected,,,,1
-622ec0535fe2c737c6af4a5e,ET,health_workers,Health Workers,,,,1
-622ec0535fe2c737c6af4a55,ET,idp_conflict,Conflict IDPs,,,,1
-622ec0535fe2c737c6af4a5f,ET,idp_drought,Drought Affected IDPs,,,,1
-622ec0535fe2c737c6af4a57,ET,idp_flood,Flood Affected IDPs,,,,1
-622ec0535fe2c737c6af4a62,ET,idp_natural_affected,Natural Disaster Affected,,,,1
-622ec0535fe2c737c6af4a58,ET,idp_natural_disaster,Natural Disaster IDPs,,,,1
-622ec0535fe2c737c6af4a59,ET,idp_returnee,Returnee IDPs,,,,1
-622ec0535fe2c737c6af4a5c,ET,returnees_home,Returnees (who went home),,,,1
-622ec0535fe2c737c6af4a5b,ET,returnees_not_home,Returnees (not home),,,,1
-622ec0535fe2c737c6af4a65,ET,social_workers,Social Workers,,,,1
-622ec0535fe2c737c6af4a63,ET,vulnerable_groups,Vulnerable Groups,,,,1
-622ec0535fe2c737c6af4a6e,NG,idps_in_camps,IDPs in Camps,,,,1
-622ec0535fe2c737c6af4a6d,NG,idps_in_host_communities,IDPs in Host Communities,,,,1
-622ec0535fe2c737c6af4a6f,PHL,general_population,General Population,,,,1
-622ec0535fe2c737c6af4a73,PHL,idp_drought,Drought Affected IDPs,,,,1
-622ec0535fe2c737c6af4a74,PHL,idp_flood,Flood Affected IDPs,,,,1
-622ec0535fe2c737c6af4a78,PHL,idp_natural_disaster,Natural Disaster IDPs,,,,1
-622ec0535fe2c737c6af4acb,SO,drought_non_idps,Drought Non-IDPs,,,2/1/2022,2022
-622ec0535fe2c737c6af4a7d,SO,health_care_workers,Health Care Workers,,,,1
-622ec0535fe2c737c6af4a83,SS,otherwise_affected,Otherwise Affected,,,,1
+_id,admin0pcode,cluster_code,beneficiary_type_id,beneficiary_type_name,description,end_date,start_date,year
+622ec0535fe2c737c6af4a8d,AF,wash,access_to_services_rural,Underserved Community - Rural,,,1/1/2022,2022
+622ec0535fe2c737c6af4a9e,AF,education,access_to_services_urban,Underserved Community - Urban or Peri Urban,,,1/1/2022,2022
+622ec0535fe2c737c6af4a09,AF,health,access_to_services,Access to Services,,,1/1/2021,2021
+622ec0535fe2c737c6af49f4,AF,fsac,acutely_vulnerable_humanitarian needs,Acutely Vulnerable People with Humanitarian Needs,,,1/1/2021,2021
+622ec0535fe2c737c6af49e7,AF,esnfi,afghan_refugee_returnees_documented_border_iran,Afghan Refugee Returnees from Iran (Documented) - Border,,,1/1/2021,2021
+622ec0535fe2c737c6af49e6,AF,wash,afghan_refugee_returnees_documented_border_pakistan,Afghan Refugee Returnees from Pakistan (Documented) - Border,,,1/1/2021,2021
+622ec0535fe2c737c6af49e9,AF,education,afghan_refugee_returnees_documented_settlement_iran,Afghan Refugee Returnees from Iran (Documented) - Settlement,,,1/1/2021,2021
+622ec0535fe2c737c6af49e8,AF,health,afghan_refugee_returnees_documented_settlement_pakistan,Afghan Refugee Returnees from Pakistan (Documented) - Settlement,,,1/1/2021,2021
+622ec0535fe2c737c6af49eb,AF,fsac,afghan_refugee_returnees_undocumented_border_iran,Afghan Returnees from Iran (Undocumented) - Border,,,1/1/2021,2021
+622ec0535fe2c737c6af49ea,AF,esnfi,afghan_refugee_returnees_undocumented_border_pakistan,Afghan Returnees from Pakistan (Undocumented) - Border,,,1/1/2021,2021
+622ec0535fe2c737c6af49ed,AF,wash,afghan_refugee_returnees_undocumented_settlement_iran,Afghan Returnees from Iran (Undocumented) - Settlement,,,1/1/2021,2021
+622ec0535fe2c737c6af49ec,AF,education,afghan_refugee_returnees_undocumented_settlement_pakistan,Afghan Returnees from Pakistan (Undocumented) - Settlement,,,1/1/2021,2021
+622ec0535fe2c737c6af4aa5,AF,health,conflict_affected_non_displaced,Conflict affected (non-displaced),Conflict affected (non-displaced),,1/1/2022,2022
+622ec0535fe2c737c6af4a86,AF,fsac,conflict_affected_rural,Conflict Affected Community - Rural,,,1/1/2022,2022
+622ec0535fe2c737c6af4a97,AF,esnfi,conflict_affected_urban,Conflict Affected Community - Urban or Peri Urban,,,1/1/2022,2022
+622ec0535fe2c737c6af4a0b,AF,wash,conflict_affected,Conflict Affected,,,1/1/2021,2021
+622ec0535fe2c737c6af4abe,AF,education,conflict_idp_2021,Conflict IDPs (displaced in 2021),Conflict IDPs (displaced in 2021),,1/1/2022,2022
+622ec0535fe2c737c6af4abf,AF,health,conflict_idp_2022,Conflict IDPs (displaced in 2022),Conflict IDPs (displaced in 2022),,1/1/2022,2022
+622ec0535fe2c737c6af49ef,AF,fsac,covid_19_affected_people,COVID-19 Affected People,,,1/1/2021,2021
+622ec0535fe2c737c6af4aa8,AF,esnfi,cross_border_returnees,Cross Border Returnees,Cross Border Returnees,,1/1/2022,2022
+622ec0535fe2c737c6af4a29,AF,wash,displaced_refugees,Displaced & Refugees,,,1/1/2021,2021
+622ec0535fe2c737c6af4a2a,AF,education,displaced_returnees,Displaced & Returnees,,,1/1/2021,2021
+622ec0535fe2c737c6af4a84,AF,health,drought_affected_displaced_2022_rural,Drought Affected Displaced (2022) - Rural,,,1/1/2022,2022
+622ec0535fe2c737c6af4a95,AF,fsac,drought_affected_displaced_2022_urban,Drought Affected Displaced (2022) - Urban or Peri Urban,,,1/1/2022,2022
+622ec0535fe2c737c6af4a12,AF,esnfi,drought_affected_displaced_response,Drought Affected Displaced ( Response ),,,1/1/2021,2021
+622ec0535fe2c737c6af4a91,AF,wash,drought_affected_non_displaced_response_rural,Drought Affected Non Displaced ( Response ) - Rural,,,1/1/2022,2022
+622ec0535fe2c737c6af4aa2,AF,education,drought_affected_non_displaced_response_urban,Drought Affected Non Displaced ( Response ) - Urban or Peri Urban,,,1/1/2022,2022
+622ec0535fe2c737c6af4a8a,AF,esnfi,flood_affected_displaced_2022_rural,Flood Affected Displaced (2022) - Rural,,,1/1/2022,2022
+622ec0535fe2c737c6af4a96,AF,wash,flood_affected_displaced_2022_urban,Flood Affected Displaced (2022) - Urban or Peri Urban,,,1/1/2022,2022
+622ec0535fe2c737c6af4a14,AF,education,flood_affected_displaced_response,Flood Affected Displaced ( Response ),,,1/1/2021,2021
+622ec0535fe2c737c6af4a92,AF,health,flood_affected_non_displaced_response_rural,Flood Affected Non Displaced ( Response ) - Rural,,,1/1/2022,2022
+622ec0535fe2c737c6af4aa4,AF,fsac,flood_affected_non_displaced_response_urban,Flood Affected Non Displaced ( Response ) - Urban or Peri Urban,,,1/1/2022,2022
+622ec0535fe2c737c6af4abb,AF,education,health_workers,Health Workers,,,1/1/2022,2022
+622ec0535fe2c737c6af4a8b,AF,wash,host_communities_conflict_idps_rural,Communities Hosting Conflict IDPs - Rural,,,1/1/2022,2022
+622ec0535fe2c737c6af4aa0,AF,education,host_communities_conflict_idps_urban,Communities Hosting Conflict IDPs - Urban or Peri Urban,,,1/1/2022,2022
+622ec0535fe2c737c6af4a89,AF,health,host_communities_disaster_idps_rural,Communities Hosting Natural Disasater IDPs - Rural,,,1/1/2022,2022
+622ec0535fe2c737c6af4a9b,AF,fsac,host_communities_disaster_idps_urban,Communities Hosting Natural Disasater IDPs - Urban or Peri Urban,,,1/1/2022,2022
+622ec0535fe2c737c6af4a8e,AF,esnfi,host_communities_refugees_rural,Communities Hosting Refugees - Rural,,,1/1/2022,2022
+622ec0535fe2c737c6af4a9d,AF,wash,host_communities_refugees_urban,Communities Hosting Refugees - Urban or Peri Urban,,,1/1/2022,2022
+622ec0535fe2c737c6af4a8c,AF,education,host_communities_returnees_rural,Communities Hosting Returnees - Rural,,,1/1/2022,2022
+622ec0535fe2c737c6af4a9c,AF,health,host_communities_returnees_urban,Communities Hosting Returnees - Urban or Peri Urban,,,1/1/2022,2022
+622ec0535fe2c737c6af4aae,AF,fsac,host_community,Host community,Host community,,1/1/2022,2022
+622ec0535fe2c737c6af4a82,AF,esnfi,idp_conflict_2022_rural,Conflict IDPs (2022) - Rural,,,1/1/2022,2022
+622ec0535fe2c737c6af4a93,AF,wash,idp_conflict_2022_urban,Conflict IDPs (2022) - Urban or Peri Urban,,,1/1/2022,2022
+622ec0535fe2c737c6af4a20,AF,education,idp_conflict_natural_disaster,Internally Displaced (Conflict or Natural Disaster),,,1/1/2021,2021
+622ec0535fe2c737c6af4ab5,AF,wash,idp_drought_affected,Drought affected IDPs,,,1/1/2022,2022
+622ec0535fe2c737c6af4ab7,AF,education,idp_flood_affected,Flood affected IDPs,,,1/1/2022,2022
+622ec0535fe2c737c6af4a85,AF,esnfi,idp_other_natural_disaster_2022_rural,"Other Natural Disaster (Avalanche,Landslide,Earthquake,etc.) IDPs (2022) - Rural",,,1/1/2022,2022
+622ec0535fe2c737c6af4a94,AF,wash,idp_other_natural_disaster_2022_urban,"Other Natural Disaster (Avalanche,Landslide,Earthquake,etc.) IDPs (2022) - Urban or Peri Urban",,,1/1/2022,2022
+622ec0535fe2c737c6af4aba,AF,education,idp_other,Other IDPs,,,1/1/2022,2022
+622ec0535fe2c737c6af4a88,AF,health,idp_protracted_rural,Conflict IDPs (Prolonged) - Rural,,,1/1/2022,2022
+622ec0535fe2c737c6af4a9a,AF,fsac,idp_protracted_urban,Conflict IDPs (Prolonged) - Urban or Peri Urban,,,1/1/2022,2022
+622ec0535fe2c737c6af4a10,AF,esnfi,idp_protracted,Protracted IDPs,,,1/1/2021,2021
+622ec0535fe2c737c6af4aaf,AF,wash,idp_returnees,IDPs returnees,,,1/1/2022,2022
+622ec0535fe2c737c6af4a2f,AF,education,ipds_returenees_host_community,IDPs + Returnees + Host Community,,,1/1/2021,2021
+622ec0535fe2c737c6af4acc,AF,health,multiple_shocks_ipc_3_affected,Multiple shocks (IPC phase 3) affected population,,,1/1/2022,2022
+622ec0535fe2c737c6af4aca,AF,fsac,multiple_shocks_ipc_4_affected,Multiple shocks (IPC phase 4) affected population,,,1/1/2022,2022
+622ec0535fe2c737c6af49e4,AF,esnfi,natural_disaster_affected_avalanche,Natural Disaster Affected (Avalanche),,,1/1/2021,2021
+622ec0535fe2c737c6af49e1,AF,wash,natural_disaster_affected_earthquake,Natural Disaster Affected (Earthquake),,,1/1/2021,2021
+622ec0535fe2c737c6af49e3,AF,education,natural_disaster_affected_flood,Natural Disaster Affected (Flood),,,1/1/2021,2021
+622ec0535fe2c737c6af4a87,AF,esnfi,natural_disaster_affected_rural,Natural Disaster Affected Community People - Rural,,,1/1/2022,2022
+622ec0535fe2c737c6af4a98,AF,wash,natural_disaster_affected_urban,Natural Disaster Affected Community People - Urban or Peri Urban,,,1/1/2022,2022
+622ec0535fe2c737c6af49e5,AF,education,natural_disaster_affected_wls,Natural Disaster Affected (Winter / Lean Season),,,1/1/2021,2021
+622ec0535fe2c737c6af4ac8,AF,fsac,natural_disaster_idp_2021,Natural Disaster IDPs (displaced in 2021),Natural Disaster IDPs (displaced in 2021),,1/1/2022,2022
+622ec0535fe2c737c6af4ac9,AF,esnfi,natural_disaster_idp_2022,Natural Disaster IDPs (displaced in 2022),Natural Disaster IDPs (displaced in 2022),,1/1/2022,2022
+622ec0535fe2c737c6af4aa7,AF,wash,natural_disaster_idp,Natural Disaster IDPs (displaced),Natural Disaster IDPs (Displaced),,1/1/2022,2022
+622ec0535fe2c737c6af4abd,AF,education,natural_disaster_non_displaced,Natural disaster non-displaced,,,1/1/2022,2022
+622ec0535fe2c737c6af49f7,AF,health,new_cross_border_returnees_humanitarian_needs,New Cross-Border Returnees with Humanitarian Needs,,,1/1/2021,2021
+622ec0535fe2c737c6af49f0,AF,fsac,new_idps_conflict_natural_disaster,New IDPs (Conflict + Natural Disaster),,,1/1/2021,2021
+622ec0535fe2c737c6af49f1,AF,esnfi,newly_shock_affected_humanitarian_needs,Newly Shock-Affected People with Humanitarian Needs,,,1/1/2021,2021
+622ec0535fe2c737c6af4abc,AF,wash,other_beneficiaries,Other beneficiaries,,,1/1/2022,2022
+622ec0535fe2c737c6af4aaa,AF,education,prolonged_idp_2021_2020,Prolonged IDPs (displaced in 2021-2020),Prolonged IDPs (displaced in 2021-2020),,1/1/2022,2022
+622ec0535fe2c737c6af4aab,AF,health,protracted_idp_2019,Protracted IDPs (displaced in 2019 and before),Protracted IDPs (displaced in 2019 and before),,1/1/2022,2022
+622ec0535fe2c737c6af4a90,AF,fsac,refugee_pakistani_rural,Pakistani Refugees - Rural,,,1/1/2022,2022
+622ec0535fe2c737c6af4aa1,AF,esnfi,refugee_pakistani_urban,Pakistani Refugees - Urban or Peri Urban,,,1/1/2022,2022
+622ec0535fe2c737c6af4a0a,AF,wash,refugee_pakistani,Pakistani Refugees,,,1/1/2021,2021
+622ec0535fe2c737c6af4a24,AF,education,refugee_returnees_border_encashment,Refugee Returnees - at border or in encashment centres,,,1/1/2021,2021
+622ec0535fe2c737c6af4ac3,AF,health,refugee_returnees_border_or_ec,Refugee Returnees (at border or EC),Refugee returnees (at border or EC),,1/1/2022,2022
+622ec0535fe2c737c6af4a25,AF,fsac,refugee_returnees_return_place,Refugee Returnees - in their place of return,,,1/1/2021,2021
+622ec0535fe2c737c6af4ac2,AF,esnfi,refugee_returnees_settlement_place_of_return,Refugee Returnees (at settlement or place of return),Refugee returnees (at settlement or place of return),,1/1/2022,2022
+622ec0535fe2c737c6af4ab0,AF,health,refugees,Refugees and asylum seekers,,,1/1/2022,2022
+622ec0535fe2c737c6af4a99,AF,fsac,returnee_documented_rural,Afghan Refugee Returnees (Documented) - Rural,,,1/1/2022,2022
+622ec0535fe2c737c6af4a9f,AF,esnfi,returnee_documented_urban,Afghan Refugee Returnees (Documented) - Urban or Peri Urban,,,1/1/2022,2022
+622ec0535fe2c737c6af4a07,AF,wash,returnee_documented,Afghan Refugee Returnees (Documented),,,1/1/2021,2021
+622ec0535fe2c737c6af4a2c,AF,education,returnee_refugees,Returnees & Refugees,,,1/1/2021,2021
+622ec0535fe2c737c6af4a8f,AF,health,returnee_undocumented_rural,Afghan Returnees (Undocumented) - Rural,,,1/1/2022,2022
+622ec0535fe2c737c6af4aa3,AF,fsac,returnee_undocumented_urban,Afghan Returnees (Undocumented) - Urban or Peri Urban,,,1/1/2022,2022
+622ec0535fe2c737c6af4a08,AF,esnfi,returnee_undocumented,Afghan Returnees (Undocumented),,,1/1/2021,2021
+622ec0535fe2c737c6af4ab1,AF,wash,returnees,Afghan refugee returnees,,,1/1/2022,2022
+622ec0535fe2c737c6af4a21,AF,education,shock_affected_non_displaced_conflict_natural_disaster,Shock-Affected Non-Displaced (Conflict or Natural Disaster),,,1/1/2021,2021
+622ec0535fe2c737c6af4a22,AF,health,undocumented_returnees_border_encashment,Undocumented Returnees - at border or in encashment centres,,,1/1/2021,2021
+622ec0535fe2c737c6af4ac1,AF,fsac,undocumented_returnees_border_or_ec,Undocumented Returnees (at border or EC),Undocumented returnees (at border or EC),,1/1/2022,2022
+622ec0535fe2c737c6af4a23,AF,esnfi,undocumented_returnees_return_place,Undocumented Returnees - in their place of return,,,1/1/2021,2021
+622ec0535fe2c737c6af4ac0,AF,wash,undocumented_returnees_settlement_place_of_return,Undocumented Returnees (at settlement or place of return),Undocumented returnees (at settlement or place of return),,1/1/2022,2022
+622ec0535fe2c737c6af4ac7,AF,education,vulnerable_people_humanitarian_needs,"Vulnerable People with Humanitarian Needs (including host community,protracted IDPs etc.)","Vulnerable people with humanitarian needs (including host community,protracted IDPs etc.)",,1/1/2022,2022
+622ec0535fe2c737c6af4aac,AF,wash,vulnerable_people_returnees_areas_of_origin,Vulnerable people returning to areas of origin,Vulnerable people returning to areas of origin,,1/1/2022,2022
+622ec0535fe2c737c6af4a26,AF,education,vulnerable_people,Vulnerable People with Humanitarian Needs,,,1/1/2021,2021
+622ec0535fe2c737c6af4851,ALL,wash,conflict_idps,Conflict IDPs,,,,1
+622ec0535fe2c737c6af484e,ALL,education,drought_idps,Drought IDPs,,,,1
+622ec0535fe2c737c6af484f,ALL,health,flood_idps,Flood IDPs,,,,1
+622ec0535fe2c737c6af4854,ALL,fsac,host_communities,Host Communities,,,,1
+622ec0535fe2c737c6af484d,ALL,esnfi,idps,IDPs,,,,1
+622ec0535fe2c737c6af4850,ALL,wash,natural_disaster_idps,Natural Disaster IDPs,,,,1
+622ec0535fe2c737c6af4855,ALL,fsac,stakeholders,Stakeholders,,,,1
+,ALL,education,non_hrp,Response activity outside of the HRP,,,,
+622ec0535fe2c737c6af4a33,CB,fsac,government_officials,Government Officials,,,,1
+622ec0535fe2c737c6af4a34,CB,esnfi,humanitarian_workers,Humanitarian Workers,,,,1
+622ec0535fe2c737c6af4a35,CB,wash,private_sector,Private Sector,,,,1
+622ec0535fe2c737c6af4a37,CB,education,service_provider,Service Provider,,,,1
+622ec0535fe2c737c6af4a38,COL,health,afectados_por_deslizamientos,Afectados por deslizamientos,,,,1
+622ec0535fe2c737c6af4a39,COL,fsac,afectados_por_inundaciones,Afectados por inundaciones,,,,1
+622ec0535fe2c737c6af4a3a,COL,esnfi,afectados_por_otro_tipo_de_desastres_naturales,Afectados por otro tipo de desastres naturales,,,,1
+622ec0535fe2c737c6af4a3c,COL,wash,afectados_por_sequias,Afectados por sequias,,,,1
+622ec0535fe2c737c6af4a3b,COL,education,afectados_por_vendavales,Afectados por vendavales,,,,1
+622ec0535fe2c737c6af4a3f,COL,fsac,lideres_lideresas_sociales_amenazados,L√≠deres / lideresas sociales amenazados,,,,1
+622ec0535fe2c737c6af4a3e,COL,esnfi,migrantes,Migrantes,,,,1
+622ec0535fe2c737c6af4a41,COL,wash,mujeres_lactantes_gestantes,Mujeres lactantes / gestantes,,,,1
+622ec0535fe2c737c6af4a53,COL,education,otros,Otros,,,,1
+622ec0535fe2c737c6af4a40,COL,wash,personas_confinadas,Personas confinadas,,,,1
+622ec0535fe2c737c6af4a44,COL,fsac,poblacion_con_doble_afectacion_conflicto_y_desastres,Poblaci√≥n con doble afectaci√≥n (conflicto y desastres),,,,1
+622ec0535fe2c737c6af4a4d,COL,esnfi,poblacion_con_multiples_afectaciones,Poblaci√≥n con m√∫ltiples afectaciones,,,,1
+622ec0535fe2c737c6af4a45,COL,wash,poblacion_en_situacion_de_discapacidad,Poblaci√≥n en situaci√≥n de discapacidad,,,,1
+622ec0535fe2c737c6af4a46,COL,education,poblacion_lgbttti,Poblaci√≥n LGBTTTI,,,,1
+622ec0535fe2c737c6af4a47,COL,health,poblacion_vulnerable,Poblaci√≥n vulnerable,,,,1
+622ec0535fe2c737c6af4a4c,COL,wash,sex_crimes_victims,V√≠ctimas de Delitos Sexuales,,,,1
+622ec0535fe2c737c6af4a4a,COL,education,solicitantes_de_asilo,Solicitantes de asilo,,,,1
+622ec0535fe2c737c6af4a4b,COL,health,victimas_de_aei,V√≠ctimas de AEI,,,,1
+622ec0535fe2c737c6af4a4f,COL,fsac,victimas_de_map_muse_aei_en_general,V√≠ctimas de MAP / MUSE / AEI en general,,,,1
+622ec0535fe2c737c6af4a4e,COL,esnfi,victimas_de_map,V√≠ctimas de MAP,,,,1
+622ec0535fe2c737c6af4a51,COL,wash,victimas_de_muse,V√≠ctimas de MUSE,,,,1
+622ec0535fe2c737c6af4a56,COL,education,victimas_de_otras_violencias_basadas_en_genero,V√≠ctimas de otras violencias basadas en g√©nero,,,,1
+622ec0535fe2c737c6af4a52,COL,health,victimas_de_reclutamiento_forzado,V√≠ctimas de reclutamiento forzado,,,,1
+622ec0535fe2c737c6af4a50,COL,fsac,victimas_del_conflicto_armado_en_general,V√≠ctimas del conflicto armado en general,,,,1
+622ec0535fe2c737c6af4a5f,ET,education,idp_drought,Drought Affected IDPs,,,,1
+622ec0535fe2c737c6af4a57,ET,health,idp_flood,Flood Affected IDPs,,,,1
+622ec0535fe2c737c6af4a62,ET,fsac,idp_natural_affected,Natural Disaster Affected,,,,1
+622ec0535fe2c737c6af4a59,ET,wash,idp_returnee,Returnee IDPs,,,,1
+622ec0535fe2c737c6af4a5c,ET,education,returnees_home,Returnees (who went home),,,,1
+622ec0535fe2c737c6af4a5b,ET,health,returnees_not_home,Returnees (not home),,,,1
+622ec0535fe2c737c6af4a65,ET,fsac,social_workers,Social Workers,,,,1
+622ec0535fe2c737c6af4a63,ET,esnfi,vulnerable_groups,Vulnerable Groups,,,,1
+622ec0535fe2c737c6af4a6e,NG,wash,idps_in_camps,IDPs in Camps,,,,1
+622ec0535fe2c737c6af4a6d,NG,education,idps_in_host_communities,IDPs in Host Communities,,,,1
+622ec0535fe2c737c6af4a6f,PHL,health,general_population,General Population,,,,1
+622ec0535fe2c737c6af4acb,SO,education,drought_non_idps,Drought Non-IDPs,,,2/1/2022,2022
+622ec0535fe2c737c6af4a7d,SO,health,health_care_workers,Health Care Workers,,,,1
+622ec0535fe2c737c6af4a83,SS,fsac,otherwise_affected,Otherwise Affected,,,,1

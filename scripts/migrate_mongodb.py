@@ -403,9 +403,35 @@ def import_beneficiary_types_from_csv(conn, beneficiary_type_csv):
                     (select id from rh_location where code = tmp_beneficiarytype.admin0pcode)
                     from tmp_beneficiarytype"""
             )
-            c.execute("DROP TABLE tmp_beneficiarytype;")
         except Exception as exception:
-            print(exception)
+            print(f"Error b_type: {exception}")
+            conn.rollback()
+            
+        try:
+            c.execute('SELECT id,code FROM rh_cluster')
+            cluster_ids = c.fetchall()
+            
+            c.execute('SELECT cluster_code,beneficiary_type_id FROM tmp_beneficiarytype')
+            beneficiary_ids = c.fetchall()
+
+            for cluster_id in cluster_ids:
+                for b_id in beneficiary_ids:
+                    b_cluster_code = b_id[0]
+                    cluster_code = cluster_id[1]
+                    
+                    if b_cluster_code == cluster_code:    
+                        # print(f"{b_cluster_code} = {cluster_code}")
+                        print(f"cluster_id: {cluster_id[0]} === b_id: {b_id[1]}")
+                        query = f"""
+                        INSERT INTO rh_beneficiarytype_clusters (beneficiarytype_id, cluster_id)
+                        VALUES ((select id from rh_beneficiarytype where code = "{b_id[1]}"),{cluster_id[0]})
+                        """
+                        print(query)
+                        c.execute(query)
+                        
+            c.execute("DROP TABLE tmp_beneficiarytype;")
+        except Exception as e:
+            print(f"Error in b_type and cluster: {e}")
             conn.rollback()
 
 

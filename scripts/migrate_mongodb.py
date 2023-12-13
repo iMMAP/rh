@@ -420,13 +420,10 @@ def import_beneficiary_types_from_csv(conn, beneficiary_type_csv):
                     cluster_code = cluster_id[1]
                     
                     if b_cluster_code == cluster_code:    
-                        # print(f"{b_cluster_code} = {cluster_code}")
-                        print(f"cluster_id: {cluster_id[0]} === b_id: {b_id[1]}")
                         query = f"""
                         INSERT INTO rh_beneficiarytype_clusters (beneficiarytype_id, cluster_id)
                         VALUES ((select id from rh_beneficiarytype where code = "{b_id[1]}"),{cluster_id[0]})
                         """
-                        print(query)
                         c.execute(query)
                         
             c.execute("DROP TABLE tmp_beneficiarytype;")

@@ -166,4 +166,7 @@ def stock_report_view(request, pk):
 @require_http_methods(["POST"])
 def submit_stock_report_form(request, pk):
     StockReports.objects.filter(id=pk).update(submitted=True, submitted_at=datetime.datetime.now())
-    return redirect("stock_report", pk)
+    return redirect("all_stock_report")
+
+def edit_submitted_stock(request):
+    return render(request, 'stock/edit_submitted_stock.html')

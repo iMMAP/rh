@@ -214,7 +214,7 @@
 
                     <ol class="list-group">
                         {% for report in submitted_stock_reports %}
-                        <a href="{% url 'stock_report' report.id %}" class="list-group-item list-group-item-action">
+                        <a href="{% url 'edit_submitted_stock' %}" class="list-group-item list-group-item-action">  <!-- report.id -->
                             <li class="multiple-fields-row three-items">
                                 <div class="field-col">
                                     {{ report.created_at|date:"F, Y" }}

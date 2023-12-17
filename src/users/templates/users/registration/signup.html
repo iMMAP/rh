@@ -27,7 +27,7 @@
                         <div class="input-field is-required">
                             {{ field.label_tag }}
                             <div class="input-holder">{{ field }}</div>
-                            <div class="sign-up-field-error">{{field.errors}}</div>
+                            <span class="sign-up-field-error">{{field.errors}}</span>
                         </div>
                     {% endfor %}
                     {% for field in p_form %}

@@ -37,7 +37,6 @@ INSTALLED_APPS = [
     "users.apps.UsersConfig",
     "stock.apps.StockConfig",
     "project_reports.apps.ProjectReportsConfig",
-    "import_export",
 ]
 USE_DJANGO_JQUERY = True
 

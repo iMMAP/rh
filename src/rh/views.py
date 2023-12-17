@@ -936,7 +936,9 @@ def copy_project_target_location(plan, location):
         # Duplicate the original target location
         # by retrieving it with the provided primary key.
         new_location = get_object_or_404(TargetLocation, pk=location.pk)
-        new_location.pk = None  # Generate a new primary key for the duplicated location.
+        new_location.pk = (
+            None  # Generate a new primary key for the duplicated location.
+        )
         new_location.save()  # Save the duplicated location to the database.
 
         # Associate the duplicated location with the new activity plan.
@@ -965,7 +967,9 @@ def copy_target_location_disaggregation_locations(location, disaggregation_locat
     try:
         # Duplicate the original disaggregation location by retrieving it with the provided primary key.
         new_disaggregation_location = get_object_or_404(DisaggregationLocation, pk=disaggregation_location.pk)
-        new_disaggregation_location.pk = None  # Generate a new primary key for the duplicated location.
+        new_disaggregation_location.pk = (
+            None  # Generate a new primary key for the duplicated location.
+        )
         new_disaggregation_location.save()  # Save the duplicated location to the database.
 
         # Associate the duplicated disaggregation location with the new target location.
@@ -1151,11 +1155,9 @@ def delete_budget_progress(request, pk):
 
 def ProjectListView(request, flag):
     # project_list =json.loads(request.POST.get("projectList"))
-    qs = Project.objects.all()
-    print(qs)
-    dataset = ProjectResource().export(qs)
-    # getting the file format
-    # format = request.POST.get("format")
+    project = Project.objects.filter(user=request.user.id)
+
+    dataset = ProjectResource().export(project)
     format = flag
     if format == "xls":
         ds = dataset.xls

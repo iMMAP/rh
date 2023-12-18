@@ -125,23 +125,6 @@
                         {% block content %}
                         {% endblock content %}
                     </div>
-                    <!-- MESSAGE SECTION STARTS -->
-                    {% if messages %}
-                        <div class="message-container">
-                        {% for message in messages %}
-                            {% if message.tags == 'success' %}
-                            <div class="message-success-alert">
-                                {{message}}
-                            </div>
-                            {% elif message.tags == 'error' %}
-                            <div class="message-danger-alert">
-                                {{message}}
-                            </div>
-                            {% endif %}
-                        {% endfor %}
-                        </div>
-                    {% endif %}
-                    <!-- MESSAGE SECTION ENDS -->
                 </main>
                 <footer class="footer">
                     <div class="container">

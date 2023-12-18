@@ -14,17 +14,25 @@
                     <h2 class="plan-title">Create Project Plan</h2>
                 {% endif %}
             </div>
+            <!-- MESSAGE SECTION STARTS -->
             {% if messages %}
-                {% for message in messages %}
-                    <div class="section-message-alert">
-                        <div class="description">
-                            <div class="text">
-                                <p class="error-message">{{ message }}</p>
-                            </div>
+                <div class="message-container">
+                    {% for message in messages %}
+                        {% if message.tags == 'success' %}
+                        <div class="message-success-alert">
+                            {{message}}
+                            <span class="close-message-alert">&#x2715;</span>
                         </div>
-                    </div>
-                {% endfor %}
+                        {% elif message.tags == 'error' %}
+                        <div class="message-danger-alert">
+                            {{message}}
+                            <span class="close-message-alert">&#x2715;</span>
+                        </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
             {% endif %}
+        <!-- MESSAGE SECTION ENDS -->
             <form method="post">
                 {% csrf_token %}
                 {{ form.active }}

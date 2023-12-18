@@ -14,7 +14,25 @@
                     </div>
                 </div>
             </div>
-            
+            <!-- MESSAGE SECTION STARTS -->
+            {% if messages %}
+                <div class="message-container">
+                    {% for message in messages %}
+                        {% if message.tags == 'success' %}
+                        <div class="message-success-alert">
+                            {{message}}
+                            <span class="close-message-alert">&#x2715;</span>
+                        </div>
+                        {% elif message.tags == 'error' %}
+                        <div class="message-danger-alert">
+                            {{message}}
+                            <span class="close-message-alert">&#x2715;</span>
+                        </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            {% endif %}
+        <!-- MESSAGE SECTION ENDS -->
             <form method="post" action="#" class="login-form">
                 <div class="form-holder">
                     {% csrf_token %}

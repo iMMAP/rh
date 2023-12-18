@@ -13,17 +13,25 @@
               {{ report.created_at|date:"F, Y" }}
             </h3>
 
+            <!-- MESSAGE SECTION STARTS -->
             {% if messages %}
-              {% for message in messages %}
-                {% if message.tags in 'info,warning,success' %}
-                  <div class="alert alert-{{ message.tags }}" role="alert">{{ message }}</div>
-                {% elif message.tags == 'error' %}
-                  <div class="alert alert-danger" role="alert">{{ message }}</div>
-                {% else %}
-                  <div class="alert alert-warning" role="alert">{{ message }}</div>
-                {% endif %}
-              {% endfor %}
+                <div class="message-container">
+                {% for message in messages %}
+                    {% if message.tags == 'success' %}
+                    <div class="message-success-alert">
+                        {{message}}
+                        <span class="close-alert-message">&#x2715;</span>
+                    </div>
+                    {% elif message.tags == 'error' %}
+                    <div class="message-danger-alert">
+                        {{message}}
+                        <span class="close-alert-message">&#x2715;</span>
+                    </div>
+                    {% endif %}
+                {% endfor %}
+                </div>
             {% endif %}
+        <!-- MESSAGE SECTION ENDS -->
 
             <h5 class="p-3">
               <span class="badge bg-success">{{ warehouse_location_stocks|length }}</span>

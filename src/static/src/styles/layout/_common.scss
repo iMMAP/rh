@@ -112,11 +112,7 @@ ul{
 }
 
 .message-container{
-  position: absolute;
-  left: 25%;
-  top: 14%;
   z-index: 100;
-  width: 50%;
   text-align: center;
   margin: auto;
   padding: 0;
@@ -124,22 +120,30 @@ ul{
   vertical-align: middle;
 }
 .message-success-alert{
-  background-color: #e8ffee;
-  border: 1px solid #d4edda;
+  background-color: #ecfff1;
+  border: 1px solid #a4f5b7;
   color: #35712F;
   display: inline-block;
   border-radius: 5px;
-  padding: 10px 40px;
+  padding: 16px 20px 16px 40px;
 }
 .message-danger-alert{
   background-color: #fff1f3;
-  border: 1px solid #f8d7da;
+  border: 1px solid #fdb0b7;
   color: $red-be;
   display: inline-block;
   border-radius: 5px;
-  padding: 10px 40px;
+  padding: 16px 20px 16px 40px;
 }
-
+.close-alert-message{
+  color:$red-be;
+  margin-left: 16px;
+  cursor: pointer;
+}
+.close-alert-message:hover{
+  font-weight: bold;
+  transition: all 0.5s ease-in-out;
+}
 //------------------------
 // Random added style end
 //-------------------------

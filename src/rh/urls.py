@@ -7,7 +7,7 @@ urlpatterns = [
     path("", user_views.index, name="index"),
     path("home", user_views.home, name="home"),
     # Organization Registration route
-    path("organization_register/", user_views.organization_register, name="organization_register"),
+    path("organization/add/", user_views.organization_register, name="organization_register"),
     # Projects CRUD
     path("projects/draft/", user_views.draft_projects_view, name="draft_projects"),
     path("projects/active/", user_views.active_projects_view, name="active_projects"),

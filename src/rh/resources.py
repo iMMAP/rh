@@ -2,7 +2,6 @@ from import_export import resources, fields
 from django.contrib.auth.models import User
 from import_export.widgets import ManyToManyWidget, ForeignKeyWidget
 from .models import (
-
     Cluster,
     Currency,
     Donor,
@@ -99,12 +98,11 @@ class ProjectResource(resources.ModelResource):
         column_name="clusters", attribute="clusters", widget=ManyToManyWidget(Cluster, field="title", separator=",")
     )
 
-
     # activity planning start
     def dehydrate_activity_domain(self, project):
         activity_domain = list(project.activityplan_set.all())
         return ",".join([child.activity_domain.name for child in activity_domain])
-    
+
     def dehydrate_activity_type(self, project):
         activity_types = list(project.activityplan_set.all())
         return ",".join([child.activity_type.name for child in activity_types])
@@ -112,7 +110,7 @@ class ProjectResource(resources.ModelResource):
     def dehydrate_indicators(self, project):
         activity_plan = project.activityplan_set.all()
         return ",".join([indicator.name for plan in activity_plan for indicator in plan.indicators.all()])
-        
+
     def dehydrate_beneficiary(self, project):
         activity_plan = list(project.activityplan_set.all())
         return ",".join([child.beneficiary for child in activity_plan if child.beneficiary])

@@ -4,19 +4,18 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('rh', '0004_rename_gran_type_indicator_grant_type'),
+        ("rh", "0004_rename_gran_type_indicator_grant_type"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='beneficiarytype',
-            name='is_regular_beneficiary',
+            model_name="beneficiarytype",
+            name="is_regular_beneficiary",
         ),
         migrations.AlterField(
-            model_name='beneficiarytype',
-            name='is_hrp_beneficiary',
+            model_name="beneficiarytype",
+            name="is_hrp_beneficiary",
             field=models.BooleanField(default=False, null=True),
         ),
     ]

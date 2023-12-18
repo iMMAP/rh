@@ -8,6 +8,7 @@ $(function () {
         const url = $(this).data('url');
         window.location.href = url;
 	});
+    $('.js_multiselect').select2()
     // toggle between accordion arrow
     $("#activityAcc").on("click", function(){
         let up =$(".activity-arrow-up");

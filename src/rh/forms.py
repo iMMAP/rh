@@ -327,3 +327,38 @@ class BudgetProgressForm(forms.ModelForm):
         )
         self.fields["donor"].queryset = self.fields["donor"].queryset.filter(pk__in=donor_ids)
         self.fields["budget_currency"].queryset = self.fields["budget_currency"].queryset.filter(pk=budget_currency.pk)
+
+
+class OrganizationRegisterForm(forms.ModelForm):
+    """Organization Registeration Form"""
+
+    class Meta:
+        model = Organization
+        fields = "__all__"
+        exclude = ("old_id",)
+        labels = {"clusters": "Clusters / Sectors", "name": "Organization Name"}
+
+        widgets = {
+            "clusters": forms.SelectMultiple(attrs={"class": "js_multiselect"}),
+            "countries": forms.SelectMultiple(attrs={"class": "js_multiselect"}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["countries"].queryset = self.fields["countries"].queryset.filter(type="Country")
+
+    def clean_name(self):
+        """check if organization name already exits"""
+        name = self.cleaned_data.get("name")
+        org_name = Organization.objects.filter(name__iexact=name)
+        if org_name.exists():
+            raise forms.ValidationError(f"{name} already exists...!")
+        return name
+
+    def clean_code(self):
+        """check if organization code exists"""
+        code = self.cleaned_data.get("code")
+        org_code = Organization.objects.filter(code__iexact=code)
+        if org_code.exists():
+            raise forms.ValidationError(f"{code} aleady exists...!")
+        return code

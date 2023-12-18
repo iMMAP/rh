@@ -15,7 +15,14 @@ from project_reports.models import ProjectMonthlyReport as Report
 from rh.resources import ProjectResource
 
 from .filters import ProjectsFilter
-from .forms import ActivityPlanFormSet, BudgetProgressForm, DisaggregationFormSet, ProjectForm, TargetLocationFormSet
+from .forms import (
+    ActivityPlanFormSet,
+    BudgetProgressForm,
+    DisaggregationFormSet,
+    OrganizationRegisterForm,
+    ProjectForm,
+    TargetLocationFormSet,
+)
 from .models import (
     ActivityDomain,
     ActivityPlan,
@@ -936,9 +943,7 @@ def copy_project_target_location(plan, location):
         # Duplicate the original target location
         # by retrieving it with the provided primary key.
         new_location = get_object_or_404(TargetLocation, pk=location.pk)
-        new_location.pk = (
-            None  # Generate a new primary key for the duplicated location.
-        )
+        new_location.pk = None  # Generate a new primary key for the duplicated location.
         new_location.save()  # Save the duplicated location to the database.
 
         # Associate the duplicated location with the new activity plan.
@@ -967,9 +972,7 @@ def copy_target_location_disaggregation_locations(location, disaggregation_locat
     try:
         # Duplicate the original disaggregation location by retrieving it with the provided primary key.
         new_disaggregation_location = get_object_or_404(DisaggregationLocation, pk=disaggregation_location.pk)
-        new_disaggregation_location.pk = (
-            None  # Generate a new primary key for the duplicated location.
-        )
+        new_disaggregation_location.pk = None  # Generate a new primary key for the duplicated location.
         new_disaggregation_location.save()  # Save the duplicated location to the database.
 
         # Associate the duplicated disaggregation location with the new target location.
@@ -1151,6 +1154,25 @@ def delete_budget_progress(request, pk):
     if budget_progress:
         budget_progress.delete()
     return JsonResponse({"success": True})
+
+
+# Registration Organizations
+@login_required
+def organization_register(request):
+    if request.method == "POST":
+        org_form = OrganizationRegisterForm(request.POST)
+        if org_form.is_valid():
+            name = org_form.cleaned_data.get("name")
+            code = org_form.cleaned_data.get("code")
+            organization = org_form.save()
+            if organization:
+                messages.success(request, f"[{code}] {name} is registered successfully !")
+            else:
+                messages.error(request, "Something went wrong ! please try again ")
+    else:
+        org_form = OrganizationRegisterForm()
+    context = {"org_form": org_form}
+    return render(request, "rh/projects/forms/organization_register_form.html", context)
 
 
 def ProjectListView(request, flag):

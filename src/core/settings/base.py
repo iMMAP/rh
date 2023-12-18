@@ -167,12 +167,12 @@ INTERNAL_IPS = [
 ]
 
 # Can use MailTrap SMTP Setup for now (dev and staging only).
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 
 EMAIL_HOST = env("EMAIL_HOST")
-EMAIL_PORT = env("EMAIL_PORT") # 2525
+EMAIL_PORT = env("EMAIL_PORT")  # 2525
 EMAIL_HOST_USER = env("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD")
 DEFAULT_FROM_EMAIL = env("DEFAULT_FROM_EMAIL")
-EMAIL_USE_TLS = env("EMAIL_USE_TLS",default=True)
+EMAIL_USE_TLS = env("EMAIL_USE_TLS", default=True)
 EMAIL_USE_SSL = env("EMAIL_USE_SSL", default=True)

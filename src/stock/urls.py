@@ -12,7 +12,5 @@ urlpatterns = [
         user_views.submit_stock_report_form,
         name="submit_stock_report",
     ),
-    path("stocks/edit_submitted_stock/", 
-        user_views.edit_submitted_stock,
-        name="edit_submitted_stock"),
+    path("stocks/edit_submitted_stock/", user_views.edit_submitted_stock, name="edit_submitted_stock"),
 ]

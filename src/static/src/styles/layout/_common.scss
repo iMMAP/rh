@@ -113,12 +113,12 @@ ul{
 
 .message-container{
   position: absolute;
-  left: 37%;
-  top: 15%;
+  left: 25%;
+  top: 14%;
   z-index: 100;
-  width: 25%;
+  width: 50%;
   text-align: center;
-  margin: 0;
+  margin: auto;
   padding: 0;
   transition: all 0.5s ease-in-out;
   vertical-align: middle;
@@ -127,15 +127,17 @@ ul{
   background-color: #e8ffee;
   border: 1px solid #d4edda;
   color: #35712F;
+  display: inline-block;
   border-radius: 5px;
-  padding: 10px 20px;
+  padding: 10px 40px;
 }
 .message-danger-alert{
   background-color: #fff1f3;
   border: 1px solid #f8d7da;
   color: $red-be;
+  display: inline-block;
   border-radius: 5px;
-  padding: 10px 20px;
+  padding: 10px 40px;
 }
 
 //------------------------

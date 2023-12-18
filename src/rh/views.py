@@ -1156,7 +1156,6 @@ def delete_budget_progress(request, pk):
 def ProjectListView(request, flag):
     # project_list =json.loads(request.POST.get("projectList"))
     project = Project.objects.filter(user=request.user.id)
-
     dataset = ProjectResource().export(project)
     format = flag
     if format == "xls":

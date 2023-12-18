@@ -2,7 +2,7 @@ from import_export import resources, fields
 from django.contrib.auth.models import User
 from import_export.widgets import ManyToManyWidget, ForeignKeyWidget
 from .models import (
-    ActivityDomain,
+
     Cluster,
     Currency,
     Donor,
@@ -13,6 +13,7 @@ from .models import (
 
 class ProjectResource(resources.ModelResource):
     activity_type = fields.Field()
+    activity_domain = fields.Field()
     indicators = fields.Field()
     beneficiary = fields.Field()
     beneficiary_category = fields.Field()
@@ -43,7 +44,7 @@ class ProjectResource(resources.ModelResource):
             "description",
             "start_date",
             "end_date",
-            "activity_domains",
+            "activity_domain",
             "activity_type",
             "indicators",
             "beneficiary",
@@ -71,7 +72,7 @@ class ProjectResource(resources.ModelResource):
             "description",
             "start_date",
             "end_date",
-            "activity_domains",
+            "activity_domain",
             "activity_type",
             "indicators",
             "beneficiary",
@@ -97,22 +98,21 @@ class ProjectResource(resources.ModelResource):
     cluster = fields.Field(
         column_name="clusters", attribute="clusters", widget=ManyToManyWidget(Cluster, field="title", separator=",")
     )
-    activitydomain = fields.Field(
-        column_name="activity_domains",
-        attribute="activity_domains",
-        widget=ManyToManyWidget(ActivityDomain, field="name", separator=","),
-    )
+
 
     # activity planning start
+    def dehydrate_activity_domain(self, project):
+        activity_domain = list(project.activityplan_set.all())
+        return ",".join([child.activity_domain.name for child in activity_domain])
+    
     def dehydrate_activity_type(self, project):
         activity_types = list(project.activityplan_set.all())
         return ",".join([child.activity_type.name for child in activity_types])
 
     def dehydrate_indicators(self, project):
         activity_plan = project.activityplan_set.all()
-        for plan in activity_plan:
-            return ",".join([indicator.name for indicator in plan.indicators.all()])
-
+        return ",".join([indicator.name for plan in activity_plan for indicator in plan.indicators.all()])
+        
     def dehydrate_beneficiary(self, project):
         activity_plan = list(project.activityplan_set.all())
         return ",".join([child.beneficiary for child in activity_plan if child.beneficiary])

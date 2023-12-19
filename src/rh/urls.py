@@ -9,7 +9,7 @@ urlpatterns = [
     path("organizations/create/", user_views.organization_register, name="organizations-create"),
     # Projects CRUD
     # Refactored
-    path("projects/", user_views.projects_view, name="projects-list"),
+    path("projects/", user_views.projects_list, name="projects-list"),
     path(
         "projects/create/", 
         user_views.create_project_view, 
@@ -17,7 +17,7 @@ urlpatterns = [
     ),
     path(
         "projects/<str:pk>/",
-        user_views.open_project_view,
+        user_views.projects_detail,
         name="projects-detail",
     ),
     path(

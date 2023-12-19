@@ -48,24 +48,8 @@ RECORDS_PER_PAGE = 3
 
 
 @cache_control(no_store=True)
-def index(request):
-    template = loader.get_template("index.html")
-
-    users_count = User.objects.all().count()
-    locations_count = Location.objects.all().count()
-    reports_count = Report.objects.all().count()
-    context = {
-        "users": users_count,
-        "locations": locations_count,
-        "reports": reports_count,
-    }
-    return HttpResponse(template.render(context, request))
-
-
-@cache_control(no_store=True)
-@login_required
-def home(request):
-    template = loader.get_template("home.html")
+def landing_page(request):
+    template = loader.get_template("landing.html")
 
     users_count = User.objects.all().count()
     locations_count = Location.objects.all().count()

@@ -4,10 +4,9 @@ from . import exports as export_views
 from . import views as user_views
 
 urlpatterns = [
-    path("", user_views.index, name="index"),
-    path("home", user_views.home, name="home"),
-    # Organization Registration route
-    path("organization/add/", user_views.organization_register, name="organization_register"),
+    path("", user_views.landing_page, name="landing"),
+    # Organization CRUD
+    path("organizations/create/", user_views.organization_register, name="organizations-create"),
     # Projects CRUD
     path("projects/draft/", user_views.draft_projects_view, name="draft_projects"),
     path("projects/active/", user_views.active_projects_view, name="active_projects"),
@@ -21,37 +20,44 @@ urlpatterns = [
         user_views.archived_projects_view,
         name="archived_projects",
     ),
-    path("project/create/", user_views.create_project_view, name="create_project"),
+    
+    # Refactored
+    path("projects/create/", user_views.create_project_view, name="create_project"),
     path(
-        "project/project_plan/<str:pk>/",
+        "projects/<str:pk>/",
+        user_views.open_project_view,
+        name="view_project",
+    ),
+
+    path(
+        "projects/<str:pk>/update",
         user_views.update_project_view,
         name="update_project",
     ),
     path(
-        "project/project_plan/archive/<str:pk>/",
+        "projects/<str:pk>/delete",
+        user_views.delete_project,
+        name="delete_project",
+    ),
+    # End Refactored
+
+    path(
+        "projects/project_plan/archive/<str:pk>/",
         user_views.archive_project,
         name="archive_project",
     ),
     path(
-        "project/project_plan/unarchive/<str:pk>/",
+        "projects/project_plan/unarchive/<str:pk>/",
         user_views.unarchive_project,
         name="unarchive_project",
     ),
+   
     path(
-        "project/project_plan/delete/<str:pk>/",
-        user_views.delete_project,
-        name="delete_project",
-    ),
-    path(
-        "project/project_plan/copy/<str:pk>/",
+        "projects/project_plan/copy/<str:pk>/",
         user_views.copy_project,
         name="copy_project",
     ),
-    path(
-        "project/view_project/<str:pk>/",
-        user_views.open_project_view,
-        name="view_project",
-    ),
+    
     # Projects Activity Plannings CRUD
     path(
         "project/activity_plan/copy/<str:project>/<str:plan>/",

@@ -35,7 +35,7 @@ from .models import (
     TargetLocation,
 )
 
-RECORDS_PER_PAGE = 3
+RECORDS_PER_PAGE = 10
 
 
 # TODO: Add is_safe_url to redirects
@@ -136,56 +136,13 @@ def load_facility_sites(request):
     return JsonResponse(response, safe=False)
 
 
-# TODO: Project View Structure can be improved.
-@cache_control(no_store=True)
-@login_required
-def draft_projects_view(request):
-    """Projects"""
-
-    all_projects = Project.objects.all()
-    draft_projects = all_projects.filter(state="draft").order_by("-id")
-    draft_projects_count = draft_projects.count()
-    active_projects = all_projects.filter(state="in-progress")
-    completed_projects = all_projects.filter(state="done")
-    archived_projects = all_projects.filter(state="archive")
-
-    # Setup Filter
-    project_filter = ProjectsFilter(request.GET, queryset=draft_projects)
-    draft_projects = project_filter.qs
-
-    # Setup Pagination
-    p = Paginator(draft_projects, RECORDS_PER_PAGE)
-    page = request.GET.get("page")
-    p_draft_projects = p.get_page(page)
-    total_pages = "a" * p_draft_projects.paginator.num_pages
-
-    context = {
-        "draft_view": True,
-        "draft_projects_count": draft_projects_count,
-        "projects": p_draft_projects,
-        "active_projects": active_projects,
-        "completed_projects": completed_projects,
-        "archived_projects": archived_projects,
-        "project_filter": project_filter,
-        "total_pages": total_pages,
-    }
-    return render(request, "rh/projects/views/draft_projects.html", context)
-
 
 @cache_control(no_store=True)
 @login_required
-def active_projects_view(request):
+def projects_view(request):
     """Projects"""
-
-    all_projects = Project.objects.all()
-    active_projects = all_projects.filter(state="in-progress").order_by("-id")
-    active_projects_count = active_projects.count()
-    draft_projects = all_projects.filter(state="draft")
-    completed_projects = all_projects.filter(state="done")
-    archived_projects = all_projects.filter(state="archive")
-
     # Setup Filter
-    project_filter = ProjectsFilter(request.GET, queryset=active_projects)
+    project_filter = ProjectsFilter(request.GET, queryset=Project.objects.all().order_by("-id"))
     active_projects = project_filter.qs
 
     # Setup Pagination
@@ -195,86 +152,17 @@ def active_projects_view(request):
     total_pages = "a" * p_active_projects.paginator.num_pages
 
     context = {
-        "active_view": True,
-        "active_projects_count": active_projects_count,
+        "projects_count": Project.objects.count(),
         "projects": p_active_projects,
-        "draft_projects": draft_projects,
-        "completed_projects": completed_projects,
-        "archived_projects": archived_projects,
+        "draft_projects_count": Project.objects.filter(state="draft").count(),
+        "active_projects_count": Project.objects.filter(state="in-progress").count(),
+        "completed_projects_count": Project.objects.filter(state="done").count(),
+        "archived_projects_count": Project.objects.filter(state="archive").count(),
         "project_filter": project_filter,
         "total_pages": total_pages,
     }
-    return render(request, "rh/projects/views/active_projects.html", context)
+    return render(request, "rh/projects/views/projects_list.html", context)
 
-
-@cache_control(no_store=True)
-@login_required
-def completed_projects_view(request):
-    """Projects"""
-
-    all_projects = Project.objects.all()
-    completed_projects = all_projects.filter(state="done").order_by("-id")
-    completed_projects_count = completed_projects.count()
-    draft_projects = all_projects.filter(state="draft")
-    active_projects = all_projects.filter(state="in-progress")
-    archived_projects = all_projects.filter(state="archive")
-
-    # Setup Filter
-    project_filter = ProjectsFilter(request.GET, queryset=completed_projects)
-    completed_projects = project_filter.qs
-
-    # Setup Pagination
-    p = Paginator(completed_projects, RECORDS_PER_PAGE)
-    page = request.GET.get("page")
-    p_completed_projects = p.get_page(page)
-    total_pages = "a" * p_completed_projects.paginator.num_pages
-
-    context = {
-        "completed_view": True,
-        "completed_projects_count": completed_projects_count,
-        "projects": p_completed_projects,
-        "draft_projects": draft_projects,
-        "active_projects": active_projects,
-        "archived_projects": archived_projects,
-        "project_filter": project_filter,
-        "total_pages": total_pages,
-    }
-    return render(request, "rh/projects/views/completed_projects.html", context)
-
-
-@cache_control(no_store=True)
-@login_required
-def archived_projects_view(request):
-    """Projects"""
-
-    all_projects = Project.objects.all()
-    archived_projects = all_projects.filter(state="archive").order_by("-id")
-    archived_projects_count = archived_projects.count()
-    completed_projects = all_projects.filter(state="done")
-    draft_projects = all_projects.filter(state="draft")
-    active_projects = all_projects.filter(state="in-progress")
-
-    # Setup Filter
-    project_filter = ProjectsFilter(request.GET, queryset=archived_projects)
-    archived_projects = project_filter.qs
-
-    # Setup Pagination
-    p = Paginator(archived_projects, RECORDS_PER_PAGE)
-    page = request.GET.get("page")
-    p_archived_projects = p.get_page(page)
-    total_pages = "a" * p_archived_projects.paginator.num_pages
-
-    context = {
-        "archived_view": True,
-        "archived_projects_count": archived_projects_count,
-        "projects": p_archived_projects,
-        "draft_projects": draft_projects,
-        "active_projects": active_projects,
-        "completed_projects": completed_projects,
-        "project_filter": project_filter,
-        "total_pages": total_pages,
-    }
-    return render(request, "rh/projects/views/archived_projects.html", context)
 
 
 @cache_control(no_store=True)

@@ -36,7 +36,7 @@
             <div class="sidebar-nav-holder">
                 <ul class="sidebar-nav">
                     <li class="{% if project_planning %}current{% endif %}">
-                        <a href="{% if project %}{% url 'update_project' project.pk %}{% else %}{% url 'create_project' %}{% endif %}">
+                        <a href="{% if project %}{% url 'projects-update' project.pk %}{% else %}{% url 'projects-create' %}{% endif %}">
                             Project Planning
                         </a>
                     </li>

@@ -42,7 +42,7 @@
                     {% endfor %}
                 </li>
             </ul>
-            <a href="{% url 'update_project' project.pk %}" class="btn btn-red">Edit</a>
+            <a href="{% url 'projects-update' project.pk %}" class="btn btn-red">Edit</a>
             
         </div>
         <div class="bottom-block">
@@ -517,7 +517,7 @@
                     </a>
                 {% endif %}
                 <a href="#"
-                    data-url="{% url 'delete_project' project.pk %}"
+                    data-url="{% url 'projects-delete' project.pk %}"
                     data-type="delete" 
                     data-name="project"
                     data-verify="{{project.state}}"  

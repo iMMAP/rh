@@ -1,5 +1,6 @@
 {% extends "../_base.html" %}
-
+{% load static %}
+{% load vite %}
 {% block content %}
 
 <div class="container px-4 px-lg-5 h-100">
@@ -25,8 +26,10 @@
                     </h5>
                     {% for stock in stocks %}
                     <div class="accordion mb-3" id="stock_details_{{ warehouse_location.id }}_{{ forloop.counter0 }}">
-                        <div class="accordion-item">
-                            <h2 class="accordion-header"
+                        
+                        <div class="inner-holder">
+                            <h2 class="block-top stock-accordion-opener"
+
                                 id="stock_details_header_{{ warehouse_location.id }}_{{ forloop.counter0 }}">
                                 <button class="accordion-button" type="button" data-bs-toggle="collapse"
                                     data-bs-target="#collapse_{{ warehouse_location.id }}_{{ forloop.counter0 }}"
@@ -36,14 +39,104 @@
                                     {{ stock.stock_type }}, {{ stock.targeted_groups }}
                                 </button>
                             </h2>
-                            <div id="collapse_{{ warehouse_location.id }}_{{ forloop.counter0 }}"
-                                class="accordion-collapse collapse show"
+
+                            <div id="collapse_{{ warehouse_location.id }}_{{ forloop.counter0 }} " 
+                                class="accordion-collapse collapse hide"
                                 aria-labelledby="stock_details_header_{{ warehouse_location.id }}_{{ forloop.counter0 }}"
                                 data-bs-parent="#stock_details_{{ warehouse_location.id }}_{{ forloop.counter0 }}">
-                                <div class="accordion-body"
+                                
+                                <div class="stock-accordion-slide"
                                     id="accordion_body_{{ warehouse_location.id }}_{{ forloop.counter0 }}">
-                                    <div class="row">
-                                        <div class="col-sm">
+
+                                    <div class="multiple-fields-row three-items">
+                                        <div class="field-col">
+                                             <div class="select-field">
+                                                <h5>Cluster</h5>
+                                                <div class="btn btn-red">{{stock.cluster}}</div>
+                                                
+                                             </div>                                               
+                                        </div>
+
+                                        <div class="field-col">
+                                             <div class="select-field">
+                                                <h5>Stock Purpose</h5>
+                                                <span class="btn btn-red">{{stock.stock_purpose}}</span>
+                                                
+                                             </div>                                               
+                                        </div>
+
+                                        <div class="field-col">
+                                             <div class="select-field">
+                                                <h5>Cluster</h5>
+                                                <span class="btn btn-red">{{stock.targeted_groups}}</span>
+                                                
+                                             </div>                                               
+                                        </div>
+                                        
+                                    </div>
+
+                                    <div class="multiple-fields-row three-items">
+                                        <div class="field-col">
+                                             <div class="select-field">
+                                                <h5>Stock Type </h5>
+                                                <span class="btn btn-red">{{stock.stock_type}}</span>
+                                                
+                                             </div>                                               
+                                        </div>
+
+                                        <div class="field-col">
+                                             <div class="select-field">
+                                                <h5>Stock Status</h5>
+                                                <span class="btn btn-red">{{stock.status }}</span>
+                                                
+                                             </div>                                               
+                                        </div>
+
+                                        <div class="field-col">
+                                             <div class="select-field">
+                                                <h5>Stock Unit</h5>
+                                                <span class="btn btn-red">{{stock.stock_unit}}</span>
+                                                
+                                             </div>                                               
+                                        </div>
+                                        
+                                    </div>
+
+                                    <div class="multiple-fields-row three-items">
+                                        <div class="field-col">
+                                             <div class="select-field">
+                                                <h5>No. in Stock</h5>
+                                                <span class="btn btn-red">{{stock.qty_in_stock}}</span>
+                                                
+                                             </div>                                               
+                                        </div>
+
+                                        <div class="field-col">
+                                             <div class="select-field">
+                                                <h5>No. in Pipeline</h5>
+                                                <span class="btn btn-red">{{stock.qty_in_pipeline }}</span>
+                                                
+                                             </div>                                               
+                                        </div>
+
+                                        <div class="field-col">
+                                             <div class="select-field">
+                                                <h5>Beneficiary Coverage</h5>
+                                                <span class="btn btn-red">{{stock.beneficiary_coverage }}</span>
+                                                
+                                             </div>                                               
+                                        </div>
+                                        
+                                    </div>
+                                    
+                                    
+                                    
+                                    
+                                    
+                                    <!-- <div class="row">
+                                        <div class="col">
+                                            
+                                            
                                             <b>
                                                 Cluster
                                             </b> <br />
@@ -111,7 +204,8 @@
                                             <br /><br />
                                             <br />
                                         </div>
-                                    </div>
+                                    </div> -->
+
                                 </div>
                             </div>
                         </div>
@@ -131,5 +225,8 @@
         </div>
     </div>
 </div>
+
+{% comment %} Full Pack relative to location of manage.py file {% endcomment %}
+{% vite 'stock/static/stock/stock.js' %}
 
 {% endblock content %}

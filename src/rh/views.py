@@ -136,23 +136,26 @@ def load_facility_sites(request):
     return JsonResponse(response, safe=False)
 
 
-
 @cache_control(no_store=True)
 @login_required
 def projects_view(request):
     """Projects"""
     # Setup Filter
-    project_filter = ProjectsFilter(request.GET, queryset=Project.objects.all().order_by("-id"))
-    active_projects = project_filter.qs
+    project_filter = ProjectsFilter(
+        request.GET,
+        queryset=Project.objects.all()
+        .prefetch_related("clusters", "programme_partners", "implementing_partners")
+        .order_by("-id"),
+    )
 
     # Setup Pagination
-    p = Paginator(active_projects, RECORDS_PER_PAGE)
+    p = Paginator(project_filter.qs, RECORDS_PER_PAGE)
     page = request.GET.get("page")
     p_active_projects = p.get_page(page)
     total_pages = "a" * p_active_projects.paginator.num_pages
 
     context = {
-        "projects_count": Project.objects.count(),
+        "projects_count": p.count,
         "projects": p_active_projects,
         "draft_projects_count": Project.objects.filter(state="draft").count(),
         "active_projects_count": Project.objects.filter(state="in-progress").count(),
@@ -162,7 +165,6 @@ def projects_view(request):
         "total_pages": total_pages,
     }
     return render(request, "rh/projects/views/projects_list.html", context)
-
 
 
 @cache_control(no_store=True)

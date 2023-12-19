@@ -92,7 +92,7 @@ def stock_report_view(request, pk):
             "report": stock_report,
             "warehouse_location_stocks": warehouse_location_stocks,
         }
-        return render(request, "stocks/stock_report_view.html", context)
+        return render(request, "stock/stock_report_view.html", context)
 
     form = StockReportForm(instance=stock_report)
 
@@ -168,5 +168,7 @@ def submit_stock_report_form(request, pk):
     StockReports.objects.filter(id=pk).update(submitted=True, submitted_at=datetime.datetime.now())
     return redirect("all_stock_report")
 
-def edit_submitted_stock(request):
-    return render(request, 'stock/edit_submitted_stock.html')
+
+def edit_submitted_stock(request, pk):
+    StockReports.objects.get(id=pk)
+    return redirect("stock_report", pk=pk)

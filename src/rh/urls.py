@@ -8,19 +8,8 @@ urlpatterns = [
     # Organization CRUD
     path("organizations/create/", user_views.organization_register, name="organizations-create"),
     # Projects CRUD
-    path("projects/draft/", user_views.draft_projects_view, name="draft_projects"),
-    path("projects/active/", user_views.active_projects_view, name="active_projects"),
-    path(
-        "projects/completed/",
-        user_views.completed_projects_view,
-        name="completed_projects",
-    ),
-    path(
-        "projects/archived/",
-        user_views.archived_projects_view,
-        name="archived_projects",
-    ),
     # Refactored
+    path("projects/", user_views.projects_view, name="projects-list"),
     path(
         "projects/create/", 
         user_views.create_project_view, 

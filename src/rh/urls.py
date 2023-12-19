@@ -8,7 +8,6 @@ urlpatterns = [
     # Organization CRUD
     path("organizations/create/", user_views.organization_register, name="organizations-create"),
     # Projects CRUD
-    # Refactored
     path("projects/", user_views.projects_list, name="projects-list"),
     path(
         "projects/create/", 
@@ -30,7 +29,6 @@ urlpatterns = [
         user_views.delete_project,
         name="projects-delete",
     ),
-    # End Refactored
     path(
         "projects/project_plan/archive/<str:pk>/",
         user_views.archive_project,
@@ -48,7 +46,7 @@ urlpatterns = [
     ),
     # Projects Activity Plannings CRUD
     path(
-        "project/activity_plan/copy/<str:project>/<str:plan>/",
+        "projects/activity_plan/copy/<str:project>/<str:plan>/",
         user_views.copy_activity_plan,
         name="copy_plan",
     ),
@@ -58,44 +56,44 @@ urlpatterns = [
         name="delete_plan",
     ),
     path(
-        "project/activity_plan/create/?project=<str:project>/",
+        "projects/<int:project>/activity_plan/create",
         user_views.create_project_activity_plan,
         name="create_project_activity_plan",
     ),
     # Projects Target Locations CRUD
     path(
-        "project/target_location/copy/<str:project>/<str:location>/",
+        "projects/<int:project>/target_location/<str:location>/copy/",
         user_views.copy_target_location,
         name="copy_location",
     ),
     path(
-        "project/target_location/delete/<str:pk>/",
+        "projects/target_location/<int:pk>/delete",
         user_views.delete_target_location,
         name="delete_location",
     ),
     path(
-        "project/project_plan/review/?project=<str:project>/",
+        "projects/project_plan/review/?project=<str:project>/",
         user_views.project_planning_review,
         name="project_plan_review",
     ),
     path(
-        "project/project_plan/submit/<str:pk>/",
+        "projects/project_plan/submit/<str:pk>/",
         user_views.submit_project,
         name="project_submit",
     ),
     # Financial Reporting
     path(
-        "project/financials/budget_progress/?project=<str:project>/",
+        "projects/financials/budget_progress/?project=<str:project>/",
         user_views.create_project_budget_progress_view,
         name="create_project_budget_progress",
     ),
     path(
-        "project/budget_progress/copy/<str:project>/<str:budget>/",
+        "projects/budget_progress/copy/<str:project>/<str:budget>/",
         user_views.copy_budget_progress,
         name="copy_budget",
     ),
     path(
-        "project/budget_progress/delete/<str:pk>/",
+        "projects/budget_progress/delete/<str:pk>/",
         user_views.delete_budget_progress,
         name="delete_budget",
     ),

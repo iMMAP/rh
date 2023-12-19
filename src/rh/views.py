@@ -138,7 +138,7 @@ def load_facility_sites(request):
 
 @cache_control(no_store=True)
 @login_required
-def projects_view(request):
+def projects_list(request):
     """Projects"""
     # Setup Filter
     project_filter = ProjectsFilter(
@@ -151,12 +151,12 @@ def projects_view(request):
     # Setup Pagination
     p = Paginator(project_filter.qs, RECORDS_PER_PAGE)
     page = request.GET.get("page")
-    p_active_projects = p.get_page(page)
-    total_pages = "a" * p_active_projects.paginator.num_pages
+    p_projects = p.get_page(page)
+    total_pages = "a" * p_projects.paginator.num_pages
 
     context = {
-        "projects_count": p.count,
-        "projects": p_active_projects,
+        "projects_count": Project.objects.all().count,
+        "projects": p_projects,
         "draft_projects_count": Project.objects.filter(state="draft").count(),
         "active_projects_count": Project.objects.filter(state="in-progress").count(),
         "completed_projects_count": Project.objects.filter(state="done").count(),
@@ -169,30 +169,28 @@ def projects_view(request):
 
 @cache_control(no_store=True)
 @login_required
-def open_project_view(request, pk):
-    """View for creating a project."""
-
-    project = get_object_or_404(Project, pk=pk)
-    activity_plans = project.activityplan_set.all()
-    target_locations = project.targetlocation_set.all()
-    plans = list(activity_plans.values_list("pk", flat=True))
-    locations = list(target_locations.values_list("pk", flat=True))
-
-    project_state = project.state
-    parent_page = {
-        "in-progress": "active_projects",
-        "draft": "draft_projects",
-        "done": "completed_projects",
-        "archive": "archived_projects",
-    }.get(project_state, None)
+def projects_detail(request, pk):
+    """View for viewing a project.
+    url: projects/<str:pk>/
+    """
+    project = get_object_or_404(
+        Project.objects.prefetch_related(
+            "clusters",
+            "donors",
+            "programme_partners",
+            "implementing_partners",
+            Prefetch(
+                "activityplan_set",
+                ActivityPlan.objects.select_related("activity_domain", "beneficiary").prefetch_related(
+                    "targetlocation_set", "indicators", "activity_type", "activity_detail"
+                ),
+            ),
+        ),
+        pk=pk,
+    )
 
     context = {
         "project": project,
-        "activity_plans": activity_plans,
-        "target_locations": target_locations,
-        "plans": plans,
-        "locations": locations,
-        "parent_page": parent_page,
         "project_view": True,
         "financial_view": False,
         "reports_view": False,
@@ -249,25 +247,10 @@ def update_project_view(request, pk):
     else:
         form = ProjectForm(instance=project)
 
-    activity_plans = project.activityplan_set.all()
-    plans = list(activity_plans.values_list("pk", flat=True))
-    target_locations = project.targetlocation_set.all()
-    locations = list(target_locations.values_list("pk", flat=True))
-    project_state = project.state
-    parent_page = {
-        "in-progress": "active_projects",
-        "draft": "draft_projects",
-        "done": "completed_projects",
-        "archive": "archived_projects",
-    }.get(project_state, None)
-
     context = {
         "form": form,
         "project": project,
         "project_planning": True,
-        "plans": plans,
-        "locations": locations,
-        "parent_page": parent_page,
         "project_view": True,
         "financial_view": False,
         "reports_view": False,
@@ -292,8 +275,6 @@ def create_project_activity_plan(request, project):
     project = get_object_or_404(Project, pk=project)
 
     # Get all existing activity plans for the project
-    activity_plans = project.activityplan_set.all()
-
     # Create the activity plan formset with initial data from the project
     activity_plan_formset = ActivityPlanFormSet(
         request.POST or None, instance=project, form_kwargs={"project": project}
@@ -391,17 +372,7 @@ def create_project_activity_plan(request, project):
             pass
 
     # Prepare data for rendering the template
-    plans = list(activity_plans.values_list("pk", flat=True))
-    clusters = project.clusters.all()
-    cluster_ids = list(clusters.values_list("pk", flat=True))
-
-    project_state = project.state
-    parent_page = {
-        "in-progress": "active_projects",
-        "draft": "draft_projects",
-        "done": "completed_projects",
-        "archive": "archived_projects",
-    }.get(project_state, None)
+    cluster_ids = list(project.clusters.values_list('id',flat=True))
 
     combined_formset = zip(activity_plan_formset.forms, target_location_formsets)
 
@@ -412,8 +383,6 @@ def create_project_activity_plan(request, project):
         "combined_formset": combined_formset,
         "clusters": cluster_ids,
         "activity_planning": True,
-        "plans": plans,
-        "parent_page": parent_page,
         "project_view": True,
         "financial_view": False,
         "reports_view": False,
@@ -528,12 +497,6 @@ def get_activity_empty_form(request):
     # Get the project object based on the provided project ID
     project = get_object_or_404(Project, pk=request.POST.get("project"))
 
-    # Get all activity plans associated with the project
-    activity_plans = project.activityplan_set.all()
-
-    # Extract a list of primary keys (pk) from activity plans
-    plans = list(activity_plans.values_list("pk", flat=True))
-
     # Prepare form_kwargs to pass to ActivityPlanFormSet
     form_kwargs = {"project": project}
 
@@ -553,7 +516,6 @@ def get_activity_empty_form(request):
         "form": activity_plan_formset.empty_form,
         "target_location_formset": target_location_formset,
         "project": project,
-        "plans": plans,
     }
 
     # Render the activity empty form template and generate HTML
@@ -575,20 +537,12 @@ def project_planning_review(request, **kwargs):
     project = get_object_or_404(Project, pk=pk)
     activity_plans = project.activityplan_set.all()
     target_locations = [activity_plan.targetlocation_set.all() for activity_plan in activity_plans]
-    project_state = project.state
-    parent_page = {
-        "in-progress": "active_projects",
-        "draft": "draft_projects",
-        "done": "completed_projects",
-        "archive": "archived_projects",
-    }.get(project_state, None)
 
     context = {
         "project": project,
         "activity_plans": activity_plans,
         "target_locations": target_locations,
         "project_review": True,
-        "parent_page": parent_page,
         "project_view": True,
         "financial_view": False,
         "reports_view": False,
@@ -616,8 +570,11 @@ def submit_project(request, pk):
         plan.state = "in-progress"
         plan.save()
 
-    url = reverse(
-        "active_projects",
+    url = (
+        reverse(
+            "projects-list",
+        )
+        + "?state=draft"
     )
 
     # Return the URL in a JSON response
@@ -658,8 +615,11 @@ def archive_project(request, pk):
         project.active = False
         project.save()
 
-    url = reverse(
-        "draft_projects",
+    url = (
+        reverse(
+            "projects-list",
+        )
+        + "?state=draft"
     )
 
     # Return the URL in a JSON response
@@ -702,8 +662,11 @@ def unarchive_project(request, pk):
         project.active = True
         project.save()
 
-    url = reverse(
-        "draft_projects",
+    url = (
+        reverse(
+            "projects-list",
+        )
+        + "?state=draft"
     )
     # Return the URL in a JSON response
     response_data = {"redirect_url": url}
@@ -718,8 +681,11 @@ def delete_project(request, pk):
     if project.state != "archive":
         if project:
             project.delete()
-        url = reverse(
-            "draft_projects",
+        url = (
+            reverse(
+                "projects-list",
+            )
+            + "?state=draft"
         )
 
     # Return the URL in a JSON response
@@ -773,7 +739,7 @@ def copy_project(request, pk):
         # Save the changes made to the new project.
         new_project.save()
 
-        url = reverse("view_project", args=[new_project.pk])
+        url = reverse("projects-detail", args=[new_project.pk])
 
         # Return the URL in a JSON response
         response_data = {"redirect_url": url}
@@ -984,18 +950,10 @@ def create_project_budget_progress_view(request, project):
                     messages.error(request, error_message)
 
     # progress = list(budget_progress.values_list("pk", flat=True))
-    project_state = project.state
-    parent_page = {
-        "in-progress": "active_projects",
-        "draft": "draft_projects",
-        "done": "completed_projects",
-        "archive": "archived_projects",
-    }.get(project_state, None)
 
     context = {
         "project": project,
         "formset": formset,
-        "parent_page": parent_page,
         "project_view": False,
         "financial_view": True,
         "reports_view": False,

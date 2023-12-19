@@ -334,6 +334,7 @@ function updateLocationBlockTitles(locationPrefix) {
 
 
 /**
+ * TODO: Make it generic
 * Get Districts and Zpnes for Target Location Form
 **/
 function getLocations(locationPrefix, locationType, parentType, clearZone=null) {
@@ -365,17 +366,24 @@ function getLocations(locationPrefix, locationType, parentType, clearZone=null) 
 				xhr.setRequestHeader("X-CSRFToken", csrftoken);
 			},
 			success: function (data) {
-				if (data) {
-					// Clear zone if needed
-					if (parentType === 'province' && clearZone === true) {
-						$(`#id_${locationPrefix}-zone`).html('').val('');
-					}
-	
+				debugger
+
+				// Clear zone if needed
+				if (parentType === 'province' && clearZone === true) {
+					$(`#id_${locationPrefix}-zone`).html('').val('');
+				}
+				if (data){
 					// Update the location select element
 					$(`#id_${locationPrefix}-${locationType}`).html(data);
 					$(`select#id_${locationPrefix}-${locationType}`).val(selectedLocations);
-	
 				}
+
+				if(locationType == 'zone' && data === ''){
+					$(`#id_${locationPrefix}-${locationType}`).parent().hide();
+				}else{
+					$(`#id_${locationPrefix}-${locationType}`).parent().show();
+				}
+					
 			},
 			error: function (error) {
 				console.log('Error fetching empty form:', error);

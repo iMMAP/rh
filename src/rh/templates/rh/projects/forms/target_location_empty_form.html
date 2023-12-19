@@ -11,17 +11,17 @@
                 <div>
                     <button href="#"
                         data-url="{% url 'copy_location' project=project.pk location=target_location_form.instance.pk  %}"
-                        data-return-url="{% url 'create_project_activity_plan' project=project.pk %}"
                         data-type="copy"
-                        data-record-name="target location"
-                        class="btn btn-gray-outline show_confirm"><span class="btn-text">Duplicate</span><span class="icon-copy-outline"></span>
+                        data-name="target location" 
+                        class="btn btn-gray-outline show-sw-action-popup">
+                        <span class="icon-copy"></span>
+                        <span class="btn-text">Duplicate</span>
                     </button>
                     <button href="#"
-                        data-url="{% url 'delete_location' target_location_form.instance.pk %}"
-                        data-return-url="{% url 'create_project_activity_plan' project=project.pk %}"
-                        data-type="delete"
-                        data-record-name="target location"
-                        class="btn btn-gray-outline show_confirm">
+                            data-url="{% url 'delete_location' target_location_form.instance.pk %}"
+                            data-type="delete" 
+                            data-name="target location" 
+                            class="btn btn-gray-outline show-sw-action-popup">
                         <span class="icon-trashbin"></span>
                         <span class="btn-text">Delete</span>
                     </button>

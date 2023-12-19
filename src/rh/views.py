@@ -105,6 +105,8 @@ def load_locations_details(request):
                 [f'<option value="{location.pk}">{location}</option>' for location in parent.children.order_by("name")]
             )
             + "</optgroup>"
+            if parent.children.exists()
+            else ""
             for parent in parents
         ]
     )
@@ -900,7 +902,12 @@ def copy_target_location(request, project, location):
         new_location.state = "draft"
         new_location.title = f"[COPY] - {target_location.title}"
         new_location.save()
-    return JsonResponse({"success": True})
+
+    url = reverse("create_project_activity_plan", args=[project.pk])
+
+    # Return the URL in a JSON response
+    response_data = {"redirect_url": url}
+    return JsonResponse(response_data)
 
 
 @cache_control(no_store=True)
@@ -910,7 +917,12 @@ def delete_target_location(request, pk):
     target_location = get_object_or_404(TargetLocation, pk=pk)
     if target_location:
         target_location.delete()
-    return JsonResponse({"success": True})
+
+    url = reverse("create_project_activity_plan", args=[target_location.project.pk])
+
+    # Return the URL in a JSON response
+    response_data = {"redirect_url": url}
+    return JsonResponse(response_data)
 
 
 #############################################

@@ -5,10 +5,10 @@
         <div class="holder">
             <ul class="breadcrumbs">
                 <li>
-                    <a href="{% url 'home' %}">Home</a>
+                    <a href="{% url 'landing' %}">Home</a>
                 </li>
                 <li>
-                    <a id="return-url" href="{% url parent_page %}">
+                    <a id="return-url" href="{% url 'projects-list' %}?state={{project.state}}">
                         {% if project.state == 'in-progress' %}
                             Active Projects
                         {% elif project.state == 'draft' %}

@@ -1,4 +1,4 @@
-<tr data-url="{% url 'view_project' project.id %}">
+<tr data-url="{% url 'projects-detail' project.id %}">
     <td class="cluster-col">
         <div class="table-flex-holder">
             <div class="input-check-holder">
@@ -99,7 +99,7 @@
                 <li>
                     <button>
                         <a href="#"
-                            data-url="{% url 'delete_project' project.pk %}"
+                            data-url="{% url 'projects-delete' project.pk %}"
                             data-type="delete"
                             data-verify="{{project.state}}" 
                             data-name="project" 

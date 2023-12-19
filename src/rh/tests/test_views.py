@@ -11,37 +11,22 @@ class TestLoggedInViews(TestCase):
         self.user = User.objects.create_user(username="testuser", password="testpassword")
         self.client.login(username="testuser", password="testpassword")
 
-        self.index_url = reverse("index")
-        self.home_url = reverse("home")
+        self.landing_url = reverse("landing")
         self.load_locations_details_url = reverse("ajax-load-locations")
         self.load_facility_sites_url = reverse("ajax-load-facility_sites")
 
-    def test_index_view(self):
+    def test_landing_view(self):
         # Create dummy data
-        User.objects.create(username="user1")
         Location.objects.create(name="location1", parent=None)
 
-        response = self.client.get(self.index_url)
+        response = self.client.get(self.landing_url)
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, "index.html")
+        self.assertTemplateUsed(response, "landing.html")
         self.assertContains(response, "Users")
         self.assertContains(response, "Locations")
         self.assertContains(response, User.objects.all().count())
         self.assertContains(response, Location.objects.all().count())
-        print("Logged In. Welcome Index Page. Test for index view (authenticated user) passed.")
-
-    def test_home_view(self):
-        # Create dummy data
-        Location.objects.create(name="location1", parent=None)
-
-        response = self.client.get(self.home_url)
-        self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, "home.html")
-        self.assertContains(response, "Users")
-        self.assertContains(response, "Locations")
-        self.assertContains(response, User.objects.all().count())
-        self.assertContains(response, Location.objects.all().count())
-        print("Logged In! Welcome to Home Page. Test for home view (authenticated user) passed.")
+        print("Logged In! Welcome to landing Page. Test for landing view (authenticated user) passed.")
 
     def test_load_locations_details_view(self):
         # Create dummy provinces and districts
@@ -77,32 +62,23 @@ class TestLoggedInViews(TestCase):
 class TestNotLoggedInViews(TestCase):
     def setUp(self):
         self.client = Client()
-        self.index_url = reverse("index")
-        self.home_url = reverse("home")
+        self.landing_url = reverse("landing")
         self.load_locations_details_url = reverse("ajax-load-locations")
         self.load_facility_sites_url = reverse("ajax-load-facility_sites")
 
-    def test_index_view(self):
+    def test_landing_view(self):
         # Create dummy data
         User.objects.create(username="user1")
         Location.objects.create(name="location1", parent=None)
 
-        response = self.client.get(self.index_url)
+        response = self.client.get(self.landing_url)
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, "index.html")
+        self.assertTemplateUsed(response, "landing.html")
         self.assertContains(response, "Users")
         self.assertContains(response, "Locations")
         self.assertContains(response, User.objects.all().count())
         self.assertContains(response, Location.objects.all().count())
-        print("Logged In! Welcome to Index Page. Test for index view (unauthenticated user) passed.")
-
-    def test_home_view(self):
-        # Create dummy data
-        Location.objects.create(name="location1", parent=None)
-
-        response = self.client.get(self.home_url)
-        self.assertEqual(response.status_code, 302)
-        print("Access Denied! Please login and try again. Test for home view (unauthenticated user) passed.")
+        print("Logged In! Welcome to landing Page. Test for landing view (unauthenticated user) passed.")
 
     def test_load_locations_details_view(self):
         # Create dummy provinces and districts

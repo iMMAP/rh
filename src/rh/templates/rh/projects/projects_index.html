@@ -10,17 +10,13 @@
         <div class="page-navigation-panel">
             <div class="holder">
                 <div class="link-holder">
-                    {% if parent_page %}
-                        <a href="{% url parent_page %}" class="btn-back">Back to All Projects</a>
-                    {% else %}
-                        <a href="{% url 'active_projects' %}" class="btn-back">Back to Active Projects</a>
-                    {% endif %}
+                    <a href="{% url 'projects-list' %}?state=in-progress" class="btn-back">Back to Active Projects</a>
                 </div>
 
                 <div class="tabs-nav-holder">
                     <ul class="tabs-nav">
                         <li class="{% if project_view %}active{% endif %}">
-                            <a href="{% if project %}{% url 'view_project' project.pk %}{% else %}{% url 'create_project' %}{% endif %}">Project
+                            <a href="{% if project %}{% url 'projects-detail' project.pk %}{% else %}{% url 'projects-create' %}{% endif %}">Project
                             planning</a>
                         </li>
                         <li class="{% if financial_view %}active{% endif %}">

@@ -20,18 +20,19 @@
                     </h5>
 
                     {% for warehouse_location, stocks in warehouse_location_stocks.items %}
-                    <h5 class="p-2" style="background-color: aliceblue;">
+                    <h5 class="p-2">
                         <i class="fa fa-map-marker" aria-hidden="true"></i> &nbsp;{{ warehouse_location.province.name }},
                         {{ warehouse_location.district.name }}, {{ warehouse_location.name }}
                     </h5>
                     {% for stock in stocks %}
-                    <div class="accordion mb-3" id="stock_details_{{ warehouse_location.id }}_{{ forloop.counter0 }}">
+                    <div class=" stock-block stock-accordion" 
+                        id="stock_details_{{ warehouse_location.id }}_{{ forloop.counter0 }}">
                         
                         <div class="inner-holder">
                             <h2 class="block-top stock-accordion-opener"
 
                                 id="stock_details_header_{{ warehouse_location.id }}_{{ forloop.counter0 }}">
-                                <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                                     data-bs-target="#collapse_{{ warehouse_location.id }}_{{ forloop.counter0 }}"
                                     aria-expanded="false"
                                     aria-controls="collapse_{{ warehouse_location.id }}_{{ forloop.counter0 }}">
@@ -51,7 +52,7 @@
                                     <div class="multiple-fields-row three-items">
                                         <div class="field-col">
                                              <div class="select-field">
-                                                <h5>Cluster</h5>
+                                                <h6>Cluster</h6>
                                                 <div class="btn btn-red">{{stock.cluster}}</div>
                                                 
                                              </div>                                               
@@ -59,7 +60,7 @@
 
                                         <div class="field-col">
                                              <div class="select-field">
-                                                <h5>Stock Purpose</h5>
+                                                <h6>Stock Purpose</h6>
                                                 <span class="btn btn-red">{{stock.stock_purpose}}</span>
                                                 
                                              </div>                                               
@@ -67,7 +68,7 @@
 
                                         <div class="field-col">
                                              <div class="select-field">
-                                                <h5>Cluster</h5>
+                                                <h6>Cluster</h6>
                                                 <span class="btn btn-red">{{stock.targeted_groups}}</span>
                                                 
                                              </div>                                               
@@ -78,7 +79,7 @@
                                     <div class="multiple-fields-row three-items">
                                         <div class="field-col">
                                              <div class="select-field">
-                                                <h5>Stock Type </h5>
+                                                <h6>Stock Type </h6>
                                                 <span class="btn btn-red">{{stock.stock_type}}</span>
                                                 
                                              </div>                                               
@@ -86,7 +87,7 @@
 
                                         <div class="field-col">
                                              <div class="select-field">
-                                                <h5>Stock Status</h5>
+                                                <h6>Stock Status</h6>
                                                 <span class="btn btn-red">{{stock.status }}</span>
                                                 
                                              </div>                                               
@@ -94,7 +95,7 @@
 
                                         <div class="field-col">
                                              <div class="select-field">
-                                                <h5>Stock Unit</h5>
+                                                <h6>Stock Unit</h6>
                                                 <span class="btn btn-red">{{stock.stock_unit}}</span>
                                                 
                                              </div>                                               
@@ -105,7 +106,7 @@
                                     <div class="multiple-fields-row three-items">
                                         <div class="field-col">
                                              <div class="select-field">
-                                                <h5>No. in Stock</h5>
+                                                <h6>No. in Stock</h6>
                                                 <span class="btn btn-red">{{stock.qty_in_stock}}</span>
                                                 
                                              </div>                                               
@@ -113,7 +114,7 @@
 
                                         <div class="field-col">
                                              <div class="select-field">
-                                                <h5>No. in Pipeline</h5>
+                                                <h6>No. in Pipeline</h6>
                                                 <span class="btn btn-red">{{stock.qty_in_pipeline }}</span>
                                                 
                                              </div>                                               
@@ -121,7 +122,7 @@
 
                                         <div class="field-col">
                                              <div class="select-field">
-                                                <h5>Beneficiary Coverage</h5>
+                                                <h6>Beneficiary Coverage</h6>
                                                 <span class="btn btn-red">{{stock.beneficiary_coverage }}</span>
                                                 
                                              </div>                                               

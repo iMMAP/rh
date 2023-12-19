@@ -34,16 +34,9 @@ def index_project_report_view(request, project):
     project_report_archive = project_reports.filter(active=False)
     project_reports_todo = active_project_reports.filter(state__in=["todo", "pending", "submit", "reject"])
     project_report_complete = active_project_reports.filter(state="complete")
-    project_state = project.state
-    parent_page = {
-        "in-progress": "active_projects",
-        "draft": "draft_projects",
-        "done": "completed_projects",
-        "archive": "archived_projects",
-    }.get(project_state, None)
+   
     context = {
         "project": project,
-        "parent_page": parent_page,
         "project_reports": active_project_reports,
         "project_reports_todo": project_reports_todo,
         "project_report_complete": project_report_complete,
@@ -76,13 +69,7 @@ def create_project_monthly_report_view(request, project):
         initial={"report_due_date": end_of_month, "project": project},
     )
 
-    project_state = project.state
-    parent_page = {
-        "in-progress": "active_projects",
-        "draft": "draft_projects",
-        "done": "completed_projects",
-        "archive": "archived_projects",
-    }.get(project_state, None)
+
 
     if request.method == "POST":
         if form.is_valid():
@@ -100,7 +87,6 @@ def create_project_monthly_report_view(request, project):
     context = {
         "project": project,
         "report_form": form,
-        "parent_page": parent_page,
         "project_view": False,
         "financial_view": False,
         "reports_view": True,
@@ -305,18 +291,10 @@ def details_monthly_progress_view(request, project, report):
     monthly_report = get_object_or_404(ProjectMonthlyReport, pk=report)
     activity_reports = monthly_report.activityplanreport_set.select_related("activity_plan", "indicator")
 
-    project_state = project.state
-    parent_page = {
-        "in-progress": "active_projects",
-        "draft": "draft_projects",
-        "done": "completed_projects",
-        "archive": "archived_projects",
-    }.get(project_state, None)
     context = {
         "project": project,
         "monthly_report": monthly_report,
         "activity_reports": activity_reports,
-        "parent_page": parent_page,
         "project_view": False,
         "financial_view": False,
         "reports_view": True,
@@ -500,12 +478,6 @@ def create_project_monthly_report_progress_view(request, project, report):
             # Add error handling code here
             pass
 
-    parent_page = {
-        "in-progress": "active_projects",
-        "draft": "draft_projects",
-        "done": "completed_projects",
-        "archive": "archived_projects",
-    }.get(project_state, None)
 
     combined_formset = zip(activity_report_formset.forms, location_report_formsets)
 
@@ -517,7 +489,6 @@ def create_project_monthly_report_progress_view(request, project, report):
         "activity_report_formset": activity_report_formset,
         # 'location_report_formset': location_report_formset,
         "combined_formset": combined_formset,
-        "parent_page": parent_page,
         "project_view": False,
         "financial_view": False,
         "reports_view": True,
@@ -671,12 +642,7 @@ def update_project_monthly_report_progress_view(request, project, report):
             # Add error handling code here
             pass
 
-    parent_page = {
-        "in-progress": "active_projects",
-        "draft": "draft_projects",
-        "done": "completed_projects",
-        "archive": "archived_projects",
-    }.get(project_state, None)
+   
     combined_formset = zip(activity_report_formset.forms, location_report_formsets)
 
     context = {
@@ -686,7 +652,6 @@ def update_project_monthly_report_progress_view(request, project, report):
         "report_form": monthly_report_instance,
         "activity_report_formset": activity_report_formset,
         "combined_formset": combined_formset,
-        "parent_page": parent_page,
         "project_view": False,
         "financial_view": False,
         "reports_view": True,

@@ -149,7 +149,7 @@ def login_view(request):
             login(request, user)
             if "next" in request.POST:
                 return redirect(request.POST.get("next"))
-            return redirect("index")
+            return redirect("landing")
         else:
             messages.error(request, "Enter correct email and password.")
     context = {}

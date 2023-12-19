@@ -20,27 +20,28 @@ urlpatterns = [
         user_views.archived_projects_view,
         name="archived_projects",
     ),
-    
     # Refactored
-    path("projects/create/", user_views.create_project_view, name="create_project"),
+    path(
+        "projects/create/", 
+        user_views.create_project_view, 
+        name="projects-create"
+    ),
     path(
         "projects/<str:pk>/",
         user_views.open_project_view,
-        name="view_project",
+        name="projects-detail",
     ),
-
     path(
         "projects/<str:pk>/update",
         user_views.update_project_view,
-        name="update_project",
+        name="projects-update",
     ),
     path(
         "projects/<str:pk>/delete",
         user_views.delete_project,
-        name="delete_project",
+        name="projects-delete",
     ),
     # End Refactored
-
     path(
         "projects/project_plan/archive/<str:pk>/",
         user_views.archive_project,
@@ -51,13 +52,11 @@ urlpatterns = [
         user_views.unarchive_project,
         name="unarchive_project",
     ),
-   
     path(
         "projects/project_plan/copy/<str:pk>/",
         user_views.copy_project,
         name="copy_project",
     ),
-    
     # Projects Activity Plannings CRUD
     path(
         "project/activity_plan/copy/<str:project>/<str:plan>/",

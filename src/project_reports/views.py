@@ -33,7 +33,7 @@ def index_project_report_view(request, project):
     project_report_archive = project_reports.filter(active=False)
     project_reports_todo = active_project_reports.filter(state__in=["todo", "pending", "submit", "reject"])
     project_report_complete = active_project_reports.filter(state="complete")
-   
+
     context = {
         "project": project,
         "project_reports": active_project_reports,
@@ -67,8 +67,6 @@ def create_project_monthly_report_view(request, project):
         request.POST or None,
         initial={"report_due_date": end_of_month, "project": project},
     )
-
-
 
     if request.method == "POST":
         if form.is_valid():
@@ -482,7 +480,6 @@ def create_project_monthly_report_progress_view(request, project, report):
             # Add error handling code here
             pass
 
-
     combined_formset = zip(activity_report_formset.forms, location_report_formsets)
 
     context = {
@@ -646,7 +643,6 @@ def update_project_monthly_report_progress_view(request, project, report):
             # Add error handling code here
             pass
 
-   
     combined_formset = zip(activity_report_formset.forms, location_report_formsets)
 
     context = {

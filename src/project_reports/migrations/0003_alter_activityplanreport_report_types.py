@@ -4,16 +4,15 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('rh', '0006_alter_organization_type'),
-        ('project_reports', '0002_activityplanreport_report_types_and_more'),
+        ("rh", "0006_alter_organization_type"),
+        ("project_reports", "0002_activityplanreport_report_types_and_more"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='activityplanreport',
-            name='report_types',
-            field=models.ManyToManyField(blank=True, null=True, to='rh.reporttype'),
+            model_name="activityplanreport",
+            name="report_types",
+            field=models.ManyToManyField(blank=True, null=True, to="rh.reporttype"),
         ),
     ]

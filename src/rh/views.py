@@ -310,6 +310,7 @@ def create_project_activity_plan(request, project):
         # Check if the form was submitted for "Next Step" or "Save & Continue"
         submit_type = request.POST.get("submit_type")
 
+        acitivities_target = {}
         if activity_plan_formset.is_valid():
             # Save valid activity plan forms
             for activity_plan_form in activity_plan_formset:
@@ -317,6 +318,7 @@ def create_project_activity_plan(request, project):
                     "activity_type"
                 ):
                     activity_plan = activity_plan_form.save()
+                    acitivities_target.update({activity_plan.pk: 0})
                     activity_domain_name = activity_plan_form.cleaned_data.get("activity_domain").name
                     activity_type_name = activity_plan_form.cleaned_data.get("activity_type").name
                     title = f"{activity_domain_name}, {activity_type_name}"
@@ -352,12 +354,19 @@ def create_project_activity_plan(request, project):
                                         disaggregation_instance = disaggregation_form.save(commit=False)
                                         disaggregation_instance.target_location = target_location_instance
                                         disaggregation_instance.save()
+                                        acitivities_target[
+                                            target_location_instance.activity_plan_id
+                                        ] += disaggregation_instance.target
                                         new_disaggregations.append(disaggregation_instance.id)
 
                             all_disaggregations = post_target_location_form.instance.disaggregationlocation_set.all()
                             for dis in all_disaggregations:
                                 if dis.id not in new_disaggregations:
                                     dis.delete()
+
+            for activity_plan_form in activity_plan_formset:
+                activity_plan = activity_plan_form.save()
+                activity_plan.total_target = acitivities_target[activity_plan.pk]
 
             activity_plan_formset.save()
 

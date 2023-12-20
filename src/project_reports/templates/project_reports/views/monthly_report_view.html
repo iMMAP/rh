@@ -155,10 +155,25 @@
                             <span class="tooltip-info icon-info" data-tippy-content="Lorem lorem lorem"></span>
                             {{ activity_report.activity_plan }}
                         </span>
+                        {% if activity_report.target_achieved %}
                         <span class="people">
                             <span class="icon-group"></span>
-                            1657
+                            Target Achieved
+                            - <span id="{{ form.prefix }}-people-count">
+                                {{ activity_report.target_achieved }}
+                            </span>
                         </span>
+                        {% endif %}
+                        
+                        {% if activity_report.activity_plan.total_target %}
+                        <span class="people">
+                            <span class="icon-group"></span>
+                            Target Required
+                            - <span id="{{ form.prefix }}-people-count">
+                                {{ activity_report.activity_plan.total_target }}
+                            </span>
+                        </span>
+                        {% endif %}
                     </a>
                     
                     <div class="monthly-accordion-slide">

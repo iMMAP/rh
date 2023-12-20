@@ -9,8 +9,9 @@
             </div>
             <div class="block-activity mb-3">
                 <div>
-                    <button href="#"
-                        data-url="{% url 'copy_location' project=project.pk location=target_location_form.instance.pk  %}"
+                    <button href="#" 
+                        {% if target_location_form.instance.pk %} data-url="{% url 'copy_location' project=project.pk location=target_location_form.instance.pk  %}" {% endif %}
+                        {% comment %} data-url="{% url 'copy_location' project=project.pk location=target_location_form.instance.pk  %}" {% endcomment %}
                         data-type="copy"
                         data-name="target location" 
                         class="btn btn-gray-outline show-sw-action-popup">
@@ -18,7 +19,7 @@
                         <span class="btn-text">Duplicate</span>
                     </button>
                     <button href="#"
-                            data-url="{% url 'delete_location' target_location_form.instance.pk %}"
+                            {% if target_location_form.instance.pk %} data-url="{% url 'delete_location' target_location_form.instance.pk %}" {% endif %}
                             data-type="delete" 
                             data-name="target location" 
                             class="btn btn-gray-outline show-sw-action-popup">
@@ -28,19 +29,8 @@
                 </div>
             </div>
         </div>
-        <div id="{{ target_location_form.prefix }}" >
-            
-            {% comment %} {% if target_location_formset.can_delete %}
-                {% if target_location_form.instance.id %}
-                    <div class="field">
-                        <label>Delete:</label>
-                        {{ target_location_form.DELETE }}
-                    </div>
-                {% endif %}
-            {% endif %} {% endcomment %}
-            
+        <div id="{{ target_location_form.prefix }}" >           
             <div class="row">
-                
                 <div class="col">
                     <div class="multiple-fields-row four-items">
                         <div class="field-col">

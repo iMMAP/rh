@@ -482,7 +482,7 @@ class ActivityPlan(models.Model):
     # facility_lat = models.CharField(max_length=NAME_MAX_LENGTH, null=True, blank=True)
     # facility_long = models.CharField(max_length=NAME_MAX_LENGTH, null=True, blank=True)
 
-    # households = models.IntegerField(default=0, blank=True, null=True)
+    total_target = models.IntegerField(default=0, blank=True, null=True)
     description = models.TextField(blank=True, null=True)
     # old_id = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
 
@@ -508,8 +508,8 @@ class TargetLocation(models.Model):
         ("district", "District"),
     ]
     TARGET_CLASSIFICATION = [
-        ("urban","Urban"),
-        ("rural","Rural"),
+        ("urban", "Urban"),
+        ("rural", "Rural"),
     ]
     project = models.ForeignKey(Project, on_delete=models.CASCADE, null=True, blank=True)
     activity_plan = models.ForeignKey(ActivityPlan, on_delete=models.CASCADE, null=True, blank=True)
@@ -566,7 +566,6 @@ class TargetLocation(models.Model):
     site_long = models.CharField(max_length=255, blank=True, null=True)
     classification = models.CharField(max_length=15, choices=TARGET_CLASSIFICATION, blank=True, null=True)
     old_id = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
-    
 
     def __str__(self):
         return f"{self.project}, {self.province}, {self.district}"

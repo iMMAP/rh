@@ -174,7 +174,7 @@ class BeneficiaryTypeFactory(DjangoModelFactory):
             for cluster in extracted:
                 self.clusters.add(cluster)
         else:
-            clusters = Cluster.objects.all()
+            clusters = Cluster.objects.order_by("?")[:2]
             for cluster in clusters:
                 self.clusters.add(cluster)
 
@@ -212,7 +212,7 @@ class OrganizationFactory(DjangoModelFactory):
             for cluster in extracted:
                 self.clusters.add(cluster)
         else:
-            clusters = Cluster.objects.all()
+            clusters = Cluster.objects.order_by("?")[:2]
             for cluster in clusters:
                 self.clusters.add(cluster)
 
@@ -245,7 +245,7 @@ class DonorFactory(DjangoModelFactory):
             for cluster in extracted:
                 self.clusters.add(cluster)
         else:
-            clusters = Cluster.objects.all()
+            clusters = Cluster.objects.order_by("?")[:2]
             for cluster in clusters:
                 self.clusters.add(cluster)
 
@@ -259,7 +259,7 @@ class ActivityDomainFactory(DjangoModelFactory):
         model = ActivityDomain
 
     active = factory.Faker("boolean")
-    code = factory.Faker("pystr", max_chars=200)
+    code = factory.Faker("pystr", max_chars=10)
     name = factory.Faker("word")
 
     @factory.post_generation
@@ -284,7 +284,7 @@ class ActivityDomainFactory(DjangoModelFactory):
             for cluster in extracted:
                 self.clusters.add(cluster)
         else:
-            clusters = Cluster.objects.all()
+            clusters = Cluster.objects.order_by("?")[:2]
             for cluster in clusters:
                 self.clusters.add(cluster)
 
@@ -329,7 +329,7 @@ class ActivityTypeFactory(DjangoModelFactory):
             for cluster in extracted:
                 self.clusters.add(cluster)
         else:
-            clusters = Cluster.objects.all()
+            clusters = Cluster.objects.order_by("?")[:2]
             for cluster in clusters:
                 self.clusters.add(cluster)
 
@@ -423,7 +423,7 @@ class ProjectFactory(DjangoModelFactory):
             for cluster in extracted:
                 self.clusters.add(cluster)
         else:
-            clusters = Cluster.objects.all()[: random.randint(1, 5)]
+            clusters = Cluster.objects.order_by("?")[:2][: random.randint(1, 5)]
             for cluster in clusters:
                 self.clusters.add(cluster)
 

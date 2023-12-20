@@ -5,7 +5,6 @@ export default function initExport() {
     event.stopPropagation();
     // Get the export URL from the button's data-url attribute
     var exportUrl = $(this).find("a").data("url");
-    debugger
     
     // Send an AJAX request to the export URL
     $.ajax({

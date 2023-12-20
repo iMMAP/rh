@@ -230,7 +230,7 @@
                         </thead>
                         <tbody>
                             {% for report in submitted_stock_reports %}
-                                <tr data-url="{% url 'edit_submitted_stock' report.id %}">
+                                <tr data-url="{% url 'stock_report' report.id %}">
                                     <td class="month-col" data-title="Month">
                                         <div class="table-flex-holder">
                                             {{ report.created_at|date:"F, Y" }}

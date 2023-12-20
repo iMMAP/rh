@@ -112,12 +112,13 @@ $(function () {
 		});
 	}
 
-	get_activity_domains();
+	// Run when updating a new project
+	if (window.location.pathname.includes("update")) {
+		get_activity_domains();
+	}
 	
 	$("#id_clusters").on("change", function() {
 		get_activity_domains();
 	})
-
-	$('.js_multiselect').select2()
 
 });

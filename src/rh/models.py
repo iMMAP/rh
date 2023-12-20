@@ -88,12 +88,18 @@ class BeneficiaryType(models.Model):
 class Organization(models.Model):
     """Organizations Model"""
 
+    TYPE_CHOICES = [
+        ("National NGO", "National NGO"),
+        ("International NGO", "International NGO"),
+        ("Government", "Government"),
+        ("Business", "Business"),
+    ]
     countries = models.ManyToManyField(Location, blank=True)
     clusters = models.ManyToManyField(Cluster, blank=True)
 
     name = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
     code = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
-    type = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
+    type = models.CharField(max_length=NAME_MAX_LENGTH, choices=TYPE_CHOICES, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
     updated_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
     old_id = models.CharField("Old ID", max_length=NAME_MAX_LENGTH, blank=True, null=True)
@@ -476,7 +482,7 @@ class ActivityPlan(models.Model):
     # facility_lat = models.CharField(max_length=NAME_MAX_LENGTH, null=True, blank=True)
     # facility_long = models.CharField(max_length=NAME_MAX_LENGTH, null=True, blank=True)
 
-    # households = models.IntegerField(default=0, blank=True, null=True)
+    total_target = models.IntegerField(default=0, blank=True, null=True)
     description = models.TextField(blank=True, null=True)
     # old_id = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
 
@@ -500,6 +506,10 @@ class TargetLocation(models.Model):
     LOCATIONS_GROUP = [
         ("province", "Province/State"),
         ("district", "District"),
+    ]
+    TARGET_CLASSIFICATION = [
+        ("urban", "Urban"),
+        ("rural", "Rural"),
     ]
     project = models.ForeignKey(Project, on_delete=models.CASCADE, null=True, blank=True)
     activity_plan = models.ForeignKey(ActivityPlan, on_delete=models.CASCADE, null=True, blank=True)
@@ -554,6 +564,7 @@ class TargetLocation(models.Model):
     site_name = models.CharField(max_length=255, blank=True, null=True)
     site_lat = models.CharField(max_length=255, blank=True, null=True)
     site_long = models.CharField(max_length=255, blank=True, null=True)
+    classification = models.CharField(max_length=15, choices=TARGET_CLASSIFICATION, blank=True, null=True)
     old_id = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
 
     def __str__(self):

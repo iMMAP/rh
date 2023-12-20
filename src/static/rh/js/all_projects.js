@@ -8,6 +8,12 @@ $(function () {
         const url = $(this).data('url');
         window.location.href = url;
 	});
+
+    $('.js_multiselect').select2()
+
+    $('.close-alert-message').on('click', function() {
+        $('.message-container').css('display','none');
+    });
     // toggle between accordion arrow
     $("#activityAcc").on("click", function(){
         let up =$(".activity-arrow-up");

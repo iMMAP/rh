@@ -39,6 +39,7 @@
 		{% csrf_token %}
 
 		{% for activity_report_form, location_report_formset in combined_formset %}
+		{{activity_report_form.id}}
 		<div class="monthly-progress monthly-accordion create-report">
 			<div class="inner-holder">
 				<a href="#" class="block-top monthly-accordion-opener">
@@ -53,10 +54,28 @@
 						{{ activity_report_form.activity_plan }}
 						
 					</span>
+					
+					{% if activity_report_form.target_achieved.value %}
 					<span class="people">
 						<span class="icon-group"></span>
-						1657
+						Target Achieved
+						- <span id="{{ form.prefix }}-people-count">
+							{{ activity_report_form.target_achieved.value }}
+						</span>
 					</span>
+					{% endif %}
+
+					{% if activity_report_form.instance.activity_plan.total_target or activity_report_form.initial.activity_plan.total_target or activity_report_form.activity_plan.total_target %}
+					<span class="people">
+						<span class="icon-group"></span>
+						Target Required
+						- <span id="{{ form.prefix }}-people-count">
+							{{ activity_report_form.instance.activity_plan.total_target }}
+							{{ activity_report_form.initial.activity_plan.total_target }}
+							{{ activity_report_form.activity_plan.total_target }}
+						</span>
+					</span>
+					{% endif %}
 				</a>
 				<div class="monthly-accordion-slide">
 					<div class="row">

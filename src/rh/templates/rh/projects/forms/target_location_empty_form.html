@@ -9,40 +9,30 @@
             </div>
             <div class="block-activity mb-3">
                 <div>
-                    <button href="#"
-                        data-url="{% url 'copy_location' project=project.pk location=target_location_form.instance.pk  %}"
-                        data-return-url="{% url 'create_project_activity_plan' project=project.pk %}"
+                    <button href="#" 
+                        {% if target_location_form.instance.pk %} data-url="{% url 'copy_location' project=project.pk location=target_location_form.instance.pk  %}" {% endif %}
+                        {% comment %} data-url="{% url 'copy_location' project=project.pk location=target_location_form.instance.pk  %}" {% endcomment %}
                         data-type="copy"
-                        data-record-name="target location"
-                        class="btn btn-gray-outline show_confirm"><span class="btn-text">Duplicate</span><span class="icon-copy-outline"></span>
+                        data-name="target location" 
+                        class="btn btn-gray-outline show-sw-action-popup">
+                        <span class="icon-copy"></span>
+                        <span class="btn-text">Duplicate</span>
                     </button>
                     <button href="#"
-                        data-url="{% url 'delete_location' target_location_form.instance.pk %}"
-                        data-return-url="{% url 'create_project_activity_plan' project=project.pk %}"
-                        data-type="delete"
-                        data-record-name="target location"
-                        class="btn btn-gray-outline show_confirm">
+                            {% if target_location_form.instance.pk %} data-url="{% url 'delete_location' target_location_form.instance.pk %}" {% endif %}
+                            data-type="delete" 
+                            data-name="target location" 
+                            class="btn btn-gray-outline show-sw-action-popup">
                         <span class="icon-trashbin"></span>
                         <span class="btn-text">Delete</span>
                     </button>
                 </div>
             </div>
         </div>
-        <div id="{{ target_location_form.prefix }}" >
-            
-            {% comment %} {% if target_location_formset.can_delete %}
-                {% if target_location_form.instance.id %}
-                    <div class="field">
-                        <label>Delete:</label>
-                        {{ target_location_form.DELETE }}
-                    </div>
-                {% endif %}
-            {% endif %} {% endcomment %}
-            
+        <div id="{{ target_location_form.prefix }}" >           
             <div class="row">
-                
                 <div class="col">
-                    <div class="multiple-fields-row three-items">
+                    <div class="multiple-fields-row four-items">
                         <div class="field-col">
                             <div class="select-field is-required">
                                 <label for="{{target_location_form.province.id_for_label}}" >Province / State</label>
@@ -61,8 +51,15 @@
                                 {{ target_location_form.zone }}
                             </div>
                         </div>
+                        <div class="field-col">
+                            <div class="select-field is is-required">
+                                <label for="{{target_location_form.classification_for_label}}">Classification</label>
+                                {{ target_location_form.classification }}
+                            </div>
+                        </div>
                     </div>
                 </div>
+                
             </div>
             <div class="disaggregation-block disaggregation-accordion">
                 <div class="inner-holder">

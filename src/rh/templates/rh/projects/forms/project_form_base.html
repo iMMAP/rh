@@ -7,11 +7,10 @@
             <div class="holder">
                 <ul class="breadcrumbs">
                     <li>
-                        <a href="{% url 'home' %}">Home</a>
+                        <a href="{% url 'landing' %}">Home</a>
                     </li>
-                    {% if parent_page %}
                     <li>
-                        <a id="return-url" href="{% url parent_page %}">
+                        <a id="return-url" href="{% url 'projects-list' %}?state={{project.state}}">
                             {% if project.state == 'in-progress' %}
                                 Active Projects
                             {% elif project.state == 'draft' %}
@@ -23,7 +22,6 @@
                             {% endif %}
                         </a>
                     </li>
-                    {% endif %}
                     {% if project %}
                         <li class="current">{{ project.code }}</li>
                     {% else %}
@@ -36,7 +34,7 @@
             <div class="sidebar-nav-holder">
                 <ul class="sidebar-nav">
                     <li class="{% if project_planning %}current{% endif %}">
-                        <a href="{% if project %}{% url 'update_project' project.pk %}{% else %}{% url 'create_project' %}{% endif %}">
+                        <a href="{% if project %}{% url 'projects-update' project.pk %}{% else %}{% url 'projects-create' %}{% endif %}">
                             Project Planning
                         </a>
                     </li>
@@ -46,8 +44,9 @@
                         Planning</a>
                     </li>
                     <li class="{% if project_review %}current{% endif %}">
-                        <a class="{% if not plans %}disabled-link{% endif %}"
-                            href="{% if project and plans %}{% url 'project_plan_review' project.pk %}{% else %}#{% endif %}">Review</a>
+                        
+                        <a class="disabled-link"
+                            href="{% if project %} {% url 'project_plan_review' project.pk %} {% else %}#{% endif %}">Review</a>
                     </li>
                 </ul>
             </div>

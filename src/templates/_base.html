@@ -67,7 +67,7 @@
                     <div class="container">
                         <div class="logo-holder">
                             <strong class="logo">
-                                <a href="{% url 'index' %}">
+                                <a href="{% url 'landing' %}">
                                     <img src="{% static 'rh/images/immap-logo.svg' %}" alt="IMMAP" />
                                 </a>
                             </strong>
@@ -83,7 +83,7 @@
                             <div class="mobile-menu-holder">
                                 <ul class="main-nav">
                                     <li class="main-nav-item">
-                                        <a class="main-nav-link" href="{% url 'active_projects' %}">Projects</a>
+                                        <a class="main-nav-link" href="{% url 'projects-list' %}">Projects</a>
                                     </li>
                                     <li class="main-nav-item">
                                         <a class="main-nav-link" href="{% url 'stocks' %}">Stocks</a>
@@ -100,6 +100,9 @@
                                                 </li>
                                                 <li class="inner-nav-item">
                                                     <a class="inner-nav-link" href="#">My Cluster/Org</a>
+                                                </li>
+                                                <li class="inner-nav-item">
+                                                    <a class="inner-nav-link" href="{% url 'organizations-create' %}">Add Organization</a>
                                                 </li>
                                                 <li class="inner-nav-item">
                                                     <a href="{% url 'logout' %}" class="inner-nav-link logout-link">Logout</a>
@@ -122,23 +125,6 @@
                         {% block content %}
                         {% endblock content %}
                     </div>
-                    <!-- MESSAGE SECTION STARTS -->
-                    {% if messages %}
-                        <div class="message-container">
-                        {% for message in messages %}
-                            {% if message.tags == 'success' %}
-                            <div class="message-success-alert">
-                                {{message}}
-                            </div>
-                            {% elif message.tags == 'error' %}
-                            <div class="message-danger-alert">
-                                {{message}}
-                            </div>
-                            {% endif %}
-                        {% endfor %}
-                        </div>
-                    {% endif %}
-                    <!-- MESSAGE SECTION ENDS -->
                 </main>
                 <footer class="footer">
                     <div class="container">

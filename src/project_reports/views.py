@@ -1,6 +1,6 @@
 import calendar
-from datetime import datetime, timedelta
 import json
+from datetime import datetime, timedelta
 
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
@@ -11,17 +11,17 @@ from django.template.loader import render_to_string
 from django.urls import reverse
 from django.utils import timezone
 from django.views.decorators.cache import cache_control
-from rh.models import Indicator, Location, Project
+
+from rh.models import ImplementationModalityType, Indicator, Location, Project
 
 from .forms import (
     ActivityPlanReportForm,
     DisaggregationReportFormSet,
+    IndicatorsForm,
     ProjectMonthlyReportForm,
     TargetLocationReportFormSet,
-    IndicatorsForm,
 )
 from .models import ActivityPlanReport, DisaggregationLocationReport, ProjectMonthlyReport, TargetLocationReport
-from rh.models import ImplementationModalityType
 
 
 @cache_control(no_store=True)
@@ -29,21 +29,14 @@ from rh.models import ImplementationModalityType
 def index_project_report_view(request, project):
     """Project Monthly Report View"""
     project = get_object_or_404(Project, pk=project)
-    project_reports = ProjectMonthlyReport.objects.all()
+    project_reports = ProjectMonthlyReport.objects.filter(project=project.pk)
     active_project_reports = project_reports.filter(active=True)
     project_report_archive = project_reports.filter(active=False)
     project_reports_todo = active_project_reports.filter(state__in=["todo", "pending", "submit", "reject"])
     project_report_complete = active_project_reports.filter(state="complete")
-    project_state = project.state
-    parent_page = {
-        "in-progress": "active_projects",
-        "draft": "draft_projects",
-        "done": "completed_projects",
-        "archive": "archived_projects",
-    }.get(project_state, None)
+
     context = {
         "project": project,
-        "parent_page": parent_page,
         "project_reports": active_project_reports,
         "project_reports_todo": project_reports_todo,
         "project_report_complete": project_report_complete,
@@ -76,14 +69,6 @@ def create_project_monthly_report_view(request, project):
         initial={"report_due_date": end_of_month, "project": project},
     )
 
-    project_state = project.state
-    parent_page = {
-        "in-progress": "active_projects",
-        "draft": "draft_projects",
-        "done": "completed_projects",
-        "archive": "archived_projects",
-    }.get(project_state, None)
-
     if request.method == "POST":
         if form.is_valid():
             report = form.save(commit=False)
@@ -100,7 +85,6 @@ def create_project_monthly_report_view(request, project):
     context = {
         "project": project,
         "report_form": form,
-        "parent_page": parent_page,
         "project_view": False,
         "financial_view": False,
         "reports_view": True,
@@ -120,13 +104,18 @@ def copy_project_monthly_report_view(request, report):
         # Calculate the first day of the last month
         first_day_of_last_month = (first_day_of_current_month - timedelta(days=1)).replace(day=1)
 
+        last_month_report = None
+
         # Filter the reports for the last month and find the latest submitted report
-        last_month_report = ProjectMonthlyReport.objects.filter(
+        last_month_reports = ProjectMonthlyReport.objects.filter(
+            project=monthly_report.project.pk,
             report_date__gte=first_day_of_last_month,
             report_date__lt=first_day_of_current_month,
             state="complete",  # Filter by the "Submitted" state
             approved_on__isnull=False,  # Ensure the report has a submission date
-        ).latest("approved_on")
+        )
+        if last_month_reports:
+            last_month_report = last_month_reports.latest("approved_on")
 
         # Check if the new monthly report was successfully created.
         if monthly_report and last_month_report:
@@ -305,18 +294,10 @@ def details_monthly_progress_view(request, project, report):
     monthly_report = get_object_or_404(ProjectMonthlyReport, pk=report)
     activity_reports = monthly_report.activityplanreport_set.select_related("activity_plan", "indicator")
 
-    project_state = project.state
-    parent_page = {
-        "in-progress": "active_projects",
-        "draft": "draft_projects",
-        "done": "completed_projects",
-        "archive": "archived_projects",
-    }.get(project_state, None)
     context = {
         "project": project,
         "monthly_report": monthly_report,
         "activity_reports": activity_reports,
-        "parent_page": parent_page,
         "project_view": False,
         "financial_view": False,
         "reports_view": True,
@@ -441,6 +422,7 @@ def create_project_monthly_report_progress_view(request, project, report):
                     activity_report_form.save_m2m()
 
                     # Process target location forms and their disaggregation forms
+                    activity_report_target = 0
                     for location_report_formset in location_report_formsets:
                         if location_report_formset.instance == activity_report:
                             if location_report_formset.is_valid():
@@ -479,6 +461,7 @@ def create_project_monthly_report_progress_view(request, project, report):
                                                         location_report_instance
                                                     )
                                                     disaggregation_report_instance.save()
+                                                    activity_report_target += disaggregation_report_instance.target
                                                     new_report_disaggregations.append(disaggregation_report_instance.id)
 
                                         all_report_disaggregations = (
@@ -487,6 +470,9 @@ def create_project_monthly_report_progress_view(request, project, report):
                                         for disaggregation_report in all_report_disaggregations:
                                             if disaggregation_report.id not in new_report_disaggregations:
                                                 disaggregation_report.delete()
+
+                    activity_report.target_achieved = activity_report_target
+                    activity_report.save()
 
             # activity_report_formset.save()
             return redirect(
@@ -500,13 +486,6 @@ def create_project_monthly_report_progress_view(request, project, report):
             # Add error handling code here
             pass
 
-    parent_page = {
-        "in-progress": "active_projects",
-        "draft": "draft_projects",
-        "done": "completed_projects",
-        "archive": "archived_projects",
-    }.get(project_state, None)
-
     combined_formset = zip(activity_report_formset.forms, location_report_formsets)
 
     context = {
@@ -517,7 +496,6 @@ def create_project_monthly_report_progress_view(request, project, report):
         "activity_report_formset": activity_report_formset,
         # 'location_report_formset': location_report_formset,
         "combined_formset": combined_formset,
-        "parent_page": parent_page,
         "project_view": False,
         "financial_view": False,
         "reports_view": True,
@@ -613,6 +591,7 @@ def update_project_monthly_report_progress_view(request, project, report):
                     activity_report.save()
 
                     # Process target location forms and their disaggregation forms
+                    activity_report_target = 0
                     for location_report_formset in location_report_formsets:
                         if location_report_formset.instance == activity_report:
                             if location_report_formset.is_valid():
@@ -651,6 +630,7 @@ def update_project_monthly_report_progress_view(request, project, report):
                                                         location_report_instance
                                                     )
                                                     disaggregation_report_instance.save()
+                                                    activity_report_target += disaggregation_report_instance.target
                                                     new_report_disaggregations.append(disaggregation_report_instance.id)
 
                                         all_report_disaggregations = (
@@ -659,6 +639,9 @@ def update_project_monthly_report_progress_view(request, project, report):
                                         for disaggregation_report in all_report_disaggregations:
                                             if disaggregation_report.id not in new_report_disaggregations:
                                                 disaggregation_report.delete()
+
+                    activity_report.target_achieved = activity_report_target
+                    activity_report.save()
 
             return redirect(
                 "view_monthly_report",
@@ -671,12 +654,6 @@ def update_project_monthly_report_progress_view(request, project, report):
             # Add error handling code here
             pass
 
-    parent_page = {
-        "in-progress": "active_projects",
-        "draft": "draft_projects",
-        "done": "completed_projects",
-        "archive": "archived_projects",
-    }.get(project_state, None)
     combined_formset = zip(activity_report_formset.forms, location_report_formsets)
 
     context = {
@@ -686,7 +663,6 @@ def update_project_monthly_report_progress_view(request, project, report):
         "report_form": monthly_report_instance,
         "activity_report_formset": activity_report_formset,
         "combined_formset": combined_formset,
-        "parent_page": parent_page,
         "project_view": False,
         "financial_view": False,
         "reports_view": True,

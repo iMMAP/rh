@@ -9,6 +9,7 @@ LOCAL_INSTALLED_APPS = [
     "debug_toolbar",
     "django_extensions",
     "nplusone.ext.django",
+    "django_tui",
 ]
 
 # Concatinate the local apps to the installed apps list of our base settings
@@ -76,5 +77,5 @@ DJANGO_VITE_PLUGIN = {
     "BUILD_URL_PREFIX": "/" + STATIC_URL + "build",
     "DEV_MODE": True,
     "STATIC_LOOKUP": False,
-    "SERVER": {"HOST": "0.0.0.0"},
+    # "SERVER": {"HOST": "0.0.0.0"},
 }

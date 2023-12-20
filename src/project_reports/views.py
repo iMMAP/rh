@@ -11,7 +11,6 @@ from django.template.loader import render_to_string
 from django.urls import reverse
 from django.utils import timezone
 from django.views.decorators.cache import cache_control
-
 from rh.models import ImplementationModalityType, Indicator, Location, Project
 
 from .forms import (
@@ -110,6 +109,7 @@ def copy_project_monthly_report_view(request, report):
 
         # Filter the reports for the last month and find the latest submitted report
         last_month_reports = ProjectMonthlyReport.objects.filter(
+            project=monthly_report.project.pk,
             report_date__gte=first_day_of_last_month,
             report_date__lt=first_day_of_current_month,
             state="complete",  # Filter by the "Submitted" state

@@ -42,12 +42,12 @@ urlpatterns = [
     ),
     # Projects Activity Plannings CRUD
     path(
-        "projects/activity_plan/copy/<str:project>/<str:plan>/",
+        "projects/<int:project>/activity_plan/<str:plan>/copy/",
         user_views.copy_activity_plan,
         name="copy_plan",
     ),
     path(
-        "project/activity_plan/delete/<str:pk>/",
+        "project/activity_plan/<str:pk>/delete/",
         user_views.delete_activity_plan,
         name="delete_plan",
     ),
@@ -63,33 +63,33 @@ urlpatterns = [
         name="copy_location",
     ),
     path(
-        "projects/target_location/<int:pk>/delete",
+        "projects/target_location/<str:pk>/delete",
         user_views.delete_target_location,
         name="delete_location",
     ),
     path(
-        "projects/project_plan/review/?project=<str:project>/",
+        "projects/<int:project>/project_plan/review/",
         user_views.project_planning_review,
         name="project_plan_review",
     ),
     path(
-        "projects/project_plan/submit/<str:pk>/",
+        "projects/<str:pk>/project_plan/submit/",
         user_views.submit_project,
         name="project_submit",
     ),
     # Financial Reporting
     path(
-        "projects/financials/budget_progress/?project=<str:project>/",
+        "projects/<int:project>/financials/budget_progress/",
         user_views.create_project_budget_progress_view,
         name="create_project_budget_progress",
     ),
     path(
-        "projects/budget_progress/copy/<str:project>/<str:budget>/",
+        "projects/<int:project>/budget_progress/<str:budget>/copy/",
         user_views.copy_budget_progress,
         name="copy_budget",
     ),
     path(
-        "projects/budget_progress/delete/<str:pk>/",
+        "projects/budget_progress/<str:pk>/delete/",
         user_views.delete_budget_progress,
         name="delete_budget",
     ),

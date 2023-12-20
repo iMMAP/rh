@@ -9,6 +9,7 @@ LOCAL_INSTALLED_APPS = [
     "debug_toolbar",
     "django_extensions",
     "nplusone.ext.django",
+    "django_tui",
 ]
 
 # Concatinate the local apps to the installed apps list of our base settings

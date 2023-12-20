@@ -374,7 +374,7 @@ def create_project_activity_plan(request, project):
             pass
 
     # Prepare data for rendering the template
-    cluster_ids = list(project.clusters.values_list('id',flat=True))
+    cluster_ids = list(project.clusters.values_list("id", flat=True))
 
     combined_formset = zip(activity_plan_formset.forms, target_location_formsets)
 

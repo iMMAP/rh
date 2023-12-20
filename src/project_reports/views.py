@@ -1,6 +1,6 @@
 import calendar
-from datetime import datetime, timedelta
 import json
+from datetime import datetime, timedelta
 
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
@@ -11,17 +11,16 @@ from django.template.loader import render_to_string
 from django.urls import reverse
 from django.utils import timezone
 from django.views.decorators.cache import cache_control
-from rh.models import Indicator, Location, Project
+from rh.models import ImplementationModalityType, Indicator, Location, Project
 
 from .forms import (
     ActivityPlanReportForm,
     DisaggregationReportFormSet,
+    IndicatorsForm,
     ProjectMonthlyReportForm,
     TargetLocationReportFormSet,
-    IndicatorsForm,
 )
 from .models import ActivityPlanReport, DisaggregationLocationReport, ProjectMonthlyReport, TargetLocationReport
-from rh.models import ImplementationModalityType
 
 
 @cache_control(no_store=True)
@@ -29,7 +28,7 @@ from rh.models import ImplementationModalityType
 def index_project_report_view(request, project):
     """Project Monthly Report View"""
     project = get_object_or_404(Project, pk=project)
-    project_reports = ProjectMonthlyReport.objects.all()
+    project_reports = ProjectMonthlyReport.objects.filter(project=project.pk)
     active_project_reports = project_reports.filter(active=True)
     project_report_archive = project_reports.filter(active=False)
     project_reports_todo = active_project_reports.filter(state__in=["todo", "pending", "submit", "reject"])

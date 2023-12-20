@@ -9,11 +9,7 @@ urlpatterns = [
     path("organizations/create/", user_views.organization_register, name="organizations-create"),
     # Projects CRUD
     path("projects/", user_views.projects_list, name="projects-list"),
-    path(
-        "projects/create/", 
-        user_views.create_project_view, 
-        name="projects-create"
-    ),
+    path("projects/create/", user_views.create_project_view, name="projects-create"),
     path(
         "projects/<str:pk>/",
         user_views.projects_detail,

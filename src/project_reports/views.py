@@ -11,6 +11,7 @@ from django.template.loader import render_to_string
 from django.urls import reverse
 from django.utils import timezone
 from django.views.decorators.cache import cache_control
+
 from rh.models import ImplementationModalityType, Indicator, Location, Project
 
 from .forms import (
@@ -421,6 +422,7 @@ def create_project_monthly_report_progress_view(request, project, report):
                     activity_report_form.save_m2m()
 
                     # Process target location forms and their disaggregation forms
+                    activity_report_target = 0
                     for location_report_formset in location_report_formsets:
                         if location_report_formset.instance == activity_report:
                             if location_report_formset.is_valid():
@@ -459,6 +461,7 @@ def create_project_monthly_report_progress_view(request, project, report):
                                                         location_report_instance
                                                     )
                                                     disaggregation_report_instance.save()
+                                                    activity_report_target += disaggregation_report_instance.target
                                                     new_report_disaggregations.append(disaggregation_report_instance.id)
 
                                         all_report_disaggregations = (
@@ -467,6 +470,9 @@ def create_project_monthly_report_progress_view(request, project, report):
                                         for disaggregation_report in all_report_disaggregations:
                                             if disaggregation_report.id not in new_report_disaggregations:
                                                 disaggregation_report.delete()
+
+                    activity_report.target_achieved = activity_report_target
+                    activity_report.save()
 
             # activity_report_formset.save()
             return redirect(
@@ -585,6 +591,7 @@ def update_project_monthly_report_progress_view(request, project, report):
                     activity_report.save()
 
                     # Process target location forms and their disaggregation forms
+                    activity_report_target = 0
                     for location_report_formset in location_report_formsets:
                         if location_report_formset.instance == activity_report:
                             if location_report_formset.is_valid():
@@ -623,6 +630,7 @@ def update_project_monthly_report_progress_view(request, project, report):
                                                         location_report_instance
                                                     )
                                                     disaggregation_report_instance.save()
+                                                    activity_report_target += disaggregation_report_instance.target
                                                     new_report_disaggregations.append(disaggregation_report_instance.id)
 
                                         all_report_disaggregations = (
@@ -631,6 +639,9 @@ def update_project_monthly_report_progress_view(request, project, report):
                                         for disaggregation_report in all_report_disaggregations:
                                             if disaggregation_report.id not in new_report_disaggregations:
                                                 disaggregation_report.delete()
+
+                    activity_report.target_achieved = activity_report_target
+                    activity_report.save()
 
             return redirect(
                 "view_monthly_report",

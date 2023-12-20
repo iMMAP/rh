@@ -1,4 +1,5 @@
 from django.db import models
+
 from rh.models import ActivityPlan, Disaggregation, Indicator, Location, LocationType, Project, ReportType
 
 # ##############################################
@@ -47,6 +48,7 @@ class ActivityPlanReport(models.Model):
     indicator = models.ForeignKey(Indicator, on_delete=models.SET_NULL, null=True)
 
     report_types = models.ManyToManyField(ReportType, null=True, blank=True)
+    target_achieved = models.IntegerField(default=0, null=True, blank=True)
 
     class Meta:
         verbose_name = "Activity Plan Report"

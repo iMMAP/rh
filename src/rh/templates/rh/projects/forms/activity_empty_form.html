@@ -35,10 +35,10 @@
 
             <div class="block-top project-activity-accordion-opener">
                 <span class="title ">
-                    {% if form.total.value %}
+                    {% if form.total_target.value %}
                     <span class="people">
                         <span class="icon-group"></span>
-                        <span id="{{ form.prefix }}-people-count">{{ form.total.value }}</span>
+                        <span id="{{ form.prefix }}-people-count">{{ form.total_target.value }}</span>
                         -
                     </span>
                     {% endif %}
@@ -131,6 +131,13 @@
                                 </div>
                             </div>
                         </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="input-field is-required">
+                        <label for="{{ form.description.id_for_label}}">Activity Description</label>
+                        <div class="input-holder">{{ form.description }}</div>
                     </div>
                 </div>
             </div>

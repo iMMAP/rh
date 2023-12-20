@@ -263,7 +263,7 @@
                     <div class="block-activity">
                         <span class="people">
                             <span class="icon-group"></span>
-                            {{ activity_plan.total }}
+                            {{ activity_plan.total_target }}
                         </span>
                     </div>
                 </div>
@@ -372,17 +372,26 @@
                                                             </div>
                                                         </div>
                                                         <div class="field-col">
-                                                            <div class="select-field ">
-                                                                <span class="label">Location Type</span>
-                                                                <span class="text-read-only">{{ target_location.location_type }}</span>
+                                                            <div class="input-field">
+                                                                <span class="label">Ward/Zone</span>
+                                                                <div class="input-holder">
+                                                                    <span class="text-read-only">{{ target_location.zone }}</span>
+                                                                </div>
                                                             </div>
                                                         </div>
+                                                        
                                                     </div>
                                                 </div>
                                                 <br/>
                                                 <div class="col col-lg">
                                                     <div class="multiple-fields-row three-items">
                                                         <div class="field-col">
+                                                            <div class="select-field ">
+                                                                <span class="label">Location Type</span>
+                                                                <span class="text-read-only">{{ target_location.location_type }}</span>
+                                                            </div>
+                                                        </div>
+                                                        <!-- <div class="field-col">
                                                             <div class="select-field">
                                                                 <span class="label">Site Name</span>
                                                                 <span class="text-read-only">{{ target_location.site_name }}</span>
@@ -403,7 +412,7 @@
                                                                     <span class="text-read-only">{{ target_location.site_long }}</span>
                                                                 </div>
                                                             </div>
-                                                        </div>
+                                                        </div> -->
                                                     </div>
                                                 </div>
                                             </div>

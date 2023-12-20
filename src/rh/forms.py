@@ -211,7 +211,6 @@ class TargetLocationForm(forms.ModelForm):
             "locations_group_by": forms.widgets.RadioSelect(),
             "district": forms.Select(attrs={"locations-queries-url": reverse_lazy("ajax-load-locations")}),
             "zone": forms.Select(attrs={"locations-queries-url": reverse_lazy("ajax-load-locations")}),
-
         }
 
     def __init__(self, *args, **kwargs):

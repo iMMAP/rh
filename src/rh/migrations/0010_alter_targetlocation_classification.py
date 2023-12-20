@@ -4,15 +4,16 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('rh', '0009_alter_targetlocation_classification'),
+        ("rh", "0009_alter_targetlocation_classification"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='targetlocation',
-            name='classification',
-            field=models.CharField(blank=True, choices=[('Urban', 'Urban'), ('Rural', 'Rural')], max_length=15, null=True),
+            model_name="targetlocation",
+            name="classification",
+            field=models.CharField(
+                blank=True, choices=[("Urban", "Urban"), ("Rural", "Rural")], max_length=15, null=True
+            ),
         ),
     ]

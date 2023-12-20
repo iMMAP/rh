@@ -133,7 +133,11 @@ class ProjectForm(forms.ModelForm):
         fields = "__all__"
 
         widgets = {
-            "clusters": forms.SelectMultiple(attrs={"class": "js_multiselect"}),
+            "clusters": forms.SelectMultiple(
+                attrs={
+                    "class": "js_multiselect",
+                }
+            ),
             "donors": forms.SelectMultiple(attrs={"class": "js_multiselect"}),
             "implementing_partners": forms.SelectMultiple(attrs={"class": "js_multiselect"}),
             "programme_partners": forms.SelectMultiple(attrs={"class": "js_multiselect"}),
@@ -141,6 +145,7 @@ class ProjectForm(forms.ModelForm):
                 attrs={
                     "class": "js_multiselect",
                     "activity-domains-queries-url": reverse_lazy("ajax-load-activity_domains"),
+                    "id": "id_activity_domains",
                 }
             ),
             "start_date": forms.widgets.DateInput(
@@ -175,11 +180,24 @@ class ProjectForm(forms.ModelForm):
         if user_profile and user_profile.clusters:
             user_clusters = list(user_profile.clusters.all().values_list("pk", flat=True))
 
+        # should not be empty when form is used in updating
+        if self.instance.pk:
+            # Update mode
+            self.fields["activity_domains"].choices = (
+                self.instance.activity_domains.all().order_by("name").values_list("pk", "name")
+            )
+        else:
+            # Create mode
+            self.fields["activity_domains"].choices = []
+
         self.fields["clusters"].queryset = self.fields["clusters"].queryset.filter(id__in=user_clusters)
         self.fields["donors"].queryset = Donor.objects.order_by("name")
         self.fields["budget_currency"].queryset = Currency.objects.order_by("name")
-        self.fields["implementing_partners"].queryset = Organization.objects.order_by("name")
-        self.fields["programme_partners"].queryset = Organization.objects.order_by("name")
+
+        orgs = Organization.objects.order_by("name").values_list("pk", "name")
+
+        self.fields["implementing_partners"].choices = orgs
+        self.fields["programme_partners"].choices = orgs
         self.fields["user"].queryset = User.objects.order_by("username")
 
 

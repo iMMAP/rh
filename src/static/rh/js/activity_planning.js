@@ -366,7 +366,6 @@ function getLocations(locationPrefix, locationType, parentType, clearZone=null) 
 				xhr.setRequestHeader("X-CSRFToken", csrftoken);
 			},
 			success: function (data) {
-				debugger
 
 				// Clear zone if needed
 				if (parentType === 'province' && clearZone === true) {

@@ -1,6 +1,7 @@
 {% extends "../_base.html" %}
 {% load static %}
 {% load vite %}
+{% load compress %}
 {% block content %}
 <div class="base-section" style="padding-bottom: 20px;">
     <div class="container">
@@ -151,14 +152,25 @@
 <div class="container px-4 px-lg-5 h-100">
     <div class="row h-100 align-items-center justify-content-center text-left">
         <div class="col-lg-9 align-self-end">
-            {% if stock_reports %}
-            <div class="card mt-4">
-                <div class="card-body">
-                    <h3 class="card-title bg-light p-3 project-title report-title">
-                        Stock Reports Todo
-                    </h3>
-                    <table class="table responsive-table report-table">
-                        <thead>
+            <div class="projects-options-panel projects-options-panel-small page-top-panel-reports">
+                <div class="holder tabs-nav-holder">
+                    <div>
+                        <ul class="tabs-nav js-tabs-nav tabs-nav-small">
+                            <li class="active">
+                                <a href="#stock_reports_todo">Stock Reports Todo</a>
+                            </li>
+        
+                            <li class="">
+                                <a href="#reports_complete">Stock Reports Completed</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="stock_reports_todo">
+                <table class="table responsive-table report-table">
+                    <thead>
                         <tr>
                             <th class="month-col">
                                 <strong class="table-title">Month</strong>
@@ -176,7 +188,8 @@
                                 <strong class="table-title">Status</strong>
                             </th>
                         </tr>
-                        </thead>
+                    </thead>
+                    {% if stock_reports %}
                         <tbody>
                             {% for report in stock_reports %}
                                 <tr data-url="{% url 'stock_report' report.id %}">
@@ -185,31 +198,22 @@
                                             {{ report.created_at|date:"F, Y" }}
                                         </div>
                                     </td>
-                                
                                     <td class="progress-col" data-title="Progress Report">Monthly progress for {{ report.created_at|date:"F, Y" }} {% now "r" as todays_date %}</td>
                                 
                                     <td class="date-col" data-title="Due date">{{ report.due_date|date:"d F, Y" }}</td>
                                 
-                                    <td class="date-col" data-title="Due date"></td>
+                                    <td class="date-col" data-title="Status">Pending</td>
                                 </tr>    
 
                             {% endfor %}
                         </tbody>
-                    </table>
-                </div>
+                    {% endif %}
+                </table>                   
             </div>
-            {% endif %}
 
-           
-            {% if submitted_stock_reports %}
-            <div class="card mt-4" style="margin: 32px 0px ;">
-                <div class="card-body">
-                    <h3 class="card-title bg-light p-3 project-title report-title">
-                        Stock Reports Completed
-                    </h3>
-
-                    <table class="table responsive-table report-table">
-                        <thead>
+            <div id="reports_complete">
+                <table class="table responsive-table report-table">
+                    <thead>
                         <tr>
                             <th class="month-col">
                                 <strong class="table-title">Month</strong>
@@ -220,14 +224,15 @@
                             </th>
             
                             <th class="date-col">
-                                <strong class="table-title">Due date</strong>
+                                <strong class="table-title">Submitted date</strong>
                             </th>
             
                             <th class="month-col">
                                 <strong class="table-title">Status</strong>
                             </th>
                         </tr>
-                        </thead>
+                    </thead>
+                    {% if submitted_stock_reports %}
                         <tbody>
                             {% for report in submitted_stock_reports %}
                                 <tr data-url="{% url 'stock_report' report.id %}">
@@ -241,21 +246,23 @@
                                 
                                     <td class="date-col" data-title="Submitted date">{{ report.submitted_at|date:"d F, Y" }}</td>
                                 
-                                    <td class="date-col" data-title="Due date"></td>
+                                    <td class="date-col" data-title="Status">Submitted</td>
                                 </tr>    
 
                             {% endfor %}
                         </tbody>
-                    </table>  
-                </div>
-
+                    {% endif %}
+                </table>  
             </div>
-            {% endif %}
-
         </div>
     </div>
 </div>
 
 {% comment %} Full Pack relative to location of manage.py file {% endcomment %}
+
+{% compress js %}
+	<script defer src="{% static 'project_reports/js/monthly_report.js' %}"></script>
+{% endcompress js %}
+
 {% vite 'stock/static/stock/stock.js' %}
 {% endblock %}

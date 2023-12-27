@@ -157,11 +157,11 @@
                     <div>
                         <ul class="tabs-nav js-tabs-nav tabs-nav-small">
                             <li class="active">
-                                <a href="#stock_reports_todo">Stock Reports Todo</a>
+                                <strong><a href="#stock_reports_todo">Stock Reports Todo</a></strong>
                             </li>
         
                             <li class="">
-                                <a href="#reports_complete">Stock Reports Completed</a>
+                                <strong><a href="#reports_complete">Stock Reports Completed</a></strong>   
                             </li>
                         </ul>
                     </div>
@@ -261,7 +261,7 @@
 {% comment %} Full Pack relative to location of manage.py file {% endcomment %}
 
 {% compress js %}
-	<script defer src="{% static 'project_reports/js/monthly_report.js' %}"></script>
+	<script defer src="{% static 'stock/js/stock.js' %}"></script>
 {% endcompress js %}
 
 {% vite 'stock/static/stock/stock.js' %}

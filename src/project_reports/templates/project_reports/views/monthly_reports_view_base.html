@@ -36,7 +36,7 @@
         </ul>
         <div class="actions-panel">
             <div class="filter-holder">
-                <a href="#" class="btn btn-red filter-open">Filter</a>
+                <!-- <a href="#" class="btn btn-red filter-open">Filter</a> -->
                 <form action="#" class="filter-form">
                     <div class="filter-options">
                         <div class="block-top">
@@ -53,28 +53,16 @@
                                 </select>
                             </div>
                             <div class="select-field">
-                                <label>Country</label>
-                                <select name="country" id="country" class="custom-select">
-                                    <option value="placeholder" disabled selected placeholder>Country</option>
-                                    <option value="option1">Option 1</option>
-                                    <option value="option2">Option 2</option>
-                                </select>
+                               <label for="report-country">Country</label>
+                               {{report_filter.form.country}}
                             </div>
                             <div class="select-field">
                                 <label>Province/ State</label>
-                                <select name="state" id="state" class="custom-select">
-                                    <option value="placeholder" disabled selected placeholder>Province/ State</option>
-                                    <option value="option1">Option 1</option>
-                                    <option value="option2">Option 2</option>
-                                </select>
+                                {{report_filter.form.province}}
                             </div>
                             <div class="select-field">
                                 <label>District</label>
-                                <select name="district" id="district" class="custom-select">
-                                    <option value="placeholder" disabled selected placeholder>District</option>
-                                    <option value="option1">Option 1</option>
-                                    <option value="option2">Option 2</option>
-                                </select>
+                                {{report_filter.form.district}}
                             </div>
                             <div class="date-picker-field">
                                 <div class="date start">
@@ -89,27 +77,15 @@
                             </div>
                             <div class="select-field">
                                 <label>Cluster/Sector</label>
-                                <select name="cluster" id="cluster" class="custom-select">
-                                    <option value="placeholder" disabled selected placeholder>Cluster/Sector</option>
-                                    <option value="option1">Option 1</option>
-                                    <option value="option2">Option 2</option>
-                                </select>
+                                {{report_filter.form.clusters}}
                             </div>
                             <div class="select-field">
                                 <label>Organization</label>
-                                <select name="organisation" id="organisation" class="custom-select">
-                                    <option value="placeholder" disabled selected placeholder>Organization</option>
-                                    <option value="option1">Option 1</option>
-                                    <option value="option2">Option 2</option>
-                                </select>
+                                {{report_filter.form.organization}}
                             </div>
                             <div class="select-field">
                                 <label>Activity Domain</label>
-                                <select name="domain" id="domain" class="custom-select">
-                                    <option value="placeholder" disabled selected placeholder>Activity Domain</option>
-                                    <option value="option1">Option 1</option>
-                                    <option value="option2">Option 2</option>
-                                </select>
+                                {{report_filter.form.activity_domains}}
                             </div>
                         </div>
                         <div class="block-footer">

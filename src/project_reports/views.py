@@ -11,7 +11,7 @@ from django.template.loader import render_to_string
 from django.urls import reverse
 from django.utils import timezone
 from django.views.decorators.cache import cache_control
-
+from .filter import ReportFilterForm
 from rh.models import ImplementationModalityType, Indicator, Location, Project
 
 from .forms import (
@@ -22,12 +22,24 @@ from .forms import (
     TargetLocationReportFormSet,
 )
 from .models import ActivityPlanReport, DisaggregationLocationReport, ProjectMonthlyReport, TargetLocationReport
-
+from django.core.paginator import Paginator
+RECORDS_PER_PAGE = 10
 
 @cache_control(no_store=True)
 @login_required
 def index_project_report_view(request, project):
     """Project Monthly Report View"""
+    # report_filter = ReportFilterForm(
+    #     request.GET,
+    #     queryset=ProjectMonthlyReport.objects.all()
+    #     .prefetch_related("project","ActivityPlanReport")
+    #     .order_by("-id"),
+    # )
+    # page_obj = Paginator(report_filter.qs, RECORDS_PER_PAGE)
+    # page = request.GET.get('page')
+    # project_page = page_obj.get_page(page)
+    # total_pages = "a" * project_page.paginator.num_pages
+
     project = get_object_or_404(Project, pk=project)
     project_reports = ProjectMonthlyReport.objects.filter(project=project.pk)
     active_project_reports = project_reports.filter(active=True)
@@ -41,6 +53,7 @@ def index_project_report_view(request, project):
         "project_reports_todo": project_reports_todo,
         "project_report_complete": project_report_complete,
         "project_report_archive": project_report_archive,
+        # "report_filter":report_filter,
         "project_view": False,
         "financial_view": False,
         "reports_view": True,

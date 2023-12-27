@@ -47,7 +47,7 @@ class ActivityPlanReport(models.Model):
     activity_plan = models.ForeignKey(ActivityPlan, on_delete=models.CASCADE, null=True, blank=True)
     indicator = models.ForeignKey(Indicator, on_delete=models.SET_NULL, null=True)
 
-    report_types = models.ManyToManyField(ReportType, null=True, blank=True)
+    report_types = models.ManyToManyField(ReportType, blank=True)
     target_achieved = models.IntegerField(default=0, null=True, blank=True)
 
     class Meta:

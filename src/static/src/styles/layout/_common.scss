@@ -95,6 +95,17 @@ ul{
 .target-location-container {
   margin: 8px 0;
 }
+.info-sign{
+  border: 1px solid $red-be;
+  margin-right: 3px;
+  border-radius: 5px;
+}
+.filter-heading-text{
+  margin-bottom: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #6b6d70;
+}
 .circle-bage{
   background-color: #6b6d70;
   color: white;
@@ -146,6 +157,16 @@ ul{
 }
 .show-password{
   float: inline-end;
+}
+.small-label{
+  font-size: 11px;
+  font-weight: 600;
+  vertical-align: top;
+  color: #aaadb1;
+}
+.input-select{
+  width: 100%;
+  height: 4.5rem;
 }
 //------------------------
 // Random added style end

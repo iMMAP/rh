@@ -11,7 +11,8 @@ from django.template.loader import render_to_string
 from django.urls import reverse
 from django.utils import timezone
 from django.views.decorators.cache import cache_control
-from .filter import ReportFilterForm
+
+# from .filter import ReportFilterForm
 from rh.models import ImplementationModalityType, Indicator, Location, Project
 
 from .forms import (
@@ -22,8 +23,10 @@ from .forms import (
     TargetLocationReportFormSet,
 )
 from .models import ActivityPlanReport, DisaggregationLocationReport, ProjectMonthlyReport, TargetLocationReport
-from django.core.paginator import Paginator
+
+# from django.core.paginator import Paginator
 RECORDS_PER_PAGE = 10
+
 
 @cache_control(no_store=True)
 @login_required

@@ -41,10 +41,6 @@ STORAGES = {
     "default": {
         "BACKEND": "django.core.files.storage.FileSystemStorage",
     },
-    "staticfiles": {
-        # "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage", # with cashing
-        "BACKEND": "whitenoise.storage.CompressedStaticFilesStorage",  # No Caching
-    },
 }
 
 

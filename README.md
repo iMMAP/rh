@@ -1,6 +1,6 @@
 # ReportHub from iMMAP
 
-
+Staging app: [Staging demo](https://dev.reporthub.immap.org/)
 Documentation: [Technical Documentation](https://immap.github.io/rh/)
 
 
@@ -81,28 +81,3 @@ poetry add package_name
 ```shell
 poetry add --dev package_name
 ```
-
-### View dependencies tree
-
-```shell
-poetry show
-```
-
-## Production
-
-Build the frontend assets
-
-```shell
-make npm-build
-```
-
-## Linting and formatting 
-[Ruff](https://github.com/astral-sh/ruff) is used for linting and formatting.
-
-Ruff is an extremely fast Python linter and code formatter.
-It can replace Flake8 and black formatter
-
-Install the vs code extension to setup immediatly.
-
-
-

@@ -524,7 +524,7 @@ def get_activity_empty_form(request):
 
     # Prepare context for rendering the activity empty form template
     context = {
-        "form": activity_plan_formset.empty_form,
+        "form": activity_plan_formset,
         "target_location_formset": target_location_formset,
         "project": project,
     }

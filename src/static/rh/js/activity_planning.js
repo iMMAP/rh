@@ -377,11 +377,11 @@ function getLocations(locationPrefix, locationType, parentType, clearZone=null) 
 					$(`select#id_${locationPrefix}-${locationType}`).val(selectedLocations);
 				}
 
-				if(locationType == 'zone' && data === ''){
-					$(`#id_${locationPrefix}-${locationType}`).parent().hide();
-				}else{
-					$(`#id_${locationPrefix}-${locationType}`).parent().show();
-				}
+				// if(locationType == 'zone' && data === ''){
+				// 	$(`#id_${locationPrefix}-${locationType}`).parent().hide();
+				// }else{
+				// 	$(`#id_${locationPrefix}-${locationType}`).parent().show();
+				// }
 					
 			},
 			error: function (error) {

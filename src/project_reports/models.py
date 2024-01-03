@@ -1,6 +1,15 @@
 from django.db import models
 
-from rh.models import ActivityPlan, Disaggregation, Indicator, Location, LocationType, Project, ReportType
+from rh.models import (
+    ActivityPlan,
+    Disaggregation,
+    Indicator,
+    Location,
+    LocationType,
+    Project,
+    ReportType,
+    FacilitySiteType,
+)
 
 # ##############################################
 # ############# Project Reporting ##############
@@ -89,6 +98,7 @@ class TargetLocationReport(models.Model):
         blank=True,
     )
     location_type = models.ForeignKey(LocationType, on_delete=models.SET_NULL, null=True, blank=True)
+    facility_site_type = models.ForeignKey(FacilitySiteType, on_delete=models.SET_NULL, null=True)
 
     def __str__(self):
         return f"{self.activity_plan_report}, {self.province}, {self.district}"

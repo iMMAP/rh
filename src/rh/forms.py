@@ -12,6 +12,7 @@ from .models import (
     Organization,
     Project,
     TargetLocation,
+    FacilitySiteType,
 )
 
 
@@ -222,6 +223,8 @@ class TargetLocationForm(forms.ModelForm):
         )
         self.fields["province"].queryset = self.fields["province"].queryset.filter(type="Province")
         self.fields["district"].queryset = self.fields["district"].queryset.filter(type="District")
+        # Get only the relevant facility types -  related to cluster
+        self.fields["facility_site_type"].queryset = FacilitySiteType.objects.all()
         self.fields["zone"].queryset = self.fields["zone"].queryset.filter(type="Zone")
         self.fields["province"].widget.attrs.update(
             {
@@ -295,9 +298,6 @@ class ActivityPlanForm(forms.ModelForm):
             {"onchange": f"updateActivityTitle('{prefix}', 'id_{prefix}-activity_detail');"}
         )
         self.fields["indicators"].widget.attrs.update({"style": "height: 128px;"})
-        # self.fields["facility_type"].queryset = self.fields[
-        #     "facility_type"
-        # ].queryset.filter(cluster__in=cluster_ids)
 
 
 ActivityPlanFormSet = inlineformset_factory(

@@ -174,7 +174,7 @@ class LocationType(models.Model):
 
 class FacilitySiteType(models.Model):
     cluster = models.ForeignKey(Cluster, on_delete=models.SET_NULL, blank=True, null=True)
-    name = models.fields.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
+    name = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
 
     def __str__(self):
         return self.name
@@ -186,7 +186,7 @@ class FacilitySiteType(models.Model):
 
 class ImplementationModalityType(models.Model):
     code = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
-    name = models.fields.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
+    name = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
 
     def __str__(self):
         return self.name
@@ -199,7 +199,7 @@ class ImplementationModalityType(models.Model):
 class TransferMechanismType(models.Model):
     modality_id = models.ForeignKey(ImplementationModalityType, on_delete=models.SET_NULL, blank=True, null=True)
     code = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
-    name = models.fields.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
+    name = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
 
     def __str__(self):
         return self.name
@@ -211,7 +211,7 @@ class TransferMechanismType(models.Model):
 
 class PackageType(models.Model):
     code = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
-    name = models.fields.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
+    name = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
 
     def __str__(self):
         return self.name
@@ -223,7 +223,7 @@ class PackageType(models.Model):
 
 class TransferCategory(models.Model):
     code = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
-    name = models.fields.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
+    name = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
 
     def __str__(self):
         return self.name
@@ -235,7 +235,7 @@ class TransferCategory(models.Model):
 
 class GrantType(models.Model):
     code = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
-    name = models.fields.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
+    name = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
 
     def __str__(self):
         return self.name
@@ -247,7 +247,7 @@ class GrantType(models.Model):
 
 class UnitType(models.Model):
     code = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
-    name = models.fields.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
+    name = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
 
     def __str__(self):
         return self.name
@@ -259,7 +259,7 @@ class UnitType(models.Model):
 
 class ReportType(models.Model):
     code = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
-    name = models.fields.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
+    name = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
 
     def __str__(self):
         return self.name
@@ -557,14 +557,16 @@ class TargetLocation(models.Model):
         blank=True,
     )
     location_type = models.ForeignKey(LocationType, on_delete=models.SET_NULL, null=True, blank=True)
+    classification = models.CharField(max_length=15, choices=TARGET_CLASSIFICATION, blank=True, null=True)
 
     implementing_partner = models.ForeignKey(Organization, on_delete=models.SET_NULL, null=True, blank=True)
+
+    facility_site_type = models.ForeignKey(FacilitySiteType, on_delete=models.SET_NULL, null=True)
 
     site_monitoring = models.BooleanField(default=False)
     site_name = models.CharField(max_length=255, blank=True, null=True)
     site_lat = models.CharField(max_length=255, blank=True, null=True)
     site_long = models.CharField(max_length=255, blank=True, null=True)
-    classification = models.CharField(max_length=15, choices=TARGET_CLASSIFICATION, blank=True, null=True)
     old_id = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
 
     def __str__(self):

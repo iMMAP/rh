@@ -1,6 +1,7 @@
 # ReportHub from iMMAP
 
 Staging app: [Staging demo](https://dev.reporthub.immap.org/)
+
 Documentation: [Technical Documentation](https://immap.github.io/rh/)
 
 

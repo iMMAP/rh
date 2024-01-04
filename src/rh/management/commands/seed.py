@@ -18,8 +18,8 @@ from rh.factory import (
     IndicatorFactory,
 )
 
-from users.models import Profile
 from django.contrib.auth.models import User
+from rh.models import Cluster
 # from django.contrib.auth.hashers import make_password
 
 
@@ -39,13 +39,6 @@ class Command(BaseCommand):
         Admin2Factory.create_batch(amount * 2)
         Admin3Factory.create_batch(amount * 2)
 
-        password = "bcrypt$$2b$12$eRuG.5HPTy3ZaFrQmFMox.3Zvf0p5pj8Z0qYDh/j1Cetr93Jm005a"  # admin
-
-        user = User.objects.update_or_create(
-            username="admin", email="admin@admin.com", password=password, is_superuser=1, is_staff=1
-        )
-        Profile.objects.create(user=user)
-
         # Fake main activities
         ClusterFactory.create_batch(amount)
         OrganizationFactory.create_batch(amount)
@@ -56,7 +49,15 @@ class Command(BaseCommand):
         ActivityDetailFactory.create_batch(amount)
         DisaggregationFactory.create_batch(amount)
         IndicatorFactory.create_batch(amount)
-        # ProfileFactory.create_batch(amount)
+
+        password = "bcrypt$$2b$12$eRuG.5HPTy3ZaFrQmFMox.3Zvf0p5pj8Z0qYDh/j1Cetr93Jm005a"  # admin
+        user = User.objects.update_or_create(
+            username="admin", email="admin@admin.com", password=password, is_superuser=1, is_staff=1
+        )
+        user[0].profile.country_id = 1
+        user[0].profile.organization_id = 1
+        user[0].profile.clusters.add(Cluster.objects.get(pk=1))
+        user[0].profile.save()
 
         # Fake projects
         ProjectFactory.create_batch(amount)

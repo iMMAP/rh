@@ -60,7 +60,7 @@ class CountryFactory(DjangoModelFactory):
 
     @factory.lazy_attribute
     def code(self):
-        return self.name.capitalize()
+        return f"{self.name.capitalize()}-{self.level}-{random.randint(1, 100)}"
 
 
 class Admin1Factory(DjangoModelFactory):
@@ -81,7 +81,7 @@ class Admin1Factory(DjangoModelFactory):
 
     @factory.lazy_attribute
     def code(self):
-        return self.name.capitalize()
+        return f"{self.name.capitalize()}-{self.level}-{random.randint(1, 100)}"
 
 
 class Admin2Factory(DjangoModelFactory):
@@ -102,7 +102,7 @@ class Admin2Factory(DjangoModelFactory):
 
     @factory.lazy_attribute
     def code(self):
-        return self.name.capitalize()
+        return f"{self.name.capitalize()}-{self.level}-{random.randint(1, 100)}"
 
 
 class Admin3Factory(DjangoModelFactory):
@@ -123,7 +123,7 @@ class Admin3Factory(DjangoModelFactory):
 
     @factory.lazy_attribute
     def code(self):
-        return self.name.capitalize()
+        return f"{self.name.capitalize()}-{self.level}-{random.randint(1, 100)}"
 
 
 class ClusterFactory(factory.django.DjangoModelFactory):
@@ -486,7 +486,7 @@ class ActivityPlanFactory(DjangoModelFactory):
 
     project = factory.SubFactory(ProjectFactory)
 
-    title = factory.Faker("sentence", nb_words=4)
+    # title = factory.Faker("sentence", nb_words=4)
 
     activity_domain = factory.Iterator(ActivityDomain.objects.all())
 

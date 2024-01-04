@@ -249,14 +249,13 @@ admin.site.register(Project, ProjectAdmin)
 
 class ActivityPlanAdmin(admin.ModelAdmin):
     list_display = (
-        "title",
         "project",
         "beneficiary",
         "beneficiary_category",
         "state",
         "active",
     )
-    search_fields = ("title", "state", "active", "project__title")
+    search_fields = ("state", "active", "project__title")
     list_filter = ("state", "active", "project__code")
     form = ActivityPlanModelAdminForm
 
@@ -266,7 +265,6 @@ admin.site.register(ActivityPlan, ActivityPlanAdmin)
 
 class TargetLocationAdmin(admin.ModelAdmin):
     list_display = (
-        "title",
         "site_name",
         "project",
         "activity_plan",

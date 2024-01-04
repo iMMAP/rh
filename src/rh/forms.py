@@ -252,8 +252,8 @@ TargetLocationFormSet = inlineformset_factory(
 )
 
 DisaggregationFormSet = inlineformset_factory(
-    TargetLocation,
-    DisaggregationLocation,
+    parent_model=TargetLocation,
+    model=DisaggregationLocation,
     fields="__all__",
     extra=0,  # Number of empty forms to display
 )
@@ -271,10 +271,6 @@ class ActivityPlanForm(forms.ModelForm):
 
     def __init__(self, *args, project, **kwargs):
         super().__init__(*args, **kwargs)
-        clusters = project.clusters.all()
-        activity_domains = project.activity_domains.all()
-        activity_domains = list(activity_domains.all().values_list("pk", flat=True))
-        list(clusters.values_list("pk", flat=True))
         prefix = kwargs.get("prefix")
 
         self.fields["save"] = forms.BooleanField(
@@ -282,9 +278,7 @@ class ActivityPlanForm(forms.ModelForm):
             initial=False,
             widget=forms.HiddenInput(attrs={"name": self.prefix + "-save"}),
         )
-        self.fields["activity_domain"].queryset = self.fields["activity_domain"].queryset.filter(
-            pk__in=activity_domains
-        )
+        self.fields["activity_domain"].queryset = project.activity_domains.all()
         self.fields["activity_domain"].widget.attrs.update(
             {
                 "data-form-prefix": f"{prefix}",
@@ -301,8 +295,8 @@ class ActivityPlanForm(forms.ModelForm):
 
 
 ActivityPlanFormSet = inlineformset_factory(
-    Project,
-    ActivityPlan,
+    parent_model=Project,
+    model=ActivityPlan,
     form=ActivityPlanForm,
     extra=0,
     can_delete=True,

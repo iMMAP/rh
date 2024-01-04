@@ -18,7 +18,7 @@ from rh.factory import (
     IndicatorFactory,
 )
 
-# from users.factory import ProfileFactory
+from users.models import Profile
 from django.contrib.auth.models import User
 # from django.contrib.auth.hashers import make_password
 
@@ -32,17 +32,19 @@ class Command(BaseCommand):
         parser.add_argument("--amount", type=int, help="The amount of fake data you want")
         # parser.add_argument('amount', nargs='+', type=int)
 
-    def _generate_data(self, amount):
-        password = "bcrypt$$2b$12$eRuG.5HPTy3ZaFrQmFMox.3Zvf0p5pj8Z0qYDh/j1Cetr93Jm005a"  # admin
-        User.objects.update_or_create(
-            username="admin", email="admin@admin.com", password=password, is_superuser=1, is_staff=1
-        )
-
+    def _generate_data(self, amount): 
         # Fake Locations
         CountryFactory.create_batch(amount)
         Admin1Factory.create_batch(amount * 2)
         Admin2Factory.create_batch(amount * 2)
         Admin3Factory.create_batch(amount * 2)
+
+        password = "bcrypt$$2b$12$eRuG.5HPTy3ZaFrQmFMox.3Zvf0p5pj8Z0qYDh/j1Cetr93Jm005a"  # admin
+
+        user = User.objects.update_or_create(
+            username="admin", email="admin@admin.com", password=password, is_superuser=1, is_staff=1
+        )
+        Profile.objects.create(user=user)
 
         # Fake main activities
         ClusterFactory.create_batch(amount)

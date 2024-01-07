@@ -35,27 +35,48 @@
         </li>
     </ul>
       <ul class="buttons-list-inline">
-		{% if monthly_report.pk  %}
-			<li>
-				<a href="#" 
-					data-url="{% url 'copy_project_monthly_report' monthly_report.pk %}"
-					data-type="copy" 
-					data-name="last month activities" 
-					class="btn btn-gray show-sw-action-popup">
-					<span class="btn-text">Copy last month activities</span>
-					<span class="icon-copy-outline"></span>
-				</a>
-			</li>
-		{% endif %}
+        {% if monthly_report.pk  %}
+          <li>
+            <a href="#" 
+              data-url="{% url 'copy_project_monthly_report' monthly_report.pk %}"
+              data-type="copy" 
+              data-name="last month activities" 
+              class="btn btn-gray show-sw-action-popup">
+              <span class="btn-text">Copy last month activities</span>
+              <span class="icon-copy-outline"></span>
+            </a>
+          </li>
+        {% endif %}
+        {% if monthly_report %}
         <li>
-          <a href="#" class="btn btn-red">
+          <button class="export-button">
+            <a href="#"
+                data-url="{% url 'export_monthly_report_template' monthly_report.pk %}"
+                class="btn btn-red project-detail"
+                title="Export Template">
+                <span class="btn-text">Export Template</span>
+                <span class="icon-download"></span>
+                <!-- <span class="project-detail icon-download"></span> -->
+            </a>
+          </button>
+        </li>
+        
+        <li>
+          <a href="#" 
+            data-url="{% url 'import_monthly_reports' monthly_report.pk %}"
+            class="btn btn-red show-sw-import-popup">
             <span class="btn-text">Import</span>
+            {% csrf_token %}
             <span class="icon-upload"></span>
           </a>
         </li>
+        {% endif %}
       </ul>
     </div>
   </div>
+  <script>
+      var csrfToken = '{{ csrf_token }}';
+  </script>
   {% block report_body %}
   {% endblock report_body %}
 

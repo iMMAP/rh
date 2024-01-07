@@ -1,8 +1,9 @@
 from django import forms
 from django.forms.models import inlineformset_factory
 
-from .models import ActivityPlanReport, DisaggregationLocationReport, ProjectMonthlyReport, TargetLocationReport
 from rh.models import Indicator
+
+from .models import ActivityPlanReport, DisaggregationLocationReport, ProjectMonthlyReport, TargetLocationReport
 
 
 class ProjectMonthlyReportForm(forms.ModelForm):
@@ -75,3 +76,11 @@ class IndicatorsForm(forms.ModelForm):
     class Meta:
         model = Indicator
         fields = "__all__"
+
+
+class MonthlyReportFileUpload(forms.Form):
+    """
+    File upload form for monthly reports data import
+    """
+
+    file = forms.FileField()

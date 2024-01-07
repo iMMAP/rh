@@ -126,7 +126,7 @@ urlpatterns = [
     ),
     # Exports
     path(
-        "export-excel/<int:project_id>/",
+        "project/export-excel/<int:project_id>/",
         export_views.ProjectExportExcelView.as_view(),
         name="export_project_excel",
     ),

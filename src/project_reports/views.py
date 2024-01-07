@@ -2,6 +2,7 @@ import calendar
 import json
 from datetime import datetime, timedelta
 
+# import pandas as pd
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.forms.models import inlineformset_factory
@@ -11,6 +12,7 @@ from django.template.loader import render_to_string
 from django.urls import reverse
 from django.utils import timezone
 from django.views.decorators.cache import cache_control
+from tablib import Dataset
 
 from rh.models import ImplementationModalityType, Indicator, Location, Project
 
@@ -18,10 +20,12 @@ from .forms import (
     ActivityPlanReportForm,
     DisaggregationReportFormSet,
     IndicatorsForm,
+    MonthlyReportFileUpload,
     ProjectMonthlyReportForm,
     TargetLocationReportFormSet,
 )
 from .models import ActivityPlanReport, DisaggregationLocationReport, ProjectMonthlyReport, TargetLocationReport
+from .resources import ActivityPlanReportResource, DisaggregationLocationReportResource, TargetLocationReportResource
 
 
 @cache_control(no_store=True)
@@ -874,3 +878,109 @@ def get_indicator_reference(request):
         print(indicator_refereces)
         data = {"data": list(indicator_refereces), "message": "success", "status": 200}
         return JsonResponse(data, safe=False)
+
+
+def import_monthly_reports(request, report):
+    """Process Post request for file upload."""
+    monthly_report = get_object_or_404(ProjectMonthlyReport, pk=report)
+
+    if request.method == "POST":
+        form = MonthlyReportFileUpload(request.POST, request.FILES)  # Pass request.FILES to the form
+        if form.is_valid():
+            activity_plan_resource = ActivityPlanReportResource()
+            location_resource = TargetLocationReportResource()
+            disaggregation_resource = DisaggregationLocationReportResource()
+
+            dataset = Dataset()
+            activity_plan_data = Dataset()
+            location_data = Dataset()
+            disaggregation_data = Dataset()
+
+            # Define headers for each dataset
+            activity_plan_data.headers = [
+                "id",
+                "activity_domain",
+                "activity_type",
+                "activity_detail",
+                "indicator",
+                "report_types",
+            ]
+            location_data.headers = ["id", "country", "province", "district", "zone", "location_type"]
+            disaggregation_data.headers = ["id", "disaggregation", "target"]
+
+            report_file = form.cleaned_data["file"]  # Access the file from the cleaned data
+
+            file_data = dataset.load(report_file.read())
+            df = file_data.get_df()
+
+            for index, row in df.iterrows():
+                # Extract data for activity_plan_data
+                activity_plan_data.append(
+                    [
+                        "",
+                        row.get("activity_domain"),
+                        row.get("activity_type"),
+                        row.get("activity_detail"),
+                        row.get("indicator"),
+                        row.get("report_types"),
+                    ]
+                )
+
+                # Extract data for location_data
+                location_data.append(
+                    [
+                        "",
+                        row.get("country"),
+                        row.get("province"),
+                        row.get("district"),
+                        row.get("zone"),
+                        row.get("location_type"),
+                    ]
+                )
+
+                # Extract data for disaggregation_data
+                disaggregation_data.append(
+                    [
+                        "",
+                        row.get("disaggregation"),
+                        row.get("target"),
+                    ]
+                )
+
+                # Now you have dictionaries with keys corresponding to column names for each resource
+                # You can use these dictionaries to import data into your resources
+                # context = {'monthly_report': monthly_report}
+
+                plan_import_result = activity_plan_resource.import_data(
+                    activity_plan_data, monthly_report=monthly_report, dry_run=True
+                )
+                if not plan_import_result.has_errors():
+                    activity_plan_resource.import_data(activity_plan_data, dry_run=False)
+                    del activity_plan_data[0]
+
+                location_import_result = location_resource.import_data(location_data, dry_run=True)
+                if not location_import_result.has_errors():
+                    location_resource.import_data(location_data, dry_run=False)
+                    del location_data[0]
+                disaggregation_import_result = disaggregation_resource.import_data(disaggregation_data, dry_run=True)
+                if not disaggregation_import_result.has_errors():
+                    disaggregation_resource.import_data(disaggregation_data, dry_run=False)
+                    del disaggregation_data[0]
+
+            # Generate the URL using reverse
+            url = reverse(
+                "view_monthly_report",
+                kwargs={
+                    "project": monthly_report.project.pk,
+                    "report": monthly_report.pk,
+                },
+            )
+
+            # Return the URL in a JSON response
+            response_data = {"redirect_url": url}
+            return JsonResponse(response_data)
+
+    else:
+        form = MonthlyReportFileUpload()  # Initialize the form without data
+
+    return render(request, "your_template.html", {"form": form})

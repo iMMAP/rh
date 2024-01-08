@@ -21,7 +21,7 @@ DONORS_CSV = "./data/updated_nov_2023/donors.csv"
 USERS_CSV = "./data/updated_nov_2023/user.csv"
 FACILITIES = "./data/updated_nov_2023/facility_site_types.csv"
 DISS_CSV = "./data/updated_nov_2023/dissaggregation.csv"
-
+STOCKUNIT_CSV = "./data/updated_nov_2023/stockunits.csv"
 
 def get_sqlite_client(dbname):
     """
@@ -45,6 +45,25 @@ def import_currencies_from_csv(conn, currencies_csv):
         try:
             c.execute(f"""insert into {table}(name) select name from tmp_currency""")
             c.execute("DROP TABLE tmp_currency;")
+        except Exception as exception:
+            conn.rollback()
+
+
+def import_stock_units_from_csv(conn, stockunits_csv):
+    """
+    Import Stock Unit from CSV
+    """
+    c = conn.cursor()
+    df = pd.read_csv(stockunits_csv)
+
+    if len(df) > 0:
+        table = "stock_stockunit"
+
+        df.to_sql("tmp_stockunit", conn, if_exists="replace", index=False)
+
+        try:
+            c.execute(f"""insert into {table}(name) select name from tmp_stockunit""")
+            c.execute("DROP TABLE tmp_stockunit;")
         except Exception as exception:
             conn.rollback()
 
@@ -795,6 +814,8 @@ try:
     import_beneficiary_types_from_csv(connection,BENEFICIARY_TYPES_CSV)
 
     import_dissaggregation_from_csv(connection,DISS_CSV)
+
+    import_stock_units_from_csv(connection, STOCKUNIT_CSV)
 
     connection.commit()
 

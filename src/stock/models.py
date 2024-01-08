@@ -1,7 +1,7 @@
 from django.db import models
 
 from rh.models import Cluster, Location
-
+NAME_MAX_LENGTH = 200
 
 class WarehouseLocation(models.Model):
     province = models.ForeignKey(
@@ -31,6 +31,7 @@ class WarehouseLocation(models.Model):
 class StockType(models.Model):
     cluster = models.ForeignKey(Cluster, on_delete=models.SET_NULL, null=True, blank=True)
     stock_items = models.CharField(max_length=255, blank=True, null=True)
+    old_id = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
 
     def __str__(self):
         return self.stock_items

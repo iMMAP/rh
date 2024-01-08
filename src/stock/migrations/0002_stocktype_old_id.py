@@ -4,15 +4,14 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('stock', '0001_initial'),
+        ("stock", "0001_initial"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='stocktype',
-            name='old_id',
+            model_name="stocktype",
+            name="old_id",
             field=models.CharField(blank=True, max_length=200, null=True),
         ),
     ]

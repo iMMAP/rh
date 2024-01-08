@@ -1,25 +1,25 @@
+from django.contrib.auth.models import User
 from django.core.management.base import BaseCommand
 
 # from users.factory import UserFactory
 from rh.factory import (
-    ClusterFactory,
-    OrganizationFactory,
-    DonorFactory,
-    CountryFactory,
+    ActivityDetailFactory,
+    ActivityDomainFactory,
+    ActivityTypeFactory,
     Admin1Factory,
     Admin2Factory,
     Admin3Factory,
     BeneficiaryTypeFactory,
-    ActivityDomainFactory,
-    ActivityTypeFactory,
-    ActivityDetailFactory,
+    ClusterFactory,
+    CountryFactory,
     DisaggregationFactory,
-    ProjectFactory,
+    DonorFactory,
     IndicatorFactory,
+    OrganizationFactory,
+    ProjectFactory,
 )
-
-from django.contrib.auth.models import User
 from rh.models import Cluster
+
 # from django.contrib.auth.hashers import make_password
 
 
@@ -32,7 +32,7 @@ class Command(BaseCommand):
         parser.add_argument("--amount", type=int, help="The amount of fake data you want")
         # parser.add_argument('amount', nargs='+', type=int)
 
-    def _generate_data(self, amount): 
+    def _generate_data(self, amount):
         # Fake Locations
         CountryFactory.create_batch(amount)
         Admin1Factory.create_batch(amount * 2)

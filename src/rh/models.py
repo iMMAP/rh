@@ -31,7 +31,7 @@ class Location(models.Model):
         blank=True,
         null=True,
     )
-    code = models.CharField(max_length=200,unique=True)
+    code = models.CharField(max_length=200, unique=True)
     name = models.CharField(max_length=200)
     level = models.IntegerField(default=0)
     original_name = models.CharField(max_length=200, blank=True, null=True)
@@ -97,8 +97,8 @@ class Organization(models.Model):
     countries = models.ManyToManyField(Location, blank=True)
     clusters = models.ManyToManyField(Cluster, blank=True)
 
-    name = models.CharField(max_length=NAME_MAX_LENGTH,unique=True)
-    code = models.CharField(max_length=NAME_MAX_LENGTH,unique=True)
+    name = models.CharField(max_length=NAME_MAX_LENGTH, unique=True)
+    code = models.CharField(max_length=NAME_MAX_LENGTH, unique=True)
     type = models.CharField(max_length=NAME_MAX_LENGTH, choices=TYPE_CHOICES, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
     updated_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
@@ -307,9 +307,8 @@ class ActivityType(models.Model):
         verbose_name = "Activity Type"
         verbose_name_plural = "Activity Types"
         constraints = [
-            models.UniqueConstraint(fields=['code', 'activity_domain'], name='unique_activitytype_for_activity_domain')
+            models.UniqueConstraint(fields=["code", "activity_domain"], name="unique_activitytype_for_activity_domain")
         ]
-
 
 
 class ActivityDetail(models.Model):
@@ -324,7 +323,7 @@ class ActivityDetail(models.Model):
         verbose_name = "Activity Detail"
         verbose_name_plural = "Activity Details"
         constraints = [
-            models.UniqueConstraint(fields=['code', 'activity_type'], name='unique_ActivityDetail_for_activity_type')
+            models.UniqueConstraint(fields=["code", "activity_type"], name="unique_ActivityDetail_for_activity_type")
         ]
 
 
@@ -358,6 +357,7 @@ class Indicator(models.Model):
         verbose_name = "Indicator"
         verbose_name_plural = "Indicators"
 
+
 # ##############################################
 # ############## Project Planning ##############
 # ##############################################
@@ -375,11 +375,11 @@ class Project(models.Model):
     state = models.CharField(max_length=15, choices=PROJECT_STATES, default="draft", null=True, blank=True)
     active = models.BooleanField(default=True)
     title = models.CharField(max_length=NAME_MAX_LENGTH)
-    code = models.CharField(max_length=NAME_MAX_LENGTH,unique=True)
+    code = models.CharField(max_length=NAME_MAX_LENGTH, unique=True)
 
     is_hrp_project = models.BooleanField(default=False)
     has_hrp_code = models.BooleanField(default=False)
-    hrp_code = models.CharField(max_length=NAME_MAX_LENGTH, null=True, blank=True,unique=True)
+    hrp_code = models.CharField(max_length=NAME_MAX_LENGTH, null=True, blank=True, unique=True)
 
     clusters = models.ManyToManyField(Cluster)
     activity_domains = models.ManyToManyField(ActivityDomain, related_name="activity_domains")

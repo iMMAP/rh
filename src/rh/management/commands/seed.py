@@ -1,25 +1,25 @@
+from django.contrib.auth.models import User
 from django.core.management.base import BaseCommand
 
 # from users.factory import UserFactory
 from rh.factory import (
-    ClusterFactory,
-    OrganizationFactory,
-    DonorFactory,
-    CountryFactory,
+    ActivityDetailFactory,
+    ActivityDomainFactory,
+    ActivityTypeFactory,
     Admin1Factory,
     Admin2Factory,
     Admin3Factory,
     BeneficiaryTypeFactory,
-    ActivityDomainFactory,
-    ActivityTypeFactory,
-    ActivityDetailFactory,
+    ClusterFactory,
+    CountryFactory,
     DisaggregationFactory,
-    ProjectFactory,
+    DonorFactory,
     IndicatorFactory,
+    OrganizationFactory,
+    ProjectFactory,
 )
-
-from django.contrib.auth.models import User
 from rh.models import Cluster
+
 # from django.contrib.auth.hashers import make_password
 
 

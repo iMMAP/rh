@@ -313,8 +313,10 @@ class ActivityType(models.Model):
 
 class ActivityDetail(models.Model):
     activity_type = models.ForeignKey(ActivityType, on_delete=models.SET_NULL, blank=True, null=True)
+
     code = models.CharField(max_length=DESCRIPTION_MAX_LENGTH)
     name = models.CharField(max_length=DESCRIPTION_MAX_LENGTH)
+
 
     def __str__(self):
         return self.name

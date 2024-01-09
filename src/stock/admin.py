@@ -5,7 +5,7 @@ from rh.models import Location
 from .models import (
     StockLocationDetails,
     StockReports,
-    StockType,
+    StockItemsType,
     StockUnit,
     WarehouseLocation,
 )
@@ -40,12 +40,12 @@ admin.AdminSite.get_app_list = get_app_list
 ########### Stock Types Model Admin #############
 #############################################
 class StockTypeAdmin(admin.ModelAdmin):
-    list_display = ("stock_items", "cluster")
-    search_fields = ("Stock Items", "cluster")
+    list_display = ("name", "cluster")
+    search_fields = ("Name", "cluster")
     list_filter = ("cluster",)
 
 
-admin.site.register(StockType, StockTypeAdmin)
+admin.site.register(StockItemsType, StockTypeAdmin)
 
 
 #############################################

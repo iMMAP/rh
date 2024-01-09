@@ -22,6 +22,7 @@ USERS_CSV = "./data/updated_nov_2023/user.csv"
 FACILITIES = "./data/updated_nov_2023/facility_site_types.csv"
 DISS_CSV = "./data/updated_nov_2023/dissaggregation.csv"
 STOCKUNIT_CSV = "./data/updated_nov_2023/stockunits.csv"
+STOCKITEMS_TYPES_CSV = "./data/updated_nov_2023/stockitems_types.csv"
 
 def get_sqlite_client(dbname):
     """
@@ -67,6 +68,49 @@ def import_stock_units_from_csv(conn, stockunits_csv):
         except Exception as exception:
             conn.rollback()
 
+
+def import_stockitems_types_from(conn, stockitems_types_csv):
+    """
+    Import Stock Items types from CSV
+    """
+    c = conn.cursor()
+    df = pd.read_csv(stockitems_types_csv)
+
+    if len(df) > 0:
+        table = "stock_stockitemstype"
+
+        df.to_sql("tmp_stockitemstype", conn, if_exists="replace", index=False)
+
+        try:
+            c.execute(f"""insert into {table}(old_id, cluster_id,stock_items_name) select _id, cluster_id,stock_item_name from tmp_stockitemstype""")
+        except Exception as exception:
+            print(exception)
+            conn.rollback()
+
+
+        try:
+            c.execute('SELECT id,code FROM rh_cluster')
+            cluster_ids = c.fetchall()
+
+    
+            c.execute('SELECT id,cluster_id FROM stock_stockitemstype')
+            stock_itemstypes = c.fetchall()
+
+            # Insert the IDs into the cluster_disaggregation table
+            for cluster_id in cluster_ids:
+                for stock_itemstype in stock_itemstypes:
+                    if cluster_id[1] == stock_itemstype[1]:
+                        c.execute('''
+                        UPDATE stock_stockitemstype
+                        SET cluster_id = ?
+                        WHERE cluster_id = ?
+                        ''', (cluster_id[0],cluster_id[1]))
+        except Exception as e:
+            print(f"Error in stockitem_types and cluster: {e}")
+            conn.rollback()
+        
+        c.execute("DROP TABLE tmp_stockitemstype;")
+            
 
 def import_locations(conn, locations_csv):
     """
@@ -816,6 +860,8 @@ try:
     import_dissaggregation_from_csv(connection,DISS_CSV)
 
     import_stock_units_from_csv(connection, STOCKUNIT_CSV)
+
+    import_stockitems_types_from(connection, STOCKITEMS_TYPES_CSV)
 
     connection.commit()
 

@@ -1,0 +1,203 @@
+_id,admin0pcode,cluster,cluster_id,details,remarks,stock_item_name,stock_item_type
+60c003008e856402218b5e38,AF,Health,health,,,Health: IEHK Basic Unit,health_iehk_basic_unit
+60c003008e856402218b5e39,AF,Health,health,,,Health: IEHK Supplementary Unit,health_iehk_supplementary_unit
+60c003008e856402218b5e3a,AF,Health,health,,,Health: New Born Kit,health_new_born_kit
+60c003008e856402218b5e3b,AF,Health,health,,,Health: Pneumonia Kit,health_pneumonia_kit
+60c003008e856402218b5e3c,AF,Health,health,,,Health: Trauma Kit A,health_trauma_kit_a
+60c003008e856402218b5e3d,AF,Health,health,,,Health: Trauma Kit B,health_trauma_kit_b
+60c003008e856402218b5e3e,AF,Health,health,,,Health: Miscellaneous,health_miscellaneous
+60c003008e856402218b5e3f,AF,Health,health,,,Health: Ringer Lactate,Health: Ringer Lactate
+60c003008e856402218b5e40,AF,Health,health,,,Health: Tent (24sqm),Health: Tent (24sqm)
+60c003008e856402218b5e41,AF,Health,health,,,Health: Chlorine Granules (25kg),Health: Chlorine Granules (25kg)
+60c003008e856402218b5e42,AF,Health,health,,,Health: Cholera Community: Drugs Module,Health: Cholera Community: Drugs Module
+60c003008e856402218b5e43,AF,Health,health,,,Health: Cholera Community: Document Module,Health: Cholera Community: Document Module
+60c003008e856402218b5e44,AF,Health,health,,,Health: Cholera Community: ORP kit,Health: Cholera Community: ORP kit
+60c003008e856402218b5e45,AF,Health,health,,,Health: DDK Kit,health_ddk_kit
+60c003008e856402218b5e46,AF,Health,health,,,"Health: Sprayer (12 L, IK 12 BS)","Health: Sprayer (12 L, IK 12 BS)"
+60c003008e856402218b5e47,AF,Health,health,,,Health: Water Drinking Filter,Health: Water Drinking Filter
+60c003008e856402218b5e48,AF,Health,health,,,Health: Dignity Kit,health_dignity_kit
+60c003008e856402218b5e49,AF,Health,health,,,Health: Clean Delivery Kit,health_clean_delivery_kit
+60c003008e856402218b5e4a,AF,Health,health,,,Health: Kitchen Kit,health_kitchen_kit
+60c003008e856402218b5e4b,AF,Health,health,,,Health: RH Kit 0,health_rb_kit_0
+60c003008e856402218b5e4c,AF,Health,health,,,Health: RH Kit 1A,health_rh_kit _1a
+60c003008e856402218b5e4d,AF,Health,health,,,Health: RH Kit 1B,health_rh_kit_1b
+60c003008e856402218b5e4e,AF,Health,health,,,Health: First Aid Kit,health_first_aid_kit
+60c003008e856402218b5e4f,AF,Health,health,,,Health: RH Kit 2A,health_rh_kit_2a
+60c003008e856402218b5e50,AF,Health,health,,,Health: RH Kit 2B,health_rh_kit_2b
+60c003008e856402218b5e51,AF,Health,health,,,Health: RH Kit 3,health_rh_kit_3
+60c003008e856402218b5e52,AF,Health,health,,,Health: RH Kit 4,health_rh_kit_4
+60c003008e856402218b5e53,AF,Health,health,,,Health: RH Kit 6A,health_rh_kit_6a
+60c003008e856402218b5e54,AF,Health,health,,,Health: RH Kit 6B,health_rh_kit_6b
+60c003008e856402218b5e55,AF,Health,health,,,Health: RH Kit 7,health_rh_ kit_7
+60c003008e856402218b5e56,AF,Health,health,,,Health: RH Kit 5,health_rh_kit_5
+60c003008e856402218b5e57,AF,Health,health,,,Health: RH Kit 9,health_rh_kit 9
+60c003008e856402218b5e58,AF,Health,health,,,Health: RH Kit 10,health_rh_kit_10
+60c003008e856402218b5e59,AF,Health,health,,,Health: RH Kit 8,health_rh_kit_8
+60c003008e856402218b5e5a,AF,Health,health,,,Health: RH Kit 11A,health_rh_kit_11a
+60c003008e856402218b5e5b,AF,Health,health,,,Health: RH Kit 11B,health_rh_kit_11b
+60c003008e856402218b5e5c,AF,Health,health,,,Health: RH Kit 12,health_rh_kit_12
+60c003008e856402218b5e5d,AF,Wash,wash,,,WASH: Aquatabs 33mg,wash_aquatabs
+60c003008e856402218b5e5e,AF,Wash,wash,,,WASH: Aquatabs 1.67g,wash_aquatabs
+60c003008e856402218b5e5f,AF,Wash,wash,,,WASH: Basic Family Water Kit (10 Families),wash_family_water_kit
+60c003008e856402218b5e60,AF,Wash,wash,,,"WASH: Water Tank (Bladder / Other) (2,000 Liters)",wash_water_tank_2000l
+60c003008e856402218b5e61,AF,Wash,wash,,,"WASH: Water Tank (Bladder / Other) (3,000 Liters)",wash_water_tank_3000l
+60c003008e856402218b5e62,AF,Wash,wash,,,"WASH: Water Tank (Bladder / Other) (4,000 Liters)",wash_water_tank_4000l
+60c003008e856402218b5e63,AF,Wash,wash,,,"WASH: Water Tank (Bladder / Other) (5,000 Liters)",wash_water_tank_5000l
+60c003008e856402218b5e64,AF,Wash,wash,,,"WASH: Water Tank (Bladder / Other) (10,000 Liters)",wash_water_tank_10000l
+60c003008e856402218b5e65,AF,Wash,wash,,,"WASH: Water Tank (Bladder / Other) (15,000 Liters)",wash_water_tank_15000l
+60c003008e856402218b5e66,AF,Wash,wash,,,"WASH: Water Tank (Bladder / Other) (20,000 Liters)",wash_water_tank_20000l
+60c003008e856402218b5e67,AF,Wash,wash,,,"WASH: Water Tank (Bladder / Other) (30,000 Liters)",wash_water_tank_30000l
+60c003008e856402218b5e68,AF,Wash,wash,,,"WASH: Water Tank (Bladder / Other) (40,000 Liters)",wash_water_tank_40000l
+60c003008e856402218b5e69,AF,Wash,wash,,,"WASH: Water Tank (Bladder / Other) (50,000 Liters)",wash_water_tank_50000l
+60c003008e856402218b5e6a,AF,Wash,wash,,,WASH: Bucket (10 Liters),wash_bucket_10l
+60c003008e856402218b5e6b,AF,Wash,wash,,,WASH: Bucket (15 Liters),wash_bucket_15l
+60c003008e856402218b5e6c,AF,Wash,wash,,,WASH: Bucket (18 Liters),wash_bucket_18l
+60c003008e856402218b5e6d,AF,Wash,wash,,,WASH: Ceramic Filter,wash_ceramic_filter
+60c003008e856402218b5e6e,AF,Wash,wash,,,WASH: Chlorine Bleaching Powder (60-65% 35-40KG),wash_chlorine_bleach_powder
+60c003008e856402218b5e6f,AF,Wash,wash,,,"WASH: Chlorine PUR Sachets Water Floc. & Disinfectant,PDR/BOX-240",wash_chlorine_pur_satchets
+60c003008e856402218b5e70,AF,Wash,wash,,,"WASH: Water Tank (Bladder / Other) (1,000 Liters)",wash_water_tank_1000l
+60c003008e856402218b5e71,AF,Wash,wash,,,WASH: Complete Latrine Tent,wash_latrine_tent
+60c003008e856402218b5e72,AF,Wash,wash,,,WASH: DelAgua kit,wash_delagua_kit
+60c003008e856402218b5e73,AF,Wash,wash,,,WASH: Emergency Family Latrine,wash_emergency_family_latrine
+60c003008e856402218b5e74,AF,Wash,wash,,,WASH: Emergency Latrine Slab,wash_emergency_latrine_slab
+60c003008e856402218b5e75,AF,Wash,wash,,,WASH: Cloth for Water Filter,wash_cloth_water_filter
+60c003008e856402218b5e76,AF,Wash,wash,,,WASH: HTH Chlorine,wash_hth_chlorine
+60c003008e856402218b5e77,AF,Wash,wash,,,WASH: Hygiene Kits,wash_hygiene_kits
+60c003008e856402218b5e78,AF,Wash,wash,,,WASH: Instruction on use of Chlorine Tablets (Water Kit),wash_instruction_chlorine_tablets_use
+60c003008e856402218b5e79,AF,Wash,wash,,,WASH: Instruction on use of Hygiene Kit (Hygiene Kit),wash_instruction_hygiene_kit_use
+60c003008e856402218b5e7a,AF,Wash,wash,,,WASH: Family Hygiene+Dignity Kit,wash_family_hygiene_dignity_kit
+60c003008e856402218b5e7b,AF,Wash,wash,,,WASH: Jerrycan (20 liters),wash_jerrycan_20l
+60c003008e856402218b5e7c,AF,Wash,wash,,,WASH: Jerrycan (10 liters),wash_jerrycan_10l
+60c003008e856402218b5e7d,AF,Wash,wash,,,WASH: Metal Door,wash_metal_door
+60c003008e856402218b5e7e,AF,Wash,wash,,,WASH: Leaflet on use of Chlorine Tablets (Dari + Pashtu),wash_leaflet_chlorine_tablets_use
+60c003008e856402218b5e7f,AF,Wash,wash,,,WASH: Pump Spares (Air Pump),wash_pump_spares_air_pump
+60c003008e856402218b5e80,AF,Wash,wash,,,WASH: Pump Spares (Claft on the Top of the Wall),wash_pump_spares_claft
+60c003008e856402218b5e81,AF,Wash,wash,,,"WASH: Pump Spares (Clift 1"" on the Top of the Wall)",wash_pump_spares_clift
+60c003008e856402218b5e82,AF,Wash,wash,,,WASH: Pump Spares (Joining Solution (Glue)),wash_pump_spares_glue
+60c003008e856402218b5e83,AF,Wash,wash,,,WASH: Pump Spares (Long Pedestal Afrideve Hand pump),wash_pump_spares_long_pedestal
+60c003008e856402218b5e84,AF,Wash,wash,,,WASH: Pump Spares (PAMIR Hand Pump + Cylinder and Access),wash_pump_spares_pamir_hand_pump_cylinder
+60c003008e856402218b5e85,AF,Wash,wash,,,WASH: Pump Spares (PAMIR Hand Pump),wash_pump_spares_pamir_hand_pump
+60c003008e856402218b5e86,AF,Wash,wash,,,WASH: Pump Spares (PVC Vent Pipe 4'),wash_pump_spares_pvc_pipe_4_inch
+60c003008e856402218b5e87,AF,Wash,wash,,,WASH: Pump Spares (PVC Filter Pipe 6' Class D (26.28 KG)),wash_pump_spares_pvc_pipe_67_inch
+60c003008e856402218b5e88,AF,Wash,wash,,,WASH: Pump Spares (PVC Pipe 63 MM Class E),wash_pump_spares_pvc_pipe_63_mm
+60c003008e856402218b5e89,AF,Wash,wash,,,WASH: Pump Spares (Rod Center Laiser),wash_pump_spares_rod_center_laiser
+60c003008e856402218b5e8a,AF,Wash,wash,,,WASH: Pump Spares (Rod),wash_pump_spares_rod_center_laiser
+60c003008e856402218b5e8b,AF,Wash,wash,,,WASH: Pump Spares (Short Pedestal Afrideve Handpump),wash_pump_spares_short_pedestal
+60c003008e856402218b5e8c,AF,Wash,wash,,,WASH: Soap (Hand Washing),wash_soap_hand_washing
+60c003008e856402218b5e8d,AF,Wash,wash,,,WASH: Soap (Laundry),wash_soap_laundry
+60c003008e856402218b5e8e,AF,Wash,wash,,,WASH: Squatting Plate (Plastic 120x80cm),wash_squatting_plate_120_80
+60c003008e856402218b5e8f,AF,Wash,wash,,,WASH: Squatting Plate (Plastic 80x60cm),wash_squatting_plate_80_60
+60c003008e856402218b5e90,AF,Wash,wash,,,WASH: Water Filter Cloth,wash_water_filter_cloth
+60c003008e856402218b5e91,AF,Wash,wash,,,WASH: Water Kit (1 Family),wash_water_kit
+60c003008e856402218b5e92,AF,Wash,wash,,,WASH: Pump Spares (Cap for Bottom of Casing),wash_pump_spares_cap
+60c003008e856402218b5e93,AF,Wash,wash,,,"WASH: Metal Poles (120mm - 140mm diameter x 2,000mm length )",wash_metal_poles
+60c003008e856402218b5e94,AF,Wash,wash,,,WASH: Trap Door & Frame/Prefab RCC,wash_trap_door_prefab_rcc
+60c003008e856402218b5e95,AF,Wash,wash,,,WASH: Mesh Net,wash_mesh_net
+60c003008e856402218b5e96,AF,Wash,wash,,,WASH: Cement,wash_cement
+60c003008e856402218b5e97,AF,Wash,wash,,,WASH: Wire Gauze Fly Trap,wash_wire_gauze_fly_trap
+60c003008e856402218b5e98,AF,Wash,wash,,,"WASH: Door Lintel (L=1,400mm & C=25 cm)",wash_door_lintel
+60c003008e856402218b5e99,AF,Wash,wash,,,WASH: Hygiene Kits for COVID-19,wash_hygiene_kits_covid19
+60c003008e856402218b5e9a,AF,ESNFI,esnfi,,,ESNFI: Standard NFI Kit (16 items),esnfi_standard_nfi_kit
+60c003008e856402218b5e9b,AF,Wash,wash,,,WASH: Water Taps,wash_water_taps
+60c003008e856402218b5e9c,AF,ESNFI,esnfi,,,ESNFI: Emergency Shelter Repair Toolkit (11+2 items),esnfi_emergency_shelter_repeair_toolkit
+60c003008e856402218b5e9d,AF,ESNFI,esnfi,,,ESNFI: Winterization Kit,esnfi_winterization_kit
+60c003008e856402218b5e9e,AF,ESNFI,esnfi,,,ESNFI: Multi-Purpose Cash,esnfi_multi_purpose_cash
+60c003008e856402218b5e9f,AF,ESNFI,esnfi,,,ESNFI: Cash for NFIs,esnfi_cash_nfis
+60c003008e856402218b5ea0,AF,ESNFI,esnfi,,,ESNFI: Cash for Winterization,esnfi_cash_winterization
+60c003008e856402218b5ea1,AF,ESNFI,esnfi,,,ESNFI: Cash for Rent,esnfi_cash_rent
+60c003008e856402218b5ea2,AF,ESNFI,esnfi,,,ESNFI: Cash for Shelter Repair,esnfi_cash_shelter_repair
+60c003008e856402218b5ea3,AF,ESNFI,esnfi,,,ESNFI: Cash for Gas,esnfi_cash_voucher
+60c003008e856402218b5ea4,AF,ESNFI,esnfi,,,ESNFI: Axe (Iron with Wood Handle),esnfi_axe
+60c003008e856402218b5ea5,AF,ESNFI,esnfi,,,ESNFI: Beam,esnfi_beam
+60c003008e856402218b5ea6,AF,ESNFI,esnfi,,,ESNFI: Big Spoon for Cooking,esnfi_big_spoon
+60c003008e856402218b5ea7,AF,ESNFI,esnfi,,,ESNFI: Blankets,esnfi_blankets
+60c003008e856402218b5ea8,AF,ESNFI,esnfi,,,ESNFI: Bowl,esnfi_bowl
+60c003008e856402218b5ea9,AF,ESNFI,esnfi,,,ESNFI: Claw Hammer (4' Steel Magnetic Head),esnfi_hammer
+60c003008e856402218b5eaa,AF,ESNFI,esnfi,,,"ESNFI: Clothes for Children (e.g. socks, gloves, sweaters, hats)",esnfi_clothes_children
+60c003008e856402218b5eab,AF,ESNFI,esnfi,,,"ESNFI: Clothes for Men (e.g. socks, gloves, sweaters, hats)",esnfi_clothes_men
+60c003008e856402218b5eac,AF,ESNFI,esnfi,,,ESNFI: Emergency Shelter Kit (2+1 items),esnfi_emergency_shelter_kit
+60c003008e856402218b5ead,AF,ESNFI,esnfi,,,"ESNFI: Clothes for Women (e.g. socks, gloves, sweaters, hats)",esnfi_clothes_women
+60c003008e856402218b5eae,AF,ESNFI,esnfi,,,ESNFI: Cooking Pot,esnfi_cooking_pot
+60c003008e856402218b5eaf,AF,ESNFI,esnfi,,,ESNFI: Family Sized Tent,esnfi_family_sized_tent
+60c003008e856402218b5eb0,AF,ESNFI,esnfi,,,ESNFI: Fuel Gel,esnfi_fuel_gel
+60c003008e856402218b5eb1,AF,ESNFI,esnfi,,,ESNFI: Gas Cylinder,esnfi_gas
+60c003008e856402218b5eb2,AF,ESNFI,esnfi,,,ESNFI: Hand-held Saw,esnfi_saw
+60c003008e856402218b5eb3,AF,ESNFI,esnfi,,,ESNFI: Hoe (Iron with Wood Handle),esnfi_hoe
+60c003008e856402218b5eb4,AF,ESNFI,esnfi,,,ESNFI: Jerrycan,esnfi_jerrycan
+60c003008e856402218b5eb5,AF,ESNFI,esnfi,,,ESNFI: Kindling,esnfi_kindling
+60c003008e856402218b5eb6,AF,ESNFI,esnfi,,,ESNFI: Kitchen Set,esnfi_kitchen_set
+60c003008e856402218b5eb7,AF,ESNFI,esnfi,,,"ESNFI: Lights (Solar Lantern, Torch w/ Battery, Table Lamp)",esnfi_lights
+60c003008e856402218b5eb8,AF,ESNFI,esnfi,,,ESNFI: Masons Bucket (15 Liters Reinforced),esnfi_bucket
+60c003008e856402218b5eb9,AF,ESNFI,esnfi,,,ESNFI: Matchbox,esnfi_matchbox
+60c003008e856402218b5eba,AF,ESNFI,esnfi,,,ESNFI: Nails,esnfi_nails
+60c003008e856402218b5ebb,AF,ESNFI,esnfi,,,ESNFI: Peeling Knife,esnfi_peeling_knife
+60c003008e856402218b5ebc,AF,ESNFI,esnfi,,,ESNFI: Pick Digger (with Wooden Handle),esnfi_digger
+60c003008e856402218b5ebd,AF,ESNFI,esnfi,,,ESNFI: Plastering Trowel (10' with Wood Handle),esnfi_trowel
+60c003008e856402218b5ebe,AF,ESNFI,esnfi,,,ESNFI: Glass for Tea,esnfi_glass
+60c003008e856402218b5ebf,AF,ESNFI,esnfi,,,ESNFI: Plastic Rope (30m / 6-10 mm Diameter),esnfi_plastic_rope
+60c003008e856402218b5ec0,AF,ESNFI,esnfi,,,ESNFI: Pump Spares (PVC Filter Pipe 6' Class D (26.28 KG)),esnfi_pump_spares_pvc_pipe_67_inch
+60c003008e856402218b5ec1,AF,ESNFI,esnfi,,,ESNFI: Pump Spares (PVC Pipe 63 MM Class E),esnfi_pump_spares_pvc_pipe_63_mm
+60c003008e856402218b5ec2,AF,ESNFI,esnfi,,,ESNFI: Rope,esnfi_rope
+60c003008e856402218b5ec3,AF,ESNFI,esnfi,,,ESNFI: Plastic Mat,esnfi_plastic_mat
+60c003008e856402218b5ec4,AF,ESNFI,esnfi,,,ESNFI: Shovel (Iron with Wood Handle),esnfi_shovel
+60c003008e856402218b5ec5,AF,ESNFI,esnfi,,,ESNFI: Sisal Rope (100m),esnfi_sisal_rope
+60c003008e856402218b5ec6,AF,ESNFI,esnfi,,,ESNFI: Sanitry Napkins,esnfi_sanitry_napkins
+60c003008e856402218b5ec7,AF,ESNFI,esnfi,,,ESNFI: Soap (Handwash),esnfi_soap_handwash
+60c003008e856402218b5ec8,AF,ESNFI,esnfi,,,ESNFI: Spoon,esnfi_spoon
+60c003008e856402218b5ec9,AF,ESNFI,esnfi,,,ESNFI: Tarpaulin,esnfi_tarapaulin
+60c003008e856402218b5eca,AF,ESNFI,esnfi,,,ESNFI: Wheelbarrow/Zambil,esnfi_wheelbarrow
+60c003008e856402218b5ecb,AF,ESNFI,esnfi,,,ESNFI: Tea Pot,esnfi_tea_pot
+60c003008e856402218b5ecc,AF,ESNFI,esnfi,,,ESNFI: Window,esnfi_window
+60c003008e856402218b5ecd,AF,ESNFI,esnfi,,,ESNFI: Wood,esnfi_wood
+60c003008e856402218b5ece,AF,Protection,protection,,,Protection: Dignity Kit,protection_dignity_kit
+60c003008e856402218b5ecf,AF,FSAC,fsac,,,FSAC: Cash,fsac_cash
+60c003008e856402218b5ed0,AF,FSAC,fsac,,,FSAC: Food Package,fsac_food_package
+60c003008e856402218b5ed1,AF,FSAC,fsac,,,FSAC: Wheat,fsac_wheat
+60c003008e856402218b5ed2,AF,FSAC,fsac,,,FSAC: Wheat Flour,fsac_wheat_flour
+60c003008e856402218b5ed3,AF,FSAC,fsac,,,FSAC: Oil,fsac_oil
+60c003008e856402218b5ed4,AF,FSAC,fsac,,,FSAC: Pulses,fsac_pulses
+60c003008e856402218b5ed5,AF,FSAC,fsac,,,FSAC: Salt,fsac_salt
+60c003008e856402218b5ed6,AF,FSAC,fsac,,,FSAC: Rice,fsac_rice
+60c003008e856402218b5ed7,AF,FSAC,fsac,,,FSAC: Seed,fsac_seed
+60c003008e856402218b5ed8,AF,FSAC,fsac,,,FSAC: HEB,fsac_heb
+60c003008e856402218b5ed9,AF,FSAC,fsac,,,FSAC: RUSF,fsac_rusf
+60c003008e856402218b5eda,AF,FSAC,fsac,,,FSAC: MNT,fsac_mnt
+60c003008e856402218b5edb,AF,FSAC,fsac,,,FSAC: Other,fsac_other
+60c003008e856402218b5edc,AF,EiEWG,eiewg,,,EiEWG: Classroom Kits,classroom_kits
+60c003008e856402218b5edd,AF,EiEWG,eiewg,,,EiEWG: EiE Kits,eie_kits
+60c003008e856402218b5ede,AF,EiEWG,eiewg,,,EiEWG: Recreational Kits,recreational_kits
+60c003008e856402218b5edf,AF,EiEWG,eiewg,,,EiEWG: School in Box Kits,school_in_box_kits
+60c003008e856402218b5ee0,AF,EiEWG,eiewg,,,EiEWG: Startup Kits,startup_kits
+60c003008e856402218b5ee1,AF,Protection,protection,,,Protection: Tent,protection_tents
+60c003008e856402218b5ee2,AF,EiEWG,eiewg,,,EiEWG: Student Bags,student_bags
+60c003008e856402218b5ee3,AF,EiEWG,eiewg,,,EiEWG: Students Kits,student_kits
+60c003008e856402218b5ee4,AF,EiEWG,eiewg,,,EiEWG: Top up Kits,top_up_kits
+60c003008e856402218b5ee5,AF,EiEWG,eiewg,,,EiEWG: Text Books,text_books
+60c003008e856402218b5ee6,AF,EiEWG,eiewg,,,EiEWG: Teacher Kits,teacher_kits
+60c003008e856402218b5ee7,AF,EiEWG,eiewg,,,EiEWG: Teching Kits,teaching_kits
+60c003008e856402218b5ee8,AF,EiEWG,eiewg,,,EiEWG: Reading Kits,reading_kits
+60c003008e856402218b5ee9,AF,EiEWG,eiewg,,,EiEWG: Tents (72 sq.m),tents_72_sq_m
+60c003008e856402218b5eea,AF,EiEWG,eiewg,,,EiEWG: Tents Other,tents_other
+60c003008e856402218b5eeb,ET,ESNFI,esnfi,,1,ESNFI in Cash,esnfi_in_cash
+60c003008e856402218b5eec,ET,ESNFI,esnfi,,1,ESNFI Mixed (Cash+In-Kind),esnfi_mixed_cash_in_kind
+60c003008e856402218b5eed,ET,ESNFI,esnfi,,1,ESNFI In-Kind,esnfi_in_kind
+60c003008e856402218b5eee,ET,ESNFI,esnfi,"[{""unit_type_label"":""Kit Item"",""unit_type_id"":""esnfi_plastic_sheeting_tarapaulin"",""unit_type_name"":""Plastic Sheeting / Tarpaulin"",""quantity"":2},{""unit_type_label"":""Kit Item"",""unit_type_id"":""esnfi_rope"",""unit_type_name"":""Rope"",""quantity"":1},{""unit_type_label"":""Kit Item"",""unit_type_id"":""esnfi_blankets"",""unit_type_name"":""Blankets"",""quantity"":2},{""unit_type_label"":""Kit Item"",""unit_type_id"":""esnfi_bed_mat"",""unit_type_name"":""Bed Mat"",""quantity"":2},{""unit_type_label"":""Kit Item"",""unit_type_id"":""mosquito_net"",""unit_type_name"":""Mosquito Net"",""quantity"":2},{""unit_type_label"":""Kit Item"",""unit_type_id"":""esnfi_plates"",""unit_type_name"":""Plates"",""quantity"":2},{""unit_type_label"":""Amount (per HH)"",""unit_type_id"":""esnfi_cups"",""unit_type_name"":""Cups"",""quantity"":4},{""unit_type_label"":""Kit Item"",""unit_type_id"":""esnfi_kettle_jug"",""unit_type_name"":""Kettle/Jug"",""quantity"":1},{""unit_type_label"":""Kit Item"",""unit_type_id"":""esnfi_cooking_pot"",""unit_type_name"":""Cooking Pot"",""quantity"":1},{""unit_type_label"":""Kit Item"",""unit_type_id"":""esnfi_cooking_ladel_125ml"",""unit_type_name"":""Cooking Ladel 125ml"",""quantity"":1},{""unit_type_label"":""Kit Item"",""unit_type_id"":""esnfi_washing_basin_60cm_diameter"",""unit_type_name"":""Washing Basin 60CM Diameter"",""quantity"":1},{""unit_type_label"":""Kit Item"",""unit_type_id"":""esnfi_jerrycan_20l"",""unit_type_name"":""Jerrycan 20L"",""quantity"":1},{""unit_type_label"":""Kit Item"",""unit_type_id"":""esnfi_jerrycan_10l"",""unit_type_name"":""Jerrycan 10L"",""quantity"":1},{""unit_type_label"":""Kit Item"",""unit_type_id"":""esnfi_soap"",""unit_type_name"":""Soap"",""quantity"":10}]",1,Partial ESNFI Kit,partial_esnfi_kit
+60c003008e856402218b5eef,ET,ESNFI,esnfi,,1,Cash for Shelter/Rent,cash_for_shelter_rent
+60c003008e856402218b5ef0,ET,ESNFI,esnfi,"[{""unit_type_label"":""Kit Item"",""unit_type_id"":""g35_cgi"",""unit_type_name"":""G-35 CGI"",""measure_id"":""piece"",""mearue_name"":""Piece"",""unit_price"":8.75,""total_price"":177,""currency_id"":""usd"",""quantity"":20},{""unit_type_label"":""Kit Item"",""unit_type_id"":""locking_sytem_10"",""unit_type_name"":""Locking System (Gate Latch) 10"",""measure_id"":""piece"",""mearue_name"":""Piece"",""unit_price"":1.24,""total_price"":2,""currency_id"":""usd"",""quantity"":2},{""unit_type_label"":""Kit Item"",""unit_type_id"":""t_hinge_6"",""unit_type_name"":""T-Hinge 6"",""measure_id"":""piece"",""mearue_name"":""Piece"",""unit_price"":0.4,""total_price"":1,""currency_id"":""usd"",""quantity"":2},{""unit_type_label"":""Kit Item"",""unit_type_id"":""nail_12"",""unit_type_name"":""Nail no 12"",""measure_id"":""kg"",""mearue_name"":""KG"",""unit_price"":2.69,""total_price"":5,""currency_id"":""usd"",""quantity"":2},{""unit_type_label"":""Kit Item"",""unit_type_id"":""nail_10"",""unit_type_name"":""Nail no 10"",""measure_id"":""kg"",""mearue_name"":""KG"",""unit_price"":2.69,""total_price"":5,""currency_id"":""usd"",""quantity"":2},{""unit_type_label"":""Kit Item"",""unit_type_id"":""nail_8"",""unit_type_name"":""Nail no 8"",""measure_id"":""kg"",""mearue_name"":""KG"",""unit_price"":2.69,""total_price"":5,""currency_id"":""usd"",""quantity"":2},{""unit_type_label"":""Kit Item"",""unit_type_id"":""roofing_nail"",""unit_type_name"":""Roofing Nail"",""measure_id"":""kg"",""mearue_name"":""KG"",""unit_price"":4.98,""total_price"":15,""currency_id"":""usd"",""quantity"":3},{""unit_type_label"":""Kit Item"",""unit_type_id"":""cash_for_local_material_labor"",""unit_type_name"":""Cash for Local Materials and Labor"",""currency_id"":""usd"",""quantity"":40}]",1,Emergency Shelter Repair Kits (Partial),emergency_shelter_repair_kits_partial
+60c003008e856402218b5ef1,ET,ESNFI,esnfi,,1,Emergency Shelter Repair Kits (Full),emergency_shelter_repair_kits_full
+60c003008e856402218b5ef2,AF,EiEWG,eiewg,,,EiEWG: Tents (24 sq.m),tents_24_sq_m
+60c003008e856402218b5ef3,ET,ESNFI,esnfi,,1,Cash for Shelter - Communal Shelters,cash_for_shelter_communal_shelters
+60c003008e856402218b5ef4,ET,ESNFI,esnfi,,1,Cash for Partial Repair - Minor,cash_for_partial_repair_minor
+60c003008e856402218b5ef5,ET,ESNFI,esnfi,,1,Emergency Shelter Repair Kits Mixed (Cash + In-Kind),emergency_shelter_repair_kits_mixed_cash_in_kind
+60c003008e856402218b5ef6,ET,ESNFI,esnfi,,1,Communal Shelter Construction,communal_shelter_construction
+60c003008e856402218b5ef7,ET,ESNFI,esnfi,,1,Minor Shelter Repair - Kits,minor_shelter_repair_kits
+60c003008e856402218b5ef8,ET,ESNFI,esnfi,,1,Rehabilitation of Communal Existing Structure,rehabilitation_of_communal_existing_structure
+60c003008e856402218b5ef9,ET,ESNFI,esnfi,,1,Transitional Shelter Construction (Poles+CGI),transitional_shelter_construction_poles+cgi
+60c003008e856402218b5efa,ET,ESNFI,esnfi,,1,Transitional Shelter Construction (Tukul-Poles+Grass),transitional_shelter_construction_tukul_poles+grass
+60c003008e856402218b5efb,ET,ESNFI,esnfi,,1,Transitional Shelter Construction (Tukul-Mud Bricks),transitional_shelter_construction_tukul_mud_bricks
+60c003008e856402218b5efc,ET,ESNFI,esnfi,,,Non-Food Items (NFI) In-Kind,nfi_in_kind
+60c003008e856402218b5efd,ET,ESNFI,esnfi,,,Non-Food Items (NFI) In-Cash,nfi_in_cash
+60c003008e856402218b5efe,ET,ESNFI,esnfi,,1,Construction of Communal Facility,construction_of_communal_facility
+60c003008e856402218b5eff,ET,ESNFI,esnfi,,,Emergency Shelter Kit,emergency_shelter_kits
+60c003008e856402218b5f00,ET,ESNFI,esnfi,,,Emergency Shelter Construction,emergency_shelter_construction
+60c003008e856402218b5f01,ET,ESNFI,esnfi,,,Non-Food Items (NFI) Mixed,nfi_mixed

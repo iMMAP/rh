@@ -82,7 +82,7 @@ def import_stockitems_types_from(conn, stockitems_types_csv):
         df.to_sql("tmp_stockitemstype", conn, if_exists="replace", index=False)
 
         try:
-            c.execute(f"""insert into {table}(old_id, cluster_id,stock_items_name) select _id, cluster_id,stock_item_name from tmp_stockitemstype""")
+            c.execute(f"""insert into {table}(old_id, cluster_id, name) select _id, cluster_id, stock_item_name from tmp_stockitemstype""")
         except Exception as exception:
             print(exception)
             conn.rollback()
@@ -110,7 +110,8 @@ def import_stockitems_types_from(conn, stockitems_types_csv):
             conn.rollback()
         
         c.execute("DROP TABLE tmp_stockitemstype;")
-            
+
+# c.execute(f"""insert into {table}(old_id, cluster_id,stock_items_name) select _id, cluster_id,stock_item_name from tmp_stockitemstype""")          
 
 def import_locations(conn, locations_csv):
     """

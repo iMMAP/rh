@@ -288,7 +288,7 @@ class ActivityType(models.Model):
     activity_domain = models.ForeignKey(ActivityDomain, on_delete=models.SET_NULL, blank=True, null=True)
     active = models.BooleanField(default=True)
     code = models.CharField(max_length=DESCRIPTION_MAX_LENGTH, unique=True)
-    name = models.CharField(max_length=DESCRIPTION_MAX_LENGTH, unique=True)
+    name = models.CharField(max_length=DESCRIPTION_MAX_LENGTH)
     countries = models.ManyToManyField(Location)
     clusters = models.ManyToManyField(Cluster)
     # indicators = models.ManyToManyField(Indicator)
@@ -306,12 +306,17 @@ class ActivityType(models.Model):
     class Meta:
         verbose_name = "Activity Type"
         verbose_name_plural = "Activity Types"
+        constraints = [
+            models.UniqueConstraint(fields=["code", "activity_domain"], name="unique_activitytype_for_activity_domain")
+        ]
 
 
 class ActivityDetail(models.Model):
     activity_type = models.ForeignKey(ActivityType, on_delete=models.SET_NULL, blank=True, null=True)
-    code = models.CharField(max_length=DESCRIPTION_MAX_LENGTH, unique=True)
-    name = models.CharField(max_length=DESCRIPTION_MAX_LENGTH, unique=True)
+
+    code = models.CharField(max_length=DESCRIPTION_MAX_LENGTH)
+    name = models.CharField(max_length=DESCRIPTION_MAX_LENGTH)
+
 
     def __str__(self):
         return self.name
@@ -319,15 +324,19 @@ class ActivityDetail(models.Model):
     class Meta:
         verbose_name = "Activity Detail"
         verbose_name_plural = "Activity Details"
+        constraints = [
+            models.UniqueConstraint(fields=["code", "activity_type"], name="unique_ActivityDetail_for_activity_type")
+        ]
 
 
 class Indicator(models.Model):
-    """Indicators"""
-
     activity_types = models.ManyToManyField(ActivityType)
 
-    code = models.CharField(max_length=600, unique=True)
-    name = models.CharField(max_length=600, unique=True)
+    # code = models.CharField(max_length=600, unique=True)
+
+    # This should be unique
+    name = models.CharField(max_length=600)
+
     numerator = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
     denominator = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
     description = models.CharField(max_length=1200, blank=True, null=True)

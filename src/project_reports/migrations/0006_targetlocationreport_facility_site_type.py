@@ -5,16 +5,15 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('rh', '0013_targetlocation_facility_site_type'),
-        ('project_reports', '0005_alter_activityplanreport_report_types'),
+        ("rh", "0013_targetlocation_facility_site_type"),
+        ("project_reports", "0005_alter_activityplanreport_report_types"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='targetlocationreport',
-            name='facility_site_type',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, to='rh.facilitysitetype'),
+            model_name="targetlocationreport",
+            name="facility_site_type",
+            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, to="rh.facilitysitetype"),
         ),
     ]

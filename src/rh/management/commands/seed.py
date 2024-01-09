@@ -32,7 +32,7 @@ class Command(BaseCommand):
         parser.add_argument("--amount", type=int, help="The amount of fake data you want")
         # parser.add_argument('amount', nargs='+', type=int)
 
-    def _generate_data(self, amount): 
+    def _generate_data(self, amount):
         # Fake Locations
         CountryFactory.create_batch(amount)
         Admin1Factory.create_batch(amount * 2)

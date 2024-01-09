@@ -4,15 +4,14 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('rh', '0015_remove_targetlocation_title_and_more'),
-        ('stock', '0002_stocktype_old_id'),
+        ("rh", "0015_remove_targetlocation_title_and_more"),
+        ("stock", "0002_stocktype_old_id"),
     ]
 
     operations = [
         migrations.RenameModel(
-            old_name='StockType',
-            new_name='StockItemsType',
+            old_name="StockType",
+            new_name="StockItemsType",
         ),
     ]

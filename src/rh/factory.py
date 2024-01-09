@@ -369,10 +369,6 @@ class IndicatorFactory(DjangoModelFactory):
             for activity_type in activity_types:
                 self.activity_types.add(activity_type)
 
-    @factory.lazy_attribute
-    def code(self):
-        return self.name.capitalize()
-
 
 class ProjectFactory(DjangoModelFactory):
     class Meta:

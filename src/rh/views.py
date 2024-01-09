@@ -95,8 +95,8 @@ def load_activity_domains(request):
 @cache_control(no_store=True)
 @login_required
 def load_locations_details(request):
-    parent_ids = [int(i) for i in request.POST.getlist("parents[]") if i]
-    parents = Location.objects.filter(pk__in=parent_ids).select_related("parent")
+    # parent_ids = [int(i) for i in request.GET.getlist("parents[]") if i]
+    parents = Location.objects.filter(pk=list(request.GET.values())[0]).select_related("parent")
 
     response = "".join(
         [
@@ -111,7 +111,7 @@ def load_locations_details(request):
         ]
     )
 
-    return JsonResponse(response, safe=False)
+    return HttpResponse(response)
 
 
 @cache_control(no_store=True)
@@ -463,7 +463,7 @@ def get_disaggregations_forms(request):
 def get_target_location_empty_form(request):
     """Get an empty target location form for a project"""
     # Get the project object based on the provided project ID
-    project = get_object_or_404(Project, pk=request.POST.get("project"))
+    project = get_object_or_404(Project, pk=request.GET.get("project"))
 
     # Prepare form_kwargs to pass to ActivityPlanFormSet
     form_kwargs = {"project": project}
@@ -472,7 +472,7 @@ def get_target_location_empty_form(request):
     activity_plan_formset = ActivityPlanFormSet(form_kwargs=form_kwargs, instance=project)
 
     # Get the prefix index from the request
-    prefix_index = request.POST.get("prefix_index")
+    prefix_index = request.GET.get("prefix_index")
 
     # Create an instance of TargetLocationFormSet with a prefixed name
     target_location_formset = TargetLocationFormSet(
@@ -483,7 +483,7 @@ def get_target_location_empty_form(request):
     # Create a disaggregation formset for each target location form
     target_location_form = target_location_formset.empty_form
     disaggregation_formset = DisaggregationFormSet(
-        request.POST or None,
+        request.GET or None,
         instance=target_location_form.instance,
         prefix=f"disaggregation_{target_location_form.prefix}",
     )
@@ -496,10 +496,10 @@ def get_target_location_empty_form(request):
     }
 
     # Render the target location form template and generate HTML
-    html = render_to_string("rh/projects/forms/target_location_empty_form.html", context)
+    return render(request,"rh/projects/forms/target_location_empty_form.html", context)
 
     # Return JSON response containing the generated HTML
-    return JsonResponse({"html": html})
+    # return JsonResponse({"html": html})
 
 
 @login_required
@@ -530,10 +530,10 @@ def get_activity_empty_form(request):
     }
 
     # Render the activity empty form template and generate HTML
-    html = render_to_string("rh/projects/forms/activity_empty_form.html", context)
-
+    return render(request,"rh/projects/forms/activity_empty_form.html", context)
+    # return html
     # Return JSON response containing the generated HTML
-    return JsonResponse({"html": html})
+    # return JsonResponse({"html": html})
 
 
 # TODO: Fix the functions related to the above activity planning changes

@@ -412,14 +412,14 @@ $(function () {
 	});
 	
 	// Button to handle addition of new target location form.
-	$(document).off('click').on('click', '.add-target-location-form-button', function(event) {
-		event.preventDefault(); // Prevent the default behavior (form submission)
-		event.stopPropagation(); // Prevent the default behavior (propagation)
-		const activityFormPrefix = event.currentTarget.dataset.formPrefix
-		const activityProject = event.currentTarget.dataset.project
-		const activityFormIndex = activityFormPrefix.match(/\d+/)[0]
-		addTargetLocationForm(activityFormPrefix, activityProject, activityFormIndex); // Call the function to add a new activity form
-	});
+	// $(document).off('click').on('click', '.add-target-location-form-button', function(event) {
+	// 	event.preventDefault(); // Prevent the default behavior (form submission)
+	// 	event.stopPropagation(); // Prevent the default behavior (propagation)
+	// 	const activityFormPrefix = event.currentTarget.dataset.formPrefix
+	// 	const activityProject = event.currentTarget.dataset.project
+	// 	const activityFormIndex = activityFormPrefix.match(/\d+/)[0]
+	// 	addTargetLocationForm(activityFormPrefix, activityProject, activityFormIndex); // Call the function to add a new activity form
+	// });
 
 	let $activityBlockHolder = $(".activity_form");
 	$activityBlockHolder.each(function (formIndex, formElement) {

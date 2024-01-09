@@ -108,8 +108,18 @@
                         <div class="target-location-block target-location-accordion">
                             <div class="inner-holder">
                                 <div class="add_button">
-                                    <button data-form-prefix="{{form.prefix}}" data-project="{{project.pk}}" type="button"
-                                            class="btn btn-red add-target-location-form-button">Add Target Location
+                                    <button 
+                                        data-form-prefix="{{form.prefix}}" 
+                                        data-project="{{project.pk}}" 
+                                        type="button"
+                                        class="btn btn-red add-target-location-form-button"
+                                        hx-get="/ajax/get_target_location_empty_form?project={{project.pk}}&prefix_index={{form.prefix}}"
+                                        hx-trigger="click"
+                                        hx-target="#{{form.prefix}}"
+                                        hx-swap="afterend"
+                                    >
+                                   
+                                        Add Target Location
                                     </button>
                                 </div>
                                 <div class="block-top target-location-accordion-opener">

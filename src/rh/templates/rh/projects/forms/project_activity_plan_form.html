@@ -75,7 +75,5 @@
 
 {% block scripts %}
     {{ activity_plan_formset.media.js }}
-    {% compress js %}
-        <script defer src="{% static 'rh/js/activity_planning.js' %}"></script>
-    {% endcompress js %}
+    <script defer src="{% static 'rh/js/activity_planning.js' %}"></script>
 {% endblock scripts %}

@@ -137,7 +137,7 @@ def import_indicators_from_csv(conn, indicators_csv):
         df.to_sql("tmp_indicator", conn, if_exists="replace", index=False)
         try:
             c.execute(
-                "select activity_description_id,indicator_id,indicator_name from tmp_indicator"
+                "select activity_description_id,indicator_name from tmp_indicator"
             )
             indicators = c.fetchall()
             for indicator in indicators:
@@ -155,14 +155,20 @@ def import_indicators_from_csv(conn, indicators_csv):
                         activity_type = None
 
                 indicator.pop(0)
-                indicator.append(None)
-                indicator.append(None)
-                indicator.append(None)
+                # indicator.append(None)
+                # indicator.append(None)
+                # indicator.append(None)
 
-                aquery = f"""insert into {table}(code, name, numerator, denominator, description) 
-                values (?, ?, ?, ?, ?)
+                aquery = f"""insert into {table}(name) 
+                values (?)
                 """
-                c.execute(aquery, indicator)
+                            
+                try:
+                    c.execute(aquery, indicator)
+                except Exception as exception:
+                    print(f"LOG Indicators: {exception}")
+                    continue
+
                 last_indicator_id = c.lastrowid
 
                 if last_indicator_id and activity_type:
@@ -175,6 +181,7 @@ def import_indicators_from_csv(conn, indicators_csv):
 
             c.execute("DROP TABLE tmp_indicator;")
         except Exception as exception:
+            print(f"ERROR: import_indicators_from_csv: {exception}")
             conn.rollback()
 
 
@@ -240,7 +247,9 @@ def import_activity_domains_from_csv(conn, activity_domain_csv):
                        """
                     c.execute(clquery)
 
+            c.execute("DROP TABLE tmp_activitydomain;")
         except Exception as exception:
+            print(f"ERROR: import_activity_domain: {exception}")
             conn.rollback()
 
 
@@ -260,10 +269,11 @@ def import_activity_descriptions_from_csv(conn, activity_description_csv):
             """
             )
             activity_types = c.fetchall()
+            count = 0
             for activity_type in activity_types:
                 activity_type = list(activity_type)
-                activity_domain = activity_type[2]
-                cluster = activity_type[3]
+                activity_domain = activity_type[2] # activity_type_id
+                cluster = activity_type[3] # cluster_id
                 country = "AF"
 
                 if activity_domain:
@@ -310,7 +320,14 @@ def import_activity_descriptions_from_csv(conn, activity_description_csv):
                 hrp_code,code_indicator,start_date,end_date,ocha_code,objective_id) 
                     values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """
-                c.execute(aquery, activity_type)
+
+                try:
+                    c.execute(aquery, activity_type)
+                except Exception as exception:
+                    # print(f"EXEC: {exception}")
+                    count = count + 1
+                    continue
+                
                 last_activity_type_id = c.lastrowid
 
                 if last_activity_type_id and country:
@@ -334,7 +351,11 @@ def import_activity_descriptions_from_csv(conn, activity_description_csv):
                 #         values({last_activity_type_id}, {indicator})
                 #     """
                 #     c.execute(inquery)
+            if count > 0:
+                print(f"Log: {count} activitytype was not inserted to the DB due to constraint error")
+            c.execute("DROP TABLE tmp_activitytype;")
         except Exception as exception:
+            print(f"ERROR: import_activity_description: {exception}")
             conn.rollback()
 
 
@@ -356,6 +377,7 @@ def import_activity_details_from_csv(conn, activity_details_csv):
             )
             activity_details = c.fetchall()
             m2m_records = []
+            count = 0
             for activity_detail in activity_details:
                 activity_detail = list(activity_detail)
                 activity_type = activity_detail[0]
@@ -375,9 +397,22 @@ def import_activity_details_from_csv(conn, activity_details_csv):
 
                 aquery = f"""insert into {table}(activity_type_id, code, name) values (?, ?, ?)
                 """
-                c.execute(aquery, activity_detail)
 
+               
+
+                try:
+                    c.execute(aquery, activity_detail)
+                except Exception as exception:
+                    print(f"LOG: EXEC acitivity-details: {exception}")
+                    count = count + 1
+                    continue
+            
+            if count > 0:
+                print(f"Log: {count} activitydetail was not inserted to the DB due to constraint error")
+
+            c.execute("DROP TABLE tmp_activitydetail;")
         except Exception as exception:
+            print(f"ERROR: import_activity_details_from_csv: {exception}")
             conn.rollback()
 
 
@@ -530,6 +565,7 @@ def import_donors_from_csv(conn, donors_csv):
             c.execute("DROP TABLE tmp_donor;")
 
         except Exception as exception:
+            print(f"ERROR: donors: {exception}")
             conn.rollback()
 
 
@@ -662,7 +698,7 @@ def import_users_from_csv(conn, users_csv):
 
             c.execute("DROP TABLE tmp_accounts;")
         except Exception as exception:
-            print("***********IMPORT ERROR:************ ", exception)
+            print("***********IMPORT ERROR - USER ************ ", exception)
             conn.rollback()
 
 
@@ -699,6 +735,7 @@ def import_facilities_from_csv(conn, facilities_csv):
 
             c.execute("DROP TABLE tmp_facilitysitetype;")
         except Exception as exception:
+            print(f"ERROR: import_facilities_from_csv: {exception}")
             conn.rollback()
 
 

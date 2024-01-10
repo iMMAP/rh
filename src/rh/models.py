@@ -317,7 +317,6 @@ class ActivityDetail(models.Model):
     code = models.CharField(max_length=DESCRIPTION_MAX_LENGTH)
     name = models.CharField(max_length=DESCRIPTION_MAX_LENGTH)
 
-
     def __str__(self):
         return self.name
 

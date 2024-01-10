@@ -2,7 +2,16 @@
     {{ location_report_form.id }}
     <div class="location-inner-holder">
         <div class="block-activity mb-3">
-        
+            {% if location_report_form.instance.pk %}
+                <button 
+                    data-url="{% url 'delete_location_report' location_report_form.instance.pk %}"
+                    data-type="delete" 
+                    data-name="Location Report" 
+                    class="btn btn-gray show-sw-action-popup">
+                        <span class="btn-text">Delete</span>
+                        <span class="icon-trashbin-outline"></span>
+                </button>
+            {% endif %}
         </div>
         <!-- <div class="block-top">
             <span class="title">

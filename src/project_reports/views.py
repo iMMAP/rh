@@ -836,6 +836,47 @@ def get_disaggregations_report_empty_forms(request):
     return JsonResponse(location_disaggregation_report_dict)
 
 
+def recompute_target_achieved(plan_report):
+    """Recompute the target achieved for each activity plan report"""
+    location_reports = plan_report.targetlocationreport_set.all()
+
+    activity_report_target = 0
+    for location_report in location_reports:
+        disaggregation_location_reports = location_report.disaggregationlocationreport_set.all()
+
+        for disaggregation_location_report in disaggregation_location_reports:
+            activity_report_target += disaggregation_location_report.target
+    plan_report.target_achieved = activity_report_target
+    plan_report.save()
+
+
+@cache_control(no_store=True)
+@login_required
+def delete_location_report_view(request, location_report):
+    """Delete the target location report"""
+    location_report = get_object_or_404(TargetLocationReport, pk=location_report)
+    plan_report = location_report.activity_plan_report
+    monthly_report = location_report.activity_plan_report.monthly_report
+    if location_report:
+        location_report.delete()
+
+        # Recompute the achieved target for the location_report activity.
+        recompute_target_achieved(plan_report)
+
+    # Generate the URL using reverse
+    url = reverse(
+        "view_monthly_report",
+        kwargs={
+            "project": monthly_report.project.pk,
+            "report": monthly_report.pk,
+        },
+    )
+
+    # Return the URL in a JSON response
+    response_data = {"redirect_url": url}
+    return JsonResponse(response_data)
+
+
 def submit_monthly_report_view(request, report):
     monthly_report = get_object_or_404(ProjectMonthlyReport, pk=report)
     # TODO: Handle with access rights and groups

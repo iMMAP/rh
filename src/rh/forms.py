@@ -210,18 +210,8 @@ class TargetLocationForm(forms.ModelForm):
             "country": forms.widgets.HiddenInput(),
             "active": forms.widgets.HiddenInput(),
             "locations_group_by": forms.widgets.RadioSelect(),
-            "district": forms.Select(
-                attrs={
-                    "name":"test",
-                    "hx-get": "/test-district?parents=",
-                    "locations-queries-url": reverse_lazy("ajax-load-locations"),
-                }
-            ),
-            "zone": forms.Select(
-                attrs={
-                    "locations-queries-url": reverse_lazy("ajax-load-locations"),
-                }
-            ),
+            "district": forms.Select(),
+            "zone": forms.Select(),
         }
 
     def __init__(self, *args, **kwargs):
@@ -233,32 +223,15 @@ class TargetLocationForm(forms.ModelForm):
         )
         self.fields["province"].queryset = self.fields["province"].queryset.filter(type="Province")
         self.fields["district"].queryset = self.fields["district"].queryset.filter(type="District")
-        # Get only the relevant facility types -  related to cluster
         self.fields["zone"].queryset = self.fields["zone"].queryset.filter(type="Zone")
-        self.fields["facility_site_type"].queryset = FacilitySiteType.objects.all()
-        # del self.fields['province'].widget.attrs
-        self.fields["province"].widget.attrs.update(
-            {
-                "data-form-prefix": f"{kwargs.get('prefix')}",
-                "onchange": f"updateLocationTitle('{kwargs.get('prefix')}', 'id_{kwargs.get('prefix')}-province');",
-                "hx-get": f"{reverse_lazy('ajax-load-locations')}",
-                "hx-target":"#districts_select",
-                "hx-swap":"innerHTML"
-            }
-        )
         
-        self.fields["district"].widget.attrs.update(
-            {
-                "id":"districts_select",
-                "onchange": f"updateLocationTitle('{kwargs.get('prefix')}', 'id_{kwargs.get('prefix')}-district');",
-                "locations-queries-url": reverse_lazy("ajax-load-locations"),
-                "hx-get": f"{reverse_lazy('ajax-load-locations')}",
-                "hx-target":"#zones_select",
-                "hx-swap":"innerHTML"
-            }
-        )
+        # Get only the relevant facility types -  related to cluster
+        self.fields["facility_site_type"].queryset = FacilitySiteType.objects.all()
+        
         self.fields["site_name"].widget.attrs.update(
-            {"id":"zones_select","onchange": f"updateLocationTitle('{kwargs.get('prefix')}', 'id_{kwargs.get('prefix')}-site_name');"}
+            {
+                "onchange": f"updateLocationTitle('{kwargs.get('prefix')}', 'id_{kwargs.get('prefix')}-site_name');",
+            }
         )
 
 

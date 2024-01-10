@@ -36,20 +36,49 @@
                         <div class="field-col">
                             <div class="select-field is-required">
                                 <label for="{{target_location_form.province.id_for_label}}" >Province / State</label>
-                                {{ target_location_form.province }}
+                                
+                            <select 
+                                name="{{ target_location_form.prefix}}" 
+                                id="provinces_select" 
+                                onchange="updateLocationTitle('{{target_location_form.prefix}}', 'id_{{target_location_form.prefix}}-provinces');" 
+                                hx-get="{% url 'ajax-load-locations' %}" 
+                                hx-target="#districts_select" 
+                                hx-swap="innerHTML"
+                        >
+                                {% for province in target_location_form.province %}
+                                    {{province}}
+                                {% endfor %}
+                             
+                            </select>
+                              
                             </div>
                         </div>
                         <div class="field-col">
                             <div class="input-field is-required">
                                 <label for="{{target_location_form.district.id_for_label}}">District</label>
-                                {{ target_location_form.district }}
+                                
+                                <select 
+                                name="{{ target_location_form.prefix}}" 
+                                id="districts_select" 
+                                onchange="updateLocationTitle('{{target_location_form.prefix}}', 'id_{{target_location_form.prefix}}-district');" 
+                                hx-get="{% url 'ajax-load-locations' %}" 
+                                hx-target="#zones_select" 
+                                hx-swap="innerHTML"
+                        >
+                                {% comment %} The option will be fetched with htmx {% endcomment %}
+                            </select>
                             </div>
                         </div>
                         {% if target_location_form.zone.choices %}
                          <div class="field-col">
                             <div class="input-field">
                                 <label for="{{target_location_form.zone.id_for_label}}">Ward / Zone</label>
-                                {{ target_location_form.zone }}
+                                <select 
+                                name="{{ target_location_form.prefix}}" 
+                                id="districts_select" 
+                                onchange="updateLocationTitle('{{target_location_form.prefix}}', 'id_{{target_location_form.prefix}}-zone');" 
+                        >
+                            </select>
                             </div>
                         </div>
                         {% endif %}

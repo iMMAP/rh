@@ -154,3 +154,19 @@
         </div>
     </div>
 </div>
+
+<script>
+// Open/Activate the accordion
+const parentDiv = document.querySelector('.project-activity-accordion-slide');
+const innerHolder = parentDiv.closest('.inner-holder')
+
+// Unbind any existing click events
+innerHolder.querySelector('.project-activity-accordion-opener').off('click');
+innerHolder.querySelector('.project-activity-accordion-opener').on('click', function(event) {
+    event.preventDefault(); // Prevent the default behavior (form submission)
+    event.stopPropagation(); // Prevent the default behavior (propagation)
+    innerHolder.toggleClass('project-activity-accordion-active')
+    $(this).next('.project-activity-accordion-slide').toggleClass('js-acc-hidden')
+    // $(this).next('.target-location-accordion-slide').slideToggle(DETAILS_TOGGLE_DURATION);
+});
+</script>

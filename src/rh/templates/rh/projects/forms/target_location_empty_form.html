@@ -61,9 +61,11 @@
                                 name="{{ target_location_form.prefix}}" 
                                 id="districts_select" 
                                 onchange="updateLocationTitle('{{target_location_form.prefix}}', 'id_{{target_location_form.prefix}}-district');" 
+                               {% if target_location_form.zone.choices %}
                                 hx-get="{% url 'ajax-load-locations' %}" 
                                 hx-target="#zones_select" 
                                 hx-swap="innerHTML"
+                               {% endif %}
                         >
                                 {% comment %} The option will be fetched with htmx {% endcomment %}
                             </select>
@@ -75,7 +77,7 @@
                                 <label for="{{target_location_form.zone.id_for_label}}">Ward / Zone</label>
                                 <select 
                                 name="{{ target_location_form.prefix}}" 
-                                id="districts_select" 
+                                id="zones_select" 
                                 onchange="updateLocationTitle('{{target_location_form.prefix}}', 'id_{{target_location_form.prefix}}-zone');" 
                         >
                             </select>
@@ -113,7 +115,7 @@
                         {{ target_location_form.disaggregation_formset.management_form }}
                         {% for disaggregation_form in target_location_form.disaggregation_formset %}
                             {{ disaggregation_form.id }}
-                            {% include "rh/projects/forms/disaggregation_empty_form.html" %}
+                            {% include "rh/projects/forms/disaggregation_empty_form.html" with disaggregation_form=disaggregation_form %}
                         {% endfor %}
                     </div>
                 </div>

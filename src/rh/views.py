@@ -97,21 +97,7 @@ def load_activity_domains(request):
 def load_locations_details(request):
     # parent_ids = [int(i) for i in request.GET.getlist("parents[]") if i]
     parents = Location.objects.filter(pk=list(request.GET.values())[0]).select_related("parent")
-
-    response = "".join(
-        [
-            f'<optgroup label="{parent.name}">'
-            + "".join(
-                [f'<option value="{location.pk}">{location}</option>' for location in parent.children.order_by("name")]
-            )
-            + "</optgroup>"
-            if parent.children.exists()
-            else ""
-            for parent in parents
-        ]
-    )
-
-    return HttpResponse(response)
+    return render(request,"rh/projects/forms/_location_select_options.html",{"parents":parents})
 
 
 @cache_control(no_store=True)
@@ -506,7 +492,7 @@ def get_target_location_empty_form(request):
 def get_activity_empty_form(request):
     """Get an empty activity form"""
     # Get the project object based on the provided project ID
-    project = get_object_or_404(Project, pk=request.POST.get("project"))
+    project = get_object_or_404(Project, pk=request.GET.get("project"))
 
     # Prepare form_kwargs to pass to ActivityPlanFormSet
     form_kwargs = {"project": project}
@@ -515,7 +501,7 @@ def get_activity_empty_form(request):
     activity_plan_formset = ActivityPlanFormSet(form_kwargs=form_kwargs, instance=project)
 
     # Get the prefix index from the request
-    prefix_index = request.POST.get("prefix_index")
+    prefix_index = request.GET.get("prefix_index")
 
     # Create an instance of TargetLocationFormSet with a prefixed name
     target_location_formset = TargetLocationFormSet(

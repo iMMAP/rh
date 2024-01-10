@@ -50,6 +50,11 @@ urlpatterns = [
         name="update_project_monthly_report_progress",
     ),
     path(
+        "project/monthly_progress/location_report/delete/<str:location_report>/",
+        user_views.delete_location_report_view,
+        name="delete_location_report",
+    ),
+    path(
         "project/monthly_progress/submit_report/<str:report>/",
         user_views.submit_monthly_report_view,
         name="submit_monthly_report",

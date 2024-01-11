@@ -38,10 +38,6 @@ from .models import (
 RECORDS_PER_PAGE = 10
 
 
-# TODO: Add is_safe_url to redirects
-# from django.utils.http import is_safe_url
-
-
 #############################################
 #                Index Views
 #############################################
@@ -336,6 +332,7 @@ def create_project_activity_plan(request, project):
                             ) and post_target_location_form.cleaned_data.get("district"):
                                 target_location_instance = post_target_location_form.save()
                                 target_location_instance.project = project
+                                target_location_instance.country = request.user.profile.country
                                 target_location_instance.save()
 
                         if hasattr(post_target_location_form, "disaggregation_formset"):
@@ -534,9 +531,6 @@ def get_activity_empty_form(request):
 
     # Return JSON response containing the generated HTML
     return JsonResponse({"html": html})
-
-
-# TODO: Fix the functions related to the above activity planning changes
 
 
 @cache_control(no_store=True)

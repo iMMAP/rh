@@ -31,7 +31,7 @@ class Location(models.Model):
         blank=True,
         null=True,
     )
-    code = models.CharField(max_length=200)
+    code = models.CharField(max_length=200, unique=True)
     name = models.CharField(max_length=200)
     level = models.IntegerField(default=0)
     original_name = models.CharField(max_length=200, blank=True, null=True)
@@ -51,9 +51,9 @@ class Cluster(models.Model):
 
     countries = models.ManyToManyField(Location, blank=True)
 
-    name = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
-    code = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
-    title = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
+    name = models.CharField(max_length=NAME_MAX_LENGTH, unique=True)
+    code = models.CharField(max_length=NAME_MAX_LENGTH, unique=True)
+    title = models.CharField(max_length=NAME_MAX_LENGTH)
     ocha_code = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
 
     def __str__(self):
@@ -97,8 +97,8 @@ class Organization(models.Model):
     countries = models.ManyToManyField(Location, blank=True)
     clusters = models.ManyToManyField(Cluster, blank=True)
 
-    name = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
-    code = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
+    name = models.CharField(max_length=NAME_MAX_LENGTH, unique=True)
+    code = models.CharField(max_length=NAME_MAX_LENGTH, unique=True)
     type = models.CharField(max_length=NAME_MAX_LENGTH, choices=TYPE_CHOICES, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
     updated_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
@@ -109,7 +109,7 @@ class Organization(models.Model):
 
 
 class Donor(models.Model):
-    code = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
+    code = models.CharField(max_length=NAME_MAX_LENGTH, unique=True)
     name = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
 
     countries = models.ManyToManyField(Location, blank=True)
@@ -174,7 +174,7 @@ class LocationType(models.Model):
 
 class FacilitySiteType(models.Model):
     cluster = models.ForeignKey(Cluster, on_delete=models.SET_NULL, blank=True, null=True)
-    name = models.fields.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
+    name = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
 
     def __str__(self):
         return self.name
@@ -186,7 +186,7 @@ class FacilitySiteType(models.Model):
 
 class ImplementationModalityType(models.Model):
     code = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
-    name = models.fields.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
+    name = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
 
     def __str__(self):
         return self.name
@@ -199,7 +199,7 @@ class ImplementationModalityType(models.Model):
 class TransferMechanismType(models.Model):
     modality_id = models.ForeignKey(ImplementationModalityType, on_delete=models.SET_NULL, blank=True, null=True)
     code = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
-    name = models.fields.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
+    name = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
 
     def __str__(self):
         return self.name
@@ -211,7 +211,7 @@ class TransferMechanismType(models.Model):
 
 class PackageType(models.Model):
     code = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
-    name = models.fields.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
+    name = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
 
     def __str__(self):
         return self.name
@@ -223,7 +223,7 @@ class PackageType(models.Model):
 
 class TransferCategory(models.Model):
     code = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
-    name = models.fields.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
+    name = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
 
     def __str__(self):
         return self.name
@@ -235,7 +235,7 @@ class TransferCategory(models.Model):
 
 class GrantType(models.Model):
     code = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
-    name = models.fields.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
+    name = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
 
     def __str__(self):
         return self.name
@@ -247,7 +247,7 @@ class GrantType(models.Model):
 
 class UnitType(models.Model):
     code = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
-    name = models.fields.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
+    name = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
 
     def __str__(self):
         return self.name
@@ -259,7 +259,7 @@ class UnitType(models.Model):
 
 class ReportType(models.Model):
     code = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
-    name = models.fields.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
+    name = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
 
     def __str__(self):
         return self.name
@@ -271,8 +271,8 @@ class ReportType(models.Model):
 
 class ActivityDomain(models.Model):
     active = models.BooleanField(default=True)
-    code = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
-    name = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
+    code = models.CharField(max_length=NAME_MAX_LENGTH, unique=True)
+    name = models.CharField(max_length=NAME_MAX_LENGTH)
     countries = models.ManyToManyField(Location)
     clusters = models.ManyToManyField(Cluster)
 
@@ -287,8 +287,8 @@ class ActivityDomain(models.Model):
 class ActivityType(models.Model):
     activity_domain = models.ForeignKey(ActivityDomain, on_delete=models.SET_NULL, blank=True, null=True)
     active = models.BooleanField(default=True)
-    code = models.CharField(max_length=DESCRIPTION_MAX_LENGTH, blank=True, null=True)
-    name = models.CharField(max_length=DESCRIPTION_MAX_LENGTH, blank=True, null=True)
+    code = models.CharField(max_length=DESCRIPTION_MAX_LENGTH, unique=True)
+    name = models.CharField(max_length=DESCRIPTION_MAX_LENGTH)
     countries = models.ManyToManyField(Location)
     clusters = models.ManyToManyField(Cluster)
     # indicators = models.ManyToManyField(Indicator)
@@ -306,12 +306,16 @@ class ActivityType(models.Model):
     class Meta:
         verbose_name = "Activity Type"
         verbose_name_plural = "Activity Types"
+        constraints = [
+            models.UniqueConstraint(fields=["code", "activity_domain"], name="unique_activitytype_for_activity_domain")
+        ]
 
 
 class ActivityDetail(models.Model):
     activity_type = models.ForeignKey(ActivityType, on_delete=models.SET_NULL, blank=True, null=True)
-    code = models.CharField(max_length=DESCRIPTION_MAX_LENGTH, blank=True, null=True)
-    name = models.CharField(max_length=DESCRIPTION_MAX_LENGTH, blank=True, null=True)
+
+    code = models.CharField(max_length=DESCRIPTION_MAX_LENGTH)
+    name = models.CharField(max_length=DESCRIPTION_MAX_LENGTH)
 
     def __str__(self):
         return self.name
@@ -319,15 +323,19 @@ class ActivityDetail(models.Model):
     class Meta:
         verbose_name = "Activity Detail"
         verbose_name_plural = "Activity Details"
+        constraints = [
+            models.UniqueConstraint(fields=["code", "activity_type"], name="unique_ActivityDetail_for_activity_type")
+        ]
 
 
 class Indicator(models.Model):
-    """Indicators"""
-
     activity_types = models.ManyToManyField(ActivityType)
 
-    code = models.CharField(max_length=600, blank=True, null=True)
-    name = models.CharField(max_length=600, blank=True, null=True)
+    # code = models.CharField(max_length=600, unique=True)
+
+    # This should be unique
+    name = models.CharField(max_length=600)
+
     numerator = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
     denominator = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
     description = models.CharField(max_length=1200, blank=True, null=True)
@@ -368,11 +376,11 @@ class Project(models.Model):
     state = models.CharField(max_length=15, choices=PROJECT_STATES, default="draft", null=True, blank=True)
     active = models.BooleanField(default=True)
     title = models.CharField(max_length=NAME_MAX_LENGTH)
-    code = models.CharField(max_length=NAME_MAX_LENGTH, null=True, blank=True)
+    code = models.CharField(max_length=NAME_MAX_LENGTH, unique=True)
 
     is_hrp_project = models.BooleanField(default=False)
     has_hrp_code = models.BooleanField(default=False)
-    hrp_code = models.CharField(max_length=NAME_MAX_LENGTH, null=True, blank=True)
+    hrp_code = models.CharField(max_length=NAME_MAX_LENGTH, null=True, blank=True, unique=True)
 
     clusters = models.ManyToManyField(Cluster)
     activity_domains = models.ManyToManyField(ActivityDomain, related_name="activity_domains")
@@ -426,7 +434,7 @@ class ActivityPlan(models.Model):
         blank=True,
         default="draft",
     )
-    title = models.CharField(max_length=800, null=True, blank=True)
+    # title = models.CharField(max_length=800, null=True, blank=True)
 
     activity_domain = models.ForeignKey(ActivityDomain, on_delete=models.SET_NULL, null=True, blank=True)
     activity_type = ChainedForeignKey(
@@ -487,7 +495,7 @@ class ActivityPlan(models.Model):
     # old_id = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
 
     def __str__(self):
-        return f"{self.title}"
+        return f"Project {self.project.code} - Activity Plan"
 
     class Meta:
         verbose_name = "Activity Plan"
@@ -522,7 +530,6 @@ class TargetLocation(models.Model):
         null=True,
         blank=True,
     )
-    title = models.CharField(max_length=NAME_MAX_LENGTH, null=True, blank=True)
     locations_group_by = models.CharField(max_length=15, choices=LOCATIONS_GROUP, null=True, blank=True)
     group_by_province = models.BooleanField(default=True)
     group_by_district = models.BooleanField(default=True)
@@ -557,14 +564,16 @@ class TargetLocation(models.Model):
         blank=True,
     )
     location_type = models.ForeignKey(LocationType, on_delete=models.SET_NULL, null=True, blank=True)
+    classification = models.CharField(max_length=15, choices=TARGET_CLASSIFICATION, blank=True, null=True)
 
     implementing_partner = models.ForeignKey(Organization, on_delete=models.SET_NULL, null=True, blank=True)
+
+    facility_site_type = models.ForeignKey(FacilitySiteType, on_delete=models.SET_NULL, null=True)
 
     site_monitoring = models.BooleanField(default=False)
     site_name = models.CharField(max_length=255, blank=True, null=True)
     site_lat = models.CharField(max_length=255, blank=True, null=True)
     site_long = models.CharField(max_length=255, blank=True, null=True)
-    classification = models.CharField(max_length=15, choices=TARGET_CLASSIFICATION, blank=True, null=True)
     old_id = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
 
     def __str__(self):

@@ -1,6 +1,15 @@
 from django.db import models
 
-from rh.models import ActivityPlan, Disaggregation, Indicator, Location, LocationType, Project, ReportType
+from rh.models import (
+    ActivityPlan,
+    Disaggregation,
+    Indicator,
+    Location,
+    LocationType,
+    Project,
+    ReportType,
+    FacilitySiteType,
+)
 
 # ##############################################
 # ############# Project Reporting ##############
@@ -47,7 +56,7 @@ class ActivityPlanReport(models.Model):
     activity_plan = models.ForeignKey(ActivityPlan, on_delete=models.CASCADE, null=True, blank=True)
     indicator = models.ForeignKey(Indicator, on_delete=models.SET_NULL, null=True)
 
-    report_types = models.ManyToManyField(ReportType, null=True, blank=True)
+    report_types = models.ManyToManyField(ReportType, blank=True)
     target_achieved = models.IntegerField(default=0, null=True, blank=True)
 
     class Meta:
@@ -89,6 +98,7 @@ class TargetLocationReport(models.Model):
         blank=True,
     )
     location_type = models.ForeignKey(LocationType, on_delete=models.SET_NULL, null=True, blank=True)
+    facility_site_type = models.ForeignKey(FacilitySiteType, on_delete=models.SET_NULL, null=True)
 
     def __str__(self):
         return f"{self.activity_plan_report}, {self.province}, {self.district}"

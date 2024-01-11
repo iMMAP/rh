@@ -161,11 +161,8 @@ class DisaggregationInline(admin.TabularInline):
 
 
 class IndicatorAdmin(admin.ModelAdmin):
-    list_display = (
-        "name",
-        "code",
-    )
-    search_fields = ("activity_types__name", "name", "code")
+    list_display = ("name",)
+    search_fields = ("activity_types__name", "name")
     # list_filter = ('activity_type',)
     inlines = [
         DisaggregationInline,
@@ -249,14 +246,13 @@ admin.site.register(Project, ProjectAdmin)
 
 class ActivityPlanAdmin(admin.ModelAdmin):
     list_display = (
-        "title",
         "project",
         "beneficiary",
         "beneficiary_category",
         "state",
         "active",
     )
-    search_fields = ("title", "state", "active", "project__title")
+    search_fields = ("state", "active", "project__title")
     list_filter = ("state", "active", "project__code")
     form = ActivityPlanModelAdminForm
 
@@ -266,7 +262,6 @@ admin.site.register(ActivityPlan, ActivityPlanAdmin)
 
 class TargetLocationAdmin(admin.ModelAdmin):
     list_display = (
-        "title",
         "site_name",
         "project",
         "activity_plan",

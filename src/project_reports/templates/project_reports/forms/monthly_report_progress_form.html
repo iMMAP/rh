@@ -15,12 +15,16 @@
 				{% endif %}
 			</strong>
             <ul class="buttons-list-inline">
-                <li>
-                    <a href="#" class="btn btn-gray">
-                        <span class="btn-text">Delete</span>
-                        <span class="icon-trashbin-outline"></span>
-                    </a>
-                </li>
+				<li>
+					<a href="#" 
+					data-url="{% url 'delete_project_monthly_report' monthly_report.pk %}"
+					data-type="delete" 
+					data-name="Report" 
+					class="btn btn-gray show-sw-action-popup">
+						<span class="btn-text">Delete</span>
+						<span class="icon-trashbin-outline"></span>
+					</a>
+				</li>
             </ul>
         </div>
     </div>
@@ -142,58 +146,58 @@
 							</div>
 						</div>
 					</div>
-					{% for indicator in activity_report_form.initial.activity_plan.indicators.all %}
-					<div class="multiple-fields-row two-items">
+					<!-- {% for indicator in activity_report_form.initial.activity_plan.indicators.all %} -->
+					<!-- <div class="multiple-fields-row two-items">
 						<div class="field-col">
 							<div class="select-field">
-								<label for="packageType">Package Type</label>
+								<label>Package Type</label>
 								{{indicator_form.package_type}}
 							</div>
 						</div>
 						<div class="field-col">
 							<div class="select-field">
-								<label for="packageType">Unit Type</label>
+								<label>Unit Type</label>
 								{{indicator_form.unit_type}}
 							</div>
 						</div>
 						<div class="field-col">
 							<div class="select-field">
-								<label for="packageType">Transfer mechanism Type</label>
+								<label>Transfer mechanism Type</label>
 								{{indicator_form.transfer_mechanism_type}}
 							</div>
 						</div>
 						<div class="field-col">
 							<div class="select-field">
-								<label for="packageType">Implementation Modility Type</label>
+								<label>Implementation Modility Type</label>
 								{{indicator_form.implement_modility_type}}
 							</div>
 						</div>
 						<div class="field-col">
 							<div class="select-field">
-								<label for="packageType">Transfer category</label>
+								<label>Transfer category</label>
 								{{indicator_form.transfer_category}}
 							</div>
 						</div>
 						<div class="field-col">
 							<div class="select-field">
-								<label for="packageType">grant Type</label>
+								<label >grant Type</label>
 								{{indicator_form.grant_type}}
 							</div>
 						</div>
 						<div class="field-col">
 							<div class="select-field">
-								<label for="packageType">Currency</label>
+								<label>Currency</label>
 								{{indicator_form.currency}}
 							</div>
 						</div>
 						<div class="field-col">
 							<div class="select-field">
-								<label for="packageType">Location Type</label>
+								<label>Location Type</label>
 								{{indicator_form.location_type}}
 							</div>
 						</div>
-					</div>
-					{% endfor %}
+					</div> -->
+					<!-- {% endfor %} -->
 					<div class="row monthly-reporting" id="report_locations-{{activity_report_form.prefix}}">
 						<div class="col col-lg">
 							<div class="target-location-block target-location-accordion">

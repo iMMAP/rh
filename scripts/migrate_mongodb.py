@@ -21,7 +21,8 @@ DONORS_CSV = "./data/updated_nov_2023/donors.csv"
 USERS_CSV = "./data/updated_nov_2023/user.csv"
 FACILITIES = "./data/updated_nov_2023/facility_site_types.csv"
 DISS_CSV = "./data/updated_nov_2023/dissaggregation.csv"
-
+STOCKUNIT_CSV = "./data/updated_nov_2023/stockunits.csv"
+STOCKITEMS_TYPES_CSV = "./data/updated_nov_2023/stockitems_types.csv"
 
 def get_sqlite_client(dbname):
     """
@@ -48,6 +49,69 @@ def import_currencies_from_csv(conn, currencies_csv):
         except Exception as exception:
             conn.rollback()
 
+
+def import_stock_units_from_csv(conn, stockunits_csv):
+    """
+    Import Stock Unit from CSV
+    """
+    c = conn.cursor()
+    df = pd.read_csv(stockunits_csv)
+
+    if len(df) > 0:
+        table = "stock_stockunit"
+
+        df.to_sql("tmp_stockunit", conn, if_exists="replace", index=False)
+
+        try:
+            c.execute(f"""insert into {table}(name) select name from tmp_stockunit""")
+            c.execute("DROP TABLE tmp_stockunit;")
+        except Exception as exception:
+            conn.rollback()
+
+
+def import_stockitems_types_from(conn, stockitems_types_csv):
+    """
+    Import Stock Items types from CSV
+    """
+    c = conn.cursor()
+    df = pd.read_csv(stockitems_types_csv)
+
+    if len(df) > 0:
+        table = "stock_stockitemstype"
+
+        df.to_sql("tmp_stockitemstype", conn, if_exists="replace", index=False)
+
+        try:
+            c.execute(f"""insert into {table}(old_id, cluster_id, name) select _id, cluster_id, stock_item_name from tmp_stockitemstype""")
+        except Exception as exception:
+            print(exception)
+            conn.rollback()
+
+
+        try:
+            c.execute('SELECT id,code FROM rh_cluster')
+            cluster_ids = c.fetchall()
+
+    
+            c.execute('SELECT id,cluster_id FROM stock_stockitemstype')
+            stock_itemstypes = c.fetchall()
+
+            # Insert the IDs into the cluster_disaggregation table
+            for cluster_id in cluster_ids:
+                for stock_itemstype in stock_itemstypes:
+                    if cluster_id[1] == stock_itemstype[1]:
+                        c.execute('''
+                        UPDATE stock_stockitemstype
+                        SET cluster_id = ?
+                        WHERE cluster_id = ?
+                        ''', (cluster_id[0],cluster_id[1]))
+        except Exception as e:
+            print(f"Error in stockitem_types and cluster: {e}")
+            conn.rollback()
+        
+        c.execute("DROP TABLE tmp_stockitemstype;")
+
+# c.execute(f"""insert into {table}(old_id, cluster_id,stock_items_name) select _id, cluster_id,stock_item_name from tmp_stockitemstype""")          
 
 def import_locations(conn, locations_csv):
     """
@@ -137,7 +201,7 @@ def import_indicators_from_csv(conn, indicators_csv):
         df.to_sql("tmp_indicator", conn, if_exists="replace", index=False)
         try:
             c.execute(
-                "select activity_description_id,indicator_id,indicator_name from tmp_indicator"
+                "select activity_description_id,indicator_name from tmp_indicator"
             )
             indicators = c.fetchall()
             for indicator in indicators:
@@ -155,14 +219,20 @@ def import_indicators_from_csv(conn, indicators_csv):
                         activity_type = None
 
                 indicator.pop(0)
-                indicator.append(None)
-                indicator.append(None)
-                indicator.append(None)
+                # indicator.append(None)
+                # indicator.append(None)
+                # indicator.append(None)
 
-                aquery = f"""insert into {table}(code, name, numerator, denominator, description) 
-                values (?, ?, ?, ?, ?)
+                aquery = f"""insert into {table}(name) 
+                values (?)
                 """
-                c.execute(aquery, indicator)
+                            
+                try:
+                    c.execute(aquery, indicator)
+                except Exception as exception:
+                    print(f"LOG Indicators: {exception}")
+                    continue
+
                 last_indicator_id = c.lastrowid
 
                 if last_indicator_id and activity_type:
@@ -175,6 +245,7 @@ def import_indicators_from_csv(conn, indicators_csv):
 
             c.execute("DROP TABLE tmp_indicator;")
         except Exception as exception:
+            print(f"ERROR: import_indicators_from_csv: {exception}")
             conn.rollback()
 
 
@@ -240,7 +311,9 @@ def import_activity_domains_from_csv(conn, activity_domain_csv):
                        """
                     c.execute(clquery)
 
+            c.execute("DROP TABLE tmp_activitydomain;")
         except Exception as exception:
+            print(f"ERROR: import_activity_domain: {exception}")
             conn.rollback()
 
 
@@ -260,10 +333,11 @@ def import_activity_descriptions_from_csv(conn, activity_description_csv):
             """
             )
             activity_types = c.fetchall()
+            count = 0
             for activity_type in activity_types:
                 activity_type = list(activity_type)
-                activity_domain = activity_type[2]
-                cluster = activity_type[3]
+                activity_domain = activity_type[2] # activity_type_id
+                cluster = activity_type[3] # cluster_id
                 country = "AF"
 
                 if activity_domain:
@@ -310,7 +384,14 @@ def import_activity_descriptions_from_csv(conn, activity_description_csv):
                 hrp_code,code_indicator,start_date,end_date,ocha_code,objective_id) 
                     values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """
-                c.execute(aquery, activity_type)
+
+                try:
+                    c.execute(aquery, activity_type)
+                except Exception as exception:
+                    # print(f"EXEC: {exception}")
+                    count = count + 1
+                    continue
+                
                 last_activity_type_id = c.lastrowid
 
                 if last_activity_type_id and country:
@@ -334,7 +415,11 @@ def import_activity_descriptions_from_csv(conn, activity_description_csv):
                 #         values({last_activity_type_id}, {indicator})
                 #     """
                 #     c.execute(inquery)
+            if count > 0:
+                print(f"Log: {count} activitytype was not inserted to the DB due to constraint error")
+            c.execute("DROP TABLE tmp_activitytype;")
         except Exception as exception:
+            print(f"ERROR: import_activity_description: {exception}")
             conn.rollback()
 
 
@@ -356,6 +441,7 @@ def import_activity_details_from_csv(conn, activity_details_csv):
             )
             activity_details = c.fetchall()
             m2m_records = []
+            count = 0
             for activity_detail in activity_details:
                 activity_detail = list(activity_detail)
                 activity_type = activity_detail[0]
@@ -375,9 +461,22 @@ def import_activity_details_from_csv(conn, activity_details_csv):
 
                 aquery = f"""insert into {table}(activity_type_id, code, name) values (?, ?, ?)
                 """
-                c.execute(aquery, activity_detail)
 
+               
+
+                try:
+                    c.execute(aquery, activity_detail)
+                except Exception as exception:
+                    print(f"LOG: EXEC acitivity-details: {exception}")
+                    count = count + 1
+                    continue
+            
+            if count > 0:
+                print(f"Log: {count} activitydetail was not inserted to the DB due to constraint error")
+
+            c.execute("DROP TABLE tmp_activitydetail;")
         except Exception as exception:
+            print(f"ERROR: import_activity_details_from_csv: {exception}")
             conn.rollback()
 
 
@@ -530,6 +629,7 @@ def import_donors_from_csv(conn, donors_csv):
             c.execute("DROP TABLE tmp_donor;")
 
         except Exception as exception:
+            print(f"ERROR: donors: {exception}")
             conn.rollback()
 
 
@@ -662,7 +762,7 @@ def import_users_from_csv(conn, users_csv):
 
             c.execute("DROP TABLE tmp_accounts;")
         except Exception as exception:
-            print("***********IMPORT ERROR:************ ", exception)
+            print("***********IMPORT ERROR - USER ************ ", exception)
             conn.rollback()
 
 
@@ -699,6 +799,7 @@ def import_facilities_from_csv(conn, facilities_csv):
 
             c.execute("DROP TABLE tmp_facilitysitetype;")
         except Exception as exception:
+            print(f"ERROR: import_facilities_from_csv: {exception}")
             conn.rollback()
 
 
@@ -795,6 +896,10 @@ try:
     import_beneficiary_types_from_csv(connection,BENEFICIARY_TYPES_CSV)
 
     import_dissaggregation_from_csv(connection,DISS_CSV)
+
+    import_stock_units_from_csv(connection, STOCKUNIT_CSV)
+
+    import_stockitems_types_from(connection, STOCKITEMS_TYPES_CSV)
 
     connection.commit()
 

@@ -37,11 +37,23 @@ print(obj.public_method())  # Output: This is a private method.
 
 ```
   
+- ***Naming routes and urls***:
+```python
+app_name = 'projects'
+{% url 'projects:project-list' %}
+
+'projects/' -> name = 'projects-list'
+'projects/create/' -> name = 'projects-create'
+'projects/<int:pk>/' -> name = 'projects-detail'
+'projects/<int:pk>/update/' ->  name = 'projects-update'
+'projects/<int:pk>/delete/' -> name = 'projects-delete';
+```
+
+
 - ***Indentation and Formatting***:
 
-    - Limit lines to a maximum of 79 characters as per PEP8. We can enforce it with the Flake8 library.
-    - Use parentheses to wrap lines that exceed the maximum length. 
-    - Write clear, readable, and concise code. Avoid excessive nesting and complex logic. Add a space on both sides of binary operators (=, +, -, *, /, etc.) and after commas. Put imports on separate lines, and group them in the following order: standard library imports, third-party package imports, and local application imports.
+    - Follow the ruff linting and formating rule run `make lint` to check for errors
+    - Write clear, readable, and concise code. Avoid excessive nesting and complex logic. 
 
 - ***Documentation***:
 

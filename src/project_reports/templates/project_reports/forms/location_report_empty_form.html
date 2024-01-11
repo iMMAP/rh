@@ -2,7 +2,16 @@
     {{ location_report_form.id }}
     <div class="location-inner-holder">
         <div class="block-activity mb-3">
-        
+            {% if location_report_form.instance.pk %}
+                <button 
+                    data-url="{% url 'delete_location_report' location_report_form.instance.pk %}"
+                    data-type="delete" 
+                    data-name="Location Report" 
+                    class="btn btn-gray show-sw-action-popup">
+                        <span class="btn-text">Delete</span>
+                        <span class="icon-trashbin-outline"></span>
+                </button>
+            {% endif %}
         </div>
         <!-- <div class="block-top">
             <span class="title">
@@ -27,10 +36,18 @@
                                 {{ location_report_form.district }}
                             </div>
                         </div>
+                        {% if location_report_form.zone.choices %}
                         <div class="field-col">
                             <div class="input-field">
                                 <label for="{{location_report_form.zone.id_for_label}}">Ward / Zone</label>
                                 {{ location_report_form.zone }}
+                            </div>
+                        </div> 
+                        {% endif %}
+                        <div class="field-col">
+                            <div class="input-field">
+                                <label for="{{location_report_form.facility_site_type.id_for_label}}">Facility Site Type</label>
+                                {{ location_report_form.facility_site_type }}
                             </div>
                         </div>
                     </div>

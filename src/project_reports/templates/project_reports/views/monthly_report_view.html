@@ -237,6 +237,16 @@
                                                         {% endif %}
                                                         {{ location_report.district }}
                                                     </span>
+                                                    {% if location_report.pk %}
+                                                        <button 
+                                                            data-url="{% url 'delete_location_report' location_report.pk %}"
+                                                            data-type="delete" 
+                                                            data-name="Location Report" 
+                                                            class="btn btn-gray show-sw-action-popup">
+                                                                <span class="btn-text">Delete</span>
+                                                                <span class="icon-trashbin-outline"></span>
+                                                        </button>
+                                                    {% endif %}
                                                 </div>
                                                 <div class="row">
                                                     <div class="col col-lg">

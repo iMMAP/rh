@@ -95,6 +95,17 @@ ul{
 .target-location-container {
   margin: 8px 0;
 }
+.info-sign{
+  border: 1px solid $red-be;
+  margin-right: 3px;
+  border-radius: 5px;
+}
+.filter-heading-text{
+  margin-bottom: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #6b6d70;
+}
 .circle-bage{
   background-color: #6b6d70;
   color: white;
@@ -143,6 +154,18 @@ ul{
 .close-alert-message:hover{
   font-weight: bold;
   transition: all 0.5s ease-in-out;
+}
+.show-password{
+  float: inline-end;
+}
+.small-label{
+  font-size: 12px;
+  vertical-align: top;
+  color: $gray;
+}
+.input-select{
+  width: 100%;
+  height: 4rem;
 }
 //------------------------
 // Random added style end

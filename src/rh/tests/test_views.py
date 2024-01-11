@@ -17,7 +17,7 @@ class TestLoggedInViews(TestCase):
 
     def test_landing_view(self):
         # Create dummy data
-        Location.objects.create(name="location1", parent=None)
+        Location.objects.create(name="location1", code="l1", parent=None)
 
         response = self.client.get(self.landing_url)
         self.assertEqual(response.status_code, 200)
@@ -30,9 +30,9 @@ class TestLoggedInViews(TestCase):
 
     def test_load_locations_details_view(self):
         # Create dummy provinces and districts
-        province1 = Location.objects.create(name="Province 1", parent=None)
+        province1 = Location.objects.create(name="Province 1", code="p1", parent=None)
 
-        province2 = Location.objects.create(name="Province 2", parent=None)
+        province2 = Location.objects.create(name="Province 2", code="p2", parent=None)
 
         # Prepare GET request parameters
         params = {"provinces[]": [str(province1.pk), str(province2.pk)], "listed_districts[]": []}
@@ -45,9 +45,9 @@ class TestLoggedInViews(TestCase):
 
     def test_load_facility_sites_view(self):
         # Create dummy clusters and facility sites
-        cluster1 = Cluster.objects.create(name="Cluster 1")
+        cluster1 = Cluster.objects.create(name="Cluster 1", code="c1")
 
-        cluster2 = Cluster.objects.create(name="Cluster 2")
+        cluster2 = Cluster.objects.create(name="Cluster 2", code="c2")
 
         # Prepare GET request parameters
         params = {"clusters[]": [str(cluster1.pk), str(cluster2.pk)], "listed_facilities[]": []}
@@ -69,7 +69,7 @@ class TestNotLoggedInViews(TestCase):
     def test_landing_view(self):
         # Create dummy data
         User.objects.create(username="user1")
-        Location.objects.create(name="location1", parent=None)
+        Location.objects.create(name="location1", code="l1", parent=None)
 
         response = self.client.get(self.landing_url)
         self.assertEqual(response.status_code, 200)
@@ -82,8 +82,8 @@ class TestNotLoggedInViews(TestCase):
 
     def test_load_locations_details_view(self):
         # Create dummy provinces and districts
-        province1 = Location.objects.create(name="Province 1", parent=None)
-        province2 = Location.objects.create(name="Province 2", parent=None)
+        province1 = Location.objects.create(name="Province 1", code="p1", parent=None)
+        province2 = Location.objects.create(name="Province 2", code="p2", parent=None)
 
         # Prepare GET request parameters
         params = {"provinces[]": [str(province1.pk), str(province2.pk)], "listed_districts[]": []}
@@ -95,8 +95,8 @@ class TestNotLoggedInViews(TestCase):
 
     def test_load_facility_sites_view(self):
         # Create dummy clusters and facility sites
-        cluster1 = Cluster.objects.create(name="Cluster 1")
-        cluster2 = Cluster.objects.create(name="Cluster 2")
+        cluster1 = Cluster.objects.create(name="Cluster 1", code="c1")
+        cluster2 = Cluster.objects.create(name="Cluster 2", code="c2")
 
         # Prepare GET request parameters
         params = {"clusters[]": [str(cluster1.pk), str(cluster2.pk)], "listed_facilities[]": []}

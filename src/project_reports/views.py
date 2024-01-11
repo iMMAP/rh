@@ -1,6 +1,7 @@
 import calendar
 import json
 from datetime import datetime, timedelta
+from itertools import chain
 
 # import pandas as pd
 from django.contrib.auth.decorators import login_required
@@ -14,6 +15,7 @@ from django.utils import timezone
 from django.views.decorators.cache import cache_control
 from tablib import Dataset
 
+# from .filter import ReportFilterForm
 from rh.models import ImplementationModalityType, Indicator, Location, Project
 
 from .forms import (
@@ -27,11 +29,25 @@ from .forms import (
 from .models import ActivityPlanReport, DisaggregationLocationReport, ProjectMonthlyReport, TargetLocationReport
 from .resources import ActivityPlanReportResource, DisaggregationLocationReportResource, TargetLocationReportResource
 
+# from django.core.paginator import Paginator
+RECORDS_PER_PAGE = 10
+
 
 @cache_control(no_store=True)
 @login_required
 def index_project_report_view(request, project):
     """Project Monthly Report View"""
+    # report_filter = ReportFilterForm(
+    #     request.GET,
+    #     queryset=ProjectMonthlyReport.objects.all()
+    #     .prefetch_related("project","ActivityPlanReport")
+    #     .order_by("-id"),
+    # )
+    # page_obj = Paginator(report_filter.qs, RECORDS_PER_PAGE)
+    # page = request.GET.get('page')
+    # project_page = page_obj.get_page(page)
+    # total_pages = "a" * project_page.paginator.num_pages
+
     project = get_object_or_404(Project, pk=project)
     project_reports = ProjectMonthlyReport.objects.filter(project=project.pk)
     active_project_reports = project_reports.filter(active=True)
@@ -45,6 +61,7 @@ def index_project_report_view(request, project):
         "project_reports_todo": project_reports_todo,
         "project_report_complete": project_report_complete,
         "project_report_archive": project_report_archive,
+        # "report_filter":report_filter,
         "project_view": False,
         "financial_view": False,
         "reports_view": True,
@@ -313,7 +330,11 @@ def details_monthly_progress_view(request, project, report):
 def get_project_and_report_details(project_id, report_id=None):
     project = get_object_or_404(Project, pk=project_id)
     project_state = project.state
-    activity_plans = project.activityplan_set.select_related("activity_domain", "activity_type", "activity_detail")
+    activity_plans = project.activityplan_set.select_related(
+        "activity_domain",
+        "activity_type",
+        "activity_detail",
+    )
     target_locations = project.targetlocation_set.select_related("province", "district", "zone").all()
     monthly_report_instance = None
 
@@ -362,12 +383,15 @@ def create_project_monthly_report_progress_view(request, project, report):
         target_location_zones,
     ) = get_target_locations_doamin(target_locations)
 
+    activity_plans = activity_plans.prefetch_related("indicators")
+    project_indicators = list(chain.from_iterable(activity.indicators.all() for activity in activity_plans))
+
     # Create the activity plan formset with initial data from the project
     ActivityReportFormset = inlineformset_factory(
         ProjectMonthlyReport,
         ActivityPlanReport,
         form=ActivityPlanReportForm,
-        extra=len(activity_plans),
+        extra=len(project_indicators),
         can_delete=True,
     )
 
@@ -405,15 +429,25 @@ def create_project_monthly_report_progress_view(request, project, report):
 
     # Loop through the forms in the formset and set initial and queryset values for specific fields
     if not request.POST:
+        # Create a dictionary to map indicator IDs to ActivityPlans
+        indicator_activity_plan_map = {
+            indicator.id: activity_plan
+            for activity_plan in activity_plans
+            for indicator in activity_plan.indicators.all()
+        }
         for i, form in enumerate(activity_report_formset.forms):
-            if i < len(activity_plans):
-                activity_plan = activity_plans[i]
-                if not form.instance.pk:
-                    form.initial = {
-                        "activity_plan": activity_plan,
-                        "project_id": project,
-                    }
-                form.fields["indicator"].queryset = activity_plan.indicators.select_related("package_type").all()
+            if i < len(project_indicators):
+                indicator = project_indicators[i]
+                activity_plan = indicator_activity_plan_map.get(indicator.id)
+
+                if activity_plan:
+                    if not form.instance.pk:
+                        form.initial = {
+                            "activity_plan": activity_plan,
+                            "project_id": project,
+                            "indicator": indicator,
+                        }
+                    form.fields["indicator"].queryset = activity_plan.indicators.all()
 
     if request.method == "POST":
         if activity_report_formset.is_valid():
@@ -456,6 +490,7 @@ def create_project_monthly_report_progress_view(request, project, report):
                                             if disaggregation_report_form.is_valid():
                                                 if (
                                                     disaggregation_report_form.cleaned_data != {}
+                                                    and disaggregation_report_form.cleaned_data.get("target")
                                                     and disaggregation_report_form.cleaned_data.get("target") > 0
                                                 ):
                                                     disaggregation_report_instance = disaggregation_report_form.save(
@@ -498,7 +533,6 @@ def create_project_monthly_report_progress_view(request, project, report):
         "activity_plans": activity_plans,
         "report_form": monthly_report_instance,
         "activity_report_formset": activity_report_formset,
-        # 'location_report_formset': location_report_formset,
         "combined_formset": combined_formset,
         "project_view": False,
         "financial_view": False,
@@ -536,6 +570,9 @@ def update_project_monthly_report_progress_view(request, project, report):
         target_location_districts,
         target_location_zones,
     ) = get_target_locations_doamin(target_locations)
+
+    activity_plans = activity_plans.prefetch_related("indicators")
+    project_indicators = list(chain.from_iterable(activity.indicators.all() for activity in activity_plans))
 
     # Create the activity plan formset with initial data from the project
     ActivityReportFormset = inlineformset_factory(
@@ -580,15 +617,30 @@ def update_project_monthly_report_progress_view(request, project, report):
 
     # Loop through the forms in the formset and set initial and queryset values for specific fields
     if not request.POST:
+        # Create a dictionary to map indicator IDs to ActivityPlans
+        indicator_activity_plan_map = {
+            indicator.id: activity_plan
+            for activity_plan in activity_plans
+            for indicator in activity_plan.indicators.all()
+        }
         for i, form in enumerate(activity_report_formset.forms):
-            if i < len(activity_plans):
-                activity_plan = activity_plans[i]
-                form.fields["indicator"].queryset = activity_plan.indicators.all()
+            if i < len(project_indicators):
+                indicator = project_indicators[i]
+                activity_plan = indicator_activity_plan_map.get(indicator.id)
+
+                if activity_plan:
+                    if not form.instance.pk:
+                        form.initial = {
+                            "activity_plan": activity_plan,
+                            "project_id": project,
+                            "indicator": indicator,
+                        }
+                form.fields["indicator"].queryset = activity_plan.indicators.all().select_related("package_type")
 
     if request.method == "POST":
         if activity_report_formset.is_valid():
             for activity_report_form in activity_report_formset:
-                indicator_data = activity_report_form.cleaned_data.get("indicator")
+                indicator_data = activity_report_form.cleaned_data.get("indicator", "")
                 if indicator_data:
                     activity_report = activity_report_form.save(commit=False)
                     activity_report.monthly_report = monthly_report_instance
@@ -601,8 +653,8 @@ def update_project_monthly_report_progress_view(request, project, report):
                             if location_report_formset.is_valid():
                                 for location_report_form in location_report_formset:
                                     cleaned_data = location_report_form.cleaned_data
-                                    province = cleaned_data.get("province")
-                                    district = cleaned_data.get("district")
+                                    province = cleaned_data.get("province", "")
+                                    district = cleaned_data.get("district", "")
 
                                     if province and district:
                                         location_report_instance = location_report_form.save(commit=False)
@@ -625,7 +677,7 @@ def update_project_monthly_report_progress_view(request, project, report):
                                             if disaggregation_report_form.is_valid():
                                                 if (
                                                     disaggregation_report_form.cleaned_data != {}
-                                                    and disaggregation_report_form.cleaned_data.get("target") > 0
+                                                    and disaggregation_report_form.cleaned_data.get("target", 0) > 0
                                                 ):
                                                     disaggregation_report_instance = disaggregation_report_form.save(
                                                         commit=False
@@ -788,6 +840,47 @@ def get_disaggregations_report_empty_forms(request):
     return JsonResponse(location_disaggregation_report_dict)
 
 
+def recompute_target_achieved(plan_report):
+    """Recompute the target achieved for each activity plan report"""
+    location_reports = plan_report.targetlocationreport_set.all()
+
+    activity_report_target = 0
+    for location_report in location_reports:
+        disaggregation_location_reports = location_report.disaggregationlocationreport_set.all()
+
+        for disaggregation_location_report in disaggregation_location_reports:
+            activity_report_target += disaggregation_location_report.target
+    plan_report.target_achieved = activity_report_target
+    plan_report.save()
+
+
+@cache_control(no_store=True)
+@login_required
+def delete_location_report_view(request, location_report):
+    """Delete the target location report"""
+    location_report = get_object_or_404(TargetLocationReport, pk=location_report)
+    plan_report = location_report.activity_plan_report
+    monthly_report = location_report.activity_plan_report.monthly_report
+    if location_report:
+        location_report.delete()
+
+        # Recompute the achieved target for the location_report activity.
+        recompute_target_achieved(plan_report)
+
+    # Generate the URL using reverse
+    url = reverse(
+        "view_monthly_report",
+        kwargs={
+            "project": monthly_report.project.pk,
+            "report": monthly_report.pk,
+        },
+    )
+
+    # Return the URL in a JSON response
+    response_data = {"redirect_url": url}
+    return JsonResponse(response_data)
+
+
 def submit_monthly_report_view(request, report):
     monthly_report = get_object_or_404(ProjectMonthlyReport, pk=report)
     # TODO: Handle with access rights and groups
@@ -829,7 +922,6 @@ def approve_monthly_report_view(request, report):
 
 
 def reject_monthly_report_view(request, report):
-    # TODO: Provide a popup reasone for rejection field here.
     monthly_report = get_object_or_404(ProjectMonthlyReport, pk=report)
     message = ""
     if request.GET.get("message", ""):

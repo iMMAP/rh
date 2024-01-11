@@ -77,10 +77,10 @@ class ProjectReportExportExcelView(View):
         # Define column headers and types
         columns = [
             {"header": "Project Code", "type": "string", "width": 20},
+            {"header": "indicator", "type": "string", "width": 40},
             {"header": "activity_domain", "type": "string", "width": 40},
             {"header": "activity_type", "type": "string", "width": 40},
             {"header": "activity_detail", "type": "string", "width": 40},
-            {"header": "indicator", "type": "string", "width": 40},
             {"header": "report_types", "type": "string", "width": 20},
             {"header": "country", "type": "string", "width": 20},
             {"header": "province", "type": "string", "width": 20},
@@ -120,94 +120,41 @@ class ProjectReportExportExcelView(View):
 
         Args:
             sheet (Worksheet): The worksheet object.
-            project (Project): The project_report object.
+            project_report (Project Report): The project_report object.
         """
         rows = []
         activity_plans = project_report.project.activityplan_set.all()
         for plan in activity_plans:
             target_locations = plan.targetlocation_set.all()
-            for location in target_locations:
-                disaggregation_locations = location.disaggregationlocation_set.all()
-                for disaggregation in disaggregation_locations:
-                    rows.append(
-                        project_report.project.code,
-                        plan.activity_domain,
-                        plan.activity_type,
-                        plan.activity_detail,
-                        plan.activity_detail,
-                        location.country,
-                        location.province,
-                        location.district,
-                    )
+            indicators = plan.indicators.all()
+            for indicator in indicators:
+                for location in target_locations:
+                    disaggregation_locations = location.disaggregationlocation_set.all()
+                    for disaggregation_location in disaggregation_locations:
+                        rows.append(
+                            [
+                                project_report.project.code if project_report.project else None,
+                                indicator.name if indicator else None,
+                                plan.activity_domain.code if plan.activity_domain else None,
+                                plan.activity_type.code if plan.activity_type else None,
+                                plan.activity_detail.code if plan.activity_detail else None,
+                                None,
+                                location.country.name if location.country else None,
+                                location.province.name if location.province else None,
+                                location.district.name if location.district else None,
+                                location.zone.name if location.zone else None,
+                                location.location_type,
+                                disaggregation_location.disaggregation.name
+                                if disaggregation_location.disaggregation
+                                else None,
+                                None,
+                            ]
+                        )
 
-        for row in rows:
+        for row_idx, row in enumerate(rows, start=2):
             for col_idx, value in enumerate(row, start=1):
-                sheet.cell(row=2, column=col_idx, value=value)
-
+                try:
+                    sheet.cell(row=row_idx, column=col_idx, value=value)
+                except Exception as e:
+                    print(e)
         sheet.freeze_panes = sheet["A2"]
-
-    # def write_activity_plan_report_sheet(self, workbook, project_report):
-    #     """
-    #     Write the population sheet to the workbook.
-
-    #     Args:
-    #         workbook (Workbook): The Excel workbook object.
-    #         project (Project): The project object.
-    #     """
-    #     sheet = workbook.create_sheet(title="Target Population")
-
-    #     # Define column headers and types for Sheet 2
-    #     columns = [
-    #         {"header": "Monthly Report ID", "type": "string", "width": 20},
-    #         {"header": "Activity Plan", "type": "string", "width": 20},
-    #         {"header": "Indicator", "type": "string", "width": 40},
-    #         {"header": "Report Types", "type": "string", "width": 40},
-    #     ]
-
-    #     self.write_sheet_columns(sheet, columns)
-    #     self.write_activity_plan_report_data_rows(sheet, project_report)
-
-    #     sheet.freeze_panes = sheet["A2"]
-
-    # def write_activity_plan_report_data_rows(self, sheet, project_report):
-    #     """
-    #     Write population data rows to the sheet.plan.activity_detail.name if plan.activity_detail else None,
-    #             # "\n".join([indicator.name for indicator in plan.indicators.all()]),
-
-    #     Args:
-    #         sheet (Worksheet): The worksheet object.
-    #         project (Project): The project object.
-    #     """
-    #     row = [
-    #         project_report.pk,
-    #         None,
-    #         None,
-    #         None,
-    #     ]
-
-    #     for col_idx, value in enumerate(row, start=1):
-    #         sheet.cell(row=2, column=col_idx, value=value)
-
-    # def write_target_locations_report_sheet(self, workbook, project_report):
-    #     """
-    #     Write the target locations sheet to the workbook.
-
-    #     Args:
-    #         workbook (Workbook): The Excel workbook object.
-    #         project (Project): The project object.
-    #     """
-
-    #     sheet = workbook.create_sheet(title="Target Locations")
-
-    #     # Define column headers and types for Sheet 3
-    #     columns = [
-    #         {"header": "Activity Plan Report ID", "type": "string", "width": 20},
-    #         {"header": "Country", "type": "string", "width": 20},
-    #         {"header": "Province", "type": "string", "width": 20},
-    #         {"header": "District", "type": "string", "width": 20},
-    #         {"header": "Zone/Ward", "type": "string", "width": 20},
-    #         {"header": "Location Type", "type": "string", "width": 20},
-    #     ]
-
-    #     self.write_sheet_columns(sheet, columns)
-    #     sheet.freeze_panes = sheet["A2"]

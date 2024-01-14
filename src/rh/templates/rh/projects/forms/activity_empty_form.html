@@ -177,30 +177,29 @@ document.querySelector('.project-activity-accordion-slide')
     });
 
 
-const formsetContainer = document.querySelector("#activity-formset");
-
 // Get the number of existing forms
-const formIdx = formsetContainer.children.length; 
+{% comment %} const formIdx = formsetContainer.children.length;  {% endcomment %}
 
-const activityTypeSelect = document.querySelector(`select[id^='{{ form.prefix }}-activity_detail']`);
+const activityTypeSelect = $("select[id^='id_{{ form.prefix }}-activity_type']");
 console.log(activityTypeSelect)
 
-{% comment %} const activityDomainSelectID = "#id_" + activityTypeSelect.data('chainfield');
+const activityDomainSelectID = "#id_" + activityTypeSelect.data('chainfield');
 const activityTypeUrl = activityTypeSelect.data('url');
 const activityTypeID = "#" + activityTypeSelect.attr('id');
+console.log(activityDomainSelectID, activityTypeUrl, activityTypeID)
 chainedfk.init(activityDomainSelectID, activityTypeUrl, activityTypeID, '', '--------', true);
 
-const activityDetailSelect = document.querySelector(`select[id^='id_activityplan_set-${formIdx}-activity_detail']`);
+const activityDetailSelect = $(`select[id^='id_activityplan_set-{{ form.prefix }}-activity_detail']`);
 const activityTypeSelectID = "#id_" + activityDetailSelect.data('chainfield');
 const activityDetailUrl = activityDetailSelect.data('url');
 const activityDetailID = "#" + activityDetailSelect.attr('id');
 chainedfk.init(activityTypeSelectID, activityDetailUrl, activityDetailID, '', '--------', true);
 
-const indicatorsSelect = document.querySelector(`select[id^='id_activityplan_set-${formIdx}-indicators']`);
+const indicatorsSelect = $(`select[id^='id_activityplan_set-{{ form.prefix }}-indicators']`);
 const IndicatorsUrl = indicatorsSelect.data('url');
 const IndicatorsID = "#" + indicatorsSelect.attr('id');
-chainedm2m.init(activityTypeSelectID, IndicatorsUrl, IndicatorsID, '', '--------', true); {% endcomment %}
-{% comment %} $(IndicatorsID).select2(); {% endcomment %}
+chainedm2m.init(activityTypeSelectID, IndicatorsUrl, IndicatorsID, '', '--------', true);
+$(IndicatorsID).select2(); 
 
 {% comment %} addTargetLocationForm(activityFormPrefix, projectID, activityFormIndex); {% endcomment %}
     

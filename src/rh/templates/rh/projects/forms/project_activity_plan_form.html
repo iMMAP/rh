@@ -43,7 +43,7 @@
                                     data-form-prefix="{{activity_plan_formset.prefix}}" 
                                     data-project="{{project.pk}}"
                                     class="btn btn-red"
-                                    hx-get="{% url 'get_activity_empty_form' %}?project={{project.pk}}&prefix_index={{form.prefix}}"
+                                    hx-get="{% url 'get_activity_empty_form' %}?project={{project.pk}}&prefix_index={{activity_plan_formset.prefix}}"
                                     hx-target="#activity-formset"
                                     hx-swap="afterbegin"
                                 >

@@ -65,13 +65,13 @@
                             <div class="field-col">
                                 <div class="select-field is-required">
                                     <label for="{{form.activity_type.id_for_label}}">Activity Type</label>
-                                    {{ form.activity_type }}
+                                     {{form.activity_type}}
                                 </div>
                             </div>
                             <div class="field-col">
                                 <div class="select-field">
-                                    <label for="{{form.activity_detail.id_for_label}}">Activity Detail</label>
-                                    {{ form.activity_detail }}
+                                    <label for="{{form.activity_detail.id_for_label}}">Activity Detail </label>
+                                    {{form.activity_detail}}
                                 </div>
                             </div>
                         </div>
@@ -157,16 +157,51 @@
 
 <script>
 // Open/Activate the accordion
-const parentDiv = document.querySelector('.project-activity-accordion-slide');
-const innerHolder = parentDiv.closest('.inner-holder')
+function next(el, selector) {
+  const nextEl = el.nextElementSibling;
+  if (!selector || (nextEl && nextEl.matches(selector))) {
+    return nextEl;
+  }
+  return null;
+}
 
 // Unbind any existing click events
-innerHolder.querySelector('.project-activity-accordion-opener').off('click');
-innerHolder.querySelector('.project-activity-accordion-opener').on('click', function(event) {
-    event.preventDefault(); // Prevent the default behavior (form submission)
-    event.stopPropagation(); // Prevent the default behavior (propagation)
-    innerHolder.toggleClass('project-activity-accordion-active')
-    $(this).next('.project-activity-accordion-slide').toggleClass('js-acc-hidden')
-    // $(this).next('.target-location-accordion-slide').slideToggle(DETAILS_TOGGLE_DURATION);
-});
+document.querySelector('.project-activity-accordion-slide')
+    .closest('.inner-holder')
+    .querySelector('.project-activity-accordion-opener')
+    .addEventListener('click', function(event) {
+        document.querySelector('.project-activity-accordion-slide').closest('.inner-holder').classList.toggle("project-activity-accordion-active");
+        next(this,".project-activity-accordion-slide").classList.toggle("js-acc-hidden")
+        // $(this).next('.project-activity-accordion-slide').toggleClass('js-acc-hidden')
+        // $(this).next('.target-location-accordion-slide').slideToggle(DETAILS_TOGGLE_DURATION);
+    });
+
+
+const formsetContainer = document.querySelector("#activity-formset");
+
+// Get the number of existing forms
+const formIdx = formsetContainer.children.length; 
+
+const activityTypeSelect = document.querySelector(`select[id^='{{ form.prefix }}-activity_detail']`);
+console.log(activityTypeSelect)
+
+{% comment %} const activityDomainSelectID = "#id_" + activityTypeSelect.data('chainfield');
+const activityTypeUrl = activityTypeSelect.data('url');
+const activityTypeID = "#" + activityTypeSelect.attr('id');
+chainedfk.init(activityDomainSelectID, activityTypeUrl, activityTypeID, '', '--------', true);
+
+const activityDetailSelect = document.querySelector(`select[id^='id_activityplan_set-${formIdx}-activity_detail']`);
+const activityTypeSelectID = "#id_" + activityDetailSelect.data('chainfield');
+const activityDetailUrl = activityDetailSelect.data('url');
+const activityDetailID = "#" + activityDetailSelect.attr('id');
+chainedfk.init(activityTypeSelectID, activityDetailUrl, activityDetailID, '', '--------', true);
+
+const indicatorsSelect = document.querySelector(`select[id^='id_activityplan_set-${formIdx}-indicators']`);
+const IndicatorsUrl = indicatorsSelect.data('url');
+const IndicatorsID = "#" + indicatorsSelect.attr('id');
+chainedm2m.init(activityTypeSelectID, IndicatorsUrl, IndicatorsID, '', '--------', true); {% endcomment %}
+{% comment %} $(IndicatorsID).select2(); {% endcomment %}
+
+{% comment %} addTargetLocationForm(activityFormPrefix, projectID, activityFormIndex); {% endcomment %}
+    
 </script>

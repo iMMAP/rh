@@ -49,7 +49,7 @@ class ActivityPlanModelAdminForm(forms.ModelForm):
         model = ActivityPlan
         fields = "__all__"
         widgets = {
-            "indicators": FilteredSelectMultiple("Indicators", False),
+            "indicator": FilteredSelectMultiple("Indicator", False),
         }
 
 

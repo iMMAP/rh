@@ -13,7 +13,7 @@ from .models import (
 class ProjectResource(resources.ModelResource):
     activity_type = fields.Field()
     activity_domain = fields.Field()
-    indicators = fields.Field()
+    indicator = fields.Field()
     beneficiary = fields.Field()
     beneficiary_category = fields.Field()
 
@@ -45,7 +45,7 @@ class ProjectResource(resources.ModelResource):
             "end_date",
             "activity_domain",
             "activity_type",
-            "indicators",
+            "indicator",
             "beneficiary",
             "beneficiary_category",
             "province",
@@ -73,7 +73,7 @@ class ProjectResource(resources.ModelResource):
             "end_date",
             "activity_domain",
             "activity_type",
-            "indicators",
+            "indicator",
             "beneficiary",
             "beneficiary_category",
             "province",
@@ -107,9 +107,6 @@ class ProjectResource(resources.ModelResource):
         activity_types = list(project.activityplan_set.all())
         return ",".join([child.activity_type.name for child in activity_types])
 
-    def dehydrate_indicators(self, project):
-        activity_plan = project.activityplan_set.all()
-        return ",".join([indicator.name for plan in activity_plan for indicator in plan.indicators.all()])
 
     def dehydrate_beneficiary(self, project):
         activity_plan = list(project.activityplan_set.all())

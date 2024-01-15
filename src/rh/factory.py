@@ -20,6 +20,12 @@ from .models import (
     LocationType,
     TargetLocation,
     DisaggregationLocation,
+    GrantType,
+    TransferCategory,
+    TransferMechanismType,
+    ImplementationModalityType,
+    UnitType,
+    PackageType,
 )
 from users.factory import UserFactory
 
@@ -30,6 +36,59 @@ D_TYPES = [
     ("gender", "Gender"),
 ]
 
+# Run the bellow command in the shell to create fake data
+# DisaggregationFactory.create_batch(amount)
+
+
+# unit_type
+class UnitTypeFactory(DjangoModelFactory):
+    class Meta:
+        model = UnitType
+
+    name = factory.Faker("word")
+
+
+# grant_type
+class GrantTypeFactory(DjangoModelFactory):
+    class Meta:
+        model = GrantType
+
+    name = factory.Faker("word")
+
+
+# transfer_category
+class TransferCategoryFactory(DjangoModelFactory):
+    class Meta:
+        model = TransferCategory
+
+    name = factory.Faker("word")
+
+
+
+
+# implement_modility_type
+class ImplementationModalityTypeFactory(DjangoModelFactory):
+    class Meta:
+        model = ImplementationModalityType
+
+    name = factory.Faker("word")
+
+
+# transfer_mechanism_type
+class TransferMechanismTypeFactory(DjangoModelFactory):
+    class Meta:
+        model = TransferMechanismType
+
+    name = factory.Faker("word")
+    modality = factory.SubFactory(ImplementationModalityTypeFactory)
+
+
+class PackageTypeFactory(DjangoModelFactory):
+    class Meta:
+        model = PackageType
+
+    name = factory.Faker("word")
+
 
 class DisaggregationFactory(DjangoModelFactory):
     class Meta:
@@ -38,8 +97,25 @@ class DisaggregationFactory(DjangoModelFactory):
     name = factory.Faker("word")
     type = factory.Iterator(D_TYPES, getter=lambda c: c[0])
 
+    @factory.post_generation
+    def indicators(self, create, extracted, **kwargs):
+        if not create:
+            return
+
+        if extracted:
+            for indic in extracted:
+                self.clusters.add(indic)
+        else:
+            indics = Indicator.objects.order_by("?")[:3]
+            for indic in indics:
+                self.indicators.add(indic)
+
+
+
     # Run the bellow command in the shell to create fake data
     # DisaggregationFactory.create_batch(amount)
+
+
 
 
 class CountryFactory(DjangoModelFactory):
@@ -356,6 +432,13 @@ class IndicatorFactory(DjangoModelFactory):
     denominator = factory.Faker("pystr", max_chars=200)
     description = factory.Faker("text", max_nb_chars=1200)
 
+    package_type = factory.SubFactory(PackageTypeFactory)
+    unit_type = factory.SubFactory(UnitTypeFactory)
+    grant_type = factory.SubFactory(GrantTypeFactory)
+    transfer_category = factory.SubFactory(TransferCategoryFactory)
+    implement_modility_type = factory.SubFactory(ImplementationModalityTypeFactory)
+    transfer_mechanism_type = factory.SubFactory(TransferMechanismTypeFactory)
+
     @factory.post_generation
     def activity_types(self, create, extracted, **kwargs):
         if not create:
@@ -368,11 +451,6 @@ class IndicatorFactory(DjangoModelFactory):
             activity_types = ActivityType.objects.all()
             for activity_type in activity_types:
                 self.activity_types.add(activity_type)
-
-    @factory.lazy_attribute
-    def code(self):
-        return self.name.capitalize()
-
 
 class ProjectFactory(DjangoModelFactory):
     class Meta:
@@ -423,7 +501,7 @@ class ProjectFactory(DjangoModelFactory):
             for cluster in extracted:
                 self.clusters.add(cluster)
         else:
-            clusters = Cluster.objects.order_by("?")[:2][: random.randint(1, 5)]
+            clusters = Cluster.objects.order_by("?")[: random.randint(1, 5)]
             for cluster in clusters:
                 self.clusters.add(cluster)
 
@@ -498,6 +576,17 @@ class ActivityPlanFactory(DjangoModelFactory):
 
     hrp_beneficiary = factory.Iterator(BeneficiaryType.objects.filter(is_hrp_beneficiary=True))
     # Add other fields if necessary
+
+    @factory.post_generation
+    def indicator(self, create, extracted, **kwargs):
+        if not create:
+            return
+        if extracted:
+            return
+        else:
+            self.indicator = self.activity_type.indicator_set.order_by("?")[:1][0]
+
+
 
 
 class LocationTypeFactory(DjangoModelFactory):

@@ -291,7 +291,7 @@ class ActivityPlanForm(forms.ModelForm):
         self.fields["activity_detail"].widget.attrs.update(
             {"onchange": f"updateActivityTitle('{prefix}', 'id_{prefix}-activity_detail');"}
         )
-        self.fields["indicators"].widget.attrs.update({"style": "height: 128px;"})
+        self.fields["indicator"].widget.attrs.update({"style": "20px"})
 
 
 ActivityPlanFormSet = inlineformset_factory(

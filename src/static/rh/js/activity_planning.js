@@ -66,13 +66,13 @@ function addActivityForm(prefix, project, nextFormIndex) {
 					const activityDetailID = "#" + activityDetailSelect.attr('id');
 					chainedfk.init(activityTypeSelectID, activityDetailUrl, activityDetailID, '', '--------', true);
 			
-					const indicatorsSelect = $(`select[id^='id_activityplan_set-${formIdx}-indicators']`);
+					const indicatorsSelect = $(`select[id^='id_activityplan_set-${formIdx}-indicator']`);
 					const IndicatorsUrl = indicatorsSelect.data('url');
 					const IndicatorsID = "#" + indicatorsSelect.attr('id');
-					chainedm2m.init(activityTypeSelectID, IndicatorsUrl, IndicatorsID, '', '--------', true);
+					// chainedm2m.init(activityTypeSelectID, IndicatorsUrl, IndicatorsID, '', '--------', true);
+					chainedfk.init(activityTypeSelectID, IndicatorsUrl, IndicatorsID, '', '--------', true);
 					$(IndicatorsID).select2();
-					
-					addTargetLocationForm(activityFormPrefix, projectID, activityFormIndex);
+					// addTargetLocationForm(activityFormPrefix, projectID, activityFormIndex);
 			
 				}, 100);
 				
@@ -150,6 +150,7 @@ function addTargetLocationForm(prefix, project, nextFormIndex) {
 				});
 
 				if (addedForm){
+						
 					const locationPrefix = addedForm[0].dataset.locationPrefix
 					// Load Locations (districts and zones)
 					getLocations(locationPrefix, 'district', 'province');
@@ -165,18 +166,29 @@ function addTargetLocationForm(prefix, project, nextFormIndex) {
 					
 					// Update disaggregations based on indicators for the new added form 
 					const activityFormIndex = formPrefix.match(/activityplan_set-(\d+)/)[1] 
-					var $select2Event = $(`#id_activityplan_set-${activityFormIndex}-indicators`);
+					var $select2Event = $(`#id_activityplan_set-${activityFormIndex}-indicator`);
+
+
 					if ($select2Event.length && $select2Event.select2 && $select2Event.select2('data')) {
+
 						let selectedIDs = $select2Event.select2('data').map(item => item.id);
+						console.log(selectedIDs,"66666666666666666666666666666666666666666666")
 						handleDisaggregationForms($select2Event[0], selectedIDs, [locationPrefix]);
 					}
 
+					console.log("2222  222 What is going on ???????????????")
+
+
 					// Update change event on indicators for the new added form 
 					$select2Event.on("select2:select", function (event) { 
+						console.log(event.currentTarget,"63333333333333333333")
+
 						let indicatorsSelect = event.currentTarget
 						let selectedIDs = $(indicatorsSelect).select2('data').map(item => item.id);
 						handleDisaggregationForms(indicatorsSelect, selectedIDs, [locationPrefix])
 					});
+
+					console.log("What is going on ???????????????")
 
 					// Update change event on indicators for the new added form 
 					$select2Event.on("select2:unselect", function (event) { 
@@ -398,7 +410,7 @@ function getLocations(locationPrefix, locationType, parentType, clearZone=null) 
 $(function () {
 
 	// Initialize indicators with django select except for the empty form
-	$("select[multiple]:not(#id_activityplan_set-__prefix__-indicators)").select2();
+	$("select[multiple]:not(#id_activityplan_set-__prefix__-indicator)").select2();
 
 	// Button to handle addition of new activity form.
 	$('#add-activity-form-button').off('click').on('click', function(event) {
@@ -428,7 +440,7 @@ $(function () {
 		updateActivityTitle(`activityplan_set-${formIndex}`, `id_activityplan_set-${formIndex}-activity_domain`);
 		
 		// Update disaggregations based on indicators
-		var $select2Event = $(`#id_activityplan_set-${formIndex}-indicators`);
+		var $select2Event = $(`#id_activityplan_set-${formIndex}-indicator`);
 		$select2Event.on("select2:select", function (event) { 
 			let indicatorsSelect = event.currentTarget
 			let selectedIDs = $(indicatorsSelect).select2('data').map(item => item.id);

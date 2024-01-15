@@ -183,8 +183,8 @@ def projects_detail(request, pk):
             "implementing_partners",
             Prefetch(
                 "activityplan_set",
-                ActivityPlan.objects.select_related("activity_domain", "beneficiary").prefetch_related(
-                    "targetlocation_set", "indicators", "activity_type", "activity_detail"
+                ActivityPlan.objects.select_related("activity_domain", "beneficiary","indicator").prefetch_related(
+                    "targetlocation_set", "activity_type", "activity_detail"
                 ),
             ),
         ),
@@ -487,6 +487,11 @@ def get_target_location_empty_form(request):
         instance=target_location_form.instance,
         prefix=f"disaggregation_{target_location_form.prefix}",
     )
+
+    print("============================= /n")
+    print(f"this is new - ${disaggregation_formset}")
+    print("============================= /n")
+
     target_location_form.disaggregation_formset = disaggregation_formset
 
     # Prepare context for rendering the target location form template
@@ -776,7 +781,7 @@ def copy_project_activity_plan(project, plan):
         new_plan.title = f"[COPY] - {plan.title}"
 
         # Copy indicators from the original plan to the duplicated plan.
-        new_plan.indicators.set(plan.indicators.all())
+        new_plan.indicator = plan.indicator
 
         # Save the changes made to the duplicated plan.
         new_plan.save()
@@ -865,7 +870,7 @@ def copy_activity_plan(request, project, plan):
         new_plan.active = True
         new_plan.state = "draft"
         new_plan.title = f"[COPY] - {activity_plan.title}"
-        new_plan.indicators.set(activity_plan.indicators.all())
+        new_plan.indicator = activity_plan.indicator
         new_plan.save()
 
     url = reverse("create_project_activity_plan", args=[project.pk])

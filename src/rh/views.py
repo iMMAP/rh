@@ -33,6 +33,7 @@ from .models import (
     Location,
     Project,
     TargetLocation,
+    Disaggregation
 )
 
 RECORDS_PER_PAGE = 10
@@ -407,44 +408,35 @@ def create_project_activity_plan(request, project):
 def get_disaggregations_forms(request):
     """Get target location empty form"""
     # Get selected indicators
-    indicators = Indicator.objects.filter(pk__in=request.POST.getlist("indicators[]"))
-
-    # Get selected locations prefixes
+    indicator = Indicator.objects.get(pk=request.POST.get("indicator"))
     locations_prefix = request.POST.getlist("locations_prefixes[]")
 
-    # Use a set to store unique related Disaggregations
-    unique_related_disaggregations = set()
-
-    # Loop through each Indicator and retrieve its related Disaggregations
-    for indicator in indicators:
-        related_disaggregations = indicator.disaggregation_set.all()
-        unique_related_disaggregations.update(related_disaggregations)
-
-    # Convert the set to a list
-    unique_related_disaggregations = list(unique_related_disaggregations)
-
-    # Create a dictionary to hold disaggregation forms per location prefix
+    related_disaggregations = indicator.disaggregation_set.all()
+   
+    
     location_disaggregation_dict = {}
 
     initial_data = []
 
     # Populate initial data with related disaggregations
-    if unique_related_disaggregations:
-        for disaggregation in unique_related_disaggregations:
+    if len(related_disaggregations) > 0:
+        for disaggregation in related_disaggregations:
             initial_data.append({"disaggregation": disaggregation})
 
         # Create DisaggregationFormSet for each location prefix
         for location_prefix in locations_prefix:
-            DisaggregationFormSet.extra = len(unique_related_disaggregations)
+            # Check if is from the add new form or from the activity create
+            DisaggregationFormSet.extra = len(related_disaggregations)
             disaggregation_formset = DisaggregationFormSet(
                 prefix=f"disaggregation_{location_prefix}", initial=initial_data
             )
 
-            # Generate HTML for each disaggregation form and store in dictionary
             for disaggregation_form in disaggregation_formset.forms:
+                # disaggregation_form = modelform_factory(DisaggregationLocation,fields=["target","disaggregation"])
                 context = {
                     "disaggregation_form": disaggregation_form,
                 }
+
                 html = render_to_string("rh/projects/forms/disaggregation_empty_form.html", context)
 
                 if location_prefix in location_disaggregation_dict:
@@ -453,7 +445,6 @@ def get_disaggregations_forms(request):
                     location_disaggregation_dict.update({location_prefix: [html]})
 
     # Set back extra to 0 to avoid empty forms if refreshed.
-    DisaggregationFormSet.extra = 0
 
     # Return JSON response containing generated HTML forms
     return JsonResponse(location_disaggregation_dict)
@@ -488,10 +479,7 @@ def get_target_location_empty_form(request):
         prefix=f"disaggregation_{target_location_form.prefix}",
     )
 
-    print("============================= /n")
-    print(f"this is new - ${disaggregation_formset}")
-    print("============================= /n")
-
+  
     target_location_form.disaggregation_formset = disaggregation_formset
 
     # Prepare context for rendering the target location form template

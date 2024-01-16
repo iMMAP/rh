@@ -1,21 +1,26 @@
 <div class="location-inner-holder">
+    
     <div class="row">
-        <div class="col">
             <div class="multiple-fields-row two-items">
-                <div class="field-col">
+                 <div class="field-col">
                     <div class="select-field is-required">
-                        <label for="{{disaggregation_form.disaggregation.id_for_label}}" >Disaggregation</label>
-                        {{disaggregation_form}}
-                        {{ disaggregation_form.disaggregation }}
+                        {{disaggregation_form.id}}
+                        <select  
+                        disabled
+                            id="{{disaggregation_form.disaggregation.id_for_label}}"
+                            name="{{disaggregation_form.prefix}}"
+                            value="{{disaggregation_form.disaggregation.initial.id}}"
+                        >
+                            <option selected value="{{disaggregation_form.disaggregation.initial.id}}">{{ disaggregation_form.disaggregation.initial}}</option>
+                        </select>
                     </div>
-                </div>
+                </div>  
                 <div class="field-col">
                     <div class="select-field is-required">
-                        <label for="{{disaggregation_form.target.id_for_label}}" >Target</label>
+                        <label for="{{disaggregation_form.target.id_for_label}}" >Target for "{{disaggregation_form.disaggregation.initial}}"</label>
                         {{ disaggregation_form.target }}
                     </div>
                 </div>
             </div>
-        </div>
     </div>
 </div>

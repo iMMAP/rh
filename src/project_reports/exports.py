@@ -1,12 +1,7 @@
 import base64
-
-# import datetime
-# import json
 from io import BytesIO
 
 from django.http import JsonResponse
-
-# from django.utils import timezone
 from django.views import View
 from openpyxl import Workbook
 from openpyxl.styles import Font, NamedStyle
@@ -55,7 +50,7 @@ class ProjectReportExportExcelView(View):
             response = {
                 "file_url": "data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,"
                 + base64.b64encode(excel_file.read()).decode("utf-8"),
-                "file_name": "monthly_report.xlsx",
+                "file_name": "monthly_report_template.xlsx",
             }
 
             return JsonResponse(response)
@@ -87,9 +82,24 @@ class ProjectReportExportExcelView(View):
             {"header": "district", "type": "string", "width": 20},
             {"header": "zone", "type": "string", "width": 20},
             {"header": "location_type", "type": "string", "width": 20},
-            {"header": "disaggregation", "type": "string", "width": 20},
-            {"header": "target", "type": "string", "width": 20},
         ]
+
+        activity_plans = project_report.project.activityplan_set.all()
+        disaggregations = []
+        disaggregation_list = []
+        for plan in activity_plans:
+            target_locations = plan.targetlocation_set.all()
+            for location in target_locations:
+                disaggregation_locations = location.disaggregationlocation_set.all()
+                for dl in disaggregation_locations:
+                    if dl.disaggregation.name not in disaggregation_list:
+                        disaggregation_list.append(dl.disaggregation.name)
+                        disaggregations.append({"header": dl.disaggregation.name, "type": "string", "width": 20})
+                    else:
+                        continue
+        if disaggregations:
+            for disaggregation in disaggregations:
+                columns.append(disaggregation)
 
         self.write_sheet_columns(sheet, columns)
         self.write_project_report_data_rows(sheet, project_report)
@@ -129,27 +139,21 @@ class ProjectReportExportExcelView(View):
             indicators = plan.indicators.all()
             for indicator in indicators:
                 for location in target_locations:
-                    disaggregation_locations = location.disaggregationlocation_set.all()
-                    for disaggregation_location in disaggregation_locations:
-                        rows.append(
-                            [
-                                project_report.project.code if project_report.project else None,
-                                indicator.name if indicator else None,
-                                plan.activity_domain.code if plan.activity_domain else None,
-                                plan.activity_type.code if plan.activity_type else None,
-                                plan.activity_detail.code if plan.activity_detail else None,
-                                None,
-                                location.country.name if location.country else None,
-                                location.province.name if location.province else None,
-                                location.district.name if location.district else None,
-                                location.zone.name if location.zone else None,
-                                location.location_type,
-                                disaggregation_location.disaggregation.name
-                                if disaggregation_location.disaggregation
-                                else None,
-                                None,
-                            ]
-                        )
+                    rows.append(
+                        [
+                            project_report.project.code if project_report.project else None,
+                            indicator.name if indicator else None,
+                            plan.activity_domain.code if plan.activity_domain else None,
+                            plan.activity_type.code if plan.activity_type else None,
+                            plan.activity_detail.code if plan.activity_detail else None,
+                            None,
+                            location.country.name if location.country else None,
+                            location.province.name if location.province else None,
+                            location.district.name if location.district else None,
+                            location.zone.name if location.zone else None,
+                            location.location_type,
+                        ]
+                    )
 
         for row_idx, row in enumerate(rows, start=2):
             for col_idx, value in enumerate(row, start=1):

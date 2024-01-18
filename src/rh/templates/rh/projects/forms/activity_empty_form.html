@@ -124,7 +124,7 @@
                                     {{ target_location_formset.management_form }}
                                     <div id="{{form.prefix}}">
                                         {% for target_location_form in target_location_formset %}
-                                        {% include "rh/projects/forms/target_location_empty_form.html" with target_location_form=target_location_form %}
+                                            {% include "rh/projects/forms/target_location_empty_form.html" with target_location_form=target_location_form %}
                                         {% endfor %}
                                     </div>
                                 </div>

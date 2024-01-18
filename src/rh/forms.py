@@ -251,10 +251,28 @@ TargetLocationFormSet = inlineformset_factory(
     can_delete=True,  # Allow deletion of existing forms
 )
 
+class DisaggregationLocationForm(forms.ModelForm):
+    class Meta:
+        model = DisaggregationLocation
+        fields = ("disaggregation","target",)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # target_location = None # get this from somewherr
+        # target_location.disaggregationlocation_set.all():
+
+        print(f"{self.fields['disaggregation'].queryset} : ========== DIS FORM DTL FORM =======")
+        print(f"{self.initial} : ========== SELF INITIAL =======")
+        print(f"{self.instance} : ========== SELF INSTANCE =======")
+        # TODO: limit this to the acitivity plan indicator specific disaggredations
+        self.fields["disaggregation"].queryset = self.fields["disaggregation"].queryset
+
+
 DisaggregationFormSet = inlineformset_factory(
     parent_model=TargetLocation,
     model=DisaggregationLocation,
-    fields="__all__",
+    form=DisaggregationLocationForm,
     extra=0,  # Number of empty forms to display
 )
 

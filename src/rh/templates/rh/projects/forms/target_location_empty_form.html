@@ -83,8 +83,8 @@
                     <div class="disaggregation-accordion-slide">
                         {{ target_location_form.disaggregation_formset.management_form }}
                         {% for disaggregation_form in target_location_form.disaggregation_formset %}
-                        {{ disaggregation_form.id }}
-                        {% include "rh/projects/forms/disaggregation_empty_form.html" %}
+                            {{ disaggregation_form.id }}
+                            {% include "rh/projects/forms/disaggregation_empty_form.html" %}
                         {% endfor %}
                     </div>
                 </div>

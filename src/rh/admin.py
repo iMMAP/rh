@@ -260,6 +260,10 @@ class ActivityPlanAdmin(admin.ModelAdmin):
 admin.site.register(ActivityPlan, ActivityPlanAdmin)
 
 
+class DisaggregationLocationInline(admin.TabularInline):
+    model = DisaggregationLocation
+    extra = 1
+
 class TargetLocationAdmin(admin.ModelAdmin):
     list_display = (
         "site_name",
@@ -274,6 +278,9 @@ class TargetLocationAdmin(admin.ModelAdmin):
     )
     search_fields = ("title", "project__title", "state", "active")
     list_filter = ("state", "active", "project__code")
+    inlines = [
+        DisaggregationLocationInline,
+    ]
 
 
 admin.site.register(TargetLocation, TargetLocationAdmin)

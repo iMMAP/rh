@@ -578,6 +578,9 @@ class TargetLocation(models.Model):
     site_long = models.CharField(max_length=255, blank=True, null=True)
     old_id = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
 
+    disaggregations = models.ManyToManyField("Disaggregation", through="DisaggregationLocation",
+                                          related_name="disaggregations")
+
     def __str__(self):
         return f"{self.project}, {self.province}, {self.district}"
 

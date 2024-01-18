@@ -2,16 +2,34 @@
     
     <div class="row">
             <div class="multiple-fields-row two-items">
-                 <div class="field-col">
+                {% comment %} {{disaggregation_form.fields}} {% endcomment %}
+                {% comment %} {% for field in disaggregation_form %} {% endcomment %}
+                    <div class="field-col">
+                        <label for="{{disaggregation_form.disaggregation.id_for_label}}" >{{disaggregation_form.disaggregation.label}}</label>
+                        {{ disaggregation_form.disaggregation }}
+                        {% comment %} {{ field }} {% endcomment %}
+                    </div>
+                    <div class="field-col">
+                        <label for="{{disaggregation_form.target.id_for_label}}" >{{disaggregation_form.target.label}}</label>
+                        {{ disaggregation_form.target }}
+                        {% comment %} {{ field }} {% endcomment %}
+                    </div>
+                {% comment %} {% endfor %} {% endcomment %}
+                 {% comment %} <div class="field-col">
                     <div class="select-field is-required">
-                        {{disaggregation_form.id}}
                         <select  
-                        disabled
                             id="{{disaggregation_form.disaggregation.id_for_label}}"
-                            name="{{disaggregation_form.prefix}}"
+                            name="{{disaggregation_form.prefix}}-{{disaggregation_form.disaggregation.name}}"
                             value="{{disaggregation_form.disaggregation.initial.id}}"
                         >
-                            <option selected value="{{disaggregation_form.disaggregation.initial.id}}">{{ disaggregation_form.disaggregation.initial}}</option>
+                            <option 
+                                selected 
+                                value="{{disaggregation_form.disaggregation.initial.id}}"
+                            >
+                                initial id: {{ disaggregation_form.disaggregation.initial.id}}
+                                initial: {{ disaggregation_form.disaggregation.initial}}
+                                initial name: {{ disaggregation_form.disaggregation.initial.name}}
+                            </option>
                         </select>
                     </div>
                 </div>  
@@ -20,7 +38,7 @@
                         <label for="{{disaggregation_form.target.id_for_label}}" >Target for "{{disaggregation_form.disaggregation.initial}}"</label>
                         {{ disaggregation_form.target }}
                     </div>
-                </div>
+                </div> {% endcomment %}
             </div>
     </div>
 </div>

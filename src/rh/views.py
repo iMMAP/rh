@@ -298,10 +298,22 @@ def create_project_activity_plan(request, project):
         )
         for target_location_form in target_location_formset.forms:
             # Create a disaggregation formset for each target location form
+            # HERE
+        
+            initial_data = []
+        
+            for disaggregation in target_location_form.instance.disaggregationlocation_set.all():
+                initial_data.append({"disaggregation": disaggregation})
+            
+            # print("\n ======= The EDIT Problem ================= \n")
+            # print(initial_data)
+            # print("\n ======= END EDIT Problem ================= \n")
+            
             disaggregation_formset = DisaggregationFormSet(
                 request.POST or None,
                 instance=target_location_form.instance,
                 prefix=f"disaggregation_{target_location_form.prefix}",
+                initial=initial_data,
             )
             target_location_form.disaggregation_formset = disaggregation_formset
 
@@ -320,12 +332,12 @@ def create_project_activity_plan(request, project):
                 ):
                     activity_plan = activity_plan_form.save()
                     acitivities_target.update({activity_plan.pk: 0})
-                    activity_domain_name = activity_plan_form.cleaned_data.get("activity_domain").name
-                    activity_type_name = activity_plan_form.cleaned_data.get("activity_type").name
-                    title = f"{activity_domain_name}, {activity_type_name}"
-                    if activity_plan_form.cleaned_data.get("activity_detail"):
-                        title += f", {activity_plan_form.cleaned_data.get('activity_detail').name}"
-                    activity_plan.title = title
+                    # activity_domain_name = activity_plan_form.cleaned_data.get("activity_domain").name
+                    # activity_type_name = activity_plan_form.cleaned_data.get("activity_type").name
+                    # title = f"{activity_domain_name}, {activity_type_name}"
+                    # if activity_plan_form.cleaned_data.get("activity_detail"):
+                    #     title += f", {activity_plan_form.cleaned_data.get('activity_detail').name}"
+                    # activity_plan.title = title
 
             # Process target location forms and their disaggregation forms
             for post_target_location_formset in target_location_formsets:
@@ -352,6 +364,9 @@ def create_project_activity_plan(request, project):
                                         disaggregation_form.cleaned_data != {}
                                         and disaggregation_form.cleaned_data.get("target") > 0
                                     ):
+                                        print("Hello ========================== /n /n")
+                                        print(disaggregation_form.cleaned_data)
+                                        print("EndHello ========================== /n /n")
                                         disaggregation_instance = disaggregation_form.save(commit=False)
                                         disaggregation_instance.target_location = target_location_instance
                                         disaggregation_instance.save()
@@ -426,7 +441,9 @@ def get_disaggregations_forms(request):
         # Create DisaggregationFormSet for each location prefix
         for location_prefix in locations_prefix:
             # Check if is from the add new form or from the activity create
+            DisaggregationFormSet.max_num = len(related_disaggregations)
             DisaggregationFormSet.extra = len(related_disaggregations)
+
             disaggregation_formset = DisaggregationFormSet(
                 prefix=f"disaggregation_{location_prefix}", initial=initial_data
             )

@@ -1,6 +1,6 @@
 {% extends "rh/projects/views/projects_view_base.html" %}
 {% block table_body %}
-    <tbody>
+    <tbody class="cursor-pointer">
         <!--Include The Active Projects Details Here -->
         {% for project in projects %}
             {% include "rh/projects/views/_projects_details.html" %}

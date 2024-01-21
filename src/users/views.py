@@ -182,7 +182,9 @@ def profile(request):
 
             user_profile.save()
             p_form.save_m2m()
+            messages.success(request, "Profile Updated successfully")
             return redirect("profile")
+
         else:
             for error in list(u_form.errors.values()):
                 messages.error(request, error)

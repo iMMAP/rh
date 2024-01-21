@@ -12,6 +12,11 @@
 //Random added style start
 //----------------------------------
 
+input[readonly].cursor-none {
+  cursor: not-allowed;
+}
+
+
 .cursor-pointer{
   cursor: pointer;
 }

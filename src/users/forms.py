@@ -64,6 +64,11 @@ class UserUpdateForm(forms.ModelForm):
         model = User
         fields = ["first_name", "last_name", "email"]
 
+        widgets = {
+            "email": forms.TextInput(attrs={"readonly": "readonly", 
+                                            "class":"cursor-none"}),   
+        }
+
 
 class ProfileUpdateForm(forms.ModelForm):
     """Profile Update form"""
@@ -76,6 +81,7 @@ class ProfileUpdateForm(forms.ModelForm):
 
         widgets = {
             "clusters": forms.SelectMultiple(attrs={"class": "js_multiselect"}),
+
         }
 
     def __init__(self, *args, **kwargs):

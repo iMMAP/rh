@@ -190,7 +190,7 @@
                         </tr>
                     </thead>
                     {% if stock_reports %}
-                        <tbody>
+                        <tbody class="cursor-pointer">
                             {% for report in stock_reports %}
                                 <tr data-url="{% url 'stock_report' report.id %}">
                                     <td class="month-col" data-title="Month">
@@ -233,7 +233,7 @@
                         </tr>
                     </thead>
                     {% if submitted_stock_reports %}
-                        <tbody>
+                        <tbody class="cursor-pointer">
                             {% for report in submitted_stock_reports %}
                                 <tr data-url="{% url 'stock_report' report.id %}">
                                     <td class="month-col" data-title="Month">

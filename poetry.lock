@@ -452,6 +452,21 @@ files = [
 Django = ">=3.2"
 
 [[package]]
+name = "django-htmx"
+version = "1.17.2"
+description = "Extensions for using Django with htmx."
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "django-htmx-1.17.2.tar.gz", hash = "sha256:4089f2ed38727e9846c2f4cd1daddf6b010c7be8d834cfbcffc8c5ecf445c04e"},
+    {file = "django_htmx-1.17.2-py3-none-any.whl", hash = "sha256:f4971432d2ca45dbb31d9b58add1c50ae54354afe4bf59cafd591b1711b502c0"},
+]
+
+[package.dependencies]
+asgiref = ">=3.6"
+Django = ">=3.2"
+
+[[package]]
 name = "django-import-export"
 version = "3.3.5"
 description = "Django application and library for importing and exporting data with included admin integration."
@@ -2306,4 +2321,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "b1ade6e6bc92d818b9129da027fe49b7b14b11bf8d9bba6303bff9469866422e"
+content-hash = "b3dd4f70d866377899f48b6c9486222622b2e99e69238e1d4d6dc8d825a1b82d"

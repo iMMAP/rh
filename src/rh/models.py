@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from django.db import models
-from smart_selects.db_fields import ChainedForeignKey, ChainedManyToManyField
+from smart_selects.db_fields import ChainedForeignKey
 
 NAME_MAX_LENGTH = 200
 DESCRIPTION_MAX_LENGTH = 600
@@ -197,9 +197,9 @@ class ImplementationModalityType(models.Model):
 
 
 class TransferMechanismType(models.Model):
-    modality_id = models.ForeignKey(ImplementationModalityType, on_delete=models.SET_NULL, blank=True, null=True)
-    code = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
-    name = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
+    modality = models.ForeignKey(ImplementationModalityType, on_delete=models.SET_NULL, blank=True, null=True)
+    code = models.CharField(max_length=NAME_MAX_LENGTH)
+    name = models.CharField(max_length=NAME_MAX_LENGTH, unique=True)
 
     def __str__(self):
         return self.name
@@ -348,8 +348,6 @@ class Indicator(models.Model):
     implement_modility_type = models.ForeignKey(
         ImplementationModalityType, on_delete=models.SET_NULL, null=True, blank=True
     )
-    location_type = models.ForeignKey(LocationType, on_delete=models.SET_NULL, null=True, blank=True)
-    currency = models.ForeignKey(Currency, on_delete=models.SET_NULL, null=True, blank=True)
 
     def __str__(self):
         return self.name
@@ -457,11 +455,15 @@ class ActivityPlan(models.Model):
         blank=True,
         sort=True,
     )
-    indicators = ChainedManyToManyField(
+    indicator = ChainedForeignKey(
         Indicator,
-        blank=True,
         chained_field="activity_type",
         chained_model_field="activity_types",
+        show_all=False,
+        auto_choose=True,
+        null=True,
+        blank=True,
+        sort=True,
     )
 
     beneficiary = models.ForeignKey(
@@ -575,6 +577,10 @@ class TargetLocation(models.Model):
     site_lat = models.CharField(max_length=255, blank=True, null=True)
     site_long = models.CharField(max_length=255, blank=True, null=True)
     old_id = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
+
+    disaggregations = models.ManyToManyField(
+        "Disaggregation", through="DisaggregationLocation", related_name="disaggregations"
+    )
 
     def __str__(self):
         return f"{self.project}, {self.province}, {self.district}"

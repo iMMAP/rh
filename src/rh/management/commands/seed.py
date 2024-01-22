@@ -47,8 +47,8 @@ class Command(BaseCommand):
         ActivityDomainFactory.create_batch(amount)
         ActivityTypeFactory.create_batch(amount)
         ActivityDetailFactory.create_batch(amount)
-        DisaggregationFactory.create_batch(amount)
         IndicatorFactory.create_batch(amount)
+        DisaggregationFactory.create_batch(amount)
 
         password = "bcrypt$$2b$12$eRuG.5HPTy3ZaFrQmFMox.3Zvf0p5pj8Z0qYDh/j1Cetr93Jm005a"  # admin
         user = User.objects.update_or_create(

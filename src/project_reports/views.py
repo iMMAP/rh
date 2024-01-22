@@ -631,7 +631,7 @@ def update_project_monthly_report_progress_view(request, project, report):
                             "project_id": project,
                             "indicator": indicator,
                         }
-                form.fields["indicator"].queryset = activity_plan.indicators.all().select_related("package_type")
+                form.fields["indicator"].queryset = activity_plan.indicator.select_related("package_type")
 
     if request.method == "POST":
         if activity_report_formset.is_valid():

@@ -84,6 +84,16 @@
                                 <ul class="main-nav">
                                     <li class="main-nav-item">
                                         <a class="main-nav-link" href="{% url 'projects-list' %}">Projects</a>
+                                          <div class="inner-drop">
+                                            <ul class="inner-nav">
+                                                <li class="inner-nav-item">
+                                                    <a class="inner-nav-link" href="{% url 'projects-list' %}">Projects List</a>
+                                                </li>
+                                                <li class="inner-nav-item">
+                                                    <a class="inner-nav-link" href="{% url 'projects-create' %}">Create Project</a>
+                                                </li>
+                                            </ul>
+                                        </div>
                                     </li>
                                     <li class="main-nav-item">
                                         <a class="main-nav-link" href="{% url 'stocks' %}">Stocks</a>
@@ -242,6 +252,10 @@
         </script>
         <!-- Select2 CDN -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js" integrity="sha512-2ImtlRlf2VVmiGZsjm9bEyhjGW4dU7B6TNwh/hx/iSByxNENtj3WVE6o/9Lj4TJeVXPi4bnOIMXFIJJAeufa0A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        
+        {% comment %} HTMX {% endcomment %}
+        <script src="https://unpkg.com/htmx.org@1.9.10" integrity="sha384-D1Kt99CQMDuVetoL1lrYwg5t+9QdHe7NLX/SoJYkXDFfX37iInKRy5xLSi8nO7UC" crossorigin="anonymous"></script>
+        
     </script>
     </body>
 </html>

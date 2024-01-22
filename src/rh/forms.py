@@ -206,6 +206,7 @@ class TargetLocationForm(forms.ModelForm):
     class Meta:
         model = TargetLocation
         fields = "__all__"
+        exclude = ("disaggregations",)
         widgets = {
             "country": forms.widgets.HiddenInput(),
             "active": forms.widgets.HiddenInput(),
@@ -251,10 +252,29 @@ TargetLocationFormSet = inlineformset_factory(
     can_delete=True,  # Allow deletion of existing forms
 )
 
+
+class DisaggregationLocationForm(forms.ModelForm):
+    class Meta:
+        model = DisaggregationLocation
+        fields = (
+            "disaggregation",
+            "target",
+        )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # target_location = None # get this from somewherr
+        # target_location.disaggregationlocation_set.all():
+
+        # TODO: limit this to the acitivity plan indicator specific disaggredations
+        self.fields["disaggregation"].queryset = self.fields["disaggregation"].queryset
+
+
 DisaggregationFormSet = inlineformset_factory(
     parent_model=TargetLocation,
     model=DisaggregationLocation,
-    fields="__all__",
+    form=DisaggregationLocationForm,
     extra=0,  # Number of empty forms to display
 )
 
@@ -291,7 +311,7 @@ class ActivityPlanForm(forms.ModelForm):
         self.fields["activity_detail"].widget.attrs.update(
             {"onchange": f"updateActivityTitle('{prefix}', 'id_{prefix}-activity_detail');"}
         )
-        self.fields["indicators"].widget.attrs.update({"style": "height: 128px;"})
+        self.fields["indicator"].widget.attrs.update({"style": "20px"})
 
 
 ActivityPlanFormSet = inlineformset_factory(

@@ -293,14 +293,12 @@
                                             <label for="activityDetail-{{forloop.counter}}" class="label">{{activityPlan.activity_detail}}</label>
                                         </div>
                                         {% endif %}
-                                        {% for indicator in activityPlan.indicators.all %}
                                         <div class="input-holder">
-                                            <label for="indicator-{{indicator.id}}" class="text-read-only">Indicators</label>
+                                            <label for="indicator-{{activityPlan.indicator.id}}" class="text-read-only">Indicator</label>
                                             <input type="checkbox" class="checkedIndicator" id="indicator-{{indicator.id}}" 
-                                            value="{{indicator.name}}">
-                                            <label for="indicator-{{indicator.id}}" class="label">{{indicator.name}}</label>
+                                            value="{{activityPlan.indicator.name}}">
+                                            <label for="indicator-{{activityPlan.indicator.id}}" class="label">{{activityPlan.indicator.name}}</label>
                                         </div>
-                                        {% endfor %}
                                         <div class="multiple-fields-row two-items">
                                             <div class="field-col">
                                                 <div class="input-holder">
@@ -738,11 +736,9 @@
                             {% endif %}
                             <div class="select-field">
                                 <span class="label">Indicators</span>
-                                {% for indicator in activity_plan.indicators.all %}
                                 <span class="text-read-only">
-                                    {{ indicator.name }} <br>
+                                    {{ activity_plan.indicator.name }} <br>
                                 </span>
-                                {% endfor %}
                             </div>
                         </div>
 

@@ -107,7 +107,6 @@ class ProjectResource(resources.ModelResource):
         activity_types = list(project.activityplan_set.all())
         return ",".join([child.activity_type.name for child in activity_types])
 
-
     def dehydrate_beneficiary(self, project):
         activity_plan = list(project.activityplan_set.all())
         return ",".join([child.beneficiary for child in activity_plan if child.beneficiary])

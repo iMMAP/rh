@@ -4,15 +4,16 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('rh', '0022_alter_activityplan_activity_detail_and_more'),
+        ("rh", "0022_alter_activityplan_activity_detail_and_more"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='targetlocation',
-            name='disaggregations',
-            field=models.ManyToManyField(related_name='disaggregations', through='rh.DisaggregationLocation', to='rh.disaggregation'),
+            model_name="targetlocation",
+            name="disaggregations",
+            field=models.ManyToManyField(
+                related_name="disaggregations", through="rh.DisaggregationLocation", to="rh.disaggregation"
+            ),
         ),
     ]

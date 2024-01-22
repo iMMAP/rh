@@ -4,15 +4,14 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('rh', '0017_rename_modality_id_transfermechanismtype_modality_and_more'),
+        ("rh", "0017_rename_modality_id_transfermechanismtype_modality_and_more"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='transfermechanismtype',
-            name='code',
+            model_name="transfermechanismtype",
+            name="code",
             field=models.CharField(max_length=200),
         ),
     ]

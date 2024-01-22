@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from django.db import models
-from smart_selects.db_fields import ChainedForeignKey, ChainedManyToManyField
+from smart_selects.db_fields import ChainedForeignKey
 
 NAME_MAX_LENGTH = 200
 DESCRIPTION_MAX_LENGTH = 600
@@ -199,7 +199,7 @@ class ImplementationModalityType(models.Model):
 class TransferMechanismType(models.Model):
     modality = models.ForeignKey(ImplementationModalityType, on_delete=models.SET_NULL, blank=True, null=True)
     code = models.CharField(max_length=NAME_MAX_LENGTH)
-    name = models.CharField(max_length=NAME_MAX_LENGTH,unique=True )
+    name = models.CharField(max_length=NAME_MAX_LENGTH, unique=True)
 
     def __str__(self):
         return self.name
@@ -578,8 +578,9 @@ class TargetLocation(models.Model):
     site_long = models.CharField(max_length=255, blank=True, null=True)
     old_id = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
 
-    disaggregations = models.ManyToManyField("Disaggregation", through="DisaggregationLocation",
-                                          related_name="disaggregations")
+    disaggregations = models.ManyToManyField(
+        "Disaggregation", through="DisaggregationLocation", related_name="disaggregations"
+    )
 
     def __str__(self):
         return f"{self.project}, {self.province}, {self.district}"

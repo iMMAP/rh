@@ -206,6 +206,7 @@ class TargetLocationForm(forms.ModelForm):
     class Meta:
         model = TargetLocation
         fields = "__all__"
+        exclude=("disaggregations",)
         widgets = {
             "country": forms.widgets.HiddenInput(),
             "active": forms.widgets.HiddenInput(),
@@ -262,9 +263,6 @@ class DisaggregationLocationForm(forms.ModelForm):
         # target_location = None # get this from somewherr
         # target_location.disaggregationlocation_set.all():
 
-        print(f"{self.fields['disaggregation'].queryset} : ========== DIS FORM DTL FORM =======")
-        print(f"{self.initial} : ========== SELF INITIAL =======")
-        print(f"{self.instance} : ========== SELF INSTANCE =======")
         # TODO: limit this to the acitivity plan indicator specific disaggredations
         self.fields["disaggregation"].queryset = self.fields["disaggregation"].queryset
 

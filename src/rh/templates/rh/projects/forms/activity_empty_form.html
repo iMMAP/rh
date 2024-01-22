@@ -53,6 +53,19 @@
                 <span class="subtitle"></span>
             </div>
             <div class="project-activity-accordion-slide" id="{{ form.prefix }}-details">
+                <!-- ERRORS SECTION STARTS -->
+                {% if form.errors %}
+                    <div class="message-container">
+                    {% for error in form.errors %}
+                        <div class="message-danger-alert">
+                            {{error}}
+                            <span class="close-alert-message">&#x2715;</span>
+                        </div>
+                    {% endfor %}
+                    </div>
+                {% endif %}
+                <!-- ERRORS SECTION ENDS -->
+
                 <div class="row">
                     <div class="col">
                         <div class="multiple-fields-row three-items">

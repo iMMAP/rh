@@ -264,17 +264,6 @@ def update_project_view(request, pk):
 @cache_control(no_store=True)
 @login_required
 def create_project_activity_plan(request, project):
-    """
-    View function to handle creating or updating activity plans for a project.
-
-    Args:
-        request (HttpRequest): The HTTP request object.
-        project (int): The primary key of the Project object.
-
-    Returns:
-        HttpResponse: The response containing the rendered template with the activity plan forms.
-    """
-    # Get the project object or return 404 if not found
     project = get_object_or_404(Project, pk=project)
 
     # Get all existing activity plans for the project
@@ -282,9 +271,7 @@ def create_project_activity_plan(request, project):
     activity_plan_formset = ActivityPlanFormSet(
         request.POST or None, instance=project, form_kwargs={"project": project}
     )
-    target_location_formset = TargetLocationFormSet(
-        request.POST or None,
-    )
+    
 
     target_location_formsets = []
 
@@ -304,10 +291,6 @@ def create_project_activity_plan(request, project):
         
             for disaggregation in target_location_form.instance.disaggregationlocation_set.all():
                 initial_data.append({"disaggregation": disaggregation})
-            
-            # print("\n ======= The EDIT Problem ================= \n")
-            # print(initial_data)
-            # print("\n ======= END EDIT Problem ================= \n")
             
             disaggregation_formset = DisaggregationFormSet(
                 request.POST or None,
@@ -332,14 +315,7 @@ def create_project_activity_plan(request, project):
                 ):
                     activity_plan = activity_plan_form.save()
                     acitivities_target.update({activity_plan.pk: 0})
-                    # activity_domain_name = activity_plan_form.cleaned_data.get("activity_domain").name
-                    # activity_type_name = activity_plan_form.cleaned_data.get("activity_type").name
-                    # title = f"{activity_domain_name}, {activity_type_name}"
-                    # if activity_plan_form.cleaned_data.get("activity_detail"):
-                    #     title += f", {activity_plan_form.cleaned_data.get('activity_detail').name}"
-                    # activity_plan.title = title
 
-            # Process target location forms and their disaggregation forms
             for post_target_location_formset in target_location_formsets:
                 if post_target_location_formset.is_valid():
                     for post_target_location_form in post_target_location_formset:
@@ -364,9 +340,6 @@ def create_project_activity_plan(request, project):
                                         disaggregation_form.cleaned_data != {}
                                         and disaggregation_form.cleaned_data.get("target") > 0
                                     ):
-                                        print("Hello ========================== /n /n")
-                                        print(disaggregation_form.cleaned_data)
-                                        print("EndHello ========================== /n /n")
                                         disaggregation_instance = disaggregation_form.save(commit=False)
                                         disaggregation_instance.target_location = target_location_instance
                                         disaggregation_instance.save()
@@ -399,6 +372,9 @@ def create_project_activity_plan(request, project):
             pass
 
     # Prepare data for rendering the template
+    target_location_formset = TargetLocationFormSet(
+        request.POST or None,
+    )
     cluster_ids = list(project.clusters.values_list("id", flat=True))
 
     combined_formset = zip(activity_plan_formset.forms, target_location_formsets)

@@ -1,5 +1,17 @@
 <div class="location-inner-holder">
-    
+    <!-- ERRORS SECTION STARTS -->
+    {% if disaggregation_form.errors %}
+        <div class="message-container">
+        {% for error in disaggregation_form.errors %}
+            <div class="message-danger-alert">
+                {{error}}
+                <span class="close-alert-message">&#x2715;</span>
+            </div>
+        {% endfor %}
+        </div>
+    {% endif %}
+    <!-- ERRORS SECTION ENDS -->
+
     <div class="row">
             <div class="multiple-fields-row two-items">
                 {% comment %} {{disaggregation_form.fields}} {% endcomment %}

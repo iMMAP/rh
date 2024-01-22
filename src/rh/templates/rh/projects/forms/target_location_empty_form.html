@@ -29,7 +29,20 @@
                 </div>
             </div>
         </div>
-        <div id="{{ target_location_form.prefix }}" >           
+        <div id="{{ target_location_form.prefix }}" >       
+            <!-- ERRORS SECTION STARTS -->
+                {% if target_location_form.errors %}
+                    <div class="message-container">
+                    {% for error in target_location_form.errors %}
+                        <div class="message-danger-alert">
+                            {{error}}
+                            <span class="close-alert-message">&#x2715;</span>
+                        </div>
+                    {% endfor %}
+                    </div>
+                {% endif %}
+                <!-- ERRORS SECTION ENDS -->
+
             <div class="row">
                 <div class="col">
                     <div class="multiple-fields-row four-items">

@@ -4,33 +4,32 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('rh', '0016_remove_indicator_code_alter_activitydetail_code_and_more'),
+        ("rh", "0016_remove_indicator_code_alter_activitydetail_code_and_more"),
     ]
 
     operations = [
         migrations.RenameField(
-            model_name='transfermechanismtype',
-            old_name='modality_id',
-            new_name='modality',
+            model_name="transfermechanismtype",
+            old_name="modality_id",
+            new_name="modality",
         ),
         migrations.RemoveField(
-            model_name='indicator',
-            name='currency',
+            model_name="indicator",
+            name="currency",
         ),
         migrations.RemoveField(
-            model_name='indicator',
-            name='location_type',
+            model_name="indicator",
+            name="location_type",
         ),
         migrations.AlterField(
-            model_name='transfermechanismtype',
-            name='code',
+            model_name="transfermechanismtype",
+            name="code",
             field=models.CharField(max_length=200, unique=True),
         ),
         migrations.AlterField(
-            model_name='transfermechanismtype',
-            name='name',
+            model_name="transfermechanismtype",
+            name="name",
             field=models.CharField(max_length=200, unique=True),
         ),
     ]

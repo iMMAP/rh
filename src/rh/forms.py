@@ -206,7 +206,7 @@ class TargetLocationForm(forms.ModelForm):
     class Meta:
         model = TargetLocation
         fields = "__all__"
-        exclude=("disaggregations",)
+        exclude = ("disaggregations",)
         widgets = {
             "country": forms.widgets.HiddenInput(),
             "active": forms.widgets.HiddenInput(),
@@ -252,10 +252,14 @@ TargetLocationFormSet = inlineformset_factory(
     can_delete=True,  # Allow deletion of existing forms
 )
 
+
 class DisaggregationLocationForm(forms.ModelForm):
     class Meta:
         model = DisaggregationLocation
-        fields = ("disaggregation","target",)
+        fields = (
+            "disaggregation",
+            "target",
+        )
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

@@ -64,8 +64,6 @@ class TransferCategoryFactory(DjangoModelFactory):
     name = factory.Faker("word")
 
 
-
-
 # implement_modility_type
 class ImplementationModalityTypeFactory(DjangoModelFactory):
     class Meta:
@@ -110,12 +108,8 @@ class DisaggregationFactory(DjangoModelFactory):
             for indic in indics:
                 self.indicators.add(indic)
 
-
-
     # Run the bellow command in the shell to create fake data
     # DisaggregationFactory.create_batch(amount)
-
-
 
 
 class CountryFactory(DjangoModelFactory):
@@ -452,6 +446,7 @@ class IndicatorFactory(DjangoModelFactory):
             for activity_type in activity_types:
                 self.activity_types.add(activity_type)
 
+
 class ProjectFactory(DjangoModelFactory):
     class Meta:
         model = Project
@@ -585,8 +580,6 @@ class ActivityPlanFactory(DjangoModelFactory):
             return
         else:
             self.indicator = self.activity_type.indicator_set.order_by("?")[:1][0]
-
-
 
 
 class LocationTypeFactory(DjangoModelFactory):

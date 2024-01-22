@@ -264,6 +264,7 @@ class DisaggregationLocationInline(admin.TabularInline):
     model = DisaggregationLocation
     extra = 1
 
+
 class TargetLocationAdmin(admin.ModelAdmin):
     list_display = (
         "site_name",

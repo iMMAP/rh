@@ -33,7 +33,6 @@ from .models import (
     Location,
     Project,
     TargetLocation,
-    Disaggregation
 )
 
 RECORDS_PER_PAGE = 10
@@ -184,7 +183,7 @@ def projects_detail(request, pk):
             "implementing_partners",
             Prefetch(
                 "activityplan_set",
-                ActivityPlan.objects.select_related("activity_domain", "beneficiary","indicator").prefetch_related(
+                ActivityPlan.objects.select_related("activity_domain", "beneficiary", "indicator").prefetch_related(
                     "targetlocation_set", "activity_type", "activity_detail"
                 ),
             ),
@@ -271,7 +270,6 @@ def create_project_activity_plan(request, project):
     activity_plan_formset = ActivityPlanFormSet(
         request.POST or None, instance=project, form_kwargs={"project": project}
     )
-    
 
     target_location_formsets = []
 
@@ -286,12 +284,12 @@ def create_project_activity_plan(request, project):
         for target_location_form in target_location_formset.forms:
             # Create a disaggregation formset for each target location form
             # HERE
-        
+
             initial_data = []
-        
+
             for disaggregation in target_location_form.instance.disaggregationlocation_set.all():
                 initial_data.append({"disaggregation": disaggregation})
-            
+
             disaggregation_formset = DisaggregationFormSet(
                 request.POST or None,
                 instance=target_location_form.instance,
@@ -403,8 +401,7 @@ def get_disaggregations_forms(request):
     locations_prefix = request.POST.getlist("locations_prefixes[]")
 
     related_disaggregations = indicator.disaggregation_set.all()
-   
-    
+
     location_disaggregation_dict = {}
 
     initial_data = []
@@ -472,7 +469,6 @@ def get_target_location_empty_form(request):
         prefix=f"disaggregation_{target_location_form.prefix}",
     )
 
-  
     target_location_form.disaggregation_formset = disaggregation_formset
 
     # Prepare context for rendering the target location form template

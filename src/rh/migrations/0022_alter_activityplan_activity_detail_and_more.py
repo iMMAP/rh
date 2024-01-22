@@ -6,20 +6,35 @@ import smart_selects.db_fields
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('rh', '0021_alter_activityplan_activity_detail'),
+        ("rh", "0021_alter_activityplan_activity_detail"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='activityplan',
-            name='activity_detail',
-            field=smart_selects.db_fields.ChainedForeignKey(auto_choose=True, blank=True, chained_field='activity_type', chained_model_field='activity_type', null=True, on_delete=django.db.models.deletion.CASCADE, to='rh.activitydetail'),
+            model_name="activityplan",
+            name="activity_detail",
+            field=smart_selects.db_fields.ChainedForeignKey(
+                auto_choose=True,
+                blank=True,
+                chained_field="activity_type",
+                chained_model_field="activity_type",
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                to="rh.activitydetail",
+            ),
         ),
         migrations.AlterField(
-            model_name='activityplan',
-            name='indicator',
-            field=smart_selects.db_fields.ChainedForeignKey(auto_choose=True, blank=True, chained_field='activity_type', chained_model_field='activity_types', null=True, on_delete=django.db.models.deletion.CASCADE, to='rh.indicator'),
+            model_name="activityplan",
+            name="indicator",
+            field=smart_selects.db_fields.ChainedForeignKey(
+                auto_choose=True,
+                blank=True,
+                chained_field="activity_type",
+                chained_model_field="activity_types",
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                to="rh.indicator",
+            ),
         ),
     ]

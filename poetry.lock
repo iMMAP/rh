@@ -512,26 +512,6 @@ django = ">=2.0"
 jsonschema = "*"
 
 [[package]]
-name = "django-select2"
-version = "7.10.1"
-description = "Select2 option fields for Django"
-optional = false
-python-versions = "*"
-files = [
-    {file = "django-select2-7.10.1.tar.gz", hash = "sha256:f40ee661377edf493f446c25134e5b53feee17e3bc364a12dac1bf52eabe816a"},
-    {file = "django_select2-7.10.1-py2.py3-none-any.whl", hash = "sha256:e0e530ad8c8f0df75178f3d3ae3573113b14136cff0fad9454c458d635545db2"},
-]
-
-[package.dependencies]
-django = ">=3.2"
-django-appconf = ">=0.6.0"
-
-[package.extras]
-docs = ["sphinx"]
-selenium = ["selenium"]
-test = ["pytest", "pytest-cov", "pytest-django", "selenium"]
-
-[[package]]
 name = "django-smart-selects"
 version = "1.6.0"
 description = "Django application to handle chained model fields."
@@ -2321,4 +2301,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "b3dd4f70d866377899f48b6c9486222622b2e99e69238e1d4d6dc8d825a1b82d"
+content-hash = "ddc5917b50f44b2c60a5089568d07772ed510a694965c7f346c5b3510e96ad60"

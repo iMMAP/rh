@@ -11,14 +11,12 @@
   "devDependencies": {
     "django-vite-plugin": "^3.0.0",
     "sass": "^1.69.4",
-    "select2": "^4.1.0-rc.0",
     "vite": "^4.0.2"
   },
   "dependencies": {
     "@sentry/browser": "^7.86.0",
     "choices.js": "^10.2.0",
     "include-media": "^2.0.0",
-    "jquery": "^3.7.1",
     "normalize.css": "^8.0.1",
     "resize-observer-polyfill": "^1.5.1",
     "simplebar": "^6.2.5",

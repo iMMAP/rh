@@ -914,3 +914,54 @@
     </script>
     
 {% endblock project_body %}
+
+{% block script %}
+<script>
+ const activityAcc = document.querySelector('#activityAcc')
+if(activityAcc){
+    activityAcc.addEventListener('click', function () {
+    let up = document.querySelector('.activity-arrow-up');
+    let down = document.querySelector('.activity-arrow-down');
+
+    if (up.classList.contains('hidden')) {
+        up.classList.remove('hidden');
+        down.classList.add('hidden');
+    } else {
+        up.classList.add('hidden');
+        down.classList.remove('hidden');
+    }
+});
+}   
+
+
+document.getElementById('projectAcc').addEventListener('click', function () {
+        let arrowUp = document.querySelector('.accordion-arrow-up');
+        let arrowDown = document.querySelector('.accordion-arrow-down');
+
+        if (arrowUp.classList.contains('hidden')) {
+            arrowUp.classList.remove('hidden');
+            arrowDown.classList.add('hidden');
+        } else {
+            arrowUp.classList.add('hidden');
+            arrowDown.classList.remove('hidden');
+        }
+    });
+
+
+// Filter accordion 
+const accordionItems = document.querySelectorAll(".accordion-item");
+accordionItems.forEach(item =>{
+    const title = item.querySelector(".accordion-title");
+    const content = item.querySelector(".accordion-content");
+    title.addEventListener("click",()=>{
+        
+        for(let i = 0; i<accordionItems.length; i++){
+            if(accordionItems[i] != item){
+                accordionItems[i].classList.remove("active");
+            } else {item.classList.toggle("active");}
+        } 
+    });
+    
+});
+</script>
+{% endblock script %}

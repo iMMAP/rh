@@ -57,4 +57,15 @@ ready(() => {
       }),
     ],
   });
+
+
+  const msgAlert = document.querySelector('.close-alert-message')
+  if(msgAlert){
+      msgAlert.addEventListener('click', function() {
+          const msgContainer = document.querySelector('.message-container')
+          if(msgContainer){
+              msgContainer.style.display = 'none';
+          }
+      });
+  }
 });

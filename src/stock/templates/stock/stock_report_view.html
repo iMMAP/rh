@@ -39,8 +39,12 @@
                                     <i class="fa fa-list" aria-hidden="true"></i> &nbsp;
                                     {{ stock.stock_type }}, {{ stock.targeted_groups }}
                                 </button>
+                                
                             </h2>
-
+                            <div class="Edit-Submitted-Stock">
+                                <a href="" class="btn btn-red" >Edit</a>
+                            </div>
+                            
                             <div id="collapse_{{ warehouse_location.id }}_{{ forloop.counter0 }} " 
                                 class="accordion-collapse collapse hide"
                                 aria-labelledby="stock_details_header_{{ warehouse_location.id }}_{{ forloop.counter0 }}"
@@ -231,3 +235,22 @@
 {% vite 'stock/static/stock/stock.js' %}
 
 {% endblock content %}
+
+
+
+<!-- <div class="top-block">
+    <ul class="project-breadcrumbs">
+        <li>
+            {% if user.profile.country %}{{ user.profile.country }}{% endif %}
+        </li>
+        <li>{{ project.code }}</li>
+        <li>
+            {% for cluster in project.clusters.all %}
+                {{ cluster.title }}
+                {% if not forloop.last %},{% endif %}
+            {% endfor %}
+        </li>
+    </ul>
+    <a href="{% url 'projects-update' project.pk %}" class="btn btn-red">Edit</a>
+    
+</div> -->

@@ -1,6 +1,6 @@
-<tr data-url="{% url 'projects-detail' project.id %}">
+<tr>
     <td class="cluster-col">
-        <div class="table-flex-holder">
+        <a class="table-flex-holder" href="{% url 'projects-detail' project.id %}">
             <div class="input-check-holder">
                 <input type="checkbox" id="table-check-{{project.pk}}" class="project-checkbox" value="{{project.pk}}" name="table-check{{project.pk}}" />
                 <label for="table-check-{{project.pk}}">
@@ -14,7 +14,7 @@
                 </label>
             </div> {% endcomment %}
             {{ project.title }}
-        </div>
+        </a>
     </td>
     <td class="title-col">
         {% for cluster in project.clusters.all %}

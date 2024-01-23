@@ -259,10 +259,5 @@
 </div>
 
 {% comment %} Full Pack relative to location of manage.py file {% endcomment %}
-
-{% compress js %}
-	<script defer src="{% static 'stock/js/stock.js' %}"></script>
-{% endcompress js %}
-
-{% vite 'stock/static/stock/stock.js' %}
+{% vite  'stock/static/stock/stock.js' %}
 {% endblock %}

@@ -1,5 +1,3 @@
-// window.jQuery = window.$ = require('jquery');
-// require('select2');
 $(function () {
 	const isHrpProject = $("#id_is_hrp_project");
 	const hasHrpCode = $("#id_has_hrp_code");

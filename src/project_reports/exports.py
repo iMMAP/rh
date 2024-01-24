@@ -136,24 +136,22 @@ class ProjectReportExportExcelView(View):
         activity_plans = project_report.project.activityplan_set.all()
         for plan in activity_plans:
             target_locations = plan.targetlocation_set.all()
-            indicators = plan.indicators.all()
-            for indicator in indicators:
-                for location in target_locations:
-                    rows.append(
-                        [
-                            project_report.project.code if project_report.project else None,
-                            indicator.name if indicator else None,
-                            plan.activity_domain.code if plan.activity_domain else None,
-                            plan.activity_type.code if plan.activity_type else None,
-                            plan.activity_detail.code if plan.activity_detail else None,
-                            None,
-                            location.country.name if location.country else None,
-                            location.province.name if location.province else None,
-                            location.district.name if location.district else None,
-                            location.zone.name if location.zone else None,
-                            location.location_type,
-                        ]
-                    )
+            for location in target_locations:
+                rows.append(
+                    [
+                        project_report.project.code if project_report.project else None,
+                        plan.indicator.name if plan.indicator else None,
+                        plan.activity_domain.code if plan.activity_domain else None,
+                        plan.activity_type.code if plan.activity_type else None,
+                        plan.activity_detail.code if plan.activity_detail else None,
+                        None,
+                        location.country.name if location.country else None,
+                        location.province.name if location.province else None,
+                        location.district.name if location.district else None,
+                        location.zone.name if location.zone else None,
+                        location.location_type,
+                    ]
+                )
 
         for row_idx, row in enumerate(rows, start=2):
             for col_idx, value in enumerate(row, start=1):

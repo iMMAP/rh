@@ -250,7 +250,8 @@ export default function initSWPopup() {
 					success: function (data) {
 						debugger
 						Swal.hideLoading();
-						if (data.redirect_url) {
+						if (data.success) {
+							debugger
 							// Show success notification first
 							Swal.fire({
 								position: "top-end",
@@ -265,6 +266,18 @@ export default function initSWPopup() {
 								window.location.href = data.redirect_url;
 							}, 1500); // Adjust the delay time as needed
 						}
+						else {
+							Swal.fire({
+								title: "Import Error!",
+								icon: "error",
+								html: `<div>${data.message}</div>`,
+								showCloseButton: true,
+								confirmButtonText: `Ok`,
+								customClass: {
+									confirmButton: 'btn btn-red',
+								},
+							});
+						}
 					},
 					error: function (error) {
 						debugger
@@ -277,39 +290,7 @@ export default function initSWPopup() {
 				console.error('Error:', error);
 				Swal.fire('Error', 'An error occurred during file processing.', 'error');
 			}
-
-
 		}
-		// if (file) {
-		// 	const reader = new FileReader();
-		
-		// 	reader.onload = async function (e) {
-		// 		const fileContent = e.target.result;
-		
-		// 		// Show loading spinner or message during asynchronous operations
-		// 		Swal.showLoading();
-		
-		// 		try {
-		// 			// Simulate asynchronous processing (replace with your actual logic)
-		// 			await new Promise(resolve => setTimeout(resolve, 2000));
-		
-		// 			// Display the uploaded content or process the file here
-		// 			await Swal.fire({
-		// 				title: "Your uploaded file",
-		// 				text: fileContent,
-		// 			});
-		// 		} catch (error) {
-		// 			console.error('Error:', error);
-		// 			Swal.fire('Error', 'An error occurred during file processing.', 'error');
-		// 		} finally {
-		// 			// Hide loading spinner
-		// 			Swal.hideLoading();
-		// 		}
-		// 	};
-		
-		// 	reader.readAsText(file); // Read the file as text content
-		// }
-
 	}
 
 	// Attach the click event listener to all elements with class "show_confirm"

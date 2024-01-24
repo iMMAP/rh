@@ -13,7 +13,6 @@ from django.template.loader import render_to_string
 from django.urls import reverse
 from django.utils import timezone
 from django.views.decorators.cache import cache_control
-
 from rh.models import (
     ActivityDetail,
     ActivityDomain,
@@ -961,165 +960,185 @@ def import_monthly_reports(request, report):
         if form.is_valid():
             report_file = form.cleaned_data["file"]
             df = pd.read_excel(report_file)
+            if df.empty:
+                success = False
+                message = "No Data in the file!"
 
             with transaction.atomic():
                 for index, row in df.iterrows():
+                    message = ""
+
+                    # TODO: Handle same file upload multiple times
+
+                    # Get or create Indicator
+                    indicator_name = row.get("indicator")
+                    activity_domain_name = row.get("activity_domain")
+                    activity_type_name = row.get("activity_type")
+                    activity_detail_name = row.get("activity_detail")
+                    country_name = row.get("country")
+                    province_name = row.get("province")
+                    district_name = row.get("district")
+                    zone_name = row.get("zone")
+                    location_type_name = row.get("location_type")
+                    facility_site_type_name = row.get("facility_site_type")
+
+                    columns_to_check = [
+                        "indicator",
+                        "activity_domain",
+                        "activity_type",
+                        "country",
+                        "province",
+                        "district",
+                    ]
+                    required_column_missing = False
+                    for column in columns_to_check:
+                        if pd.isnull(row[column]):
+                            required_column_missing = True
+                            message += f"<span>Row [{index + 2}]: {column.capitalize()} is missing. </span><br/>"
+
+                    if required_column_missing:
+                        success = False
+                        break
+
                     try:
-                        # Get or create Indicator
-                        indicator_name = row.get("indicator")
-                        if not pd.isna(indicator_name):
-                            indicator = Indicator.objects.get(name=indicator_name)
-                        else:
-                            print(f"Error: Indicator name not found for row {index + 2}")
+                        indicator = get_object_or_404(Indicator, name=indicator_name)
+                        activity_domain = get_object_or_404(ActivityDomain, code=activity_domain_name)
+                        activity_type = get_object_or_404(ActivityType, code=activity_type_name)
+                    except Exception as e:
+                        success = False
+                        message += f"<span>Row [{index + 2}]: {e} </span><br/>"
+                        break
+
+                    activity_plan_params = {
+                        "project": monthly_report.project,
+                        "activity_domain": activity_domain,
+                        "activity_type": activity_type,
+                    }
+                    if not pd.isna(activity_detail_name):
+                        try:
+                            activity_detail = ActivityDetail.objects.get(code=activity_detail_name)
+                        except ActivityDetail.DoesNotExist:
                             continue
 
-                        # Get or create ActivityPlan
-                        activity_domain_name = row.get("activity_domain")
-                        activity_type_name = row.get("activity_type")
-                        activity_detail_name = row.get("activity_detail")
+                        if activity_detail:
+                            activity_plan_params.update({"activity_detail": activity_detail})
+                    try:
+                        activity_plan = get_object_or_404(ActivityPlan, **activity_plan_params)
+                    except Exception as e:
+                        success = False
+                        message += f"<span>Row [{index + 2}]: {e} </span><br/>"
+                        break
 
-                        if all((activity_domain_name, activity_type_name)):
-                            activity_plan_params = {
-                                "project": monthly_report.project,
-                                "activity_domain": ActivityDomain.objects.get(code=activity_domain_name),
-                                "activity_type": ActivityType.objects.get(code=activity_type_name),
-                            }
-                            if not pd.isna(activity_detail_name):
-                                activity_plan_params.update(
-                                    {"activity_detail": ActivityDetail.objects.get(code=activity_detail_name)}
-                                )
-
-                            activity_plan = ActivityPlan.objects.get(**activity_plan_params)
-                        else:
-                            print(f"Error: ActivityPlan details not found for row {index + 2}")
-                            continue
-
-                        # Create ActivityPlanReport
-                        activity_plan_report_params = {
-                            "monthly_report": monthly_report,
-                            "activity_plan": activity_plan,
-                            "indicator": indicator,
-                        }
+                    # Create ActivityPlanReport
+                    activity_plan_report_params = {
+                        "monthly_report": monthly_report,
+                        "activity_plan": activity_plan,
+                        "indicator": indicator,
+                    }
+                    activity_plan_report = ActivityPlanReport.objects.filter(
+                        monthly_report=monthly_report,
+                        activity_plan=activity_plan,
+                        indicator=indicator,
+                    )
+                    if not activity_plan_report:
                         activity_plan_report = ActivityPlanReport.objects.create(**activity_plan_report_params)
+                    else:
+                        activity_plan_report = activity_plan_report[0]
 
-                        # Handle Location details
-                        country_name = row.get("country")
-                        province_name = row.get("province")
-                        district_name = row.get("district")
-                        zone_name = row.get("zone")
+                    # Handle Location details
+                    try:
+                        country = get_object_or_404(Location, name=country_name)
+                        province = get_object_or_404(Location, name=province_name)
+                        district = get_object_or_404(Location, name=district_name)
+                    except Exception as e:
+                        success = False
+                        message += f"<span>Row [{index + 2}]: {e} </span><br/>"
+                        break
 
-                        if not pd.isna(country_name):
-                            country = Location.objects.get(name=country_name)
-                        else:
-                            print(f"Error: Country name not found for row {index + 2}")
+                    target_location_report_params = {
+                        "activity_plan_report": activity_plan_report,
+                        "country": country,
+                        "province": province,
+                        "district": district,
+                    }
+
+                    if not pd.isna(zone_name):
+                        try:
+                            zone = Location.objects.get_object_or_404(Location, name=zone_name)
+                        except Location.DoesNotExist:
                             continue
-
-                        if not pd.isna(province_name):
-                            province = Location.objects.get(name=province_name)
-                        else:
-                            print(f"Error: Province name not found for row {index + 2}")
-                            continue
-
-                        if not pd.isna(district_name):
-                            district = Location.objects.get(name=district_name)
-                        else:
-                            print(f"Error: District name not found for row {index + 2}")
-                            continue
-
-                        if not pd.isna(zone_name):
-                            zone = Location.objects.get(name=zone_name)
-                        else:
-                            print(f"Error: Zone name not found for row {index + 2}")
-                            zone = None
-
-                        target_location_report_params = {
-                            "activity_plan_report": activity_plan_report,
-                            "country": country,
-                            "province": province,
-                            "district": district,
-                        }
 
                         if zone:
-                            target_location_report_params.update(
-                                {
-                                    "zone": zone,
-                                }
-                            )
+                            target_location_report_params.update({"zone": zone})
 
-                        # Create TargetLocationReport
-                        location_type_name = row.get("location_type")
-                        facility_site_type_name = row.get("facility_site_type")
-
-                        if not pd.isna(location_type_name):
-                            target_location_report_params.update(
-                                {"location_type": LocationType.objects.get(name=location_type_name)}
-                            )
-
-                        if not pd.isna(facility_site_type_name):
-                            target_location_report_params.update(
-                                {"facility_site_type": FacilitySiteType.objects.get(name=facility_site_type_name)}
-                            )
-
-                        if target_location_report_params:
-                            target_location_report = TargetLocationReport.objects.create(
-                                **target_location_report_params
-                            )
-                        else:
-                            print(f"Error: TargetLocationReport details not found for row {index + 2}")
+                    # Create TargetLocationReport
+                    if not pd.isna(location_type_name):
+                        try:
+                            location_type = get_object_or_404(LocationType, name=location_type_name)
+                        except LocationType.DoesNotExist:
                             continue
-                        activity_report_target = 0
-                        activity_plans = monthly_report.project.activityplan_set.all()
-                        disaggregations = []
-                        disaggregation_list = []
-                        for plan in activity_plans:
-                            target_locations = plan.targetlocation_set.all()
-                            for location in target_locations:
-                                disaggregation_locations = location.disaggregationlocation_set.all()
-                                for dl in disaggregation_locations:
-                                    if dl.disaggregation.name not in disaggregation_list:
-                                        disaggregation_list.append(dl.disaggregation.name)
-                                        disaggregations.append(dl.disaggregation.name)
-                                    else:
-                                        continue
 
-                        for disaggregation in disaggregations:
-                            disaggregation_name = disaggregation
-                            disaggregation_target = row.get(disaggregation, 0)
-                            if not pd.isna(row.get(disaggregation, 0)):
-                                activity_report_target += row.get(disaggregation, 0)
-                            if not pd.isna(disaggregation_target) and not pd.isna(disaggregation_name):
-                                disaggregation = Disaggregation.objects.get(name=disaggregation_name)
-                            else:
-                                print(f"Error: Disaggregation name not found for row {index + 2}")
-                                continue
+                        if location_type:
+                            target_location_report_params.update({"location_type": location_type})
 
-                            disaggregation_location_report_params = {
-                                "target_location_report": target_location_report,
-                                "disaggregation": disaggregation,
-                                "target": int(disaggregation_target),
-                            }
-                            DisaggregationLocationReport.objects.create(**disaggregation_location_report_params)
+                    # Create TargetLocationReport
+                    if not pd.isna(facility_site_type_name):
+                        try:
+                            facility_site_type = get_object_or_404(FacilitySiteType, name=facility_site_type_name)
+                        except FacilitySiteType.DoesNotExist:
+                            continue
 
-                        activity_plan_report.target_achieved = activity_report_target
-                        activity_plan_report.save()
+                        if facility_site_type:
+                            target_location_report_params.update({"facility_site_type": facility_site_type})
 
-                    except (
-                        Location.DoesNotExist,
-                        ActivityDomain.DoesNotExist,
-                        ActivityType.DoesNotExist,
-                        ActivityDetail.DoesNotExist,
-                        Disaggregation.DoesNotExist,
-                        Indicator.DoesNotExist,
-                    ):
-                        print(f"Error: Object not found for row {index + 2}")
-        url = reverse(
-            "view_monthly_report",
-            kwargs={
-                "project": monthly_report.project.pk,
-                "report": monthly_report.pk,
-            },
-        )
+                    if target_location_report_params:
+                        target_location_report = TargetLocationReport.objects.create(**target_location_report_params)
 
-        # Return the URL in a JSON response
-        response_data = {"redirect_url": url}
-        return JsonResponse(response_data)
+                    activity_report_target = 0
+                    activity_plans = monthly_report.project.activityplan_set.all()
+                    disaggregations = []
+                    disaggregation_list = []
+                    for plan in activity_plans:
+                        target_locations = plan.targetlocation_set.all()
+                        for location in target_locations:
+                            disaggregation_locations = location.disaggregationlocation_set.all()
+                            for dl in disaggregation_locations:
+                                if dl.disaggregation.name not in disaggregation_list:
+                                    disaggregation_list.append(dl.disaggregation.name)
+                                    disaggregations.append(dl.disaggregation.name)
+                                else:
+                                    continue
+
+                    for disaggregation in disaggregations:
+                        disaggregation_name = disaggregation
+                        disaggregation_target = row.get(disaggregation, 0)
+                        if not pd.isna(disaggregation_target):
+                            activity_report_target += row.get(disaggregation, 0)
+                        if not pd.isna(disaggregation_target) and not pd.isna(disaggregation_name):
+                            disaggregation = Disaggregation.objects.get(name=disaggregation_name)
+                        else:
+                            continue
+
+                        disaggregation_location_report_params = {
+                            "target_location_report": target_location_report,
+                            "disaggregation": disaggregation,
+                            "target": int(disaggregation_target),
+                        }
+                        DisaggregationLocationReport.objects.create(**disaggregation_location_report_params)
+
+                    activity_plan_report.target_achieved += activity_report_target
+                    activity_plan_report.save()
+
+                    success = True
+
+            url = reverse(
+                "view_monthly_report",
+                kwargs={
+                    "project": monthly_report.project.pk,
+                    "report": monthly_report.pk,
+                },
+            )
+
+            # Return the URL in a JSON response
+            response_data = {"success": success, "redirect_url": url, "message": message}
+            return JsonResponse(response_data)

@@ -12,4 +12,9 @@ urlpatterns = [
         user_views.submit_stock_report_form,
         name="submit_stock_report",
     ),
+    path(
+        "stocks/report/update_stock_report/<str:pk>",
+        user_views.update_stock_report,
+        name="update_stock_report",
+    ),
 ]

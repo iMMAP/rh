@@ -60,32 +60,32 @@ function addTargetLocationReportForm(prefix, project, nextFormIndex) {
 
 				if (addedForm){
 					const locationReportPrefix = addedForm[0].dataset.locationPrefix
-				// 	// Load Locations (districts and zones)
-				// 	getLocations(locationPrefix, 'district', 'province');
-				// 	getLocations(locationPrefix, 'zone', 'district');
+					// 	// Load Locations (districts and zones)
+					// 	getLocations(locationPrefix, 'district', 'province');
+					// 	getLocations(locationPrefix, 'zone', 'district');
+						
+					// 	// Add Load Locations (districts and zones) event for new form
+					// 	$(`#id_${locationPrefix}-province`).on('change', function() {
+					// 		getLocations(locationPrefix, 'district', 'province', clearZone=true);
+					// 	});
+					// 	$(`#id_${locationPrefix}-district`).on('change', function() {
+					// 		getLocations(locationPrefix, 'zone', 'district');
+					// 	});
 					
-				// 	// Add Load Locations (districts and zones) event for new form
-				// 	$(`#id_${locationPrefix}-province`).on('change', function() {
-				// 		getLocations(locationPrefix, 'district', 'province', clearZone=true);
-				// 	});
-				// 	$(`#id_${locationPrefix}-district`).on('change', function() {
-				// 		getLocations(locationPrefix, 'zone', 'district');
-				// 	});
-					
-				// 	// Update disaggregations based on indicators for the new added form 
-				const activityReportFormIndex = formPrefix.match(/activityplanreport_set-(\d+)/)[1] 
-				var $indicator = $(`#id_activityplanreport_set-${activityReportFormIndex}-indicator`);
-				if ($indicator){
-					let selectedID = $indicator[0].value;
-					handleDisaggregationReportForms($indicator[0], selectedID, [locationReportPrefix])
-				}
-				
-				// 	// Update change event on indicators for the new added form 
-				$indicator.on("change", function (event) { 
-						let indicatorsSelect = event.currentTarget
+					// 	// Update disaggregations based on indicators for the new added form 
+					const activityReportFormIndex = formPrefix.match(/activityplanreport_set-(\d+)/)[1] 
+					var $indicator = $(`#id_activityplanreport_set-${activityReportFormIndex}-indicator`);
+					if ($indicator){
 						let selectedID = $indicator[0].value;
-						handleDisaggregationReportForms(indicatorsSelect, selectedID, [locationReportPrefix])
-					});
+						handleDisaggregationReportForms($indicator[0], selectedID, [locationReportPrefix])
+					}
+					
+					// Update change event on indicators for the new added form 
+					// $indicator.on("change", function (event) { 
+					// 	let indicatorsSelect = event.currentTarget
+					// 	let selectedID = $indicator[0].value;
+					// 	handleDisaggregationReportForms(indicatorsSelect, selectedID, [locationReportPrefix])
+					// });
 				}
 				
 				// Load Locations (districts and zones)
@@ -245,16 +245,16 @@ $(function () {
 		addTargetLocationReportForm(activityReportFormPrefix, activityProject, activityReportFormIndex); // Call the function to add a new activity form
 	});
 
-	let $activityBlockHolder = $("#activity-formset-form");
-	$activityBlockHolder.each(function (formIndex, formElement) {
-		// Update disaggregations based on indicators
-		var $indicator = $(`#id_activityplanreport_set-${formIndex}-indicator`);
-		$indicator.on("change", function (event) { 
-			let indicatorsSelect = event.currentTarget
-			let selectedID = $indicator[0].value;
-			handleDisaggregationReportForms(indicatorsSelect, selectedID)
-		});
-	});
+	// let $activityBlockHolder = $("#activity-formset-form");
+	// $activityBlockHolder.each(function (formIndex, formElement) {
+	// 	// Update disaggregations based on indicators
+	// 	var $indicator = $(`#id_activityplanreport_set-${formIndex}-indicator`);
+	// 	$indicator.on("change", function (event) { 
+	// 		let indicatorsSelect = event.currentTarget
+	// 		let selectedID = $indicator[0].value;
+	// 		handleDisaggregationReportForms(indicatorsSelect, selectedID)
+	// 	});
+	// });
 
 	// const $locationBlock = $(".target_location_form");
 	// $locationBlock.each(function (formIndex, formElement) {

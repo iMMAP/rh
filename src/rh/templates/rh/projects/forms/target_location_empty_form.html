@@ -29,7 +29,20 @@
                 </div>
             </div>
         </div>
-        <div id="{{ target_location_form.prefix }}" >           
+        <div id="{{ target_location_form.prefix }}" >       
+            <!-- ERRORS SECTION STARTS -->
+                {% if target_location_form.errors %}
+                    <div class="message-container">
+                    {% for error in target_location_form.errors %}
+                        <div class="message-danger-alert">
+                            {{error}}
+                            <span class="close-alert-message">&#x2715;</span>
+                        </div>
+                    {% endfor %}
+                    </div>
+                {% endif %}
+                <!-- ERRORS SECTION ENDS -->
+
             <div class="row">
                 <div class="col">
                     <div class="multiple-fields-row four-items">
@@ -83,8 +96,8 @@
                     <div class="disaggregation-accordion-slide">
                         {{ target_location_form.disaggregation_formset.management_form }}
                         {% for disaggregation_form in target_location_form.disaggregation_formset %}
-                        {{ disaggregation_form.id }}
-                        {% include "rh/projects/forms/disaggregation_empty_form.html" %}
+                            {{ disaggregation_form.id }}
+                            {% include "rh/projects/forms/disaggregation_empty_form.html" %}
                         {% endfor %}
                     </div>
                 </div>

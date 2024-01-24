@@ -7,10 +7,9 @@ export default defineConfig({
       input: [
         "src/styles/style.scss", 
         "src/js/app.js", 
-        "rh/js/all_projects.js",
+        "rh/js/project_planning.js",
 
         // relative to the folder that vite.config is located
-        "../stock/static/stock/stock.js",
         "../users/static/users/users.js",
       ],
       root: "..",

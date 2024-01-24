@@ -1,6 +1,7 @@
 {% extends "rh/projects/forms/project_form_base.html" %}
 {% load static %}
-{% load compress %}
+{% load vite %}
+
 {% block project_contents %}
     <div class="project-title-holder">
         <h2 class="plan-title">{{ project.title }}</h2>
@@ -172,8 +173,7 @@
         </div>
     </div>
 {% endblock project_contents %}
-{% block scripts %}
-    {% compress js %}
-        <script defer src="{% static 'rh/js/project_planning.js' %}"></script>
-    {% endcompress js %}
-{% endblock scripts %}
+
+{% block project_form_scripts %}
+    {% vite  'static/rh/js/project_planning.js' %}
+{% endblock project_form_scripts %}

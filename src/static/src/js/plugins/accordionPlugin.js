@@ -8,9 +8,9 @@
   if (typeof define === "function" && define.amd) {
     define(["jquery"], factory);
   } else if (typeof exports === "object") {
-    import("jquery").then((jquery) => {
-      module.exports = factory(jquery);
-    });
+    // import("jquery").then((jquery) => {
+    //   module.exports = factory(jquery);
+    // });
     // module.exports = factory(require("jquery"));
   } else {
     root.SlideAccordion = factory(jQuery);

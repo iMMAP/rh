@@ -207,7 +207,7 @@ class ProjectExportExcelView(View):
                 plan.activity_domain.name if plan.activity_domain else None,
                 plan.activity_type.name if plan.activity_type else None,
                 plan.activity_detail.name if plan.activity_detail else None,
-                "\n".join([indicator.name for indicator in plan.indicators.all()]),
+                plan.indicator.name if plan.indicator else None,
             ]
 
             for col_idx, value in enumerate(row, start=1):

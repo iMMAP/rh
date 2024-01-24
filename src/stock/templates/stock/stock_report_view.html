@@ -18,7 +18,9 @@
                             {{ warehouse_location_stocks|length }}
                         </span>
                     </h5>
-
+                    <div class="Edit-Submitted-Stock">
+                        <a href="{% url 'update_stock_report' report.id %}" class="btn btn-red" >Edit Month</a>
+                    </div>
                     {% for warehouse_location, stocks in warehouse_location_stocks.items %}
                     <h5 class="p-2">
                         <i class="fa fa-map-marker" aria-hidden="true"></i> &nbsp;{{ warehouse_location.province.name }},
@@ -41,9 +43,6 @@
                                 </button>
                                 
                             </h2>
-                            <div class="Edit-Submitted-Stock">
-                                <a href="" class="btn btn-red" >Edit</a>
-                            </div>
                             
                             <div id="collapse_{{ warehouse_location.id }}_{{ forloop.counter0 }} " 
                                 class="accordion-collapse collapse hide"
@@ -133,84 +132,6 @@
                                         </div>
                                         
                                     </div>
-                                    
-                                    
-                                    
-                                    
-                                    
-                                    <!-- <div class="row">
-                                        <div class="col">
-                                            
-                                            
-                                            <b>
-                                                Cluster
-                                            </b> <br />
-                                            {{ stock.cluster }}
-                                            <br /><br />
-                                        </div>
-                                        <div class="col-sm">
-                                            <b>
-                                                Stock purpose
-                                            </b> <br />
-                                            {{ stock.stock_purpose }}
-                                            <br /><br />
-                                        </div>
-                                        <div class="col-sm">
-                                            <b>
-                                                Targeted groups
-                                            </b> <br />
-                                            {{ stock.targeted_groups }}
-                                            <br /><br />
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-sm">
-                                            <b>
-                                                Stock type
-                                            </b> <br />
-                                            {{ stock.stock_type }}
-                                            <br /><br />
-                                        </div>
-                                        <div class="col-sm">
-                                            <b>
-                                                Status
-                                            </b> <br />
-                                            {{ stock.status }}
-                                            <br /><br />
-                                        </div>
-                                        <div class="col-sm">
-                                            <b>
-                                                Units
-                                            </b> <br />
-                                            {{ stock.stock_unit }}
-                                            <br /><br />
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-sm">
-                                            <b>
-                                                Qty in Stock
-                                            </b> <br />
-                                            {{ stock.qty_in_stock }}
-                                            <br /><br />
-                                        </div>
-                                        <div class="col-sm">
-                                            <b>
-                                                Qty in Pipeline
-                                            </b> <br />
-                                            {{ stock.qty_in_pipeline }}
-                                            <br /><br />
-                                        </div>
-                                        <div class="col-sm">
-                                            <b>
-                                                Beneficiary coverage
-                                            </b> <br />
-                                            {{ stock.beneficiary_coverage }}
-                                            <br /><br />
-                                            <br />
-                                        </div>
-                                    </div> -->
-
                                 </div>
                             </div>
                         </div>
@@ -235,22 +156,3 @@
 {% vite 'stock/static/stock/stock.js' %}
 
 {% endblock content %}
-
-
-
-<!-- <div class="top-block">
-    <ul class="project-breadcrumbs">
-        <li>
-            {% if user.profile.country %}{{ user.profile.country }}{% endif %}
-        </li>
-        <li>{{ project.code }}</li>
-        <li>
-            {% for cluster in project.clusters.all %}
-                {{ cluster.title }}
-                {% if not forloop.last %},{% endif %}
-            {% endfor %}
-        </li>
-    </ul>
-    <a href="{% url 'projects-update' project.pk %}" class="btn btn-red">Edit</a>
-    
-</div> -->

@@ -53,6 +53,19 @@
                 <span class="subtitle"></span>
             </div>
             <div class="project-activity-accordion-slide" id="{{ form.prefix }}-details">
+                <!-- ERRORS SECTION STARTS -->
+                {% if form.errors %}
+                    <div class="message-container">
+                    {% for error in form.errors %}
+                        <div class="message-danger-alert">
+                            {{error}}
+                            <span class="close-alert-message">&#x2715;</span>
+                        </div>
+                    {% endfor %}
+                    </div>
+                {% endif %}
+                <!-- ERRORS SECTION ENDS -->
+
                 <div class="row">
                     <div class="col">
                         <div class="multiple-fields-row three-items">
@@ -80,11 +93,10 @@
                 <div class="row">
                     <div class="col">
                         <div class="select-field">
-                            <label for="{{form.indicators.id_for_label}}">
-                                Indicators [Hold Control/Command button to select
-                                multiple]
+                            <label for="{{form.indicator.id_for_label}}">
+                                Indicator
                             </label>
-                            {{ form.indicators }}
+                            {{ form.indicator }}
                         </div>
                         <div class="multiple-fields-row">
                             <div class="field-col">
@@ -125,7 +137,7 @@
                                     {{ target_location_formset.management_form }}
                                     <div id="{{form.prefix}}">
                                         {% for target_location_form in target_location_formset %}
-                                        {% include "rh/projects/forms/target_location_empty_form.html" with target_location_form=target_location_form %}
+                                            {% include "rh/projects/forms/target_location_empty_form.html" with target_location_form=target_location_form %}
                                         {% endfor %}
                                     </div>
                                 </div>

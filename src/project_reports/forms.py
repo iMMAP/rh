@@ -65,7 +65,7 @@ class ActivityPlanReportForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        (self.fields["indicator"].widget.attrs.update({"class": "report_indicator", "required": ""}),)
+        (self.fields["indicator"].widget.attrs.update({"hidden": ""}),)
 
 
 class RejectMonthlyReportForm(forms.Form):

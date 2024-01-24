@@ -1,6 +1,7 @@
 {% extends "../../../_base.html" %}
 {% load static %}
 {% load compress %}
+{% load vite %}
 {% block page_title %}
     ReportHub - Projects
 {% endblock page_title %}
@@ -287,6 +288,7 @@
                             </tr>
                         </thead>
                         {% block table_body %}
+
                         {% endblock table_body %}
                     </table>
                 </div>
@@ -295,7 +297,4 @@
         {% block pager %}
         {% endblock pager %}
     </div>
-    {% compress js %}
-        <script defer src="{% static 'rh/js/all_projects.js' %}"></script>
-    {% endcompress js %}
 {% endblock content %}

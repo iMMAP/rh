@@ -14,6 +14,7 @@ from django.template.loader import render_to_string
 from django.urls import reverse
 from django.utils import timezone
 from django.views.decorators.cache import cache_control
+
 from rh.models import (
     ActivityDetail,
     ActivityDomain,
@@ -981,6 +982,7 @@ def get_indicator_reference(request):
 
 
 def import_monthly_reports(request, report):
+    """Import monthly report activities via excel."""
     monthly_report = get_object_or_404(ProjectMonthlyReport, pk=report)
     if request.method == "POST":
         form = MonthlyReportFileUpload(request.POST, request.FILES)
@@ -1093,7 +1095,7 @@ def import_monthly_reports(request, report):
                         else:
                             print(f"Error: TargetLocationReport details not found for row {index + 2}")
                             continue
-
+                        activity_report_target = 0
                         activity_plans = monthly_report.project.activityplan_set.all()
                         disaggregations = []
                         disaggregation_list = []
@@ -1109,9 +1111,10 @@ def import_monthly_reports(request, report):
                                         continue
 
                         for disaggregation in disaggregations:
-                            # Get or create DisaggregationLocationReport
                             disaggregation_name = disaggregation
                             disaggregation_target = row.get(disaggregation, 0)
+                            if not pd.isna(row.get(disaggregation, 0)):
+                                activity_report_target += row.get(disaggregation, 0)
                             if not pd.isna(disaggregation_target) and not pd.isna(disaggregation_name):
                                 disaggregation = Disaggregation.objects.get(name=disaggregation_name)
                             else:
@@ -1124,6 +1127,9 @@ def import_monthly_reports(request, report):
                                 "target": int(disaggregation_target),
                             }
                             DisaggregationLocationReport.objects.create(**disaggregation_location_report_params)
+
+                        activity_plan_report.target_achieved = activity_report_target
+                        activity_plan_report.save()
 
                     except (
                         Location.DoesNotExist,

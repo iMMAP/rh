@@ -1,6 +1,7 @@
 from django import forms
 from django.forms.models import inlineformset_factory
 from rh.models import Indicator
+from django.urls import reverse_lazy
 
 from .models import ActivityPlanReport, DisaggregationLocationReport, ProjectMonthlyReport, TargetLocationReport
 
@@ -33,6 +34,10 @@ class TargetLocationReportForm(forms.ModelForm):
     class Meta:
         model = TargetLocationReport
         fields = "__all__"
+        widgets = {
+            "district": forms.Select(attrs={"target-locations-queries-url": reverse_lazy("ajax-load-target-locations")}),
+            "zone": forms.Select(attrs={"target-locations-queries-url": reverse_lazy("ajax-load-target-locations")}),
+        }
 
 
 TargetLocationReportFormSet = inlineformset_factory(

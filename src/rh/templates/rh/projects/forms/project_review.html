@@ -291,12 +291,10 @@
                             </div>
                             {% endif %}
                             <div class="select-field">
-                                <span class="label">Indicators</span>
-                                {% for indicator in activity_plan.indicators.all %}
+                                <span class="label">Indicator</span>
                                 <span class="text-read-only">
-                                    {{ indicator.name }} <br>
+                                    {{ activity_plan.indicator.name }} <br>
                                 </span>
-                                {% endfor %}
                             </div>
                         </div>
 

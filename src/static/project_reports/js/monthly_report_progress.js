@@ -84,8 +84,15 @@ function addTargetLocationReportForm(prefix, project, nextFormIndex) {
 					$indicator.on("change", function (event) {
 						let indicatorsSelect = event.currentTarget
 						let selectedID = $indicator[0].value;
-						handleDisaggregationReportForms(indicatorsSelect, selectedID, [locationReportPrefix])
-					});
+						handleDisaggregationReportForms($indicator[0], selectedID, [locationReportPrefix])
+					}
+					
+					// Update change event on indicators for the new added form 
+					// $indicator.on("change", function (event) { 
+					// 	let indicatorsSelect = event.currentTarget
+					// 	let selectedID = $indicator[0].value;
+					// 	handleDisaggregationReportForms(indicatorsSelect, selectedID, [locationReportPrefix])
+					// });
 				}
 
 				// Load Locations (districts and zones)

@@ -1,7 +1,6 @@
 import calendar
 import json
 from datetime import datetime, timedelta
-from itertools import chain
 
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
@@ -379,15 +378,14 @@ def create_project_monthly_report_progress_view(request, project, report):
         target_location_zones,
     ) = get_target_locations_doamin(target_locations)
 
-    activity_plans = activity_plans.prefetch_related("indicators")
-    project_indicators = list(chain.from_iterable(activity.indicators.all() for activity in activity_plans))
+    activity_plans = [plan for plan in activity_plans]
 
     # Create the activity plan formset with initial data from the project
     ActivityReportFormset = inlineformset_factory(
         ProjectMonthlyReport,
         ActivityPlanReport,
         form=ActivityPlanReportForm,
-        extra=len(project_indicators),
+        extra=len(activity_plans),
         can_delete=True,
     )
 
@@ -425,25 +423,16 @@ def create_project_monthly_report_progress_view(request, project, report):
 
     # Loop through the forms in the formset and set initial and queryset values for specific fields
     if not request.POST:
-        # Create a dictionary to map indicator IDs to ActivityPlans
-        indicator_activity_plan_map = {
-            indicator.id: activity_plan
-            for activity_plan in activity_plans
-            for indicator in activity_plan.indicators.all()
-        }
         for i, form in enumerate(activity_report_formset.forms):
-            if i < len(project_indicators):
-                indicator = project_indicators[i]
-                activity_plan = indicator_activity_plan_map.get(indicator.id)
-
-                if activity_plan:
-                    if not form.instance.pk:
-                        form.initial = {
-                            "activity_plan": activity_plan,
-                            "project_id": project,
-                            "indicator": indicator,
-                        }
-                    form.fields["indicator"].queryset = activity_plan.indicators.all()
+            if i < len(activity_plans):
+                activity_plan = activity_plans[i]
+                if not form.instance.pk:
+                    form.initial = {
+                        "activity_plan": activity_plan,
+                        "project_id": project,
+                        "indicator": activity_plan.indicator,
+                    }
+                    form.fields["indicator"].queryset = Indicator.objects.filter(id=activity_plan.indicator.id)
 
     if request.method == "POST":
         if activity_report_formset.is_valid():
@@ -486,7 +475,7 @@ def create_project_monthly_report_progress_view(request, project, report):
                                             if disaggregation_report_form.is_valid():
                                                 if (
                                                     disaggregation_report_form.cleaned_data != {}
-                                                    and disaggregation_report_form.cleaned_data.get("target")
+                                                    # and disaggregation_report_form.cleaned_data.get("target")
                                                     and disaggregation_report_form.cleaned_data.get("target") > 0
                                                 ):
                                                     disaggregation_report_instance = disaggregation_report_form.save(
@@ -567,8 +556,7 @@ def update_project_monthly_report_progress_view(request, project, report):
         target_location_zones,
     ) = get_target_locations_doamin(target_locations)
 
-    activity_plans = activity_plans.prefetch_related("indicators")
-    project_indicators = list(chain.from_iterable(activity.indicators.all() for activity in activity_plans))
+    activity_plans = [plan for plan in activity_plans]
 
     # Create the activity plan formset with initial data from the project
     ActivityReportFormset = inlineformset_factory(
@@ -613,25 +601,10 @@ def update_project_monthly_report_progress_view(request, project, report):
 
     # Loop through the forms in the formset and set initial and queryset values for specific fields
     if not request.POST:
-        # Create a dictionary to map indicator IDs to ActivityPlans
-        indicator_activity_plan_map = {
-            indicator.id: activity_plan
-            for activity_plan in activity_plans
-            for indicator in activity_plan.indicators.all()
-        }
         for i, form in enumerate(activity_report_formset.forms):
-            if i < len(project_indicators):
-                indicator = project_indicators[i]
-                activity_plan = indicator_activity_plan_map.get(indicator.id)
-
-                if activity_plan:
-                    if not form.instance.pk:
-                        form.initial = {
-                            "activity_plan": activity_plan,
-                            "project_id": project,
-                            "indicator": indicator,
-                        }
-                form.fields["indicator"].queryset = activity_plan.indicators.all().select_related("package_type")
+            if i < len(activity_plans):
+                activity_plan = activity_plans[i]
+                form.fields["indicator"].queryset = Indicator.objects.filter(id=activity_plan.indicator.id)
 
     if request.method == "POST":
         if activity_report_formset.is_valid():
@@ -810,7 +783,6 @@ def get_disaggregations_report_empty_forms(request):
     # Create a dictionary to hold disaggregation forms per location prefix
     location_disaggregation_report_dict = {}
     if request.POST.get("indicator"):
-        # Get selected indicators
         indicator = get_object_or_404(Indicator, pk=int(request.POST.get("indicator")))
 
         # Get selected locations prefixes

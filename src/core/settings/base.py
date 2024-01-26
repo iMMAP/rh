@@ -32,6 +32,7 @@ INSTALLED_APPS = [
     "smart_selects",
     "django_vite_plugin",
     "import_export",
+    "django_htmx",
     # RH apps
     "rh.apps.RhConfig",
     "users.apps.UsersConfig",
@@ -48,6 +49,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "django_htmx.middleware.HtmxMiddleware",
 ]
 
 ROOT_URLCONF = "core.urls"

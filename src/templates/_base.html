@@ -84,9 +84,30 @@
                                 <ul class="main-nav">
                                     <li class="main-nav-item">
                                         <a class="main-nav-link" href="{% url 'projects-list' %}">Projects</a>
+                                          <div class="inner-drop">
+                                            <ul class="inner-nav">
+                                                <li class="inner-nav-item">
+                                                    <a class="inner-nav-link" href="{% url 'projects-list' %}">Projects List</a>
+                                                </li>
+                                                <li class="inner-nav-item">
+                                                    <a class="inner-nav-link" href="{% url 'projects-create' %}">Create Project</a>
+                                                </li>
+                                            </ul>
+                                        </div>
                                     </li>
                                     <li class="main-nav-item">
                                         <a class="main-nav-link" href="{% url 'stocks' %}">Stocks</a>
+                                            <div class="inner-drop">
+                                                <ul class="inner-nav">
+                                                    <li class="inner-nav-item">
+                                                        <a href="{% url 'stocks' %}" class="inner-nav-link">Add Warehouse</a>
+                                                    </li> 
+                                                    <li>
+                                                        <a href="{% url 'all_stock_report' %}" class="inner-nav-link">Add Stock</a>
+                                                    </li>
+                                                </ul>
+
+                                            </div>
                                     </li>
                                     <li class="main-nav-item">
                                         <a class="main-nav-link" href="#">Admin Dashboard</a>
@@ -220,7 +241,6 @@
                 </footer>
             </div>
         </div>
-
         <!-- jQuery CDN -->
         <script 
             src="https://code.jquery.com/jquery-3.6.1.min.js"
@@ -228,20 +248,26 @@
             crossorigin="anonymous"
         >
         </script>
+
+        <!-- Select2 CDN -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js" integrity="sha512-2ImtlRlf2VVmiGZsjm9bEyhjGW4dU7B6TNwh/hx/iSByxNENtj3WVE6o/9Lj4TJeVXPi4bnOIMXFIJJAeufa0A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        
+
+        {% comment %} HTMX {% endcomment %}
+        <script src="https://unpkg.com/htmx.org@1.9.10" integrity="sha384-D1Kt99CQMDuVetoL1lrYwg5t+9QdHe7NLX/SoJYkXDFfX37iInKRy5xLSi8nO7UC" crossorigin="anonymous"></script>
         
         <!-- Full Pack relative to location of manage.py file -->
         {% vite 'static/src/js/app.js' %}
-        {% vite 'static/rh/js/all_projects.js' %}
-        {% vite 'users/static/users/users.js' %}
-        {% block scripts %}
-        {% endblock scripts %}
-
+        
         <script 
             defer 
             src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js">
         </script>
-        <!-- Select2 CDN -->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js" integrity="sha512-2ImtlRlf2VVmiGZsjm9bEyhjGW4dU7B6TNwh/hx/iSByxNENtj3WVE6o/9Lj4TJeVXPi4bnOIMXFIJJAeufa0A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+        
+
+        {% block scripts %}
+        {% endblock scripts %}
     </script>
     </body>
 </html>

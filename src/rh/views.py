@@ -183,8 +183,8 @@ def projects_detail(request, pk):
             "implementing_partners",
             Prefetch(
                 "activityplan_set",
-                ActivityPlan.objects.select_related("activity_domain", "beneficiary").prefetch_related(
-                    "targetlocation_set", "indicators", "activity_type", "activity_detail"
+                ActivityPlan.objects.select_related("activity_domain", "beneficiary", "indicator").prefetch_related(
+                    "targetlocation_set", "activity_type", "activity_detail"
                 ),
             ),
         ),
@@ -263,26 +263,12 @@ def update_project_view(request, pk):
 @cache_control(no_store=True)
 @login_required
 def create_project_activity_plan(request, project):
-    """
-    View function to handle creating or updating activity plans for a project.
-
-    Args:
-        request (HttpRequest): The HTTP request object.
-        project (int): The primary key of the Project object.
-
-    Returns:
-        HttpResponse: The response containing the rendered template with the activity plan forms.
-    """
-    # Get the project object or return 404 if not found
     project = get_object_or_404(Project, pk=project)
 
     # Get all existing activity plans for the project
     # Create the activity plan formset with initial data from the project
     activity_plan_formset = ActivityPlanFormSet(
         request.POST or None, instance=project, form_kwargs={"project": project}
-    )
-    target_location_formset = TargetLocationFormSet(
-        request.POST or None,
     )
 
     target_location_formsets = []
@@ -297,10 +283,18 @@ def create_project_activity_plan(request, project):
         )
         for target_location_form in target_location_formset.forms:
             # Create a disaggregation formset for each target location form
+            # HERE
+
+            initial_data = []
+
+            for disaggregation in target_location_form.instance.disaggregationlocation_set.all():
+                initial_data.append({"disaggregation": disaggregation})
+
             disaggregation_formset = DisaggregationFormSet(
                 request.POST or None,
                 instance=target_location_form.instance,
                 prefix=f"disaggregation_{target_location_form.prefix}",
+                initial=initial_data,
             )
             target_location_form.disaggregation_formset = disaggregation_formset
 
@@ -319,14 +313,7 @@ def create_project_activity_plan(request, project):
                 ):
                     activity_plan = activity_plan_form.save()
                     acitivities_target.update({activity_plan.pk: 0})
-                    activity_domain_name = activity_plan_form.cleaned_data.get("activity_domain").name
-                    activity_type_name = activity_plan_form.cleaned_data.get("activity_type").name
-                    title = f"{activity_domain_name}, {activity_type_name}"
-                    if activity_plan_form.cleaned_data.get("activity_detail"):
-                        title += f", {activity_plan_form.cleaned_data.get('activity_detail').name}"
-                    activity_plan.title = title
 
-            # Process target location forms and their disaggregation forms
             for post_target_location_formset in target_location_formsets:
                 if post_target_location_formset.is_valid():
                     for post_target_location_form in post_target_location_formset:
@@ -383,6 +370,9 @@ def create_project_activity_plan(request, project):
             pass
 
     # Prepare data for rendering the template
+    target_location_formset = TargetLocationFormSet(
+        request.POST or None,
+    )
     cluster_ids = list(project.clusters.values_list("id", flat=True))
 
     combined_formset = zip(activity_plan_formset.forms, target_location_formsets)
@@ -407,44 +397,36 @@ def create_project_activity_plan(request, project):
 def get_disaggregations_forms(request):
     """Get target location empty form"""
     # Get selected indicators
-    indicators = Indicator.objects.filter(pk__in=request.POST.getlist("indicators[]"))
-
-    # Get selected locations prefixes
+    indicator = Indicator.objects.get(pk=request.POST.get("indicator"))
     locations_prefix = request.POST.getlist("locations_prefixes[]")
 
-    # Use a set to store unique related Disaggregations
-    unique_related_disaggregations = set()
+    related_disaggregations = indicator.disaggregation_set.all()
 
-    # Loop through each Indicator and retrieve its related Disaggregations
-    for indicator in indicators:
-        related_disaggregations = indicator.disaggregation_set.all()
-        unique_related_disaggregations.update(related_disaggregations)
-
-    # Convert the set to a list
-    unique_related_disaggregations = list(unique_related_disaggregations)
-
-    # Create a dictionary to hold disaggregation forms per location prefix
     location_disaggregation_dict = {}
 
     initial_data = []
 
     # Populate initial data with related disaggregations
-    if unique_related_disaggregations:
-        for disaggregation in unique_related_disaggregations:
+    if len(related_disaggregations) > 0:
+        for disaggregation in related_disaggregations:
             initial_data.append({"disaggregation": disaggregation})
 
         # Create DisaggregationFormSet for each location prefix
         for location_prefix in locations_prefix:
-            DisaggregationFormSet.extra = len(unique_related_disaggregations)
+            # Check if is from the add new form or from the activity create
+            DisaggregationFormSet.max_num = len(related_disaggregations)
+            DisaggregationFormSet.extra = len(related_disaggregations)
+
             disaggregation_formset = DisaggregationFormSet(
                 prefix=f"disaggregation_{location_prefix}", initial=initial_data
             )
 
-            # Generate HTML for each disaggregation form and store in dictionary
             for disaggregation_form in disaggregation_formset.forms:
+                # disaggregation_form = modelform_factory(DisaggregationLocation,fields=["target","disaggregation"])
                 context = {
                     "disaggregation_form": disaggregation_form,
                 }
+
                 html = render_to_string("rh/projects/forms/disaggregation_empty_form.html", context)
 
                 if location_prefix in location_disaggregation_dict:
@@ -453,7 +435,6 @@ def get_disaggregations_forms(request):
                     location_disaggregation_dict.update({location_prefix: [html]})
 
     # Set back extra to 0 to avoid empty forms if refreshed.
-    DisaggregationFormSet.extra = 0
 
     # Return JSON response containing generated HTML forms
     return JsonResponse(location_disaggregation_dict)
@@ -487,6 +468,7 @@ def get_target_location_empty_form(request):
         instance=target_location_form.instance,
         prefix=f"disaggregation_{target_location_form.prefix}",
     )
+
     target_location_form.disaggregation_formset = disaggregation_formset
 
     # Prepare context for rendering the target location form template
@@ -776,7 +758,7 @@ def copy_project_activity_plan(project, plan):
         new_plan.title = f"[COPY] - {plan.title}"
 
         # Copy indicators from the original plan to the duplicated plan.
-        new_plan.indicators.set(plan.indicators.all())
+        new_plan.indicator = plan.indicator
 
         # Save the changes made to the duplicated plan.
         new_plan.save()
@@ -865,7 +847,7 @@ def copy_activity_plan(request, project, plan):
         new_plan.active = True
         new_plan.state = "draft"
         new_plan.title = f"[COPY] - {activity_plan.title}"
-        new_plan.indicators.set(activity_plan.indicators.all())
+        new_plan.indicator = activity_plan.indicator
         new_plan.save()
 
     url = reverse("create_project_activity_plan", args=[project.pk])

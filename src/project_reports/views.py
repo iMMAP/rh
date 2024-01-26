@@ -14,7 +14,7 @@ from django.utils import timezone
 from django.views.decorators.cache import cache_control
 
 # from .filter import ReportFilterForm
-from rh.models import ImplementationModalityType, Indicator, Location, Project
+from rh.models import ImplementationModalityType, Indicator, Location, Project, TargetLocation
 
 from .forms import (
     ActivityPlanReportForm,
@@ -781,6 +781,26 @@ def get_location_report_empty_form(request):
 
     # Return JSON response containing the generated HTML
     return JsonResponse({"html": html})
+
+
+@cache_control(no_store=True)
+@login_required
+def load_target_locations_details(request):
+    parent_ids = [int(i) for i in request.POST.getlist("parents[]") if i]
+    parents = Location.objects.filter(pk__in=parent_ids).select_related("parent")
+    response = "".join(
+        [
+            f'<optgroup label="{parent.name}">'
+            + "".join(
+                [f'<option value="{target_location.district.pk}">{target_location.district.name}</option>' for target_location in TargetLocation.objects.filter(province=parent)]
+            )
+            + "</optgroup>"
+            if TargetLocation.objects.filter(province=parent).exists()
+            else ""
+            for parent in parents
+        ]
+    )
+    return JsonResponse(response, safe=False)
 
 
 @login_required

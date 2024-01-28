@@ -89,12 +89,13 @@ export default function initSWPopup() {
 				} catch (error) {
 					if(unable){
 						Swal.showValidationMessage(`
-						Request Failed !!!`);
+							Request Failed !!!`
+						);
 					} else {
-					Swal.showValidationMessage(`
-						Request failed: ${error}
-					`);
-				}
+						Swal.showValidationMessage(`
+							Request failed: ${error}
+						`);
+					}
 			  	}
 			},
 			allowOutsideClick: () => !Swal.isLoading()
@@ -200,6 +201,98 @@ export default function initSWPopup() {
 		});
 	}
 
+	async function showImportFilePopup(event) {
+		// Prevent the default behavior of the click event
+		event.preventDefault();
+		event.stopPropagation();
+
+		// Get the relevant data attributes from the clicked element
+	  	var dataURL = event.currentTarget.dataset.url;
+
+		const { value: file } = await Swal.fire({
+			title: 'Select File',
+			input: 'file',
+			showCancelButton: true,
+			confirmButtonText: "Upload",
+			customClass: {
+				input: 'sw-input-width',
+				confirmButton: 'btn btn-red',
+				cancelButton: 'btn btn-danger',
+				loader: 'custom-loader',
+			},
+			inputAttributes: {
+				accept: '.csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel',
+				'aria-label': 'Upload your file',
+			},
+		});	
+		
+		if (file) {
+			var formData = new FormData();		
+
+			// Get CSRF token from the page
+			const csrfToken = $('[name=csrfmiddlewaretoken]').val();
+
+            formData.append("file", file);
+
+			try {
+				debugger
+				// Show loading spinner or message during asynchronous operations
+				Swal.showLoading();
+				const response = $.ajax({
+					url: dataURL,
+					type: 'POST',
+					data: formData,
+					processData: false,
+					contentType: false,
+					headers: {
+						'X-CSRFToken': csrfToken
+					},
+					success: function (data) {
+						debugger
+						Swal.hideLoading();
+						if (data.success) {
+							debugger
+							// Show success notification first
+							Swal.fire({
+								position: "top-end",
+								icon: "success",
+								title: "DONE!",
+								showConfirmButton: false,
+								timer: 1500
+							});
+				
+							// Delay the page reload to allow the notification to be shown
+							setTimeout(() => {
+								window.location.href = data.redirect_url;
+							}, 1500); // Adjust the delay time as needed
+						}
+						else {
+							Swal.fire({
+								title: "Import Error!",
+								icon: "error",
+								html: `<div>${data.message}</div>`,
+								showCloseButton: true,
+								confirmButtonText: `Ok`,
+								customClass: {
+									confirmButton: 'btn btn-red',
+								},
+							});
+						}
+					},
+					error: function (error) {
+						debugger
+						Swal.showValidationMessage(`
+							Request failed: ${error}
+						`);
+					},
+				});
+			} catch (error) {
+				console.error('Error:', error);
+				Swal.fire('Error', 'An error occurred during file processing.', 'error');
+			}
+		}
+	}
+
 	// Attach the click event listener to all elements with class "show_confirm"
 	$(".show-sw-action-popup").on("click", function(event) {
 		showActionConfirmPopup(event)
@@ -207,5 +300,9 @@ export default function initSWPopup() {
 
 	$(".show-sw-confirm-button").on("click", function(event) {
 		showConfirmationPopup(event)
+	});
+
+	$(".show-sw-import-popup").on("click", function(event) {
+		showImportFilePopup(event)
 	});
 }

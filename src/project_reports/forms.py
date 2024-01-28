@@ -1,5 +1,6 @@
 from django import forms
 from django.forms.models import inlineformset_factory
+
 from rh.models import Indicator
 from django.urls import reverse_lazy
 
@@ -35,7 +36,9 @@ class TargetLocationReportForm(forms.ModelForm):
         model = TargetLocationReport
         fields = "__all__"
         widgets = {
-            "district": forms.Select(attrs={"target-locations-queries-url": reverse_lazy("ajax-load-target-locations")}),
+            "district": forms.Select(
+                attrs={"target-locations-queries-url": reverse_lazy("ajax-load-target-locations")}
+            ),
             "zone": forms.Select(attrs={"target-locations-queries-url": reverse_lazy("ajax-load-target-locations")}),
         }
 
@@ -80,3 +83,11 @@ class IndicatorsForm(forms.ModelForm):
     class Meta:
         model = Indicator
         fields = "__all__"
+
+
+class MonthlyReportFileUpload(forms.Form):
+    """
+    File upload form for monthly reports data import
+    """
+
+    file = forms.FileField()

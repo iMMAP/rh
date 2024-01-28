@@ -14,7 +14,6 @@ from django.template.loader import render_to_string
 from django.urls import reverse
 from django.utils import timezone
 from django.views.decorators.cache import cache_control
-
 from rh.models import (
     ActivityDetail,
     ActivityDomain,
@@ -1025,7 +1024,8 @@ def import_monthly_reports(request, report):
                     for index, row in df.iterrows():
                         message = ""
 
-                        # TODO: Handle same file upload multiple times
+                        # TODO: Handle same file upload multiple times, 
+                        # check all of the file first and then run import
 
                         # Get or create Indicator
                         indicator_name = row.get("indicator")

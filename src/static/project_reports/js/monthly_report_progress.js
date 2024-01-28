@@ -61,16 +61,16 @@ function addTargetLocationReportForm(prefix, project, nextFormIndex) {
 				if (addedForm){
 					const locationReportPrefix = addedForm[0].dataset.locationPrefix
 					// 	// Load Locations (districts and zones)
-					// 	getLocations(locationPrefix, 'district', 'province');
-					// 	getLocations(locationPrefix, 'zone', 'district');
+					getLocations(locationReportPrefix, 'district', 'province');
+					getLocations(locationReportPrefix, 'zone', 'district');
 						
-					// 	// Add Load Locations (districts and zones) event for new form
-					// 	$(`#id_${locationPrefix}-province`).on('change', function() {
-					// 		getLocations(locationPrefix, 'district', 'province', clearZone=true);
-					// 	});
-					// 	$(`#id_${locationPrefix}-district`).on('change', function() {
-					// 		getLocations(locationPrefix, 'zone', 'district');
-					// 	});
+					// Add Load Locations (districts and zones) event for new form
+					$(`#id_${locationReportPrefix}-province`).on('change', function() {
+						getLocations(locationReportPrefix, 'district', 'province', clearZone=true);
+					});
+					$(`#id_${locationReportPrefix}-district`).on('change', function() {
+						getLocations(locationReportPrefix, 'zone', 'district');
+					});
 					
 					// 	// Update disaggregations based on indicators for the new added form 
 					const activityReportFormIndex = formPrefix.match(/activityplanreport_set-(\d+)/)[1] 
@@ -183,9 +183,9 @@ function handleDisaggregationReportForms(indicatorsSelect, selectedID, locations
 /**
 * Get Districts and Zpnes for Target Location Form
 **/
-async function getLocations(locationPrefix, locationType, parentType, clearZone = null) {
+function getLocations(locationPrefix, locationType, parentType, clearZone = null) {
     // Get the URL for fetching locations
-    const locationUrl = $(`#id_${locationPrefix}-${locationType}`).attr(`locations-queries-url`);
+    const locationUrl = $(`#id_${locationPrefix}-${locationType}`).attr(`target-locations-queries-url`);
     
     // Get an array of location IDs
     const locationIds = $(`select#id_${locationPrefix}-${locationType} option`)
@@ -198,35 +198,44 @@ async function getLocations(locationPrefix, locationType, parentType, clearZone 
     // Get the selected locations
     const selectedLocations = $(`select#id_${locationPrefix}-${locationType}`).val();
 
-    try {
+    
+	try {
+		if (locationUrl) {
+			// Use JavaScript Cookie library
+			const csrftoken = Cookies.get('csrftoken');
 
-		// Use JavaScript Cookie library
-		const csrftoken = Cookies.get('csrftoken');
+			// Make an AJAX request to fetch locations data
+			$.ajax({
+				type: "POST",
+				url: locationUrl,
+				data: {
+					parents: parentIds,
+					listed_locations: locationIds,
+				},
+				beforeSend: function (xhr, settings) {
+					xhr.setRequestHeader("X-CSRFToken", csrftoken);
+				},
+				success: function (data) {
 
-        // Make an AJAX request to fetch locations data
-        const response = await $.ajax({
-            type: "POST",
-            url: locationUrl,
-            data: {
-                parents: parentIds,
-                listed_locations: locationIds,
-            },
-			beforeSend: function(xhr, settings) {
-				xhr.setRequestHeader("X-CSRFToken", csrftoken);
-			},
-        });
+					// Clear zone if needed
+					if (parentType === 'province' && clearZone === true) {
+						$(`#id_${locationPrefix}-zone`).html('').val('');
+					}
+					if (data){
+						// Update the location select element
+						$(`#id_${locationPrefix}-${locationType}`).html(data);
+						$(`select#id_${locationPrefix}-${locationType}`).val(selectedLocations);
+					}
 
-        // Clear zone if needed
-        if (parentType === 'province' && clearZone === true) {
-            $(`#id_${locationPrefix}-zone`).html('').val('');
-        }
-
-        // Update the location select element
-        $(`#id_${locationPrefix}-${locationType}`).html(response);
-        $(`select#id_${locationPrefix}-${locationType}`).val(selectedLocations);
-    } catch (error) {
-        console.error(`Error fetching ${locationType}: ${error}`);
-    }
+				},
+				error: function (error) {
+					console.log('Error fetching empty form:', error);
+				}
+			});
+		}
+	} catch (error) {
+		console.error(`Error fetching ${locationType}: ${error}`);
+	}
 }
 
 

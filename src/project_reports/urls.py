@@ -124,6 +124,11 @@ urlpatterns = [
         name="get_location_report_empty_form",
     ),
     path(
+        "ajax/load-target-locations-details/",
+        user_views.load_target_locations_details,
+        name="ajax-load-target-locations",
+    ),
+    path(
         "ajax/get_disaggregations_report_forms/",
         user_views.get_disaggregations_report_empty_forms,
         name="get_disaggregations_report_empty_forms",

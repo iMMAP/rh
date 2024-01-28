@@ -167,3 +167,10 @@ def stock_report_view(request, pk):
 def submit_stock_report_form(request, pk):
     StockReports.objects.filter(id=pk).update(submitted=True, submitted_at=datetime.datetime.now())
     return redirect("all_stock_report")
+
+
+@cache_control(no_store=True)
+@login_required
+def update_stock_report(request, pk):
+    StockReports.objects.filter(id=pk).update(submitted=False)
+    return redirect("stock_report", pk=pk)

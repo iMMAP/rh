@@ -1,5 +1,6 @@
 import calendar
 import json
+from collections import defaultdict
 from datetime import datetime, timedelta
 
 import pandas as pd
@@ -25,6 +26,7 @@ from rh.models import (
     Location,
     LocationType,
     Project,
+    TargetLocation,
 )
 
 from .forms import (
@@ -766,6 +768,57 @@ def get_location_report_empty_form(request):
 
     # Return JSON response containing the generated HTML
     return JsonResponse({"html": html})
+
+
+@cache_control(no_store=True)
+@login_required
+def load_target_locations_details(request):
+    # parent_ids = [int(i) for i in request.POST.getlist("parents[]") if i]
+    # parents = Location.objects.filter(pk__in=parent_ids).select_related("parent")
+    # response = "".join(
+    #     [
+    #         f'<optgroup label="{parent.name}">'
+    #         + "".join(
+    #             [f'<option value="{target_location.district.pk}">{target_location.district.name}</option>' for target_location in TargetLocation.objects.filter(province=parent)]
+    #         )
+    #         + "</optgroup>"
+    #         if TargetLocation.objects.filter(province=parent).exists()
+    #         else ""
+    #         for parent in parents
+    #     ]
+    # )
+    # return JsonResponse(response, safe=False)
+
+    parent_ids = [int(i) for i in request.POST.getlist("parents[]") if i]
+    parents = Location.objects.filter(pk__in=parent_ids).select_related("parent")
+
+    response = ""
+
+    # Use defaultdict to keep track of seen district primary keys for each parent
+    seen_district_pks = defaultdict(set)
+
+    # Retrieve target locations for the current parent
+    for parent in parents:
+        target_locations = TargetLocation.objects.filter(province=parent)
+
+        # Check if any target_location exists for the current parent
+        if target_locations.exists():
+            response += f'<optgroup label="{parent.name}">'
+
+            # Iterate over target_location objects for the current parent and retrieve the district primary keys
+            for target_location in target_locations:
+                district_pk = target_location.district.pk
+                if district_pk not in seen_district_pks[parent.pk]:
+                    seen_district_pks[parent.pk].add(district_pk)
+
+                    # Update the set of seen district primary keys for the current parent
+                    response += (
+                        f'<option value="{target_location.district.pk}">{target_location.district.name}</option>'
+                    )
+
+            response += "</optgroup>"
+
+    return JsonResponse(response, safe=False)
 
 
 @login_required

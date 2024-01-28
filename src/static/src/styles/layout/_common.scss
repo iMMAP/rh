@@ -12,10 +12,18 @@
 //Random added style start
 //----------------------------------
 
+.Edit-Submitted-Stock{
+  display: flex;
+  justify-content: end;
+}
+
+.Edit-Submitted-Stock .btn{
+  width: 150px;
+}
+
 input[readonly].cursor-none {
   cursor: not-allowed;
 }
-
 
 .cursor-pointer{
   cursor: pointer;

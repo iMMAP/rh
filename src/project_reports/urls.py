@@ -1,5 +1,6 @@
 from django.urls import path
 
+from . import exports as export_views
 from . import views as user_views
 
 urlpatterns = [
@@ -106,6 +107,17 @@ urlpatterns = [
     #     user_views.load_facility_sites,
     #     name="ajax-load-facility_sites",
     # ),
+    # Exports
+    path(
+        "project/monthly_progress/export/<str:report>/",
+        export_views.ProjectReportExportExcelView.as_view(),
+        name="export_monthly_report_template",
+    ),
+    path(
+        "project/monthly_progress/import/<str:report>/",
+        user_views.import_monthly_reports,
+        name="import_monthly_reports",
+    ),
     path(
         "ajax/get_location_report_empty_form/",
         user_views.get_location_report_empty_form,

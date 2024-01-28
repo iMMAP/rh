@@ -16,7 +16,7 @@ import initShowHideInputValue from "./components/initShowHideInputValue";
 import initCopyInputValue from "./components/initCopyInputValue";
 import initAccordion from "./components/initAccordion";
 import initTooltip from "./components/initTooltip";
-import initExport from './utils/export';
+// import initExport from './utils/export';
 import initSWPopup from './utils/sweatalertPopups';
 import initExportSW from './utils/exportSW';
 
@@ -42,7 +42,7 @@ ready(() => {
   initAccordion();
   initTooltip();
   initExportSW();
-  initExport();
+  // initExport();
   initSWPopup();
 
 

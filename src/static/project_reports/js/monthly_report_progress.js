@@ -265,25 +265,25 @@ $(function () {
 	// 	});
 	// });
 
-	// const $locationBlock = $(".target_location_form");
-	// $locationBlock.each(function (formIndex, formElement) {
+	const $locationBlock = $(".location_report_form");
+	$locationBlock.each(function (formIndex, formElement) {
 
-	// 	const locationPrefix = formElement.dataset.locationPrefix
+		const locationReportPrefix = formElement.dataset.locationPrefix
 
-	// 	// Update the Target Locations Titles
-	// 	updateLocationBlockTitles(locationPrefix);
+		// Update the Target Locations Titles
+		// updateLocationBlockTitles(locationReportPrefix);
 
-	// 	// Initial load for districts and zones
-	// 	getLocations(locationPrefix, 'district', 'province');
-	// 	getLocations(locationPrefix, 'zone', 'district');
+		// Initial load for districts and zones
+		getLocations(locationReportPrefix, 'district', 'province');
+		getLocations(locationReportPrefix, 'zone', 'district');
 
-	// 	$(`#id_${locationPrefix}-province`).on('change', function() {
-	// 		getLocations(locationPrefix, 'district', 'province', clearZone=true);
-	// 	});
-	// 	$(`#id_${locationPrefix}-district`).on('change', function() {
-	// 		getLocations(locationPrefix, 'zone', 'district');
-	// 	});
+		$(`#id_${locationReportPrefix}-province`).on('change', function() {
+			getLocations(locationReportPrefix, 'district', 'province', clearZone=true);
+		});
+		$(`#id_${locationReportPrefix}-district`).on('change', function() {
+			getLocations(locationReportPrefix, 'zone', 'district');
+		});
 		
-	// });
+	});
 
 });

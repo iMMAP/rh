@@ -49,4 +49,7 @@ DJANGO_VITE_PLUGIN = {
     "BUILD_URL_PREFIX": "/" + STATIC_URL + "build",
     "DEV_MODE": False,
     "STATIC_LOOKUP": False,
+    'JS_ATTRS_BUILD': {
+        'defer': True
+    },
 }

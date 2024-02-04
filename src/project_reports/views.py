@@ -446,7 +446,8 @@ def create_project_monthly_report_progress_view(request, project, report):
                         "project_id": project,
                         "indicator": activity_plan.indicator,
                     }
-                    form.fields["indicator"].queryset = Indicator.objects.filter(id=activity_plan.indicator.id)
+                    if activity_plan.indicator:
+                        form.fields["indicator"].queryset = Indicator.objects.filter(id=activity_plan.indicator.id)
 
     if request.method == "POST":
         if activity_report_formset.is_valid():
@@ -618,7 +619,8 @@ def update_project_monthly_report_progress_view(request, project, report):
         for i, form in enumerate(activity_report_formset.forms):
             if i < len(activity_plans):
                 activity_plan = activity_plans[i]
-                form.fields["indicator"].queryset = Indicator.objects.filter(id=activity_plan.indicator.id)
+                if activity_plan.indicator:
+                    form.fields["indicator"].queryset = Indicator.objects.filter(id=activity_plan.indicator.id)
 
     if request.method == "POST":
         if activity_report_formset.is_valid():

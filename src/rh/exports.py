@@ -202,7 +202,7 @@ class ProjectExportExcelView(View):
             project (Project): The project object.
         """
         activity_plans = project.activityplan_set.all()
-        for plan in activity_plans:
+        for activity_idx, plan in enumerate(activity_plans, start=1):
             row = [
                 plan.activity_domain.name if plan.activity_domain else None,
                 plan.activity_type.name if plan.activity_type else None,
@@ -211,7 +211,7 @@ class ProjectExportExcelView(View):
             ]
 
             for col_idx, value in enumerate(row, start=1):
-                sheet.cell(row=2, column=col_idx, value=value)
+                sheet.cell(row=activity_idx + 1, column=col_idx, value=value)
 
     def write_target_locations_sheet(self, workbook, project):
         """
@@ -245,7 +245,7 @@ class ProjectExportExcelView(View):
             project (Project): The project object.
         """
         target_locations = project.targetlocation_set.all()
-        for location in target_locations:
+        for location_idx, location in enumerate(target_locations, start=1):
             row = [
                 location.province.name,
                 location.district.name,
@@ -253,7 +253,7 @@ class ProjectExportExcelView(View):
             ]
 
             for col_idx, value in enumerate(row, start=1):
-                sheet.cell(row=2, column=col_idx, value=value)
+                sheet.cell(row=location_idx + 1, column=col_idx, value=value)
 
     def write_budget_progress_sheet(self, workbook, project):
         """

@@ -382,37 +382,74 @@
                                                 </div>
                                                 <br/>
                                                 <div class="col col-lg">
-                                                    <div class="multiple-fields-row three-items">
+                                                    <div class="multiple-fields-row two-items">
                                                         <div class="field-col">
                                                             <div class="select-field ">
                                                                 <span class="label">Location Type</span>
                                                                 <span class="text-read-only">{{ target_location.location_type }}</span>
                                                             </div>
                                                         </div>
-                                                        <!-- <div class="field-col">
-                                                            <div class="select-field">
-                                                                <span class="label">Site Name</span>
-                                                                <span class="text-read-only">{{ target_location.site_name }}</span>
-                                                            </div>
-                                                        </div>
                                                         <div class="field-col">
-                                                            <div class="input-field">
-                                                                <span class="label">Site Latitude</span>
-                                                                <div class="input-holder">
-                                                                    <span class="text-read-only">{{ target_location.site_lat }}</span>
+                                                            <div class="field-col">
+                                                                <div class="input-field">
+                                                                    <span class="label">Facility Monitoring</span>
+                                                                    <div class="input-holder">
+                                                                        <span class="text-read-only">
+                                                                            {% if target_location.facility_monitoring %}
+                                                                            Yes
+                                                                            {% else %}
+                                                                            No
+                                                                            {% endif %}
+                                                                        </span>
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <div class="field-col">
-                                                            <div class="input-field">
-                                                                <span class="label">Site Longitude</span>
-                                                                <div class="input-holder">
-                                                                    <span class="text-read-only">{{ target_location.site_long }}</span>
-                                                                </div>
-                                                            </div>
-                                                        </div> -->
                                                     </div>
                                                 </div>
+                                            </div>
+                                            <br/>
+                                            <div class="row">
+                                                {% if target_location.facility_monitoring %}
+                                                <div class="col">
+                                                    <div class="multiple-fields-row two-items">
+                                                        <div class="field-col">
+                                                            <div class="select-field">
+                                                                <span class="label">Facility / Site Name</span>
+                                                                <span class="text-read-only">{{ target_location.facility_name }}</span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="field-col">
+                                                            <div class="input-field">
+                                                                <span class="label">Facility / Site ID</span>
+                                                                <div class="input-holder">
+                                                                    <span class="text-read-only">{{ target_location.facility_id }}</span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col">
+                                                    <div class="multiple-fields-row two-items">
+                                                        <div class="field-col">
+                                                            <div class="input-field">
+                                                                <span class="label">Facility / Site Latitude</span>
+                                                                <div class="input-holder">
+                                                                    <span class="text-read-only">{{ target_location.facility_lat }}</span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="field-col">
+                                                            <div class="input-field">
+                                                                <span class="label">Facility / Site Longitude</span>
+                                                                <div class="input-holder">
+                                                                    <span class="text-read-only">{{ target_location.facility_long }}</span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                {% endif %}
                                             </div>
                                             <br/>
                                             <div class="disaggregation-block disaggregation-accordion">

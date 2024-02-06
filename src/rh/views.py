@@ -10,8 +10,8 @@ from django.template import loader
 from django.template.loader import render_to_string
 from django.urls import reverse
 from django.views.decorators.cache import cache_control
-
 from project_reports.models import ProjectMonthlyReport as Report
+
 from rh.resources import ProjectResource
 
 from .filters import ProjectsFilter
@@ -186,6 +186,7 @@ def projects_detail(request, pk):
         ),
         pk=pk,
     )
+    activity_plans = project.activityplan_set.all()
 
     context = {
         "project": project,
@@ -193,6 +194,7 @@ def projects_detail(request, pk):
         "financial_view": False,
         "reports_view": False,
         "project_filter": project,
+        "activity_plans": activity_plans,
     }
     return render(request, "rh/projects/views/project_view.html", context)
 

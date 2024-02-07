@@ -211,15 +211,19 @@ function addTargetLocationForm(prefix, project, nextFormIndex) {
 						`#id_activityplan_set-${activityFormIndex}-indicator`,
 					);
 
-
-					
 					let selectedID = $select2Event[0].value
-
-				
 					handleDisaggregationForms($select2Event[0], selectedID, [
 						locationPrefix,
 					]);
 
+					// Call Facility Monitoring function when page loads.
+					handleFacilityMonitoring(locationPrefix, addedForm);
+					let $facilityMonitoring = $(addedForm).find(
+						`#id_${locationPrefix}-facility_monitoring`
+					);
+					$facilityMonitoring.change(function () {
+						handleFacilityMonitoring(locationPrefix, addedForm);
+					});
 
 				}
 			}
@@ -383,9 +387,6 @@ function updateLocationBlockTitles(locationPrefix) {
 	// id_target_locations_activityplan_set-0-0-province
 	updateLocationTitle(locationPrefix, `id_${locationPrefix}-province`);
 	updateLocationTitle(locationPrefix, `id_${locationPrefix}-district`);
-
-	// TODO: Update for site and zone
-	// updateLocationTitle(locationPrefix, `id_${locationPrefix}-site_name`);
 }
 
 /**
@@ -462,16 +463,11 @@ function getLocations(
 @param {string} formElement - Form Element.
 **/
 function handleFacilityMonitoring(locationPrefix, formElement) {
-	debugger
-	// id_target_locations_activityplan_set-0-0-facility_monitoring
-	// id_target_locations_activityplan_set-0-0-facility_monitoring
-	// id_target_locations_activityplan_set-0-0-facility_monitoring
 	$formElement = $(formElement)
 	let $facilityMonitoring = $(`#id_${locationPrefix}-facility_monitoring`);
 	let $facilityName = $formElement.find(
 		`#id_${locationPrefix}-facility_name`
 	);
-	let $facilityId = $formElement.find(`#id_${locationPrefix}-facility_id`);
 	let $facilityDetails = $formElement.find(
 		`#facility_details_${locationPrefix}`
 	);
@@ -566,12 +562,9 @@ $(function () {
 		$(`#id_${locationPrefix}-district`).on("change", function () {
 			getLocations(locationPrefix, "zone", "district");
 		});
-
 		// Call Facility Monitoring function when page loads.
 		handleFacilityMonitoring(locationPrefix, formElement);
 		
-		// var $facilityMonitoring = $(`id_${locationPrefix}-facility_monitoring`)
-		debugger
 		let $facilityMonitoring = $(formElement).find(
 			`#id_${locationPrefix}-facility_monitoring`
 		);

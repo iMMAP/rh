@@ -58,29 +58,6 @@
                                 <a class="filter-close" href="#"></a>
                             </div>
 
-                            <!-- <div class="accordion">
-                                <div class="accordion-item">
-                                    <div class="accordion-title btn btn-gray project-title" style="position: relative;">
-                                        project
-                                    </div>
-                                    <div class="accordion-content">
-                                        jksdjfojsd 
-                                        dfasdjfpjasd 
-                                        j dfaosidjfas
-                                         oisjdfpa
-                                    </div>
-                                </div>
-                                <div class="accordion-item">
-                                    <div class="accordion-title">planning</div>
-                                    <div class="accordion-content">
-                                        jksdjfojsd 
-                                        dfasdjfpjasd 
-                                        j dfaosidjfas
-                                         oisjdfpa
-                                    </div>
-                                </div>
-                            </div> -->
-
                             <div class="export-format">
                                 <div style="font-size: 16px; color: #000; font-weight: 600;">File Format</div>
                                 <div class="label">
@@ -366,36 +343,6 @@
                                                 <label for="locationType-{{targetLocation.location_type.id}}" 
                                                 class="label">{{targetLocation.location_type | linebreaksbr }}</label>
                                             </div>
-                                            <div class="field-col">
-                                                <label for="siteName-{{targetLocation.site_name.id}}" 
-                                                class="text-read-only">Site Name</label>
-                                                <input type="checkbox" id="siteName-{{targetLocation.site_name.id}}" 
-                                                class="site-name-check"
-                                                value="{{targetLocation.site_name}}"
-                                                name="site_name"> 
-                                                <label for="siteName-{{targetLocation.site_name.id}}" 
-                                                class="label">{{targetLocation.site_name | linebreaksbr }}</label>
-                                            </div>
-                                            <div class="field-col">
-                                                <label for="latitude-{{targetLocation.site_lat.id}}" 
-                                                class="text-read-only">Site Latitude</label>
-                                                <input type="checkbox" id="latitude-{{targetLocation.site_lat.id}}" 
-                                                class="site-lat-check"
-                                                value="{{targetLocation.site_lat}}"
-                                                name="site_latitude"> 
-                                                <label for="latitude-{{targetLocation.site_lat.id}}" 
-                                                class="label">{{targetLocation.site_lat | linebreaksbr }}</label>
-                                            </div>
-                                            <div class="field-col">
-                                                <label for="Longitude-{{targetLocation.site_long.id}}" 
-                                                class="text-read-only">Site Longitude</label>
-                                                <input type="checkbox" id="Longitude-{{targetLocation.site_long.id}}" 
-                                                class="site-long-check"
-                                                value="{{targetLocation.site_long}}"
-                                                name="site_longitude"> 
-                                                <label for="Longitude-{{targetLocation.site_long.id}}" 
-                                                class="label">{{targetLocation.site_long | linebreaksbr }}</label>
-                                            </div>
                                             {% endfor %}
                                         </div>
                                         <hr>
@@ -422,54 +369,6 @@
                         </div>
                     <!-- </form> -->
                     </div>
-                <!-- export and filter ended -->
-
-                    <!--<div class="export-formats">
-                        <span class="title">File format</span>
-                        <ul class="formats-list">
-                            <li>
-                                <button class="export-button">
-                                    <a href="#"
-                                        data-url="{% url 'export_project_excel' project.pk %}"
-                                        class="text-decoration-none"
-                                        title="Export Excel">
-                                        <span class="text">Excel</span>
-                                    </a>
-                                </button>
-                            </li>
-                            <li>
-                                <button class="export-button">
-                                    <a href="#"
-                                        data-url="{% url 'export_project_excel' project.pk %}"
-                                        class="text-decoration-none"
-                                        title="Export DOC">
-                                        <span class="text">DOC</span>
-                                    </a>
-                                </button>
-                            </li>
-                            <li>
-                                <button class="export-button">
-                                    <a href="#"
-                                        data-url="{% url 'export_project_excel' project.pk %}"
-                                        class="text-decoration-none"
-                                        title="Export CSV">
-                                        <span class="text">CSV</span>
-                                    </a>
-                                </button>
-                            </li>
-                            <li>
-                                <button class="export-button">
-                                    <a href="#"
-                                        data-url="{% url 'export_project_excel' project.pk %}"
-                                        class="text-decoration-none"
-                                        title="Export PDF">
-                                        <span class="text">PDF</span>
-                                    </a>
-                                </button>
-                            </li>
-                        </ul>
-                    </div>
-                </div> -->
                 <a href="#"
                     data-url="{% url 'copy_project' project.pk %}"
                     data-type="copy" 

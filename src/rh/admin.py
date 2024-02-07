@@ -2,6 +2,8 @@ from django import forms
 from django.contrib import admin
 from django.contrib.admin.widgets import FilteredSelectMultiple
 from django.db.models import Count
+from import_export.admin import ImportExportActionModelAdmin
+
 from .models import (
     ActivityDetail,
     ActivityDomain,
@@ -29,8 +31,6 @@ from .models import (
     TransferMechanismType,
     UnitType,
 )
-
-from import_export.admin import ImportExportActionModelAdmin
 
 admin.site.register(Currency)
 admin.site.register(LocationType)
@@ -267,7 +267,6 @@ class DisaggregationLocationInline(admin.TabularInline):
 
 class TargetLocationAdmin(admin.ModelAdmin):
     list_display = (
-        "site_name",
         "project",
         "activity_plan",
         "country",

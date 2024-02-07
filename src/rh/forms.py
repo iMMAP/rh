@@ -127,9 +127,6 @@ class TargetLocationForm(forms.ModelForm):
                 "locations-queries-url": reverse_lazy("ajax-load-locations"),
             }
         )
-        self.fields["site_name"].widget.attrs.update(
-            {"onchange": f"updateLocationTitle('{kwargs.get('prefix')}', 'id_{kwargs.get('prefix')}-site_name');"}
-        )
 
 
 TargetLocationFormSet = inlineformset_factory(
@@ -171,11 +168,6 @@ class ActivityPlanForm(forms.ModelForm):
     class Meta:
         model = ActivityPlan
         fields = "__all__"
-        widgets = {
-            "facility_type": forms.Select(
-                attrs={"facility-sites-queries-url": reverse_lazy("ajax-load-facility_sites")}
-            ),
-        }
 
     def __init__(self, *args, project, **kwargs):
         super().__init__(*args, **kwargs)

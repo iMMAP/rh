@@ -79,26 +79,7 @@ function addTargetLocationReportForm(prefix, project, nextFormIndex) {
 						let selectedID = $indicator[0].value;
 						handleDisaggregationReportForms($indicator[0], selectedID, [locationReportPrefix])
 					}
-					
-					// Update change event on indicators for the new added form 
-					// $indicator.on("change", function (event) { 
-					// 	let indicatorsSelect = event.currentTarget
-					// 	let selectedID = $indicator[0].value;
-					// 	handleDisaggregationReportForms(indicatorsSelect, selectedID, [locationReportPrefix])
-					// });
 				}
-				
-				// Load Locations (districts and zones)
-				// 	getLocations(locationPrefix, 'district', 'province');
-				// 	getLocations(locationPrefix, 'zone', 'district');
-					
-				// 	// Add Load Locations (districts and zones) event for new form
-				// 	$(`#id_${locationPrefix}-province`).on('change', function() {
-				// 		getLocations(locationPrefix, 'district', 'province', clearZone=true);
-				// 	});
-				// 	$(`#id_${locationPrefix}-district`).on('change', function() {
-				// 		getLocations(locationPrefix, 'zone', 'district');
-				// 	});
 			}
 		},
 		error: function (error) {
@@ -245,11 +226,6 @@ function getLocations(locationPrefix, locationType, parentType, clearZone = null
 @param {string} formElement - Form Element.
 **/
 function handleFacilityMonitoring(locationPrefix, formElement) {
-	debugger
-	// id_target_locations_activityplan_set-0-0-facility_monitoring
-	// id_target_locations_activityplan_set-0-0-facility_monitoring
-	// id_target_locations_activityplan_set-0-0-facility_monitoring
-	// id_locations_report_activityplanreport_set-0-0-facility_monitoring
 	$formElement = $(formElement)
 	let $facilityMonitoring = $(`#id_${locationPrefix}-facility_monitoring`);
 	let $facilityName = $formElement.find(
@@ -284,18 +260,6 @@ $(function () {
 		const activityReportFormIndex = activityReportFormPrefix.match(/\d+/)[0]
 		addTargetLocationReportForm(activityReportFormPrefix, activityProject, activityReportFormIndex); // Call the function to add a new activity form
 	});
-
-	// let $activityBlockHolder = $("#activity-formset-form");
-	// $activityBlockHolder.each(function (formIndex, formElement) {
-	// 	// Update disaggregations based on indicators
-	// 	var $indicator = $(`#id_activityplanreport_set-${formIndex}-indicator`);
-	// 	$indicator.on("change", function (event) { 
-	// 		let indicatorsSelect = event.currentTarget
-	// 		let selectedID = $indicator[0].value;
-	// 		handleDisaggregationReportForms(indicatorsSelect, selectedID)
-	// 	});
-	// });
-
 
 	const $locationBlock = $(".location_report_form");
 	$locationBlock.each(function (formIndex, formElement) {

@@ -79,6 +79,15 @@ function addTargetLocationReportForm(prefix, project, nextFormIndex) {
 						let selectedID = $indicator[0].value;
 						handleDisaggregationReportForms($indicator[0], selectedID, [locationReportPrefix])
 					}
+
+					// Call Facility Monitoring function when page loads.
+					handleFacilityMonitoring(locationReportPrefix, addedForm);
+					let $facilityMonitoring = $(addedForm).find(
+						`#id_${locationReportPrefix}-facility_monitoring`
+					);
+					$facilityMonitoring.change(function () {
+						handleFacilityMonitoring(locationReportPrefix, addedForm);
+					});
 				}
 			}
 		},

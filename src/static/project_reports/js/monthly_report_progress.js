@@ -240,6 +240,37 @@ function getLocations(locationPrefix, locationType, parentType, clearZone = null
 
 
 /**
+* Handle Facility Monitoring field
+@param {string} locationPrefix - Form Location Prefix.
+@param {string} formElement - Form Element.
+**/
+function handleFacilityMonitoring(locationPrefix, formElement) {
+	debugger
+	// id_target_locations_activityplan_set-0-0-facility_monitoring
+	// id_target_locations_activityplan_set-0-0-facility_monitoring
+	// id_target_locations_activityplan_set-0-0-facility_monitoring
+	// id_locations_report_activityplanreport_set-0-0-facility_monitoring
+	$formElement = $(formElement)
+	let $facilityMonitoring = $(`#id_${locationPrefix}-facility_monitoring`);
+	let $facilityName = $formElement.find(
+		`#id_${locationPrefix}-facility_name`
+	);
+	let $facilityId = $formElement.find(`#id_${locationPrefix}-facility_id`);
+	let $facilityDetails = $formElement.find(
+		`#facility_details_${locationPrefix}`
+	);
+
+	if (!$facilityMonitoring.is(":checked")) {
+		$facilityDetails.hide();
+		$facilityName.prop("required", false).removeClass("is-required");
+	} else {
+		$facilityDetails.show();
+		$facilityName.prop("required", true).addClass("is-required");
+	}
+}
+
+
+/**
 * Ready Function
 **/
 $(function () {
@@ -265,6 +296,7 @@ $(function () {
 	// 	});
 	// });
 
+
 	const $locationBlock = $(".location_report_form");
 	$locationBlock.each(function (formIndex, formElement) {
 
@@ -283,7 +315,16 @@ $(function () {
 		$(`#id_${locationReportPrefix}-district`).on('change', function() {
 			getLocations(locationReportPrefix, 'zone', 'district');
 		});
+
+		// Call Facility Monitoring function when page loads.
+		handleFacilityMonitoring(locationReportPrefix, formElement);
 		
+		let $facilityMonitoring = $(formElement).find(
+			`#id_${locationReportPrefix}-facility_monitoring`
+		);
+		$facilityMonitoring.change(function () {
+			handleFacilityMonitoring(locationReportPrefix, formElement);
+		});
 	});
 
 });

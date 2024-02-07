@@ -212,6 +212,18 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="col">
+                                <div class="field-col">
+                                    <div class="select-field">
+                                        <label>Report Types</label>
+                                        <span class="text-read-only m2m-badges">
+                                            {% for report_type in activity_report.report_types.all %}
+                                            <span class="btn btn-red"> {{ report_type.name }}</span>
+                                            {% endfor %}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <div class="target_location-block target-location-accordion">
                             <div class="inner-holder">

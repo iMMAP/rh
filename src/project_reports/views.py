@@ -14,6 +14,7 @@ from django.template.loader import render_to_string
 from django.urls import reverse
 from django.utils import timezone
 from django.views.decorators.cache import cache_control
+
 from rh.models import (
     ActivityDetail,
     ActivityDomain,
@@ -630,6 +631,7 @@ def update_project_monthly_report_progress_view(request, project, report):
                     activity_report = activity_report_form.save(commit=False)
                     activity_report.monthly_report = monthly_report_instance
                     activity_report.save()
+                    activity_report_form.save_m2m()
 
                     # Process target location forms and their disaggregation forms
                     activity_report_target = 0

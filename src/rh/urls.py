@@ -141,4 +141,8 @@ urlpatterns = [
         user_views.ProjectListView,
         name="export_porjcet_list",
     ),
+    path(
+        "project/activityplan/indicator",
+        user_views.update_indicator_type, name='update_indicator_type',
+    )
 ]

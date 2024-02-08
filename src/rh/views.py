@@ -1,3 +1,4 @@
+
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
@@ -19,13 +20,16 @@ from .forms import (
     ActivityPlanFormSet,
     BudgetProgressForm,
     DisaggregationFormSet,
+    IndicatorTypesForm,
     OrganizationRegisterForm,
     ProjectForm,
     TargetLocationFormSet,
+ 
 )
 from .models import (
     ActivityDomain,
     ActivityPlan,
+    ActivityType,
     BudgetProgress,
     Cluster,
     DisaggregationLocation,
@@ -260,7 +264,7 @@ def update_project_view(request, pk):
 @login_required
 def create_project_activity_plan(request, project):
     project = get_object_or_404(Project, pk=project)
-
+    
     # Get all existing activity plans for the project
     # Create the activity plan formset with initial data from the project
     activity_plan_formset = ActivityPlanFormSet(
@@ -370,12 +374,14 @@ def create_project_activity_plan(request, project):
     target_location_formset = TargetLocationFormSet(
         request.POST or None,
     )
+    indicator_form = IndicatorTypesForm(request.POST)
     cluster_ids = list(project.clusters.values_list("id", flat=True))
-
-    combined_formset = zip(activity_plan_formset.forms, target_location_formsets)
+    
+    combined_formset = zip(activity_plan_formset.forms, target_location_formsets, indicator_form)
 
     context = {
         "project": project,
+        'indicator_form':indicator_form,
         "activity_plan_formset": activity_plan_formset,
         "target_location_formset": target_location_formset,
         "combined_formset": combined_formset,
@@ -385,7 +391,6 @@ def create_project_activity_plan(request, project):
         "financial_view": False,
         "reports_view": False,
     }
-
     # Render the template with the context data
     return render(request, "rh/projects/forms/project_activity_plan_form.html", context)
 
@@ -1018,3 +1023,20 @@ def ProjectListView(request, flag):
     response = HttpResponse(ds, content_type=f"{format}")
     response["Content-Disposition"] = f"attachment; filename=project.{format}"
     return response
+
+def update_indicator_type(request):
+    if request.method == 'POST':
+        # indicator_ids = [int(i) for i in request.POST.getlist("id[]") if i]
+        indicator_id = request.POST.get("id")
+        activity_type = Indicator.objects.values_list('activity_types').get(id=indicator_id)
+        cluster = ActivityType.objects.values_list('clusters').filter(id__in=activity_type)
+        name = Cluster.objects.filter(id__in=cluster)
+        cluster_code =''
+        for n in name:
+            print(n.code)
+            cluster_code = n.code
+        data = {
+            'cluster':cluster_code
+        }
+        return JsonResponse(data, safe=False)
+    

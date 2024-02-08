@@ -643,3 +643,16 @@ class BudgetProgress(models.Model):
     class Meta:
         verbose_name = "Budget Progress"
         verbose_name_plural = "Budget Progress"
+
+class IndidicatorTypes(models.Model):
+    # Relations
+    activity_plan = models.ForeignKey(ActivityPlan, null=True, blank=True, on_delete=models.SET_NULL)
+    indicator = models.ForeignKey(Indicator, on_delete=models.SET_NULL, null=True, blank=True)
+    package_type = models.ForeignKey(PackageType, on_delete=models.SET_NULL, null=True, blank=True)
+    unit_type = models.ForeignKey(UnitType, on_delete=models.SET_NULL, null=True, blank=True)
+    grant_type = models.ForeignKey(GrantType, on_delete=models.SET_NULL, null=True, blank=True)
+    transfer_category = models.ForeignKey(TransferCategory, on_delete=models.SET_NULL, null=True, blank=True)
+    transfer_mechanism_type = models.ForeignKey(TransferMechanismType, on_delete=models.SET_NULL, null=True, blank=True)
+    implement_modility_type = models.ForeignKey(
+        ImplementationModalityType, on_delete=models.SET_NULL, null=True, blank=True
+    )

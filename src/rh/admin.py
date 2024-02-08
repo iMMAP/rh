@@ -28,6 +28,7 @@ from .models import (
     TransferCategory,
     TransferMechanismType,
     UnitType,
+    IndidicatorTypes
 )
 
 from import_export.admin import ImportExportActionModelAdmin
@@ -42,6 +43,7 @@ admin.site.register(TransferCategory)
 admin.site.register(GrantType)
 admin.site.register(UnitType)
 admin.site.register(ReportType)
+admin.site.register(IndidicatorTypes)
 
 
 class ActivityPlanModelAdminForm(forms.ModelForm):

@@ -12,7 +12,7 @@ from openpyxl.utils import get_column_letter
 
 
 from .models import (
-    Project,
+    Project, Disaggregation
 )
 
 #############################################
@@ -42,12 +42,14 @@ class ProjectExportExcelView(View):
         """
         try:
             project = Project.objects.get(id=project_id)  # Get the project object
+            disaggregations = [disaggregation.name for disaggregation in Disaggregation.objects.all()]# Get all the disaggregation object
+
 
             workbook = Workbook()
 
             self.write_project_sheet(workbook, project)
             self.write_population_sheet(workbook, project)
-            self.write_target_locations_sheet(workbook, project)
+            self.write_target_locations_sheet(workbook, project, disaggregations)
             self.write_budget_progress_sheet(workbook, project)
 
             excel_file = BytesIO()
@@ -202,7 +204,7 @@ class ProjectExportExcelView(View):
             project (Project): The project object.
         """
         activity_plans = project.activityplan_set.all()
-        for plan in activity_plans:
+        for activity_idx, plan in enumerate(activity_plans, start=1):
             row = [
                 plan.activity_domain.name if plan.activity_domain else None,
                 plan.activity_type.name if plan.activity_type else None,
@@ -211,9 +213,9 @@ class ProjectExportExcelView(View):
             ]
 
             for col_idx, value in enumerate(row, start=1):
-                sheet.cell(row=2, column=col_idx, value=value)
+                sheet.cell(row=activity_idx + 1, column=col_idx, value=value)
 
-    def write_target_locations_sheet(self, workbook, project):
+    def write_target_locations_sheet(self, workbook, project, disaggregations):
         """
         Write the target locations sheet to the workbook.
 
@@ -224,6 +226,9 @@ class ProjectExportExcelView(View):
 
         sheet = workbook.create_sheet(title="Target Locations")
 
+        # Fetch all disaggregations to use as headers
+        disaggregations = [disaggregation.name for disaggregation in Disaggregation.objects.all()]
+
         # Define column headers and types for Sheet 3
         columns = [
             {"header": "Province", "type": "string", "width": 20},
@@ -231,12 +236,16 @@ class ProjectExportExcelView(View):
             {"header": "Zone/Ward", "type": "string", "width": 20},
         ]
 
+        # Add disaggregation names as headers
+        columns.extend({"header": disaggregation, "type": "string", "width": 20} for disaggregation in disaggregations)
+
+
         self.write_sheet_columns(sheet, columns)
-        self.write_target_locations_data_rows(sheet, project)
+        self.write_target_locations_data_rows(sheet, project, disaggregations)
 
         sheet.freeze_panes = sheet["A2"]
 
-    def write_target_locations_data_rows(self, sheet, project):
+    def write_target_locations_data_rows(self, sheet, project, disaggregations):
         """
         Write target locations data rows to the sheet.
 
@@ -245,15 +254,34 @@ class ProjectExportExcelView(View):
             project (Project): The project object.
         """
         target_locations = project.targetlocation_set.all()
-        for location in target_locations:
+        for location_idx, location in enumerate(target_locations, start=1):
+            # disaggregation_names = ", ".join(
+            #     disaggregation.name for disaggregation in Disaggregation.objects.all()
+            # )
             row = [
                 location.province.name,
                 location.district.name,
                 location.zone.name if location.zone else None,
             ]
 
+            # Create dictionary to map disaggregation names to target values
+            disaggregation_values = {disaggregation: "" for disaggregation in disaggregations}
+
+            # Fetch disaggregation information associated with current location
+            location_disaggregations = location.disaggregationlocation_set.all()
+
+            # Set values for each disaggregation
+            for disaggregation_location in location_disaggregations:
+                disaggregation_name = disaggregation_location.disaggregation.name
+                target = disaggregation_location.target
+                disaggregation_values[disaggregation_name] = target
+
+            # Append disaggregation values to row
+            row.extend(disaggregation_values[disaggregation] for disaggregation in disaggregations)
+
+
             for col_idx, value in enumerate(row, start=1):
-                sheet.cell(row=2, column=col_idx, value=value)
+                sheet.cell(row=location_idx + 1, column=col_idx, value=value)
 
     def write_budget_progress_sheet(self, workbook, project):
         """

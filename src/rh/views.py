@@ -558,11 +558,8 @@ def submit_project(request, pk):
         plan.state = "in-progress"
         plan.save()
 
-    url = (
-        reverse(
-            "projects-list",
-        )
-        + "?state=draft"
+    url = reverse(
+        "projects-list",
     )
 
     # Return the URL in a JSON response
@@ -603,11 +600,8 @@ def archive_project(request, pk):
         project.active = False
         project.save()
 
-    url = (
-        reverse(
-            "projects-list",
-        )
-        + "?state=draft"
+    url = reverse(
+        "projects-list",
     )
 
     # Return the URL in a JSON response
@@ -650,11 +644,8 @@ def unarchive_project(request, pk):
         project.active = True
         project.save()
 
-    url = (
-        reverse(
-            "projects-list",
-        )
-        + "?state=draft"
+    url = reverse(
+        "projects-list",
     )
     # Return the URL in a JSON response
     response_data = {"redirect_url": url}
@@ -669,11 +660,8 @@ def delete_project(request, pk):
     if project.state != "archive":
         if project:
             project.delete()
-        url = (
-            reverse(
-                "projects-list",
-            )
-            + "?state=draft"
+        url = reverse(
+            "projects-list",
         )
 
     # Return the URL in a JSON response

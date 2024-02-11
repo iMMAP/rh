@@ -36,6 +36,9 @@
     </td>
     {% comment %} <td class="update-date-col">{{ project.updated_at }}</td> {% endcomment %}
     <td class="description-col">{{ project.description }}</td>
+    <td class="status-col">
+        <span class="{% if project.state == 'draft' %}draft{% elif project.state == 'in-progress' %}active{% elif project.state == 'done' %}completed{% elif project.state == 'archive' %}archived{% endif %}">{{ project.state }}</span>
+    </td>
     <td class="action-col">
         <div class="table-flex-holder">
             <ul class="table-options-buttons ">

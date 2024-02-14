@@ -146,3 +146,9 @@ _id,admin0pcode,cluster_code,beneficiary_type_id,beneficiary_type_name,descripti
 622ec0535fe2c737c6af4acb,SO,education,drought_non_idps,Drought Non-IDPs,,,2/1/2022,2022
 622ec0535fe2c737c6af4a7d,SO,health,health_care_workers,Health Care Workers,,,,1
 622ec0535fe2c737c6af4a83,SS,fsac,otherwise_affected,Otherwise Affected,,,,1
+,AF,ALL,,New IDPs in 2024,,,2024-01-01,2024
+,AF,ALL,,Cross-Border Returnees from Pakistan in 2024 (District of Return),,,2024-01-01,2025
+,AF,ALL,,Cross-Border Returnees from Iran in 2024 (District of Return),,,2024-01-01,2026
+,AF,ALL,,Cross-Border Returnees from Iran and Pakistan in 2024  (Border or Encashment / Transit Centres),,,2024-01-01,2027
+,AF,ALL,,Cross-Border Returnees from Pakistan in 2024  (Temporary Sites),,,2024-01-01,2028
+,AF,ALL,,Natural Disaster-Affected in 2024 (Non-Displaced),,,2024-01-01,2029

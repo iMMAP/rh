@@ -1,4 +1,4 @@
-_id,admin0pcode,cluster_code,beneficiary_type_id,beneficiary_type_name,description,end_date,start_date,year,is_active
+_id,admin0pcode,cluster_code,beneficiary_type_id,beneficiary_type_name,description,end_date,start_date,year,is_active,type
 622ec0535fe2c737c6af4a8d,AF,wash,access_to_services_rural,Underserved Community - Rural,,,1/1/2022,2022,FALSE
 622ec0535fe2c737c6af4a9e,AF,education,access_to_services_urban,Underserved Community - Urban or Peri Urban,,,1/1/2022,2022,FALSE
 622ec0535fe2c737c6af4a09,AF,health,access_to_services,Access to Services,,,1/1/2021,2021,FALSE
@@ -146,9 +146,9 @@ _id,admin0pcode,cluster_code,beneficiary_type_id,beneficiary_type_name,descripti
 622ec0535fe2c737c6af4acb,SO,education,drought_non_idps,Drought Non-IDPs,,,2/1/2022,2022,FALSE
 622ec0535fe2c737c6af4a7d,SO,health,health_care_workers,Health Care Workers,,,,1,FALSE
 622ec0535fe2c737c6af4a83,SS,fsac,otherwise_affected,Otherwise Affected,,,,1,FALSE
-,AF,ALL,new-idps-in-2024,New IDPs in 2024,,,2024-01-01,2024,TRUE
-,AF,ALL,cross-border-returnees-from-pakistan-in-2024-district-of-return,Cross-Border Returnees from Pakistan in 2024 (District of Return),,,2024-01-01,2024,TRUE
-,AF,ALL,cross-border-returnees-from-iran-in-2024-district-of-return,Cross-Border Returnees from Iran in 2024 (District of Return),,,2024-01-01,2024,TRUE
-,AF,ALL,cross-border-returnees-from-iran-and-pakistan-in-2024-border-or-encashment-transit-centres,Cross-Border Returnees from Iran and Pakistan in 2024  (Border or Encashment / Transit Centres),,,2024-01-01,2024,TRUE
-,AF,ALL,cross-border-returnees-from-pakistan-in-2024-temporary-sites,Cross-Border Returnees from Pakistan in 2024  (Temporary Sites),,,2024-01-01,2024,TRUE
-,AF,ALL,natural-disaster-affected-in-2024-non-displaced,Natural Disaster-Affected in 2024 (Non-Displaced),,,2024-01-01,2024,TRUE
+,AF,health,new-idps-in-2024,New IDPs in 2024,,,2024-01-01,2024,TRUE
+,AF,health,cross-border-returnees-from-pakistan-in-2024-district-of-return,Cross-Border Returnees from Pakistan in 2024 (District of Return),,,2024-01-01,2024,TRUE
+,AF,health,cross-border-returnees-from-iran-in-2024-district-of-return,Cross-Border Returnees from Iran in 2024 (District of Return),,,2024-01-01,2024,TRUE
+,AF,health,cross-border-returnees-from-iran-and-pakistan-in-2024-border-or-encashment-transit-centres,Cross-Border Returnees from Iran and Pakistan in 2024  (Border or Encashment / Transit Centres),,,2024-01-01,2024,TRUE
+,AF,health,cross-border-returnees-from-pakistan-in-2024-temporary-sites,Cross-Border Returnees from Pakistan in 2024  (Temporary Sites),,,2024-01-01,2024,TRUE
+,AF,health,natural-disaster-affected-in-2024-non-displaced,Natural Disaster-Affected in 2024 (Non-Displaced),,,2024-01-01,2024,TRUE

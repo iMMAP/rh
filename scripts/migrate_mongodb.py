@@ -496,12 +496,13 @@ def import_beneficiary_types_from_csv(conn, beneficiary_type_csv):
             c.execute(
                 f"""
                     insert into 
-                    {table}(name, code, description, country_id,is_active) 
+                    {table}(name, code, description,is_active,country_id) 
                     select 
-                    beneficiary_type_name, beneficiary_type_id, description,is_active
+                    beneficiary_type_name, beneficiary_type_id, description,is_active,
                     (select id from rh_location where code = tmp_beneficiarytype.admin0pcode)
                     from tmp_beneficiarytype"""
             )
+
         except Exception as exception:
             print(f"Error b_type: {exception}")
             conn.rollback()

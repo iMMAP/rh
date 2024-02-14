@@ -37,6 +37,9 @@ class ProjectMonthlyReport(models.Model):
     approved_on = models.DateTimeField(blank=True, null=True)
     rejected_on = models.DateTimeField(blank=True, null=True)
 
+    created_at = models.DateTimeField(auto_now_add=True,null=True)
+    updated_at = models.DateTimeField(auto_now=True,null=True)
+
     def __str__(self):
         name = "Monthly Report"
         if self.report_date:
@@ -57,6 +60,9 @@ class ActivityPlanReport(models.Model):
 
     report_types = models.ManyToManyField(ReportType, blank=True)
     target_achieved = models.IntegerField(default=0, null=True, blank=True)
+
+    created_at = models.DateTimeField(auto_now_add=True,null=True)
+    updated_at = models.DateTimeField(auto_now=True,null=True)
 
     class Meta:
         verbose_name = "Activity Plan Report"
@@ -114,6 +120,9 @@ class TargetLocationReport(models.Model):
     facility_lat = models.CharField(max_length=200, null=True, blank=True)
     facility_long = models.CharField(max_length=200, null=True, blank=True)
 
+    created_at = models.DateTimeField(auto_now_add=True,null=True)
+    updated_at = models.DateTimeField(auto_now=True,null=True)
+
     def __str__(self):
         return f"{self.activity_plan_report}, {self.province}, {self.district}"
 
@@ -128,6 +137,9 @@ class DisaggregationLocationReport(models.Model):
     disaggregation = models.ForeignKey(Disaggregation, on_delete=models.CASCADE, null=True, blank=True)
 
     target = models.IntegerField(default=0, null=True, blank=True)
+
+    created_at = models.DateTimeField(auto_now_add=True,null=True)
+    updated_at = models.DateTimeField(auto_now=True,null=True)
 
     def __str__(self):
         return f"{self.disaggregation.name}"

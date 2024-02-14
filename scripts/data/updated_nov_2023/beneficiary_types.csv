@@ -1,4 +1,4 @@
-_id,admin0pcode,cluster_code,beneficiary_type_id,beneficiary_type_name,description,end_date,start_date,year
+_id,admin0pcode,cluster_code,beneficiary_type_id,beneficiary_type_name,description,end_date,start_date,year,is_active
 622ec0535fe2c737c6af4a8d,AF,wash,access_to_services_rural,Underserved Community - Rural,,,1/1/2022,2022
 622ec0535fe2c737c6af4a9e,AF,education,access_to_services_urban,Underserved Community - Urban or Peri Urban,,,1/1/2022,2022
 622ec0535fe2c737c6af4a09,AF,health,access_to_services,Access to Services,,,1/1/2021,2021

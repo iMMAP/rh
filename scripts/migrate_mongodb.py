@@ -291,7 +291,7 @@ def import_activity_domains_from_csv(conn, activity_domain_csv):
                 # m2m_records.append({'cluster': cluster, 'country': country})
                 domain.pop(2)
 
-                aquery = f"""insert into {table}(code, name, active) values (?, ?, ?)
+                aquery = f"""insert into {table}(code, name, is_active) values (?, ?, ?)
                 """
                 c.execute(aquery, domain)
                 last_domain_id = c.lastrowid
@@ -380,7 +380,7 @@ def import_activity_descriptions_from_csv(conn, activity_description_csv):
 
                 # activity_type[4] = indicator
 
-                aquery = f"""insert into {table}(code,name,activity_domain_id,active,activity_date,
+                aquery = f"""insert into {table}(code,name,activity_domain_id,is_active,activity_date,
                 hrp_code,code_indicator,start_date,end_date,ocha_code,objective_id) 
                     values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """
@@ -496,9 +496,9 @@ def import_beneficiary_types_from_csv(conn, beneficiary_type_csv):
             c.execute(
                 f"""
                     insert into 
-                    {table}(name, code, description, start_date, end_date, country_id) 
+                    {table}(name, code, description, country_id,is_active) 
                     select 
-                    beneficiary_type_name, beneficiary_type_id, description, start_date, end_date, 
+                    beneficiary_type_name, beneficiary_type_id, description,is_active
                     (select id from rh_location where code = tmp_beneficiarytype.admin0pcode)
                     from tmp_beneficiarytype"""
             )
@@ -608,7 +608,7 @@ def import_donors_from_csv(conn, donors_csv):
                 donor = tuple(donor)
                 dquery = f"""
                         insert into 
-                        {table}(old_id, updated, code, name, created) 
+                        {table}(old_id, updated_at, code, name, created_at) 
                         values (?, ?, ?, ?, ?)
                     """
                 c.execute(dquery, donor)
@@ -825,9 +825,9 @@ def import_dissaggregation_from_csv(conn, diss_csv):
             c.execute(
                 f"""
                     insert into 
-                    {table}(name, type,updated,created) 
+                    {table}(name, type,updated_at,created_at) 
                     select 
-                    name,type,updated,created
+                    name,type,updated_at,created_at
                     from tmp_diss"""
             )
             c.execute("DROP TABLE tmp_diss;")

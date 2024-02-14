@@ -230,7 +230,6 @@ class BeneficiaryTypeFactory(DjangoModelFactory):
     name = factory.Faker("word")
     code = factory.Faker("word")
     country = factory.SubFactory(CountryFactory)
-    is_hrp_beneficiary = factory.Faker("boolean")
     start_date = factory.Faker("date_time_this_decade", tzinfo=pytz.UTC)
     end_date = factory.Faker("date_time_this_decade", tzinfo=pytz.UTC)
     description = factory.Faker("sentence")
@@ -569,7 +568,7 @@ class ActivityPlanFactory(DjangoModelFactory):
 
     beneficiary = factory.Iterator(BeneficiaryType.objects.all())
 
-    hrp_beneficiary = factory.Iterator(BeneficiaryType.objects.filter(is_hrp_beneficiary=True))
+    hrp_beneficiary = factory.Iterator(BeneficiaryType.objects.filter())
     # Add other fields if necessary
 
     @factory.post_generation

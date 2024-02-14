@@ -1,14 +1,14 @@
 activity_type_id,activity_type_name,cluster_id
-hrp-2023-cccm-assistance,(HRP 2023) CCCM Assistance,esnfi
-hrp-2023-cccm-mechanisms,(HRP 2023) CCCM Mechanisms,coordination
-hrp-2023-coordination-and-common-services-,(HRP 2023) Coordination and Common Services ,coordination
-hrp-2023-curricula,(HRP 2023) Curricula,education
-hrp-2023-equal-access,(HRP 2023) Equal Access,education
-hrp-2023-nfi-assistance,(HRP 2023) NFI Assistance,esnfi
-hrp-2023-recruitment-and-selection,(HRP 2023) Recruitment and Selection,education
-hrp-2023-shelter-assistance,(HRP 2023) Shelter Assistance,esnfi
-hrp-2023-winterization,(HRP 2023) Winterization,education
-hrp-2023-winterization-assistance,(HRP 2023) Winterization Assistance,esnfi
+cccm-assistance,CCCM Assistance,esnfi
+cccm-mechanisms,CCCM Mechanisms,coordination
+coordination-and-common-services-,Coordination and Common Services ,coordination
+curricula,Curricula,education
+equal-access,Equal Access,education
+nfi-assistance,NFI Assistance,esnfi
+recruitment-and-selection,Recruitment and Selection,education
+shelter-assistance,Shelter Assistance,esnfi
+winterization,Winterization,education
+winterization-assistance,Winterization Assistance,esnfi
 primary_health_care_services,1. Primary health care services,health
 secondary-health-care-services,2. Secondary health care services,health
 health_training,3. Training,health

@@ -496,9 +496,9 @@ def import_beneficiary_types_from_csv(conn, beneficiary_type_csv):
             c.execute(
                 f"""
                     insert into 
-                    {table}(name, code, description,is_active,country_id) 
+                    {table}(name, code, description,is_active,type,country_id) 
                     select 
-                    beneficiary_type_name, beneficiary_type_id, description,is_active,
+                    beneficiary_type_name, beneficiary_type_id, description,is_active,type,
                     (select id from rh_location where code = tmp_beneficiarytype.admin0pcode)
                     from tmp_beneficiarytype"""
             )
@@ -826,14 +826,14 @@ def import_dissaggregation_from_csv(conn, diss_csv):
             c.execute(
                 f"""
                     insert into 
-                    {table}(name, type,updated_at,created_at) 
+                    {table}(name, type) 
                     select 
-                    name,type,updated_at,created_at
+                    name,type
                     from tmp_diss"""
             )
             c.execute("DROP TABLE tmp_diss;")
         except Exception as exception:
-            print(f"Error: {exception}")
+            print(f"Error in DISAG: {exception}")
             conn.rollback()
 
         try:

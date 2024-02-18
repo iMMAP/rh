@@ -229,10 +229,12 @@ class BeneficiaryTypeFactory(DjangoModelFactory):
 
     name = factory.Faker("word")
     code = factory.Faker("word")
-    country = factory.SubFactory(CountryFactory)
-    start_date = factory.Faker("date_time_this_decade", tzinfo=pytz.UTC)
-    end_date = factory.Faker("date_time_this_decade", tzinfo=pytz.UTC)
+    is_active = factory.Faker("boolean")
     description = factory.Faker("sentence")
+
+    type = factory.Iterator(BeneficiaryType.TYPE, getter=lambda c: c[0])
+
+    country = factory.SubFactory(CountryFactory)
 
     @factory.post_generation
     def clusters(self, create, extracted, **kwargs):
@@ -327,7 +329,7 @@ class ActivityDomainFactory(DjangoModelFactory):
     class Meta:
         model = ActivityDomain
 
-    active = factory.Faker("boolean")
+    is_active = factory.Faker("boolean")
     code = factory.Faker("pystr", max_chars=10)
     name = factory.Faker("word")
 

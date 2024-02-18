@@ -81,8 +81,8 @@ class BeneficiaryType(models.Model):
     is_active = models.BooleanField(default=False)
 
     TYPE = [
-        ("HRP", "hrp"),
-        ("Non-HRP", "non-hrp")
+        ("hrp","HRP"),
+        ("non-hrp","Non-HRP")
     ]
     type = models.CharField(max_length=NAME_MAX_LENGTH,choices=TYPE)
 

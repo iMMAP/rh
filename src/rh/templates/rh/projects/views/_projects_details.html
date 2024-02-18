@@ -65,7 +65,7 @@
                 </li>
                 <li>
                     <button class="button-archive-unarchive">
-                        {% if project.active %}
+                        {% if project.is_active %}
                             <a href="#"
                             data-url="{% url 'archive_project' project.pk %}"
                             data-type="archive" 

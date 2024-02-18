@@ -27,7 +27,7 @@ class ProjectMonthlyReport(models.Model):
         ("complete", "Completed"),
     ]
     state = models.CharField(max_length=15, choices=REPORT_STATES, default="todo", null=True, blank=True)
-    active = models.BooleanField(default=True)
+    is_active = models.BooleanField(default=True)
     report_period = models.DateField(blank=True, null=True)
     report_date = models.DateField(blank=True, null=True)
     report_due_date = models.DateField(blank=True, null=True)
@@ -132,7 +132,7 @@ class TargetLocationReport(models.Model):
 
 
 class DisaggregationLocationReport(models.Model):
-    active = models.BooleanField(default=True)
+    is_active = models.BooleanField(default=True)
     target_location_report = models.ForeignKey(TargetLocationReport, on_delete=models.CASCADE, null=True, blank=True)
     disaggregation = models.ForeignKey(Disaggregation, on_delete=models.CASCADE, null=True, blank=True)
 

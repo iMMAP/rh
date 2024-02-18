@@ -585,19 +585,19 @@ def archive_project(request, pk):
 
                 # Iterate through disaggregation locations and archive.
                 for disaggregation_location in disaggregation_locations:
-                    disaggregation_location.active = False
+                    disaggregation_location.is_active = False
                     disaggregation_location.save()
 
                 location.state = "archive"
-                location.active = False
+                location.is_active = False
                 location.save()
 
             plan.state = "archive"
-            plan.active = False
+            plan.is_active = False
             plan.save()
 
         project.state = "archive"
-        project.active = False
+        project.is_active = False
         project.save()
 
     url = reverse(
@@ -629,19 +629,19 @@ def unarchive_project(request, pk):
 
                 # Iterate through disaggregation locations and archive.
                 for disaggregation_location in disaggregation_locations:
-                    disaggregation_location.active = True
+                    disaggregation_location.is_active = True
                     disaggregation_location.save()
 
                 location.state = "draft"
-                location.active = True
+                location.is_active = True
                 location.save()
 
             plan.state = "draft"
-            plan.active = True
+            plan.is_active = True
             plan.save()
 
         project.state = "draft"
-        project.active = True
+        project.is_active = True
         project.save()
 
     url = reverse(
@@ -734,7 +734,7 @@ def copy_project_activity_plan(project, plan):
         new_plan.project = project
 
         # Set the plan as active and in a draft state to indicate it's a copy.
-        new_plan.active = True
+        new_plan.is_active = True
         new_plan.state = "draft"
 
         # Copy indicators from the original plan to the duplicated plan.
@@ -764,7 +764,7 @@ def copy_project_target_location(plan, location):
         new_location.project = plan.project
 
         # Set the location as active and in a draft state to indicate it's a copy.
-        new_location.active = True
+        new_location.is_active = True
         new_location.state = "draft"
 
         # Save the changes made to the duplicated location.
@@ -821,7 +821,7 @@ def copy_activity_plan(request, project, plan):
                 copy_target_location_disaggregation_locations(new_location, disaggregation_location)
 
         new_plan.project = project
-        new_plan.active = True
+        new_plan.is_active = True
         new_plan.state = "draft"
         new_plan.indicator = activity_plan.indicator
         new_plan.save()
@@ -865,7 +865,7 @@ def copy_target_location(request, project, location):
             copy_target_location_disaggregation_locations(new_location, disaggregation_location)
 
         new_location.project = project
-        new_location.active = True
+        new_location.is_active = True
         new_location.state = "draft"
         new_location.save()
 
@@ -949,7 +949,7 @@ def copy_budget_progress(request, project, budget):
         new_budget_progress.pk = None
         new_budget_progress.save()
         new_budget_progress.project = project
-        new_budget_progress.active = True
+        new_budget_progress.is_active = True
         new_budget_progress.state = "draft"
         new_budget_progress.title = f"[COPY] - {budget_progress.title}"
         new_budget_progress.save()

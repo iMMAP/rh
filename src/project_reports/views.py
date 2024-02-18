@@ -60,8 +60,8 @@ def index_project_report_view(request, project):
 
     project = get_object_or_404(Project, pk=project)
     project_reports = ProjectMonthlyReport.objects.filter(project=project.pk)
-    active_project_reports = project_reports.filter(active=True)
-    project_report_archive = project_reports.filter(active=False)
+    active_project_reports = project_reports.filter(is_active=True)
+    project_report_archive = project_reports.filter(is_active=False)
     project_reports_todo = active_project_reports.filter(state__in=["todo", "pending", "submit", "reject"])
     project_report_complete = active_project_reports.filter(state="complete")
 
@@ -104,7 +104,7 @@ def create_project_monthly_report_view(request, project):
         if form.is_valid():
             report = form.save(commit=False)
             report.project = project
-            report.active = True
+            report.is_active = True
             report.state = "pending"
             report.save()
             return redirect(
@@ -201,7 +201,7 @@ def copy_monthly_report_activity_plan(monthly_report, plan_report):
         new_plan_report.monthly_report = monthly_report
 
         # Set the plan report as active
-        new_plan_report.active = True
+        new_plan_report.is_active = True
 
         # Copy indicator from the current plan report to the duplicated plan report.
         new_plan_report.indicator = plan_report.indicator
@@ -286,7 +286,7 @@ def archive_project_monthly_report_view(request, report):
     monthly_report = get_object_or_404(ProjectMonthlyReport, pk=report)
     project = monthly_report.project
     if monthly_report:
-        monthly_report.active = False
+        monthly_report.is_active = False
         monthly_report.save()
     # Generate the URL using reverse
     url = reverse(
@@ -306,7 +306,7 @@ def unarchive_project_monthly_report_view(request, report):
     monthly_report = get_object_or_404(ProjectMonthlyReport, pk=report)
     project = monthly_report.project
     if monthly_report:
-        monthly_report.active = True
+        monthly_report.is_active = True
         monthly_report.state = "todo"
         monthly_report.save()
     # Generate the URL using reverse

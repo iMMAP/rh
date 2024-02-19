@@ -441,8 +441,14 @@ def get_disaggregations_forms(request):
 @login_required
 def get_target_location_empty_form(request):
     """Get an empty target location form for a project"""
+    from django import forms
+
     # Get the project object based on the provided project ID
     project = get_object_or_404(Project, pk=request.POST.get("project"))
+    activity_domain_id = request.POST.get("activity_domain", None)
+    activity_domain = None
+    if activity_domain_id:
+        activity_domain = get_object_or_404(ActivityDomain, pk=activity_domain_id)
 
     # Prepare form_kwargs to pass to ActivityPlanFormSet
     form_kwargs = {"project": project}
@@ -461,6 +467,18 @@ def get_target_location_empty_form(request):
     # for target_location_form in target_location_formset.forms:
     # Create a disaggregation formset for each target location form
     target_location_form = target_location_formset.empty_form
+
+    # Check if the activity plan is selected
+    if activity_domain:
+        # Get clusters associated with the activity plan's domain
+        clusters = activity_domain.clusters.all()
+        cluster_has_nhs_code = any(cluster.has_nhs_code for cluster in clusters)
+        # If at least one cluster has NHS code, add the NHS code field to the form
+        if cluster_has_nhs_code:
+            target_location_form.fields['nhs_code'] = forms.CharField(max_length=200, required=True)
+        else:
+            target_location_form.fields.pop('nhs_code', None)
+                
     disaggregation_formset = DisaggregationFormSet(
         request.POST or None,
         instance=target_location_form.instance,

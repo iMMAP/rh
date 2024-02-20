@@ -10,12 +10,10 @@ from .models import (
     DisaggregationLocation,
     Donor,
     FacilitySiteType,
-    Indicator,
-    IndidicatorTypes,
     Organization,
-    PackageType,
     Project,
     TargetLocation,
+    projectIndicatorType,
 )
 
 
@@ -289,17 +287,11 @@ class OrganizationRegisterForm(forms.ModelForm):
         if org_code.exists():
             raise forms.ValidationError(f"{code} aleady exists...!")
         return code
-class IndicatorTypesForm(forms.ModelForm):
+class ProjectIndicatorTypeForm(forms.ModelForm):
     class Meta:
-        model=Indicator
-        fields = (
-            'package_type',
-            'unit_type',
-            'transfer_category',
-            'transfer_mechanism_type',
-            'grant_type',
-            'implement_modility_type'
-            )
+        model = projectIndicatorType
+        fields = "__all__"
+        exclude = ('project','indicator',)
         
 
         

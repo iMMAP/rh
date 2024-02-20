@@ -28,7 +28,8 @@ from .models import (
     TransferCategory,
     TransferMechanismType,
     UnitType,
-    IndidicatorTypes
+    IndicatorType,
+   
 )
 
 from import_export.admin import ImportExportActionModelAdmin
@@ -43,7 +44,9 @@ admin.site.register(TransferCategory)
 admin.site.register(GrantType)
 admin.site.register(UnitType)
 admin.site.register(ReportType)
-admin.site.register(IndidicatorTypes)
+
+
+
 
 
 class ActivityPlanModelAdminForm(forms.ModelForm):
@@ -157,10 +160,13 @@ admin.site.register(Disaggregation, DisaggregationAdmin)
 admin.site.register(DisaggregationLocation)
 
 
+
 class DisaggregationInline(admin.TabularInline):
     model = Disaggregation.indicators.through
     extra = 1
-
+class IndicatorTypeInline(admin.TabularInline):
+    model = IndicatorType.indicator.through
+    
 
 class IndicatorAdmin(admin.ModelAdmin):
     list_display = ("name",)
@@ -168,6 +174,7 @@ class IndicatorAdmin(admin.ModelAdmin):
     # list_filter = ('activity_type',)
     inlines = [
         DisaggregationInline,
+        IndicatorTypeInline
     ]
 
 

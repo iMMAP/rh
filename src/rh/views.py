@@ -20,9 +20,10 @@ from .forms import (
     ActivityPlanFormSet,
     BudgetProgressForm,
     DisaggregationFormSet,
-    IndicatorTypesForm,
+  
     OrganizationRegisterForm,
     ProjectForm,
+    ProjectIndicatorTypeForm,
     TargetLocationFormSet,
  
 )
@@ -34,10 +35,12 @@ from .models import (
     Cluster,
     DisaggregationLocation,
     Indicator,
-    IndidicatorTypes,
+    IndicatorType,
+
     Location,
     Project,
     TargetLocation,
+    projectIndicatorType,
 )
 
 RECORDS_PER_PAGE = 10
@@ -375,14 +378,14 @@ def create_project_activity_plan(request, project):
     target_location_formset = TargetLocationFormSet(
         request.POST or None,
     )
-    indicator_form = IndicatorTypesForm(request.POST)
+  
     cluster_ids = list(project.clusters.values_list("id", flat=True))
     
-    combined_formset = zip(activity_plan_formset.forms, target_location_formsets, indicator_form)
+    combined_formset = zip(activity_plan_formset.forms, target_location_formsets)
 
     context = {
         "project": project,
-        'indicator_form':indicator_form,
+
         "activity_plan_formset": activity_plan_formset,
         "target_location_formset": target_location_formset,
         "combined_formset": combined_formset,
@@ -1027,7 +1030,11 @@ def ProjectListView(request, flag):
 
 def update_indicator_type(request):
     indicator_id = request.GET.get("id")
-    indicator = Indicator.objects.get(id=indicator_id)
-    indicator_form = IndicatorTypesForm(instance=indicator)
-    return render(request, 'rh/projects/views/_indicator_types.html',{'indicator_form':indicator_form})
+    indicator = IndicatorType.objects.get(indicator=indicator_id)
+    indicator_form = ProjectIndicatorTypeForm()
+    context = {
+        'indicator':indicator,
+        'indicator_form':indicator_form
+    }
+    return render(request, 'rh/projects/views/_indicator_types.html',context)
     

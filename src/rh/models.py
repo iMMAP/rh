@@ -646,7 +646,6 @@ class BudgetProgress(models.Model):
 
 class IndidicatorTypes(models.Model):
     # Relations
-    activity_plan = models.ForeignKey(ActivityPlan, null=True, blank=True, on_delete=models.SET_NULL)
     indicator = models.ForeignKey(Indicator, on_delete=models.SET_NULL, null=True, blank=True)
     package_type = models.ForeignKey(PackageType, on_delete=models.SET_NULL, null=True, blank=True)
     unit_type = models.ForeignKey(UnitType, on_delete=models.SET_NULL, null=True, blank=True)

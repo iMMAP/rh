@@ -545,17 +545,12 @@ function updateIndicatorTypes(e){
 	$.ajax({
 		url: indicatorUrl,
 		data: {id},
-		type: "POST",
-		dataType: "json",
 		beforeSend: function (xhr, settings) {
 			xhr.setRequestHeader("X-CSRFToken", csrftoken);
 		},
 		success: function(data){
+			$("#indicator-types").html(data);
 			console.log(data);
-			if(data.cluster){
-				document.getElementById("wash").style.display = 'block';
-				document.getElementById("cluster-section").innerHTML = data.cluster;
-			}
 		}, error: function(error){
 			console.log(error);
 		}

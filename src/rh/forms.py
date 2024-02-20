@@ -10,6 +10,7 @@ from .models import (
     DisaggregationLocation,
     Donor,
     FacilitySiteType,
+    Indicator,
     IndidicatorTypes,
     Organization,
     PackageType,
@@ -290,7 +291,15 @@ class OrganizationRegisterForm(forms.ModelForm):
         return code
 class IndicatorTypesForm(forms.ModelForm):
     class Meta:
-        model=IndidicatorTypes
-        fields = "__all__"
-        exclude = ('activity_plan', 'indicator',)
+        model=Indicator
+        fields = (
+            'package_type',
+            'unit_type',
+            'transfer_category',
+            'transfer_mechanism_type',
+            'grant_type',
+            'implement_modility_type'
+            )
+        
+
         

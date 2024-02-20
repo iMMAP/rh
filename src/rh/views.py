@@ -34,6 +34,7 @@ from .models import (
     Cluster,
     DisaggregationLocation,
     Indicator,
+    IndidicatorTypes,
     Location,
     Project,
     TargetLocation,
@@ -1025,18 +1026,8 @@ def ProjectListView(request, flag):
     return response
 
 def update_indicator_type(request):
-    if request.method == 'POST':
-        # indicator_ids = [int(i) for i in request.POST.getlist("id[]") if i]
-        indicator_id = request.POST.get("id")
-        activity_type = Indicator.objects.values_list('activity_types').get(id=indicator_id)
-        cluster = ActivityType.objects.values_list('clusters').filter(id__in=activity_type)
-        name = Cluster.objects.filter(id__in=cluster)
-        cluster_code =''
-        for n in name:
-            print(n.code)
-            cluster_code = n.code
-        data = {
-            'cluster':cluster_code
-        }
-        return JsonResponse(data, safe=False)
+    indicator_id = request.GET.get("id")
+    indicator = Indicator.objects.get(id=indicator_id)
+    indicator_form = IndicatorTypesForm(instance=indicator)
+    return render(request, 'rh/projects/views/_indicator_types.html',{'indicator_form':indicator_form})
     

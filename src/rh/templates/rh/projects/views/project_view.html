@@ -253,8 +253,8 @@
                                 </div>
                                 <div class="accordion-item">
                                     <div class="accordion-title project-title report-title" id="activityAcc">
-                                        <p class="accordion-subject">Activity Planing
-                                            <span class="badge" style="margin-left: 10px;">{{ activity_plans | length }}</span>
+                                        <p class="accordion-subject">Activity Planing{{ activity_plans | length }}
+                                            <span class="badge" style="margin-left: 10px;">{{ project.activityplan_set.all | length }}</span>
                                         </p>
                                         <span class="accordion-arrows">
                                             <span class="activity-arrow-up hidden">&#x25B2;</span>
@@ -263,7 +263,7 @@
                                     </div>
                         
                                     <div class="accordion-content">
-                                        {% for activityPlan in activity_plans%}
+                                        {% for activityPlan in project.activityplan_set.all %}
                                         <span>
                                             <p  class="circle-bage">{{forloop.counter}}</p>
                                         </span>
@@ -422,54 +422,6 @@
                         </div>
                     <!-- </form> -->
                     </div>
-                <!-- export and filter ended -->
-
-                    <!--<div class="export-formats">
-                        <span class="title">File format</span>
-                        <ul class="formats-list">
-                            <li>
-                                <button class="export-button">
-                                    <a href="#"
-                                        data-url="{% url 'export_project_excel' project.pk %}"
-                                        class="text-decoration-none"
-                                        title="Export Excel">
-                                        <span class="text">Excel</span>
-                                    </a>
-                                </button>
-                            </li>
-                            <li>
-                                <button class="export-button">
-                                    <a href="#"
-                                        data-url="{% url 'export_project_excel' project.pk %}"
-                                        class="text-decoration-none"
-                                        title="Export DOC">
-                                        <span class="text">DOC</span>
-                                    </a>
-                                </button>
-                            </li>
-                            <li>
-                                <button class="export-button">
-                                    <a href="#"
-                                        data-url="{% url 'export_project_excel' project.pk %}"
-                                        class="text-decoration-none"
-                                        title="Export CSV">
-                                        <span class="text">CSV</span>
-                                    </a>
-                                </button>
-                            </li>
-                            <li>
-                                <button class="export-button">
-                                    <a href="#"
-                                        data-url="{% url 'export_project_excel' project.pk %}"
-                                        class="text-decoration-none"
-                                        title="Export PDF">
-                                        <span class="text">PDF</span>
-                                    </a>
-                                </button>
-                            </li>
-                        </ul>
-                    </div>
-                </div> -->
                 <a href="#"
                     data-url="{% url 'copy_project' project.pk %}"
                     data-type="copy" 
@@ -914,54 +866,3 @@
     </script>
     
 {% endblock project_body %}
-
-{% block script %}
-<script>
- const activityAcc = document.querySelector('#activityAcc')
-if(activityAcc){
-    activityAcc.addEventListener('click', function () {
-    let up = document.querySelector('.activity-arrow-up');
-    let down = document.querySelector('.activity-arrow-down');
-
-    if (up.classList.contains('hidden')) {
-        up.classList.remove('hidden');
-        down.classList.add('hidden');
-    } else {
-        up.classList.add('hidden');
-        down.classList.remove('hidden');
-    }
-});
-}   
-
-
-document.getElementById('projectAcc').addEventListener('click', function () {
-        let arrowUp = document.querySelector('.accordion-arrow-up');
-        let arrowDown = document.querySelector('.accordion-arrow-down');
-
-        if (arrowUp.classList.contains('hidden')) {
-            arrowUp.classList.remove('hidden');
-            arrowDown.classList.add('hidden');
-        } else {
-            arrowUp.classList.add('hidden');
-            arrowDown.classList.remove('hidden');
-        }
-    });
-
-
-// Filter accordion 
-const accordionItems = document.querySelectorAll(".accordion-item");
-accordionItems.forEach(item =>{
-    const title = item.querySelector(".accordion-title");
-    const content = item.querySelector(".accordion-content");
-    title.addEventListener("click",()=>{
-        
-        for(let i = 0; i<accordionItems.length; i++){
-            if(accordionItems[i] != item){
-                accordionItems[i].classList.remove("active");
-            } else {item.classList.toggle("active");}
-        } 
-    });
-    
-});
-</script>
-{% endblock script %}

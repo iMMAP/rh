@@ -40,7 +40,7 @@
                                 <button id="add-activity-form-button" type="button" data-forms-count="{{ activity_plan_formset.management_form.TOTAL_FORMS.value }}" data-form-prefix="{{activity_plan_formset.prefix}}" data-project="{{project.pk}}"
                                     class="btn btn-red">Add Activity
                                 </button>
-
+                               
                                 <!-- <button type="button"
                                         id="fold-unfold-all"
                                         class="btn btn-gray-outline fold-unfold-all-details">
@@ -55,11 +55,13 @@
                     </div>
                 </div>
                 {{ activity_plan_formset.management_form }} {% csrf_token %}
-
+                
                 <div id="activity-formset">
-                    {% for form, target_location_formset in combined_formset %}
-                        {% include "rh/projects/forms/activity_empty_form.html" with form=form target_location_formset=target_location_formset %}
+                    {% for form, target_location_formset, indicator_form in combined_formset %}
+                        {% include "rh/projects/forms/activity_empty_form.html" with form=form target_location_formset=target_location_formset indicator_form=indicator_form %}
+                        
                     {% endfor %}
+                    
                 </div>
                 <div class="plan-submit-holder">
                     <a href="{% url 'projects-update' project.pk %}"

@@ -1,0 +1,10 @@
+<div class="multiple-fields-row">
+    {% for field in indicator_form %}
+    <div class="field-col">
+        <div class="select-field">
+            <label>{{field.label}}</label>
+            {{ field }}
+        </div>
+    </div>
+    {% endfor %}
+</div>

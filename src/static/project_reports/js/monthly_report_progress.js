@@ -79,26 +79,16 @@ function addTargetLocationReportForm(prefix, project, nextFormIndex) {
 						let selectedID = $indicator[0].value;
 						handleDisaggregationReportForms($indicator[0], selectedID, [locationReportPrefix])
 					}
-					
-					// Update change event on indicators for the new added form 
-					// $indicator.on("change", function (event) { 
-					// 	let indicatorsSelect = event.currentTarget
-					// 	let selectedID = $indicator[0].value;
-					// 	handleDisaggregationReportForms(indicatorsSelect, selectedID, [locationReportPrefix])
-					// });
+
+					// Call Facility Monitoring function when page loads.
+					handleFacilityMonitoring(locationReportPrefix, addedForm);
+					let $facilityMonitoring = $(addedForm).find(
+						`#id_${locationReportPrefix}-facility_monitoring`
+					);
+					$facilityMonitoring.change(function () {
+						handleFacilityMonitoring(locationReportPrefix, addedForm);
+					});
 				}
-				
-				// Load Locations (districts and zones)
-				// 	getLocations(locationPrefix, 'district', 'province');
-				// 	getLocations(locationPrefix, 'zone', 'district');
-					
-				// 	// Add Load Locations (districts and zones) event for new form
-				// 	$(`#id_${locationPrefix}-province`).on('change', function() {
-				// 		getLocations(locationPrefix, 'district', 'province', clearZone=true);
-				// 	});
-				// 	$(`#id_${locationPrefix}-district`).on('change', function() {
-				// 		getLocations(locationPrefix, 'zone', 'district');
-				// 	});
 			}
 		},
 		error: function (error) {
@@ -240,6 +230,32 @@ function getLocations(locationPrefix, locationType, parentType, clearZone = null
 
 
 /**
+* Handle Facility Monitoring field
+@param {string} locationPrefix - Form Location Prefix.
+@param {string} formElement - Form Element.
+**/
+function handleFacilityMonitoring(locationPrefix, formElement) {
+	$formElement = $(formElement)
+	let $facilityMonitoring = $(`#id_${locationPrefix}-facility_monitoring`);
+	let $facilityName = $formElement.find(
+		`#id_${locationPrefix}-facility_name`
+	);
+	let $facilityId = $formElement.find(`#id_${locationPrefix}-facility_id`);
+	let $facilityDetails = $formElement.find(
+		`#facility_details_${locationPrefix}`
+	);
+
+	if (!$facilityMonitoring.is(":checked")) {
+		$facilityDetails.hide();
+		$facilityName.prop("required", false).removeClass("is-required");
+	} else {
+		$facilityDetails.show();
+		$facilityName.prop("required", true).addClass("is-required");
+	}
+}
+
+
+/**
 * Ready Function
 **/
 $(function () {
@@ -253,17 +269,6 @@ $(function () {
 		const activityReportFormIndex = activityReportFormPrefix.match(/\d+/)[0]
 		addTargetLocationReportForm(activityReportFormPrefix, activityProject, activityReportFormIndex); // Call the function to add a new activity form
 	});
-
-	// let $activityBlockHolder = $("#activity-formset-form");
-	// $activityBlockHolder.each(function (formIndex, formElement) {
-	// 	// Update disaggregations based on indicators
-	// 	var $indicator = $(`#id_activityplanreport_set-${formIndex}-indicator`);
-	// 	$indicator.on("change", function (event) { 
-	// 		let indicatorsSelect = event.currentTarget
-	// 		let selectedID = $indicator[0].value;
-	// 		handleDisaggregationReportForms(indicatorsSelect, selectedID)
-	// 	});
-	// });
 
 	const $locationBlock = $(".location_report_form");
 	$locationBlock.each(function (formIndex, formElement) {
@@ -283,7 +288,16 @@ $(function () {
 		$(`#id_${locationReportPrefix}-district`).on('change', function() {
 			getLocations(locationReportPrefix, 'zone', 'district');
 		});
+
+		// Call Facility Monitoring function when page loads.
+		handleFacilityMonitoring(locationReportPrefix, formElement);
 		
+		let $facilityMonitoring = $(formElement).find(
+			`#id_${locationReportPrefix}-facility_monitoring`
+		);
+		$facilityMonitoring.change(function () {
+			handleFacilityMonitoring(locationReportPrefix, formElement);
+		});
 	});
 
 });

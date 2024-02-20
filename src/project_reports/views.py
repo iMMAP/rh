@@ -14,6 +14,7 @@ from django.template.loader import render_to_string
 from django.urls import reverse
 from django.utils import timezone
 from django.views.decorators.cache import cache_control
+
 from rh.models import (
     ActivityDetail,
     ActivityDomain,
@@ -125,7 +126,8 @@ def create_project_monthly_report_view(request, project):
 def copy_project_monthly_report_view(request, report):
     """Copy report view"""
     monthly_report = get_object_or_404(ProjectMonthlyReport, pk=report)
-
+    message = ""
+    success = False
     if monthly_report:
         # Calculate the first day of the current month
         today = datetime.now()
@@ -164,8 +166,12 @@ def copy_project_monthly_report_view(request, report):
 
                     # Iterate through disaggregation locations reports and copy them to the new location report.
                     for disaggregation_location_report in disaggregation_location_reports:
-                        copy_disaggregation_location_reports(new_location_report, disaggregation_location_report)
+                        success = copy_disaggregation_location_reports(
+                            new_location_report, disaggregation_location_report
+                        )
 
+        else:
+            message = "Atleast one last month approved report is required."
         # Save the changes made to the new monthly report.
         monthly_report.state = "todo"
         monthly_report.save()
@@ -179,7 +185,7 @@ def copy_project_monthly_report_view(request, report):
         )
 
         # Return the URL in a JSON response
-        response_data = {"redirect_url": url}
+        response_data = {"success": success, "redirect_url": url, "message": message}
         return JsonResponse(response_data)
 
 
@@ -359,7 +365,7 @@ def get_project_and_report_details(project_id, report_id=None):
     )
 
 
-def get_target_locations_doamin(target_locations):
+def get_target_locations_domain(target_locations):
     # TODO: use cache
     # Create Q objects for each location type
     province_q = Q(id__in=[location.province.id for location in target_locations if location.province])
@@ -390,7 +396,7 @@ def create_project_monthly_report_progress_view(request, project, report):
         target_location_provinces,
         target_location_districts,
         target_location_zones,
-    ) = get_target_locations_doamin(target_locations)
+    ) = get_target_locations_domain(target_locations)
 
     activity_plans = [plan for plan in activity_plans]
 
@@ -569,7 +575,7 @@ def update_project_monthly_report_progress_view(request, project, report):
         target_location_provinces,
         target_location_districts,
         target_location_zones,
-    ) = get_target_locations_doamin(target_locations)
+    ) = get_target_locations_domain(target_locations)
 
     activity_plans = [plan for plan in activity_plans]
 
@@ -630,6 +636,7 @@ def update_project_monthly_report_progress_view(request, project, report):
                     activity_report = activity_report_form.save(commit=False)
                     activity_report.monthly_report = monthly_report_instance
                     activity_report.save()
+                    activity_report_form.save_m2m()
 
                     # Process target location forms and their disaggregation forms
                     activity_report_target = 0
@@ -725,7 +732,7 @@ def get_location_report_empty_form(request):
         target_location_provinces,
         target_location_districts,
         target_location_zones,
-    ) = get_target_locations_doamin(target_locations)
+    ) = get_target_locations_domain(target_locations)
 
     ActivityReportFormset = inlineformset_factory(
         ProjectMonthlyReport,
@@ -919,8 +926,9 @@ def delete_location_report_view(request, location_report):
 def submit_monthly_report_view(request, report):
     monthly_report = get_object_or_404(ProjectMonthlyReport, pk=report)
     # TODO: Handle with access rights and groups
-    monthly_report.state = "submit"
+    monthly_report.state = "complete"
     monthly_report.submitted_on = timezone.now()
+    monthly_report.approved_on = timezone.now()
     monthly_report.save()
     # Generate the URL using reverse
     url = reverse(

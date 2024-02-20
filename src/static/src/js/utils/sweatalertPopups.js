@@ -101,19 +101,35 @@ export default function initSWPopup() {
 			allowOutsideClick: () => !Swal.isLoading()
 		}).then((result) => {
 			if (result.isConfirmed) {
-				// Show success notification first
-				Swal.fire({
-					position: "top-end",
-					icon: "success",
-					title: successMessage,
-					showConfirmButton: false,
-					timer: 1500
-				});
+				debugger
+				icon = "success"
+				
+				if (result.value.success !== undefined && result.value.success !== false){
+					Swal.fire({
+						icon: "warning",
+						title: "Copy Validation...",
+						text: result.value.message,
+						confirmButtonText: "Ok!",
+						customClass: {
+							confirmButton: "btn btn-red",
+							loader: 'custom-loader',
+						},
+					  });
+				}else{
+					// Show success notification first
+					Swal.fire({
+						position: "top-end",
+						icon: "success",
+						title: successMessage,
+						showConfirmButton: false,
+						timer: 1500
+					});
+					// Delay the page reload to allow the notification to be shown
+					setTimeout(() => {
+						window.location.href = result.value.redirect_url;
+					}, 1500); // Adjust the delay time as needed
+				}
 	
-				// Delay the page reload to allow the notification to be shown
-				setTimeout(() => {
-					window.location.href = result.value.redirect_url;
-				}, 1500); // Adjust the delay time as needed
 			}
 		});
 	}

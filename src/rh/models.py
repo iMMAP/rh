@@ -484,14 +484,6 @@ class ActivityPlan(models.Model):
         max_length=15, choices=CATEGORY_TYPES, default="non-disabled", null=True, blank=True
     )
 
-    # Facility Monitoring
-    # facility_monitoring = models.BooleanField(default=False)
-    # facility_name = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True, )
-    # facility_id = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True, )
-    # facility_type = models.ForeignKey(FacilitySiteType, on_delete=models.SET_NULL, null=True, blank=True)
-    # facility_lat = models.CharField(max_length=NAME_MAX_LENGTH, null=True, blank=True)
-    # facility_long = models.CharField(max_length=NAME_MAX_LENGTH, null=True, blank=True)
-
     total_target = models.IntegerField(default=0, blank=True, null=True)
     description = models.TextField(blank=True, null=True)
     # old_id = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
@@ -572,11 +564,26 @@ class TargetLocation(models.Model):
 
     facility_site_type = models.ForeignKey(FacilitySiteType, on_delete=models.SET_NULL, null=True)
 
-    site_monitoring = models.BooleanField(default=False)
-    site_name = models.CharField(max_length=255, blank=True, null=True)
-    site_lat = models.CharField(max_length=255, blank=True, null=True)
-    site_long = models.CharField(max_length=255, blank=True, null=True)
-    old_id = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
+    # site_monitoring = models.BooleanField(default=False)
+    # site_name = models.CharField(max_length=255, blank=True, null=True)
+    # site_lat = models.CharField(max_length=255, blank=True, null=True)
+    # site_long = models.CharField(max_length=255, blank=True, null=True)
+    # old_id = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
+
+    # Facility Monitoring
+    facility_monitoring = models.BooleanField(default=False)
+    facility_name = models.CharField(
+        max_length=NAME_MAX_LENGTH,
+        blank=True,
+        null=True,
+    )
+    facility_id = models.CharField(
+        max_length=NAME_MAX_LENGTH,
+        blank=True,
+        null=True,
+    )
+    facility_lat = models.CharField(max_length=NAME_MAX_LENGTH, null=True, blank=True)
+    facility_long = models.CharField(max_length=NAME_MAX_LENGTH, null=True, blank=True)
 
     disaggregations = models.ManyToManyField(
         "Disaggregation", through="DisaggregationLocation", related_name="disaggregations"

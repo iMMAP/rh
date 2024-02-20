@@ -186,6 +186,7 @@ def projects_detail(request, pk):
         ),
         pk=pk,
     )
+    activity_plans = project.activityplan_set.all()
 
     context = {
         "project": project,
@@ -193,6 +194,7 @@ def projects_detail(request, pk):
         "financial_view": False,
         "reports_view": False,
         "project_filter": project,
+        "activity_plans": activity_plans,
     }
     return render(request, "rh/projects/views/project_view.html", context)
 
@@ -282,7 +284,6 @@ def create_project_activity_plan(request, project):
             # HERE
 
             initial_data = []
-
             for disaggregation in target_location_form.instance.disaggregationlocation_set.all():
                 initial_data.append({"disaggregation": disaggregation})
 
@@ -557,11 +558,8 @@ def submit_project(request, pk):
         plan.state = "in-progress"
         plan.save()
 
-    url = (
-        reverse(
-            "projects-list",
-        )
-        + "?state=draft"
+    url = reverse(
+        "projects-list",
     )
 
     # Return the URL in a JSON response
@@ -602,11 +600,8 @@ def archive_project(request, pk):
         project.active = False
         project.save()
 
-    url = (
-        reverse(
-            "projects-list",
-        )
-        + "?state=draft"
+    url = reverse(
+        "projects-list",
     )
 
     # Return the URL in a JSON response
@@ -649,11 +644,8 @@ def unarchive_project(request, pk):
         project.active = True
         project.save()
 
-    url = (
-        reverse(
-            "projects-list",
-        )
-        + "?state=draft"
+    url = reverse(
+        "projects-list",
     )
     # Return the URL in a JSON response
     response_data = {"redirect_url": url}
@@ -668,11 +660,8 @@ def delete_project(request, pk):
     if project.state != "archive":
         if project:
             project.delete()
-        url = (
-            reverse(
-                "projects-list",
-            )
-            + "?state=draft"
+        url = reverse(
+            "projects-list",
         )
 
     # Return the URL in a JSON response
@@ -748,9 +737,6 @@ def copy_project_activity_plan(project, plan):
         new_plan.active = True
         new_plan.state = "draft"
 
-        # Modify the title of the duplicated plan to indicate it's a copy.
-        new_plan.title = f"[COPY] - {plan.title}"
-
         # Copy indicators from the original plan to the duplicated plan.
         new_plan.indicator = plan.indicator
 
@@ -780,9 +766,6 @@ def copy_project_target_location(plan, location):
         # Set the location as active and in a draft state to indicate it's a copy.
         new_location.active = True
         new_location.state = "draft"
-
-        # Modify the title of the duplicated location to indicate it's a copy.
-        new_location.title = f"[COPY] - {location.title}"
 
         # Save the changes made to the duplicated location.
         new_location.save()
@@ -840,7 +823,6 @@ def copy_activity_plan(request, project, plan):
         new_plan.project = project
         new_plan.active = True
         new_plan.state = "draft"
-        new_plan.title = f"[COPY] - {activity_plan.title}"
         new_plan.indicator = activity_plan.indicator
         new_plan.save()
 
@@ -885,7 +867,6 @@ def copy_target_location(request, project, location):
         new_location.project = project
         new_location.active = True
         new_location.state = "draft"
-        new_location.title = f"[COPY] - {target_location.title}"
         new_location.save()
 
     url = reverse("create_project_activity_plan", args=[project.pk])

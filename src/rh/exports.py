@@ -11,9 +11,7 @@ from openpyxl.styles import Font, NamedStyle
 from openpyxl.utils import get_column_letter
 
 
-from .models import (
-    Project, Disaggregation
-)
+from .models import Project, Disaggregation
 
 #############################################
 ############### Export Views #################
@@ -42,8 +40,9 @@ class ProjectExportExcelView(View):
         """
         try:
             project = Project.objects.get(id=project_id)  # Get the project object
-            disaggregations = [disaggregation.name for disaggregation in Disaggregation.objects.all()]# Get all the disaggregation object
-
+            disaggregations = [
+                disaggregation.name for disaggregation in Disaggregation.objects.all()
+            ]  # Get all the disaggregation object
 
             workbook = Workbook()
 
@@ -239,7 +238,6 @@ class ProjectExportExcelView(View):
         # Add disaggregation names as headers
         columns.extend({"header": disaggregation, "type": "string", "width": 20} for disaggregation in disaggregations)
 
-
         self.write_sheet_columns(sheet, columns)
         self.write_target_locations_data_rows(sheet, project, disaggregations)
 
@@ -278,7 +276,6 @@ class ProjectExportExcelView(View):
 
             # Append disaggregation values to row
             row.extend(disaggregation_values[disaggregation] for disaggregation in disaggregations)
-
 
             for col_idx, value in enumerate(row, start=1):
                 sheet.cell(row=location_idx + 1, column=col_idx, value=value)

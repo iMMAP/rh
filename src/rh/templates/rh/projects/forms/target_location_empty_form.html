@@ -82,6 +82,60 @@
                 </div>
                 
             </div>
+            <div class="row mtb20">
+                <div class="col">
+                    <div class="field-col">
+                        <div class="input-check-holder">
+                            {{ target_location_form.facility_monitoring }}
+                            <label for="{{ target_location_form.facility_monitoring.id_for_label }}">
+                                <span class="input"></span>
+                                <span class="text">Facility Monitoring</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mtb20" id="facility_details_{{ target_location_form.prefix }}">
+                <div class="col col-lg">
+                    <div class="multiple-fields-row two-items">
+                        <div class="field-col">
+                            <div class="input-field">
+                                <label for="{{ target_location_form.facility_name.id_for_label }}">
+                                    Facility / Site Name
+                                </label>
+                                <div class="input-holder">{{ target_location_form.facility_name }}</div>
+                            </div>
+                        </div>
+                         <div class="field-col">
+                             <div class="input-field">
+                                 <label for="{{ target_location_form.facility_id.id_for_label }}">
+                                     Facility / Site ID
+                                 </label>
+                                 <div class="input-holder">{{ target_location_form.facility_id }}</div>
+                             </div>
+                         </div>
+                    </div>
+                    <div class="multiple-fields-row two-items">
+                        <div class="field-col">
+                            <div class="input-field">
+                                <label for="{{ target_location_form.facility_lat.id_for_label }}">
+                                    Facility / Site Latitude
+                                </label>
+                                <div class="input-holder">{{ target_location_form.facility_lat }}</div>
+                            </div>
+                        </div>
+                        <div class="field-col">
+                            <div class="input-field">
+                                <label for="{{ target_location_form.facility_long.id_for_label }}">
+                                    Facility / Site Longitude
+                                </label>
+                                <div class="input-holder">{{ target_location_form.facility_long }}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div class="disaggregation-block disaggregation-accordion">
                 <div class="inner-holder">
                     <div class="block-top disaggregation-accordion-opener">

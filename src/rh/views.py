@@ -35,8 +35,6 @@ from .models import (
     Cluster,
     DisaggregationLocation,
     Indicator,
-    IndicatorType,
-
     Location,
     Project,
     TargetLocation,
@@ -1030,7 +1028,7 @@ def ProjectListView(request, flag):
 
 def update_indicator_type(request):
     indicator_id = request.GET.get("id")
-    indicator = IndicatorType.objects.get(indicator=indicator_id)
+    indicator = Indicator.objects.get(id=indicator_id)
     indicator_form = ProjectIndicatorTypeForm()
     context = {
         'indicator':indicator,

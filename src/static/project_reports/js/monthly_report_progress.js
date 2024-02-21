@@ -2,7 +2,7 @@ var DETAILS_TOGGLE_DURATION = 500
 /**
 * Handle Add Dynamic Target Location Report Form
 **/
-function addTargetLocationReportForm(prefix, project, nextFormIndex) {
+function addTargetLocationReportForm(prefix, project, nextFormIndex, activityDomain) {
 	const activityReportFormPrefix = prefix
 	const projectID = project
 
@@ -11,7 +11,7 @@ function addTargetLocationReportForm(prefix, project, nextFormIndex) {
 
 	$.ajax({
 		url: '/ajax/get_location_report_empty_form/',
-		data: {'prefix_index': nextFormIndex, 'project': projectID},
+		data: {'prefix_index': nextFormIndex, 'project': projectID, 'activity_domain': activityDomain},
 		type: 'POST',
 		dataType: 'json',
 		beforeSend: function(xhr, settings) {
@@ -266,8 +266,10 @@ $(function () {
 		event.stopPropagation(); // Prevent the default behavior (propagation)
 		const activityReportFormPrefix = event.currentTarget.dataset.formPrefix
 		const activityProject = event.currentTarget.dataset.project
+		const activityDomain = event.currentTarget.dataset.activityDomain
+		debugger
 		const activityReportFormIndex = activityReportFormPrefix.match(/\d+/)[0]
-		addTargetLocationReportForm(activityReportFormPrefix, activityProject, activityReportFormIndex); // Call the function to add a new activity form
+		addTargetLocationReportForm(activityReportFormPrefix, activityProject, activityReportFormIndex, activityDomain); // Call the function to add a new activity form
 	});
 
 	const $locationBlock = $(".location_report_form");

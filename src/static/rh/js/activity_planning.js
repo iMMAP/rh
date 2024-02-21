@@ -513,7 +513,6 @@ $(function () {
 			const activityProject = event.currentTarget.dataset.project;
 			const activityDomain = $(document).find(`#id_${activityFormPrefix}-activity_domain`)
 			const activityFormIndex = activityFormPrefix.match(/\d+/)[0];
-			debugger
 			addTargetLocationForm(
 				activityFormPrefix,
 				activityProject,

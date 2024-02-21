@@ -114,6 +114,11 @@ class TargetLocationReport(models.Model):
     )
     facility_lat = models.CharField(max_length=200, null=True, blank=True)
     facility_long = models.CharField(max_length=200, null=True, blank=True)
+    nhs_code = models.CharField(
+        max_length=200,
+        blank=True,
+        null=True,
+    )
 
     def __str__(self):
         return f"{self.activity_plan_report}, {self.province}, {self.district}"

@@ -120,36 +120,14 @@ $(function () {
 	})
 
 });
-const activityAcc = document.querySelector('#activityAcc')
-if(activityAcc){
-    activityAcc.addEventListener('click', function () {
-    let up = document.querySelector('.activity-arrow-up');
-    let down = document.querySelector('.activity-arrow-down');
+const activityAcc = document.querySelector('#activityAcc').addEventListener('click', function () {
+    const down = document.querySelector('.activity-arrow-down');
+	down.classList.toggle("rotate-90-degree");
+});   
 
-    if (up.classList.contains('hidden')) {
-        up.classList.remove('hidden');
-        down.classList.add('hidden');
-    } else {
-        up.classList.add('hidden');
-        down.classList.remove('hidden');
-    }
-});
-}   
-
-document.getElementById('projectAcc').addEventListener('click', function () {
-        let arrowUp = document.querySelector('.accordion-arrow-up');
-        let arrowDown = document.querySelector('.accordion-arrow-down');
-
-        if (arrowUp.classList.contains('hidden')) {
-            arrowUp.classList.remove('hidden');
-            arrowDown.classList.add('hidden');
-        } else {
-            arrowUp.classList.add('hidden');
-            arrowDown.classList.remove('hidden');
-        }
-    });
 // Filter accordion 
 const accordionItems = document.querySelectorAll(".accordion-item");
+const arrowDown = document.querySelector('.accordion-arrow-down');
 accordionItems.forEach(item =>{
     const title = item.querySelector(".accordion-title");
     const content = item.querySelector(".accordion-content");
@@ -158,8 +136,11 @@ accordionItems.forEach(item =>{
         for(let i = 0; i<accordionItems.length; i++){
             if(accordionItems[i] != item){
                 accordionItems[i].classList.remove("active");
-            } else {item.classList.toggle("active");}
+            } else {item.classList.toggle("active");
+		
+			}
         } 
+		arrowDown.classList.toggle("rotate-90-degree");
     });
     
 });

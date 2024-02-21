@@ -1,3 +1,4 @@
+from django import forms
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
@@ -441,8 +442,6 @@ def get_disaggregations_forms(request):
 @login_required
 def get_target_location_empty_form(request):
     """Get an empty target location form for a project"""
-    from django import forms
-
     # Get the project object based on the provided project ID
     project = get_object_or_404(Project, pk=request.POST.get("project"))
     activity_domain_id = request.POST.get("activity_domain", None)
@@ -575,10 +574,7 @@ def submit_project(request, pk):
 
         plan.state = "in-progress"
         plan.save()
-
-    url = reverse(
-        "projects-list",
-    )
+    url = reverse("projects-detail", args=[project.pk])
 
     # Return the URL in a JSON response
     response_data = {"redirect_url": url}

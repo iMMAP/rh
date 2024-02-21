@@ -520,38 +520,44 @@
                 </div>
                 <div class="multiple-fields-row">
                     <div class="field-col">
-                        <div class="input-check-holder">
-                            {% if project.is_hrp_project %}
-                            <input type="checkbox" disabled checked />
-                            {% else %}
-                            <input type="checkbox" disabled />
-                            {% endif %}
-                            <span class="label">
-                                <span class="input"></span>
-                                <span class="text">HRP project?</span>
-                            </span>
+                        <div class="input-field">
+                            <span class="label">Is HRP Project?</span>
+                            <div class="input-holder">
+                                <span class="text-read-only">
+                                    {% if project.is_hrp_project %}
+                                    Yes
+                                    {% else %}
+                                    No
+                                    {% endif %}
+                                </span>
+                            </div>
                         </div>
                     </div>
+                    {% if project.is_hrp_project %}
                     <div class="field-col">
-                        <div class="input-check-holder">
-                            {% if project.has_hrp_code %}
-                            <input type="checkbox" disabled checked />
-                            {% else %}
-                            <input type="checkbox" disabled />
-                            {% endif %}
-                            <span class="label">
-                                <span class="input"></span>
-                                <span class="text">HRP Code?</span>
-                            </span>
+                        <div class="input-field">
+                            <span class="label">Has HRP Code?</span>
+                            <div class="input-holder">
+                                <span class="text-read-only">
+                                    {% if project.has_hrp_code %}
+                                    Yes
+                                    {% else %}
+                                    No
+                                    {% endif %}
+                                </span>
+                            </div>
                         </div>
                     </div>
+                    {% endif %}
                 </div>
+                {% if project.has_hrp_code %}
                 <div class="input-field">
                     <span class="label">HRP project code</span>
                     <div class="input-holder">
                         <span class="text-read-only">{{ project.hrp_code }}</span>
                     </div>
                 </div>
+                {% endif %}
             </div>
             <div class="col col-lg">
                 <div class="select-field is-required">
@@ -697,7 +703,7 @@
                                             </div>
                                             <div class="row">
                                                 <div class="col col-lg">
-                                                    <div class="multiple-fields-row three-items">
+                                                    <div class="multiple-fields-row {% if target_location.zone %}three{% else %}two{% endif %}-items">
                                                         <div class="field-col">
                                                             <div class="select-field is-required">
                                                                 <span class="label">Province</span>
@@ -717,7 +723,7 @@
                                                                 <div class="input-field">
                                                                     <span class="label">Zone</span>
                                                                     <div class="input-holder">
-                                                                        <span class="text-read-only">{{ target_location.district }}</span>
+                                                                        <span class="text-read-only">{{ target_location.zone }}</span>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -725,13 +731,23 @@
                                                     </div>
                                                 </div>
                                                 <div class="col">
-                                                    <div class="multiple-fields-row two-items">
+                                                    <div class="multiple-fields-row {% if target_location.nhs_code %}three{% else %}two{% endif %}-items">
                                                         <div class="field-col">
                                                             <div class="select-field ">
                                                                 <span class="label">Location Type</span>
                                                                 <span class="text-read-only">{{ target_location.location_type }}</span>
                                                             </div>
                                                         </div>
+                                                        {% if target_location.nhs_code %}
+                                                        <div class="field-col">
+                                                            <div class="input-field">
+                                                                <span class="label">NHS Code</span>
+                                                                <div class="input-holder">
+                                                                    <span class="text-read-only">{{ target_location.nhs_code }}</span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        {% endif %}
                                                         <div class="field-col">
                                                             <div class="input-field">
                                                                 <span class="label">Facility Monitoring</span>

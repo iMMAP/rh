@@ -4,6 +4,7 @@ from collections import defaultdict
 from datetime import datetime, timedelta
 
 import pandas as pd
+from django import forms
 from django.contrib.auth.decorators import login_required
 from django.db import transaction
 from django.db.models import Q
@@ -747,6 +748,11 @@ def get_location_report_empty_form(request):
     # Get the prefix index from the request
     prefix_index = request.POST.get("prefix_index")
 
+    activity_domain_id = request.POST.get("activity_domain", None)
+    activity_domain = None
+    if activity_domain_id:
+        activity_domain = get_object_or_404(ActivityDomain, pk=activity_domain_id)
+
     # Create an instance of TargetLocationFormSet with a prefixed name
     location_report_formset = TargetLocationReportFormSet(
         prefix=f"locations_report_{activity_report_formset.prefix}-{prefix_index}"
@@ -755,6 +761,17 @@ def get_location_report_empty_form(request):
     # for target_location_form in target_location_formset.forms:
     # Create a disaggregation formset for each target location form
     location_report_form = location_report_formset.empty_form
+
+    # Check if the activity plan is selected
+    if activity_domain:
+        # Get clusters associated with the activity plan's domain
+        clusters = activity_domain.clusters.all()
+        cluster_has_nhs_code = any(cluster.has_nhs_code for cluster in clusters)
+        # If at least one cluster has NHS code, add the NHS code field to the form
+        if cluster_has_nhs_code:
+            location_report_form.fields["nhs_code"] = forms.CharField(max_length=200, required=True)
+        else:
+            location_report_form.fields.pop("nhs_code", None)
 
     location_report_form.fields["province"].queryset = Location.objects.filter(id__in=target_location_provinces)
     location_report_form.fields["district"].queryset = Location.objects.filter(id__in=target_location_districts)
@@ -782,22 +799,6 @@ def get_location_report_empty_form(request):
 @cache_control(no_store=True)
 @login_required
 def load_target_locations_details(request):
-    # parent_ids = [int(i) for i in request.POST.getlist("parents[]") if i]
-    # parents = Location.objects.filter(pk__in=parent_ids).select_related("parent")
-    # response = "".join(
-    #     [
-    #         f'<optgroup label="{parent.name}">'
-    #         + "".join(
-    #             [f'<option value="{target_location.district.pk}">{target_location.district.name}</option>' for target_location in TargetLocation.objects.filter(province=parent)]
-    #         )
-    #         + "</optgroup>"
-    #         if TargetLocation.objects.filter(province=parent).exists()
-    #         else ""
-    #         for parent in parents
-    #     ]
-    # )
-    # return JsonResponse(response, safe=False)
-
     parent_ids = [int(i) for i in request.POST.getlist("parents[]") if i]
     parents = Location.objects.filter(pk__in=parent_ids).select_related("parent")
 

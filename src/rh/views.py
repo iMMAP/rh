@@ -475,10 +475,10 @@ def get_target_location_empty_form(request):
         cluster_has_nhs_code = any(cluster.has_nhs_code for cluster in clusters)
         # If at least one cluster has NHS code, add the NHS code field to the form
         if cluster_has_nhs_code:
-            target_location_form.fields['nhs_code'] = forms.CharField(max_length=200, required=True)
+            target_location_form.fields["nhs_code"] = forms.CharField(max_length=200, required=True)
         else:
-            target_location_form.fields.pop('nhs_code', None)
-                
+            target_location_form.fields.pop("nhs_code", None)
+
     disaggregation_formset = DisaggregationFormSet(
         request.POST or None,
         instance=target_location_form.instance,

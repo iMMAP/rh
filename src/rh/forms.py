@@ -113,12 +113,14 @@ class TargetLocationForm(forms.ModelForm):
         )
 
         cluster_has_nhs_code = False
-        if 'instance' in kwargs and kwargs['instance']:
-            activity_plan = kwargs['instance'].activity_plan
+        if "instance" in kwargs and kwargs["instance"]:
+            activity_plan = kwargs["instance"].activity_plan
             if activity_plan:
-                cluster_has_nhs_code = any(cluster.has_nhs_code for cluster in activity_plan.activity_domain.clusters.all())
+                cluster_has_nhs_code = any(
+                    cluster.has_nhs_code for cluster in activity_plan.activity_domain.clusters.all()
+                )
         if cluster_has_nhs_code:
-            self.fields['nhs_code'] = forms.CharField(max_length=200, required=True)
+            self.fields["nhs_code"] = forms.CharField(max_length=200, required=True)
         # else:
         #     self.fields.pop('nhs_code', None)
 

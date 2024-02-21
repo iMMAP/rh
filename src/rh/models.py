@@ -56,7 +56,6 @@ class Cluster(models.Model):
     title = models.CharField(max_length=NAME_MAX_LENGTH)
     ocha_code = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
     has_nhs_code = models.BooleanField(default=False, null=True)
-    
 
     def check_nhs_code(self):
         return self.has_nhs_code

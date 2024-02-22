@@ -1,5 +1,5 @@
 {% extends "../projects_index.html" %}
-
+{% load static %}
 {% block project_body %}
     <div class="breadcrumbs-nav-panel">
         <div class="holder">
@@ -94,18 +94,14 @@
                                     </svg>
                                     The project fields will be exported 
                                     according to the selectiong order in CSV file.
-                                </span>
-                                
+                                </span>  
                             </div>
-                            <div class="accordion">
-                                <div class="accordion-item">
-                                    <div class="project-title report-title accordion-title" id="projectAcc">
-                                        <p class="accordion-subject">Project Planing </p>
-                                        <span class="accordion-arrows">
-                                            <p class="accordion-arrow-down">&#x25BC;</p>
-                                        </span>
-                                    </div>
-                                    <div class="accordion-content block-body" data-simplebar>
+                                <details class="details">
+                                    <summary class="summary project-planning">
+                                        Project Planing
+                                        <span class="project-chevron icon-chevron-down"></span>
+                                    </summary>
+                                    <div class="block-body" data-simplebar>
                                         <small class="label">Available fields: </small>
                                         <div class="multiple-fields-row two-items">
                                             {% if project.title %}
@@ -273,35 +269,30 @@
                                         </div>
                                     </div>
 
-                                </div>
-                                <div class="accordion-item">
-                                    <div class="accordion-title project-title report-title" id="activityAcc">
-                                        <p class="accordion-subject">Activity Planing
-                                            <span class="export-badge">
-                                            {% if project.activityplan_set.all %}
-                                                {{ project.activityplan_set.all | length }}
-                                            {% else %}
-                                                <span class="label">Empty</span>
-                                            {% endif %}
-                                            </span>
-                                        </p>
-                                        <span class="accordion-arrows">
-                                            <p class="activity-arrow-down">&#x25BC;</p>
+                                </details>
+                                <details class="details">
+                                    <summary class="summary activity-planning">
+                                        Activity Planing
+                                        <span class="activity-chevron icon-chevron-down"></span>
+                                        <span class="export-badge">
+                                        {% if project.activityplan_set.all %}
+                                            {{ project.activityplan_set.all | length }}
+                                        {% else %}
+                                            <small class="empty-text">Not Found</small>
+                                        {% endif %}
                                         </span>
-                                    </div>
-                        
-                                    <div class="accordion-content">
+                                    </summary>
+                                    <div class="block-body" data-simplebar>
                                         {% for activityPlan in project.activityplan_set.all %}
-                                        <span>
-                                            <p  class="circle-bage">{{forloop.counter}}</p>
-                                        </span>
+                                        <span class="circle-bage">{{forloop.counter}} </span>
                                         <div class="input-holder">
                                             <label  class="text-read-only">Activity Domain</label>
                                             <input type="checkbox" 
                                             class="domain-check" id="activityDomain-{{activityPlan.id}}" 
                                             value="{{activityPlan.activity_domain.name}}"
                                             name="activity_domain"> 
-                                            <label for="activityDomain-{{activityPlan.id}}" class="label">{{activityPlan.activity_domain}}</label>
+                                            <label for="activityDomain-{{activityPlan.id}}" 
+                                            class="label">{{activityPlan.activity_domain}}</label>
                                         </div>
                                         <div class="input-holder">
                                             <label for="activityType-{{forloop.counter}}" class="text-read-only">Activity Type</label>
@@ -358,7 +349,6 @@
                                                 <label for="Description-{{forloop.counter}}" class="label">{{activityPlan.description | linebreaksbr }}</label>
                                             </div> 
                                         <div class="target-location-container">
-                                            
                                             <span class="target-location-badge">
                                                 <span>
                                                     <svg xmlns="http://www.w3.org/2000/svg" height="15" width="15" viewBox="0 0 590 350">
@@ -370,67 +360,80 @@
                                         </div>
                                         <div class="multiple-fields-row two-items">
                                             {% for targetLocation in activityPlan.targetlocation_set.all %} 
-                                            
                                             <div class="field-col">
-                                                <label for="province-{{targetLocation.province.id}}" class="text-read-only">Province</label>
-                                                <input type="checkbox" id="province-{{targetLocation.province.id}}" class="province-check"
-                                                value="{{targetLocation.province.name}}"
-                                                name="province"> 
-                                                <label for="province-{{targetLocation.province.id}}" class="label">{{targetLocation.province | linebreaksbr }}</label>
+                                                <div class="input-holder">
+                                                    <label for="province-{{targetLocation.province.id}}" class="text-read-only">Province</label>
+                                                    <input type="checkbox" id="province-{{targetLocation.province.id}}" class="province-check"
+                                                    value="{{targetLocation.province.name}}"
+                                                    name="province"> 
+                                                    <label for="province-{{targetLocation.province.id}}" 
+                                                    class="label">{{targetLocation.province | linebreaksbr }}</label>
+                                                </div>
                                             </div>
                                             <div class="field-col">
-                                                <label for="district-{{targetLocation.district.id}}" class="text-read-only">District</label>
-                                                <input type="checkbox" id="district-{{targetLocation.district.id}}" class="district-check"
-                                                value="{{targetLocation.district.name}}"
-                                                name="district"> 
-                                                <label for="district-{{targetLocation.district.id}}" class="label">{{targetLocation.district | linebreaksbr }}</label>
+                                                <div class="input-holder">
+                                                    <label for="district-{{targetLocation.district.id}}" class="text-read-only">District</label>
+                                                    <input type="checkbox" id="district-{{targetLocation.district.id}}" class="district-check"
+                                                    value="{{targetLocation.district.name}}"
+                                                    name="district"> 
+                                                    <label for="district-{{targetLocation.district.id}}" 
+                                                    class="label">{{targetLocation.district | linebreaksbr }}</label>
+                                                </div>
                                             </div>
                                             <div class="field-col">
-                                                <label for="locationType-{{targetLocation.location_type.id}}" class="text-read-only">Location Type</label>
-                                                <input type="checkbox" id="locationType-{{targetLocation.location_type.id}}" 
-                                                class="location-type-check"
-                                                value="{{targetLocation.location_type.name}}"
-                                                name="location_type"> 
-                                                <label for="locationType-{{targetLocation.location_type.id}}" 
-                                                class="label">{{targetLocation.location_type | linebreaksbr }}</label>
+                                                <div class="input-holder">
+                                                    <label for="locationType-{{targetLocation.location_type.id}}" class="text-read-only">Location Type</label>
+                                                    <input type="checkbox" id="locationType-{{targetLocation.location_type.id}}" 
+                                                    class="location-type-check"
+                                                    value="{{targetLocation.location_type.name}}"
+                                                    name="location_type"> 
+                                                    <label for="locationType-{{targetLocation.location_type.id}}" 
+                                                    class="label">{{targetLocation.location_type | linebreaksbr }}</label>
+                                                </div>
                                             </div>
                                             <div class="field-col">
-                                                <label for="siteName-{{targetLocation.site_name.id}}" 
-                                                class="text-read-only">Site Name</label>
-                                                <input type="checkbox" id="siteName-{{targetLocation.site_name.id}}" 
-                                                class="site-name-check"
-                                                value="{{targetLocation.site_name}}"
-                                                name="site_name"> 
-                                                <label for="siteName-{{targetLocation.site_name.id}}" 
-                                                class="label">{{targetLocation.site_name | linebreaksbr }}</label>
+                                                <div class="input-holder">
+                                                    <label for="siteName-{{targetLocation.site_name.id}}" 
+                                                    class="text-read-only">Site Name</label>
+                                                    <input type="checkbox" id="siteName-{{targetLocation.site_name.id}}" 
+                                                    class="site-name-check"
+                                                    value="{{targetLocation.site_name}}"
+                                                    name="site_name"> 
+                                                    <label for="siteName-{{targetLocation.site_name.id}}" 
+                                                    class="label">{{targetLocation.site_name | linebreaksbr }}</label>
+                                                </div>
                                             </div>
                                             <div class="field-col">
-                                                <label for="latitude-{{targetLocation.site_lat.id}}" 
-                                                class="text-read-only">Site Latitude</label>
-                                                <input type="checkbox" id="latitude-{{targetLocation.site_lat.id}}" 
-                                                class="site-lat-check"
-                                                value="{{targetLocation.site_lat}}"
-                                                name="site_latitude"> 
-                                                <label for="latitude-{{targetLocation.site_lat.id}}" 
-                                                class="label">{{targetLocation.site_lat | linebreaksbr }}</label>
+                                                <div class="input-holder">
+                                                    <label for="latitude-{{targetLocation.site_lat.id}}" 
+                                                    class="text-read-only">Site Latitude</label>
+                                                    <input type="checkbox" id="latitude-{{targetLocation.site_lat.id}}" 
+                                                    class="site-lat-check"
+                                                    value="{{targetLocation.site_lat}}"
+                                                    name="site_latitude"> 
+                                                    <label for="latitude-{{targetLocation.site_lat.id}}" 
+                                                    class="label">{{targetLocation.site_lat | linebreaksbr }}</label>
+                                                </div>
                                             </div>
                                             <div class="field-col">
-                                                <label for="Longitude-{{targetLocation.site_long.id}}" 
-                                                class="text-read-only">Site Longitude</label>
-                                                <input type="checkbox" id="Longitude-{{targetLocation.site_long.id}}" 
-                                                class="site-long-check"
-                                                value="{{targetLocation.site_long}}"
-                                                name="site_longitude"> 
-                                                <label for="Longitude-{{targetLocation.site_long.id}}" 
-                                                class="label">{{targetLocation.site_long | linebreaksbr }}</label>
+                                                <div class="input-holder">
+                                                    <label for="Longitude-{{targetLocation.site_long.id}}" 
+                                                    class="text-read-only">Site Longitude</label>
+                                                    <input type="checkbox" id="Longitude-{{targetLocation.site_long.id}}" 
+                                                    class="site-long-check"
+                                                    value="{{targetLocation.site_long}}"
+                                                    name="site_longitude"> 
+                                                    <label for="Longitude-{{targetLocation.site_long.id}}" 
+                                                    class="label">{{targetLocation.site_long | linebreaksbr }}</label>
+                                                </div>
                                             </div>
                                             {% endfor %}
                                         </div>
                                         <hr>
                                         {% endfor %}
                                     </div>
-                                </div>
-                            </div>
+                                </details>
+                           
                             <div class="block-footer">
                                 <p id="not-checked-message" style="color:#a52824"></p>
                                 <div class="btn-wrapper">
@@ -890,7 +893,41 @@
 
     <script>
         var csrfToken = '{{ csrf_token }}';
-
     </script>
     
 {% endblock project_body %}
+
+
+
+<!-- {% block script %}
+{% endblock script %} -->
+
+<!-- <script>
+
+const activityAcc = document.querySelector('#activityAcc').addEventListener('click', function () {
+    const down = document.querySelector('.activity-arrow-down');
+	down.classList.toggle("rotate-90-degree");
+});   
+
+// Filter accordion 
+const accordionItems = document.querySelectorAll(".accordion-item");
+const arrowDown = document.querySelector('.accordion-arrow-down');
+accordionItems.forEach(item =>{
+    const title = item.querySelector(".accordion-title");
+    const content = item.querySelector(".accordion-content");
+    title.addEventListener("click",()=>{
+        console.log("clicked");
+        for(let i = 0; i<accordionItems.length; i++){
+            if(accordionItems[i] != item){
+                accordionItems[i].classList.remove("active");
+            } else {item.classList.toggle("active");
+		
+			}
+        } 
+		arrowDown.classList.toggle("rotate-90-degree");
+    });
+    
+});
+
+</script> -->
+

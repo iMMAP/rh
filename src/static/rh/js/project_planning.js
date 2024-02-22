@@ -119,28 +119,12 @@ $(function () {
 		get_activity_domains();
 	})
 
-});
-const activityAcc = document.querySelector('#activityAcc').addEventListener('click', function () {
-    const down = document.querySelector('.activity-arrow-down');
-	down.classList.toggle("rotate-90-degree");
-});   
+	// summary icon rotation
+	$(".project-planning").on("click", function(){
+		$(".project-chevron").toggleClass("object-rotation");
 
-// Filter accordion 
-const accordionItems = document.querySelectorAll(".accordion-item");
-const arrowDown = document.querySelector('.accordion-arrow-down');
-accordionItems.forEach(item =>{
-    const title = item.querySelector(".accordion-title");
-    const content = item.querySelector(".accordion-content");
-    title.addEventListener("click",()=>{
-        console.log("clicked");
-        for(let i = 0; i<accordionItems.length; i++){
-            if(accordionItems[i] != item){
-                accordionItems[i].classList.remove("active");
-            } else {item.classList.toggle("active");
-		
-			}
-        } 
-		arrowDown.classList.toggle("rotate-90-degree");
-    });
-    
+	});
+	$(".activity-planning").on("click", function(){
+		$(".activity-chevron").toggleClass("object-rotation");
+	});
 });

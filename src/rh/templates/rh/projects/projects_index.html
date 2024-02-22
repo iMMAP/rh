@@ -1,5 +1,6 @@
 {% extends "../../_base.html" %}
 {% load static %}
+{% load vite %}
 {% load compress %}
 {% block page_title %}
     ReportHub -
@@ -35,3 +36,8 @@
     </div>
     
 {% endblock content %}
+
+
+{% block scripts %}
+    {% vite 'static/rh/js/project_planning.js' %}
+{% endblock scripts %}

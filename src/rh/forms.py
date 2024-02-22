@@ -12,8 +12,9 @@ from .models import (
     FacilitySiteType,
     Organization,
     Project,
+    ProjectIndicatorType,
     TargetLocation,
-    projectIndicatorType,
+ 
 )
 
 
@@ -289,7 +290,7 @@ class OrganizationRegisterForm(forms.ModelForm):
         return code
 class ProjectIndicatorTypeForm(forms.ModelForm):
     class Meta:
-        model = projectIndicatorType
+        model = ProjectIndicatorType
         fields = "__all__"
         exclude = ('project','indicator',)
         

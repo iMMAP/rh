@@ -132,7 +132,7 @@ urlpatterns = [
     ),
     # Filter Export
     path(
-        "export-filter/<int:projectId>",
+        "project/export/<int:projectId>",
         export_views.ProjectFilterExportView.as_view(),
         name="export_project_filter",
     ),
@@ -142,7 +142,7 @@ urlpatterns = [
         name="export_porjcet_list",
     ),
     path(
-        "project/activityplan/indicator",
+        "project/activityplan/indicator-type",
         user_views.update_indicator_type, name='update_indicator_type',
     )
 ]

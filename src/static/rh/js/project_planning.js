@@ -119,10 +119,3 @@ $(function () {
 		get_activity_domains();
 	})
 });
-// summary chevron rotation for project planing and activity planning 
-document.querySelector(".project-planning").addEventListener('click', function(){
-	document.querySelector(".project-chevron").classList.toggle("object-rotation");
-});
-document.querySelector(".activity-planning").addEventListener('click', function(){
-	document.querySelector(".activity-chevron").classList.toggle("object-rotation");
-});

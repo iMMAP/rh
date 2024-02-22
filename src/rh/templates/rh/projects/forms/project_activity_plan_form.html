@@ -57,8 +57,8 @@
                 {{ activity_plan_formset.management_form }} {% csrf_token %}
                 
                 <div id="activity-formset">
-                    {% for form, target_location_formset, indicator_form in combined_formset %}
-                        {% include "rh/projects/forms/activity_empty_form.html" with form=form target_location_formset=target_location_formset indicator_form=indicator_form %}
+                    {% for form, target_location_formset in combined_formset %}
+                        {% include "rh/projects/forms/activity_empty_form.html" with form=form target_location_formset=target_location_formset %}
                         
                     {% endfor %}
                     

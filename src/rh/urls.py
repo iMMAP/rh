@@ -143,6 +143,7 @@ urlpatterns = [
     ),
     path(
         "project/activityplan/indicator-type",
-        user_views.update_indicator_type, name='update_indicator_type',
-    )
+        user_views.update_indicator_type,
+        name="update_indicator_type",
+    ),
 ]

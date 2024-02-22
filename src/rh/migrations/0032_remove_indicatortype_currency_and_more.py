@@ -5,59 +5,60 @@ import django.utils.timezone
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('rh', '0031_remove_indicatortype_indicator_and_more'),
+        ("rh", "0031_remove_indicatortype_indicator_and_more"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='indicatortype',
-            name='currency',
+            model_name="indicatortype",
+            name="currency",
         ),
         migrations.RemoveField(
-            model_name='indicatortype',
-            name='grant_type',
+            model_name="indicatortype",
+            name="grant_type",
         ),
         migrations.RemoveField(
-            model_name='indicatortype',
-            name='implement_modility_type',
+            model_name="indicatortype",
+            name="implement_modility_type",
         ),
         migrations.RemoveField(
-            model_name='indicatortype',
-            name='package_type',
+            model_name="indicatortype",
+            name="package_type",
         ),
         migrations.RemoveField(
-            model_name='indicatortype',
-            name='transfer_category',
+            model_name="indicatortype",
+            name="transfer_category",
         ),
         migrations.RemoveField(
-            model_name='indicatortype',
-            name='transfer_mechanism_type',
+            model_name="indicatortype",
+            name="transfer_mechanism_type",
         ),
         migrations.RemoveField(
-            model_name='indicatortype',
-            name='unit_type',
+            model_name="indicatortype",
+            name="unit_type",
         ),
         migrations.AddField(
-            model_name='indicatortype',
-            name='created_at',
+            model_name="indicatortype",
+            name="created_at",
             field=models.DateField(auto_now_add=True, null=True),
         ),
         migrations.AddField(
-            model_name='indicatortype',
-            name='name',
+            model_name="indicatortype",
+            name="name",
             field=models.CharField(default=django.utils.timezone.now, max_length=600),
             preserve_default=False,
         ),
         migrations.AddField(
-            model_name='indicatortype',
-            name='type_name',
-            field=models.CharField(blank=True, choices=[('grant', 'Grant'), ('package', 'Package')], max_length=15, null=True),
+            model_name="indicatortype",
+            name="type_name",
+            field=models.CharField(
+                blank=True, choices=[("grant", "Grant"), ("package", "Package")], max_length=15, null=True
+            ),
         ),
         migrations.AddField(
-            model_name='indicatortype',
-            name='updated_at',
+            model_name="indicatortype",
+            name="updated_at",
             field=models.DateField(auto_now=True, null=True),
         ),
     ]

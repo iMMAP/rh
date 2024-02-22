@@ -5,63 +5,76 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('rh', '0033_remove_indicatortype_created_at_and_more'),
+        ("rh", "0033_remove_indicatortype_created_at_and_more"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='type',
-            name='clusters',
+            model_name="type",
+            name="clusters",
         ),
         migrations.RemoveField(
-            model_name='type',
-            name='indicators',
+            model_name="type",
+            name="indicators",
         ),
         migrations.RemoveField(
-            model_name='indicator',
-            name='types',
+            model_name="indicator",
+            name="types",
         ),
         migrations.AddField(
-            model_name='indicator',
-            name='currency',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='rh.currency'),
+            model_name="indicator",
+            name="currency",
+            field=models.ForeignKey(
+                blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to="rh.currency"
+            ),
         ),
         migrations.AddField(
-            model_name='indicator',
-            name='grant_type',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='rh.granttype'),
+            model_name="indicator",
+            name="grant_type",
+            field=models.ForeignKey(
+                blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to="rh.granttype"
+            ),
         ),
         migrations.AddField(
-            model_name='indicator',
-            name='implement_modility_type',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='rh.implementationmodalitytype'),
+            model_name="indicator",
+            name="implement_modility_type",
+            field=models.ForeignKey(
+                blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to="rh.implementationmodalitytype"
+            ),
         ),
         migrations.AddField(
-            model_name='indicator',
-            name='package_type',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='rh.packagetype'),
+            model_name="indicator",
+            name="package_type",
+            field=models.ForeignKey(
+                blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to="rh.packagetype"
+            ),
         ),
         migrations.AddField(
-            model_name='indicator',
-            name='transfer_category',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='rh.transfercategory'),
+            model_name="indicator",
+            name="transfer_category",
+            field=models.ForeignKey(
+                blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to="rh.transfercategory"
+            ),
         ),
         migrations.AddField(
-            model_name='indicator',
-            name='transfer_mechanism_type',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='rh.transfermechanismtype'),
+            model_name="indicator",
+            name="transfer_mechanism_type",
+            field=models.ForeignKey(
+                blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to="rh.transfermechanismtype"
+            ),
         ),
         migrations.AddField(
-            model_name='indicator',
-            name='unit_type',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='rh.unittype'),
+            model_name="indicator",
+            name="unit_type",
+            field=models.ForeignKey(
+                blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to="rh.unittype"
+            ),
         ),
         migrations.DeleteModel(
-            name='IndicatorType',
+            name="IndicatorType",
         ),
         migrations.DeleteModel(
-            name='Type',
+            name="Type",
         ),
     ]

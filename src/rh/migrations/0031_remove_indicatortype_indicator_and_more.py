@@ -5,19 +5,20 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('rh', '0030_remove_indicatortype_indicator_and_more'),
+        ("rh", "0030_remove_indicatortype_indicator_and_more"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='indicatortype',
-            name='indicator',
+            model_name="indicatortype",
+            name="indicator",
         ),
         migrations.AddField(
-            model_name='indicatortype',
-            name='indicator',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='rh.indicator'),
+            model_name="indicatortype",
+            name="indicator",
+            field=models.ForeignKey(
+                blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to="rh.indicator"
+            ),
         ),
     ]

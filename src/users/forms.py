@@ -23,7 +23,6 @@ class UserRegisterForm(UserCreationForm):
             "password1",
             "password2",
         ]
-       
 
     def clean_username(self):
         """check if username already exists"""

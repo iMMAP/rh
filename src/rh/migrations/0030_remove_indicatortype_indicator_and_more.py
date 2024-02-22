@@ -4,19 +4,18 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('rh', '0029_rename_indicatortypes_indicatortype'),
+        ("rh", "0029_rename_indicatortypes_indicatortype"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='indicatortype',
-            name='indicator',
+            model_name="indicatortype",
+            name="indicator",
         ),
         migrations.AddField(
-            model_name='indicatortype',
-            name='indicator',
-            field=models.ManyToManyField(to='rh.indicator'),
+            model_name="indicatortype",
+            name="indicator",
+            field=models.ManyToManyField(to="rh.indicator"),
         ),
     ]

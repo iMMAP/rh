@@ -40,7 +40,7 @@ def activate_account(request, uidb64, token):
     if user is not None and account_activation_token.check_token(user, token):
         user.is_active = True
         user.save()
-        messages.success(request,"Thank you for your email confirmation, you can login now into your account.")
+        messages.success(request, "Thank you for your email confirmation, you can login now into your account.")
     else:
         messages.error(request, "Activation link is invalid!")
 
@@ -91,9 +91,9 @@ def register_view(request):
             username = u_form.cleaned_data.get("username")
             email = u_form.clean_email()
 
-            #Registration with email confirmation step.
+            # Registration with email confirmation step.
             if settings.DEBUG:
-                #If development mode then go ahead and create the user.
+                # If development mode then go ahead and create the user.
                 user = u_form.save()
                 user_profile = p_form.save(commit=False)
                 user_profile.user = user
@@ -103,7 +103,7 @@ def register_view(request):
                 messages.success(request, f"Account created successfully for {username}.")
                 return redirect("login")
             else:
-                #If production mode send a verification email to the user for account activation
+                # If production mode send a verification email to the user for account activation
                 user = u_form.save(commit=False)
                 user.is_active = False
                 user.save()

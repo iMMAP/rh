@@ -4,14 +4,13 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('rh', '0027_projectindicatortype'),
+        ("rh", "0027_projectindicatortype"),
     ]
 
     operations = [
         migrations.RenameModel(
-            old_name='IndidicatorTypes',
-            new_name='IndicatorTypes',
+            old_name="IndidicatorTypes",
+            new_name="IndicatorTypes",
         ),
     ]

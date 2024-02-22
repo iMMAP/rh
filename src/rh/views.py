@@ -1,4 +1,3 @@
-
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
@@ -20,12 +19,10 @@ from .forms import (
     ActivityPlanFormSet,
     BudgetProgressForm,
     DisaggregationFormSet,
-  
     OrganizationRegisterForm,
     ProjectForm,
     ProjectIndicatorTypeForm,
     TargetLocationFormSet,
- 
 )
 from .models import (
     ActivityDomain,
@@ -264,7 +261,7 @@ def update_project_view(request, pk):
 @login_required
 def create_project_activity_plan(request, project):
     project = get_object_or_404(Project, pk=project)
-    
+
     # Get all existing activity plans for the project
     # Create the activity plan formset with initial data from the project
     activity_plan_formset = ActivityPlanFormSet(
@@ -374,14 +371,13 @@ def create_project_activity_plan(request, project):
     target_location_formset = TargetLocationFormSet(
         request.POST or None,
     )
-  
+
     cluster_ids = list(project.clusters.values_list("id", flat=True))
-    
+
     combined_formset = zip(activity_plan_formset.forms, target_location_formsets)
 
     context = {
         "project": project,
-
         "activity_plan_formset": activity_plan_formset,
         "target_location_formset": target_location_formset,
         "combined_formset": combined_formset,
@@ -1024,13 +1020,10 @@ def ProjectListView(request, flag):
     response["Content-Disposition"] = f"attachment; filename=project.{format}"
     return response
 
+
 def update_indicator_type(request):
     indicator_id = request.GET.get("id")
     indicator = Indicator.objects.get(id=indicator_id)
     indicator_form = ProjectIndicatorTypeForm()
-    context = {
-        'indicator':indicator,
-        'indicator_form':indicator_form
-    }
-    return render(request, 'rh/projects/views/_indicator_types.html',context)
-    
+    context = {"indicator": indicator, "indicator_form": indicator_form}
+    return render(request, "rh/projects/views/_indicator_types.html", context)

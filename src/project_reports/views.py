@@ -1024,7 +1024,7 @@ def import_monthly_reports(request, report):
                     for index, row in df.iterrows():
                         message = ""
 
-                        # TODO: Handle same file upload multiple times, 
+                        # TODO: Handle same file upload multiple times,
                         # check all of the file first and then run import
 
                         # Get or create Indicator

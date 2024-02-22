@@ -30,7 +30,6 @@ from .forms import (
 from .models import (
     ActivityDomain,
     ActivityPlan,
-    ActivityType,
     BudgetProgress,
     Cluster,
     DisaggregationLocation,
@@ -38,7 +37,6 @@ from .models import (
     Location,
     Project,
     TargetLocation,
-    projectIndicatorType,
 )
 
 RECORDS_PER_PAGE = 10

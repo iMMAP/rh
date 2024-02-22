@@ -646,7 +646,7 @@ class BudgetProgress(models.Model):
         verbose_name_plural = "Budget Progress"
 
 
-class projectIndicatorType(models.Model):
+class ProjectIndicatorType(models.Model):
     project = models.ForeignKey(Project, on_delete=models.SET_NULL, null=True, blank=True)
     indicator = models.ForeignKey(Indicator, on_delete=models.SET_NULL, null=True, blank=True)
 

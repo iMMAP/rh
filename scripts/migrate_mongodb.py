@@ -878,17 +878,17 @@ try:
 
     import_clusters_from_csv(connection, CLUSTERS)
 
-    import_activity_domains_from_csv(connection, ACTIVITY_DOMAIN_CSV)
+    # import_activity_domains_from_csv(connection, ACTIVITY_DOMAIN_CSV)
 
-    import_activity_descriptions_from_csv(connection, ACTIVITY_DESCRIPTION_CSV)
+    # import_activity_descriptions_from_csv(connection, ACTIVITY_DESCRIPTION_CSV)
 
-    import_activity_details_from_csv(connection, ACTIVITY_DETAIL_CSV)
+    # import_activity_details_from_csv(connection, ACTIVITY_DETAIL_CSV)
 
     import_organizations_from_csv(connection, ORGANIZATIONS_CSV)
 
     import_donors_from_csv(connection, DONORS_CSV)
 
-    import_indicators_from_csv(connection, INDICATORS_CSV)
+    # import_indicators_from_csv(connection, INDICATORS_CSV)
 
     import_users_from_csv(connection, USERS_CSV)
 

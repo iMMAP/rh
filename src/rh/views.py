@@ -1022,8 +1022,14 @@ def ProjectListView(request, flag):
 
 
 def update_indicator_type(request):
-    indicator_id = request.GET.get("id")
-    indicator = Indicator.objects.get(id=indicator_id)
-    indicator_form = ProjectIndicatorTypeForm()
-    context = {"indicator": indicator, "indicator_form": indicator_form}
-    return render(request, "rh/projects/views/_indicator_types.html", context)
+    if request.method == 'POST':
+        indicator_id = request.POST.get("id")
+        
+        indicator = Indicator.objects.get(id=indicator_id)
+        indicator_form = ProjectIndicatorTypeForm()
+        context = {"indicator": indicator, "indicator_form": indicator_form}
+
+        html =  render_to_string("rh/projects/views/_indicator_types.html", context)
+    
+        # Return JSON response containing the generated HTML
+        return JsonResponse({"html": html})

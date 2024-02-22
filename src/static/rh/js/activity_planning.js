@@ -537,23 +537,24 @@ $(function () {
 		});
 	});
 });
+// update indicator types 
 function updateIndicatorTypes(e){
 	let id = e.target.value;
 	console.log(id);
 	let indicatorUrl = e.target.dataset.indicatorUrl;
 	const csrftoken = Cookies.get("csrftoken");
-	$.ajax({
-		url: indicatorUrl,
-		data: {id},
-		beforeSend: function (xhr, settings) {
-			xhr.setRequestHeader("X-CSRFToken", csrftoken);
-		},
-		success: function(data){
-			$("#indicator-types").html(data);
-			console.log(data);
-		}, error: function(error){
-			console.log(error);
-		}
 
+	const formData = new FormData();
+	formData.append('id',id);
+	formData.append('csrfmiddlewaretoken', csrftoken);
+	fetch(indicatorUrl,{
+		method: 'POST',
+		body: formData
+	}).then(async response => {
+		let data = await response.json()
+		document.getElementById("indicator-types").innerHTML = data.html;
+	}).catch(error => {
+		console.log(error);
 	});
+
 }

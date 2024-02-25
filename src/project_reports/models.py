@@ -3,12 +3,12 @@ from django.db import models
 from rh.models import (
     ActivityPlan,
     Disaggregation,
+    FacilitySiteType,
     Indicator,
     Location,
     LocationType,
     Project,
     ReportType,
-    FacilitySiteType,
 )
 
 # ##############################################
@@ -98,7 +98,27 @@ class TargetLocationReport(models.Model):
         blank=True,
     )
     location_type = models.ForeignKey(LocationType, on_delete=models.SET_NULL, null=True, blank=True)
-    facility_site_type = models.ForeignKey(FacilitySiteType, on_delete=models.SET_NULL, null=True)
+    facility_site_type = models.ForeignKey(FacilitySiteType, on_delete=models.SET_NULL, null=True, blank=True)
+
+    # Facility Monitoring
+    facility_monitoring = models.BooleanField(default=False)
+    facility_name = models.CharField(
+        max_length=200,
+        blank=True,
+        null=True,
+    )
+    facility_id = models.CharField(
+        max_length=200,
+        blank=True,
+        null=True,
+    )
+    facility_lat = models.CharField(max_length=200, null=True, blank=True)
+    facility_long = models.CharField(max_length=200, null=True, blank=True)
+    nhs_code = models.CharField(
+        max_length=200,
+        blank=True,
+        null=True,
+    )
 
     def __str__(self):
         return f"{self.activity_plan_report}, {self.province}, {self.district}"

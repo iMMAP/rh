@@ -1,8 +1,8 @@
 from django import forms
 from django.forms.models import inlineformset_factory
+from django.urls import reverse_lazy
 
 from rh.models import Indicator
-from django.urls import reverse_lazy
 
 from .models import ActivityPlanReport, DisaggregationLocationReport, ProjectMonthlyReport, TargetLocationReport
 
@@ -36,11 +36,25 @@ class TargetLocationReportForm(forms.ModelForm):
         model = TargetLocationReport
         fields = "__all__"
         widgets = {
+            "nhs_code": forms.widgets.TextInput(),
             "district": forms.Select(
                 attrs={"target-locations-queries-url": reverse_lazy("ajax-load-target-locations")}
             ),
             "zone": forms.Select(attrs={"target-locations-queries-url": reverse_lazy("ajax-load-target-locations")}),
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        cluster_has_nhs_code = False
+        if "instance" in kwargs and kwargs["instance"]:
+            plan_report = kwargs["instance"].activity_plan_report
+            if plan_report:
+                cluster_has_nhs_code = any(
+                    cluster.has_nhs_code for cluster in plan_report.activity_plan.activity_domain.clusters.all()
+                )
+        if cluster_has_nhs_code:
+            self.fields["nhs_code"] = forms.CharField(max_length=200, required=True)
 
 
 TargetLocationReportFormSet = inlineformset_factory(

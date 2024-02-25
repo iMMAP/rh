@@ -99,6 +99,7 @@ class TargetLocationForm(forms.ModelForm):
         widgets = {
             "country": forms.widgets.HiddenInput(),
             "active": forms.widgets.HiddenInput(),
+            "nhs_code": forms.widgets.TextInput(),
             "locations_group_by": forms.widgets.RadioSelect(),
             "district": forms.Select(attrs={"locations-queries-url": reverse_lazy("ajax-load-locations")}),
             "zone": forms.Select(attrs={"locations-queries-url": reverse_lazy("ajax-load-locations")}),
@@ -111,6 +112,19 @@ class TargetLocationForm(forms.ModelForm):
             initial=False,
             widget=forms.HiddenInput(attrs={"name": self.prefix + "-save"}),
         )
+
+        cluster_has_nhs_code = False
+        if "instance" in kwargs and kwargs["instance"]:
+            activity_plan = kwargs["instance"].activity_plan
+            if activity_plan:
+                cluster_has_nhs_code = any(
+                    cluster.has_nhs_code for cluster in activity_plan.activity_domain.clusters.all()
+                )
+        if cluster_has_nhs_code:
+            self.fields["nhs_code"] = forms.CharField(max_length=200, required=True)
+        # else:
+        #     self.fields.pop('nhs_code', None)
+
         self.fields["province"].queryset = self.fields["province"].queryset.filter(type="Province")
         self.fields["district"].queryset = self.fields["district"].queryset.filter(type="District")
         # Get only the relevant facility types -  related to cluster
@@ -127,9 +141,6 @@ class TargetLocationForm(forms.ModelForm):
                 "onchange": f"updateLocationTitle('{kwargs.get('prefix')}', 'id_{kwargs.get('prefix')}-district');",
                 "locations-queries-url": reverse_lazy("ajax-load-locations"),
             }
-        )
-        self.fields["site_name"].widget.attrs.update(
-            {"onchange": f"updateLocationTitle('{kwargs.get('prefix')}', 'id_{kwargs.get('prefix')}-site_name');"}
         )
 
 
@@ -172,11 +183,6 @@ class ActivityPlanForm(forms.ModelForm):
     class Meta:
         model = ActivityPlan
         fields = "__all__"
-        widgets = {
-            "facility_type": forms.Select(
-                attrs={"facility-sites-queries-url": reverse_lazy("ajax-load-facility_sites")}
-            ),
-        }
 
     def __init__(self, *args, project, **kwargs):
         super().__init__(*args, **kwargs)

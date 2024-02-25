@@ -4,6 +4,7 @@ from collections import defaultdict
 from datetime import datetime, timedelta
 
 import pandas as pd
+from django import forms
 from django.contrib.auth.decorators import login_required
 from django.db import transaction
 from django.db.models import Q
@@ -14,6 +15,7 @@ from django.template.loader import render_to_string
 from django.urls import reverse
 from django.utils import timezone
 from django.views.decorators.cache import cache_control
+
 from rh.models import (
     ActivityDetail,
     ActivityDomain,
@@ -125,7 +127,8 @@ def create_project_monthly_report_view(request, project):
 def copy_project_monthly_report_view(request, report):
     """Copy report view"""
     monthly_report = get_object_or_404(ProjectMonthlyReport, pk=report)
-
+    message = ""
+    success = False
     if monthly_report:
         # Calculate the first day of the current month
         today = datetime.now()
@@ -164,8 +167,12 @@ def copy_project_monthly_report_view(request, report):
 
                     # Iterate through disaggregation locations reports and copy them to the new location report.
                     for disaggregation_location_report in disaggregation_location_reports:
-                        copy_disaggregation_location_reports(new_location_report, disaggregation_location_report)
+                        success = copy_disaggregation_location_reports(
+                            new_location_report, disaggregation_location_report
+                        )
 
+        else:
+            message = "Atleast one last month approved report is required."
         # Save the changes made to the new monthly report.
         monthly_report.state = "todo"
         monthly_report.save()
@@ -179,7 +186,7 @@ def copy_project_monthly_report_view(request, report):
         )
 
         # Return the URL in a JSON response
-        response_data = {"redirect_url": url}
+        response_data = {"success": success, "redirect_url": url, "message": message}
         return JsonResponse(response_data)
 
 
@@ -359,7 +366,7 @@ def get_project_and_report_details(project_id, report_id=None):
     )
 
 
-def get_target_locations_doamin(target_locations):
+def get_target_locations_domain(target_locations):
     # TODO: use cache
     # Create Q objects for each location type
     province_q = Q(id__in=[location.province.id for location in target_locations if location.province])
@@ -390,7 +397,7 @@ def create_project_monthly_report_progress_view(request, project, report):
         target_location_provinces,
         target_location_districts,
         target_location_zones,
-    ) = get_target_locations_doamin(target_locations)
+    ) = get_target_locations_domain(target_locations)
 
     activity_plans = [plan for plan in activity_plans]
 
@@ -446,7 +453,8 @@ def create_project_monthly_report_progress_view(request, project, report):
                         "project_id": project,
                         "indicator": activity_plan.indicator,
                     }
-                    form.fields["indicator"].queryset = Indicator.objects.filter(id=activity_plan.indicator.id)
+                    if activity_plan.indicator:
+                        form.fields["indicator"].queryset = Indicator.objects.filter(id=activity_plan.indicator.id)
 
     if request.method == "POST":
         if activity_report_formset.is_valid():
@@ -568,7 +576,7 @@ def update_project_monthly_report_progress_view(request, project, report):
         target_location_provinces,
         target_location_districts,
         target_location_zones,
-    ) = get_target_locations_doamin(target_locations)
+    ) = get_target_locations_domain(target_locations)
 
     activity_plans = [plan for plan in activity_plans]
 
@@ -618,7 +626,8 @@ def update_project_monthly_report_progress_view(request, project, report):
         for i, form in enumerate(activity_report_formset.forms):
             if i < len(activity_plans):
                 activity_plan = activity_plans[i]
-                form.fields["indicator"].queryset = Indicator.objects.filter(id=activity_plan.indicator.id)
+                if activity_plan.indicator:
+                    form.fields["indicator"].queryset = Indicator.objects.filter(id=activity_plan.indicator.id)
 
     if request.method == "POST":
         if activity_report_formset.is_valid():
@@ -628,6 +637,7 @@ def update_project_monthly_report_progress_view(request, project, report):
                     activity_report = activity_report_form.save(commit=False)
                     activity_report.monthly_report = monthly_report_instance
                     activity_report.save()
+                    activity_report_form.save_m2m()
 
                     # Process target location forms and their disaggregation forms
                     activity_report_target = 0
@@ -723,7 +733,7 @@ def get_location_report_empty_form(request):
         target_location_provinces,
         target_location_districts,
         target_location_zones,
-    ) = get_target_locations_doamin(target_locations)
+    ) = get_target_locations_domain(target_locations)
 
     ActivityReportFormset = inlineformset_factory(
         ProjectMonthlyReport,
@@ -738,6 +748,11 @@ def get_location_report_empty_form(request):
     # Get the prefix index from the request
     prefix_index = request.POST.get("prefix_index")
 
+    activity_domain_id = request.POST.get("activity_domain", None)
+    activity_domain = None
+    if activity_domain_id:
+        activity_domain = get_object_or_404(ActivityDomain, pk=activity_domain_id)
+
     # Create an instance of TargetLocationFormSet with a prefixed name
     location_report_formset = TargetLocationReportFormSet(
         prefix=f"locations_report_{activity_report_formset.prefix}-{prefix_index}"
@@ -746,6 +761,17 @@ def get_location_report_empty_form(request):
     # for target_location_form in target_location_formset.forms:
     # Create a disaggregation formset for each target location form
     location_report_form = location_report_formset.empty_form
+
+    # Check if the activity plan is selected
+    if activity_domain:
+        # Get clusters associated with the activity plan's domain
+        clusters = activity_domain.clusters.all()
+        cluster_has_nhs_code = any(cluster.has_nhs_code for cluster in clusters)
+        # If at least one cluster has NHS code, add the NHS code field to the form
+        if cluster_has_nhs_code:
+            location_report_form.fields["nhs_code"] = forms.CharField(max_length=200, required=True)
+        else:
+            location_report_form.fields.pop("nhs_code", None)
 
     location_report_form.fields["province"].queryset = Location.objects.filter(id__in=target_location_provinces)
     location_report_form.fields["district"].queryset = Location.objects.filter(id__in=target_location_districts)
@@ -773,22 +799,6 @@ def get_location_report_empty_form(request):
 @cache_control(no_store=True)
 @login_required
 def load_target_locations_details(request):
-    # parent_ids = [int(i) for i in request.POST.getlist("parents[]") if i]
-    # parents = Location.objects.filter(pk__in=parent_ids).select_related("parent")
-    # response = "".join(
-    #     [
-    #         f'<optgroup label="{parent.name}">'
-    #         + "".join(
-    #             [f'<option value="{target_location.district.pk}">{target_location.district.name}</option>' for target_location in TargetLocation.objects.filter(province=parent)]
-    #         )
-    #         + "</optgroup>"
-    #         if TargetLocation.objects.filter(province=parent).exists()
-    #         else ""
-    #         for parent in parents
-    #     ]
-    # )
-    # return JsonResponse(response, safe=False)
-
     parent_ids = [int(i) for i in request.POST.getlist("parents[]") if i]
     parents = Location.objects.filter(pk__in=parent_ids).select_related("parent")
 
@@ -917,8 +927,9 @@ def delete_location_report_view(request, location_report):
 def submit_monthly_report_view(request, report):
     monthly_report = get_object_or_404(ProjectMonthlyReport, pk=report)
     # TODO: Handle with access rights and groups
-    monthly_report.state = "submit"
+    monthly_report.state = "complete"
     monthly_report.submitted_on = timezone.now()
+    monthly_report.approved_on = timezone.now()
     monthly_report.save()
     # Generate the URL using reverse
     url = reverse(

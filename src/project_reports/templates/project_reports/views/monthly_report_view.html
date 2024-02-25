@@ -212,6 +212,18 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="col">
+                                <div class="field-col">
+                                    <div class="select-field">
+                                        <label>Report Types</label>
+                                        <span class="text-read-only m2m-badges">
+                                            {% for report_type in activity_report.report_types.all %}
+                                            <span class="btn btn-red"> {{ report_type.name }}</span>
+                                            {% endfor %}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <div class="target_location-block target-location-accordion">
                             <div class="inner-holder">
@@ -250,8 +262,8 @@
                                                 </div>
                                                 <div class="row">
                                                     <div class="col col-lg">
-                                                        <div class="multiple-fields-row three-items">
-                                                            <div class="field-col">
+                                                        <div class="multiple-fields-row {% if location_report.zone %}three{% else %}two{% endif %}-items">
+                                                            <div class="field-col">    
                                                                 <div class="select-field is-required">
                                                                     <span class="label">Province</span>
                                                                     <span class="text-read-only">{{ location_report.province }}</span>
@@ -265,15 +277,95 @@
                                                                     </div>
                                                                 </div>
                                                             </div>
+                                                            {% if location_report.zone %}
+                                                                <div class="field-col">
+                                                                    <div class="input-field">
+                                                                        <span class="label">Zone</span>
+                                                                        <div class="input-holder">
+                                                                            <span class="text-read-only">{{ location_report.district }}</span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            {% endif %}
+                                                        </div>
+                                                    </div>
+                                                    <div class="col">
+                                                        <div class="multiple-fields-row {% if location_report.nhs_code %}three{% else %}two{% endif %}-items">
                                                             <div class="field-col">
                                                                 <div class="select-field ">
                                                                     <span class="label">Location Type</span>
                                                                     <span class="text-read-only">{{ location_report.location_type }}</span>
                                                                 </div>
                                                             </div>
+                                                            {% if location_report.nhs_code %}
+                                                            <div class="field-col">
+                                                                <div class="input-field">
+                                                                    <span class="label">NHS Code</span>
+                                                                    <div class="input-holder">
+                                                                        <span class="text-read-only">{{ location_report.nhs_code }}</span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            {% endif %}
+                                                            <div class="field-col">
+                                                                <div class="input-field">
+                                                                    <span class="label">Facility Monitoring</span>
+                                                                    <div class="input-holder">
+                                                                        <span class="text-read-only">
+                                                                            {% if location_report.facility_monitoring %}
+                                                                            Yes
+                                                                            {% else %}
+                                                                            No
+                                                                            {% endif %}
+                                                                        </span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                    <br/>
+                                                </div>
+                                                <br/>
+                                                <div class="row">
+                                                    {% if location_report.facility_monitoring %}
+                                                    <div class="col">
+                                                        <div class="multiple-fields-row two-items">
+                                                            <div class="field-col">
+                                                                <div class="select-field">
+                                                                    <span class="label">Facility / Site Name</span>
+                                                                    <span class="text-read-only">{{ location_report.facility_name }}</span>
+                                                                </div>
+                                                            </div>
+                                                            <div class="field-col">
+                                                                <div class="input-field">
+                                                                    <span class="label">Facility / Site ID</span>
+                                                                    <div class="input-holder">
+                                                                        <span class="text-read-only">{{ location_report.facility_id }}</span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col">
+                                                        <div class="multiple-fields-row two-items">
+                                                            <div class="field-col">
+                                                                <div class="input-field">
+                                                                    <span class="label">Facility / Site Latitude</span>
+                                                                    <div class="input-holder">
+                                                                        <span class="text-read-only">{{ location_report.facility_lat }}</span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="field-col">
+                                                                <div class="input-field">
+                                                                    <span class="label">Facility / Site Longitude</span>
+                                                                    <div class="input-holder">
+                                                                        <span class="text-read-only">{{ location_report.facility_long }}</span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    {% endif %}
                                                 </div>
                                                 <br/>
                                                 <div class="disaggregation-block disaggregation-accordion">

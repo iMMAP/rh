@@ -574,3 +574,19 @@ select,
     }
   }
 }
+
+.select2-container {
+  box-sizing: border-box;
+  display: unset;
+  margin: 0;
+  position: relative;
+  vertical-align: middle;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__arrow {
+  height: 62px;
+  position: absolute;
+  top: 1px;
+  right: 1px;
+  width: 20px;
+}

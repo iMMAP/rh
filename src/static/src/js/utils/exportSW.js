@@ -2,9 +2,11 @@
 export default function initExportAndSW() {
   jQuery(function () {
     $(".js_multiselect").select2();
+    
     // changing the checkbox color when it checked
     $("input[type=checkbox]").change(function(){
       $(this).css("accent-color","#af4745");
+      
     });
     //Reset the checkbox
     $("#resetFilterButton").on("click", function(){

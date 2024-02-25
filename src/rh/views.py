@@ -22,6 +22,7 @@ from .forms import (
     DisaggregationFormSet,
     OrganizationRegisterForm,
     ProjectForm,
+    ProjectIndicatorTypeForm,
     TargetLocationFormSet,
 )
 from .models import (
@@ -372,6 +373,7 @@ def create_project_activity_plan(request, project):
     target_location_formset = TargetLocationFormSet(
         request.POST or None,
     )
+
     cluster_ids = list(project.clusters.values_list("id", flat=True))
 
     combined_formset = zip(activity_plan_formset.forms, target_location_formsets)
@@ -387,7 +389,6 @@ def create_project_activity_plan(request, project):
         "financial_view": False,
         "reports_view": False,
     }
-
     # Render the template with the context data
     return render(request, "rh/projects/forms/project_activity_plan_form.html", context)
 
@@ -1013,3 +1014,17 @@ def ProjectListView(request, flag):
     response = HttpResponse(ds, content_type=f"{format}")
     response["Content-Disposition"] = f"attachment; filename=project.{format}"
     return response
+
+
+def update_indicator_type(request):
+    if request.method == 'POST':
+        indicator_id = request.POST.get("id")
+        
+        indicator = Indicator.objects.get(id=indicator_id)
+        indicator_form = ProjectIndicatorTypeForm()
+        context = {"indicator": indicator, "indicator_form": indicator_form}
+
+        html =  render_to_string("rh/projects/views/_indicator_types.html", context)
+    
+        # Return JSON response containing the generated HTML
+        return JsonResponse({"html": html})

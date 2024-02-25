@@ -12,6 +12,7 @@ from .models import (
     FacilitySiteType,
     Organization,
     Project,
+    ProjectIndicatorType,
     TargetLocation,
 )
 
@@ -206,6 +207,9 @@ class ActivityPlanForm(forms.ModelForm):
             {"onchange": f"updateActivityTitle('{prefix}', 'id_{prefix}-activity_detail');"}
         )
         self.fields["indicator"].widget.attrs.update({"style": "20px"})
+        self.fields["indicator"].widget.attrs.update(
+            {"onchange": "updateIndicatorTypes(event)", "data-indicator-url": reverse_lazy("update_indicator_type")}
+        )
 
 
 ActivityPlanFormSet = inlineformset_factory(
@@ -288,3 +292,13 @@ class OrganizationRegisterForm(forms.ModelForm):
         if org_code.exists():
             raise forms.ValidationError(f"{code} aleady exists...!")
         return code
+
+
+class ProjectIndicatorTypeForm(forms.ModelForm):
+    class Meta:
+        model = ProjectIndicatorType
+        fields = "__all__"
+        exclude = (
+            "project",
+            "indicator",
+        )

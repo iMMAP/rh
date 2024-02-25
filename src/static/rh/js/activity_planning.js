@@ -103,7 +103,6 @@ function addActivityForm(prefix, project, nextFormIndex) {
 						true,
 					);
 					$(IndicatorsID).select2();
-					// addTargetLocationForm(activityFormPrefix, projectID, activityFormIndex);
 				}, 100);
 			}
 		},
@@ -121,7 +120,7 @@ function addActivityForm(prefix, project, nextFormIndex) {
 /**
  * Handle Add Dynamic Activity Form
  **/
-function addTargetLocationForm(prefix, project, nextFormIndex) {
+function addTargetLocationForm(prefix, project, nextFormIndex, activityDomain) {
 	const activityFormPrefix = prefix;
 	const projectID = project;
 
@@ -130,7 +129,7 @@ function addTargetLocationForm(prefix, project, nextFormIndex) {
 
 	$.ajax({
 		url: "/ajax/get_target_location_empty_form/",
-		data: { project: projectID, prefix_index: nextFormIndex },
+		data: { project: projectID, prefix_index: nextFormIndex, activity_domain: activityDomain },
 		type: "POST",
 		dataType: "json",
 		beforeSend: function (xhr, settings) {
@@ -211,15 +210,19 @@ function addTargetLocationForm(prefix, project, nextFormIndex) {
 						`#id_activityplan_set-${activityFormIndex}-indicator`,
 					);
 
-
-					
 					let selectedID = $select2Event[0].value
-
-				
 					handleDisaggregationForms($select2Event[0], selectedID, [
 						locationPrefix,
 					]);
 
+					// Call Facility Monitoring function when page loads.
+					handleFacilityMonitoring(locationPrefix, addedForm);
+					let $facilityMonitoring = $(addedForm).find(
+						`#id_${locationPrefix}-facility_monitoring`
+					);
+					$facilityMonitoring.change(function () {
+						handleFacilityMonitoring(locationPrefix, addedForm);
+					});
 
 				}
 			}
@@ -383,9 +386,6 @@ function updateLocationBlockTitles(locationPrefix) {
 	// id_target_locations_activityplan_set-0-0-province
 	updateLocationTitle(locationPrefix, `id_${locationPrefix}-province`);
 	updateLocationTitle(locationPrefix, `id_${locationPrefix}-district`);
-
-	// TODO: Update for site and zone
-	// updateLocationTitle(locationPrefix, `id_${locationPrefix}-site_name`);
 }
 
 /**
@@ -455,6 +455,31 @@ function getLocations(
 	}
 }
 
+
+/**
+* Handle Facility Monitoring field
+@param {string} locationPrefix - Form Location Prefix.
+@param {string} formElement - Form Element.
+**/
+function handleFacilityMonitoring(locationPrefix, formElement) {
+	$formElement = $(formElement)
+	let $facilityMonitoring = $(`#id_${locationPrefix}-facility_monitoring`);
+	let $facilityName = $formElement.find(
+		`#id_${locationPrefix}-facility_name`
+	);
+	let $facilityDetails = $formElement.find(
+		`#facility_details_${locationPrefix}`
+	);
+
+	if (!$facilityMonitoring.is(":checked")) {
+		$facilityDetails.hide();
+		$facilityName.prop("required", false).removeClass("is-required");
+	} else {
+		$facilityDetails.show();
+		$facilityName.prop("required", true).addClass("is-required");
+	}
+}
+
 /**
  * Ready Function
  **/
@@ -483,13 +508,16 @@ $(function () {
 		.on("click", ".add-target-location-form-button", function (event) {
 			event.preventDefault(); // Prevent the default behavior (form submission)
 			event.stopPropagation(); // Prevent the default behavior (propagation)
+			
 			const activityFormPrefix = event.currentTarget.dataset.formPrefix;
 			const activityProject = event.currentTarget.dataset.project;
+			const activityDomain = $(document).find(`#id_${activityFormPrefix}-activity_domain`)
 			const activityFormIndex = activityFormPrefix.match(/\d+/)[0];
 			addTargetLocationForm(
 				activityFormPrefix,
 				activityProject,
 				activityFormIndex,
+				activityDomain.val(),
 			); // Call the function to add a new activity form
 		});
 
@@ -515,6 +543,7 @@ $(function () {
 			let selectedID = $(indicatorsSelect)[0].value
 			handleDisaggregationForms(indicatorsSelect, selectedID);
 		});
+
 	});
 
 	const $locationBlock = $(".target_location_form");
@@ -534,6 +563,15 @@ $(function () {
 		});
 		$(`#id_${locationPrefix}-district`).on("change", function () {
 			getLocations(locationPrefix, "zone", "district");
+		});
+		// Call Facility Monitoring function when page loads.
+		handleFacilityMonitoring(locationPrefix, formElement);
+		
+		let $facilityMonitoring = $(formElement).find(
+			`#id_${locationPrefix}-facility_monitoring`
+		);
+		$facilityMonitoring.change(function () {
+			handleFacilityMonitoring(locationPrefix, formElement);
 		});
 	});
 });

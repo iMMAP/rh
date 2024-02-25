@@ -575,3 +575,24 @@ $(function () {
 		});
 	});
 });
+// update indicator types 
+function updateIndicatorTypes(e){
+	let id = e.target.value;
+	console.log(id);
+	let indicatorUrl = e.target.dataset.indicatorUrl;
+	const csrftoken = Cookies.get("csrftoken");
+
+	const formData = new FormData();
+	formData.append('id',id);
+	formData.append('csrfmiddlewaretoken', csrftoken);
+	fetch(indicatorUrl,{
+		method: 'POST',
+		body: formData
+	}).then(async response => {
+		let data = await response.json()
+		document.getElementById("indicator-types").innerHTML = data.html;
+	}).catch(error => {
+		console.log(error);
+	});
+
+}

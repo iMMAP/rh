@@ -118,5 +118,4 @@ $(function () {
 	$("#id_clusters").on("change", function() {
 		get_activity_domains();
 	})
-
 });

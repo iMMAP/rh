@@ -22,6 +22,9 @@ class WarehouseLocation(models.Model):
     )
     name = models.CharField(max_length=255, blank=True, null=True)
 
+    created_at = models.DateTimeField(auto_now_add=True,null=True)
+    updated_at = models.DateTimeField(auto_now=True,null=True)
+
     def __str__(self):
         return self.name
 
@@ -35,6 +38,9 @@ class StockItemsType(models.Model):
     name = models.CharField(max_length=255, blank=True, null=True)
     old_id = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
 
+    created_at = models.DateTimeField(auto_now_add=True,null=True)
+    updated_at = models.DateTimeField(auto_now=True,null=True)
+
     def __str__(self):
         return self.name
 
@@ -45,6 +51,9 @@ class StockItemsType(models.Model):
 
 class StockUnit(models.Model):
     name = models.CharField(max_length=255, blank=True, null=True)
+
+    created_at = models.DateTimeField(auto_now_add=True,null=True)
+    updated_at = models.DateTimeField(auto_now=True,null=True)
 
     def __str__(self):
         return self.name
@@ -86,6 +95,9 @@ class StockLocationDetails(models.Model):
     qty_in_pipeline = models.IntegerField(default=0, verbose_name="Qty in Pipeline", null=True, blank=True)
     beneficiary_coverage = models.IntegerField(default=0, blank=True, null=True)
 
+    created_at = models.DateTimeField(auto_now_add=True,null=True)
+    updated_at = models.DateTimeField(auto_now=True,null=True)
+
     def __str__(self):
         return f"{self.warehouse_location} Stock Details"
 
@@ -102,6 +114,9 @@ class StockReports(models.Model):
     submitted = models.BooleanField(default=False)
     submitted_at = models.DateTimeField(blank=True, null=True)
     note = models.TextField(blank=True, null=True)
+
+    created_at = models.DateTimeField(auto_now_add=True,null=True)
+    updated_at = models.DateTimeField(auto_now=True,null=True)
 
     def __str__(self):
         return self.created_at.strftime("%B, %Y")

@@ -19,7 +19,7 @@
                             <span class="icon-trashbin-outline"></span>
                         </a>
                     </li>
-                    {% if monthly_report.is_active %}
+                    {% if monthly_report.active %}
                     <li>
                         <a href="#" 
                         data-url="{% url 'archive_project_monthly_report' monthly_report.pk %}"

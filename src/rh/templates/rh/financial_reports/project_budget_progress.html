@@ -54,7 +54,7 @@
                 {% csrf_token %}
                 {% for form in formset reversed %}
                     {{ form.id }}
-                    {{ form.is_active }}
+                    {{ form.active }}
                     {{ form.save }}
                     <input type="hidden"
                             name="country"

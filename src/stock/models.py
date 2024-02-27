@@ -71,7 +71,7 @@ class StockLocationDetails(models.Model):
     TARGET_GROUP_TYPES = [
         ("All Population", "All Population"),
         ("Conflict Affected", "Conflict Affected"),
-        ("Natural Disaster", "Natural Disaster"),
+        ("Natural Disaster", "natural-disaster"),
         ("Returnees", "Returnees"),
     ]
     STATUS_TYPES = [

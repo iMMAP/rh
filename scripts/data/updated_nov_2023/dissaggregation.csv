@@ -1,15 +1,20 @@
 name,type,updated,created
-Men,Gender
-Women,Gender
-Boys,Gender
-Girls,Gender
-Elderly women > 65,Age
-Elderly men > 65,Age
-Boys(<=5),Age
-Boys(6-12),Age
-Boys(13-18),Age
-Girls(<=5),Age
-Girls(6-12),Age
-Girls(13-18),Age
-
-
+Men,Gender,,
+Women,Gender,,
+Boys,Gender,,
+Girls,Gender,,
+Boys(<=5),Age,,
+Boys(6-12),Age,,
+Boys(13-18),Age,,
+Girls(<=5),Age,,
+Girls(6-12),Age,,
+Girls(13-18),Age,,
+Boys (U18),Age,,
+Girls (U18),Age,,
+Men (18-64),Age,,
+Women (18-64),Age,,
+Elderly men (65+),Age,,
+Elderly women (65+),Age,,
+People with disabilities,Other,,
+Total households,Other,,
+Female-headed households,Gender,,

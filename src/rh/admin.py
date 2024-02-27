@@ -173,7 +173,7 @@ admin.site.register(Indicator, IndicatorAdmin)
 
 
 class ActivityDomainAdmin(admin.ModelAdmin):
-    list_display = ("name", "code", "active")
+    list_display = ("name", "code", "is_active")
     search_fields = ("name", "clusters__title", "code", "countries__name")
     list_filter = ("clusters", "countries")
 

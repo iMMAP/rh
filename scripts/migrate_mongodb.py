@@ -388,7 +388,7 @@ def import_activity_descriptions_from_csv(conn, activity_description_csv):
                 try:
                     c.execute(aquery, activity_type)
                 except Exception as exception:
-                    # print(f"Error Activity type: {exception}")
+                    # print(f"EXEC: {exception}")
                     count = count + 1
                     continue
                 

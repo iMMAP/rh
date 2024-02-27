@@ -377,7 +377,7 @@
                     <span class="btn-text">Duplicate</span>
                     <span class="icon-copy-outline"></span>
                 </a>
-                {% if project.is_active %}
+                {% if project.active %}
                     <a href="#"
                         data-url="{% url 'archive_project' project.pk %}"
                         data-type="archive" 

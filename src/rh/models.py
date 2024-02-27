@@ -335,7 +335,7 @@ class ActivityDomain(models.Model):
 
 class ActivityType(models.Model):
     activity_domain = models.ForeignKey(ActivityDomain, on_delete=models.SET_NULL, blank=True, null=True)
-    is_active = models.BooleanField(default=True)
+    active = models.BooleanField(default=True)
     code = models.CharField(max_length=DESCRIPTION_MAX_LENGTH, unique=True)
     name = models.CharField(max_length=DESCRIPTION_MAX_LENGTH)
     countries = models.ManyToManyField(Location)
@@ -430,7 +430,7 @@ class Project(models.Model):
         ("archive", "Archived"),
     ]
     state = models.CharField(max_length=15, choices=PROJECT_STATES, default="draft", null=True, blank=True)
-    is_active = models.BooleanField(default=True)
+    active = models.BooleanField(default=True)
     title = models.CharField(max_length=NAME_MAX_LENGTH)
     code = models.CharField(max_length=NAME_MAX_LENGTH, unique=True)
 
@@ -480,7 +480,7 @@ class ActivityPlan(models.Model):
     ]
 
     project = models.ForeignKey(Project, on_delete=models.CASCADE, null=True, blank=True)
-    is_active = models.BooleanField(default=True)
+    active = models.BooleanField(default=True)
     state = models.CharField(
         max_length=15,
         choices=ACTIVITY_PLAN_STATES,
@@ -575,7 +575,7 @@ class TargetLocation(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE, null=True, blank=True)
     activity_plan = models.ForeignKey(ActivityPlan, on_delete=models.CASCADE, null=True, blank=True)
 
-    is_active = models.BooleanField(default=True)
+    active = models.BooleanField(default=True)
     state = models.CharField(
         max_length=15,
         choices=TARGET_LOCATIONS_STATES,
@@ -679,7 +679,7 @@ class Disaggregation(models.Model):
 
 
 class DisaggregationLocation(models.Model):
-    is_active = models.BooleanField(default=True)
+    active = models.BooleanField(default=True)
     target_location = models.ForeignKey(TargetLocation, on_delete=models.CASCADE, null=True, blank=True)
     disaggregation = models.ForeignKey(Disaggregation, on_delete=models.CASCADE, null=True, blank=True)
 

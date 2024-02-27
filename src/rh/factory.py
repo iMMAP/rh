@@ -366,7 +366,7 @@ class ActivityTypeFactory(DjangoModelFactory):
 
     activity_domain = factory.Iterator(ActivityDomain.objects.all())
 
-    is_active = factory.Faker("boolean")
+    active = factory.Faker("boolean")
     code = factory.Faker("pystr", max_chars=600)
     name = factory.Faker("word")
 
@@ -453,7 +453,7 @@ class ProjectFactory(DjangoModelFactory):
         model = Project
 
     state = factory.Iterator(Project.PROJECT_STATES, getter=lambda c: c[0])
-    is_active = factory.Faker("boolean")
+    active = factory.Faker("boolean")
     title = factory.Faker("sentence")
     code = factory.Faker("word")
     is_hrp_project = factory.Faker("boolean")
@@ -620,7 +620,7 @@ class DisaggregationLocationFactory(DjangoModelFactory):
     class Meta:
         model = DisaggregationLocation
 
-    is_active = factory.Faker("boolean")
+    active = factory.Faker("boolean")
     target_location = factory.SubFactory(TargetLocationFactory)
     disaggregation = factory.SubFactory(DisaggregationFactory)
     target = factory.Faker("random_int")

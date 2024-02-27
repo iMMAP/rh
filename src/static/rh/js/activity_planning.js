@@ -480,7 +480,6 @@ function handleFacilityMonitoring(locationPrefix, formElement) {
 	}
 }
 
-
 /**
  * Ready Function
  **/

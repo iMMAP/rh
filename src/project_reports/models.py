@@ -1,4 +1,5 @@
 from django.db import models
+
 from rh.models import (
     ActivityPlan,
     Disaggregation,
@@ -119,6 +120,11 @@ class TargetLocationReport(models.Model):
     )
     facility_lat = models.CharField(max_length=200, null=True, blank=True)
     facility_long = models.CharField(max_length=200, null=True, blank=True)
+    nhs_code = models.CharField(
+        max_length=200,
+        blank=True,
+        null=True,
+    )
 
     created_at = models.DateTimeField(auto_now_add=True,null=True)
     updated_at = models.DateTimeField(auto_now=True,null=True)

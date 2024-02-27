@@ -103,7 +103,6 @@ function addActivityForm(prefix, project, nextFormIndex) {
 						true,
 					);
 					$(IndicatorsID).select2();
-					// addTargetLocationForm(activityFormPrefix, projectID, activityFormIndex);
 				}, 100);
 			}
 		},
@@ -121,7 +120,7 @@ function addActivityForm(prefix, project, nextFormIndex) {
 /**
  * Handle Add Dynamic Activity Form
  **/
-function addTargetLocationForm(prefix, project, nextFormIndex) {
+function addTargetLocationForm(prefix, project, nextFormIndex, activityDomain) {
 	const activityFormPrefix = prefix;
 	const projectID = project;
 
@@ -130,7 +129,7 @@ function addTargetLocationForm(prefix, project, nextFormIndex) {
 
 	$.ajax({
 		url: "/ajax/get_target_location_empty_form/",
-		data: { project: projectID, prefix_index: nextFormIndex },
+		data: { project: projectID, prefix_index: nextFormIndex, activity_domain: activityDomain },
 		type: "POST",
 		dataType: "json",
 		beforeSend: function (xhr, settings) {
@@ -509,13 +508,16 @@ $(function () {
 		.on("click", ".add-target-location-form-button", function (event) {
 			event.preventDefault(); // Prevent the default behavior (form submission)
 			event.stopPropagation(); // Prevent the default behavior (propagation)
+			
 			const activityFormPrefix = event.currentTarget.dataset.formPrefix;
 			const activityProject = event.currentTarget.dataset.project;
+			const activityDomain = $(document).find(`#id_${activityFormPrefix}-activity_domain`)
 			const activityFormIndex = activityFormPrefix.match(/\d+/)[0];
 			addTargetLocationForm(
 				activityFormPrefix,
 				activityProject,
 				activityFormIndex,
+				activityDomain.val(),
 			); // Call the function to add a new activity form
 		});
 
@@ -573,3 +575,24 @@ $(function () {
 		});
 	});
 });
+// update indicator types 
+function updateIndicatorTypes(e){
+	let id = e.target.value;
+	console.log(id);
+	let indicatorUrl = e.target.dataset.indicatorUrl;
+	const csrftoken = Cookies.get("csrftoken");
+
+	const formData = new FormData();
+	formData.append('id',id);
+	formData.append('csrfmiddlewaretoken', csrftoken);
+	fetch(indicatorUrl,{
+		method: 'POST',
+		body: formData
+	}).then(async response => {
+		let data = await response.json()
+		document.getElementById("indicator-types").innerHTML = data.html;
+	}).catch(error => {
+		console.log(error);
+	});
+
+}

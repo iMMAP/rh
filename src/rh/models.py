@@ -56,6 +56,10 @@ class Cluster(models.Model):
     code = models.CharField(max_length=NAME_MAX_LENGTH, unique=True)
     title = models.CharField(max_length=NAME_MAX_LENGTH)
     ocha_code = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
+    has_nhs_code = models.BooleanField(default=False, null=True)
+
+    def check_nhs_code(self):
+        return self.has_nhs_code
 
     created_at = models.DateTimeField(auto_now_add=True,null=True)
     updated_at = models.DateTimeField(auto_now=True,null=True)
@@ -394,11 +398,12 @@ class Indicator(models.Model):
     numerator = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
     denominator = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
     description = models.CharField(max_length=1200, blank=True, null=True)
-    # Reference tables
+    # RELATIONSHIPS
     package_type = models.ForeignKey(PackageType, on_delete=models.SET_NULL, null=True, blank=True)
     unit_type = models.ForeignKey(UnitType, on_delete=models.SET_NULL, null=True, blank=True)
     grant_type = models.ForeignKey(GrantType, on_delete=models.SET_NULL, null=True, blank=True)
     transfer_category = models.ForeignKey(TransferCategory, on_delete=models.SET_NULL, null=True, blank=True)
+    currency = models.ForeignKey(Currency, on_delete=models.SET_NULL, null=True, blank=True)
     transfer_mechanism_type = models.ForeignKey(TransferMechanismType, on_delete=models.SET_NULL, null=True, blank=True)
     implement_modility_type = models.ForeignKey(
         ImplementationModalityType, on_delete=models.SET_NULL, null=True, blank=True
@@ -651,6 +656,12 @@ class TargetLocation(models.Model):
     created_at = models.DateTimeField(auto_now_add=True,null=True)
     updated_at = models.DateTimeField(auto_now=True,null=True)
 
+    nhs_code = models.CharField(
+        max_length=NAME_MAX_LENGTH,
+        blank=True,
+        null=True,
+    )
+
     def __str__(self):
         return f"{self.project}, {self.province}, {self.district}"
 
@@ -723,3 +734,21 @@ class BudgetProgress(models.Model):
     class Meta:
         verbose_name = "Budget Progress"
         verbose_name_plural = "Budget Progress"
+
+
+class ProjectIndicatorType(models.Model):
+    project = models.ForeignKey(Project, on_delete=models.SET_NULL, null=True, blank=True)
+    indicator = models.ForeignKey(Indicator, on_delete=models.SET_NULL, null=True, blank=True)
+
+    package_type = models.ForeignKey(PackageType, on_delete=models.SET_NULL, null=True, blank=True)
+    unit_type = models.ForeignKey(UnitType, on_delete=models.SET_NULL, null=True, blank=True)
+    grant_type = models.ForeignKey(GrantType, on_delete=models.SET_NULL, null=True, blank=True)
+    transfer_category = models.ForeignKey(TransferCategory, on_delete=models.SET_NULL, null=True, blank=True)
+    currency = models.ForeignKey(Currency, on_delete=models.SET_NULL, null=True, blank=True)
+    transfer_mechanism_type = models.ForeignKey(TransferMechanismType, on_delete=models.SET_NULL, null=True, blank=True)
+    implement_modility_type = models.ForeignKey(
+        ImplementationModalityType, on_delete=models.SET_NULL, null=True, blank=True
+    )
+
+    def __str__(self):
+        return self.project

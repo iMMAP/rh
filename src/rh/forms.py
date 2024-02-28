@@ -120,10 +120,13 @@ class TargetLocationForm(forms.ModelForm):
                 cluster_has_nhs_code = any(
                     cluster.has_nhs_code for cluster in activity_plan.activity_domain.clusters.all()
                 )
-        if cluster_has_nhs_code:
+        nhs_code = f"{kwargs.get('prefix')}-nhs_code"
+        has_nhs_code = nhs_code in kwargs.get('data', {})
+        
+        if cluster_has_nhs_code or has_nhs_code:
             self.fields["nhs_code"] = forms.CharField(max_length=200, required=True)
-        # else:
-        #     self.fields.pop('nhs_code', None)
+        else:
+            self.fields.pop('nhs_code', None)
 
         self.fields["province"].queryset = self.fields["province"].queryset.filter(type="Province")
         self.fields["district"].queryset = self.fields["district"].queryset.filter(type="District")

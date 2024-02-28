@@ -1,9 +1,4 @@
-import Choices from 'choices.js';
-import initCustomSelect from "/static/src/js/components/initCustomSelect";
-
 $(function () {
-	initCustomSelect();
-
 	const isHrpProject = $("#id_is_hrp_project");
 	const hasHrpCode = $("#id_has_hrp_code");
 	const prHasHRPCodeEl = $("#prHasHRPCodeEl");
@@ -108,9 +103,6 @@ $(function () {
 			listed_domains: domainsIds,
 		};
 
-		// Use JavaScript Cookie library
-		const csrftoken = Cookies.get('csrftoken');
-
 		$.ajax({
 			type: "POST",
 			url: domainsUrl,
@@ -119,11 +111,8 @@ $(function () {
 				xhr.setRequestHeader("X-CSRFToken", csrftoken);
 			},
 			success: function (data) {
-				// const $domains = $("#id_activity_domains");
 				choice.setChoices(data,'value','label',true);
-				// console.log("testse",data)
-				// $domains.html(data);
-				// $domains.val(selectedDomains);
+				
 			},
 		});
 	}

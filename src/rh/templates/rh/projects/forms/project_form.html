@@ -43,59 +43,76 @@
                         <div class="input-field is-required">
                             <label for="{{ form.title.id_for_label }}">Project Title</label>
                             <div class="input-holder">{{ form.title }}</div>
+                            <span class="sign-up-field-error">{{form.title.errors}}</span>
                         </div>
+
                         <div class="input-field">
                             <label for="{{ form.code.id_for_label }}">Project Code</label>
                             <div class="input-holder">{{ form.code }}</div>
+                            <span class="sign-up-field-error">{{form.code.errors}}</span>
                         </div>
-                        <div class="select-field is-required">
-                            <label for="{{ form.clusters.id_for_label }}">Clusters / Sectors [Hold Control/Command button to select
-                                multiple]</label>
-                            <div class="input-holder">{{ form.clusters }}</div>
-                        </div>
-                    </div>
-                    <div class="col col-sm">
+
                         <div class="multiple-fields-row">
                             <div class="field-col">
                                 <div class=" date start">
                                     <label for="{{ form.start_date.id_for_label }}">Start Date</label>
                                     <div class="date-picker-field">{{ form.start_date }}</div>
+                                    <span class="sign-up-field-error">{{form.start_date.errors}}</span>
                                 </div>
                             </div>
                             <div class="field-col">
                                 <div class="date end">
                                     <label for="{{ form.end_date.id_for_label }}">End Date</label>
                                     <div class="date-picker-field">{{ form.end_date }}</div>
+                                    <span class="sign-up-field-error">{{form.end_date.errors}}</span>
                                 </div>
                             </div>
                         </div>
+                       
+
+                        <div class="field-col">
+                            <div class="select-field is-required">
+                                <label for="{{ form.donors.id_for_label }}">Project Donor [Hold Control/Command button to select
+                                    multiple]</label>
+                                <div class="input-holder">{{ form.donors }}</div>
+                                <span class="sign-up-field-error">{{form.donors.errors}}</span>
+                            </div>
+                        </div>
+
                         <div class="multiple-fields-row">
                             <div class="field-col">
                                 <div class="input-field">
                                     <label for="{{ form.budget.id_for_label }}">Project Budget</label>
                                     <div class="input-holder">{{ form.budget }}</div>
+                                    <span class="sign-up-field-error">{{form.budget.errors}}</span>
                                 </div>
                             </div>
                             <div class="field-col">
                                 <label for="{{ form.budget_currency.id_for_label }}">Budget Currency</label>
                                 <div class="select-field is-required">{{ form.budget_currency }}</div>
+                                <span class="sign-up-field-error">{{form.budget_currency.errors}}</span>
                             </div>
                         </div>
+
                         <small id="budget_received_message"></small>
+
                         <div class="multiple-fields-row">
                             <div class="field-col">
                                 <div class="input-field">
                                     <label for="{{ form.budget_received.id_for_label }}">Budget Received</label>
                                     <div class="input-holder">{{ form.budget_received }}</div>
+                                    <span class="sign-up-field-error">{{form.budget_received.errors}}</span>
                                 </div>
                             </div>
                             <div class="field-col">
                                 <div class="input-field">
                                     <label for="{{ form.budget_gap.id_for_label }}">Budget Gap</label>
                                     <div class="input-holder">{{ form.budget_gap }}</div>
+                                    <span class="sign-up-field-error">{{form.budget_gap.errors}}</span>
                                 </div>
                             </div>
                         </div>
+
                         <div class="multiple-fields-row two-items">
                             <div class="field-col">
                                 <div class="input-check-holder">
@@ -116,28 +133,32 @@
                                 </div>
                             </div>
                         </div>
+
                         <div class="input-field" id="prHrpCode">
                             <label for="{{ form.hrp_code.id_for_label }}">HRP Project Code</label>
                             <div class="input-holder">{{ form.hrp_code }}</div>
+                            <span class="sign-up-field-error">{{form.hrp_code.errors}}</span>
+                        </div>
+
+                        <div class="select-field is-required">
+                            <label for="{{ form.clusters.id_for_label }}">Clusters / Sectors [Hold Control/Command button to select
+                                multiple]</label>
+                            <div class="input-holder">{{ form.clusters }}</div>
+                            <span class="sign-up-field-error">{{form.clusters.errors}}</span>
+                    </div>
+
+                    <div class="field-col">
+                        <div class="select-field is-required">
+                            <label for="{{ form.activity_domains.id_for_label }}">Activity Domains [Hold Control/Command button to select
+                                multiple]</label>
+                            <div class="input-holder">{{ form.activity_domains }}</div>
+                            <span class="sign-up-field-error">{{form.activity_domains.errors}}</span>
                         </div>
                     </div>
+
+                    </div>
+
                     <div class="col col-lg">
-                        <div class="multiple-fields-row two-items">
-                            <div class="field-col">
-                                <div class="select-field is-required">
-                                    <label for="{{ form.activity_domains.id_for_label }}">Activity Domains [Hold Control/Command button to select
-                                        multiple]</label>
-                                    <div class="input-holder">{{ form.activity_domains }}</div>
-                                </div>
-                            </div>
-                            <div class="field-col">
-                                <div class="select-field is-required">
-                                    <label for="{{ form.donors.id_for_label }}">Project Donor [Hold Control/Command button to select
-                                        multiple]</label>
-                                    <div class="input-holder">{{ form.donors }}</div>
-                                </div>
-                            </div>
-                        </div>
                         <div class="multiple-fields-row two-items">
                             <div class="field-col">
                                 <div class="select-field">
@@ -145,6 +166,7 @@
                                         multiple]
                                     </label>
                                     {{ form.programme_partners }}
+                                    <span class="sign-up-field-error">{{form.programme_partners.errors}}</span>
                                 </div>
                             </div>
                             <div class="field-col">
@@ -153,16 +175,19 @@
                                         multiple]
                                     </label>
                                     {{ form.implementing_partners }}
+                                    <span class="sign-up-field-error">{{form.implementing_partners.errors}}</span>
                                 </div>
                             </div>
                         </div>
                         <div class="select-field">
                             <label for="{{ form.user.id_for_label }}">Focal Point</label>
                             {{ form.user }}
+                            <span class="sign-up-field-error">{{field.user.errors}}</span>
                         </div>
                         <div class="input-field is-required">
                             <label for="{{ form.description.id_for_label}}">Project Description &amp; Objectives</label>
                             <div class="input-holder">{{ form.description }}</div>
+                            <span class="sign-up-field-error">{{form.description.errors}}</span>
                         </div>
                     </div>
                 </div>

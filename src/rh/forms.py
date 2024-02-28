@@ -25,15 +25,16 @@ class ProjectForm(forms.ModelForm):
         widgets = {
             "clusters": forms.SelectMultiple(
                 attrs={
-                    "class": "js_multiselect",
+                    "class": "custom-select",
                 }
             ),
-            "donors": forms.SelectMultiple(attrs={"class": "js_multiselect"}),
-            "implementing_partners": forms.SelectMultiple(attrs={"class": "js_multiselect"}),
-            "programme_partners": forms.SelectMultiple(attrs={"class": "js_multiselect"}),
+            "donors": forms.SelectMultiple(attrs={"class": "custom-select"}),
+            "implementing_partners": forms.SelectMultiple(attrs={"class": "custom-select"}),
+            "programme_partners": forms.SelectMultiple(attrs={"class": "custom-select"}),
+            "user": forms.Select(attrs={"class": "custom-select"}),
             "activity_domains": forms.SelectMultiple(
                 attrs={
-                    "class": "js_multiselect",
+                    "class": "",
                     "activity-domains-queries-url": reverse_lazy("ajax-load-activity_domains"),
                     "id": "id_activity_domains",
                 }
@@ -269,8 +270,8 @@ class OrganizationRegisterForm(forms.ModelForm):
         labels = {"clusters": "Clusters / Sectors", "name": "Organization Name"}
 
         widgets = {
-            "clusters": forms.SelectMultiple(attrs={"class": "js_multiselect"}),
-            "countries": forms.SelectMultiple(attrs={"class": "js_multiselect"}),
+            "clusters": forms.SelectMultiple(attrs={"class": "custom-select"}),
+            "countries": forms.SelectMultiple(attrs={"class": "custom-select"}),
         }
 
     def __init__(self, *args, **kwargs):

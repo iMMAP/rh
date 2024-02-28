@@ -8,7 +8,6 @@ import initMobileNav from "./components/initMobileNav.js";
 import initOpenClose from "./components/initOpenClose.js";
 import initFixedHeader from "./components/initFixedHeader";
 import initPopups from "./components/initPopups";
-import initCustomSelect from "./components/initCustomSelect";
 import initTabs from "./components/initTabs";
 import initCollapsibleTable from "./components/initCollapsibleTable";
 import initCheckAllCheckboxes from "./components/initCheckAllCheckboxes";
@@ -33,7 +32,6 @@ ready(() => {
   initOpenClose();
   initFixedHeader();
   initPopups();
-  initCustomSelect();
   initTabs();
   initCollapsibleTable();
   initCheckAllCheckboxes();

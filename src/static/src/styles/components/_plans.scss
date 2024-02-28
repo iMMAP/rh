@@ -45,7 +45,7 @@
 
     &.col-sm {
       @include media('>=tablet') {
-        flex: 0 0 auto;
+        // flex: 0 0 auto;
         width: 326px;
       }
 
@@ -62,7 +62,7 @@
 
     &.col-lg {
       width: 100%;
-      flex: 0 0 auto;
+      // flex: 0 0 auto;
     }
   }
 }

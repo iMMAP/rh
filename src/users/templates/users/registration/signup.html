@@ -52,7 +52,7 @@
                     {% for field in p_form %}
                         <div class="input-field is-required">
                             {{ field.label_tag }}
-                            <div class="input-holder">{{ field }}</div>
+                            {{ field }}
                             <span class="sign-up-field-error">{{field.errors}}</span>
                         </div>
                     {% endfor %}

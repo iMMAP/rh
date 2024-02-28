@@ -50,7 +50,9 @@ class ProfileCreateForm(forms.ModelForm):
         labels = {"clusters": "Clusters / Sectors"}
 
         widgets = {
-            "clusters": forms.SelectMultiple(attrs={"class": "js_multiselect"}),
+            "clusters": forms.SelectMultiple(attrs={"class": "custom-select"}),
+            "organization": forms.Select(attrs={"class": "custom-select"}),
+            "country": forms.Select(attrs={"class": "custom-select"}),
         }
 
     def __init__(self, *args, **kwargs):
@@ -78,7 +80,9 @@ class ProfileUpdateForm(forms.ModelForm):
         labels = {"name": "Full Name", "clusters": "Clusters / Sectors"}
 
         widgets = {
-            "clusters": forms.SelectMultiple(attrs={"class": "js_multiselect"}),
+            "clusters": forms.SelectMultiple(attrs={"class": "custom-select"}),
+            "country": forms.Select(attrs={"class": "custom-select"}),
+            "organization": forms.Select(attrs={"class": "custom-select"}),
         }
 
     def __init__(self, *args, **kwargs):

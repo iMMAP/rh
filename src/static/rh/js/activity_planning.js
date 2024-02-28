@@ -251,9 +251,6 @@ function handleDisaggregationForms(
 		`#Locations-activityplan_set-${activityIndex} .target_location_form`,
 	);
 
-
-
-
 	// Extract locations prefixes from target location forms
 	if (locationsPrefixes.length === 0) {
 		targetLocationForms.each(function (index, element) {
@@ -580,21 +577,28 @@ $(function () {
 // update indicator types 
 function updateIndicatorTypes(e){
 	let id = e.target.value;
+	let prefix = e.target.dataset.prefix
+	let activityPlan = e.target.dataset.activityPlan
+	debugger
 	console.log(id);
 	let indicatorUrl = e.target.dataset.indicatorUrl;
 	const csrftoken = Cookies.get("csrftoken");
 
 	const formData = new FormData();
 	formData.append('id',id);
+	formData.append('prefix', prefix);
+	formData.append('activity_plan', activityPlan);
 	formData.append('csrfmiddlewaretoken', csrftoken);
-	fetch(indicatorUrl,{
-		method: 'POST',
-		body: formData
-	}).then(async response => {
-		let data = await response.json()
-		document.getElementById("indicator-types").innerHTML = data.html;
-	}).catch(error => {
-		console.log(error);
-	});
+	if (id !== ''){
+		fetch(indicatorUrl,{
+			method: 'POST',
+			body: formData
+		}).then(async response => {
+			let data = await response.json()
+			document.getElementById(`${prefix}-indicator-types`).innerHTML = data.html;
+		}).catch(error => {
+			console.log(error);
+		});
+	}
 
 }

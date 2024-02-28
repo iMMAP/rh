@@ -40,8 +40,8 @@ class Location(models.Model):
     lat = models.FloatField(blank=True, null=True)
     long = models.FloatField(blank=True, null=True)
 
-    created_at = models.DateTimeField(auto_now_add=True,null=True)
-    updated_at = models.DateTimeField(auto_now=True,null=True)
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
 
     def __str__(self):
         return f"({self.code}) {self.name}"
@@ -61,8 +61,8 @@ class Cluster(models.Model):
     def check_nhs_code(self):
         return self.has_nhs_code
 
-    created_at = models.DateTimeField(auto_now_add=True,null=True)
-    updated_at = models.DateTimeField(auto_now=True,null=True)
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
 
     def __str__(self):
         return f"[{self.code}] - {self.title}"
@@ -70,6 +70,7 @@ class Cluster(models.Model):
 
 class BeneficiaryType(models.Model):
     """Beneficiary Types Model"""
+
     country = models.ForeignKey(
         Location,
         blank=True,
@@ -80,18 +81,15 @@ class BeneficiaryType(models.Model):
 
     name = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
     code = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
-    
+
     description = models.CharField(max_length=DESCRIPTION_MAX_LENGTH, blank=True, null=True)
     is_active = models.BooleanField(default=False)
 
-    TYPE = [
-        ("hrp","HRP"),
-        ("non-hrp","Non-HRP")
-    ]
-    type = models.CharField(max_length=NAME_MAX_LENGTH,choices=TYPE)
+    TYPE = [("hrp", "HRP"), ("non-hrp", "Non-HRP")]
+    type = models.CharField(max_length=NAME_MAX_LENGTH, choices=TYPE)
 
-    created_at = models.DateTimeField(auto_now_add=True,null=True)
-    updated_at = models.DateTimeField(auto_now=True,null=True)
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
 
     def __str__(self):
         return self.name
@@ -118,8 +116,8 @@ class Organization(models.Model):
     type = models.CharField(max_length=NAME_MAX_LENGTH, choices=TYPE_CHOICES, blank=True, null=True)
 
     old_id = models.CharField("Old ID", max_length=NAME_MAX_LENGTH, blank=True, null=True)
-    created_at = models.DateTimeField(auto_now_add=True,null=True)
-    updated_at = models.DateTimeField(auto_now=True,null=True)
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
 
     def __str__(self):
         return self.code
@@ -134,8 +132,8 @@ class Donor(models.Model):
 
     old_id = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
 
-    updated_at = models.DateTimeField(auto_now=True,null=True)
-    created_at = models.DateTimeField(auto_now_add=True,null=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
 
     def __str__(self):
         return self.name
@@ -155,8 +153,8 @@ class StrategicObjective(models.Model):
     sector_objective_description = models.CharField(max_length=DESCRIPTION_MAX_LENGTH, blank=True, null=True)
     denominator = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
 
-    created_at = models.DateTimeField(auto_now_add=True,null=True)
-    updated_at = models.DateTimeField(auto_now=True,null=True)
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
 
     def __str__(self):
         return self.strategic_objective_name
@@ -171,8 +169,8 @@ class Currency(models.Model):
 
     name = models.CharField(max_length=15, null=True)
 
-    created_at = models.DateTimeField(auto_now_add=True,null=True)
-    updated_at = models.DateTimeField(auto_now=True,null=True)
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
 
     def __str__(self):
         return self.name
@@ -187,8 +185,8 @@ class LocationType(models.Model):
 
     name = models.CharField(max_length=15, null=True)
 
-    created_at = models.DateTimeField(auto_now_add=True,null=True)
-    updated_at = models.DateTimeField(auto_now=True,null=True)
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
 
     def __str__(self):
         return self.name
@@ -202,8 +200,8 @@ class FacilitySiteType(models.Model):
     cluster = models.ForeignKey(Cluster, on_delete=models.SET_NULL, blank=True, null=True)
     name = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
 
-    created_at = models.DateTimeField(auto_now_add=True,null=True)
-    updated_at = models.DateTimeField(auto_now=True,null=True)
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
 
     def __str__(self):
         return self.name
@@ -217,8 +215,8 @@ class ImplementationModalityType(models.Model):
     code = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
     name = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
 
-    created_at = models.DateTimeField(auto_now_add=True,null=True)
-    updated_at = models.DateTimeField(auto_now=True,null=True)
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
 
     def __str__(self):
         return self.name
@@ -233,8 +231,8 @@ class TransferMechanismType(models.Model):
     code = models.CharField(max_length=NAME_MAX_LENGTH)
     name = models.CharField(max_length=NAME_MAX_LENGTH, unique=True)
 
-    created_at = models.DateTimeField(auto_now_add=True,null=True)
-    updated_at = models.DateTimeField(auto_now=True,null=True)
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
 
     def __str__(self):
         return self.name
@@ -248,8 +246,8 @@ class PackageType(models.Model):
     code = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
     name = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
 
-    created_at = models.DateTimeField(auto_now_add=True,null=True)
-    updated_at = models.DateTimeField(auto_now=True,null=True)
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
 
     def __str__(self):
         return self.name
@@ -263,8 +261,8 @@ class TransferCategory(models.Model):
     code = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
     name = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
 
-    created_at = models.DateTimeField(auto_now_add=True,null=True)
-    updated_at = models.DateTimeField(auto_now=True,null=True)
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
 
     def __str__(self):
         return self.name
@@ -278,8 +276,8 @@ class GrantType(models.Model):
     code = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
     name = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
 
-    created_at = models.DateTimeField(auto_now_add=True,null=True)
-    updated_at = models.DateTimeField(auto_now=True,null=True)
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
 
     def __str__(self):
         return self.name
@@ -293,8 +291,8 @@ class UnitType(models.Model):
     code = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
     name = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
 
-    created_at = models.DateTimeField(auto_now_add=True,null=True)
-    updated_at = models.DateTimeField(auto_now=True,null=True)
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
 
     def __str__(self):
         return self.name
@@ -308,8 +306,8 @@ class ReportType(models.Model):
     code = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
     name = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
 
-    created_at = models.DateTimeField(auto_now_add=True,null=True)
-    updated_at = models.DateTimeField(auto_now=True,null=True)
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
 
     def __str__(self):
         return self.name
@@ -326,8 +324,8 @@ class ActivityDomain(models.Model):
     countries = models.ManyToManyField(Location)
     clusters = models.ManyToManyField(Cluster)
 
-    created_at = models.DateTimeField(auto_now_add=True,null=True)
-    updated_at = models.DateTimeField(auto_now=True,null=True)
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
 
     def __str__(self):
         return self.name
@@ -353,8 +351,8 @@ class ActivityType(models.Model):
     ocha_code = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
     objective = models.ForeignKey(StrategicObjective, on_delete=models.SET_NULL, blank=True, null=True)
 
-    created_at = models.DateTimeField(auto_now_add=True,null=True)
-    updated_at = models.DateTimeField(auto_now=True,null=True)
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
 
     def __str__(self):
         return self.name
@@ -373,8 +371,8 @@ class ActivityDetail(models.Model):
     code = models.CharField(max_length=DESCRIPTION_MAX_LENGTH)
     name = models.CharField(max_length=DESCRIPTION_MAX_LENGTH)
 
-    created_at = models.DateTimeField(auto_now_add=True,null=True)
-    updated_at = models.DateTimeField(auto_now=True,null=True)
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
 
     def __str__(self):
         return self.name
@@ -409,8 +407,8 @@ class Indicator(models.Model):
         ImplementationModalityType, on_delete=models.SET_NULL, null=True, blank=True
     )
 
-    created_at = models.DateTimeField(auto_now_add=True,null=True)
-    updated_at = models.DateTimeField(auto_now=True,null=True)
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
 
     def __str__(self):
         return self.name
@@ -462,9 +460,8 @@ class Project(models.Model):
     start_date = models.DateTimeField("start date")
     end_date = models.DateTimeField("end date")
 
-    created_at = models.DateTimeField(auto_now_add=True,null=True)
-    updated_at = models.DateTimeField(auto_now=True,null=True)
-    
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
 
     def __str__(self):
         return self.title
@@ -549,8 +546,8 @@ class ActivityPlan(models.Model):
     description = models.TextField(blank=True, null=True)
     # old_id = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
 
-    created_at = models.DateTimeField(auto_now_add=True,null=True)
-    updated_at = models.DateTimeField(auto_now=True,null=True)
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
 
     def __str__(self):
         return f"Project {self.project.code} - Activity Plan"
@@ -653,8 +650,8 @@ class TargetLocation(models.Model):
         "Disaggregation", through="DisaggregationLocation", related_name="disaggregations"
     )
 
-    created_at = models.DateTimeField(auto_now_add=True,null=True)
-    updated_at = models.DateTimeField(auto_now=True,null=True)
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
 
     nhs_code = models.CharField(
         max_length=NAME_MAX_LENGTH,
@@ -675,15 +672,11 @@ class Disaggregation(models.Model):
     indicators = models.ManyToManyField(Indicator)
 
     name = models.CharField(max_length=NAME_MAX_LENGTH)
-    TYPE = [
-        ("Gender", "gender"),
-        ("Age", "age"),
-        ("Other", "other")
-    ]
-    type = models.CharField(max_length=NAME_MAX_LENGTH,choices=TYPE)
+    TYPE = [("Gender", "gender"), ("Age", "age"), ("Other", "other")]
+    type = models.CharField(max_length=NAME_MAX_LENGTH, choices=TYPE)
 
-    created_at = models.DateTimeField(auto_now_add=True,null=True)
-    updated_at = models.DateTimeField(auto_now=True,null=True)
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
 
     def __str__(self):
         return self.name
@@ -696,8 +689,8 @@ class DisaggregationLocation(models.Model):
 
     target = models.IntegerField(default=0, null=True, blank=True)
 
-    created_at = models.DateTimeField(auto_now_add=True,null=True)
-    updated_at = models.DateTimeField(auto_now=True,null=True)
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
 
     def __str__(self):
         return f"{self.disaggregation.name}"
@@ -725,8 +718,8 @@ class BudgetProgress(models.Model):
     )
     description = models.TextField(blank=True, null=True)
 
-    created_at = models.DateTimeField(auto_now_add=True,null=True)
-    updated_at = models.DateTimeField(auto_now=True,null=True)
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
 
     def __str__(self):
         return f"{self.donor}, {self.activity_domain}"

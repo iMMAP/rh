@@ -190,6 +190,10 @@ class ActivityPlanForm(forms.ModelForm):
     def __init__(self, *args, project, **kwargs):
         super().__init__(*args, **kwargs)
         prefix = kwargs.get("prefix")
+        instance = kwargs.get("instance", "")
+        instance_id = ""
+        if instance:
+            instance_id = instance.pk
 
         self.fields["save"] = forms.BooleanField(
             required=False,
@@ -209,7 +213,9 @@ class ActivityPlanForm(forms.ModelForm):
         self.fields["activity_detail"].widget.attrs.update(
             {"onchange": f"updateActivityTitle('{prefix}', 'id_{prefix}-activity_detail');"}
         )
-        self.fields["indicator"].widget.attrs.update({"style": "20px"})
+        self.fields["indicator"].widget.attrs.update(
+            {"style": "20px", "data-prefix": prefix, "data-activity-plan": instance_id}
+        )
         self.fields["indicator"].widget.attrs.update(
             {"onchange": "updateIndicatorTypes(event)", "data-indicator-url": reverse_lazy("update_indicator_type")}
         )

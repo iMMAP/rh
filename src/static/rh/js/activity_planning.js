@@ -8,9 +8,6 @@ function addActivityForm(prefix, project, nextFormIndex) {
 	const activityFormIndex = nextFormIndex;
 	const projectID = project;
 
-	// Use JavaScript Cookie library
-	const csrftoken = Cookies.get("csrftoken");
-
 	$.ajax({
 		url: "/ajax/get_activity_empty_form/",
 		data: { project: projectID, prefix_index: nextFormIndex },
@@ -123,9 +120,6 @@ function addActivityForm(prefix, project, nextFormIndex) {
 function addTargetLocationForm(prefix, project, nextFormIndex, activityDomain) {
 	const activityFormPrefix = prefix;
 	const projectID = project;
-
-	// Use JavaScript Cookie library
-	const csrftoken = Cookies.get("csrftoken");
 
 	$.ajax({
 		url: "/ajax/get_target_location_empty_form/",
@@ -261,9 +255,6 @@ function handleDisaggregationForms(
 			locationsPrefixes.push(locationPrefix);
 		});
 	}
-
-	// Use JavaScript Cookie library
-	const csrftoken = Cookies.get("csrftoken");
 
 	// Make AJAX request to fetch disaggregation forms
 	$.ajax({
@@ -417,7 +408,6 @@ function getLocations(
 	).val();
 	if (locationUrl) {
 		// Use JavaScript Cookie library
-		const csrftoken = Cookies.get("csrftoken");
 		$.ajax({
 			url: locationUrl,
 			data: {
@@ -580,7 +570,6 @@ function updateIndicatorTypes(e){
 	let id = e.target.value;
 	console.log(id);
 	let indicatorUrl = e.target.dataset.indicatorUrl;
-	const csrftoken = Cookies.get("csrftoken");
 
 	const formData = new FormData();
 	formData.append('id',id);

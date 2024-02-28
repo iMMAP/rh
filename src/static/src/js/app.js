@@ -17,7 +17,7 @@ import initAccordion from "./components/initAccordion";
 import initTooltip from "./components/initTooltip";
 // import initExport from './utils/export';
 import initSWPopup from './utils/sweatalertPopups';
-import initExportSW from './utils/exportSW';
+// import initExportSW from './utils/exportSW';
 
 import * as Sentry from "@sentry/browser";
 
@@ -39,7 +39,7 @@ ready(() => {
   initCopyInputValue();
   initAccordion();
   initTooltip();
-  initExportSW();
+  // initExportSW();
   // initExport();
   initSWPopup();
 

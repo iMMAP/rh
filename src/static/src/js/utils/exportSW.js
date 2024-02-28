@@ -1,7 +1,8 @@
 
-export default function initExportAndSW() {
   jQuery(function () {
     $(".js_multiselect").select2();
+
+
     
     // changing the checkbox color when it checked
     $("input[type=checkbox]").change(function(){
@@ -370,5 +371,6 @@ export default function initExportAndSW() {
       });
     });
 
-  });
-}
+  })();
+
+  console.log("tests")

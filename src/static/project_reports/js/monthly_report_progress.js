@@ -7,7 +7,6 @@ function addTargetLocationReportForm(prefix, project, nextFormIndex, activityDom
 	const projectID = project
 
 	// Use JavaScript Cookie library
-	const csrftoken = Cookies.get('csrftoken');
 
 	$.ajax({
 		url: '/ajax/get_location_report_empty_form/',
@@ -115,9 +114,7 @@ function handleDisaggregationReportForms(indicatorsSelect, selectedID, locations
 		});
 	}
 	
-	// Use JavaScript Cookie library
-	const csrftoken = Cookies.get('csrftoken');
-	
+	// Use the global csrftoken variable
     // Make AJAX request to fetch disaggregation forms
     $.ajax({
         url: '/ajax/get_disaggregations_report_forms/',
@@ -191,9 +188,6 @@ function getLocations(locationPrefix, locationType, parentType, clearZone = null
     
 	try {
 		if (locationUrl) {
-			// Use JavaScript Cookie library
-			const csrftoken = Cookies.get('csrftoken');
-
 			// Make an AJAX request to fetch locations data
 			$.ajax({
 				type: "POST",

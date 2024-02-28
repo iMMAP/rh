@@ -1,4 +1,9 @@
+import Choices from 'choices.js';
+import initCustomSelect from "/static/src/js/components/initCustomSelect";
+
 $(function () {
+	initCustomSelect();
+
 	const isHrpProject = $("#id_is_hrp_project");
 	const hasHrpCode = $("#id_has_hrp_code");
 	const prHasHRPCodeEl = $("#prHasHRPCodeEl");
@@ -75,17 +80,28 @@ $(function () {
 	// Attach the function to the change event of the budget and budget received fields
 	$("#id_budget, #id_budget_received").on("input", calculateBudgetGap);
 	
+	const choice = new Choices('#id_activity_domains', {
+		searchEnabled: true,
+		itemSelectText: '',
+		removeItemButton: true,
+		classNames: {
+			listDropdown: 'choices__list--dropdown',
+		},
+		shouldSort: false,
+	});
 
 	function get_activity_domains() {
 		const domainsUrl = $("#id_activity_domains").attr("activity-domains-queries-url");
+		
 		const domainsIds = $("#id_activity_domains option")
 			.map(function () {
 				return $(this).val();
 			})
 			.get();
 
+
 		const clusterIds = $("#id_clusters").val();
-		const selectedDomains = $("#id_activity_domains").val();
+		// const selectedDomains = $("#id_activity_domains").val();
 
 		const requestData = {
 			clusters: clusterIds,
@@ -103,9 +119,11 @@ $(function () {
 				xhr.setRequestHeader("X-CSRFToken", csrftoken);
 			},
 			success: function (data) {
-				const $domains = $("#id_activity_domains");
-				$domains.html(data);
-				$domains.val(selectedDomains);
+				// const $domains = $("#id_activity_domains");
+				choice.setChoices(data,'value','label',true);
+				// console.log("testse",data)
+				// $domains.html(data);
+				// $domains.val(selectedDomains);
 			},
 		});
 	}

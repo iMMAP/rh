@@ -7,8 +7,9 @@ const initCustomSelects = () => {
 
   selects.forEach((select) => {
     const choice = new Choices(select, {
-      searchEnabled: false,
+      searchEnabled: true,
       itemSelectText: '',
+      removeItemButton: true,
       classNames: {
         listDropdown: 'choices__list--dropdown',
       },

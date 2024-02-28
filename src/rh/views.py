@@ -78,16 +78,15 @@ def load_activity_domains(request):
 
     clusters = Cluster.objects.filter(pk__in=cluster_ids).prefetch_related(prefetch_activitydomain)
 
-    response = "".join(
-        [
-            f'<optgroup label="{cluster.title}">'
-            + "".join([f'<option value="{domain.pk}">{domain}</option>' for domain in cluster.activitydomain_set.all()])
-            + "</optgroup>"
-            for cluster in clusters
-        ]
-    )
+    clusters = [
+        {
+            "label": cluster.title,
+            "choices": [{"value": domain.pk, "label": domain.name} for domain in cluster.activitydomain_set.all()],
+        }
+        for cluster in clusters
+    ]
 
-    return JsonResponse(response, safe=False)
+    return JsonResponse(clusters, safe=False)
 
 
 @cache_control(no_store=True)
@@ -204,8 +203,6 @@ def projects_detail(request, pk):
 @cache_control(no_store=True)
 @login_required
 def create_project_view(request):
-    """View for creating a project."""
-
     if request.method == "POST":
         form = ProjectForm(request.POST)
         if form.is_valid():
@@ -213,8 +210,7 @@ def create_project_view(request):
             return redirect("create_project_activity_plan", project=project.pk)
 
         # Form is not valid
-        error_message = "Something went wrong. Please fix the errors below."
-        messages.error(request, error_message)
+        messages.error(request, "Something went wrong. Please fix the errors below.")
     else:
         # Use user's country and clusters as default values if available
         if request.user.is_authenticated and request.user.profile and request.user.profile.country:
@@ -1017,14 +1013,14 @@ def ProjectListView(request, flag):
 
 
 def update_indicator_type(request):
-    if request.method == 'POST':
+    if request.method == "POST":
         indicator_id = request.POST.get("id")
-        
+
         indicator = Indicator.objects.get(id=indicator_id)
         indicator_form = ProjectIndicatorTypeForm()
         context = {"indicator": indicator, "indicator_form": indicator_form}
 
-        html =  render_to_string("rh/projects/views/_indicator_types.html", context)
-    
+        html = render_to_string("rh/projects/views/_indicator_types.html", context)
+
         # Return JSON response containing the generated HTML
         return JsonResponse({"html": html})

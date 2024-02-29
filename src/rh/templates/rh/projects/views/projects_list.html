@@ -87,7 +87,7 @@
                                 </span>
                                 
                             </div>
-                            <div class="block-body" data-simplebar>
+                            <div class="block-body">
                                 <div class="select-field">
                                     <label>Donors</label>
                                     <div class="small-label">[hold down the control/command button to select multiple]</div>
@@ -218,7 +218,7 @@
             </div>
         </div>
 
-        <div class="content-block top-border bottom-border bottom-decor">
+        <div class="content-block top-border bottom-border">
             <div id="tab-1">
                 <div class="table-wrapper-scrollable">
                     <table class="table all-projects-table js-collapsible-table">
@@ -309,3 +309,21 @@
         {% include "rh/projects/views/projects_pager.html" %}
     </div>
 {% endblock content %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+<script>
+    document.querySelectorAll('select').forEach((select) => {
+        const choice = new Choices(select, {
+            searchEnabled: true,
+            itemSelectText: '',
+            removeItemButton: true,
+            classNames: {
+                listDropdown: 'choices__list--dropdown',
+            },
+            shouldSort: false,
+        });
+    })
+</script>
+<script src="{% static 'src/js/utils/exportSW.js' %}"></script>
+{% endblock scripts %}

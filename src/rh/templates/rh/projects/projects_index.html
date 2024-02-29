@@ -1,10 +1,12 @@
 {% extends "_base.html" %}
 {% load static %}
-{% load vite %}
+
 {% load compress %}
+
 {% block page_title %}
     ReportHub - Projects
 {% endblock page_title %}
+
 {% block content %}
     <div class="container">
         <div class="page-navigation-panel">
@@ -33,7 +35,3 @@
         {% endblock project_body %}
     </div>
 {% endblock content %}
-
-{% block scripts %}
-<script defer src="{% static 'src/js/utils/exportSW.js' %}"></script>
-{% endblock scripts %}

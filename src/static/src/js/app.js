@@ -1,4 +1,3 @@
-import "simplebar";
 import ResizeObserver from "resize-observer-polyfill";
 import ready, { HTML } from "./utils";
 import "./utils/responsiveHelper";

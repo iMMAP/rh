@@ -19,7 +19,6 @@
     "jquery": "^3.7.1",
     "normalize.css": "^8.0.1",
     "resize-observer-polyfill": "^1.5.1",
-    "sweetalert": "^2.1.2",
     "sweetalert2": "^11.9.0",
     "tippy.js": "^6.3.7"
   }

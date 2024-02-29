@@ -220,7 +220,11 @@
     }
 
     span.active {
-        background-color: rgb(82, 165, 80);
+      background-color: rgb(82, 165, 80);
+    }
+
+    span.in-progress {
+      background-color: rgb(82, 165, 80);
     }
 
     span.completed {
@@ -229,6 +233,10 @@
 
     span.archived {
         background-color: rgb(203, 68, 74);
+    }
+
+    span.pending {
+      background-color: rgb(235, 206, 88);
     }
     
   }

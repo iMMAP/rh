@@ -1,5 +1,4 @@
 import Swal from 'sweetalert2'
-import '../../styles/style.scss'
 
 export default function initSWPopup() {
 

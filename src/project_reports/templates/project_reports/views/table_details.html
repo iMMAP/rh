@@ -1,26 +1,30 @@
 {% load custom_filters %}
 
-<tr data-url="{% url 'view_monthly_report' project=project.id report=report.id %}">
+<tr>
     <td class="month-col" data-title="Month">
-        <div class="table-flex-holder">
+        <a class="table-flex-holder" href="{% url 'view_monthly_report' project=project.id report=report.id %}">
             {% with report_state=report.state %}
                 <span class="indicator indicator-{{ report|custom_class }}"></span>
             {% endwith %}
             {{ report.report_date | date:"F Y" }}
-        </div>
+        </a>
     </td>
 
     <td class="progress-col" data-title="Progress Report">Monthly progress for {{ report.report_date | date:"F Y" }}</td>
 
     <td class="date-col" data-title="Due date">{{ report.report_due_date | date:"d F Y" }}</td>
 
-    <td class="id-col" data-title="Locations"><a href="#">Ghazni</a><br/><a href="#">Parwan</a></td>
+    <td class="id-col" data-title="Locations">location1, location2</td>
 
-    <td class="id-col" data-title="Locations"><a href="#">Ghazni</a><br/><a href="#">Parwan</a></td>
+    <td class="id-col" data-title="Locations">location1, location2</td>
 
     <td class="notes-col" data-title="Notes">Lorem ipsum dolor sit amet</td>
 
-    <td class="date-col" data-title="Due date">{{ report.get_state_display }}</td>
+    <td class="date-col" data-title="Due date">
+        <span class="{{ report.state }}">
+            {{ report.get_state_display }}
+        </span>
+    </td>
 
     <!-- <td class="edit-col" data-title="Edit">
         <ul class="table-options-buttons">

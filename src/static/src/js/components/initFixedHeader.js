@@ -1,18 +1,19 @@
-// initialize fixed blocks on scroll
 export default function initFixedHeader() {
-  const headerHeight = $('#header').outerHeight();
-  const wrapper = $('.wrapper-inner');
-  const init = () => {
-    if ($(window).scrollTop() >= 0.1) {
-      $('body').addClass('fixed-header');
-      jQuery(wrapper).css('padding-top', `${headerHeight}px`);
-    } else {
-      $('body').removeClass('fixed-header');
-      jQuery(wrapper).css('padding-top', '');
-    }
-  };
-  $(window).scroll(() => {
+    const headerHeight = document.querySelector('#header').offsetHeight;
+    const wrapper = document.querySelector('.wrapper-inner');
+    const init = () => {
+      if (window.scrollY >= 0.1) {
+        document.body.classList.add('fixed-header');
+        wrapper.style.paddingTop = `${headerHeight}px`;
+      } else {
+        document.body.classList.remove('fixed-header');
+        wrapper.style.paddingTop = '';
+      }
+    };
+
+  window.addEventListener('scroll', () => {
     init();
   });
+
   init();
 }

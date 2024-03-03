@@ -12,7 +12,6 @@ fieldset {
 
 #{$form-elements},
 select,
-.choices__inner,
 input[type="date"] {
   @include transition(border-color color);
 
@@ -369,12 +368,6 @@ label,
 .choices {
   z-index: 9;
 
-  &[data-type*="select-one"] {
-    &:after {
-      content: none !important;
-    }
-  }
-
   &.is-open {
     z-index: 99;
 
@@ -387,78 +380,18 @@ label,
     color: $placeholder-color;
     opacity: 1;
   }
-
-  .choices__list--single {
-    padding: 0;
+  
+  .choices__list--multiple .choices__item {
+    background-color: #636161;
+    border: 1px solid #aaa;
   }
-
-  .choices__inner {
-    display: flex;
-    align-items: center;
-    border: 1px solid $gray-d1 !important;
-    background-color: $form-background-color !important;
-    border-radius: 8px !important;
-    padding-right: 34px;
-    min-height: $form-element-height;
-  }
-
-  .choices__list--dropdown {
-    border: 0;
-    border-radius: 0;
-    top: calc(100% + 15px);
-    box-shadow: 0 4px 4px rgba(116, 114, 116, 0.1);
-
-    .choices__item  {
-      color: $gray-35;
-      margin: 0 0 6px;
-      font-weight: 500;
-      
-      &[data-value="placeholder"] {
-        display: none;
-      }
-
-      &:last-child {
-        margin: 0;
-      }
-    }
-  }
-
-  .choices__list--dropdown, .choices__list[aria-expanded] {
-    @include transition(visibility opacity);
-
-    opacity: 0;
-  }
-
-  .choices__list--dropdown .choices__item--selectable, .choices__list[aria-expanded] .choices__item--selectable {
-    @include transition(background-color);
-  }
-
 
   .choices__list--dropdown .choices__item--selectable.is-highlighted, .choices__list[aria-expanded] .choices__item--selectable.is-highlighted {
     background-color: rgba($red-be, 0.2) !important;
     color: $gray-35;
   }
-
-  .choices__list--dropdown .choices__item--selectable, .choices__list[aria-expanded] .choices__item--selectable {
-    padding-right: 20px;
-  }
 }
 
-select,
-.choices__inner {
-  font-weight: 500;
-  color: $gray-35;
-  cursor: pointer;
-  background: transparent;
-  background-image: url("data:image/svg+xml;utf8,<svg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'><path d='M1.175 0L5 3.7085L8.825 0L10 1.1417L5 6L0 1.1417L1.175 0Z' fill='%23C2C9D1'/><path d='M1.175 0L5 3.7085L8.825 0L10 1.1417L5 6L0 1.1417L1.175 0Z' fill='black' fill-opacity='0.25'/></svg>");
-  background-repeat: no-repeat;
-  background-position-x: calc(100% - 10px);
-  background-position-y: 50%;
-
-  option[value="placeholder"] {
-    display: none;
-  }
-}
 
 .date-picker-field {
   // margin-left: -6px;

@@ -10,8 +10,7 @@ from django.template import loader
 from django.utils.encoding import force_bytes, force_str
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from django.views.decorators.cache import cache_control
-
-from rh.models import Cluster, Location, Organization
+from django.shortcuts import render
 
 from .decorators import unauthenticated_user
 from .forms import (
@@ -78,12 +77,6 @@ def send_account_activation_email(request, user, to_email):
 @cache_control(no_store=True)
 @unauthenticated_user
 def register_view(request):
-    """Registration view for creating new signing up"""
-    template = loader.get_template("users/registration/signup.html")
-    organizations = Organization.objects.all().order_by("code").values()
-    clusters = Cluster.objects.all().order_by("title").values()
-    locations = Location.objects.all().order_by("name").values()
-
     if request.method == "POST":
         u_form = UserRegisterForm(request.POST)
         p_form = ProfileCreateForm(request.POST)
@@ -125,17 +118,13 @@ def register_view(request):
     context = {
         "u_form": u_form,
         "p_form": p_form,
-        "organizations": organizations,
-        "clusters": clusters,
-        "locations": locations,
     }
-    return HttpResponse(template.render(context, request))
+    return render(request, "users/registration/signup.html", context)
 
 
 @cache_control(no_store=True)
 @unauthenticated_user
 def login_view(request):
-    """User Login View"""
     template = loader.get_template("users/registration/login.html")
     if request.method == "POST":
         email = request.POST["email"]

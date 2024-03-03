@@ -405,16 +405,16 @@ details > summary{
   overflow-y: scroll;
   overflow-x: hidden;
 }
-::-webkit-scrollbar{
+/* ::-webkit-scrollbar{
   width: 3px;
   height: 3px;
   color: #af4745;
   background-color: rgb(214, 214, 214);
-}
-::-webkit-scrollbar-thumb{
+} */
+/* ::-webkit-scrollbar-thumb{
   background: #be2126;
   border-radius: 8px;
-}
+} */
 summary .export-badge {
   position: absolute;
   top: 8px;

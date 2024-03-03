@@ -75,25 +75,33 @@ $(function () {
 	// Attach the function to the change event of the budget and budget received fields
 	$("#id_budget, #id_budget_received").on("input", calculateBudgetGap);
 	
+	const choice = new Choices('#id_activity_domains', {
+		searchEnabled: true,
+		itemSelectText: '',
+		removeItemButton: true,
+		classNames: {
+			listDropdown: 'choices__list--dropdown',
+		},
+		shouldSort: false,
+	});
 
 	function get_activity_domains() {
 		const domainsUrl = $("#id_activity_domains").attr("activity-domains-queries-url");
+		
 		const domainsIds = $("#id_activity_domains option")
 			.map(function () {
 				return $(this).val();
 			})
 			.get();
 
+
 		const clusterIds = $("#id_clusters").val();
-		const selectedDomains = $("#id_activity_domains").val();
+		// const selectedDomains = $("#id_activity_domains").val();
 
 		const requestData = {
 			clusters: clusterIds,
 			listed_domains: domainsIds,
 		};
-
-		// Use JavaScript Cookie library
-		const csrftoken = Cookies.get('csrftoken');
 
 		$.ajax({
 			type: "POST",
@@ -103,9 +111,8 @@ $(function () {
 				xhr.setRequestHeader("X-CSRFToken", csrftoken);
 			},
 			success: function (data) {
-				const $domains = $("#id_activity_domains");
-				$domains.html(data);
-				$domains.val(selectedDomains);
+				choice.setChoices(data,'value','label',true);
+				
 			},
 		});
 	}

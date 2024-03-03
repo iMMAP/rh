@@ -1,7 +1,5 @@
 {% extends "project_reports/forms/monthly_report_form_base.html" %}
 {% load static %}
-{% load compress %}
-
 
 {% block report_body %}
 <div class="content-block top-border">
@@ -19,7 +17,6 @@
         </div>
     </div>
     <!-- {{report_form}} -->
-    
 	<form method="post" enctype="multipart/form-data" id="activity-formset-form">
 		{% csrf_token %}
         <div class="monthly-reporting">
@@ -56,8 +53,4 @@
 </div>
 
 {{ activity_plan_formset.media.js }}
-{% compress js %}
-	<script defer src="{% static 'project_reports/js/monthly_report.js' %}"></script>
-{% endcompress js %}
-
 {% endblock report_body %}

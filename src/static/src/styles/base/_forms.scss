@@ -394,8 +394,8 @@ label,
 
 
 .date-picker-field {
-  margin-left: -6px;
-  margin-right: -6px;
+  // margin-left: -6px;
+  // margin-right: -6px;
   display: flex;
   align-items: center;
 
@@ -522,4 +522,8 @@ label,
   vertical-align: middle;
   max-width: 100% !important;
   width: 960px !important;
+}
+
+.report-date-picker-field {
+  margin-bottom: 20px;
 }

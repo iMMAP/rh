@@ -157,7 +157,7 @@
 								<div class="inner-holder">
 									<div class="add_button">
 										<button data-form-prefix="{{activity_report_form.prefix}}" data-project="{{ project.pk }}"
-										 data-activity-domain="{% if activity_report_form.instance.pk %}{{activity_plan.activity_domain.pk}}{% else %}{{activity_report_form.initial.activity_plan.activity_domain.pk}}{% endif %}"
+										 data-activity-domain="{% if activity_report_form.instance.pk %}{{activity_report_form.instance.activity_plan.activity_domain.pk}}{% else %}{{activity_report_form.initial.activity_plan.activity_domain.pk}}{% endif %}"
 										 type="button" class="btn btn-red add-target-location-form-button">Add Location Report
 										</button>
 									</div>

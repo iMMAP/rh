@@ -321,6 +321,66 @@
                             </div>
                         </div>
                         <div class="col col-lg">
+                            <div class="multiple-fields-row">
+                                {% if activity_plan.package_type %}
+                                    <div class="field-col">
+                                        <div class="select-field">
+                                            <span class="label">Package Type</span>
+                                            <span class="text-read-only">{{ activity_plan.package_type }}</span>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                                {% if activity_plan.unit_type %}
+                                <div class="field-col">
+                                    <div class="select-field">
+                                        <span class="label">Unit Type</span>
+                                        <span class="text-read-only">{{ activity_plan.unit_type }}</span>
+                                    </div>
+                                </div>
+                                {% endif %}
+                                {% if activity_plan.grant_type %}
+                                <div class="field-col">
+                                    <div class="select-field">
+                                        <span class="label">Grant Type</span>
+                                        <span class="text-read-only">{{ activity_plan.grant_type }}</span>
+                                    </div>
+                                </div>
+                                {% endif %}
+                                {% if activity_plan.transfer_category %}
+                                <div class="field-col">
+                                    <div class="select-field">
+                                        <span class="label">Transfer Category</span>
+                                        <span class="text-read-only">{{ activity_plan.transfer_category }}</span>
+                                    </div>
+                                </div>
+                                {% endif %}
+                                {% if activity_plan.currency %}
+                                <div class="field-col">
+                                    <div class="select-field">
+                                        <span class="label">Currency</span>
+                                        <span class="text-read-only">{{ activity_plan.currency }}</span>
+                                    </div>
+                                </div>
+                                {% endif %}
+                                {% if activity_plan.transfer_mechanism_type %}
+                                <div class="field-col">
+                                    <div class="select-field">
+                                        <span class="label">Transfer Mechanism Type</span>
+                                        <span class="text-read-only">{{ activity_plan.transfer_mechanism_type }}</span>
+                                    </div>
+                                </div>
+                                {% endif %}
+                                {% if activity_plan.implement_modility_type %}
+                                <div class="field-col">
+                                    <div class="select-field">
+                                        <span class="label">Implementation Modility Type</span>
+                                        <span class="text-read-only">{{ activity_plan.implement_modility_type }}</span>
+                                    </div>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col col-lg">
                             <div class="input-field">
                                 <span class="label">Activity Description</span>
                                 <div class="input-holder">

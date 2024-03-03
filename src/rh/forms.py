@@ -121,10 +121,13 @@ class TargetLocationForm(forms.ModelForm):
                 cluster_has_nhs_code = any(
                     cluster.has_nhs_code for cluster in activity_plan.activity_domain.clusters.all()
                 )
-        if cluster_has_nhs_code:
+        nhs_code = f"{kwargs.get('prefix')}-nhs_code"
+        has_nhs_code = nhs_code in kwargs.get("data", {})
+
+        if cluster_has_nhs_code or has_nhs_code:
             self.fields["nhs_code"] = forms.CharField(max_length=200, required=True)
-        # else:
-        #     self.fields.pop('nhs_code', None)
+        else:
+            self.fields.pop("nhs_code", None)
 
         self.fields["province"].queryset = self.fields["province"].queryset.filter(type="Province")
         self.fields["district"].queryset = self.fields["district"].queryset.filter(type="District")
@@ -188,6 +191,10 @@ class ActivityPlanForm(forms.ModelForm):
     def __init__(self, *args, project, **kwargs):
         super().__init__(*args, **kwargs)
         prefix = kwargs.get("prefix")
+        instance = kwargs.get("instance", "")
+        instance_id = ""
+        if instance:
+            instance_id = instance.pk
 
         self.fields["save"] = forms.BooleanField(
             required=False,
@@ -207,7 +214,9 @@ class ActivityPlanForm(forms.ModelForm):
         self.fields["activity_detail"].widget.attrs.update(
             {"onchange": f"updateActivityTitle('{prefix}', 'id_{prefix}-activity_detail');"}
         )
-        self.fields["indicator"].widget.attrs.update({"style": "20px"})
+        self.fields["indicator"].widget.attrs.update(
+            {"style": "20px", "data-prefix": prefix, "data-activity-plan": instance_id}
+        )
         self.fields["indicator"].widget.attrs.update(
             {"onchange": "updateIndicatorTypes(event)", "data-indicator-url": reverse_lazy("update_indicator_type")}
         )

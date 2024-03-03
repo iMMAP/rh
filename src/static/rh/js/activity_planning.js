@@ -235,7 +235,7 @@ function handleDisaggregationForms(
 	selectedID,
 	locationsPrefixes = [],
 ) {
-	
+
 	// Extract activity index from indicatorsSelect name attribute
 	const activityIndex = indicatorsSelect.name.match(
 		/activityplan_set-(\d+)/,
@@ -244,9 +244,6 @@ function handleDisaggregationForms(
 	var targetLocationForms = $(
 		`#Locations-activityplan_set-${activityIndex} .target_location_form`,
 	);
-
-	
-
 
 	// Extract locations prefixes from target location forms
 	if (locationsPrefixes.length === 0) {
@@ -476,7 +473,9 @@ function handleFacilityMonitoring(locationPrefix, formElement) {
 $(function () {
 	// Initialize indicators with django select except for the empty form
 	$(
-		"select:not(#id_activityplan_set-__prefix__-indicator)",
+		// "select:not(#id_activityplan_set-__prefix__-indicator)",
+		// "select:not([id^='id_activityplan_set'][id$='-indicator'])"
+		"select[id^='id_activityplan_set'][id$='-indicator']"
 	).select2();
 
 
@@ -498,7 +497,7 @@ $(function () {
 		.on("click", ".add-target-location-form-button", function (event) {
 			event.preventDefault(); // Prevent the default behavior (form submission)
 			event.stopPropagation(); // Prevent the default behavior (propagation)
-			
+
 			const activityFormPrefix = event.currentTarget.dataset.formPrefix;
 			const activityProject = event.currentTarget.dataset.project;
 			const activityDomain = $(document).find(`#id_${activityFormPrefix}-activity_domain`)
@@ -524,7 +523,7 @@ $(function () {
 		$select2Event.on("select2:select", function (event) {
 			let indicatorsSelect = event.currentTarget;
 			let selectedID = $(indicatorsSelect)[0].value
-			
+
 			handleDisaggregationForms(indicatorsSelect, selectedID);
 		});
 
@@ -556,7 +555,7 @@ $(function () {
 		});
 		// Call Facility Monitoring function when page loads.
 		handleFacilityMonitoring(locationPrefix, formElement);
-		
+
 		let $facilityMonitoring = $(formElement).find(
 			`#id_${locationPrefix}-facility_monitoring`
 		);
@@ -568,20 +567,27 @@ $(function () {
 // update indicator types 
 function updateIndicatorTypes(e){
 	let id = e.target.value;
+	let prefix = e.target.dataset.prefix
+	let activityPlan = e.target.dataset.activityPlan
+	debugger
 	console.log(id);
 	let indicatorUrl = e.target.dataset.indicatorUrl;
 
 	const formData = new FormData();
 	formData.append('id',id);
+	formData.append('prefix', prefix);
+	formData.append('activity_plan', activityPlan);
 	formData.append('csrfmiddlewaretoken', csrftoken);
-	fetch(indicatorUrl,{
-		method: 'POST',
-		body: formData
-	}).then(async response => {
-		let data = await response.json()
-		document.getElementById("indicator-types").innerHTML = data.html;
-	}).catch(error => {
-		console.log(error);
-	});
+	if (id !== ''){
+		fetch(indicatorUrl,{
+			method: 'POST',
+			body: formData
+		}).then(async response => {
+			let data = await response.json()
+			document.getElementById(`${prefix}-indicator-types`).innerHTML = data.html;
+		}).catch(error => {
+			console.log(error);
+		});
+	}
 
 }

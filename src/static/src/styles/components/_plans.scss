@@ -340,15 +340,15 @@
   border-radius: 6px;
   scrollbar-color: $red-be;
 
-  &::-webkit-scrollbar {
-    height: 2px;
-    width: 0;
-  }
+  // &::-webkit-scrollbar {
+  //   height: 2px;
+  //   width: 0;
+  // }
 
-  &::-webkit-scrollbar-thumb {
-    background: $red-be;
-    -webkit-border-radius: 6ex;
-  }
+  // &::-webkit-scrollbar-thumb {
+  //   background: $red-be;
+  //   -webkit-border-radius: 6ex;
+  // }
 }
 
 .statistic-table {

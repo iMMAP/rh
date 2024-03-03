@@ -101,7 +101,7 @@
                                         Project Planing
                                         <span class="project-chevron icon-chevron-down"></span>
                                     </summary>
-                                    <div class="block-body" data-simplebar>
+                                    <div class="block-body">
                                         <small class="label">Available fields: </small>
                                         <div class="multiple-fields-row two-items">
                                             {% if project.title %}
@@ -282,7 +282,7 @@
                                         {% endif %}
                                         </span>
                                     </summary>
-                                    <div class="block-body" data-simplebar>
+                                    <div class="block-body">
                                         {% for activityPlan in project.activityplan_set.all %}
                                         <span class="circle-bage">{{forloop.counter}} </span>
                                         <div class="input-holder">
@@ -1010,13 +1010,8 @@
         <div class="input-holder">{{ project.description | linebreaksbr }}
         </div>
     </div>
-
-    <script>
-        var csrfToken = '{{ csrf_token }}';
-    </script>
     
 {% endblock project_body %}
-
 
 
 {% block scripts %}

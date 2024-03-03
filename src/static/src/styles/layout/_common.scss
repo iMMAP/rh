@@ -203,20 +203,6 @@ ul{
   /* stylelint-enable */
 }
 
-.simplebar-track {
-  &.simplebar-vertical {
-    width: 6px;
-  }
-}
-
-.simplebar-scrollbar {
-  &:before {
-    background-color: $red-be;
-    opacity: 1;
-    border-radius: 0;
-  }
-}
-
 .base-section {
   padding: 17px 0 40px;
 
@@ -671,4 +657,61 @@ a.show-sw-action-popup{
 
 a.text-decoration-none{
   text-decoration: none !important;
+}
+
+// Status badges
+.c-pill {
+  align-items: center;
+  font-weight: 600;
+  font-size: 11px;
+  display: inline-block;
+  // height: 100%;
+  white-space: nowrap;
+  width: auto;
+
+  position: relative;
+  border-radius: 100px;
+  line-height: 1;
+  overflow: hidden;
+  padding: 0px 12px 0px 12px;
+  text-overflow: ellipsis;
+  line-height: 1.25rem;
+  color: #595959;
+  word-break: break-word;
+}
+
+.completed {
+  @extend .c-pill;
+  border: 1px solid rgb(68, 117, 203);
+  background-color: rgb(68, 117, 203,0.8);
+}
+
+.archived {
+  @extend .c-pill;
+  border: 1px solid rgb(203, 68, 74);
+  background-color: rgb(203, 68, 74,0.8);
+}
+
+.pending {
+  @extend .c-pill;
+  border: 1px solid #6BC167;
+  background-color: rgb(235, 206, 88);
+}
+
+.in-progress {
+  @extend .c-pill;
+  border: 1px solid #6BC167;
+  background: #b4eda0;
+}
+
+.draft {
+  @extend .c-pill;
+  border: 1px solid #ffc400;
+  background: #ffebb6;
+}
+
+.rejected {
+  @extend .c-pill;
+  border: 1px solid #ff4436;
+  background: #ffd5d1;
 }

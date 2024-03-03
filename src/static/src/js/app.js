@@ -1,4 +1,3 @@
-import "simplebar";
 import ResizeObserver from "resize-observer-polyfill";
 import ready, { HTML } from "./utils";
 import "./utils/responsiveHelper";
@@ -8,7 +7,6 @@ import initMobileNav from "./components/initMobileNav.js";
 import initOpenClose from "./components/initOpenClose.js";
 import initFixedHeader from "./components/initFixedHeader";
 import initPopups from "./components/initPopups";
-import initCustomSelect from "./components/initCustomSelect";
 import initTabs from "./components/initTabs";
 import initCollapsibleTable from "./components/initCollapsibleTable";
 import initCheckAllCheckboxes from "./components/initCheckAllCheckboxes";
@@ -18,7 +16,7 @@ import initAccordion from "./components/initAccordion";
 import initTooltip from "./components/initTooltip";
 // import initExport from './utils/export';
 import initSWPopup from './utils/sweatalertPopups';
-import initExportSW from './utils/exportSW';
+// import initExportSW from './utils/exportSW';
 
 import * as Sentry from "@sentry/browser";
 
@@ -33,7 +31,6 @@ ready(() => {
   initOpenClose();
   initFixedHeader();
   initPopups();
-  initCustomSelect();
   initTabs();
   initCollapsibleTable();
   initCheckAllCheckboxes();
@@ -41,7 +38,7 @@ ready(() => {
   initCopyInputValue();
   initAccordion();
   initTooltip();
-  initExportSW();
+  // initExportSW();
   // initExport();
   initSWPopup();
 

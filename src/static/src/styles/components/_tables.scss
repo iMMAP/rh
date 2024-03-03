@@ -209,28 +209,6 @@
       width: 10%;
     }
 
-    span{
-      color: white;
-      padding: 5px 6px;
-      border-radius: 20px;
-    }
-
-    span.draft {
-      background-color: rgb(243, 194, 68);
-    }
-
-    span.active {
-        background-color: rgb(82, 165, 80);
-    }
-
-    span.completed {
-        background-color: rgb(68, 117, 203);
-    }
-
-    span.archived {
-        background-color: rgb(203, 68, 74);
-    }
-    
   }
 
   .project-status{

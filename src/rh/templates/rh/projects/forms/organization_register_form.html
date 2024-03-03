@@ -1,11 +1,10 @@
-{% extends "../../../_base.html" %}
+{% extends "_base.html" %}
 {% load static %}
 {% load vite %}
 {% block content %}
 <div class="login-section sign-up base-section">
     <div class="decor-holder">
-        <img src="{% static 'rh/images/login-decor.png' %}"
-             alt="image description" />
+        <img src="{% static 'rh/images/login-decor.png' %}" alt="image description" />
     </div>
     <div class="container">
         <div class="section-heading">
@@ -59,3 +58,21 @@
     </div>
 </div>
 {% endblock content %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+<script type="module">
+    document.querySelectorAll('.custom-select').forEach((select) => {
+        const choice = new Choices(select, {
+            searchEnabled: true,
+            itemSelectText: '',
+            removeItemButton: true,
+            classNames: {
+                listDropdown: 'choices__list--dropdown',
+            },
+            shouldSort: false,
+        });
+    })
+    
+</script>
+{% endblock scripts %}

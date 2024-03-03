@@ -45,7 +45,7 @@
 
     &.col-sm {
       @include media('>=tablet') {
-        flex: 0 0 auto;
+        // flex: 0 0 auto;
         width: 326px;
       }
 

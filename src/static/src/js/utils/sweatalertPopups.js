@@ -100,7 +100,6 @@ export default function initSWPopup() {
 			allowOutsideClick: () => !Swal.isLoading()
 		}).then((result) => {
 			if (result.isConfirmed) {
-				debugger
 				icon = "success"
 				
 				if (result.value.success !== undefined && result.value.success !== false){
@@ -250,7 +249,6 @@ export default function initSWPopup() {
             formData.append("file", file);
 
 			try {
-				debugger
 				// Show loading spinner or message during asynchronous operations
 				Swal.showLoading();
 				const response = $.ajax({
@@ -263,10 +261,8 @@ export default function initSWPopup() {
 						'X-CSRFToken': csrfToken
 					},
 					success: function (data) {
-						debugger
 						Swal.hideLoading();
 						if (data.success) {
-							debugger
 							// Show success notification first
 							Swal.fire({
 								position: "top-end",
@@ -295,7 +291,6 @@ export default function initSWPopup() {
 						}
 					},
 					error: function (error) {
-						debugger
 						Swal.showValidationMessage(`
 							Request failed: ${error}
 						`);

@@ -569,7 +569,7 @@ function updateIndicatorTypes(e){
 	let id = e.target.value;
 	let prefix = e.target.dataset.prefix
 	let activityPlan = e.target.dataset.activityPlan
-	debugger
+
 	console.log(id);
 	let indicatorUrl = e.target.dataset.indicatorUrl;
 

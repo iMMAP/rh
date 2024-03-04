@@ -261,7 +261,6 @@ $(function () {
 		const activityReportFormPrefix = event.currentTarget.dataset.formPrefix
 		const activityProject = event.currentTarget.dataset.project
 		const activityDomain = event.currentTarget.dataset.activityDomain
-		debugger
 		const activityReportFormIndex = activityReportFormPrefix.match(/\d+/)[0]
 		addTargetLocationReportForm(activityReportFormPrefix, activityProject, activityReportFormIndex, activityDomain); // Call the function to add a new activity form
 	});

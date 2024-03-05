@@ -1,7 +1,6 @@
 {% extends "_base.html" %}
-{% load static %}
 
-{% load compress %}
+{% load static %}
 
 {% block page_title %}
     ReportHub - Projects
@@ -35,3 +34,7 @@
         {% endblock project_body %}
     </div>
 {% endblock content %}
+
+{% block scripts %}
+    <script type="module" src="{% static 'src/js/components/initAccordion.js' %}"></script>
+{% endblock scripts %}

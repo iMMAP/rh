@@ -1,9 +1,7 @@
-import '../plugins/tabsPlugin';
+import '../plugins/tabsPlugin.js';
 
-export default function initTabs() {
-  jQuery('.js-tabs-nav').tabset({
-    tabLinks: 'a',
-    defaultTab: true,
-    addToParent: true,
-  });
-}
+jQuery('.js-tabs-nav').tabset({
+  tabLinks: 'a',
+  defaultTab: true,
+  addToParent: true,
+});

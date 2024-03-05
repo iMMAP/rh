@@ -1041,7 +1041,6 @@ def update_indicator_type(request):
 
             initial_data = {field: getattr(activity_plan, field, None) for field in indicator_type_fields}
 
-
         indicator = Indicator.objects.get(id=indicator_id)
         indicator_form = ProjectIndicatorTypeForm(prefix=prefix, initial=initial_data)
         context = {"indicator": indicator, "indicator_form": indicator_form}

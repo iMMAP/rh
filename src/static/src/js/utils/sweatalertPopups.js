@@ -8,15 +8,15 @@ export default function initSWPopup() {
       	event.stopPropagation();
 
       	// Get the relevant data attributes from the clicked element
-		var dataURL = event.currentTarget.dataset.url;
-		var name = event.currentTarget.dataset.name;
-		var popupType = event.currentTarget.dataset.type;
-		var dataVerify = event.currentTarget.dataset.verify;
-		var unable = false;
-		var confirmButtonClass = 'btn btn-red';
-		var cancelButton = 'btn btn-danger';
+		let dataURL = event.currentTarget.dataset.url;
+		let name = event.currentTarget.dataset.name;
+		let popupType = event.currentTarget.dataset.type;
+		let dataVerify = event.currentTarget.dataset.verify;
+		let unable = false;
+		let confirmButtonClass = 'btn btn-red';
+		let cancelButton = 'btn btn-danger';
       	// Initialize variables to be used in the SweetAlert2 modal
-		var title, text, icon, successMessage, confirmButtonText;
+		let title, text, icon, successMessage, confirmButtonText;
 
 		// Set the modal variables based on the type of popup requested
 		if (popupType === "copy") {
@@ -137,11 +137,11 @@ export default function initSWPopup() {
 		event.preventDefault();
 		event.stopPropagation();
 		// Get the relevant data attributes from the clicked element
-		var dataURL = event.currentTarget.dataset.url;
-		var dataButtonText = event.currentTarget.dataset.button;
-		var message = ''
-		var textInput = false
-		var title = ''
+		let dataURL = event.currentTarget.dataset.url;
+		let dataButtonText = event.currentTarget.dataset.button;
+		let message = ''
+		let textInput = false
+		let title = ''
 		if (dataButtonText == 'Reject Report'){
 			message = 'Report has been rejected!'
 			title = 'Please provide a short rejection reason?'
@@ -222,7 +222,7 @@ export default function initSWPopup() {
 		event.stopPropagation();
 
 		// Get the relevant data attributes from the clicked element
-	  	var dataURL = event.currentTarget.dataset.url;
+	  	let dataURL = event.currentTarget.dataset.url;
 
 		const { value: file } = await Swal.fire({
 			title: 'Select File',
@@ -242,7 +242,7 @@ export default function initSWPopup() {
 		});	
 		
 		if (file) {
-			var formData = new FormData();		
+			let formData = new FormData();		
 
 			// Get CSRF token from the page
 			const csrfToken = $('[name=csrfmiddlewaretoken]').val();

@@ -1,5 +1,7 @@
-{% extends "../../_base.html" %}
+{% extends "_base.html" %}
+
 {% load static %}
+
 {% block content %}
     <div class="login-section base-section">
         <div class="decor-holder">
@@ -77,3 +79,22 @@
     </div>
 {% endblock content %}
 
+{% block scripts %}
+<script>
+    const element = document.querySelector('.js-show-hide-field')
+    const button = element.querySelector('.show-hide-btn');
+    const input = element.querySelector('input');
+
+    button.addEventListener('click', (event) => {
+        event.preventDefault();
+
+        if (input.type === 'password') {
+            button.innerHTML = '<span class="icon-eye-off"></span>';
+            input.type = 'text';
+        } else {
+            button.innerHTML = '<span class="icon-eye"></span>';
+            input.type = 'password';
+        }
+    });
+</script>
+{% endblock scripts %}

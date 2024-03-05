@@ -1,5 +1,7 @@
 {% extends "../projects_index.html" %}
+
 {% load static %}
+
 {% block project_body %}
     <div class="breadcrumbs-nav-panel">
         <div class="holder">
@@ -1015,10 +1017,12 @@
 
 
 {% block scripts %}
+{{ block.super }}
 <script>
     document.querySelector(".project-planning").addEventListener('click', function(){
         document.querySelector(".project-chevron").classList.toggle("object-rotation");
     });
+
     document.querySelector(".activity-planning").addEventListener('click', function(){
         document.querySelector(".activity-chevron").classList.toggle("object-rotation");
     });

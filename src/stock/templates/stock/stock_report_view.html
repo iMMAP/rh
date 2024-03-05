@@ -1,6 +1,7 @@
-{% extends "../_base.html" %}
+{% extends "_base.html" %}
+
 {% load static %}
-{% load vite %}
+
 {% block content %}
 
 <div class="container px-4 px-lg-5 h-100">
@@ -151,8 +152,21 @@
         </div>
     </div>
 </div>
-
-{% comment %} Full Pack relative to location of manage.py file {% endcomment %}
-{% vite 'stock/static/stock/stock.js' %}
-
 {% endblock content %}
+
+{% comment %} This can be put in a base template {% endcomment %}
+{% block scripts %}
+<script src="{% static 'src/js/plugins/accordionPlugin.js' %}"></script>
+<script>
+  jQuery('.stock-accordion').slideAccordion({
+    opener: '.stock-accordion-opener',
+    slider: '.stock-accordion-slide',
+    animSpeed: 300,
+    activeClass: 'stock-accordion-active',
+    scrollToActiveItem: {
+      enable: true,
+      extraOffset: 0,
+    },
+   });
+</script>
+{% endblock scripts %}

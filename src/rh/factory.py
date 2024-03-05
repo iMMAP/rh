@@ -455,13 +455,12 @@ class ProjectFactory(DjangoModelFactory):
     state = factory.Iterator(Project.PROJECT_STATES, getter=lambda c: c[0])
     active = factory.Faker("boolean")
     title = factory.Faker("sentence")
-    code = factory.Faker("word",unique=True)
+    code = factory.Faker("word", unique=True)
     # generate unique code
 
-    
     is_hrp_project = factory.Faker("boolean")
     has_hrp_code = factory.Faker("boolean")
-    hrp_code = factory.Faker("word",unique=True)
+    hrp_code = factory.Faker("word", unique=True)
 
     start_date = factory.Faker("date_time_this_decade", tzinfo=pytz.UTC)
     end_date = factory.Faker("date_time_this_decade", tzinfo=pytz.UTC)

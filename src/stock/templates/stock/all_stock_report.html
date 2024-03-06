@@ -1,7 +1,7 @@
-{% extends "../_base.html" %}
+{% extends "_base.html" %}
+
 {% load static %}
-{% load vite %}
-{% load compress %}
+
 {% block content %}
 <div class="base-section" style="padding-bottom: 20px;">
     <div class="container">
@@ -257,7 +257,8 @@
         </div>
     </div>
 </div>
-
-{% comment %} Full Pack relative to location of manage.py file {% endcomment %}
-{% vite  'stock/static/stock/stock.js' %}
 {% endblock %}
+
+{% block scripts %}
+    <script src="{% static 'src/js/components/initTabs.js' %}"></script>
+{% endblock scripts %}

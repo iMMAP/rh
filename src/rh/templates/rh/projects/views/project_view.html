@@ -1,5 +1,7 @@
 {% extends "../projects_index.html" %}
+
 {% load static %}
+
 {% block project_body %}
     <div class="breadcrumbs-nav-panel">
         <div class="holder">
@@ -670,6 +672,12 @@
         </div>
     </div>
 
+    <div class="input-field is-required">
+        <span class="label">Project description &amp; objectives</span>
+        <div class="input-holder">{{ project.description | linebreaksbr }}
+        </div>
+    </div>
+
     <div class="activity-planning read-only">
         <div class="activity-block-holder">
             <div class="top-activity-block">
@@ -683,6 +691,8 @@
             </div>
         </div>
     </div>
+
+   
 
     {% for activity_plan in project.activityplan_set.all %}
     <div class="activity-planning read-only">
@@ -1005,20 +1015,18 @@
     </div>
     {% endfor %}
    
-    <div class="input-field is-required">
-        <span class="label">Project description &amp; objectives</span>
-        <div class="input-holder">{{ project.description | linebreaksbr }}
-        </div>
-    </div>
+    
     
 {% endblock project_body %}
 
 
 {% block scripts %}
+{{ block.super }}
 <script>
     document.querySelector(".project-planning").addEventListener('click', function(){
         document.querySelector(".project-chevron").classList.toggle("object-rotation");
     });
+
     document.querySelector(".activity-planning").addEventListener('click', function(){
         document.querySelector(".activity-chevron").classList.toggle("object-rotation");
     });

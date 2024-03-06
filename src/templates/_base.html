@@ -251,7 +251,9 @@
             </div>
         </div>
 
-        {% vite 'static/src/js/utils/initSentry.js' %}
+        {% if APP_ENV == 'production' %}
+            {% vite 'static/src/js/utils/initSentry.js' %}
+        {% endif %}
 
         <script>
             var csrftoken = '{{ csrf_token }}';

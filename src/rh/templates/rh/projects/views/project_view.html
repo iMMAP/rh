@@ -672,6 +672,12 @@
         </div>
     </div>
 
+    <div class="input-field is-required">
+        <span class="label">Project description &amp; objectives</span>
+        <div class="input-holder">{{ project.description | linebreaksbr }}
+        </div>
+    </div>
+
     <div class="activity-planning read-only">
         <div class="activity-block-holder">
             <div class="top-activity-block">
@@ -685,6 +691,8 @@
             </div>
         </div>
     </div>
+
+   
 
     {% for activity_plan in project.activityplan_set.all %}
     <div class="activity-planning read-only">
@@ -1007,11 +1015,7 @@
     </div>
     {% endfor %}
    
-    <div class="input-field is-required">
-        <span class="label">Project description &amp; objectives</span>
-        <div class="input-holder">{{ project.description | linebreaksbr }}
-        </div>
-    </div>
+    
     
 {% endblock project_body %}
 

@@ -317,22 +317,6 @@ rcssmin = "1.1.1"
 rjsmin = "1.2.1"
 
 [[package]]
-name = "django-compressor-toolkit"
-version = "0.6.0"
-description = "Set of add-ons for django-compressor"
-optional = false
-python-versions = "*"
-files = [
-    {file = "django-compressor-toolkit-0.6.0.tar.gz", hash = "sha256:c0640559512f8a8a693fc7a374ca5a8fbca84c0ee0b90268e979d04a2f6bb694"},
-]
-
-[package.dependencies]
-django-compressor = ">=1.5"
-
-[package.extras]
-test = ["django (>=1.8,<2.0)", "pytest (>=3.0,<4.0)", "pytest-cov (>=2.4,<3.0)", "pytest-django (>=3.0,<4.0)", "pytest-pythonpath (>=0.7,<1.0)"]
-
-[[package]]
 name = "django-cors-headers"
 version = "3.13.0"
 description = "django-cors-headers is a Django application for handling the server headers required for Cross-Origin Resource Sharing (CORS)."
@@ -2255,4 +2239,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "12a487cad214dfe7b2e789970e3a2d228d544d598eed38411c7ada8623dc38bc"
+content-hash = "00bd1b006e8736ef70aabfe9cb08c9faf722cbb8a60295f50dbce66661f79eb5"

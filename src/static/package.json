@@ -14,9 +14,8 @@
     "vite": "^4.0.2"
   },
   "dependencies": {
-    "@sentry/browser": "^7.86.0",
+    "@sentry/browser": "^7.105.0",
     "include-media": "^2.0.0",
-    "jquery": "^3.7.1",
     "normalize.css": "^8.0.1",
     "resize-observer-polyfill": "^1.5.1",
     "sweetalert2": "^11.9.0",

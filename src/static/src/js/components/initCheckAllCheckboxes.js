@@ -1,7 +1,3 @@
-export default function initCheckAllCheckboxes() {
-  jQuery('[data-check-pattern]').checkAll();
-}
-
 /*
  * jQuery check all plugin
  */
@@ -31,3 +27,6 @@ export default function initCheckAllCheckboxes() {
   };
 }(jQuery));
 /* eslint-enable */
+
+jQuery('[data-check-pattern]').checkAll();
+

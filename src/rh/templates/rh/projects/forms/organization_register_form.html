@@ -3,9 +3,6 @@
 {% load vite %}
 {% block content %}
 <div class="login-section sign-up base-section">
-    <div class="decor-holder">
-        <img src="{% static 'rh/images/login-decor.png' %}" alt="image description" />
-    </div>
     <div class="container">
         <div class="section-heading">
             <h1 class="title">Add Organization</h1>
@@ -61,7 +58,7 @@
 
 {% block scripts %}
 <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
-<script type="module">
+<script>
     document.querySelectorAll('.custom-select').forEach((select) => {
         const choice = new Choices(select, {
             searchEnabled: true,

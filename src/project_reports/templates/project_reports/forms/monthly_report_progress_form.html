@@ -197,6 +197,18 @@
 {{ activity_plan_formset.media.js }}
 {% compress js %}
 	<script defer src="{% static 'project_reports/js/monthly_report_progress.js' %}"></script>
+	<script>
+		jQuery('.monthly-accordion').slideAccordion({
+			opener: '.monthly-accordion-opener',
+			slider: '.monthly-accordion-slide',
+			animSpeed: 300,
+			activeClass: 'monthly-accordion-active',
+			scrollToActiveItem: {
+				enable: true,
+				extraOffset: 0,
+			},
+		});
+	</script>
 {% endcompress js %}
 
 {% endblock report_body %}

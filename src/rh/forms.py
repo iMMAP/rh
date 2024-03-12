@@ -266,7 +266,10 @@ class BudgetProgressForm(forms.ModelForm):
             pk__in=activity_domains
         )
         self.fields["donor"].queryset = self.fields["donor"].queryset.filter(pk__in=donor_ids)
-        self.fields["budget_currency"].queryset = self.fields["budget_currency"].queryset.filter(pk=budget_currency.pk)
+        if budget_currency:
+            self.fields["budget_currency"].queryset = self.fields["budget_currency"].queryset.filter(
+                pk=budget_currency.pk
+            )
 
 
 class OrganizationRegisterForm(forms.ModelForm):

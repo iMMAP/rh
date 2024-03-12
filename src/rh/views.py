@@ -690,12 +690,12 @@ def copy_project(request, pk):
         # Create a new project by duplicating the original project.
         new_project = get_object_or_404(Project, pk=pk)
         new_project.pk = None  # Generate a new primary key for the new project.
-        
+
         # Modify the title, code, and state of the new project to indicate it's a copy.
         new_project.title = f"[COPY] - {project.title}"
         new_project.code = f"[COPY] - {project.code}"  # Generate a new primary key for the new project.
         new_project.state = "draft"
-        
+
         new_project.save()  # Save the new project to the database.
 
         # Copy related data from the original project to the new project.

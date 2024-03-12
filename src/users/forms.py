@@ -81,8 +81,8 @@ class ProfileUpdateForm(forms.ModelForm):
 
         widgets = {
             "clusters": forms.SelectMultiple(attrs={"class": "custom-select"}),
-            "country": forms.Select(attrs={"class": "custom-select"}),
-            "organization": forms.Select(attrs={"class": "custom-select"}),
+            "country": forms.Select(attrs={"class": "custom-select", "disabled": "disabled"}),
+            "organization": forms.Select(attrs={"class": "custom-select", "disabled": "disabled"}),
         }
 
     def __init__(self, *args, **kwargs):

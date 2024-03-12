@@ -21,9 +21,12 @@
                     </a>
                 </li>
                 {% if project %}
-                    <li class="current">{{ project.code }}</li>
-                {% else %}
-                    <li>Financial Reports</li>
+                    <li>
+                        <a href="{% if project %}{% url 'projects-detail' project.pk %}{% else %}{% url 'projects-create' %}{% endif %}">
+                            {{ project.code }}
+                        </a>
+                    </li>
+                    <li class="current">Financial Reports</li>
                 {% endif %}
             </ul>
         </div>
@@ -33,19 +36,8 @@
             <div class="main-heading"></div>
             <div class="bottom-block">
                 <div class="title">
-                    <h2 class="plan-title">{{ project.title }}</h2>
                 </div>
-                <div class="actions-panel">
-                    <a href="#" class="btn btn-gray"><span class="btn-text">Import</span><span class="icon-download"></span></a>
-                    <button type="button"
-                            id="fold-unfold-all"
-                            class="btn btn-gray-outline fold-unfold-all-details">
-                        <span class="icon-chevron-up up hidden" id="fold-icon-up"></span>
-                        <span class="icon-chevron-down down " id="fold-icon-down"></span>
-                        <span class="btn-text hidden" id="all-fold">Collapse All</span>
-                        <span class="btn-text " id="all-unfold">Expand All</span>
-                    </button>
-                </div>
+                
             </div>
         </div>
         <div class="target-location">
@@ -61,10 +53,10 @@
                             id="country_id"
                             value="{{ user.profile.country.pk }}">
                     <input type="hidden" name="project" id="project_id" value="{{ project.pk }}">
-                    <div class="location-block-holder js-collapse-expand"
+                    <div class="project-activity-block project-activity-accordion"
                             data-form-id="{{ form.prefix }}">
                         <div class="inner-holder location-inner-holder">
-                            <div class="block-top">
+                            <div class="block-top project-activity-accordion-opener">
                                 <span class="title">
                                     {% if not form.id.value %}
                                         <span>Add Budget Progress</span>
@@ -98,15 +90,9 @@
                                                 value="true"
                                                 name="{{ form.prefix }}-save">Save</button>
                                     </div>
-                                    <a href="#" class="btn btn-gray-outline collapse-details">
-                                        <span class="icon-chevron-up up" id="{{ form.prefix }}-up"></span>
-                                        <span class="icon-chevron-down down hidden" id="{{ form.prefix }}-down"></span>
-                                        <span class="btn-text" id="{{ form.prefix }}-fold">Collapse</span>
-                                        <span class="btn-text hidden" id="{{ form.prefix }}-unfold">Expand</span>
-                                    </a>
                                 </div>
                             </div>
-                            <div id="{{ form.prefix }}-details">
+                            <div class="project-activity-accordion-slide" id="{{ form.prefix }}-details">
                                 <div class="row">
                                     <div class="col">
                                         <div class="multiple-fields-row three-items">

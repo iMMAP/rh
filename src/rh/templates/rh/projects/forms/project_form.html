@@ -39,7 +39,8 @@
                 {{ form.active }}
                 {{ form.country }}
                 <div class="row">
-                    <div class="col col-sm">
+
+                    <div class="col col">
                         <div class="input-field is-required">
                             <label for="{{ form.title.id_for_label }}">Project Title</label>
                             <div class="input-holder">{{ form.title }}</div>
@@ -52,6 +53,24 @@
                             <span class="sign-up-field-error">{{form.code.errors}}</span>
                         </div>
 
+                        <div class="select-field is-required">
+                            <label for="{{ form.clusters.id_for_label }}">Clusters / Sectors [Hold Control/Command button to select
+                                multiple]</label>
+                            <div class="input-holder">{{ form.clusters }}</div>
+                            <span class="sign-up-field-error">{{form.clusters.errors}}</span>
+                        </div>
+
+                        <div class="field-col">
+                            <div class="select-field is-required">
+                                <label for="{{ form.activity_domains.id_for_label }}">Activity Domains [Hold Control/Command button to select
+                                    multiple]</label>
+                                <div class="input-holder">{{ form.activity_domains }}</div>
+                                <span class="sign-up-field-error">{{form.activity_domains.errors}}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col col">
                         <div class="multiple-fields-row">
                             <div class="field-col">
                                 <div class=" date start">
@@ -66,16 +85,6 @@
                                     <div class="date-picker-field">{{ form.end_date }}</div>
                                     <span class="sign-up-field-error">{{form.end_date.errors}}</span>
                                 </div>
-                            </div>
-                        </div>
-                       
-
-                        <div class="field-col">
-                            <div class="select-field is-required">
-                                <label for="{{ form.donors.id_for_label }}">Project Donor [Hold Control/Command button to select
-                                    multiple]</label>
-                                <div class="input-holder">{{ form.donors }}</div>
-                                <span class="sign-up-field-error">{{form.donors.errors}}</span>
                             </div>
                         </div>
 
@@ -95,7 +104,7 @@
                         </div>
 
                         <small id="budget_received_message"></small>
-
+                        
                         <div class="multiple-fields-row">
                             <div class="field-col">
                                 <div class="input-field">
@@ -140,22 +149,17 @@
                             <span class="sign-up-field-error">{{form.hrp_code.errors}}</span>
                         </div>
 
-                        <div class="select-field is-required">
-                            <label for="{{ form.clusters.id_for_label }}">Clusters / Sectors [Hold Control/Command button to select
-                                multiple]</label>
-                            <div class="input-holder">{{ form.clusters }}</div>
-                            <span class="sign-up-field-error">{{form.clusters.errors}}</span>
                     </div>
 
-                    <div class="field-col">
-                        <div class="select-field is-required">
-                            <label for="{{ form.activity_domains.id_for_label }}">Activity Domains [Hold Control/Command button to select
-                                multiple]</label>
-                            <div class="input-holder">{{ form.activity_domains }}</div>
-                            <span class="sign-up-field-error">{{form.activity_domains.errors}}</span>
+                    <div class="col col-lg">
+                        <div class="field-col">
+                            <div class="select-field is-required">
+                                <label for="{{ form.donors.id_for_label }}">Project Donor [Hold Control/Command button to select
+                                    multiple]</label>
+                                <div class="input-holder">{{ form.donors }}</div>
+                                <span class="sign-up-field-error">{{form.donors.errors}}</span>
+                            </div>
                         </div>
-                    </div>
-
                     </div>
 
                     <div class="col col-lg">

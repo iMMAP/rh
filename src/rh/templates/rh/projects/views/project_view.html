@@ -9,23 +9,23 @@
                 <li>
                     <a href="{% url 'landing' %}">Home</a>
                 </li>
-                <li>
-                    <a id="return-url" href="{% url 'projects-list' %}?state={{project.state}}">
-                        {% if project.state == 'in-progress' %}
-                            Active Projects
-                        {% elif project.state == 'draft' %}
-                            Draft Projects
-                        {% elif project.state == 'archive' %}
-                            Archived Projects
-                        {% elif project.state == 'done' %}
-                            Completed Projects
-                        {% endif %}
-                    </a>
-                </li>
                 {% if project %}
+                    <li>
+                        <a id="return-url" href="{% url 'projects-list' %}?state={{project.state}}">
+                            {% if project.state == 'in-progress' %}
+                                Active Projects
+                            {% elif project.state == 'draft' %}
+                                Draft Projects
+                            {% elif project.state == 'archive' %}
+                                Archived Projects
+                            {% elif project.state == 'done' %}
+                                Completed Projects
+                            {% endif %}
+                        </a>
+                    </li>   
                     <li class="current">{{ project.code }}</li>
                 {% else %}
-                    <li>New Project</li>
+                    <li class="current">New Project</li>
                 {% endif %}
             </ul>
         </div>

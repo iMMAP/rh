@@ -133,7 +133,7 @@
                             <div class="block-footer">
                                 <div class="btn-wrapper">
                                     <a class="btn btn-gray-outline"
-                                        href="{% if active_projects_count %} {% url 'projects-list' %} {% elif draft_projects_count %} {% url 'projects-list' %} {% elif completed_projects_count %} {% url 'projects-list' %} {% else %} {% endif %}">Reset</a>
+                                        href="{% url 'projects-list' %}?state={{request.GET.state}}">Reset</a>
                                     <button type="submit" class="btn btn-red">Apply</button>
                                 </div>
                             </div>

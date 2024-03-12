@@ -13,9 +13,11 @@ class UserAdminCustom(UserAdmin):
         "email",
         "first_name",
         "last_name",
+        "is_active",
+        "profile_link",
+        "last_login",
         "is_staff",
         "is_superuser",
-        "profile_link",
     )
 
     def profile_link(self, obj):

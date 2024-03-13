@@ -125,13 +125,14 @@ admin.site.register(Donor, DonorAdmin)
 
 
 class BeneficiaryTypeAdmin(admin.ModelAdmin):
-    list_display = ("name", "country","Clusters")
+    list_display = ("name", "country", "Clusters")
     search_fields = ("code", "name")
     list_filter = ("clusters",)
 
     def Clusters(self, obj):
         clusters = obj.clusters.all()
         return ", ".join([c.title for c in clusters])
+
 
 admin.site.register(BeneficiaryType, BeneficiaryTypeAdmin)
 
@@ -153,6 +154,7 @@ class DisaggregationAdmin(ImportExportActionModelAdmin, admin.ModelAdmin):
 
 
 admin.site.register(Disaggregation, DisaggregationAdmin)
+
 
 class DisaggregationInline(admin.TabularInline):
     model = Disaggregation.indicators.through

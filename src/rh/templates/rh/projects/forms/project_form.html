@@ -47,7 +47,7 @@
                             <span class="sign-up-field-error">{{form.title.errors}}</span>
                         </div>
 
-                        <div class="input-field">
+                        <div class="input-field is-required">
                             <label for="{{ form.code.id_for_label }}">Project Code</label>
                             <div class="input-holder">{{ form.code }}</div>
                             <span class="sign-up-field-error">{{form.code.errors}}</span>
@@ -72,14 +72,14 @@
 
                     <div class="col col">
                         <div class="multiple-fields-row">
-                            <div class="field-col">
+                            <div class="field-col input-field is-required">
                                 <div class=" date start">
                                     <label for="{{ form.start_date.id_for_label }}">Start Date</label>
                                     <div class="date-picker-field">{{ form.start_date }}</div>
                                     <span class="sign-up-field-error">{{form.start_date.errors}}</span>
                                 </div>
                             </div>
-                            <div class="field-col">
+                            <div class="field-col input-field is-required">
                                 <div class="date end">
                                     <label for="{{ form.end_date.id_for_label }}">End Date</label>
                                     <div class="date-picker-field">{{ form.end_date }}</div>
@@ -90,7 +90,7 @@
 
                         <div class="multiple-fields-row">
                             <div class="field-col">
-                                <div class="input-field">
+                                <div class="input-field is-required">
                                     <label for="{{ form.budget.id_for_label }}">Project Budget</label>
                                     <div class="input-holder">{{ form.budget }}</div>
                                     <span class="sign-up-field-error">{{form.budget.errors}}</span>
@@ -107,7 +107,7 @@
                         
                         <div class="multiple-fields-row">
                             <div class="field-col">
-                                <div class="input-field">
+                                <div class="input-field is-required">
                                     <label for="{{ form.budget_received.id_for_label }}">Budget Received</label>
                                     <div class="input-holder">{{ form.budget_received }}</div>
                                     <span class="sign-up-field-error">{{form.budget_received.errors}}</span>
@@ -165,18 +165,16 @@
                     <div class="col col-lg">
                         <div class="multiple-fields-row two-items">
                             <div class="field-col">
-                                <div class="select-field">
-                                    <label for="{{ form.implementing_partners.id_for_label }}">Implementing Partners [Hold Control/Command button to select
-                                        multiple]
+                                <div class="select-field is-required">
+                                    <label for="{{ form.programme_partners.id_for_label }}">Programme Partners [Hold Control/Command button to select multiple]
                                     </label>
                                     {{ form.implementing_partners }}
                                     <span class="sign-up-field-error">{{form.implementing_partners.errors}}</span>
                                 </div>
                             </div>
                             <div class="field-col">
-                                <div class="select-field">
-                                    <label for="{{ form.programme_partners.id_for_label }}">Programme Partners [Hold Control/Command button to select
-                                        multiple]
+                                <div class="select-field is-required">
+                                    <label for="{{ form.implementing_partners.id_for_label }}">Implementing Partners [Hold Control/Command button to select multiple]
                                     </label>
                                     {{ form.programme_partners }}
                                     <span class="sign-up-field-error">{{form.programme_partners.errors}}</span>

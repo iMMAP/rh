@@ -14,27 +14,27 @@
 
     <td class="date-col" data-title="Due date">{{ report.report_due_date | date:"d F Y" }}</td>
 
-    <td class="id-col" data-title="Locations">location1, location2</td>
+    <td class="id-col" data-title="Locations">
+        {% for plan_report in report.activityplanreport_set.all %}
+            {{ plan_report.activity_plan.activity_domain }}
+            {% if not forloop.last %},{% endif %}
+        {% endfor %}
+    </td>
 
-    <td class="id-col" data-title="Locations">location1, location2</td>
+    <td class="id-col" data-title="Locations">
+        {% for plan_report in report.activityplanreport_set.all %}
+            {% for location_report in plan_report.targetlocationreport_set.all  %}
+                {{ location_report.province.name }}, {{ location_report.district.name }}
+            {% endfor %}
+            {% if not forloop.last %}<b>|</b>{% endif %}
+        {% endfor %}
+    </td>
 
-    <td class="notes-col" data-title="Notes">Lorem ipsum dolor sit amet</td>
+    <td class="notes-col" data-title="Notes">{{report.description}}</td>
 
     <td class="date-col" data-title="Due date">
         <span class="{{ report.state }}">
             {{ report.get_state_display }}
         </span>
     </td>
-
-    <!-- <td class="edit-col" data-title="Edit">
-        <ul class="table-options-buttons">
-            <li>
-                <button>
-                    <a class="text-decoration-none" href="{% url 'create_project_monthly_report' project=project.id %}">
-                        <span class="icon-pen"></span>
-                    </a>
-                </button>
-            </li>
-        </ul>
-    </td> -->
 </tr>

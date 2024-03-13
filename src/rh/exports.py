@@ -1,7 +1,7 @@
 import base64
 import datetime
-from io import BytesIO
 import json
+from io import BytesIO
 
 from django.http import JsonResponse
 from django.utils import timezone
@@ -10,8 +10,7 @@ from openpyxl import Workbook
 from openpyxl.styles import Font, NamedStyle
 from openpyxl.utils import get_column_letter
 
-
-from .models import Project, Disaggregation
+from .models import Disaggregation, Project
 
 #############################################
 ############### Export Views #################
@@ -99,14 +98,6 @@ class ProjectExportExcelView(View):
             {"header": "Programme Partners", "type": "string", "width": 30},
             {"header": "Status", "type": "string", "width": 10},
             {"header": "Activity Domain", "type": "string", "width": 50},
-            # {'header': 'Activity Type', 'type': 'string', 'width': 50},
-            # {'header': 'Activity Detail', 'type': 'string', 'width': 50},
-            # {'header': 'Indicators', 'type': 'string', 'width': 50},
-            # {'header': 'Beneficiary', 'type': 'string', 'width': 50},
-            # {'header': 'Beneficiary Catagory', 'type': 'string', 'width': 50},
-            # {'header': 'Province', 'type': 'string', 'width': 50},
-            # {'header': 'District', 'type': 'string', 'width': 50},
-            # {'header': 'Word/Zone', 'type': 'string', 'width': 50},
         ]
 
         self.write_sheet_columns(sheet, columns)
@@ -144,11 +135,15 @@ class ProjectExportExcelView(View):
         row = [
             project.title,
             project.code,
-            project.user.username,
-            project.user.email,
+            project.user.username if project.user else None,
+            project.user.email if project.user else None,
             project.description,
-            project.user.profile.organization.code,
-            project.user.profile.organization.type,
+            project.user.profile.organization.code
+            if project.user and project.user.profile and project.user.profile.organization
+            else None,
+            project.user.profile.organization.type
+            if project.user and project.user.profile and project.user.profile.organization
+            else None,
             ", ".join([clusters.name for clusters in project.clusters.all()]),
             project.hrp_code,
             project.start_date.astimezone(timezone.utc).replace(tzinfo=None) if project.start_date else None,
@@ -156,7 +151,7 @@ class ProjectExportExcelView(View):
             project.budget,
             project.budget_received,
             project.budget_gap,
-            project.budget_currency.name,
+            project.budget_currency.name if project.budget_currency else None,
             ", ".join([donor.name for donor in project.donors.all()]),
             ", ".join([implementing_partner.code for implementing_partner in project.implementing_partners.all()]),
             ", ".join([programme_partner.code for programme_partner in project.programme_partners.all()]),
@@ -257,8 +252,8 @@ class ProjectExportExcelView(View):
             #     disaggregation.name for disaggregation in Disaggregation.objects.all()
             # )
             row = [
-                location.province.name,
-                location.district.name,
+                location.province.name if location.province else None,
+                location.district.name if location.district else None,
                 location.zone.name if location.zone else None,
             ]
 
@@ -320,15 +315,15 @@ class ProjectExportExcelView(View):
         budget_progress = project.budgetprogress_set.all()
         for budget in budget_progress:
             row = [
-                budget.project.name,
+                budget.project.name if budget.project else None,
                 budget.title,
-                budget.donor.name,
-                budget.activity_domain.name,
+                budget.donor.name if budget.donor else None,
+                budget.activity_domain.name if budget.activity_domain else None,
                 budget.grant,
                 budget.amount_recieved,
-                budget.budget_currency.name,
+                budget.budget_currency.name if budget.budget_currency else None,
                 budget.received_date,
-                budget.country.name,
+                budget.country.name if budget.country else None,
                 budget.description,
             ]
 

@@ -1034,7 +1034,7 @@ def update_indicator_type(request):
         initial_data = {}
         if activity_plan_id:
             activity_plan = get_object_or_404(ActivityPlan, pk=activity_plan_id)
-            if str(activity_plan.indicator.pk) != indicator_id:
+            if (activity_plan.indicator) and (str(activity_plan.indicator.pk) != indicator_id):
                 fields_to_update = {field: None for field in indicator_type_fields}
 
                 # Update the fields in one query

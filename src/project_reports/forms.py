@@ -2,7 +2,7 @@ from django import forms
 from django.forms.models import inlineformset_factory
 from django.urls import reverse_lazy
 
-from rh.models import Indicator
+from rh.models import FacilitySiteType, Indicator
 
 from .models import ActivityPlanReport, DisaggregationLocationReport, ProjectMonthlyReport, TargetLocationReport
 
@@ -47,6 +47,7 @@ class TargetLocationReportForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
 
         cluster_has_nhs_code = False
+        plan_report = False
         if "instance" in kwargs and kwargs["instance"]:
             plan_report = kwargs["instance"].activity_plan_report
             if plan_report:
@@ -55,6 +56,14 @@ class TargetLocationReportForm(forms.ModelForm):
                 )
         nhs_code = f"{kwargs.get('prefix')}-nhs_code"
         has_nhs_code = nhs_code in kwargs.get("data", {})
+
+        # Get only the relevant facility types - related to cluster
+        if plan_report:
+            self.fields["facility_site_type"].queryset = FacilitySiteType.objects.filter(
+                cluster__in=plan_report.activity_plan.activity_domain.clusters.all()
+            )
+        else:
+            self.fields["facility_site_type"].queryset = FacilitySiteType.objects.all()
 
         if cluster_has_nhs_code or has_nhs_code:
             self.fields["nhs_code"] = forms.CharField(max_length=200, required=True)

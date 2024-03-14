@@ -115,6 +115,7 @@ class TargetLocationForm(forms.ModelForm):
         )
 
         cluster_has_nhs_code = False
+        activity_plan = False
         if "instance" in kwargs and kwargs["instance"]:
             activity_plan = kwargs["instance"].activity_plan
             if activity_plan:
@@ -131,8 +132,14 @@ class TargetLocationForm(forms.ModelForm):
 
         self.fields["province"].queryset = self.fields["province"].queryset.filter(type="Province")
         self.fields["district"].queryset = self.fields["district"].queryset.filter(type="District")
-        # Get only the relevant facility types -  related to cluster
-        self.fields["facility_site_type"].queryset = FacilitySiteType.objects.all()
+
+        # Get only the relevant facility types - related to cluster
+        if activity_plan:
+            self.fields["facility_site_type"].queryset = FacilitySiteType.objects.filter(
+                cluster__in=activity_plan.activity_domain.clusters.all()
+            )
+        else:
+            self.fields["facility_site_type"].queryset = FacilitySiteType.objects.all()
         self.fields["zone"].queryset = self.fields["zone"].queryset.filter(type="Zone")
         self.fields["province"].widget.attrs.update(
             {

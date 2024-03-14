@@ -772,12 +772,20 @@ def get_location_report_empty_form(request):
     if activity_domain:
         # Get clusters associated with the activity plan's domain
         clusters = activity_domain.clusters.all()
+
+        # Get only the relevant facility types - related to cluster
+        location_report_form.fields["facility_site_type"].queryset = FacilitySiteType.objects.filter(
+            cluster__in=clusters
+        )
+
         cluster_has_nhs_code = any(cluster.has_nhs_code for cluster in clusters)
         # If at least one cluster has NHS code, add the NHS code field to the form
         if cluster_has_nhs_code:
             location_report_form.fields["nhs_code"] = forms.CharField(max_length=200, required=True)
         else:
             location_report_form.fields.pop("nhs_code", None)
+    else:
+        location_report_form.fields["facility_site_type"].queryset = FacilitySiteType.objects.all()
 
     location_report_form.fields["province"].queryset = Location.objects.filter(id__in=target_location_provinces)
     location_report_form.fields["district"].queryset = Location.objects.filter(id__in=target_location_districts)

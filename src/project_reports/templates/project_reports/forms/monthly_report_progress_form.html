@@ -111,7 +111,7 @@
 								</div>
 							</div>
 						</div>
-						{% if activity_report_form.instance.activity_plan.activity_detail or activity_report_form.initial.activity_plan.activity_detail %}
+						<!-- {% if activity_report_form.instance.activity_plan.activity_detail or activity_report_form.initial.activity_plan.activity_detail %}
 							<div class="col">
 								<div class="field-col">
 									<div class="select-field">
@@ -126,11 +126,11 @@
 									</div>
 								</div>
 							</div>
-						{% endif %}
+						{% endif %} -->
 						<div class="col">
 							<div class="field-col">
 								<div class="select-field">
-									<label>Indicator</label>
+									<span class="label">Indicator</span>
 									<span class="text-read-only">{{ activity_report_form.indicator }}</span>
 									<span class="text-read-only">
 										{% if activity_report_form.instance.pk %}
@@ -145,8 +145,10 @@
 						<div class="col">
 							<div class="field-col">
 								<div class="select-field">
-									<label>Report Types</label>
-									{{ activity_report_form.report_types }}
+									<label for="{{ activity_report_form.report_types.id_for_label }}">
+										Response Types
+									</label>
+									<div class="input-holder">{{ activity_report_form.report_types }}</div>
 								</div>
 							</div>
 						</div>

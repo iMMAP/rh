@@ -1,29 +1,36 @@
 cluster,name
-cccm,IDP camp site
-cccm,host community site
-cccm,refugee site
-cccm,refugee returnee site
-cccm,IDP returnee site
-education,school/learning space
-health,hospital/health centre
-health,mobile health centre /clinic
-health,temporary health centre/clinic
-nutrition,hospital/health centre
-nutrition,malnutrition screening site
-nutrition,nutrition distribution site
-esnfi,shelter distribution site
-esnfi,camp site
-esnfi,housing construction site
-wash,school/learning space
-wash,hospital/health centre
-wash,outreach site
-wash,toilet
-wash,bathroom
-wash,water point
-wash,WASH distribution site
-wash,waste collection/disposal point
-wash,waste treatment point
-protection,Child Friendly Space
+health,NH (National Hospital)
+health,RH (Regional Hospital)
+health,PH (Provincial Hospital)
+health,DH (District Hospital)
+health,CHC (Comprehensive Health Center)
+health,BHC (Basic Health Center)
+health,SHC (Sub Health Center)
+health,FATP (First Aid Trauma Post)
+health,FHH (Family Health House )
+health,MHNT (Mobile Health Nutrition Team)
+cccm,IDP Camp Site
+cccm,Host Community Site
+cccm,Refugee Site
+cccm,Refugee Returnee Site
+cccm,IDP Returnee Site
+education,School/learning Space
+nutrition,Hospital/health Centre
+nutrition,Malnutrition Screening Site
+nutrition,Nutrition Distribution Site
+esnfi,Shelter Distribution Site
+esnfi,Camp Site
+esnfi,Housing Construction Site
+wash,School/learning Space
+wash,Hospital/Health Centre
+wash,Outreach Site
+wash,Toilet
+wash,Bathroom
+wash,Water Point
+wash,WASH Distribution Site
+wash,Waste collection/disposal point
+wash,Waste Treatment Point
+PRO-CP,Child Friendly Space
 protection,Family Protection Centre
 protection,MHPSS Site
 protection,Women Friendly Space

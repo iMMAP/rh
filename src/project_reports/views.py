@@ -87,41 +87,47 @@ def create_project_monthly_report_view(request, project):
     """View for creating a project."""
     project = get_object_or_404(Project, pk=project)
 
-    # Get the current date
-    current_date = datetime.now()
+    if project.state == "in-progress":
+        # Get the current date
+        current_date = datetime.now()
 
-    # Calculate the last day of the current month
-    last_day = calendar.monthrange(current_date.year, current_date.month)[1]
+        # Calculate the last day of the current month
+        last_day = calendar.monthrange(current_date.year, current_date.month)[1]
 
-    # Create a new date representing the end of the current month
-    end_of_month = datetime(current_date.year, current_date.month, last_day)
+        # Create a new date representing the end of the current month
+        end_of_month = datetime(current_date.year, current_date.month, last_day)
 
-    form = ProjectMonthlyReportForm(
-        request.POST or None,
-        initial={"report_due_date": end_of_month, "project": project},
+        form = ProjectMonthlyReportForm(
+            request.POST or None,
+            initial={"report_due_date": end_of_month, "project": project},
+        )
+
+        if request.method == "POST":
+            if form.is_valid():
+                report = form.save(commit=False)
+                report.project = project
+                report.active = True
+                report.state = "pending"
+                report.save()
+                return redirect(
+                    "create_project_monthly_report_progress",
+                    project=project.pk,
+                    report=report.pk,
+                )
+
+        context = {
+            "project": project,
+            "report_form": form,
+            "project_view": False,
+            "financial_view": False,
+            "reports_view": True,
+        }
+        return render(request, "project_reports/forms/monthly_report_form.html", context)
+
+    return redirect(
+        "project_reports_home",
+        project=project.pk,
     )
-
-    if request.method == "POST":
-        if form.is_valid():
-            report = form.save(commit=False)
-            report.project = project
-            report.active = True
-            report.state = "pending"
-            report.save()
-            return redirect(
-                "create_project_monthly_report_progress",
-                project=project.pk,
-                report=report.pk,
-            )
-
-    context = {
-        "project": project,
-        "report_form": form,
-        "project_view": False,
-        "financial_view": False,
-        "reports_view": True,
-    }
-    return render(request, "project_reports/forms/monthly_report_form.html", context)
 
 
 def copy_project_monthly_report_view(request, report):

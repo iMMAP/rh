@@ -34,7 +34,6 @@ from .models import (
 
 admin.site.register(Currency)
 admin.site.register(LocationType)
-admin.site.register(FacilitySiteType)
 admin.site.register(ImplementationModalityType)
 admin.site.register(TransferMechanismType)
 admin.site.register(PackageType)
@@ -42,6 +41,13 @@ admin.site.register(TransferCategory)
 admin.site.register(GrantType)
 admin.site.register(UnitType)
 admin.site.register(ReportType)
+
+
+class FacilitySiteTypeAdmin(admin.ModelAdmin):
+    list_filter = ("cluster",)
+
+
+admin.site.register(FacilitySiteType, FacilitySiteTypeAdmin)
 
 
 class ActivityPlanModelAdminForm(forms.ModelForm):

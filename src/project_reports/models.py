@@ -8,12 +8,21 @@ from rh.models import (
     Location,
     LocationType,
     Project,
-    ReportType,
 )
 
 # ##############################################
 # ############# Project Reporting ##############
 # ##############################################
+
+class ResponseType(models.Model):
+    name = models.CharField(max_length=200)
+    code = models.SlugField(max_length=200,unique=True)
+
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
+
+    def __str__(self):
+        return self.name
 
 
 class ProjectMonthlyReport(models.Model):
@@ -59,7 +68,7 @@ class ActivityPlanReport(models.Model):
     activity_plan = models.ForeignKey(ActivityPlan, on_delete=models.CASCADE, null=True, blank=True)
     indicator = models.ForeignKey(Indicator, on_delete=models.SET_NULL, null=True)
 
-    report_types = models.ManyToManyField(ReportType, blank=True)
+    report_types = models.ManyToManyField(ResponseType, blank=True)
     target_achieved = models.IntegerField(default=0, null=True, blank=True)
 
     created_at = models.DateTimeField(auto_now_add=True, null=True)

@@ -22,56 +22,34 @@
                     <form action="#" class="filter-form">
                         <div class="filter-options">
                             <div class="block-top">
-                                <span class="title">Filter</span>
+                                <span class="title">Reports Filter</span>
                                 <a class="filter-close" href="#"></a>
                             </div>
                             <div class="filter-heading-text">
                                 <span>
                                     <span class="info-sign"></span>
-                                    Get your project data sorted.
+                                    Get your reports data sorted.
                                 </span>
                                 
                             </div>
+                            <br>
                             <div class="block-body">
                                 <div class="select-field">
-                                    <label>Donors</label>
-                                    <div class="small-label">[hold down the control/command button to select multiple]</div>
-                                    <!-- {{ project_filter.form.donors }} -->
+                                    <label for="{{ reports_filter.form.cluster.id_for_label }}">Cluster / Sectors</label>
+                                    {{ reports_filter.form.cluster }}
                                 </div>
                                 <div class="select-field ">
-                                    <label for="{{ project_filter.form.clusters.id_for_label }}">Clusters / Sectors</label>
-                                    <div class="small-label">[hold down the control/command button to select multiple]</div>
-                                    <!-- {{ project_filter.form.clusters }} -->
+                                    <label for="{{ reports_filter.form.organization.id_for_label }}">Organization</label>
+                                    {{ reports_filter.form.organization }}
                                 </div>
-                                <div class="select-field">
-                                    <label>Activity Domain</label>
-                                    <div class="small-label">[hold down the control/command button to select multiple]</div>
-                                    <!-- {{ project_filter.form.activity_domains }} -->
-                                </div>
+                                <label>Start Date</label>
                                 <div class="date-picker-field">
-                                    <div class="date start">
-                                        <label>Start Date</label>
-                                        <!-- {{ project_filter.form.start_date }} -->
-                                    </div>
-                                    <div class="date end">
-                                        <label>End Date</label>
-                                        <!-- {{ project_filter.form.end_date }} -->
-                                    </div>
+                                    {{ reports_filter.form.Date }}
                                 </div>
-                                <div class="select-field">
-                                    <label>Implementing Partner</label>
-                                    <div class="small-label">[hold down the control/command button to select multiple]</div>
-                                    <!-- {{ project_filter.form.implementing_partners }} -->
-                                </div>
-                                <div class="select-field">
-                                    <label>Programme Partner</label>
-                                    <div class="small-label">[hold down the control/command button to select multiple]</div>
-                                    <!-- {{ project_filter.form.programme_partners }} -->
-                                </div>
-                                <div class="select-field">
+                                
+                                <!-- <div class="select-field">
                                     <label>Focal Person</label>
-                                    <!-- {{ project_filter.form.user }} -->
-                                </div>
+                                </div> -->
                             </div>
                             <div class="block-footer">
                                 <div class="btn-wrapper">
@@ -245,14 +223,12 @@
                                 </td>
                                 <td class="location-col" data-title="Clusters">
                                     {% for cluster in report.project.clusters.all %}
-                                        {{ cluster.name }}
-                                        {% if not forloop.last %},{% endif %}
+                                        {{ cluster.title }}{% if not forloop.last %},{% endif %}
                                     {% endfor %}
                                 </td>
                                 <td class="update-date-col" data-title="Clusters">
                                     {% for organization in report.project.implementing_partners.all %}
-                                        {{ organization.name }}
-                                        {% if not forloop.last %},{% endif %}
+                                        {{ organization.name }}{% if not forloop.last %},{% endif %}
                                     {% endfor %}
                                 </td>
                                 <td class="location-col">
@@ -320,5 +296,18 @@
 {% endblock content %}
 
 {% block scripts %}
-    
+<script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+<script>
+    document.querySelectorAll('.custom-select').forEach((select) => {
+        const choice = new Choices(select, {
+            searchEnabled: true,
+            itemSelectText: '',
+            removeItemButton: true,
+            classNames: {
+                listDropdown: 'choices__list--dropdown',
+            },
+            shouldSort: false,
+        });
+    })
+</script>
 {% endblock scripts %}

@@ -242,6 +242,11 @@ ul{
   }
 }
 
+.view_nocontent{
+  text-align: center;
+  padding: 100px;
+}
+
 .projects-options-panel {
   padding: 16px 0;
 
@@ -708,10 +713,11 @@ a.text-decoration-none{
   word-break: break-word;
 }
 
-.completed {
+.complete {
   @extend .c-pill;
   border: 1px solid rgb(68, 117, 203);
   background-color: rgb(68, 117, 203,0.8);
+  color: #ffffff
 }
 
 .archived {

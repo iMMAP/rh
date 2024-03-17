@@ -16,7 +16,6 @@ class ReportFilterForm(django_filters.FilterSet):
         queryset=Organization.objects.all(),
         widget=forms.SelectMultiple(),
     )
-    
 
     class Meta:
         model = ProjectMonthlyReport

@@ -1,5 +1,6 @@
 from django.urls import path
 
+from . import dashboards as dashboard_views
 from . import exports as export_views
 from . import views as user_views
 
@@ -138,4 +139,19 @@ urlpatterns = [
         user_views.get_indicator_reference,
         name="get_indicator_reference",
     ),
+
+
+    path(
+        "project/monthly_progress/?project=<str:project>/",
+        user_views.index_project_report_view,
+        name="project_reports_home",
+    ),
+
+    path(
+        "projects/monthly_reports/dashboard/",
+        dashboard_views.reports_dashboard_view,
+        name="view_my_dashboard",
+    ),
+
+    
 ]

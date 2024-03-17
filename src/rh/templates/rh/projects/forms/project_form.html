@@ -53,20 +53,31 @@
                             <span class="sign-up-field-error">{{form.code.errors}}</span>
                         </div>
 
-                        <div class="select-field is-required">
-                            <label for="{{ form.clusters.id_for_label }}">Clusters / Sectors [Hold Control/Command button to select
-                                multiple]</label>
-                            <div class="input-holder">{{ form.clusters }}</div>
-                            <span class="sign-up-field-error">{{form.clusters.errors}}</span>
+                        <div class="multiple-fields-row two-items">
+                            <div class="field-col">
+                                <div class="input-check-holder">
+                                    {{ form.is_hrp_project }}
+                                    <label for="{{ form.is_hrp_project.id_for_label }}">
+                                        <span class="input"></span>
+                                        <span class="text">HRP Project</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="field-col">
+                                <div class="input-check-holder" id="prHasHRPCodeEl">
+                                    {{ form.has_hrp_code }}
+                                    <label for="{{ form.has_hrp_code.id_for_label }}">
+                                        <span class="input"></span>
+                                        <span class="text">HRP Code</span>
+                                    </label>
+                                </div>
+                            </div>
                         </div>
 
-                        <div class="field-col">
-                            <div class="select-field is-required">
-                                <label for="{{ form.activity_domains.id_for_label }}">Activity Domains [Hold Control/Command button to select
-                                    multiple]</label>
-                                <div class="input-holder">{{ form.activity_domains }}</div>
-                                <span class="sign-up-field-error">{{form.activity_domains.errors}}</span>
-                            </div>
+                        <div class="input-field" id="prHrpCode">
+                            <label for="{{ form.hrp_code.id_for_label }}">HRP Project Code</label>
+                            <div class="input-holder">{{ form.hrp_code }}</div>
+                            <span class="sign-up-field-error">{{form.hrp_code.errors}}</span>
                         </div>
                     </div>
 
@@ -122,33 +133,24 @@
                             </div>
                         </div>
 
-                        <div class="multiple-fields-row two-items">
-                            <div class="field-col">
-                                <div class="input-check-holder">
-                                    {{ form.is_hrp_project }}
-                                    <label for="{{ form.is_hrp_project.id_for_label }}">
-                                        <span class="input"></span>
-                                        <span class="text">HRP Project</span>
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="field-col">
-                                <div class="input-check-holder" id="prHasHRPCodeEl">
-                                    {{ form.has_hrp_code }}
-                                    <label for="{{ form.has_hrp_code.id_for_label }}">
-                                        <span class="input"></span>
-                                        <span class="text">HRP Code</span>
-                                    </label>
-                                </div>
-                            </div>
+                    </div>
+
+                    <div class="col col-lg">
+                        <div class="select-field is-required">
+                            <label for="{{ form.clusters.id_for_label }}">Clusters / Sectors [Hold Control/Command button to select
+                                multiple]</label>
+                            <div class="input-holder">{{ form.clusters }}</div>
+                            <span class="sign-up-field-error">{{form.clusters.errors}}</span>
                         </div>
 
-                        <div class="input-field" id="prHrpCode">
-                            <label for="{{ form.hrp_code.id_for_label }}">HRP Project Code</label>
-                            <div class="input-holder">{{ form.hrp_code }}</div>
-                            <span class="sign-up-field-error">{{form.hrp_code.errors}}</span>
+                        <div class="field-col">
+                            <div class="select-field is-required">
+                                <label for="{{ form.activity_domains.id_for_label }}">Activity Domains [Hold Control/Command button to select
+                                    multiple]</label>
+                                <div class="input-holder">{{ form.activity_domains }}</div>
+                                <span class="sign-up-field-error">{{form.activity_domains.errors}}</span>
+                            </div>
                         </div>
-
                     </div>
 
                     <div class="col col-lg">

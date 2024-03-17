@@ -302,21 +302,6 @@ class UnitType(models.Model):
         verbose_name_plural = "Unit Types"
 
 
-class ReportType(models.Model):
-    code = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
-    name = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
-
-    created_at = models.DateTimeField(auto_now_add=True, null=True)
-    updated_at = models.DateTimeField(auto_now=True, null=True)
-
-    def __str__(self):
-        return self.name
-
-    class Meta:
-        verbose_name = "Report Type"
-        verbose_name_plural = "Report Types"
-
-
 class ActivityDomain(models.Model):
     is_active = models.BooleanField(default=True)
     code = models.CharField(max_length=NAME_MAX_LENGTH, unique=True)

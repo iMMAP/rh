@@ -14,9 +14,9 @@ from rh.models import (
 # ############# Project Reporting ##############
 # ##############################################
 
+
 class ResponseType(models.Model):
     name = models.CharField(max_length=200)
-    code = models.SlugField(max_length=200,unique=True)
 
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, null=True)

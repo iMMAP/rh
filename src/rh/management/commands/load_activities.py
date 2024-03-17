@@ -1,9 +1,15 @@
-from django.core.management.base import BaseCommand
-from rh.models import Cluster, ActivityDomain, ActivityType, ActivityDetail, Indicator
-from project_reports.models import ResponseType
 import os
 from pathlib import Path
+
 import pandas as pd
+from django.core.management.base import BaseCommand
+from project_reports.models import ResponseType
+
+from rh.models import ActivityDetail, ActivityDomain, ActivityType, Cluster, Indicator
+
+from project_reports.models import ResponseType
+from rh.models import ActivityDetail, ActivityDomain, ActivityType, Cluster, Indicator
+
 # from django.contrib.auth.hashers import make_password
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent.parent
@@ -56,11 +62,14 @@ class Command(BaseCommand):
 
         ResponseType.objects.bulk_create(
             [
+                ResponseType(name="COVID-19"),
+                ResponseType(name="Displacement (IDPs, Returnees & Refugees)"),
+                ResponseType(name="Humanitarian need & vulnerability"),
+                ResponseType(name="Cholera"),
                 ResponseType(name="Winterization"),
-                ResponseType(name="HRP Response"),
                 ResponseType(name="Flood"),
                 ResponseType(name="Drought"),
-                ResponseType(name="Earthquake Response"),
+                ResponseType(name="Earthquake"),
             ]
         )
 

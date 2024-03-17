@@ -53,16 +53,16 @@ class Command(BaseCommand):
                         indicator, created = Indicator.objects.get_or_create(name=row["indicator_name"])
                         if created:
                             indicator.activity_types.add(activity_type)
-        
+
         ResponseType.objects.bulk_create(
             [
-                ResponseType(name="Winterization",code="winterization"),
-                ResponseType(name="HRP Response",code="hrp-response"),
-                ResponseType(name="Flood",code="flood"),
-                ResponseType(name="Drought",code="drought"),
-                ResponseType(name="Earthquake Response",code="earthquake-response"),
+                ResponseType(name="Winterization", code="winterization"),
+                ResponseType(name="HRP Response", code="hrp-response"),
+                ResponseType(name="Flood", code="flood"),
+                ResponseType(name="Drought", code="drought"),
+                ResponseType(name="Earthquake Response", code="earthquake-response"),
             ]
-         )
+        )
 
     def handle(self, *args, **options):
         self._import_data()

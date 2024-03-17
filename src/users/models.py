@@ -6,7 +6,13 @@ from rh.models import Cluster, Location, Organization
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, blank=True, null=True)
-    country = models.ForeignKey(Location, blank=True, null=True, on_delete=models.SET_NULL)
+    country = models.ForeignKey(
+        Location,
+        blank=True,
+        null=True,
+        on_delete=models.SET_NULL,
+        limit_choices_to={"type": "Country"},
+    )
     clusters = models.ManyToManyField(Cluster)
     organization = models.ForeignKey(Organization, on_delete=models.SET_NULL, blank=True, null=True)
 

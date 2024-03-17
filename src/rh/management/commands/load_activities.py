@@ -56,11 +56,11 @@ class Command(BaseCommand):
 
         ResponseType.objects.bulk_create(
             [
-                ResponseType(name="Winterization", code="winterization"),
-                ResponseType(name="HRP Response", code="hrp-response"),
-                ResponseType(name="Flood", code="flood"),
-                ResponseType(name="Drought", code="drought"),
-                ResponseType(name="Earthquake Response", code="earthquake-response"),
+                ResponseType(name="Winterization"),
+                ResponseType(name="HRP Response"),
+                ResponseType(name="Flood"),
+                ResponseType(name="Drought"),
+                ResponseType(name="Earthquake Response"),
             ]
         )
 

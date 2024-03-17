@@ -52,9 +52,7 @@ class ProfileAdmin(admin.ModelAdmin):
     """
     Customize Default ProfileAdmin
     """
-
-    list_display = ("name", "country", "organization", "position", "user_link")
-    list_filter = ("country",)
+    list_display = ("name", "country", "organization", "position", "created_at","user_link")
     form = ProfileForm
 
     def user_link(self, obj):

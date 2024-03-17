@@ -5,12 +5,17 @@ from .models import (
     DisaggregationLocationReport,
     ProjectMonthlyReport,
     TargetLocationReport,
+    ResponseType,
 )
 
 ##############################################
 ######### Reporting Model Admins ##########
 ##############################################
 
+class ResponseTypeAdmin(admin.ModelAdmin):
+  prepopulated_fields = {"code": ("name",)}
+  
+admin.site.register(ResponseType,ResponseTypeAdmin)
 
 class ProjectMonthlyReportAdmin(admin.ModelAdmin):
     list_display = (

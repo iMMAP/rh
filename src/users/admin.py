@@ -52,9 +52,8 @@ class ProfileAdmin(admin.ModelAdmin):
     """
     Customize Default ProfileAdmin
     """
-
-    list_display = ("name", "country", "organization", "position", "user_link")
-    list_filter = ("country",)
+    list_display = ("user_link","country", "organization", "position", "created_at")
+    search_fields = ("user__first_name", "user__username")
     form = ProfileForm
 
     def user_link(self, obj):

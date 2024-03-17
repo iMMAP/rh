@@ -321,6 +321,34 @@ ul{
   }
 }
 
+.dashboard-page-top-panel{
+  border-bottom: 2px solid $gray-e6;
+  padding-bottom: 5px;
+
+  @include media('>=tablet') {
+    display: flex;
+    align-items: start;
+    justify-content: space-between;
+  }
+
+  &.page-top-panel-large {
+    padding: 13px 0 0;
+    margin-bottom: 10px;
+  }
+
+  .tabs-nav-holder {
+    margin-bottom: 8px;
+
+    @include media('>=tablet') {
+      margin-bottom: 0;
+    }
+
+    &:only-child {
+      margin-bottom: 0;
+    }
+  }
+}
+
 .project-title {
   border-bottom: 1px solid $red-be;
   padding: 10px 0;

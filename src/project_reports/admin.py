@@ -12,10 +12,11 @@ from .models import (
 ######### Reporting Model Admins ##########
 ##############################################
 
-class ResponseTypeAdmin(admin.ModelAdmin):
-  prepopulated_fields = {"code": ("name",)}
-  
-admin.site.register(ResponseType,ResponseTypeAdmin)
+
+
+
+admin.site.register(ResponseType)
+
 
 class ProjectMonthlyReportAdmin(admin.ModelAdmin):
     list_display = (

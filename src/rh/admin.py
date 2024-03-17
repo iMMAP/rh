@@ -25,7 +25,6 @@ from .models import (
     Organization,
     PackageType,
     Project,
-    ReportType,
     TargetLocation,
     TransferCategory,
     TransferMechanismType,
@@ -40,7 +39,6 @@ admin.site.register(PackageType)
 admin.site.register(TransferCategory)
 admin.site.register(GrantType)
 admin.site.register(UnitType)
-admin.site.register(ReportType)
 
 
 class FacilitySiteTypeAdmin(admin.ModelAdmin):

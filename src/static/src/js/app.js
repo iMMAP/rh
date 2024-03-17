@@ -8,7 +8,6 @@ import initFixedHeader from "./components/initFixedHeader";
 import initPopups from "./components/initPopups";
 import initTooltip from "./components/initTooltip";
 import initSWPopup from './utils/sweatalertPopups';
-import initExportSW from './utils/exportSW.js';
 
 
 ready(() => {
@@ -21,7 +20,6 @@ ready(() => {
   initPopups();
   initTooltip();
   initSWPopup();
-  initExportSW();
 
   const msgAlert = document.querySelector('.close-alert-message')
   if(msgAlert){

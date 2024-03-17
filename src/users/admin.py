@@ -11,6 +11,7 @@ from .models import Profile
 class UserAdminCustom(UserAdmin):
     list_display = (
         "email",
+        "username",
         "first_name",
         "last_name",
         "is_active",
@@ -22,7 +23,7 @@ class UserAdminCustom(UserAdmin):
 
     def profile_link(self, obj):
         url = reverse("admin:users_profile_change", args=[obj.profile.id])
-        return format_html('<a href="{}">{}</a>', url, obj.profile)
+        return format_html("<a href='{}'>{}'s Profile</a>", url, obj.username)
 
 
 admin.site.unregister(User)
@@ -45,15 +46,16 @@ class ProfileForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(ProfileForm, self).__init__(*args, **kwargs)
-        self.fields["country"].queryset = self.fields["country"].queryset.filter(type="Country")
 
 
 class ProfileAdmin(admin.ModelAdmin):
     """
     Customize Default ProfileAdmin
     """
-    list_display = ("user_link","country", "organization", "position", "created_at")
+
+    list_display = ("user_link", "country", "organization", "position", "created_at")
     search_fields = ("user__first_name", "user__username")
+    list_filter = ("country",)
     form = ProfileForm
 
     def user_link(self, obj):

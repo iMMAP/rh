@@ -18,6 +18,7 @@ class UserAdminCustom(UserAdmin):
         "profile_link",
         "last_login",
         "is_staff",
+        "date_joined",
         "is_superuser",
     )
 

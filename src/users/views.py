@@ -5,20 +5,13 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import EmailMultiAlternatives
 from django.http import HttpResponse
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
 from django.template import loader
 from django.utils.encoding import force_bytes, force_str
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from django.views.decorators.cache import cache_control
-from django.shortcuts import render
-
 from .decorators import unauthenticated_user
-from .forms import (
-    ProfileCreateForm,
-    ProfileUpdateForm,
-    UserRegisterForm,
-    UserUpdateForm,
-)
+from .forms import ProfileCreateForm, ProfileUpdateForm, UserRegisterForm, UserUpdateForm
 from .tokens import account_activation_token
 
 
@@ -162,9 +155,19 @@ def profile(request):
         u_form = UserUpdateForm(request.POST, instance=user)
         p_form = ProfileUpdateForm(request.POST, instance=user.profile)
 
+        country = None
+        organization = None
+        if user.profile:
+            if user.profile.country:
+                country = user.profile.country
+            if user.profile.organization:
+                organization = user.profile.organization
+
         if u_form.is_valid() and p_form.is_valid():
             user = u_form.save()
             user_profile = p_form.save(commit=False)
+            user_profile.country = country
+            user_profile.organization = organization
 
             user_profile.save()
             p_form.save_m2m()

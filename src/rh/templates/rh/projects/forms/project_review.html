@@ -454,6 +454,14 @@
                                                                 <span class="text-read-only">{{ target_location.location_type }}</span>
                                                             </div>
                                                         </div>
+
+                                                        <div class="field-col">
+                                                            <div class="select-field">
+                                                                <label class="label">Classification</label>
+                                                                <span class="text-read-only">{{ target_location.classification }}</span>
+                                                            </div>
+                                                        </div>
+
                                                         {% if target_location.nhs_code %}
                                                         <div class="field-col">
                                                             <div class="input-field">
@@ -464,18 +472,20 @@
                                                             </div>
                                                         </div>
                                                         {% endif %}
-                                                        <div class="field-col">
-                                                            <div class="input-field">
-                                                                <span class="label">Facility Monitoring</span>
-                                                                <div class="input-holder">
-                                                                    <span class="text-read-only">
-                                                                        {% if target_location.facility_monitoring %}
-                                                                        Yes
-                                                                        {% else %}
-                                                                        No
-                                                                        {% endif %}
-                                                                    </span>
-                                                                </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col col-lg">
+                                                    <div class="field-col">
+                                                        <div class="input-field">
+                                                            <span class="label">Facility Monitoring</span>
+                                                            <div class="input-holder">
+                                                                <span class="text-read-only">
+                                                                    {% if target_location.facility_monitoring %}
+                                                                    Yes
+                                                                    {% else %}
+                                                                    No
+                                                                    {% endif %}
+                                                                </span>
                                                             </div>
                                                         </div>
                                                     </div>

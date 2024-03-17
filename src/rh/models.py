@@ -633,7 +633,7 @@ class TargetLocation(models.Model):
 
     implementing_partner = models.ForeignKey(Organization, on_delete=models.SET_NULL, null=True, blank=True)
 
-    facility_site_type = models.ForeignKey(FacilitySiteType, on_delete=models.SET_NULL, null=True)
+    facility_site_type = models.ForeignKey(FacilitySiteType, on_delete=models.SET_NULL, null=True, blank=True)
 
     # site_monitoring = models.BooleanField(default=False)
     # site_name = models.CharField(max_length=255, blank=True, null=True)

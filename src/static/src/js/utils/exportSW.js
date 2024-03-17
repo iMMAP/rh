@@ -1,4 +1,3 @@
-export default function initExportSW() {
 // changing the checkbox color when it checked
 $("input[type=checkbox]").change(function(){
   $(this).css("accent-color","#af4745");
@@ -366,4 +365,3 @@ $(".radio-select").on("click", function(e){
       },
   });
 });
-}

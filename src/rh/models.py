@@ -50,7 +50,7 @@ class Location(models.Model):
 class Cluster(models.Model):
     """Clusters Model"""
 
-    countries = models.ManyToManyField(Location, blank=True)
+    countries = models.ManyToManyField(Location, blank=True, limit_choices_to={"type": "Country"})
 
     name = models.CharField(max_length=NAME_MAX_LENGTH, unique=True)
     code = models.CharField(max_length=NAME_MAX_LENGTH, unique=True)
@@ -76,6 +76,7 @@ class BeneficiaryType(models.Model):
         blank=True,
         null=True,
         on_delete=models.SET_NULL,
+        limit_choices_to={"type": "Country"},
     )
     clusters = models.ManyToManyField(Cluster)
 
@@ -108,7 +109,7 @@ class Organization(models.Model):
         ("Government", "Government"),
         ("Business", "Business"),
     ]
-    countries = models.ManyToManyField(Location, blank=True)
+    countries = models.ManyToManyField(Location, blank=True, limit_choices_to={"type": "Country"})
     clusters = models.ManyToManyField(Cluster, blank=True)
 
     name = models.CharField(max_length=NAME_MAX_LENGTH, unique=True)
@@ -127,7 +128,8 @@ class Donor(models.Model):
     code = models.CharField(max_length=NAME_MAX_LENGTH, unique=True)
     name = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
 
-    countries = models.ManyToManyField(Location, blank=True)
+    countries = models.ManyToManyField(Location, blank=True, limit_choices_to={"type": "Country"})
+
     clusters = models.ManyToManyField(Cluster, blank=True)
 
     old_id = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
@@ -212,7 +214,6 @@ class FacilitySiteType(models.Model):
 
 
 class ImplementationModalityType(models.Model):
-    code = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
     name = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
 
     created_at = models.DateTimeField(auto_now_add=True, null=True)
@@ -228,7 +229,6 @@ class ImplementationModalityType(models.Model):
 
 class TransferMechanismType(models.Model):
     modality = models.ForeignKey(ImplementationModalityType, on_delete=models.SET_NULL, blank=True, null=True)
-    code = models.CharField(max_length=NAME_MAX_LENGTH)
     name = models.CharField(max_length=NAME_MAX_LENGTH, unique=True)
 
     created_at = models.DateTimeField(auto_now_add=True, null=True)
@@ -243,7 +243,6 @@ class TransferMechanismType(models.Model):
 
 
 class PackageType(models.Model):
-    code = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
     name = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
 
     created_at = models.DateTimeField(auto_now_add=True, null=True)
@@ -258,7 +257,6 @@ class PackageType(models.Model):
 
 
 class TransferCategory(models.Model):
-    code = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
     name = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
 
     created_at = models.DateTimeField(auto_now_add=True, null=True)
@@ -273,7 +271,6 @@ class TransferCategory(models.Model):
 
 
 class GrantType(models.Model):
-    code = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
     name = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
 
     created_at = models.DateTimeField(auto_now_add=True, null=True)

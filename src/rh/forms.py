@@ -295,7 +295,6 @@ class OrganizationRegisterForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields["countries"].queryset = self.fields["countries"].queryset.filter(type="Country")
 
     def clean_name(self):
         """check if organization name already exits"""

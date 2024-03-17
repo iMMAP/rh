@@ -53,7 +53,6 @@ class ProfileCreateForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields["country"].queryset = self.fields["country"].queryset.filter(type="Country")
 
 
 class UserUpdateForm(forms.ModelForm):
@@ -83,7 +82,6 @@ class ProfileUpdateForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields["country"].queryset = self.fields["country"].queryset.filter(type="Country")
 
 
 class UserPasswordChangeForm(PasswordChangeForm):

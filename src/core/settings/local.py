@@ -36,7 +36,7 @@ DATABASES = {
         "PASSWORD": env("DB_PASSWORD", default=""),
         "HOST": env("DB_HOST", default="localhost"),
         "PORT": env("DB_PORT", default="3306"),
-    }
+    },
 }
 
 DB = env("DB", default="sqlite")

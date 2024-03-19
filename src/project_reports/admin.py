@@ -13,8 +13,6 @@ from .models import (
 ##############################################
 
 
-
-
 admin.site.register(ResponseType)
 
 

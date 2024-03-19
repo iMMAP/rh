@@ -102,7 +102,6 @@ class Command(BaseCommand):
             ]
         )
 
-
         # Import the actvity_domain, activity_types, activity_details
         path = os.path.join(BASE_DIR.parent, "scripts/data/output_2024.csv")
         df = pd.read_csv(path)

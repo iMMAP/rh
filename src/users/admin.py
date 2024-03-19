@@ -54,10 +54,14 @@ class ProfileAdmin(admin.ModelAdmin):
     Customize Default ProfileAdmin
     """
 
-    list_display = ("user_link", "country", "organization", "position", "created_at")
+    list_display = ("user", "user_link", "organization", "position", "created_at", "Clusters")
     search_fields = ("user__first_name", "user__username")
-    list_filter = ("country",)
+    list_filter = ("country", "clusters")
     form = ProfileForm
+
+    def Clusters(self, obj):
+        clusters = obj.clusters.all()
+        return ", ".join([c.title for c in clusters])
 
     def user_link(self, obj):
         url = reverse("admin:auth_user_change", args=[obj.user.id])

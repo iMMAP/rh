@@ -157,5 +157,5 @@ EMAIL_PORT = env("EMAIL_PORT", default=587)  # 2525
 EMAIL_HOST_USER = env("EMAIL_HOST_USER", default="reporthub@immap.org")
 EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD", default="")
 DEFAULT_FROM_EMAIL = env("DEFAULT_FROM_EMAIL", default="reporthub@immap.org")
-EMAIL_USE_SSL = env("EMAIL_USE_SSL", default=True)
-# EMAIL_USE_TLS = env("EMAIL_USE_TLS", default=True)
+EMAIL_USE_SSL = env("EMAIL_USE_SSL", default=False)
+EMAIL_USE_TLS = env("EMAIL_USE_TLS", default=True)

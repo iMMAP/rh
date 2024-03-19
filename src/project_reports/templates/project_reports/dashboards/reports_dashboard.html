@@ -6,92 +6,201 @@
 {% endblock page_title %}
 
 {% block content %}
-    <div class="container">
-        <div class="dashboard-page-top-panel">
-            <div class="tabs-nav-holder">
-                <ul class="tabs-nav">
-                </ul>
-            </div>
-            <div class="actions-panel">
-                <div class="filter-holder">
-                    <a href="#" class="btn btn-red filter-open">Filter
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 23 23" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 1 1-3 0m3 0a1.5 1.5 0 1 0-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-9.75 0h9.75" />
-                        </svg>
-                    </a>
-                    <form action="#" class="filter-form">
-                        <div class="filter-options">
-                            <div class="block-top">
-                                <span class="title">Reports Filter</span>
-                                <a class="filter-close" href="#"></a>
+
+<div class="container">
+        <section class="info-section">
+            <div class="container">
+                <div class="dahsboard-section-heading section-heading-wide">
+                    <div class="title">
+                        <div><h2>Sector Dashboard</h2></div>
+                        <div class="actions-panel">
+                            <div class="filter-holder">
+                                <a href="#" class="btn btn-red filter-open">Filter
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 23 23" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 1 1-3 0m3 0a1.5 1.5 0 1 0-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-9.75 0h9.75" />
+                                    </svg>
+                                </a>
+                                <form action="#" class="filter-form">
+                                    <div class="filter-options">
+                                        <div class="block-top">
+                                            <span class="title">Reports Filter</span>
+                                            <a class="filter-close" href="#"></a>
+                                        </div>
+                                        <div class="filter-heading-text">
+                                            <span>
+                                                <span class="info-sign"></span>
+                                                Get your reports data sorted.
+                                            </span>
+                                            
+                                        </div>
+                                        <br>
+                                        <div class="block-body">
+                                            <div class="select-field">
+                                                <label for="{{ reports_filter.form.project__clusters.id_for_label }}">Cluster / Sectors</label>
+                                                {{ reports_filter.form.project__clusters }}
+                                            </div>
+                                            <div class="select-field ">
+                                                <label for="{{ reports_filter.form.project__implementing_partners.id_for_label }}">Organization</label>
+                                                {{ reports_filter.form.project__implementing_partners }}
+                                            </div>
+                                            <label>Start Date</label>
+                                            <div class="date-picker-field">
+                                                {{ reports_filter.form.report_date }}
+                                            </div>
+                                            
+                                            <!-- <div class="select-field">
+                                                <label>Focal Person</label>
+                                            </div> -->
+                                        </div>
+                                        <div class="block-footer">
+                                            <div class="btn-wrapper">
+                                                <a class="btn btn-gray-outline"
+                                                    href="{% url 'projects-list' %}?state={{request.GET.state}}">Reset</a>
+                                                <button type="submit" class="btn btn-red">Apply</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
                             </div>
-                            <div class="filter-heading-text">
-                                <span>
-                                    <span class="info-sign"></span>
-                                    Get your reports data sorted.
-                                </span>
-                                
-                            </div>
-                            <br>
-                            <div class="block-body">
-                                <div class="select-field">
-                                    <label for="{{ reports_filter.form.cluster.id_for_label }}">Cluster / Sectors</label>
-                                    {{ reports_filter.form.cluster }}
-                                </div>
-                                <div class="select-field ">
-                                    <label for="{{ reports_filter.form.organization.id_for_label }}">Organization</label>
-                                    {{ reports_filter.form.organization }}
-                                </div>
-                                <label>Start Date</label>
-                                <div class="date-picker-field">
-                                    {{ reports_filter.form.Date }}
-                                </div>
-                                
-                                <!-- <div class="select-field">
-                                    <label>Focal Person</label>
-                                </div> -->
-                            </div>
-                            <div class="block-footer">
-                                <div class="btn-wrapper">
-                                    <a class="btn btn-gray-outline"
-                                        href="{% url 'projects-list' %}?state={{request.GET.state}}">Reset</a>
-                                    <button type="submit" class="btn btn-red">Apply</button>
-                                </div>
+                            <div class="export-formats-holder">
+                                <button class="export-button">
+                                    <a href="#"
+                                        data-url="{% url 'export_all_reports' %}"
+                                        class="btn btn-red project-detail"
+                                        title="Export Reports">
+                                        <span class="btn-text">Export Reports</span>
+                                        <span class="icon-download"></span>
+                                        <!-- <span class="project-detail icon-download"></span> -->
+                                    </a>
+                                  </button>
                             </div>
                         </div>
-                    </form>
+                    </div>
+                    
                 </div>
-                <div class="export-formats-holder">
-                    <a href="#" class="btn btn-gray export-open">
-                        <span class="btn-text">Export</span>
-                        <span class="icon-download"></span>
-                    </a>
-                    <div class="export-formats">
-                        <span class="title">File format</span>
-                        <div class="format-list">
-                            <div class="export-link-holder">
-                                <a class="export-link" href="#">
-                                    CSV
-                                </a>
-                            </div>
-                            <div class="export-link-holder">
-                                <a class="export-link" href="#">
-                                    Excel
-                                </a>
-                            </div>
-                            <div class="export-link-holder">
-                                <a class="export-link" href="#" >
-                                    JSON
-                                </a>
-                            </div>
+                <div class="section-row">
+                    <div class="section-col">
+                        <div class="info-block">
+                            <span class="title">Total Reports</span>
+                            <span class="number">{{ reports_total }}</span>
                         </div>
-                        
+                    </div>
+                    <div class="section-col">
+                        <div class="info-block">
+                            <span class="title">Organizations</span>
+                            <span class="number">{{ organizations }}</span>
+                        </div>
+                    </div>
+                    <div class="section-col">
+                        <div class="info-block">
+                            <span class="title">Total Projects</span>
+                            <span class="number">{{ projects }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="section-row">
+                    <div class="section-col">
+                        <div class="info-block">
+                            <span class="title">Reports Todo</span>
+                            <span class="number">{{ reports_todo }}</span>
+                        </div>
+                    </div>
+                    <div class="section-col">
+                        <div class="info-block">
+                            <span class="title">Reports Pending</span>
+                            <span class="number">{{ reports_pending }}</span>
+                        </div>
+                    </div>
+                    <div class="section-col">
+                        <div class="info-block">
+                            <span class="title">Reports Completed</span>
+                            <span class="number">{{ reports_complete }}</span>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-
-        <div class="content-block top-border bottom-border">
+        </section>
+        
+        <div class="content-block top-border bottom-border dashboard-page">
+            <div class="dashboard-page-top-panel">
+                <div class="tabs-nav-holder">
+                    <ul class="tabs-nav">
+                    </ul>
+                </div>
+                <!-- <div class="actions-panel">
+                    <div class="filter-holder">
+                        <a href="#" class="btn btn-red filter-open">Filter
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 23 23" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 1 1-3 0m3 0a1.5 1.5 0 1 0-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-9.75 0h9.75" />
+                            </svg>
+                        </a>
+                        <form action="#" class="filter-form">
+                            <div class="filter-options">
+                                <div class="block-top">
+                                    <span class="title">Reports Filter</span>
+                                    <a class="filter-close" href="#"></a>
+                                </div>
+                                <div class="filter-heading-text">
+                                    <span>
+                                        <span class="info-sign"></span>
+                                        Get your reports data sorted.
+                                    </span>
+                                    
+                                </div>
+                                <br>
+                                <div class="block-body">
+                                    <div class="select-field">
+                                        <label for="{{ reports_filter.form.project__clusters.id_for_label }}">Cluster / Sectors</label>
+                                        {{ reports_filter.form.project__clusters }}
+                                    </div>
+                                    <div class="select-field ">
+                                        <label for="{{ reports_filter.form.project__implementing_partners.id_for_label }}">Organization</label>
+                                        {{ reports_filter.form.project__implementing_partners }}
+                                    </div>
+                                    <label>Start Date</label>
+                                    <div class="date-picker-field">
+                                        {{ reports_filter.form.report_date }}
+                                    </div>
+                                </div>
+                                <div class="block-footer">
+                                    <div class="btn-wrapper">
+                                        <a class="btn btn-gray-outline"
+                                            href="{% url 'projects-list' %}?state={{request.GET.state}}">Reset</a>
+                                        <button type="submit" class="btn btn-red">Apply</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="export-formats-holder">
+                        <a href="#" class="btn btn-gray export-open">
+                            <span class="btn-text">Export</span>
+                            <span class="icon-download"></span>
+                        </a>
+                        <div class="export-formats">
+                            <span class="title">File format</span>
+                            <div class="format-list">
+                                <div class="export-link-holder">
+                                    <a class="export-link" href="#">
+                                        CSV
+                                    </a>
+                                </div>
+                                <div class="export-link-holder">
+                                    <a class="export-link" href="#">
+                                        Excel
+                                    </a>
+                                </div>
+                                <div class="export-link-holder">
+                                    <a class="export-link" href="#" >
+                                        JSON
+                                    </a>
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div> -->
+            </div>
             <div class="table-wrapper-scrollable">
                 <table class="table all-projects-table js-collapsible-table">
                     <thead>
@@ -254,36 +363,37 @@
             </div>
         </div>
         {% if project_reports %}
-            <div class="pagination-holder">
-                <div class="select-field view-options"></div>
-                <div class="pagination-wrapper">
-                    <ul class="pagination">
-                        {% if project_reports.has_previous %}
-                            <li class="page-item prev">
-                                <a class="page-link" href="?page={{ project_reports.previous_page_number }}">Previous</a>
-                            </li>
-                        {% else %}
-                            <li class="page-item prev disabled">
-                                <a class="page-link" href="#">Previous</a>
-                            </li>
-                        {% endif %}
-                        {% for i in total_pages %}
-                            <li class="page-item {% if project_reports.number == forloop.counter %}current-page{% endif %}">
-                                <a class="page-link" href="?page={{ forloop.counter }}">{{ forloop.counter }}</a>
-                            </li>
-                        {% endfor %}
-                        {% if project_reports.has_next %}
-                            <li class="page-item next">
-                                <a class="page-link" href="?page={{ project_reports.next_page_number }}">Next</a>
-                            </li>
-                        {% else %}
-                            <li class="page-item next disabled">
-                                <a class="page-link" href="#">Next</a>
-                            </li>
-                        {% endif %}
-                    </ul>
-                </div>
+        <div class="pagination-holder">
+            <div class="select-field view-options"></div>
+            <div class="pagination-wrapper">
+                <ul class="pagination">
+                    {% if project_reports.has_previous %}
+                        <li class="page-item prev">
+                            <a class="page-link" href="?page={{ project_reports.previous_page_number }}{% if request.GET.project__clusters %}&project__clusters={{ request.GET.project__clusters }}{% endif %}{% if request.GET.project__implementing_partners %}&project__implementing_partners={{ request.GET.project__implementing_partners }}{% endif %}{% if request.GET.date_0 %}&date_0={{ request.GET.date_0 }}{% endif %}{% if request.GET.date_1 %}&date_1={{ request.GET.date_1 }}{% endif %}">Previous</a>
+                        </li>
+                    {% else %}
+                        <li class="page-item prev disabled">
+                            <a class="page-link" href="#">Previous</a>
+                        </li>
+                    {% endif %}
+                    {% for i in total_pages %}
+                        <li class="page-item {% if project_reports.number == forloop.counter %}current-page{% endif %}">
+                            <a class="page-link" href="?page={{ forloop.counter }}{% if request.GET.project__clusters %}&project__clusters={{ request.GET.project__clusters }}{% endif %}{% if request.GET.project__implementing_partners %}&project__implementing_partners={{ request.GET.project__implementing_partners }}{% endif %}{% if request.GET.date_0 %}&date_0={{ request.GET.date_0 }}{% endif %}{% if request.GET.date_1 %}&date_1={{ request.GET.date_1 }}{% endif %}">{{ forloop.counter }}</a>
+                        </li>
+                    {% endfor %}
+                    {% if project_reports.has_next %}
+                        <li class="page-item next">
+                            <a class="page-link" href="?page={{ project_reports.next_page_number }}{% if request.GET.project__clusters %}&project__clusters={{ request.GET.project__clusters }}{% endif %}{% if request.GET.project__implementing_partners %}&project__implementing_partners={{ request.GET.project__implementing_partners }}{% endif %}{% if request.GET.date_0 %}&date_0={{ request.GET.date_0 }}{% endif %}{% if request.GET.date_1 %}&date_1={{ request.GET.date_1 }}{% endif %}">Next</a>
+                        </li>
+                    {% else %}
+                        <li class="page-item next disabled">
+                            <a class="page-link" href="#">Next</a>
+                        </li>
+                    {% endif %}
+                </ul>
             </div>
+        </div>
+        
         {% else %}
             <div class="view_nocontent">
                 <div class="nocontent_help">
@@ -310,4 +420,5 @@
         });
     })
 </script>
+<script type="module" src="{% static 'src/js/utils/exportSW.js' %}"></script>
 {% endblock scripts %}

@@ -1,34 +1,28 @@
-import django_filters
-from django import forms
-from django_filters.widgets import RangeWidget
+import datetime
 
-from rh.models import Cluster, Organization
+import django_filters
+from django_filters.widgets import RangeWidget
 
 from .models import ProjectMonthlyReport
 
 
 class ReportFilterForm(django_filters.FilterSet):
-    cluster = django_filters.ModelChoiceFilter(
-        # field_name='test',
-        # to_field_name='project',
-        queryset=Cluster.objects.all(),
-        widget=forms.Select(
-            attrs={
-                "class": "custom-select",
-            }
-        ),
-    )
-    organization = django_filters.ModelChoiceFilter(
-        queryset=Organization.objects.all(),
-        widget=forms.Select(
-            attrs={
-                "class": "custom-select",
-            }
-        ),
-    )
-
-    Date = django_filters.DateFromToRangeFilter(widget=RangeWidget(attrs={"type": "date"}))
+    """Monthly Report Filter Form"""
+    
+    # Define the DateFromToRangeFilter with initial value of current month
+    current_month = datetime.date.today().replace(day=1)
+    report_date = django_filters.DateFromToRangeFilter(widget=RangeWidget(attrs={"type": "date"}))
 
     class Meta:
         model = ProjectMonthlyReport
-        fields = "__all__"
+        fields = {
+            'project__clusters': ['exact'],  # Exact match for clusters
+            'project__implementing_partners': ['exact'],  # Exact match for implementing partners
+            'report_date': ['gte', 'lte'],  # Date range
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.form.fields["project__clusters"].widget.attrs.update({"class": "custom-select"})
+        self.form.fields["project__implementing_partners"].widget.attrs.update({"class": "custom-select"})

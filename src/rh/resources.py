@@ -94,7 +94,6 @@ class ProjectResource(resources.ModelResource):
             "facility_name",
             "facility_lat",
             "facility_long",
-            
         )
 
     user = fields.Field(column_name="user", attribute="user", widget=ForeignKeyWidget(User, field="username"))
@@ -131,7 +130,7 @@ class ProjectResource(resources.ModelResource):
     def dehydrate_hrp_beneficiary(self, project):
         activity_plan = list(project.activityplan_set.all())
         return ",".join([child.hrp_beneficiary for child in activity_plan])
-    
+
     # activity planning ends
     # target loacation starts
     def dehydrate_province(self, project):
@@ -145,23 +144,25 @@ class ProjectResource(resources.ModelResource):
     def dehydrate_location_type(self, project):
         target_location = list(project.targetlocation_set.all())
         return ",".join([location.location_type for location in target_location if location.location_type])
-    
+
     def dehydrate_classification(self, project):
         target_location = list(project.targetlocation_set.all())
         return ",".join([location.classification for location in target_location if location.classification])
-    
+
     def dehydrate_facility_site_type(self, project):
         target_location = list(project.targetlocation_set.all())
-        return ",".join([location.facility_site_type.name for location in target_location if location.facility_site_type.name])
-    
+        return ",".join(
+            [location.facility_site_type.name for location in target_location if location.facility_site_type.name]
+        )
+
     def dehydrate_facility_monitoring(self, project):
         target_location = list(project.targetlocation_set.all())
         return ",".join(["Yes" for location in target_location if location.facility_monitoring])
-    
+
     def dehydrate_facility_name(self, project):
         target_location = list(project.targetlocation_set.all())
         return ",".join([location.facility_name for location in target_location if location.facility_name])
-    
+
     def dehydrate_facility_id(self, project):
         target_location = list(project.targetlocation_set.all())
         return ",".join([location.facility_id for location in target_location if location.facility_id])
@@ -173,10 +174,11 @@ class ProjectResource(resources.ModelResource):
     def dehydrate_facility_long(self, project):
         target_location = list(project.targetlocation_set.all())
         return ",".join([location.facility_long for location in target_location if location.facility_long])
-    def dehydrate_disaggregations(self, project)
-        target_location = list(project.targetlocation_set.all())
-        for disaggregation in target_location:
-            
+
+    # def dehydrate_disaggregations(self, project)
+    #     target_location = list(project.targetlocation_set.all())
+    #     for disaggregation in target_location:
+
     # target location ends
     donor = fields.Field(
         column_name="donors", attribute="donors", widget=ManyToManyWidget(Donor, field="code", separator=",")

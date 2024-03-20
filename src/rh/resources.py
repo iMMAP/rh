@@ -111,63 +111,32 @@ class ProjectResource(resources.ModelResource):
             "description",
         )
 
-    user = fields.Field(
-        column_name="user", 
-        attribute="user", 
-        widget=ForeignKeyWidget(
-            User, 
-            field="username"
-        )
-    )
+    user = fields.Field(column_name="user", attribute="user", widget=ForeignKeyWidget(User, field="username"))
     budget_currency = fields.Field(
-        column_name="budget_currency", 
-        attribute="budget_currency", 
-        widget=ForeignKeyWidget(
-            Currency, 
-            field="name"
-        )
+        column_name="budget_currency", attribute="budget_currency", widget=ForeignKeyWidget(Currency, field="name")
     )
-    
+
     clusters = fields.Field(
-        column_name="clusters", 
-        attribute="clusters", 
-        widget=ManyToManyWidget(
-            Cluster, 
-            field="title", 
-            separator=","
-        )
+        column_name="clusters", attribute="clusters", widget=ManyToManyWidget(Cluster, field="title", separator=",")
     )
     donors = fields.Field(
-        column_name="donors", 
-        attribute="donors", 
-        widget=ManyToManyWidget(
-            Donor, 
-            field="name", 
-            separator=","
-        )
+        column_name="donors", attribute="donors", widget=ManyToManyWidget(Donor, field="name", separator=",")
     )
     implementing_partners = fields.Field(
-        column_name="implementing_partners", 
-        attribute="implementing_partners", 
-        widget=ManyToManyWidget(
-            Organization, 
-            field="code", 
-            separator=","
-        )
+        column_name="implementing_partners",
+        attribute="implementing_partners",
+        widget=ManyToManyWidget(Organization, field="code", separator=","),
     )
     programme_partners = fields.Field(
-        column_name="programme_partners", 
-        attribute="programme_partners", 
-        widget=ManyToManyWidget(
-            Organization, 
-            field="code",
-            separator=","
-        )
+        column_name="programme_partners",
+        attribute="programme_partners",
+        widget=ManyToManyWidget(Organization, field="code", separator=","),
     )
+
     def dehydrate_implementing_partners_type(self, project):
         programme_partner_type = list(project.implementing_partners.all())
         return ",".join([t.type for t in programme_partner_type])
-    
+
     def dehydrate_programme_partners_type(self, project):
         programme_partner_type = list(project.programme_partners.all())
         return ",".join([t.type for t in programme_partner_type])
@@ -180,11 +149,11 @@ class ProjectResource(resources.ModelResource):
     def dehydrate_activity_type(self, project):
         activity_types = list(project.activityplan_set.all())
         return ",".join([child.activity_type.name for child in activity_types])
-    
+
     def dehydrate_indicator(self, project):
         indicators = list(project.activityplan_set.all())
         return ",".join([child.indicator.name for child in indicators])
-    
+
     def dehydrate_beneficiary(self, project):
         activity_plan = list(project.activityplan_set.all())
         return ",".join([child.beneficiary.name for child in activity_plan if child.beneficiary.name])
@@ -196,7 +165,7 @@ class ProjectResource(resources.ModelResource):
     def dehydrate_hrp_beneficiary(self, project):
         activity_plan = list(project.activityplan_set.all())
         return ",".join([child.hrp_beneficiary for child in activity_plan])
-    
+
     def dehydrate_description(self, project):
         descriptions = list(project.activityplan_set.all())
         return ",".join([desc.description for desc in descriptions if desc])
@@ -214,21 +183,21 @@ class ProjectResource(resources.ModelResource):
     def dehydrate_location_type(self, project):
         target_location = list(project.targetlocation_set.all())
         return ",".join([location.location_type for location in target_location if location.location_type])
-    
+
     def dehydrate_classification(self, project):
         target_location = list(project.targetlocation_set.all())
         return ",".join([location.classification for location in target_location if location.classification])
-    
+
     def dehydrate_facility_site_type(self, project):
         target_location = list(project.targetlocation_set.all())
         return ",".join(
             [location.facility_site_type.name for location in target_location if location.facility_site_type]
         )
-    
+
     def dehydrate_facility_monitoring(self, project):
         target_location = list(project.targetlocation_set.all())
         return ",".join(["Yes" for location in target_location if location.facility_monitoring])
-    
+
     def dehydrate_facility_name(self, project):
         target_location = list(project.targetlocation_set.all())
         return ",".join([location.facility_name for location in target_location if location.facility_name])

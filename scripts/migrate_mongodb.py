@@ -830,10 +830,6 @@ def import_dissaggregation_from_csv(conn, diss_csv):
     """
     
     df = pd.read_csv(diss_csv)
-    now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-
-    df['updated'] = now
-    df['created'] = now
 
     if len(df) > 0:
         table = "rh_disaggregation"
@@ -841,13 +837,12 @@ def import_dissaggregation_from_csv(conn, diss_csv):
         df.to_sql("tmp_diss", conn, if_exists="replace", index=False)
 
         try:
-            now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
             c.execute(
                 f"""
                     insert into 
-                    {table}(name, type, lower_limat, upper_limat,created_at,updated_at) 
+                    {table}(name, type, lower_limit, upper_limit,created_at,updated_at) 
                     select 
-                    name,type,lower_limat,upper_limat,created_at,updated_at
+                    name,type,lower_limit,upper_limit,now(),now()
                     from tmp_diss"""
             )
             c.execute("DROP TABLE tmp_diss;")

@@ -810,7 +810,6 @@ def import_dissaggregation_from_csv(conn, diss_csv):
     """
     c = conn.cursor()
     df = pd.read_csv(diss_csv)
-
     now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
     df['updated'] = now
@@ -826,9 +825,9 @@ def import_dissaggregation_from_csv(conn, diss_csv):
             c.execute(
                 f"""
                     insert into 
-                    {table}(name, type) 
+                    {table}(name, type, lower_limat, upper_limat,created_at,updated_at) 
                     select 
-                    name,type
+                    name,type,lower_limat,upper_limat,created_at,updated_at
                     from tmp_diss"""
             )
             c.execute("DROP TABLE tmp_diss;")

@@ -667,6 +667,9 @@ class Disaggregation(models.Model):
     TYPE = [("Gender", "gender"), ("Age", "age"), ("Other", "other")]
     type = models.CharField(max_length=NAME_MAX_LENGTH, choices=TYPE)
 
+    lower_limat = models.IntegerField(default=0, blank=True, null=True)
+    upper_limat = models.IntegerField(default=0, blank=True, null=True)
+
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, null=True)
 

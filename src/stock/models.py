@@ -36,7 +36,6 @@ class WarehouseLocation(models.Model):
 class StockItemsType(models.Model):
     cluster = models.ForeignKey(Cluster, on_delete=models.SET_NULL, null=True, blank=True)
     name = models.CharField(max_length=255, blank=True, null=True)
-    old_id = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
 
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, null=True)

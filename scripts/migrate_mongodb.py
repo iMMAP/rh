@@ -668,7 +668,7 @@ def import_users_from_csv(conn, users_csv):
             )
             profile_info = c.fetchall()
             c.execute(
-                """select "createdAt",email,last_logged_in,password,status,username from tmp_accounts"""
+                """select "createdAt",email,last_logged_in,password,status,username,name from tmp_accounts"""
             )
             users = c.fetchall()
             profiles_list = []
@@ -719,16 +719,19 @@ def import_users_from_csv(conn, users_csv):
 
             for user in users:
                 user = list(user)
-                status = user[4]
-                user.append(False)
-                user.append(False)
-                user.append("")
-                user.append("")
 
-                if status == "active":
+                name = user[6].split(" ")
+                # fix index 1 out or range
+                if len(name) == 1:
+                    name.append("")
+
+                user[6]=name[0] # firsname
+                user.append(name[1]) # lastname
+
+                if user[4] == "active":
                     user[4] = True
 
-                if not user[5]:
+                if not user[5]: # username
                     continue
 
                 password = user[3]
@@ -739,19 +742,21 @@ def import_users_from_csv(conn, users_csv):
                 user = tuple(user)
                 aquery = f"""
                         insert into 
-                        {table}(date_joined, email, last_login, password, is_active, username, 
-                        is_superuser, is_staff, last_name, first_name) 
-                        values (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                        {table}(date_joined, email, last_login, password,is_active ,username, last_name, first_name,is_superuser,is_staff) 
+                        values (%s, %s, %s, %s, %s, %s, %s, %s,False,False)
                     """
-
+                
                 c.execute(aquery, user)
-                user_id = c.lastrowid
+                c.execute("SELECT lastval();")
+                user_id = c.fetchone()[0]
 
                 c.execute(f"select username from {table} where id={user_id}")
                 db_user = c.fetchone()
-
+                # print(user)
+                # print(db_user)
+                # print("marker")
                 u_profile = next(item for item in profiles_list if db_user[0] in item)
-                print("marker")
+                
                 profile_cluster_id = False
                 if u_profile:
                     u_profile = list(u_profile)
@@ -901,7 +906,7 @@ try:
 
     import_donors_from_csv(connection, DONORS_CSV)
 
-    # import_users_from_csv(connection, USERS_CSV) # Moved to load_acvtivities
+    import_users_from_csv(connection, USERS_CSV) # Moved to load_acvtivities
 
     import_facilities_from_csv(connection, FACILITIES)
 

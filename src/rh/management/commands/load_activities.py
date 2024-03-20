@@ -11,8 +11,6 @@ from rh.models import (
     TransferCategory,
     GrantType,
     UnitType,
-    Location,
-    Organization,
 )
 
 from project_reports.models import ResponseType
@@ -20,7 +18,6 @@ import os
 from pathlib import Path
 import pandas as pd
 from django.contrib.auth.models import User
-from users.models import Profile
 
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent.parent
@@ -28,55 +25,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent.parent
 
 class Command(BaseCommand):
     help = "Import activities from a 'output_2024' CSV file."
-
-    def _import_users(self):
-        path = os.path.join(BASE_DIR.parent, "scripts/data/updated_nov_2023/user.csv")
-        df = pd.read_csv(path)
-
-        # iterate over rows and create users
-        for index, row in df.iterrows():
-            name = row["name"].split(" ")
-            # fix index 1 out or range
-            if len(name) == 1:
-                name.append("")
-
-            user = User.objects.create_user(
-                username=row["username"],
-                email=row["email"],
-                first_name=name[0],
-                last_name=name[1],
-                password="bcrypt$" + row["password"],
-                last_login=row["last_logged_in"],
-                is_staff=0,
-                is_active=0,
-            )
-
-            profile = Profile(user=user)
-
-            try:
-                country = Location.objects.get(code=row["admin0pcode"])
-                profile.country = country
-            except Location.DoesNotExist:
-                profile.country = None
-
-            try:
-                org = Organization.objects.get(code=row["organization_id"])
-                profile.organization = org
-            except Organization.DoesNotExist:
-                profile.organization = None
-            
-            try:
-                cluster = Cluster.objects.get(code=row["cluster_id"])
-                profile.clusters.add(cluster)
-            except Cluster.DoesNotExist:
-                pass
-
-            profile.created_at = row["createdAt"]
-            profile.updated_at = row["updatedAt"]
-            profile.position  = row["position"]
-            profile.skype = row["skype"]
-            profile.phone = row["phone"]
-            profile.save()
 
     def _import_data(self):
         ResponseType.objects.bulk_create(
@@ -209,4 +157,4 @@ class Command(BaseCommand):
         user[0].profile.save()
 
     def handle(self, *args, **options):
-        self._import_users()
+        self._import_data()

@@ -3,9 +3,8 @@ import traceback
 from datetime import datetime
 
 import pandas as pd
+from sqlalchemy import create_engine
 
-# SET THE FILE PATHS
-SQLITE_DB_PATH = "../db.sqlite3"
 
 # CSV DATA FILES
 CURRENCIES_CSV = "./data/updated_nov_2023/currencies.csv"
@@ -24,18 +23,16 @@ DISS_CSV = "./data/updated_nov_2023/dissaggregation.csv"
 STOCKUNIT_CSV = "./data/updated_nov_2023/stockunits.csv"
 STOCKITEMS_TYPES_CSV = "./data/updated_nov_2023/stockitems_types.csv"
 
-def get_sqlite_client(dbname):
-    """
-    Returns a SqliteClient instance.
-    """
-    return sqlite3.connect(dbname)
+connection = create_engine('postgresql://postgres:admin@localhost:5432/rh')
+engine_connection = connection.raw_connection()
+c = engine_connection.cursor()
 
 
 def import_currencies_from_csv(conn, currencies_csv):
     """
     Import Currencies from CSV
     """
-    c = conn.cursor()
+    
     df = pd.read_csv(currencies_csv)
 
     if len(df) > 0:
@@ -44,17 +41,17 @@ def import_currencies_from_csv(conn, currencies_csv):
         df.to_sql("tmp_currency", conn, if_exists="replace", index=False)
 
         try:
-            c.execute(f"""insert into {table}(name) select name from tmp_currency""")
+            c.execute(f"""insert into {table}(name,created_at, updated_at) select name,now(),now() from tmp_currency""")
             c.execute("DROP TABLE tmp_currency;")
         except Exception as exception:
-            conn.rollback()
+            engine_connection.rollback()
 
 
 def import_stock_units_from_csv(conn, stockunits_csv):
     """
     Import Stock Unit from CSV
     """
-    c = conn.cursor()
+    
     df = pd.read_csv(stockunits_csv)
 
     if len(df) > 0:
@@ -66,14 +63,14 @@ def import_stock_units_from_csv(conn, stockunits_csv):
             c.execute(f"""insert into {table}(name) select name from tmp_stockunit""")
             c.execute("DROP TABLE tmp_stockunit;")
         except Exception as exception:
-            conn.rollback()
+            engine_connection.rollback()
 
 
 def import_stockitems_types_from(conn, stockitems_types_csv):
     """
     Import Stock Items types from CSV
     """
-    c = conn.cursor()
+    
     df = pd.read_csv(stockitems_types_csv)
 
     if len(df) > 0:
@@ -82,10 +79,10 @@ def import_stockitems_types_from(conn, stockitems_types_csv):
         df.to_sql("tmp_stockitemstype", conn, if_exists="replace", index=False)
 
         try:
-            c.execute(f"""insert into {table}(old_id, cluster_id, name) select _id, cluster_id, stock_item_name from tmp_stockitemstype""")
+            c.execute(f"""insert into {table}(name) select stock_item_name from tmp_stockitemstype""")
         except Exception as exception:
-            print(exception)
-            conn.rollback()
+            print("from insert",exception)
+            engine_connection.rollback()
 
 
         try:
@@ -93,21 +90,20 @@ def import_stockitems_types_from(conn, stockitems_types_csv):
             cluster_ids = c.fetchall()
 
     
-            c.execute('SELECT id,cluster_id FROM stock_stockitemstype')
+            c.execute('SELECT stock_item_name,cluster_id FROM tmp_stockitemstype')
             stock_itemstypes = c.fetchall()
 
-            # Insert the IDs into the cluster_disaggregation table
             for cluster_id in cluster_ids:
                 for stock_itemstype in stock_itemstypes:
                     if cluster_id[1] == stock_itemstype[1]:
                         c.execute('''
                         UPDATE stock_stockitemstype
-                        SET cluster_id = ?
-                        WHERE cluster_id = ?
-                        ''', (cluster_id[0],cluster_id[1]))
+                        SET cluster_id = %s
+                        WHERE name = %s
+                        ''', (cluster_id[0],stock_itemstype[0]))
         except Exception as e:
             print(f"Error in stockitem_types and cluster: {e}")
-            conn.rollback()
+            engine_connection.rollback()
         
         c.execute("DROP TABLE tmp_stockitemstype;")
 
@@ -117,50 +113,68 @@ def import_locations(conn, locations_csv):
     """
     Import locations from CSV file.
     """
-    c = conn.cursor()
     df = pd.read_csv(locations_csv)
 
     if len(df) > 0:
         table = "rh_location"
 
-        df["Long"] = df["Long"].str.replace(",", ".").astype(float)
-        df["Lat"] = df["Lat"].str.replace(",", ".").astype(float)
+        df["long"] = df["long"].str.replace(",", ".").astype(float)
+        df["lat"] = df["lat"].str.replace(",", ".").astype(float)
 
         df.to_sql("tmp_locs", conn, if_exists="replace", index=False)
 
         c.execute(
             f"""
         insert into {table} (level, parent_id, code, name, original_name, type, created_at, updated_at)
-        VALUES (0, NULL, 'ALL', 'ALL', NULL, 'All', datetime('now'), datetime('now'))
+        VALUES (0, NULL, 'ALL', 'ALL', NULL, 'All', now(), now())
         """
         )
 
         c.execute(
             f"""
-        insert into {table} (level, parent_id, code, name, original_name, type, created_at, updated_at)
-        select distinct 0 level, NULL parent, ADM0_PCODE code, ADM0_NA_EN name, ADM0_translation original_name, 
-        'Country' type, datetime('now') created_at, datetime('now') updated_at 
+        insert into {table} (level, code, name, original_name, type, created_at, updated_at)
+        select distinct 0 level, "adm0_pcode" as code, "adm0_na_en" as name, "adm0_translation" as original_name, 
+        'Country' as type, now() as created_at, now() as updated_at 
         from tmp_locs
         """
         )
 
         c.execute(
             f"""
-        insert into {table} (level, parent_id, code, name, original_name, type, created_at, updated_at)
-        select distinct 1 level, r.id as parent_id, ADM1_PCODE code, ADM1_NA_EN name, ADM1_translation 
-        original_name, 'Province' type, datetime('now') created_at, datetime('now') updated_at
-        from tmp_locs t 
-        inner join {table} r ON r.code = t.ADM0_PCODE;
+        INSERT INTO {table} (level, parent_id, code, name, original_name, type, created_at, updated_at)
+        SELECT DISTINCT 
+            1 AS level, 
+            r.id AS parent_id, 
+            "adm1_pcode" AS code, 
+            "adm1_na_en" AS name, 
+            "adm1_translation" AS original_name, 
+            'Province' AS type, 
+            NOW() AS created_at, 
+            NOW() AS updated_at
+        FROM 
+            tmp_locs t 
+        INNER JOIN 
+            {table} r ON r.code = t.adm0_pcode;
         """
         )
 
         c.execute(
             f"""
-        insert into {table} (level, parent_id, code, name, type, lat, long, created_at, updated_at)
-        select distinct 2 level, r.id as parent_id, ADM2_PCODE code, ADM2_NA_EN name, 'District' type, 
-        t.lat, t.long, datetime('now') created_at, datetime('now') updated_at
-        from tmp_locs t 
-        inner join {table} r ON r.code = t.ADM1_PCODE;
+        INSERT INTO {table} (level, parent_id, code, name, type, lat, long, created_at, updated_at)
+        SELECT DISTINCT 
+            2 AS level, 
+            r.id AS parent_id, 
+            "adm2_pcode" AS code, 
+            "adm2_na_en" AS name, 
+            'District' AS type, 
+            CAST(t.Lat AS DOUBLE PRECISION) AS lat, 
+            CAST(t.Long AS DOUBLE PRECISION) AS long, 
+            NOW() AS created_at, 
+            NOW() AS updated_at
+        FROM 
+            tmp_locs t
+        INNER JOIN 
+            {table} r ON r.code = t.adm1_pcode;
         """
         )
 
@@ -171,7 +185,7 @@ def import_clusters_from_csv(conn, clusters_csv):
     """
     Import updated clusters from CSV
     """
-    c = conn.cursor()
+    
     df = pd.read_csv(clusters_csv)
 
     if len(df) > 0:
@@ -181,18 +195,18 @@ def import_clusters_from_csv(conn, clusters_csv):
 
         try:
             c.execute(
-                f"""insert into {table}(title, code, name) select title, code, name from tmp_clusters"""
+                f"""insert into {table}(title, code, name,created_at,updated_at) select title, code, name,now(),now() from tmp_clusters"""
             )
             c.execute("DROP TABLE tmp_clusters;")
         except Exception as exception:
-            conn.rollback()
+            engine_connection.rollback()
 
 
 def import_indicators_from_csv(conn, indicators_csv):
     """
     Import Indicators from CSV
     """
-    c = conn.cursor()
+    
     df = pd.read_csv(indicators_csv)
 
     if len(df) > 0:
@@ -224,7 +238,7 @@ def import_indicators_from_csv(conn, indicators_csv):
                 # indicator.append(None)
 
                 aquery = f"""insert into {table}(name) 
-                values (?)
+                values (%s)
                 """
                             
                 try:
@@ -246,14 +260,14 @@ def import_indicators_from_csv(conn, indicators_csv):
             c.execute("DROP TABLE tmp_indicator;")
         except Exception as exception:
             print(f"ERROR: import_indicators_from_csv: {exception}")
-            conn.rollback()
+            engine_connection.rollback()
 
 
 def import_activity_domains_from_csv(conn, activity_domain_csv):
     """
     Import updated clusters from CSV
     """
-    c = conn.cursor()
+    
     df = pd.read_csv(activity_domain_csv)
 
     if len(df) > 0:
@@ -291,7 +305,7 @@ def import_activity_domains_from_csv(conn, activity_domain_csv):
                 # m2m_records.append({'cluster': cluster, 'country': country})
                 domain.pop(2)
 
-                aquery = f"""insert into {table}(code, name, is_active) values (?, ?, ?)
+                aquery = f"""insert into {table}(code, name, is_active) values (%s, %s, %s)
                 """
                 c.execute(aquery, domain)
                 last_domain_id = c.lastrowid
@@ -314,11 +328,11 @@ def import_activity_domains_from_csv(conn, activity_domain_csv):
             c.execute("DROP TABLE tmp_activitydomain;")
         except Exception as exception:
             print(f"ERROR: import_activity_domain: {exception}")
-            conn.rollback()
+            engine_connection.rollback()
 
 
 def import_activity_descriptions_from_csv(conn, activity_description_csv):
-    c = conn.cursor()
+    
     df = pd.read_csv(activity_description_csv)
 
     if len(df) > 0:
@@ -382,7 +396,7 @@ def import_activity_descriptions_from_csv(conn, activity_description_csv):
 
                 aquery = f"""insert into {table}(code,name,activity_domain_id,is_active,activity_date,
                 hrp_code,code_indicator,start_date,end_date,ocha_code,objective_id) 
-                    values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    values (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
                 """
 
                 try:
@@ -420,14 +434,14 @@ def import_activity_descriptions_from_csv(conn, activity_description_csv):
             c.execute("DROP TABLE tmp_activitytype;")
         except Exception as exception:
             print(f"ERROR: import_activity_description: {exception}")
-            conn.rollback()
+            engine_connection.rollback()
 
 
 def import_activity_details_from_csv(conn, activity_details_csv):
     """
     Import updated clusters from CSV
     """
-    c = conn.cursor()
+    
     df = pd.read_csv(activity_details_csv)
 
     if len(df) > 0:
@@ -459,7 +473,7 @@ def import_activity_details_from_csv(conn, activity_details_csv):
 
                 activity_detail[0] = activity_type
 
-                aquery = f"""insert into {table}(activity_type_id, code, name) values (?, ?, ?)
+                aquery = f"""insert into {table}(activity_type_id, code, name) values (%s, %s, %s)
                 """
 
                
@@ -477,14 +491,14 @@ def import_activity_details_from_csv(conn, activity_details_csv):
             c.execute("DROP TABLE tmp_activitydetail;")
         except Exception as exception:
             print(f"ERROR: import_activity_details_from_csv: {exception}")
-            conn.rollback()
+            engine_connection.rollback()
 
 
 def import_beneficiary_types_from_csv(conn, beneficiary_type_csv):
     """
     Import beneficiary types from CSV
     """
-    c = conn.cursor()
+    
     df = pd.read_csv(beneficiary_type_csv)
 
     if len(df) > 0:
@@ -505,7 +519,7 @@ def import_beneficiary_types_from_csv(conn, beneficiary_type_csv):
 
         except Exception as exception:
             print(f"Error b_type: {exception}")
-            conn.rollback()
+            engine_connection.rollback()
             
         try:
             c.execute('SELECT id,code FROM rh_cluster')
@@ -522,21 +536,21 @@ def import_beneficiary_types_from_csv(conn, beneficiary_type_csv):
                     if b_cluster_code == cluster_code:    
                         query = f"""
                         INSERT INTO rh_beneficiarytype_clusters (beneficiarytype_id, cluster_id)
-                        VALUES ((select id from rh_beneficiarytype where code = "{b_id[1]}"),{cluster_id[0]})
+                        VALUES ((select id from rh_beneficiarytype where code = '{b_id[1]}'),{cluster_id[0]})
                         """
                         c.execute(query)
                         
             c.execute("DROP TABLE tmp_beneficiarytype;")
         except Exception as e:
             print(f"Error in b_type and cluster: {e}")
-            conn.rollback()
+            engine_connection.rollback()
 
 
 def import_organizations_from_csv(conn, organizations_csv):
     """
     Import organizations from CSV
     """
-    c = conn.cursor()
+    
     df = pd.DataFrame()
     df = pd.read_csv(organizations_csv)
 
@@ -546,8 +560,8 @@ def import_organizations_from_csv(conn, organizations_csv):
         df.to_sql("tmp_organization", conn, if_exists="replace", index=False)
         try:
             c.execute(
-                """select _id, createdAt, organization, organization_name, organization_type, 
-                updatedAt, admin0pcode from tmp_organization"""
+                """select _id, "createdAt", organization, organization_name, organization_type, 
+                "updatedAt", admin0pcode from tmp_organization"""
             )
             organizations = c.fetchall()
             for organization in organizations:
@@ -557,7 +571,7 @@ def import_organizations_from_csv(conn, organizations_csv):
                 oquery = f"""
                         insert into 
                         {table}(old_id, created_at, code, name, type, updated_at) 
-                        values (?, ?, ?, ?, ?, ?)
+                        values (%s, %s, %s, %s, %s, %s)
                     """
                 c.execute(oquery, organization)
                 last_org_id = c.lastrowid
@@ -576,14 +590,14 @@ def import_organizations_from_csv(conn, organizations_csv):
             c.execute("DROP TABLE tmp_organization;")
         except Exception as exception:
             print("exception: ", exception)
-            conn.rollback()
+            engine_connection.rollback()
 
 
 def import_donors_from_csv(conn, donors_csv):
     """
     Import Donors from CSV
     """
-    c = conn.cursor()
+    
     df = pd.DataFrame()
     df = pd.read_csv(donors_csv)
 
@@ -610,7 +624,7 @@ def import_donors_from_csv(conn, donors_csv):
                 dquery = f"""
                         insert into 
                         {table}(old_id, updated_at, code, name, created_at) 
-                        values (?, ?, ?, ?, ?)
+                        values (%s, %s, %s, %s, %s)
                     """
                 c.execute(dquery, donor)
                 last_donor_id = c.lastrowid
@@ -631,14 +645,14 @@ def import_donors_from_csv(conn, donors_csv):
 
         except Exception as exception:
             print(f"ERROR: donors: {exception}")
-            conn.rollback()
+            engine_connection.rollback()
 
 
 def import_users_from_csv(conn, users_csv):
     """
     Import Users from CSV
     """
-    c = conn.cursor()
+    
 
     df = pd.DataFrame()
     df = pd.read_csv(users_csv)
@@ -654,7 +668,7 @@ def import_users_from_csv(conn, users_csv):
             )
             profile_info = c.fetchall()
             c.execute(
-                "select createdAt,email,last_logged_in,password,status,username from tmp_accounts"
+                """select "createdAt",email,last_logged_in,password,status,username from tmp_accounts"""
             )
             users = c.fetchall()
             profiles_list = []
@@ -727,7 +741,7 @@ def import_users_from_csv(conn, users_csv):
                         insert into 
                         {table}(date_joined, email, last_login, password, is_active, username, 
                         is_superuser, is_staff, last_name, first_name) 
-                        values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                        values (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
                     """
 
                 c.execute(aquery, user)
@@ -737,6 +751,7 @@ def import_users_from_csv(conn, users_csv):
                 db_user = c.fetchone()
 
                 u_profile = next(item for item in profiles_list if db_user[0] in item)
+                print("marker")
                 profile_cluster_id = False
                 if u_profile:
                     u_profile = list(u_profile)
@@ -748,7 +763,7 @@ def import_users_from_csv(conn, users_csv):
                 pquery = f"""
                         insert into 
                         users_profile(country_id,organization_id,phone,position,skype,user_id,is_cluster_contact) 
-                        values (?, ?, ?, ?, ?, ?, ?)
+                        values (%s, %s, %s, %s, %s, %s, %s)
                     """
                 c.execute(pquery, u_profile)
                 last_profile_id = c.lastrowid
@@ -764,14 +779,14 @@ def import_users_from_csv(conn, users_csv):
             c.execute("DROP TABLE tmp_accounts;")
         except Exception as exception:
             print("***********IMPORT ERROR - USER ************ ", exception)
-            conn.rollback()
+            engine_connection.rollback()
 
 
 def import_facilities_from_csv(conn, facilities_csv):
     """
     Import Facility types from CSV
     """
-    c = conn.cursor()
+    
     df = pd.read_csv(facilities_csv)
 
     if len(df) > 0:
@@ -794,21 +809,21 @@ def import_facilities_from_csv(conn, facilities_csv):
                         cluster = None
                 site[0] = cluster
 
-                aquery = f"""insert into {table}(cluster_id, name) values (?, ?)
+                aquery = f"""insert into {table}(cluster_id, name) values (%s, %s)
                 """
                 c.execute(aquery, site)
 
             c.execute("DROP TABLE tmp_facilitysitetype;")
         except Exception as exception:
             print(f"ERROR: import_facilities_from_csv: {exception}")
-            conn.rollback()
+            engine_connection.rollback()
 
 
 def import_dissaggregation_from_csv(conn, diss_csv):
     """
     Import disaggregation types from CSV
     """
-    c = conn.cursor()
+    
     df = pd.read_csv(diss_csv)
 
     now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
@@ -834,7 +849,7 @@ def import_dissaggregation_from_csv(conn, diss_csv):
             c.execute("DROP TABLE tmp_diss;")
         except Exception as exception:
             print(f"Error in DISAG: {exception}")
-            conn.rollback()
+            engine_connection.rollback()
 
         try:
             # Retrieve all IDs from the cluster table
@@ -853,7 +868,7 @@ def import_dissaggregation_from_csv(conn, diss_csv):
                 for disaggregation_id in disaggregation_ids:
                     c.execute('''
                     INSERT INTO rh_disaggregation_clusters (disaggregation_id, cluster_id)
-                    VALUES (?, ?)
+                    VALUES (%s, %s)
                     ''', (disaggregation_id[0],cluster_id[0]))
 
             # Insert the IDs into the cluster_disaggregation table
@@ -861,36 +876,32 @@ def import_dissaggregation_from_csv(conn, diss_csv):
                 for disaggregation_id in disaggregation_ids:
                     c.execute('''
                     INSERT INTO rh_disaggregation_indicators (disaggregation_id, indicator_id)
-                    VALUES (?, ?)
+                    VALUES (%s, %s)
                     ''', (disaggregation_id[0],indicator_id[0]))
         except Exception as e:
             print(f"Error in diss and cluster: {exception}")
-            conn.rollback()
+            engine_connection.rollback()
 
 
-connection = get_sqlite_client(SQLITE_DB_PATH)
+
 
 # Try to import the data from different sources.
 try:
     import_currencies_from_csv(connection, CURRENCIES_CSV)
-
     import_locations(connection, LOCATIONS_CSV)
-
     import_clusters_from_csv(connection, CLUSTERS)
 
-    # import_activity_domains_from_csv(connection, ACTIVITY_DOMAIN_CSV)
-
-    # import_activity_descriptions_from_csv(connection, ACTIVITY_DESCRIPTION_CSV)
-
-    # import_activity_details_from_csv(connection, ACTIVITY_DETAIL_CSV)
+    # Moved to load_acvtivities
+    # import_activity_domains_from_csv(connection, ACTIVITY_DOMAIN_CSV) # Moved to load_acvtivities
+    # import_activity_descriptions_from_csv(connection, ACTIVITY_DESCRIPTION_CSV) # Moved to load_acvtivities
+    # import_activity_details_from_csv(connection, ACTIVITY_DETAIL_CSV) # Moved to load_acvtivities
+    # import_indicators_from_csv(connection, INDICATORS_CSV) # Moved to load_acvtivities
 
     import_organizations_from_csv(connection, ORGANIZATIONS_CSV)
 
     import_donors_from_csv(connection, DONORS_CSV)
 
-    # import_indicators_from_csv(connection, INDICATORS_CSV)
-
-    import_users_from_csv(connection, USERS_CSV)
+    # import_users_from_csv(connection, USERS_CSV) # Moved to load_acvtivities
 
     import_facilities_from_csv(connection, FACILITIES)
 
@@ -901,13 +912,14 @@ try:
     import_stock_units_from_csv(connection, STOCKUNIT_CSV)
 
     import_stockitems_types_from(connection, STOCKITEMS_TYPES_CSV)
+    
+    engine_connection.commit()
 
-    connection.commit()
 
 except Exception as exc:
     print("***********IMPORT ERROR:************ ", exc)
     print("***********Traceback:************ ", traceback.format_exc())
     print("***********Roll Back The Commits************ ")
-    connection.rollback()
+    engine_connection.rollback()
 
-connection.close()
+engine_connection.close()

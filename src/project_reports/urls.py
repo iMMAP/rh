@@ -144,15 +144,12 @@ urlpatterns = [
         user_views.index_project_report_view,
         name="project_reports_home",
     ),
-
-
     # Dashboard Paths
     path(
         "projects/monthly_reports/dashboard/",
         dashboard_views.reports_dashboard_view,
         name="view_my_dashboard",
     ),
-
     path(
         "export/all/monthly_progress_reports/",
         export_views.ReportsExportView.as_view(),

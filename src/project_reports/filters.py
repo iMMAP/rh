@@ -8,7 +8,7 @@ from .models import ProjectMonthlyReport
 
 class ReportFilterForm(django_filters.FilterSet):
     """Monthly Report Filter Form"""
-    
+
     # Define the DateFromToRangeFilter with initial value of current month
     current_month = datetime.date.today().replace(day=1)
     report_date = django_filters.DateFromToRangeFilter(widget=RangeWidget(attrs={"type": "date"}))
@@ -16,9 +16,9 @@ class ReportFilterForm(django_filters.FilterSet):
     class Meta:
         model = ProjectMonthlyReport
         fields = {
-            'project__clusters': ['exact'],  # Exact match for clusters
-            'project__implementing_partners': ['exact'],  # Exact match for implementing partners
-            'report_date': ['gte', 'lte'],  # Date range
+            "project__clusters": ["exact"],  # Exact match for clusters
+            "project__implementing_partners": ["exact"],  # Exact match for implementing partners
+            "report_date": ["gte", "lte"],  # Date range
         }
 
     def __init__(self, *args, **kwargs):

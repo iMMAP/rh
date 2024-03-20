@@ -1,4 +1,4 @@
-name,type,lower_limat,upper_limat,created_at,updated_at
+name,type,lower_limit,upper_limit,created_at,updated_at
 Boys(0-5),Age,0,5,,
 Girls(0-5),Age,0,5,,
 Boys(6-17),Age,6,17,,

@@ -664,8 +664,8 @@ class Disaggregation(models.Model):
     indicators = models.ManyToManyField(Indicator)
 
     name = models.CharField(max_length=NAME_MAX_LENGTH)
-    TYPE = [("Gender", "gender"), ("Age", "age"), ("Other", "other")]
-    type = models.CharField(max_length=NAME_MAX_LENGTH, choices=TYPE)
+    Gender = [("Male", "male"), ("Female", "female"), ("Other", "other")]
+    gender = models.CharField(max_length=NAME_MAX_LENGTH, choices=Gender, null=True)
 
     lower_limit = models.IntegerField(default=0, blank=True, null=True)
     upper_limit = models.IntegerField(default=0, blank=True, null=True)

@@ -133,7 +133,7 @@ def import_locations(conn, locations_csv):
         c.execute(
             f"""
         insert into {table} (level, code, name, original_name, type, created_at, updated_at)
-        select distinct 0 level, "adm0_pcode" as code, "adm0_na_en" as name, "adm0_translation" as original_name, 
+        select distinct 0 "level", "adm0_pcode" as code, "adm0_na_en" as name, "adm0_translation" as original_name, 
         'Country' as type, now() as created_at, now() as updated_at 
         from tmp_locs
         """
@@ -840,9 +840,9 @@ def import_dissaggregation_from_csv(conn, diss_csv):
             c.execute(
                 f"""
                     insert into 
-                    {table}(name, type, lower_limit, upper_limit,created_at,updated_at) 
+                    {table}(name, gender, lower_limit, upper_limit,created_at,updated_at) 
                     select 
-                    name,type,lower_limit,upper_limit,now(),now()
+                    name,gender,lower_limit,upper_limit,now(),now()
                     from tmp_diss"""
             )
             c.execute("DROP TABLE tmp_diss;")

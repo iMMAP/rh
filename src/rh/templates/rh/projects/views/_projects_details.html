@@ -49,7 +49,9 @@
                         <a href="#"
                            data-url="{% url 'export_project_excel' project.pk %}"
                            class="text-decoration-none"
-                           title="Export Excel">
+                           title="Export Excel"
+                           data-tippy-content="Export Excel"
+                           >
                             <span class="project-detail icon-download"></span>
                         </a>
                     </button>
@@ -60,6 +62,7 @@
                             data-url="{% url 'copy_project' project.pk %}"
                             data-type="copy" 
                             data-name="project" 
+                            data-tippy-content="Copy Project"
                             class="show-sw-action-popup">
                             <span class="project-detail icon-copy"></span>
                         </a>
@@ -71,7 +74,8 @@
                             <a href="#"
                             data-url="{% url 'archive_project' project.pk %}"
                             data-type="archive" 
-                            data-name="project" 
+                            data-name="project"
+                            data-tippy-content="Archive Project" 
                             class="show-sw-action-popup">
                                 <svg xmlns="http://www.w3.org/2000/svg"
                                      class="archive-icon"
@@ -108,6 +112,7 @@
                             data-type="delete"
                             data-verify="{{project.state}}" 
                             data-name="project" 
+                            data-tippy-content="Delete Project" 
                             class="show-sw-action-popup">
                             <span class="project-detail icon-trashbin"></span></a>
                     </button>

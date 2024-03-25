@@ -1,4 +1,4 @@
-ADM0_PCODE,ADM0_NA_EN,ADM0_translation,ADM1_PCODE,ADM1_NA_EN,ADM1_translation,ADM2_PCODE,ADM2_NA_EN,UNIT_TYPE,Lat,Long
+adm0_pcode,adm0_na_en,adm0_translation,adm1_pcode,adm1_na_en,adm1_translation,adm2_pcode,adm2_na_en,unit_type,lat,long
 AF,Afghanistan,افغانستان,AF17,Badakhshan,بدخشان,AF1705,Khash,District,"36,935579","70,727267"
 AF,Afghanistan,افغانستان,AF20,Samangan,سمنگان,AF2002,Hazrat-e-Sultan,District,"36,347995","67,870735"
 AF,Afghanistan,افغانستان,AF05,Logar,لوگر,AF0501,Pul-e-Alam,Provincial Centre,"33,97378","69,052835"

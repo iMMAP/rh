@@ -45,3 +45,12 @@
 @import 'components/target-location-block';
 @import 'components/disaggregation-block';
 @import 'components/project-activity-block';
+
+
+#sentry-feedback{
+    z-index: 10;
+}
+
+.view_nocontent{
+    padding: 1.5rem 0rem;
+}

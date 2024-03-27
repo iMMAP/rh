@@ -47,10 +47,7 @@
                                             <div class="date-picker-field">
                                                 {{ reports_filter.form.report_date }}
                                             </div>
-                                            
-                                            <!-- <div class="select-field">
-                                                <label>Focal Person</label>
-                                            </div> -->
+                                        
                                         </div>
                                         <div class="block-footer">
                                             <div class="btn-wrapper">
@@ -70,7 +67,6 @@
                                         title="Export Reports">
                                         <span class="btn-text">Export Reports</span>
                                         <span class="icon-download"></span>
-                                        <!-- <span class="project-detail icon-download"></span> -->
                                     </a>
                                   </button>
                             </div>
@@ -81,6 +77,12 @@
                 <div class="section-row">
                     <div class="section-col">
                         <div class="info-block">
+                            <span class="title">Total Projects</span>
+                            <span class="number">{{ projects }}</span>
+                        </div>
+                    </div>
+                    <div class="section-col">
+                        <div class="info-block">
                             <span class="title">Total Reports</span>
                             <span class="number">{{ reports_total }}</span>
                         </div>
@@ -89,12 +91,6 @@
                         <div class="info-block">
                             <span class="title">Organizations</span>
                             <span class="number">{{ organizations }}</span>
-                        </div>
-                    </div>
-                    <div class="section-col">
-                        <div class="info-block">
-                            <span class="title">Total Projects</span>
-                            <span class="number">{{ projects }}</span>
                         </div>
                     </div>
                 </div>

@@ -1,8 +1,6 @@
 from django.contrib.auth.decorators import login_required
-from django.core.paginator import Paginator
 from django.shortcuts import render
 from django.views.decorators.cache import cache_control
-
 from rh.models import Organization, Project
 
 from .filters import ReportFilterForm
@@ -54,12 +52,6 @@ def reports_dashboard_view(request):
         queryset=queryset.order_by("-id"),
     )
 
-    # Setup Pagination
-    p = Paginator(reports_filter.qs, RECORDS_PER_PAGE)
-    page = request.GET.get("page")
-    p_reports = p.get_page(page)
-    total_pages = "a" * p_reports.paginator.num_pages
-
     # Retain filter parameters in pagination links
     query_params = request.GET.copy()
     if "page" in query_params:
@@ -68,10 +60,9 @@ def reports_dashboard_view(request):
 
     context = {
         "reports_count": queryset.count(),  # Count of filtered queryset
-        "project_reports": p_reports,
+        "project_reports": reports_filter.qs,
         "reports_filter": reports_filter,
         "pagination_query_string": pagination_query_string,
-        "total_pages": total_pages,
         "organizations": organizations.count(),
         "projects": projects.count(),
         "reports_total": reports_total,

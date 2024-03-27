@@ -11,8 +11,8 @@ from django.template import loader
 from django.template.loader import render_to_string
 from django.urls import reverse
 from django.views.decorators.cache import cache_control
-
 from project_reports.models import ProjectMonthlyReport as Report
+
 from rh.resources import ProjectResource
 
 from .filters import ProjectsFilter
@@ -704,6 +704,7 @@ def copy_project(request, pk):
         new_project.title = f"[COPY] - {project.title}"
         new_project.code = f"[COPY] - {project.code}"  # Generate a new primary key for the new project.
         new_project.state = "draft"
+        new_project.hrp_code = ""
 
         new_project.save()  # Save the new project to the database.
 

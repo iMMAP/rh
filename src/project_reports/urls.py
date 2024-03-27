@@ -1,5 +1,6 @@
 from django.urls import path
 
+from . import dashboards as dashboard_views
 from . import exports as export_views
 from . import views as user_views
 
@@ -110,7 +111,7 @@ urlpatterns = [
     # Exports
     path(
         "project/monthly_progress/export/<str:report>/",
-        export_views.ProjectReportExportExcelView.as_view(),
+        export_views.ReportTemplateExportView.as_view(),
         name="export_monthly_report_template",
     ),
     path(
@@ -137,5 +138,21 @@ urlpatterns = [
         "ajax/get_indicator_reference/",
         user_views.get_indicator_reference,
         name="get_indicator_reference",
+    ),
+    path(
+        "project/monthly_progress/?project=<str:project>/",
+        user_views.index_project_report_view,
+        name="project_reports_home",
+    ),
+    # Dashboard Paths
+    path(
+        "projects/monthly_reports/dashboard/",
+        dashboard_views.reports_dashboard_view,
+        name="view_my_dashboard",
+    ),
+    path(
+        "export/all/monthly_progress_reports/",
+        export_views.ReportsExportView.as_view(),
+        name="export_all_reports",
     ),
 ]

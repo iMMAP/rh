@@ -1,0 +1,347 @@
+{% extends "_base.html" %}
+{% load static %}
+
+{% block page_title %}
+    ReportHub - Projects Dashboard
+{% endblock page_title %}
+
+{% block content %}
+
+<div class="container">
+        <section class="info-section">
+            <div class="container">
+                <div class="dahsboard-section-heading section-heading-wide">
+                    <div class="title">
+                        <div><h2>Sector Dashboard</h2></div>
+                        <div class="actions-panel">
+                            <div class="filter-holder">
+                                <a href="#" class="btn btn-red filter-open">Filter
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 23 23" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 1 1-3 0m3 0a1.5 1.5 0 1 0-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-9.75 0h9.75" />
+                                    </svg>
+                                </a>
+                                <form action="#" class="filter-form">
+                                    <div class="filter-options">
+                                        <div class="block-top">
+                                            <span class="title">Reports Filter</span>
+                                            <a class="filter-close" href="#"></a>
+                                        </div>
+                                        <div class="filter-heading-text">
+                                            <span>
+                                                <span class="info-sign"></span>
+                                                Get your reports data sorted.
+                                            </span>
+                                            
+                                        </div>
+                                        <br>
+                                        <div class="block-body">
+                                            <div class="select-field">
+                                                <label for="{{ reports_filter.form.project__clusters.id_for_label }}">Cluster / Sectors</label>
+                                                {{ reports_filter.form.project__clusters }}
+                                            </div>
+                                            <div class="select-field ">
+                                                <label for="{{ reports_filter.form.project__implementing_partners.id_for_label }}">Organization</label>
+                                                {{ reports_filter.form.project__implementing_partners }}
+                                            </div>
+                                            <label>Date Range</label>
+                                            <div class="date-picker-field">
+                                                {{ reports_filter.form.report_date }}
+                                            </div>
+                                        
+                                        </div>
+                                        <div class="block-footer">
+                                            <div class="btn-wrapper">
+                                                <a class="btn btn-gray-outline"
+                                                    href="{% url 'projects-list' %}?state={{request.GET.state}}">Reset</a>
+                                                <button type="submit" class="btn btn-red">Apply</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="export-formats-holder">
+                                <button class="export-button">
+                                    <a href="#"
+                                        data-url="{% url 'export_all_reports' %}"
+                                        class="btn btn-red project-detail"
+                                        title="Export Reports">
+                                        <span class="btn-text">Export Reports</span>
+                                        <span class="icon-download"></span>
+                                    </a>
+                                  </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+                <div class="section-row">
+                    <div class="section-col">
+                        <div class="info-block">
+                            <span class="title">Total Projects</span>
+                            <span class="number">{{ projects }}</span>
+                        </div>
+                    </div>
+                    <div class="section-col">
+                        <div class="info-block">
+                            <span class="title">Total Reports</span>
+                            <span class="number">{{ reports_total }}</span>
+                        </div>
+                    </div>
+                    <div class="section-col">
+                        <div class="info-block">
+                            <span class="title">Organizations</span>
+                            <span class="number">{{ organizations }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="section-row">
+                    <div class="section-col">
+                        <div class="info-block">
+                            <span class="title">Reports Todo</span>
+                            <span class="number">{{ reports_todo }}</span>
+                        </div>
+                    </div>
+                    <div class="section-col">
+                        <div class="info-block">
+                            <span class="title">Reports Pending</span>
+                            <span class="number">{{ reports_pending }}</span>
+                        </div>
+                    </div>
+                    <div class="section-col">
+                        <div class="info-block">
+                            <span class="title">Reports Completed</span>
+                            <span class="number">{{ reports_complete }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        {% comment %}<div class="content-block top-border bottom-border dashboard-page">
+            <div class="dashboard-page-top-panel">
+                <div class="tabs-nav-holder">
+                    <ul class="tabs-nav">
+                    </ul>
+                </div>
+            </div>
+             <div class="table-wrapper-scrollable">
+                <table class="table all-projects-table js-collapsible-table">
+                    <thead>
+                        <tr>
+                            <th class="update-date-col">
+                                <div class="table-flex-holder">
+                                    <div class="input-check-holder">
+                                        <input type="checkbox"
+                                                id="table-head-check-01"
+                                                data-check-pattern="[name^='table-check']" />
+                                        <label for="table-head-check-01">
+                                            <span class="input"></span>
+                                        </label>
+                                    </div>
+                                    <strong class="table-title" title="Report">Report</strong>
+                                    <div class="table-sort-buttons">
+                                        <button type="button">
+                                            <span class="icon-chevron-up"></span>
+                                        </button>
+                                        <button type="button">
+                                            <span class="icon-chevron-down"></span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </th>
+                            <th class="location-col">
+                                <div class="table-flex-holder">
+                                    <strong class="table-title">Project Title</strong>
+                                </div>
+                            </th>
+                            <th class="location-col">
+                                <div class="table-flex-holder">
+                                    <strong class="table-title">Cluster/Sector</strong>
+                                    <div class="table-sort-buttons">
+                                        <button type="button">
+                                            <span class="icon-chevron-up"></span>
+                                        </button>
+                                        <button type="button">
+                                            <span class="icon-chevron-down"></span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </th>
+                            <th class="update-date-col">
+                                <div class="table-flex-holder">
+                                    <strong class="table-title">Organization</strong>
+                                    <div class="table-sort-buttons">
+                                        <button type="button">
+                                            <span class="icon-chevron-up"></span>
+                                        </button>
+                                        <button type="button">
+                                            <span class="icon-chevron-down"></span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </th>
+                            <th class="location-col">
+                                <div class="table-flex-holder">
+                                    <strong class="table-title">Focal Person</strong>
+                                </div>
+                            </th>
+                            
+                            <th class="location-col">
+                                <div class="table-flex-holder">
+                                    <strong class="table-title">Contact</strong>
+                                </div>
+                            </th>
+                            <th class="location-col">
+                                <div class="table-flex-holder">
+                                    <strong class="table-title">Period</strong>
+                                </div>
+                            </th>
+                            <th class="location-col">
+                                <div class="table-flex-holder">
+                                    <strong class="table-title">Report Status</strong>
+                                </div>
+                            </th>
+                        </tr>
+                    </thead>
+                    
+                    <tbody>
+                        {% for report in project_reports %}
+                            <tr>
+                                <td class="update-date-col" data-title="Month">
+                                    <a class="table-flex-holder" 
+                                    href="{% url 'view_monthly_report' project=report.project.id report=report.id %}" target="_blank">
+                                        <div class="input-check-holder">
+                                            <input type="checkbox" id="table-check-{{report.pk}}" 
+                                            class="project-checkbox" value="{{report.pk}}" name="table-check{{report.pk}}" />
+                                            <label for="table-check-{{report.pk}}">
+                                                <span class="input"></span>
+                                            </label>
+                                        </div>
+                                        {{ report}}
+                                        <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="20" height="20" viewBox="0,0,256,256">
+                                            <g fill="#6d6e71" fill-rule="nonzero" stroke="none" stroke-width="1" 
+                                            stroke-linecap="butt" stroke-linejoin="miter" 
+                                            stroke-miterlimit="10" stroke-dasharray="" 
+                                            stroke-dashoffset="0" font-family="none" 
+                                            font-weight="none" font-size="none" 
+                                            text-anchor="none" style="mix-blend-mode: normal">
+                                                    <g transform="scale(8,8)">
+                                                        <path d="M18,5v2h5.5625l-12.28125,12.28125l1.4375,1.4375l12.28125,-12.28125v5.5625h2v-9zM5,9v18h18v-13l-2,2v9h-14v-14h9l2,-2z">
+                                                    </path>
+                                                </g>
+                                            </g>
+                                        </svg>
+                                    </a>
+                                </td>
+                                
+                                <td class="location-col">
+                                    <a class="table-flex-holder" href="{% url 'projects-detail' report.project.id %}" target="_blank">
+                                        {{ report.project.title }}
+                                        <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="20" height="20" viewBox="0,0,256,256">
+                                            <g fill="#6d6e71" fill-rule="nonzero" 
+                                            stroke="none" stroke-width="1" 
+                                            stroke-linecap="butt" stroke-linejoin="miter" 
+                                            stroke-miterlimit="10" stroke-dasharray="" 
+                                            stroke-dashoffset="0" font-family="none" font-weight="none" 
+                                            font-size="none" text-anchor="none" style="mix-blend-mode: normal">
+                                                <g transform="scale(8,8)">
+                                                    <path 
+                                                        d="M18,5v2h5.5625l-12.28125,12.28125l1.4375,1.4375l12.28125,-12.28125v5.5625h2v-9zM5,9v18h18v-13l-2,2v9h-14v-14h9l2,-2z">
+                                                    </path>
+                                                </g>
+                                            </g>
+                                        </svg>
+                                    </a>
+                                </td>
+                                <td class="location-col" data-title="Clusters">
+                                    {% for cluster in report.project.clusters.all %}
+                                        {{ cluster.title }}{% if not forloop.last %},{% endif %}
+                                    {% endfor %}
+                                </td>
+                                <td class="update-date-col" data-title="Clusters">
+                                    {% for organization in report.project.implementing_partners.all %}
+                                        {{ organization.name }}{% if not forloop.last %},{% endif %}
+                                    {% endfor %}
+                                </td>
+                                <td class="location-col">
+                                    {{report.project.user}}
+                                </td>
+                                <td class="location-col">
+                                    {{report.project.user.email}}
+                                </td>
+                                <td class="location-col">
+                                    {{ report.report_date }}
+                                </td>
+                                <td class="location-col">
+                                    <span class="{{ report.state }}">
+                                        {{ report.get_state_display }}
+                                    </span>
+                                </td>
+                            </tr>
+                        
+                        {% endfor %}
+                        
+                    </tbody>
+                </table>
+            </div>
+        </div>
+         {% if project_reports %}
+        <div class="pagination-holder">
+            <div class="select-field view-options"></div>
+            <div class="pagination-wrapper">
+                <ul class="pagination">
+                    {% if project_reports.has_previous %}
+                        <li class="page-item prev">
+                            <a class="page-link" href="?page={{ project_reports.previous_page_number }}{% if request.GET.project__clusters %}&project__clusters={{ request.GET.project__clusters }}{% endif %}{% if request.GET.project__implementing_partners %}&project__implementing_partners={{ request.GET.project__implementing_partners }}{% endif %}{% if request.GET.date_0 %}&date_0={{ request.GET.date_0 }}{% endif %}{% if request.GET.date_1 %}&date_1={{ request.GET.date_1 }}{% endif %}">Previous</a>
+                        </li>
+                    {% else %}
+                        <li class="page-item prev disabled">
+                            <a class="page-link" href="#">Previous</a>
+                        </li>
+                    {% endif %}
+                    {% for i in total_pages %}
+                        <li class="page-item {% if project_reports.number == forloop.counter %}current-page{% endif %}">
+                            <a class="page-link" href="?page={{ forloop.counter }}{% if request.GET.project__clusters %}&project__clusters={{ request.GET.project__clusters }}{% endif %}{% if request.GET.project__implementing_partners %}&project__implementing_partners={{ request.GET.project__implementing_partners }}{% endif %}{% if request.GET.date_0 %}&date_0={{ request.GET.date_0 }}{% endif %}{% if request.GET.date_1 %}&date_1={{ request.GET.date_1 }}{% endif %}">{{ forloop.counter }}</a>
+                        </li>
+                    {% endfor %}
+                    {% if project_reports.has_next %}
+                        <li class="page-item next">
+                            <a class="page-link" href="?page={{ project_reports.next_page_number }}{% if request.GET.project__clusters %}&project__clusters={{ request.GET.project__clusters }}{% endif %}{% if request.GET.project__implementing_partners %}&project__implementing_partners={{ request.GET.project__implementing_partners }}{% endif %}{% if request.GET.date_0 %}&date_0={{ request.GET.date_0 }}{% endif %}{% if request.GET.date_1 %}&date_1={{ request.GET.date_1 }}{% endif %}">Next</a>
+                        </li>
+                    {% else %}
+                        <li class="page-item next disabled">
+                            <a class="page-link" href="#">Next</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+        
+        {% else %}
+            <div class="view_nocontent">
+                <div class="nocontent_help">
+                    <h4>No reports found.</h4>
+                </div>
+            </div>
+        {% endif %} {% endcomment %}
+
+    </div>
+{% endblock content %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+<script>
+    document.querySelectorAll('.custom-select').forEach((select) => {
+        const choice = new Choices(select, {
+            searchEnabled: true,
+            itemSelectText: '',
+            removeItemButton: true,
+            classNames: {
+                listDropdown: 'choices__list--dropdown',
+            },
+            shouldSort: false,
+        });
+    })
+</script>
+<script type="module" src="{% static 'src/js/utils/exportSW.js' %}"></script>
+{% endblock scripts %}

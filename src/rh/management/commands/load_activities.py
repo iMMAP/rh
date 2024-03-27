@@ -1,24 +1,24 @@
-from django.core.management.base import BaseCommand
-from rh.models import (
-    Cluster,
-    ActivityDomain,
-    ActivityType,
-    ActivityDetail,
-    Indicator,
-    ImplementationModalityType,
-    TransferMechanismType,
-    PackageType,
-    TransferCategory,
-    GrantType,
-    UnitType,
-)
-
-from project_reports.models import ResponseType
 import os
 from pathlib import Path
+
 import pandas as pd
 from django.contrib.auth.models import User
+from django.core.management.base import BaseCommand
 
+from project_reports.models import ResponseType
+from rh.models import (
+    ActivityDetail,
+    ActivityDomain,
+    ActivityType,
+    Cluster,
+    GrantType,
+    ImplementationModalityType,
+    Indicator,
+    PackageType,
+    TransferCategory,
+    TransferMechanismType,
+    UnitType,
+)
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent.parent
 

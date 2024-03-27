@@ -51,7 +51,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "django_htmx.middleware.HtmxMiddleware",
-    'core.middleware.MaintenanceModeMiddleware',
+    "core.middleware.MaintenanceModeMiddleware",
 ]
 
 ROOT_URLCONF = "core.urls"
@@ -162,17 +162,16 @@ EMAIL_USE_SSL = env("EMAIL_USE_SSL", default=False)
 EMAIL_USE_TLS = env("EMAIL_USE_TLS", default=True)
 
 
-
 ####################
 # Maintence mode Settings
 ####################
-MAINTENANCE_MODE_ENABLED = env("MAINTENANCE_MODE_ENABLED",default=False)
+MAINTENANCE_MODE_ENABLED = env("MAINTENANCE_MODE_ENABLED", default=False)
 # if True the superuser will not see the maintenance-mode page
-MAINTENANCE_MODE_IGNORE_SUPERUSER = env("MAINTENANCE_MODE_IGNORE_SUPERUSER",default=True) 
+MAINTENANCE_MODE_IGNORE_SUPERUSER = env("MAINTENANCE_MODE_IGNORE_SUPERUSER", default=True)
 # if True the staff will not see the maintenance-mode page
-MAINTENANCE_MODE_IGNORE_STAFF = env("MAINTENANCE_MODE_IGNORE_STAFF",default=True) 
+MAINTENANCE_MODE_IGNORE_STAFF = env("MAINTENANCE_MODE_IGNORE_STAFF", default=True)
 # the absolute url where users will be redirected to during maintenance-mode
-MAINTENANCE_MODE_REDIRECT_ROUTE = env("MAINTENANCE_MODE_REDIRECT_ROUTE",default="maintenance") 
+MAINTENANCE_MODE_REDIRECT_ROUTE = env("MAINTENANCE_MODE_REDIRECT_ROUTE", default="maintenance")
 # secret code to bypass maintenance mode for the user
 # /reporthub.immap.org/?MAINTENANCE_BYPASS_QUERY
-MAINTENANCE_BYPASS_QUERY = env("MAINTENANCE_BYPASS_QUERY",default="")
+MAINTENANCE_BYPASS_QUERY = env("MAINTENANCE_BYPASS_QUERY", default="")

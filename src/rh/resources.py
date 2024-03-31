@@ -18,16 +18,14 @@ class ProjectResource(resources.ModelResource):
     beneficiary_category = fields.Field()
     implementing_partners_type = fields.Field()
     programme_partners_type = fields.Field()
-    admin1pcode = fields.Field()
-    admin1name = fields.Field()
-    admin2pcode = fields.Field()
-    admin2name = fields.Field()
+    province = fields.Field()
+    district = fields.Field()
     location_type = fields.Field()
     classification = fields.Field()
     facility_site_type = fields.Field()
     facility_monitoring = fields.Field()
     facility_id = fields.Field()
-    region=fields.Field()
+
     facility_name = fields.Field()
     facility_lat = fields.Field()
     facility_long = fields.Field()
@@ -62,11 +60,8 @@ class ProjectResource(resources.ModelResource):
             "indicator",
             "beneficiary",
             "beneficiary_category",
-            "admin1pcode",
-            "admin1name",
-            "region",
-            "admin2pcode",
-            "admin2name",
+            "province",
+            "district",
             "location_type",
             "classification",
             "facility_site_type",
@@ -103,11 +98,8 @@ class ProjectResource(resources.ModelResource):
             "indicator",
             "beneficiary",
             "beneficiary_category",
-            "admin1pcode",
-            "admin1name",
-            "region",
-            "admin2pcode",
-            "admin2name",
+            "province",
+            "district",
             "location_type",
             "classification",
             "facility_site_type",
@@ -180,23 +172,11 @@ class ProjectResource(resources.ModelResource):
 
     # activity planning ends
     # target loacation starts
-    def dehydrate_admin1name(self, project):
+    def dehydrate_province(self, project):
         target_location = list(project.targetlocation_set.all())
         return ",".join([location.province.name for location in target_location])
-    
-    def dehydrate_region(self, project):
-        target_location = list(project.targetlocation_set.all())
-        return ",".join([location.province.region_name for location in target_location])
-    
-    def dehydrate_admin1pcode(self, project):
-        target_location = list(project.targetlocation_set.all())
-        return ",".join([location.province.code for location in target_location])
-    
-    def dehydrate_admin2pcode(self, project):
-        target_location = list(project.targetlocation_set.all())
-        return ",".join([location.district.code for location in target_location])
 
-    def dehydrate_admin2name(self, project):
+    def dehydrate_district(self, project):
         target_location = list(project.targetlocation_set.all())
         return ",".join([location.district.name for location in target_location])
 

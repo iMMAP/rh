@@ -225,8 +225,11 @@ class ProjectExportExcelView(View):
 
         # Define column headers and types for Sheet 3
         columns = [
-            {"header": "Province", "type": "string", "width": 20},
-            {"header": "District", "type": "string", "width": 20},
+            {"header": "admin1pcode", "type": "string", "width": 20},
+            {"header": "admin1name", "type": "string", "width": 20},
+            {"header": "region", "type": "string", "width": 20},
+            {"header": "admin2pcode", "type": "string", "width": 20},
+            {"header": "admin2name", "type": "string", "width": 20},
             {"header": "Zone/Ward", "type": "string", "width": 20},
         ]
 
@@ -252,7 +255,10 @@ class ProjectExportExcelView(View):
             #     disaggregation.name for disaggregation in Disaggregation.objects.all()
             # )
             row = [
+                location.province.code if location.province else None,
                 location.province.name if location.province else None,
+                location.province.region_name if location.province else None,
+                location.district.code if location.district else None,
                 location.district.name if location.district else None,
                 location.zone.name if location.zone else None,
             ]

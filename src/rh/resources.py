@@ -16,16 +16,18 @@ class ProjectResource(resources.ModelResource):
     indicator = fields.Field()
     beneficiary = fields.Field()
     beneficiary_category = fields.Field()
-    implementing_partners_type = fields.Field()
-    programme_partners_type = fields.Field()
-    province = fields.Field()
-    district = fields.Field()
+    organization = fields.Field()
+    organization_type = fields.Field()
+    admin1pcode = fields.Field()
+    admin1name = fields.Field()
+    admin2pcode = fields.Field()
+    admin2name = fields.Field()
     location_type = fields.Field()
     classification = fields.Field()
     facility_site_type = fields.Field()
     facility_monitoring = fields.Field()
     facility_id = fields.Field()
-
+    region=fields.Field()
     facility_name = fields.Field()
     facility_lat = fields.Field()
     facility_long = fields.Field()
@@ -43,6 +45,8 @@ class ProjectResource(resources.ModelResource):
             "is_hrp_project",
             "has_hrp_code",
             "hrp_code",
+            "organization",
+            "organization_type",
             "budget",
             "budget_currency",
             "budget_received",
@@ -52,16 +56,17 @@ class ProjectResource(resources.ModelResource):
             "clusters",
             "donors",
             "implementing_partners",
-            "implementing_partners_type",
             "programme_partners",
-            "programme_partners_type",
             "activity_domain",
             "activity_type",
             "indicator",
             "beneficiary",
             "beneficiary_category",
-            "province",
-            "district",
+            "admin1pcode",
+            "admin1name",
+            "region",
+            "admin2pcode",
+            "admin2name",
             "location_type",
             "classification",
             "facility_site_type",
@@ -81,6 +86,8 @@ class ProjectResource(resources.ModelResource):
             "is_hrp_project",
             "has_hrp_code",
             "hrp_code",
+            "organization",
+            "organization_type",
             "budget",
             "budget_currency",
             "budget_received",
@@ -90,16 +97,17 @@ class ProjectResource(resources.ModelResource):
             "clusters",
             "donors",
             "implementing_partners",
-            "implementing_partners_type",
             "programme_partners",
-            "programme_partners_type",
             "activity_domain",
             "activity_type",
             "indicator",
             "beneficiary",
             "beneficiary_category",
-            "province",
-            "district",
+            "admin1pcode",
+            "admin1name",
+            "region",
+            "admin2pcode",
+            "admin2name",
             "location_type",
             "classification",
             "facility_site_type",
@@ -133,13 +141,19 @@ class ProjectResource(resources.ModelResource):
         widget=ManyToManyWidget(Organization, field="code", separator=","),
     )
 
-    def dehydrate_implementing_partners_type(self, project):
-        programme_partner_type = list(project.implementing_partners.all())
-        return ",".join([t.type for t in programme_partner_type])
+    def dehydrate_organization (self, project):
+        return project.user.profile.organization.code
+    
+    def dehydrate_organization_type (self, project):
+        return project.user.profile.organization.type
+        
+    # def dehydrate_implementing_partners_type(self, project):
+    #     programme_partner_type = list(project.implementing_partners.all())
+    #     return ",".join([t.type for t in programme_partner_type])
 
-    def dehydrate_programme_partners_type(self, project):
-        programme_partner_type = list(project.programme_partners.all())
-        return ",".join([t.type for t in programme_partner_type])
+    # def dehydrate_programme_partners_type(self, project):
+    #     programme_partner_type = list(project.programme_partners.all())
+    #     return ",".join([t.type for t in programme_partner_type])
 
     # activity planning start
     def dehydrate_activity_domain(self, project):
@@ -172,11 +186,24 @@ class ProjectResource(resources.ModelResource):
 
     # activity planning ends
     # target loacation starts
-    def dehydrate_province(self, project):
+    def dehydrate_admin1name(self, project):
         target_location = list(project.targetlocation_set.all())
         return ",".join([location.province.name for location in target_location])
+    
 
-    def dehydrate_district(self, project):
+    def dehydrate_region(self, project):
+        target_location = list(project.targetlocation_set.all())
+        return ",".join([location.province.region_name for location in target_location])
+
+    def dehydrate_admin1pcode(self, project):
+        target_location = list(project.targetlocation_set.all())
+        return ",".join([location.province.code for location in target_location])
+
+    def dehydrate_admin2pcode(self, project):
+        target_location = list(project.targetlocation_set.all())
+        return ",".join([location.district.code for location in target_location])
+
+    def dehydrate_admin2name(self, project):
         target_location = list(project.targetlocation_set.all())
         return ",".join([location.district.name for location in target_location])
 

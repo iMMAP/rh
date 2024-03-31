@@ -35,6 +35,7 @@ class Location(models.Model):
     name = models.CharField(max_length=200)
     level = models.IntegerField(default=0)
     original_name = models.CharField(max_length=200, blank=True, null=True)
+    region_name = models.CharField(max_length=200, blank=True, null=True)
     type = models.CharField(max_length=15, choices=LOCATION_TYPES, default="Country", null=True, blank=True)
     classification = models.CharField(max_length=15, choices=LOCATION_CLASSIFICATIONS, null=True, blank=True)
     lat = models.FloatField(blank=True, null=True)

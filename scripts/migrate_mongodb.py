@@ -125,29 +125,29 @@ def import_locations(conn, locations_csv):
 
         c.execute(
             f"""
-        insert into {table} (level, parent_id, code, name, original_name, type, created_at, updated_at)
-        VALUES (0, NULL, 'ALL', 'ALL', NULL, 'All', now(), now())
+        insert into {table} (level, parent_id, code, name, original_name, region_name, type, created_at, updated_at)
+        VALUES (0, NULL, 'ALL', 'ALL', NULL, 'ALL', 'All', now(), now())
         """
         )
 
         c.execute(
             f"""
         insert into {table} (level, code, name, original_name, type, created_at, updated_at)
-        select distinct 0 "level", "adm0_pcode" as code, "adm0_na_en" as name, "adm0_translation" as original_name, 
-        'Country' as type, now() as created_at, now() as updated_at 
+        select distinct 0 "level", "adm0_pcode" as code, "adm0_na_en" as name, "adm0_translation" as original_name, 'Country' as type, now() as created_at, now() as updated_at 
         from tmp_locs
         """
         )
 
         c.execute(
             f"""
-        INSERT INTO {table} (level, parent_id, code, name, original_name, type, created_at, updated_at)
-        SELECT DISTINCT 
-            1 AS level, 
+        INSERT INTO {table} (level, parent_id, code, name, original_name, region_name, type, created_at, updated_at)
+        SELECT 
+            DISTINCT 1 AS level, 
             r.id AS parent_id, 
             "adm1_pcode" AS code, 
             "adm1_na_en" AS name, 
             "adm1_translation" AS original_name, 
+            t.region_name,
             'Province' AS type, 
             NOW() AS created_at, 
             NOW() AS updated_at
@@ -160,12 +160,13 @@ def import_locations(conn, locations_csv):
 
         c.execute(
             f"""
-        INSERT INTO {table} (level, parent_id, code, name, type, lat, long, created_at, updated_at)
+        INSERT INTO {table} (level, parent_id, code, name, region_name, type, lat, long, created_at, updated_at)
         SELECT DISTINCT 
             2 AS level, 
             r.id AS parent_id, 
             "adm2_pcode" AS code, 
             "adm2_na_en" AS name, 
+            t.region_name,
             'District' AS type, 
             CAST(t.Lat AS DOUBLE PRECISION) AS lat, 
             CAST(t.Long AS DOUBLE PRECISION) AS long, 

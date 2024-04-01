@@ -146,4 +146,7 @@ urlpatterns = [
         user_views.update_indicator_type,
         name="update_indicator_type",
     ),
+
+    # User Guide Download Link
+    path('rh/user_guide/download/', user_views.download_user_guide, name='download_user_guide'),
 ]

@@ -27,7 +27,7 @@ class ProjectResource(resources.ModelResource):
     facility_site_type = fields.Field()
     facility_monitoring = fields.Field()
     facility_id = fields.Field()
-    region=fields.Field()
+    region = fields.Field()
     facility_name = fields.Field()
     facility_lat = fields.Field()
     facility_long = fields.Field()
@@ -141,12 +141,12 @@ class ProjectResource(resources.ModelResource):
         widget=ManyToManyWidget(Organization, field="code", separator=","),
     )
 
-    def dehydrate_organization (self, project):
+    def dehydrate_organization(self, project):
         return project.user.profile.organization.code
-    
-    def dehydrate_organization_type (self, project):
+
+    def dehydrate_organization_type(self, project):
         return project.user.profile.organization.type
-        
+
     # def dehydrate_implementing_partners_type(self, project):
     #     programme_partner_type = list(project.implementing_partners.all())
     #     return ",".join([t.type for t in programme_partner_type])
@@ -189,7 +189,6 @@ class ProjectResource(resources.ModelResource):
     def dehydrate_admin1name(self, project):
         target_location = list(project.targetlocation_set.all())
         return ",".join([location.province.name for location in target_location])
-    
 
     def dehydrate_region(self, project):
         target_location = list(project.targetlocation_set.all())

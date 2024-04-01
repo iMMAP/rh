@@ -39,16 +39,9 @@ class ProjectExportExcelView(View):
         """
         try:
             project = Project.objects.get(id=project_id)  # Get the project object
-            disaggregations = [
-                disaggregation.name for disaggregation in Disaggregation.objects.all()
-            ]  # Get all the disaggregation object
-
             workbook = Workbook()
 
             self.write_project_sheet(workbook, project)
-            self.write_population_sheet(workbook, project)
-            self.write_target_locations_sheet(workbook, project, disaggregations)
-            self.write_budget_progress_sheet(workbook, project)
 
             excel_file = BytesIO()
             workbook.save(excel_file)
@@ -88,20 +81,44 @@ class ProjectExportExcelView(View):
             {"header": "Cluster", "type": "string", "width": 50},
             {"header": "HRP Project Code", "type": "string", "width": 20},
             {"header": "Project Start Date", "type": "date", "width": 20},
-            {"header": "Project End Date", "type": "date", "width": 20},
-            {"header": "Project Budget", "type": "float", "width": 10},
-            {"header": "Budget Received", "type": "float", "width": 10},
-            {"header": "Budget Gap", "type": "float", "width": 10},
-            {"header": "Project Budget Currency", "type": "string", "width": 10},
+            {"header": "Project End Date", "type": "date", "width": 30},
+            {"header": "Project Budget", "type": "float", "width": 20},
+            {"header": "Budget Received", "type": "float", "width": 20},
+            {"header": "Budget Gap", "type": "float", "width": 20},
+            {"header": "Project Budget Currency", "type": "string", "width": 20},
             {"header": "Project Donors", "type": "string", "width": 30},
             {"header": "Implementing Partners", "type": "string", "width": 30},
             {"header": "Programme Partners", "type": "string", "width": 30},
             {"header": "Status", "type": "string", "width": 10},
             {"header": "Activity Domain", "type": "string", "width": 50},
+            {"header": "Activity Type", "type": "string", "width": 20},
+            {"header": "Activity Detail", "type": "string", "width": 20},
+            {"header": "Indicators", "type": "string", "width": 40},
+            {"header": "admin1pcode", "type": "string", "width": 20},
+            {"header": "admin1name", "type": "string", "width": 20},
+            {"header": "region", "type": "string", "width": 20},
+            {"header": "admin2pcode", "type": "string", "width": 20},
+            {"header": "admin2name", "type": "string", "width": 20},
+            {"header": "Zone/Ward", "type": "string", "width": 20},
         ]
 
+        disaggregation_cols = []
+        disaggregations = Disaggregation.objects.all()
+        disaggregation_list = []
+
+        for disaggregation in disaggregations:
+            if disaggregation.name not in disaggregation_list:
+                disaggregation_list.append(disaggregation.name)
+                disaggregation_cols.append({"header": disaggregation.name, "type": "string", "width": 30})
+            else:
+                continue
+
+        if disaggregations:
+            for disaggregation_col in disaggregation_cols:
+                columns.append(disaggregation_col)
+
         self.write_sheet_columns(sheet, columns)
-        self.write_project_data_rows(sheet, project)
+        self.write_project_data_rows(sheet, project, columns, disaggregation_list)
 
     def write_sheet_columns(self, sheet, columns):
         """
@@ -123,7 +140,7 @@ class ProjectExportExcelView(View):
 
             sheet.column_dimensions[column_letter].width = column["width"]
 
-    def write_project_data_rows(self, sheet, project):
+    def write_project_data_rows(self, sheet, project, columns, disaggregation_list):
         """
         Write project data rows to the sheet.
 
@@ -131,210 +148,89 @@ class ProjectExportExcelView(View):
             sheet (Worksheet): The worksheet object.
             project (Project): The project object.
         """
+        rows = []
+        try:
+            plans = project.activityplan_set.all()
+            for plan in plans:
+                locations = plan.targetlocation_set.all()
+                for location in locations:
+                    # Create a dictionary to hold disaggregation data
+                    disaggregation_data = {}
 
-        row = [
-            project.title,
-            project.code,
-            project.user.username if project.user else None,
-            project.user.email if project.user else None,
-            project.description,
-            project.user.profile.organization.code
-            if project.user and project.user.profile and project.user.profile.organization
-            else None,
-            project.user.profile.organization.type
-            if project.user and project.user.profile and project.user.profile.organization
-            else None,
-            ", ".join([clusters.name for clusters in project.clusters.all()]),
-            project.hrp_code,
-            project.start_date.astimezone(timezone.utc).replace(tzinfo=None) if project.start_date else None,
-            project.end_date.astimezone(timezone.utc).replace(tzinfo=None) if project.end_date else None,
-            project.budget,
-            project.budget_received,
-            project.budget_gap,
-            project.budget_currency.name if project.budget_currency else None,
-            ", ".join([donor.name for donor in project.donors.all()]),
-            ", ".join([implementing_partner.code for implementing_partner in project.implementing_partners.all()]),
-            ", ".join([programme_partner.code for programme_partner in project.programme_partners.all()]),
-            project.state,
-            ", ".join([ActivityDomain.name for ActivityDomain in project.activity_domains.all()]),
-            # ', '.join([ActivityPlan.activity_type for ActivityPlan in project.activity_type.all()]),
-        ]
+                    row = [
+                        project.title,
+                        project.code,
+                        project.user.username if project.user else None,
+                        project.user.email if project.user else None,
+                        project.description,
+                        project.user.profile.organization.code
+                        if project.user and project.user.profile and project.user.profile.organization
+                        else None,
+                        project.user.profile.organization.type
+                        if project.user and project.user.profile and project.user.profile.organization
+                        else None,
+                        ", ".join([clusters.name for clusters in project.clusters.all()]),
+                        project.hrp_code,
+                        project.start_date.astimezone(timezone.utc).replace(tzinfo=None)
+                        if project.start_date
+                        else None,
+                        project.end_date.astimezone(timezone.utc).replace(tzinfo=None) if project.end_date else None,
+                        project.budget,
+                        project.budget_received,
+                        project.budget_gap,
+                        project.budget_currency.name if project.budget_currency else None,
+                        ", ".join([donor.name for donor in project.donors.all()]),
+                        ", ".join(
+                            [implementing_partner.code for implementing_partner in project.implementing_partners.all()]
+                        ),
+                        ", ".join([programme_partner.code for programme_partner in project.programme_partners.all()]),
+                        project.state,
+                        plan.activity_domain.name if plan.activity_domain else None,
+                        plan.activity_type.name if plan.activity_type else None,
+                        plan.activity_detail.name if plan.activity_detail else None,
+                        plan.indicator.name if plan.indicator else None,
+                        location.province.code if location.province else None,
+                        location.province.name if location.province else None,
+                        location.province.region_name if location.province else None,
+                        location.district.code if location.district else None,
+                        location.district.name if location.district else None,
+                        location.zone.name if location.zone else None,
+                    ]
+                    # Iterate through disaggregation locations and get disaggregation values
+                    disaggregation_locations = location.disaggregationlocation_set.all()
+                    disaggregation_location_list = {
+                        disaggregation_location.disaggregation.name: disaggregation_location.target
+                        for disaggregation_location in disaggregation_locations
+                    }
 
-        for col_idx, value in enumerate(row, start=1):
-            sheet.cell(row=2, column=col_idx, value=value)
+                    # Update disaggregation_data with values from disaggregation_location_list
+                    for disaggregation_entry in disaggregation_list:
+                        if disaggregation_entry not in disaggregation_location_list:
+                            disaggregation_data[disaggregation_entry] = None
 
-        sheet.freeze_panes = sheet["A2"]
+                    disaggregation_location_list.update(disaggregation_data)
 
-    def write_population_sheet(self, workbook, project):
-        """
-        Write the population sheet to the workbook.
+                    # Append disaggregation values to the row in the order of columns
+                    for column in columns:
+                        header = column["header"]
+                        if header in disaggregation_location_list:
+                            row.append(disaggregation_location_list[header])
 
-        Args:
-            workbook (Workbook): The Excel workbook object.
-            project (Project): The project object.
-        """
-        sheet = workbook.create_sheet(title="Target Population")
+                    # Add row to the list of rows
+                    rows.append(row)
 
-        # Define column headers and types for Sheet 2
-        columns = [
-            {"header": "Activity Domain", "type": "string", "width": 20},
-            {"header": "Activity Type", "type": "string", "width": 20},
-            {"header": "Activity Detail", "type": "string", "width": 20},
-            {"header": "Indicators", "type": "string", "width": 40},
-        ]
+            for row_idx, row in enumerate(rows, start=2):
+                for col_idx, value in enumerate(row, start=1):
+                    try:
+                        sheet.cell(row=row_idx, column=col_idx, value=value)
+                    except Exception as e:
+                        print("Error:", e)
 
-        self.write_sheet_columns(sheet, columns)
-        self.write_population_data_rows(sheet, project)
+            # Correct syntax to freeze panes
+            sheet.freeze_panes = "A2"
 
-        sheet.freeze_panes = sheet["A2"]
-
-    def write_population_data_rows(self, sheet, project):
-        """
-        Write population data rows to the sheet.plan.activity_detail.name if plan.activity_detail else None,
-                # "\n".join([indicator.name for indicator in plan.indicators.all()]),
-
-        Args:
-            sheet (Worksheet): The worksheet object.
-            project (Project): The project object.
-        """
-        activity_plans = project.activityplan_set.all()
-        for activity_idx, plan in enumerate(activity_plans, start=1):
-            row = [
-                plan.activity_domain.name if plan.activity_domain else None,
-                plan.activity_type.name if plan.activity_type else None,
-                plan.activity_detail.name if plan.activity_detail else None,
-                plan.indicator.name if plan.indicator else None,
-            ]
-
-            for col_idx, value in enumerate(row, start=1):
-                sheet.cell(row=activity_idx + 1, column=col_idx, value=value)
-
-    def write_target_locations_sheet(self, workbook, project, disaggregations):
-        """
-        Write the target locations sheet to the workbook.
-
-        Args:
-            workbook (Workbook): The Excel workbook object.
-            project (Project): The project object.
-        """
-
-        sheet = workbook.create_sheet(title="Target Locations")
-
-        # Fetch all disaggregations to use as headers
-        disaggregations = [disaggregation.name for disaggregation in Disaggregation.objects.all()]
-
-        # Define column headers and types for Sheet 3
-        columns = [
-            {"header": "admin1pcode", "type": "string", "width": 20},
-            {"header": "admin1name", "type": "string", "width": 20},
-            {"header": "region", "type": "string", "width": 20},
-            {"header": "admin2pcode", "type": "string", "width": 20},
-            {"header": "admin2name", "type": "string", "width": 20},
-            {"header": "Zone/Ward", "type": "string", "width": 20},
-        ]
-
-        # Add disaggregation names as headers
-        columns.extend({"header": disaggregation, "type": "string", "width": 20} for disaggregation in disaggregations)
-
-        self.write_sheet_columns(sheet, columns)
-        self.write_target_locations_data_rows(sheet, project, disaggregations)
-
-        sheet.freeze_panes = sheet["A2"]
-
-    def write_target_locations_data_rows(self, sheet, project, disaggregations):
-        """
-        Write target locations data rows to the sheet.
-
-        Args:
-            sheet (Worksheet): The worksheet object.
-            project (Project): The project object.
-        """
-        target_locations = project.targetlocation_set.all()
-        for location_idx, location in enumerate(target_locations, start=1):
-            # disaggregation_names = ", ".join(
-            #     disaggregation.name for disaggregation in Disaggregation.objects.all()
-            # )
-            row = [
-                location.province.code if location.province else None,
-                location.province.name if location.province else None,
-                location.province.region_name if location.province else None,
-                location.district.code if location.district else None,
-                location.district.name if location.district else None,
-                location.zone.name if location.zone else None,
-            ]
-
-            # Create dictionary to map disaggregation names to target values
-            disaggregation_values = {disaggregation: "" for disaggregation in disaggregations}
-
-            # Fetch disaggregation information associated with current location
-            location_disaggregations = location.disaggregationlocation_set.all()
-
-            # Set values for each disaggregation
-            for disaggregation_location in location_disaggregations:
-                disaggregation_name = disaggregation_location.disaggregation.name
-                target = disaggregation_location.target
-                disaggregation_values[disaggregation_name] = target
-
-            # Append disaggregation values to row
-            row.extend(disaggregation_values[disaggregation] for disaggregation in disaggregations)
-
-            for col_idx, value in enumerate(row, start=1):
-                sheet.cell(row=location_idx + 1, column=col_idx, value=value)
-
-    def write_budget_progress_sheet(self, workbook, project):
-        """
-        Write the target locations sheet to the workbook.
-
-        Args:
-            workbook (Workbook): The Excel workbook object.
-            project (Project): The project object.
-        """
-        sheet = workbook.create_sheet(title="Budget Progress")
-
-        # Define column headers and types for Sheet 3
-        columns = [
-            {"header": "Project", "type": "string", "width": 20},
-            {"header": "Title", "type": "string", "width": 20},
-            {"header": "Donor", "type": "string", "width": 20},
-            {"header": "Activity Domain", "type": "string", "width": 20},
-            {"header": "Grant", "type": "float", "width": 10},
-            {"header": "Amount Recieved", "type": "float", "width": 10},
-            {"header": "Budget Currency", "type": "string", "width": 20},
-            {"header": "Received Date", "type": "date", "width": 20},
-            {"header": "Country", "type": "string", "width": 20},
-            {"header": "Description", "type": "string", "width": 20},
-        ]
-
-        self.write_sheet_columns(sheet, columns)
-        self.write_budget_progress_data_rows(sheet, project)
-
-        sheet.freeze_panes = sheet["A2"]
-
-    def write_budget_progress_data_rows(self, sheet, project):
-        """
-        Write budget progress data rows to the sheet.
-
-        Args:
-            sheet (Worksheet): The worksheet object.
-            project (Project): The project object.
-        """
-        budget_progress = project.budgetprogress_set.all()
-        for budget in budget_progress:
-            row = [
-                budget.project.name if budget.project else None,
-                budget.title,
-                budget.donor.name if budget.donor else None,
-                budget.activity_domain.name if budget.activity_domain else None,
-                budget.grant,
-                budget.amount_recieved,
-                budget.budget_currency.name if budget.budget_currency else None,
-                budget.received_date,
-                budget.country.name if budget.country else None,
-                budget.description,
-            ]
-
-            for col_idx, value in enumerate(row, start=1):
-                sheet.cell(row=2, column=col_idx, value=value)
+        except Exception as e:
+            print("Error:", e)
 
 
 class ProjectFilterExportView(View):

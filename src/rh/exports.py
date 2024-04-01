@@ -579,22 +579,3 @@ class ProjectFilterExportView(View):
         return JsonResponse(response, status=500)
 
 
-# class BulkProjectExport(View):
-#     def post(self, request):
-#         project_list =json.loads(request.POST.get("projectList"))
-#         query = Project.objects.filter(id__in=project_list)
-#         print(query)
-#         dataset = ProjectResource().export(query)
-
-#         # getting the file format
-#         # format = request.POST.get("format")
-#         format='xls'
-#         if format == 'xls':
-#             ds = dataset.xls
-#         elif format == 'csv':
-#             ds = dataset.csv
-#         else:
-#             ds = dataset.json
-#         response = HttpResponse(ds, content_type=f"{format}")
-#         response['Content-Disposition'] = f"attachment; filename=project.{format}"
-#         return response

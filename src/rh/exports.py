@@ -39,16 +39,9 @@ class ProjectExportExcelView(View):
         """
         try:
             project = Project.objects.get(id=project_id)  # Get the project object
-            disaggregations = [
-                disaggregation.name for disaggregation in Disaggregation.objects.all()
-            ]  # Get all the disaggregation object
-
             workbook = Workbook()
 
             self.write_project_sheet(workbook, project)
-            # self.write_population_sheet(workbook, project)
-            # self.write_target_locations_sheet(workbook, project, disaggregations)
-            # self.write_budget_progress_sheet(workbook, project)
 
             excel_file = BytesIO()
             workbook.save(excel_file)
@@ -178,14 +171,18 @@ class ProjectExportExcelView(View):
                         else None,
                         ", ".join([clusters.name for clusters in project.clusters.all()]),
                         project.hrp_code,
-                        project.start_date.astimezone(timezone.utc).replace(tzinfo=None) if project.start_date else None,
+                        project.start_date.astimezone(timezone.utc).replace(tzinfo=None)
+                        if project.start_date
+                        else None,
                         project.end_date.astimezone(timezone.utc).replace(tzinfo=None) if project.end_date else None,
                         project.budget,
                         project.budget_received,
                         project.budget_gap,
                         project.budget_currency.name if project.budget_currency else None,
                         ", ".join([donor.name for donor in project.donors.all()]),
-                        ", ".join([implementing_partner.code for implementing_partner in project.implementing_partners.all()]),
+                        ", ".join(
+                            [implementing_partner.code for implementing_partner in project.implementing_partners.all()]
+                        ),
                         ", ".join([programme_partner.code for programme_partner in project.programme_partners.all()]),
                         project.state,
                         plan.activity_domain.name if plan.activity_domain else None,
@@ -198,7 +195,6 @@ class ProjectExportExcelView(View):
                         location.district.code if location.district else None,
                         location.district.name if location.district else None,
                         location.zone.name if location.zone else None,
-
                     ]
                     # Iterate through disaggregation locations and get disaggregation values
                     disaggregation_locations = location.disaggregationlocation_set.all()
@@ -234,7 +230,7 @@ class ProjectExportExcelView(View):
             sheet.freeze_panes = "A2"
 
         except Exception as e:
-                print("Error:", e)
+            print("Error:", e)
 
 
 class ProjectFilterExportView(View):

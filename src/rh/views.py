@@ -1069,7 +1069,7 @@ def update_indicator_type(request):
 
 @login_required
 def download_user_guide(request):
-    document_path = os.path.join(settings.MEDIA_ROOT, 'documents', 'ReportHub-User-Guide.pdf')
+    document_path = os.path.join(settings.MEDIA_ROOT, "documents", "ReportHub-User-Guide.pdf")
 
     # Check if the user is authenticated
     if not request.user.is_authenticated:
@@ -1077,5 +1077,5 @@ def download_user_guide(request):
 
     # Open the file in binary mode
     response = FileResponse(open(document_path, "rb"))
-    
+
     return response

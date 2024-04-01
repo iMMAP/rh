@@ -1,11 +1,14 @@
+import os
+
 from django import forms
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.core.paginator import Paginator
 from django.db.models import Prefetch
 from django.forms import modelformset_factory
-from django.http import HttpResponse, JsonResponse
+from django.http import FileResponse, HttpResponse, HttpResponseForbidden, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.template import loader
 from django.template.loader import render_to_string
@@ -1007,6 +1010,7 @@ def organization_register(request):
     return render(request, "rh/projects/forms/organization_register_form.html", context)
 
 
+@login_required
 def ProjectListView(request, flag):
     # project_list =json.loads(request.POST.get("projectList"))
     project = Project.objects.filter(user=request.user.id)
@@ -1023,6 +1027,7 @@ def ProjectListView(request, flag):
     return response
 
 
+@login_required
 def update_indicator_type(request):
     if request.method == "POST":
         indicator_id = request.POST.get("id")
@@ -1060,3 +1065,17 @@ def update_indicator_type(request):
 
         # Return JSON response containing the generated HTML
         return JsonResponse({"html": html})
+
+
+@login_required
+def download_user_guide(request):
+    document_path = os.path.join(settings.MEDIA_ROOT, 'documents', 'ReportHub-User-Guide.pdf')
+
+    # Check if the user is authenticated
+    if not request.user.is_authenticated:
+        return HttpResponseForbidden("You do not have permission to access this resource.")
+
+    # Open the file in binary mode
+    response = FileResponse(open(document_path, "rb"))
+    
+    return response

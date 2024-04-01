@@ -1,6 +1,7 @@
 # ruff: noqa
-from .base import *
 import sentry_sdk
+
+from .base import *
 
 SENTRY_DSN = env("SENTRY_DSN", default="")
 

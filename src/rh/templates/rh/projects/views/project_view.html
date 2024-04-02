@@ -369,7 +369,17 @@
                                                     value="{{targetLocation.province.name}}"
                                                     name="province"> 
                                                     <label for="province-{{targetLocation.province.id}}" 
-                                                    class="label">{{targetLocation.province | linebreaksbr }}</label>
+                                                    class="label">{{targetLocation.province.name}}</label>
+                                                </div>
+                                            </div>
+                                            <div class="field-col">
+                                                <div class="input-holder">
+                                                    <label for="province-{{targetLocation.province.id}}" class="text-read-only">Province Code</label>
+                                                    <input type="checkbox" id="province-{{targetLocation.province.id}}" class="province-check"
+                                                    value="{{targetLocation.province.code}}"
+                                                    name="province"> 
+                                                    <label for="province-{{targetLocation.province.id}}" 
+                                                    class="label">{{targetLocation.province.code}}</label>
                                                 </div>
                                             </div>
                                             <div class="field-col">
@@ -379,7 +389,17 @@
                                                     value="{{targetLocation.district.name}}"
                                                     name="district"> 
                                                     <label for="district-{{targetLocation.district.id}}" 
-                                                    class="label">{{targetLocation.district | linebreaksbr }}</label>
+                                                    class="label">{{targetLocation.district.name}}</label>
+                                                </div>
+                                            </div>
+                                            <div class="field-col">
+                                                <div class="input-holder">
+                                                    <label for="district-{{targetLocation.district.id}}" class="text-read-only">District Code</label>
+                                                    <input type="checkbox" id="district-{{targetLocation.district.id}}" class="district-check"
+                                                    value="{{targetLocation.district.code}}"
+                                                    name="district"> 
+                                                    <label for="district-{{targetLocation.district.id}}" 
+                                                    class="label">{{targetLocation.district.code}}</label>
                                                 </div>
                                             </div>
                                             <div class="field-col">
@@ -390,45 +410,121 @@
                                                     value="{{targetLocation.location_type.name}}"
                                                     name="location_type"> 
                                                     <label for="locationType-{{targetLocation.location_type.id}}" 
-                                                    class="label">{{targetLocation.location_type | linebreaksbr }}</label>
+                                                    class="label">{{targetLocation.location_type}}</label>
                                                 </div>
                                             </div>
                                             <div class="field-col">
                                                 <div class="input-holder">
-                                                    <label for="siteName-{{targetLocation.site_name.id}}" 
-                                                    class="text-read-only">Site Name</label>
-                                                    <input type="checkbox" id="siteName-{{targetLocation.site_name.id}}" 
+                                                    <label for="locationType-{{targetLocation.location_type.id}}" class="text-read-only">Classification</label>
+                                                    <input type="checkbox" id="locationType-{{targetLocation.location_type.id}}" 
+                                                    class="location-type-check"
+                                                    value="{{targetLocation.classification}}"
+                                                    name="location_type"> 
+                                                    <label for="locationType-{{targetLocation.location_type.id}}" 
+                                                    class="label">{{targetLocation.classification | linebreaksbr }}</label>
+                                                </div>
+                                            </div>
+                                            <div class="field-col target-location-container">
+                                                <span class="target-location-badge">
+                                                    <span>
+                                                        <svg xmlns="http://www.w3.org/2000/svg" height="15" width="15" viewBox="0 0 590 350">
+                                                            <path fill="#ffffff" d="M345 39.1L472.8 168.4c52.4 53 52.4 138.2 0 191.2L360.8 472.9c-9.3 9.4-24.5 9.5-33.9 .2s-9.5-24.5-.2-33.9L438.6 325.9c33.9-34.3 33.9-89.4 0-123.7L310.9 72.9c-9.3-9.4-9.2-24.6 .2-33.9s24.6-9.2 33.9 .2zM0 229.5V80C0 53.5 21.5 32 48 32H197.5c17 0 33.3 6.7 45.3 18.7l168 168c25 25 25 65.5 0 90.5L277.3 442.7c-25 25-65.5 25-90.5 0l-168-168C6.7 262.7 0 246.5 0 229.5zM144 144a32 32 0 1 0 -64 0 32 32 0 1 0 64 0z"/>
+                                                        </svg>
+                                                    </span>
+                                                    Facility Monitoring
+                                                </span>
+                                            </div>
+                                            <div class="field-col">
+                                                <div class="input-holder">
+                                                    <label for="siteName-{{targetLocation.facility_monitoring.id}}" 
+                                                    class="text-read-only">Facility monitoring</label>
+                                                    <input type="checkbox" id="siteName-{{targetLocation.facility_monitoring.id}}" 
                                                     class="site-name-check"
-                                                    value="{{targetLocation.site_name}}"
-                                                    name="site_name"> 
-                                                    <label for="siteName-{{targetLocation.site_name.id}}" 
-                                                    class="label">{{targetLocation.site_name | linebreaksbr }}</label>
+                                                    value="{{targetLocation.facility_monitoring}}"
+                                                    name="facility_monitoring"> 
+                                                    <label for="siteName-{{targetLocation.facility_monitoring.id}}" 
+                                                    class="label">{{targetLocation.facility_monitoring}}</label>
+                                                </div>
+                                            </div>
+                                            {% if targetLocation.facility_monitoring %}
+                                            <div class="field-col">
+                                                <div class="input-holder">
+                                                    <label for="siteName-{{targetLocation.facility_id.id}}" 
+                                                    class="text-read-only">Facility ID</label>
+                                                    <input type="checkbox" id="siteName-{{targetLocation.facility_id.id}}" 
+                                                    class="site-name-check"
+                                                    value="{{targetLocation.facility_id}}"
+                                                    name="facility_id"> 
+                                                    <label for="siteName-{{targetLocation.facility_id.id}}" 
+                                                    class="label">{{targetLocation.facility_id}}</label>
                                                 </div>
                                             </div>
                                             <div class="field-col">
                                                 <div class="input-holder">
-                                                    <label for="latitude-{{targetLocation.site_lat.id}}" 
-                                                    class="text-read-only">Site Latitude</label>
-                                                    <input type="checkbox" id="latitude-{{targetLocation.site_lat.id}}" 
+                                                    <label for="siteName-{{targetLocation.facility_name.id}}" 
+                                                    class="text-read-only">Facility name</label>
+                                                    <input type="checkbox" id="siteName-{{targetLocation.facility_name.id}}" 
+                                                    class="site-name-check"
+                                                    value="{{targetLocation.facility_name}}"
+                                                    name="facility_name"> 
+                                                    <label for="siteName-{{targetLocation.facility_name.id}}" 
+                                                    class="label">{{targetLocation.facility_name}}</label>
+                                                </div>
+                                            </div>
+                                            <div class="field-col">
+                                                <div class="input-holder">
+                                                    <label for="latitude-{{targetLocation.facility_lat}}" 
+                                                    class="text-read-only">Facility Latitude</label>
+                                                    <input type="checkbox" id="latitude-{{targetLocation.facility_lat}}" 
                                                     class="site-lat-check"
-                                                    value="{{targetLocation.site_lat}}"
-                                                    name="site_latitude"> 
-                                                    <label for="latitude-{{targetLocation.site_lat.id}}" 
-                                                    class="label">{{targetLocation.site_lat | linebreaksbr }}</label>
+                                                    value="{{targetLocation.facility_lat}}"
+                                                    name="facility_lat"> 
+                                                    <label for="latitude-{{targetLocation.facility_lat}}" 
+                                                    class="label">{{targetLocation.facility_lat}}</label>
                                                 </div>
                                             </div>
                                             <div class="field-col">
                                                 <div class="input-holder">
-                                                    <label for="Longitude-{{targetLocation.site_long.id}}" 
-                                                    class="text-read-only">Site Longitude</label>
-                                                    <input type="checkbox" id="Longitude-{{targetLocation.site_long.id}}" 
+                                                    <label for="Longitude-{{targetLocation.facility_long.id}}" 
+                                                    class="text-read-only">Facility Longitude</label>
+                                                    <input type="checkbox" id="Longitude-{{targetLocation.facility_long.id}}" 
                                                     class="site-long-check"
-                                                    value="{{targetLocation.site_long}}"
-                                                    name="site_longitude"> 
-                                                    <label for="Longitude-{{targetLocation.site_long.id}}" 
-                                                    class="label">{{targetLocation.site_long | linebreaksbr }}</label>
+                                                    value="{{targetLocation.facility_long}}"
+                                                    name="facility_long"> 
+                                                    <label for="Longitude-{{targetLocation.facility_long.id}}" 
+                                                    class="label">{{targetLocation.facility_long}}</label>
                                                 </div>
                                             </div>
+                                            {% endif %}
+                                            <div class="field-col target-location-container">
+                                                <span class="target-location-badge">
+                                                    <span>
+                                                        <svg xmlns="http://www.w3.org/2000/svg" height="15" width="15" viewBox="0 0 590 350">
+                                                            <path fill="#ffffff" d="M345 39.1L472.8 168.4c52.4 53 52.4 138.2 0 191.2L360.8 472.9c-9.3 9.4-24.5 9.5-33.9 .2s-9.5-24.5-.2-33.9L438.6 325.9c33.9-34.3 33.9-89.4 0-123.7L310.9 72.9c-9.3-9.4-9.2-24.6 .2-33.9s24.6-9.2 33.9 .2zM0 229.5V80C0 53.5 21.5 32 48 32H197.5c17 0 33.3 6.7 45.3 18.7l168 168c25 25 25 65.5 0 90.5L277.3 442.7c-25 25-65.5 25-90.5 0l-168-168C6.7 262.7 0 246.5 0 229.5zM144 144a32 32 0 1 0 -64 0 32 32 0 1 0 64 0z"/>
+                                                        </svg>
+                                                    </span>
+                                                    Disaggregations
+                                                </span>
+                                            </div>
+                                            
+                                            <div class="field-col">
+                                                <div class="input-holder">
+                                                    <input type="checkbox" id="Longitude-{{targetLocation.facility_long.id}}" 
+                                                    class="site-long-check"
+                                                    value="{{targetLocation.facility_long}}"
+                                                    name="facility_long"> 
+                                                    <label for="Longitude-{{targetLocation.facility_long.id}}" 
+                                                    class="label">Select All Disaggregaions</label>
+                                                </div>
+                                            </div>
+                                            {% for dl in targetLocation.disaggregationlocation_set.all %}
+                                            <div class="field-col">
+                                                <div class="input-holder">
+                                                    <span class="text-read-only">{{dl.disaggregation.name}}: </span>
+                                                    <span class="label">{{dl.target}}</span>
+                                                </div>
+                                            </div>
+                                            {% endfor %}
                                             {% endfor %}
                                         </div>
                                         <hr>

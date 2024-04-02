@@ -564,6 +564,8 @@ $(function () {
 		});
 	});
 });
+
+
 // update indicator types 
 function updateIndicatorTypes(e){
 	let id = e.target.value;

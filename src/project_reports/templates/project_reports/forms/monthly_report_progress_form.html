@@ -153,6 +153,75 @@
 							</div>
 						</div>
 					</div>
+
+					<!-- Indicator types start to diaplay -->
+					<div class="multiple-fields-row">
+						{% if activity_report_form.instance.indicator.package_type or activity_report_form.initial.indicator.package_type %}
+						<div class="field-col">
+							<div class="select-field">
+								<label>{{activity_report_form.package_type.label}}</label>
+								{{ activity_report_form.package_type}}
+								<small class="sign-up-field-error">{{activity_report_form.package_type.errors}}</small>
+							</div>
+						</div>
+						{% endif %}
+						{% if activity_report_form.instance.indicator.unit_type or activity_report_form.initial.indicator.unit_type %}
+						<div class="field-col">
+							<div class="select-field">
+								<label>{{activity_report_form.unit_type.label}}</label>
+								{{ activity_report_form.unit_type}}
+								<small class="sign-up-field-error">{{activity_report_form.unit_type.errors}}</small>
+							</div>
+						</div>
+						{% endif %}
+						{% if activity_report_form.instance.indicator.grant_type or activity_report_form.initial.indicator.grant_type %}
+						<div class="field-col">
+							<div class="select-field">
+								<label>{{activity_report_form.grant_type.label}}</label>
+								{{ activity_report_form.grant_type}}
+								<small class="sign-up-field-error">{{activity_report_form.grant_type.errors}}</small>
+							</div>
+						</div>
+						{% endif %}
+						{% if activity_report_form.instance.indicator.implement_modility_type or activity_report_form.initial.indicator.implement_modility_type %}
+						<div class="field-col">
+							<div class="select-field">
+								<label>{{activity_report_form.implement_modility_type.label}}</label>
+								{{ activity_report_form.implement_modility_type}}
+								<small class="sign-up-field-error">{{activity_report_form.implement_modility_type.errors}}</small>
+							</div>
+						</div>
+						{% endif %}
+						{% if activity_report_form.instance.indicator.transfer_mechanism_type or activity_report_form.initial.indicator.transfer_mechanism_type %}
+						<div class="field-col">
+							<div class="select-field">
+								<label>{{activity_report_form.transfer_mechanism_type.label}}</label>
+								{{ activity_report_form.transfer_mechanism_type}}
+								<small class="sign-up-field-error">{{activity_report_form.transfer_mechanism_type.errors}}</small>
+							</div>
+						</div>
+						{% endif %}
+						{% if activity_report_form.instance.indicator.transfer_category or activity_report_form.initial.indicator.transfer_category %}
+						<div class="field-col">
+							<div class="select-field">
+								<label>{{activity_report_form.transfer_category.label}}</label>
+								{{ activity_report_form.transfer_category}}
+								<small class="sign-up-field-error">{{activity_report_form.transfer_category.errors}}</small>
+							</div>
+						</div>
+						{% endif %}
+						{% if activity_report_form.instance.indicator.currency or activity_report_form.initial.indicator.currency %}
+						<div class="field-col">
+							<div class="select-field">
+								<label>{{activity_report_form.currency.label}}</label>
+								{{ activity_report_form.currency}}
+								<small class="sign-up-field-error">{{activity_report_form.currency.errors}}</small>
+							</div>
+						</div>
+						{% endif %}
+
+					</div>
+
 					<div class="row monthly-reporting" id="report_locations-{{activity_report_form.prefix}}">
 						<div class="col col-lg">
 							<div class="target-location-block target-location-accordion">

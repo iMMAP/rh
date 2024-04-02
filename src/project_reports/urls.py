@@ -134,11 +134,11 @@ urlpatterns = [
         user_views.get_disaggregations_report_empty_forms,
         name="get_disaggregations_report_empty_forms",
     ),
-    path(
-        "ajax/get_indicator_reference/",
-        user_views.get_indicator_reference,
-        name="get_indicator_reference",
-    ),
+    # path(
+    #     "ajax/get_indicator_reference/",
+    #     user_views.get_indicator_reference,
+    #     name="get_indicator_reference",
+    # ),
     path(
         "project/monthly_progress/?project=<str:project>/",
         user_views.index_project_report_view,

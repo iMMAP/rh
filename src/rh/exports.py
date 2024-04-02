@@ -473,5 +473,3 @@ class ProjectFilterExportView(View):
         except Exception as e:
             response = {"error": str(e)}
         return JsonResponse(response, status=500)
-
-

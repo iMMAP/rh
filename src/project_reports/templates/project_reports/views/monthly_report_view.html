@@ -178,19 +178,19 @@
                         <div class="row">
                             <div class="col">
                                 <div class="multiple-fields-row two-items">
-                                <div class="field-col">
-                                    <div class="select-field">
-                                    <label>Activity Domain</label>
-                                    <span class="text-read-only">{{activity_report.activity_plan.activity_domain}}</span>
+                                    <div class="field-col">
+                                        <div class="select-field">
+                                        <label>Activity Domain</label>
+                                        <span class="text-read-only">{{activity_report.activity_plan.activity_domain}}</span>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="field-col">
-                                    <div class="select-field">
-                                    <label>Activity Type</label>
-                
-                                    <span class="text-read-only">{{activity_report.activity_plan.activity_type}}</span>
+                                    <div class="field-col">
+                                        <div class="select-field">
+                                        <label>Activity Type</label>
+                    
+                                        <span class="text-read-only">{{activity_report.activity_plan.activity_type}}</span>
+                                        </div>
                                     </div>
-                                </div>
                                 </div>
                             </div>
                             <div class="col">
@@ -223,6 +223,67 @@
                                 </div>
                             </div>
                         </div>
+
+                            <!-- Indicator types start to diaplay -->
+                        <div class="multiple-fields-row">
+                            {% if activity_report.indicator.package_type %}
+                            <div class="field-col">
+                                <div class="select-field">
+                                    <label>Package Type</label>
+                                    <span class="text-read-only">{{activity_report.package_type}}</span>
+                                </div>
+                            </div>
+                            {% endif %}
+                            {% if activity_report.indicator.unit_type %}
+                            <div class="field-col">
+                                <div class="select-field">
+                                    <label>Unit Type</label>
+                                    <span class="text-read-only">{{activity_report.unit_type}}</span>
+                                </div>
+                            </div>
+                            {% endif %}
+                            {% if activity_report.indicator.grant_type %}
+                            <div class="field-col">
+                                <div class="select-field">
+                                    <label>Grant Type</label>
+                                    <span class="text-read-only">{{activity_report.grant_type}}</span>
+                                </div>
+                            </div>
+                            {% endif %}
+                            {% if activity_report.indicator.implement_modility_type %}
+                            <div class="field-col">
+                                <div class="select-field">
+                                    <label>Implement Modility Type</label>
+                                    <span class="text-read-only">{{activity_report.implement_modility_type}}</span>
+                                </div>
+                            </div>
+                            {% endif %}
+                            {% if activity_report.indicator.transfer_mechanism_type %}
+                            <div class="field-col">
+                                <div class="select-field">
+                                    <label>Transfer Mechanism Type</label>
+                                    <span class="text-read-only">{{activity_report.transfer_mechanism_type}}</span>
+                                </div>
+                            </div>
+                            {% endif %}
+                            {% if activity_report.indicator.transfer_category %}
+                            <div class="field-col">
+                                <div class="select-field">
+                                    <label>Transfer Category</label>
+                                    <span class="text-read-only">{{activity_report.transfer_category}}</span>
+                                </div>
+                            </div>
+                            {% endif %}
+                            {% if activity_report.indicator.currency %}
+                            <div class="field-col">
+                                <div class="select-field">
+                                    <label>Currency</label>
+                                    <span class="text-read-only">{{activity_report.currency}}</span>
+                                </div>
+                            </div>
+                            {% endif %}
+                        </div>
+                        
                         <div class="target_location-block target-location-accordion">
                             <div class="inner-holder">
                                 <div class="block-top target-location-accordion-opener">

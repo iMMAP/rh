@@ -1,5 +1,4 @@
 import calendar
-import json
 from collections import defaultdict
 from datetime import datetime, timedelta
 
@@ -15,6 +14,8 @@ from django.template.loader import render_to_string
 from django.urls import reverse
 from django.utils import timezone
 from django.views.decorators.cache import cache_control
+
+# from rh.forms import ProjectIndicatorTypeForm
 from rh.models import (
     ActivityDetail,
     ActivityDomain,
@@ -22,7 +23,6 @@ from rh.models import (
     ActivityType,
     Disaggregation,
     FacilitySiteType,
-    ImplementationModalityType,
     Indicator,
     Location,
     LocationType,
@@ -1003,30 +1003,6 @@ def reject_monthly_report_view(request, report):
     # Return the URL in a JSON response
     response_data = {"redirect_url": url}
     return JsonResponse(response_data)
-
-
-def get_indicator_reference(request):
-    if request.method == "POST":
-        indicator = json.loads(request.POST.get("id"))
-        im = ImplementationModalityType.objects.all().values()
-        print(im)
-        indicator_refereces = (
-            Indicator.objects.select_related(
-                "package_type",
-                "unit_type",
-                "grant_type",
-                "transfer_category",
-                "transfer_mechanism_type",
-                "implement_modility_type",
-                "location_type",
-                "currency",
-            )
-            .filter(id=indicator)
-            .values()
-        )
-        print(indicator_refereces)
-        data = {"data": list(indicator_refereces), "message": "success", "status": 200}
-        return JsonResponse(data, safe=False)
 
 
 def import_monthly_reports(request, report):

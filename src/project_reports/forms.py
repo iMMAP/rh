@@ -1,7 +1,6 @@
 from django import forms
 from django.forms.models import inlineformset_factory
 from django.urls import reverse_lazy
-
 from rh.models import FacilitySiteType, Indicator
 
 from .models import ActivityPlanReport, DisaggregationLocationReport, ProjectMonthlyReport, TargetLocationReport

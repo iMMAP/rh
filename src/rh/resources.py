@@ -165,9 +165,6 @@ class ProjectResource(resources.ModelResource):
     def dehydrate_organization_type(self, project):
         return project.user.profile.organization.type
 
-    def dehydrate_organization_type(self, project):
-        return project.user.profile.organization.type
-
     # activity planning start
     def dehydrate_activity_domain(self, project):
         activity_domain = list(project.activityplan_set.all())

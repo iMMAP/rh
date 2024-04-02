@@ -39,16 +39,14 @@ class ProjectExportExcelView(View):
         """
         try:
             project = Project.objects.get(id=project_id)  # Get the project object
-            disaggregations = [
-                disaggregation.name for disaggregation in Disaggregation.objects.all()
-            ]  # Get all the disaggregation object
+            
 
             workbook = Workbook()
 
             self.write_project_sheet(workbook, project)
-            self.write_population_sheet(workbook, project)
-            self.write_target_locations_sheet(workbook, project, disaggregations)
-            self.write_budget_progress_sheet(workbook, project)
+            # self.write_population_sheet(workbook, project)
+            # self.write_target_locations_sheet(workbook, project, disaggregations)
+            # self.write_budget_progress_sheet(workbook, project)
 
             excel_file = BytesIO()
             workbook.save(excel_file)
@@ -73,6 +71,10 @@ class ProjectExportExcelView(View):
             workbook (Workbook): The Excel workbook object.
             project (Project): The project object.
         """
+        disaggregations = [
+                disaggregation.name for disaggregation in Disaggregation.objects.all()
+            ]  # Get all the disaggregation object
+
         sheet = workbook.active
         sheet.title = "Project"
 
@@ -98,10 +100,34 @@ class ProjectExportExcelView(View):
             {"header": "Programme Partners", "type": "string", "width": 30},
             {"header": "Status", "type": "string", "width": 10},
             {"header": "Activity Domain", "type": "string", "width": 50},
+            # activity plan headers
+            {"header": "Activity Domain", "type": "string", "width": 20},
+            {"header": "Activity Type", "type": "string", "width": 20},
+            {"header": "Activity Detail", "type": "string", "width": 20},
+            {"header": "Indicators", "type": "string", "width": 40},
+            # target location headers
+            {"header": "admin1pcode", "type": "string", "width": 20},
+            {"header": "admin1name", "type": "string", "width": 20},
+            {"header": "region", "type": "string", "width": 20},
+            {"header": "admin2pcode", "type": "string", "width": 20},
+            {"header": "admin2name", "type": "string", "width": 20},
+            {"header": "Zone/Ward", "type": "string", "width": 20}, 
         ]
-
+        columns.extend({"header": disaggregation, "type": "string", "width": 20} for disaggregation in disaggregations)
+        budget_progress_column = [
+            # budget progressing headers
+            {"header": "Donor", "type": "string", "width": 20},
+            {"header": "Activity Domain", "type": "string", "width": 20},
+            {"header": "Grant", "type": "float", "width": 10},
+            {"header": "Amount Recieved", "type": "float", "width": 10},
+            {"header": "Budget Currency", "type": "string", "width": 20},
+            {"header": "Received Date", "type": "date", "width": 20},
+            {"header": "Country", "type": "string", "width": 20},
+            {"header": "Description", "type": "string", "width": 20},
+        ]
+        columns += budget_progress_column
         self.write_sheet_columns(sheet, columns)
-        self.write_project_data_rows(sheet, project)
+        self.write_project_data_rows(sheet, project,disaggregations)
 
     def write_sheet_columns(self, sheet, columns):
         """
@@ -123,7 +149,7 @@ class ProjectExportExcelView(View):
 
             sheet.column_dimensions[column_letter].width = column["width"]
 
-    def write_project_data_rows(self, sheet, project):
+    def write_project_data_rows(self, sheet, project,disaggregations):
         """
         Write project data rows to the sheet.
 
@@ -159,9 +185,68 @@ class ProjectExportExcelView(View):
             ", ".join([ActivityDomain.name for ActivityDomain in project.activity_domains.all()]),
             # ', '.join([ActivityPlan.activity_type for ActivityPlan in project.activity_type.all()]),
         ]
+        activity_plans = project.activityplan_set.all()
+        for activity_idx, plan in enumerate(activity_plans, start=1):
+            row_activity_plan = [
+                plan.activity_domain.name if plan.activity_domain else None,
+                plan.activity_type.name if plan.activity_type else None,
+                plan.activity_detail.name if plan.activity_detail else None,
+                plan.indicator.name if plan.indicator else None,
+            ]
+        row +=row_activity_plan
+        # target location writing the rows
+        
+        target_locations = project.targetlocation_set.all()
+        for location_idx, location in enumerate(target_locations, start=1):
+            # disaggregation_names = ", ".join(
+            #     disaggregation.name for disaggregation in Disaggregation.objects.all()
+            # )
+            row_target_location = [
+                location.province.code if location.province else None,
+                location.province.name if location.province else None,
+                location.province.region_name if location.province else None,
+                location.district.code if location.district else None,
+                location.district.name if location.district else None,
+                location.zone.name if location.zone else None,
+            ]
+
+            # Create dictionary to map disaggregation names to target values
+            disaggregation_values = {disaggregation: "" for disaggregation in disaggregations}
+
+            # Fetch disaggregation information associated with current location
+            location_disaggregations = location.disaggregationlocation_set.all()
+
+            # Set values for each disaggregation
+            for disaggregation_location in location_disaggregations:
+                disaggregation_name = disaggregation_location.disaggregation.name
+                target = disaggregation_location.target
+                disaggregation_values[disaggregation_name] = target
+
+        # Append disaggregation values to row
+        row_target_location.extend(disaggregation_values[disaggregation] for disaggregation in disaggregations)
+        row += row_target_location
+        # writing budget progressing rows
+        budget_progress = project.budgetprogress_set.all()
+        row_budget = []
+        for budget in budget_progress:
+            row_budget = [
+                budget.project.name if budget.project else None,
+                budget.title,
+                budget.donor.name if budget.donor else None,
+                budget.activity_domain.name if budget.activity_domain else None,
+                budget.grant,
+                budget.amount_recieved,
+                budget.budget_currency.name if budget.budget_currency else None,
+                budget.received_date,
+                budget.country.name if budget.country else None,
+                budget.description,
+            ]
+        row += row_budget
+
 
         for col_idx, value in enumerate(row, start=1):
             sheet.cell(row=2, column=col_idx, value=value)
+
 
         sheet.freeze_panes = sheet["A2"]
 

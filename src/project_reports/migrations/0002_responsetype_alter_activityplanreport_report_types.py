@@ -20,9 +20,9 @@ class Migration(migrations.Migration):
                 ('updated_at', models.DateTimeField(auto_now=True, null=True)),
             ],
         ),
-        migrations.AlterField(
-            model_name='activityplanreport',
-            name='report_types',
-            field=models.ManyToManyField(blank=True, to='project_reports.responsetype'),
+        migrations.AddField(
+            model_name="activityplanreport",
+            name="report_types",
+            field=models.ManyToManyField(blank=True, to="project_reports.responsetype"),
         ),
     ]

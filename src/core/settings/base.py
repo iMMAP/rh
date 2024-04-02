@@ -131,6 +131,12 @@ STATICFILES_DIRS = [
 ]
 STATIC_ROOT = BASE_DIR / "static-cdn"
 
+# Base URL to serve media files
+MEDIA_URL = "/media/"
+
+# Directory where media files are stored
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+
 COMPRESS_ENABLED = True
 
 

@@ -39,7 +39,6 @@ class ProjectExportExcelView(View):
         """
         try:
             project = Project.objects.get(id=project_id)  # Get the project object
-            
 
             workbook = Workbook()
 
@@ -72,8 +71,8 @@ class ProjectExportExcelView(View):
             project (Project): The project object.
         """
         disaggregations = [
-                disaggregation.name for disaggregation in Disaggregation.objects.all()
-            ]  # Get all the disaggregation object
+            disaggregation.name for disaggregation in Disaggregation.objects.all()
+        ]  # Get all the disaggregation object
 
         sheet = workbook.active
         sheet.title = "Project"
@@ -111,7 +110,7 @@ class ProjectExportExcelView(View):
             {"header": "region", "type": "string", "width": 20},
             {"header": "admin2pcode", "type": "string", "width": 20},
             {"header": "admin2name", "type": "string", "width": 20},
-            {"header": "Zone/Ward", "type": "string", "width": 20}, 
+            {"header": "Zone/Ward", "type": "string", "width": 20},
         ]
         columns.extend({"header": disaggregation, "type": "string", "width": 20} for disaggregation in disaggregations)
         budget_progress_column = [
@@ -127,7 +126,7 @@ class ProjectExportExcelView(View):
         ]
         columns += budget_progress_column
         self.write_sheet_columns(sheet, columns)
-        self.write_project_data_rows(sheet, project,disaggregations)
+        self.write_project_data_rows(sheet, project, disaggregations)
 
     def write_sheet_columns(self, sheet, columns):
         """
@@ -149,7 +148,7 @@ class ProjectExportExcelView(View):
 
             sheet.column_dimensions[column_letter].width = column["width"]
 
-    def write_project_data_rows(self, sheet, project,disaggregations):
+    def write_project_data_rows(self, sheet, project, disaggregations):
         """
         Write project data rows to the sheet.
 
@@ -193,9 +192,9 @@ class ProjectExportExcelView(View):
                 plan.activity_detail.name if plan.activity_detail else None,
                 plan.indicator.name if plan.indicator else None,
             ]
-        row +=row_activity_plan
+        row += row_activity_plan
         # target location writing the rows
-        
+
         target_locations = project.targetlocation_set.all()
         for location_idx, location in enumerate(target_locations, start=1):
             # disaggregation_names = ", ".join(
@@ -243,10 +242,8 @@ class ProjectExportExcelView(View):
             ]
         row += row_budget
 
-
         for col_idx, value in enumerate(row, start=1):
             sheet.cell(row=2, column=col_idx, value=value)
-
 
         sheet.freeze_panes = sheet["A2"]
 
@@ -662,5 +659,3 @@ class ProjectFilterExportView(View):
         except Exception as e:
             response = {"error": str(e)}
         return JsonResponse(response, status=500)
-
-

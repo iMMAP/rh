@@ -167,16 +167,16 @@ class ProjectResource(resources.ModelResource):
 
     # activity planning start
     def dehydrate_activity_domain(self, project):
-        activity_plans = list(project.activityplan_set.all())
-        return ",".join([child.activity_domain.name for child in activity_plans])
+        activity_domain = list(project.activityplan_set.all())
+        return ",".join([child.activity_domain.name for child in activity_domain])
 
     def dehydrate_activity_type(self, project):
-        activity_plans = list(project.activityplan_set.all())
-        return ",".join([child.activity_type.name for child in activity_plans])
+        activity_types = list(project.activityplan_set.all())
+        return ",".join([child.activity_type.name for child in activity_types])
 
     def dehydrate_indicator(self, project):
-        activity_plans = list(project.activityplan_set.all())
-        return ",".join([child.indicator.name for child in activity_plans])
+        indicators = list(project.activityplan_set.all())
+        return ",".join([child.indicator.name for child in indicators])
 
     def dehydrate_beneficiary(self, project):
         activity_plan = list(project.activityplan_set.all())
@@ -191,8 +191,8 @@ class ProjectResource(resources.ModelResource):
         return ",".join([child.hrp_beneficiary for child in activity_plan])
 
     def dehydrate_description(self, project):
-        activity_plans = list(project.activityplan_set.all())
-        return ",".join([desc.description for desc in activity_plans if desc.description])
+        descriptions = list(project.activityplan_set.all())
+        return ",".join([desc.description for desc in descriptions if desc])
 
     # activity planning ends
 

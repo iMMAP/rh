@@ -103,8 +103,10 @@ $("#downloadFilterForm").click(function(e) {
       userData.push(checkUser.name);
     }
     const checkCurrency = document.querySelector(".input-currency");
-    if(checkCurrency.checked == true){
-      currencyData.push(checkCurrency.name)
+    if (checkCurrency){
+      if(checkCurrency.checked == true){
+        currencyData.push(checkCurrency.name);
+      }
     }
 
 
@@ -170,9 +172,12 @@ $("#downloadFilterForm").click(function(e) {
     let province =[];
     let district = [];
     let locationType = [];
-    let siteName = [];
-    let siteLat = [];
-    let siteLong = []
+    let classifications = [];
+    let facilityName = [];
+    let facilityMonitoring = [];
+    let facilityId = [];
+    let facilityLat = [];
+    let facilityLong = [];
     const provinceCheck = document.querySelectorAll(".province-check");
     for(let i=0; i<provinceCheck.length; i++) {
       if(provinceCheck[i].checked == true) {
@@ -191,25 +196,50 @@ $("#downloadFilterForm").click(function(e) {
         locationType.push(locationtypeCheck[i].value)
       }
     }
-    const siteNameCheck = document.querySelectorAll(".site-name-check");
-    for(let i=0; i<siteNameCheck.length; i++){
-      if(siteNameCheck[i].checked == true) {
-        siteName.push(siteNameCheck[i].value)
+    const classificationCheck = document.querySelectorAll(".classification-check");
+    for(let i=0; i<classificationCheck.length; i++){
+      if(classificationCheck[i].checked == true) {
+        classifications.push(classificationCheck[i].value)
       }
     }
-    const siteLatCheck = document.querySelectorAll(".site-lat-check");
-    for(let i=0; i<siteLatCheck.length; i++){
-      if(siteLatCheck[i].checked == true) {
-        siteLat.push(siteLatCheck[i].value)
+    const facilityMonitoringCheck = document.querySelectorAll(".facility-monitoring-check");
+    for(let i=0; i<facilityMonitoringCheck.length; i++){
+      if(facilityMonitoringCheck[i].checked == true) {
+        facilityMonitoring.push(facilityMonitoringCheck[i].value)
       }
     }
-    const siteLongCheck = document.querySelectorAll(".site-long-check");
-    for(let i=0; i<siteLongCheck.length; i++){
-      if(siteLongCheck[i].checked == true) {
-        siteLong.push(siteLongCheck[i].value)
+    const facilityNameCheck = document.querySelectorAll(".facility-name-check");
+    for(let i=0; i<facilityNameCheck.length; i++){
+      if(facilityNameCheck[i].checked == true) {
+        facilityName.push(facilityNameCheck[i].value)
+      }
+    }
+    const facilityIdCheck = document.querySelectorAll(".facility-id-check");
+    for(let i=0; i<facilityIdCheck.length; i++){
+      if(facilityIdCheck[i].checked == true) {
+        facilityId.push(facilityIdCheck[i].value)
+      }
+    }
+    const facilityLatCheck = document.querySelectorAll(".facility-lat-check");
+    for(let i=0; i<facilityLatCheck.length; i++){
+      if(facilityLatCheck[i].checked == true) {
+        facilityLat.push(facilityLatCheck[i].value)
+      }
+    }
+    const facilityLongCheck = document.querySelectorAll(".facility-long-check");
+    for(let i=0; i<facilityLongCheck.length; i++){
+      if(facilityLongCheck[i].checked == true) {
+        facilityLong.push(facilityLongCheck[i].value)
       }
     }
     
+    let disaggregation = [];
+    const disaggregationCheck = document.querySelectorAll(".disaggregation-check");
+    for(let i = 0; i < disaggregationCheck.length; i++){
+      if(disaggregationCheck[i].checked == true){
+        disaggregation.push(disaggregationCheck[i].value);
+      }
+    }
     if(currencyData.length != 0) {exportData['currency'] = currencyData;}
     if(donorData.length != 0) {exportData['donors'] = donorData;}
     if(clusterData.length != 0){exportData['clusters'] = clusterData;}
@@ -227,9 +257,12 @@ $("#downloadFilterForm").click(function(e) {
     if(province.length != 0){exportData['province'] = province;}
     if(district.length > 0){exportData['district'] = district;}
     if(locationType.length !=0){exportData['location_type'] = locationType;}
-    if(siteName.length != 0){exportData['site_name'] = siteName;}
-    if(siteLat.length != 0){exportData['site_latitude'] = siteLat;}
-    if(siteLong.length != 0){exportData['site_longitude'] = siteLong;}
+    if(classifications.length != 0){exportData['classification'] = classifications;}
+    if(facilityMonitoring.length != 0){exportData['facility_monitoring'] = facilityMonitoring;}
+    if(facilityId.length != 0){exportData['facility_id'] = facilityId;}
+    if(facilityName.length != 0){exportData['facility_name'] = facilityName;}
+    if(facilityLat.length != 0){exportData['facility_latitude'] = facilityLat;}
+    if(facilityLong.length != 0){exportData['facility_longitude'] = facilityLong;}
     $.post({
       url: routeUrl,
       method: "POST",

@@ -263,6 +263,8 @@ $("#downloadFilterForm").click(function(e) {
     if(facilityName.length != 0){exportData['facility_name'] = facilityName;}
     if(facilityLat.length != 0){exportData['facility_latitude'] = facilityLat;}
     if(facilityLong.length != 0){exportData['facility_longitude'] = facilityLong;}
+    if(disaggregation.length != 0){exportData['disaggregation'] = disaggregation;}
+    console.log(exportData);
     $.post({
       url: routeUrl,
       method: "POST",

@@ -1,13 +1,19 @@
 from django.db import models
-
 from rh.models import (
     ActivityPlan,
+    Currency,
     Disaggregation,
     FacilitySiteType,
+    GrantType,
+    ImplementationModalityType,
     Indicator,
     Location,
     LocationType,
+    PackageType,
     Project,
+    TransferCategory,
+    TransferMechanismType,
+    UnitType,
 )
 
 # ##############################################
@@ -73,6 +79,16 @@ class ActivityPlanReport(models.Model):
 
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, null=True)
+
+    package_type = models.ForeignKey(PackageType, on_delete=models.SET_NULL, null=True, blank=True)
+    unit_type = models.ForeignKey(UnitType, on_delete=models.SET_NULL, null=True, blank=True)
+    grant_type = models.ForeignKey(GrantType, on_delete=models.SET_NULL, null=True, blank=True)
+    transfer_category = models.ForeignKey(TransferCategory, on_delete=models.SET_NULL, null=True, blank=True)
+    currency = models.ForeignKey(Currency, on_delete=models.SET_NULL, null=True, blank=True)
+    transfer_mechanism_type = models.ForeignKey(TransferMechanismType, on_delete=models.SET_NULL, null=True, blank=True)
+    implement_modility_type = models.ForeignKey(
+        ImplementationModalityType, on_delete=models.SET_NULL, null=True, blank=True
+    )
 
     class Meta:
         verbose_name = "Activity Plan Report"

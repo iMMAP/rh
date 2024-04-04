@@ -14,8 +14,8 @@ from django.template import loader
 from django.template.loader import render_to_string
 from django.urls import reverse
 from django.views.decorators.cache import cache_control
-from project_reports.models import ProjectMonthlyReport as Report
 
+from project_reports.models import ProjectMonthlyReport as Report
 from rh.resources import ProjectResource
 
 from .filters import ProjectsFilter
@@ -1029,9 +1029,6 @@ def ProjectListView(request, flag):
 
 @login_required
 def update_indicator_type(request):
-    if request.method == "POST":
-        indicator_id = request.POST.get("id")
-
     """Indicator related types fields"""
     if request.method == "POST":
         activity_plan_id = request.POST.get("activity_plan", "")

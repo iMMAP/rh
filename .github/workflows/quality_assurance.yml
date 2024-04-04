@@ -30,6 +30,7 @@ jobs:
       run: |
         make install
         pip install ruff
+        make collectstatic
     - name: Ruff Linting
       run: |
         make lint

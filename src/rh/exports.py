@@ -237,7 +237,7 @@ class ProjectFilterExportView(View):
     def post(self, request, projectId):
         project = Project.objects.get(id=projectId)
         # writing disaggregation column
-     
+
         try:
             selectedData = json.loads(request.POST.get("exportData"))
             i = 0
@@ -246,25 +246,22 @@ class ProjectFilterExportView(View):
                 if not isinstance(values, list):
                     projectFields.insert(i, keys)
                     i += 1
-            
+
             workbook = Workbook()
             sheet = workbook.active
             sheet.title = "Project"
             # defining columns
-            
-                    
-
 
             columns = []
             for keys, values in selectedData.items():
                 if not keys == "disaggregation":
                     columns += ({"header": keys, "type": "string", "width": 20},)
             # adding disaggregation column if it is selected for export
-            if selectedData['disaggregation']:
+            if selectedData["disaggregation"]:
                 targetLocation = project.targetlocation_set.all()
                 for target in targetLocation:
                     for dl in target.disaggregationlocation_set.all():
-                        columns += ({"header": dl.disaggregation.name, "type":"string", "width":30},)
+                        columns += ({"header": dl.disaggregation.name, "type": "string", "width": 30},)
 
             for idx, column in enumerate(columns, start=1):
                 cell = sheet.cell(row=1, column=idx, value=column["header"])
@@ -396,9 +393,8 @@ class ProjectFilterExportView(View):
             except Exception:
                 pass
             # # Target location
-            
+
             targetLocation = project.targetlocation_set.all()
-            
 
             try:
                 row += (
@@ -468,8 +464,6 @@ class ProjectFilterExportView(View):
                 )
             except Exception:
                 pass
-            
-                
 
             for col_idx, value in enumerate(row, start=1):
                 sheet.cell(row=2, column=col_idx, value=value)

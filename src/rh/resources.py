@@ -168,7 +168,7 @@ class ProjectResource(resources.ModelResource):
     # activity planning start
     def dehydrate_activity_domain(self, project):
         activity_plan = list(project.activityplan_set.all())
-        return ",".join([child.activity_domain.name for child in activity_plan if child.activity_domain.name ])
+        return ",".join([child.activity_domain.name for child in activity_plan if child.activity_domain.name])
 
     def dehydrate_activity_type(self, project):
         activity_types = list(project.activityplan_set.all())
@@ -273,7 +273,6 @@ class ProjectResource(resources.ModelResource):
                     value = str(dl.target)
                     value_list += (",".join([value]),)
         return ",".join([item for item in value_list if item])
-            
 
     def dehydrate_women65(self, project):
         target_location = project.targetlocation_set.all()
@@ -354,6 +353,7 @@ class ProjectResource(resources.ModelResource):
                     value = str(dl.target)
                     value_list += (",".join([value]),)
         return ",".join([item for item in value_list if item])
+
     def dehydrate_women60(self, project):
         target_location = project.targetlocation_set.all()
         value_list = []
@@ -393,7 +393,7 @@ class ProjectResource(resources.ModelResource):
                     value = str(dl.target)
                     value_list += (",".join([value]),)
         return ",".join([item for item in value_list if item])
-    
+
     def dehydrate_boys05(self, project):
         target_location = project.targetlocation_set.all()
         value_list = []

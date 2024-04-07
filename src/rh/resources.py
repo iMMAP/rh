@@ -253,182 +253,166 @@ class ProjectResource(resources.ModelResource):
         target_location = list(project.targetlocation_set.all())
         return ",".join([location.facility_long for location in target_location if location.facility_long])
 
-    # fetching disaggregain in excel file  start
+   # fetching disaggregain in excel file  start
     def dehydrate_female_headed(self, project):
         target_location = project.targetlocation_set.all()
+        female = []
         for tr in target_location:
-            return ",".join(
-                [
-                    str(dl.target)
-                    for dl in tr.disaggregationlocation_set.all()
-                    if dl.disaggregation.name == getattr(self.fields["female_headed"], "column_name")
-                ]
-            )
+            for dl in tr.disaggregationlocation_set.all():
+                if dl.disaggregation.name == getattr(self.fields["female_headed"], "column_name"):
+                    value = str(dl.target)
+                    female += (",".join([value]),)
+        return ",".join([item for item in female if item])
 
     def dehydrate_total_household(self, project):
         target_location = project.targetlocation_set.all()
+        value_list = []
         for tr in target_location:
-            return ",".join(
-                [
-                    str(dl.target)
-                    for dl in tr.disaggregationlocation_set.all()
-                    if dl.disaggregation.name == getattr(self.fields["women65"], "column_name")
-                ]
-            )
+            for dl in tr.disaggregationlocation_set.all():
+                if dl.disaggregation.name == getattr(self.fields["total_household"], "column_name"):
+                    value = str(dl.target)
+                    value_list += (",".join([value]),)
+        return ",".join([item for item in value_list if item])
 
     def dehydrate_women65(self, project):
         target_location = project.targetlocation_set.all()
+        value_list = []
         for tr in target_location:
-            return ",".join(
-                [
-                    str(dl.target)
-                    for dl in tr.disaggregationlocation_set.all()
-                    if dl.disaggregation.name == getattr(self.fields["women65"], "column_name")
-                ]
-            )
+            for dl in tr.disaggregationlocation_set.all():
+                if dl.disaggregation.name == getattr(self.fields["women65"], "column_name"):
+                    value = str(dl.target)
+                    value_list += (",".join([value]),)
+        return ",".join([item for item in value_list if item])
 
     def dehydrate_men65(self, project):
         target_location = project.targetlocation_set.all()
+        value_list = []
         for tr in target_location:
-            return ",".join(
-                [
-                    str(dl.target)
-                    for dl in tr.disaggregationlocation_set.all()
-                    if dl.disaggregation.name == getattr(self.fields["men65"], "column_name")
-                ]
-            )
+            for dl in tr.disaggregationlocation_set.all():
+                if dl.disaggregation.name == getattr(self.fields["men65"], "column_name"):
+                    value = str(dl.target)
+                    value_list += (",".join([value]),)
+        return ",".join([item for item in value_list if item])
 
     def dehydrate_women1864(self, project):
         target_location = project.targetlocation_set.all()
+        value_list = []
         for tr in target_location:
-            return ",".join(
-                [
-                    str(dl.target)
-                    for dl in tr.disaggregationlocation_set.all()
-                    if dl.disaggregation.name == getattr(self.fields["women1864"], "column_name")
-                ]
-            )
+            for dl in tr.disaggregationlocation_set.all():
+                if dl.disaggregation.name == getattr(self.fields["women1864"], "column_name"):
+                    value = str(dl.target)
+                    value_list += (",".join([value]),)
+        return ",".join([item for item in value_list if item])
 
     def dehydrate_women1860(self, project):
         target_location = project.targetlocation_set.all()
+        value_list = []
         for tr in target_location:
-            return ",".join(
-                [
-                    str(dl.target)
-                    for dl in tr.disaggregationlocation_set.all()
-                    if dl.disaggregation.name == getattr(self.fields["women1860"], "column_name")
-                ]
-            )
+            for dl in tr.disaggregationlocation_set.all():
+                if dl.disaggregation.name == getattr(self.fields["women1860"], "column_name"):
+                    value = str(dl.target)
+                    value_list += (",".join([value]),)
+        return ",".join([item for item in value_list if item])
 
     def dehydrate_men1864(self, project):
         target_location = project.targetlocation_set.all()
+        value_list = []
         for tr in target_location:
-            return ",".join(
-                [
-                    str(dl.target)
-                    for dl in tr.disaggregationlocation_set.all()
-                    if dl.disaggregation.name == getattr(self.fields["men1864"], "column_name")
-                ]
-            )
+            for dl in tr.disaggregationlocation_set.all():
+                if dl.disaggregation.name == getattr(self.fields["men1864"], "column_name"):
+                    value = str(dl.target)
+                    value_list += (",".join([value]),)
+        return ",".join([item for item in value_list if item])
 
     def dehydrate_men1860(self, project):
         target_location = project.targetlocation_set.all()
+        value_list = []
         for tr in target_location:
-            return ",".join(
-                [
-                    str(dl.target)
-                    for dl in tr.disaggregationlocation_set.all()
-                    if dl.disaggregation.name == getattr(self.fields["men1860"], "column_name")
-                ]
-            )
+            for dl in tr.disaggregationlocation_set.all():
+                if dl.disaggregation.name == getattr(self.fields["men1860"], "column_name"):
+                    value = str(dl.target)
+                    value_list += (",".join([value]),)
+        return ",".join([item for item in value_list if item])
 
     def dehydrate_girls18(self, project):
         target_location = project.targetlocation_set.all()
+        value_list = []
         for tr in target_location:
-            return ",".join(
-                [
-                    str(dl.target)
-                    for dl in tr.disaggregationlocation_set.all()
-                    if dl.disaggregation.name == getattr(self.fields["girls18"], "column_name")
-                ]
-            )
+            for dl in tr.disaggregationlocation_set.all():
+                if dl.disaggregation.name == getattr(self.fields["girls18"], "column_name"):
+                    value = str(dl.target)
+                    value_list += (",".join([value]),)
+        return ",".join([item for item in value_list if item])
 
     def dehydrate_boys18(self, project):
         target_location = project.targetlocation_set.all()
+        value_list = []
         for tr in target_location:
-            return ",".join(
-                [
-                    str(dl.target)
-                    for dl in tr.disaggregationlocation_set.all()
-                    if dl.disaggregation.name == getattr(self.fields["boys18"], "column_name")
-                ]
-            )
+            for dl in tr.disaggregationlocation_set.all():
+                if dl.disaggregation.name == getattr(self.fields["boys18"], "column_name"):
+                    value = str(dl.target)
+                    value_list += (",".join([value]),)
+        return ",".join([item for item in value_list if item])
 
     def dehydrate_women60(self, project):
         target_location = project.targetlocation_set.all()
+        value_list = []
         for tr in target_location:
-            return ",".join(
-                [
-                    str(dl.target)
-                    for dl in tr.disaggregationlocation_set.all()
-                    if dl.disaggregation.name == getattr(self.fields["women60"], "column_name")
-                ]
-            )
+            for dl in tr.disaggregationlocation_set.all():
+                if dl.disaggregation.name == getattr(self.fields["women60"], "column_name"):
+                    value = str(dl.target)
+                    value_list += (",".join([value]),)
+        return ",".join([item for item in value_list if item])
 
     def dehydrate_men60(self, project):
         target_location = project.targetlocation_set.all()
+        value_list = []
         for tr in target_location:
-            return ",".join(
-                [
-                    str(dl.target)
-                    for dl in tr.disaggregationlocation_set.all()
-                    if dl.disaggregation.name == getattr(self.fields["men60"], "column_name")
-                ]
-            )
+            for dl in tr.disaggregationlocation_set.all():
+                if dl.disaggregation.name == getattr(self.fields["men60"], "column_name"):
+                    value = str(dl.target)
+                    value_list += (",".join([value]),)
+        return ",".join([item for item in value_list if item])
 
     def dehydrate_girls617(self, project):
         target_location = project.targetlocation_set.all()
+        value_list = []
         for tr in target_location:
-            return ",".join(
-                [
-                    str(dl.target)
-                    for dl in tr.disaggregationlocation_set.all()
-                    if dl.disaggregation.name == getattr(self.fields["girls617"], "column_name")
-                ]
-            )
+            for dl in tr.disaggregationlocation_set.all():
+                if dl.disaggregation.name == getattr(self.fields["girls617"], "column_name"):
+                    value = str(dl.target)
+                    value_list += (",".join([value]),)
+        return ",".join([item for item in value_list if item])
 
     def dehydrate_boys617(self, project):
         target_location = project.targetlocation_set.all()
+        value_list = []
         for tr in target_location:
-            return ",".join(
-                [
-                    str(dl.target)
-                    for dl in tr.disaggregationlocation_set.all()
-                    if dl.disaggregation.name == getattr(self.fields["boys617"], "column_name")
-                ]
-            )
+            for dl in tr.disaggregationlocation_set.all():
+                if dl.disaggregation.name == getattr(self.fields["boys617"], "column_name"):
+                    value = str(dl.target)
+                    value_list += (", ".join([value]),)
+        return ",".join([item for item in value_list if item])
 
     def dehydrate_boys05(self, project):
         target_location = project.targetlocation_set.all()
+        value_list = []
         for tr in target_location:
-            return ",".join(
-                [
-                    str(dl.target)
-                    for dl in tr.disaggregationlocation_set.all()
-                    if dl.disaggregation.name == getattr(self.fields["boys05"], "column_name")
-                ]
-            )
+            for dl in tr.disaggregationlocation_set.all():
+                if dl.disaggregation.name == getattr(self.fields["boys05"], "column_name"):
+                    value = str(dl.target)
+                    value_list += (",".join([value]),)
+        return ",".join([item for item in value_list if item])
 
     def dehydrate_girls05(self, project):
         target_location = project.targetlocation_set.all()
+        value_list = []
         for tr in target_location:
-            return ",".join(
-                [
-                    str(dl.target)
-                    for dl in tr.disaggregationlocation_set.all()
-                    if dl.disaggregation.name == getattr(self.fields["girls05"], "column_name")
-                ]
-            )
+            for dl in tr.disaggregationlocation_set.all():
+                if dl.disaggregation.name == getattr(self.fields["girls05"], "column_name"):
+                    value = str(dl.target)
+                    value_list += (",".join([value]),)
+        return ",".join([item for item in value_list if item])
 
     def dehydrate_start_date(self, obj):
         return obj.start_date.strftime("%d-%m-%Y %H:%M:%S")

@@ -1013,7 +1013,8 @@ def organization_register(request):
 @login_required
 def ProjectListView(request, flag):
     # project_list =json.loads(request.POST.get("projectList"))
-    project = Project.objects.filter(user=request.user.id)
+   
+    project = Project.objects.all()
     dataset = ProjectResource().export(project)
     format = flag
     if format == "xls":

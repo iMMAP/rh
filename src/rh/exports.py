@@ -10,7 +10,7 @@ from openpyxl import Workbook
 from openpyxl.styles import Font, NamedStyle
 from openpyxl.utils import get_column_letter
 
-from .models import Disaggregation, Project
+from .models import BeneficiaryType, Disaggregation, Project
 
 #############################################
 ############### Export Views #################
@@ -249,10 +249,32 @@ class ProjectFilterExportView(View):
             sheet = workbook.active
             sheet.title = "Project"
             # defining columns
-
             columns = []
             for keys, values in selectedData.items():
-                columns += ({"header": keys, "type": "string", "width": 20},)
+                if not keys == "disaggregation":
+                    columns += ({"header": keys, "type": "string", "width": 20},)
+            try:
+                if selectedData['disaggregation']:
+                    disaggregation_cols = []
+                    disaggregations = Disaggregation.objects.all()
+                    disaggregation_list = []
+                    for disaggregation in disaggregations:
+                        if disaggregation.name not in disaggregation_list:
+                            disaggregation_list.append(disaggregation.name)
+                            disaggregation_cols.append({"header": disaggregation.name, "type": "string", "width": 30})
+                        else:
+                            continue
+                    if disaggregations:
+                        for disaggregation_col in disaggregation_cols:
+                            columns.append(disaggregation_col)
+            except Exception:
+                pass
+                  
+            # adding disaggregation column if it is selected for export
+            
+            
+            
+            
 
             for idx, column in enumerate(columns, start=1):
                 cell = sheet.cell(row=1, column=idx, value=column["header"])
@@ -277,9 +299,10 @@ class ProjectFilterExportView(View):
                     selected_feild = Project.objects.values_list(*projectFields).get(id=projectId)
                     for field in selected_feild:
                         if isinstance(field, datetime.datetime):
-                            row += (field.astimezone(timezone.utc).replace(tzinfo=None),)
+                            row.append(field.astimezone(timezone.utc).replace(tzinfo=None),)
                         else:
-                            row += (field,)
+                            print(field)
+                            row.append(field)
                 else:
                     pass
             except Exception:
@@ -367,10 +390,19 @@ class ProjectFilterExportView(View):
             except Exception:
                 pass
 
-            try:
-                row += (",".join([ben.name for ben in activity_plans if ben.name in selectedData["beneficiary"]]),)
-            except Exception:
-                pass
+            # try:
+            row += (
+                ",".join(
+                    [
+                        ben.beneficiary.name 
+                        for ben in activity_plans
+                        if int(ben.beneficiary.id) in selectedData["beneficiary"]
+                    ]
+                ),
+            )
+             
+            # except Exception:
+            #     pass
             try:
                 row += (",".join([b_category for b_category in selectedData["beneficiary_category"]]),)
             except Exception:
@@ -392,7 +424,19 @@ class ProjectFilterExportView(View):
                         [
                             target.province.name
                             for target in targetLocation
-                            if target.province.name in selectedData["province"]
+                            if target.province.name in selectedData["admin1name"]
+                        ]
+                    ),
+                )
+            except Exception:
+                pass
+            try:
+                row += (
+                    ",".join(
+                        [
+                            target.province.code
+                            for target in targetLocation
+                            if target.province.name in selectedData["admin1name"]
                         ]
                     ),
                 )
@@ -404,7 +448,19 @@ class ProjectFilterExportView(View):
                         [
                             target.district.name
                             for target in targetLocation
-                            if target.district.name in selectedData["district"]
+                            if target.district.name in selectedData["admin2name"]
+                        ]
+                    ),
+                )
+            except Exception:
+                pass
+            try:
+                row += (
+                    ",".join(
+                        [
+                            target.district.code
+                            for target in targetLocation
+                            if target.district.name in selectedData["admin2name"]
                         ]
                     ),
                 )
@@ -425,18 +481,23 @@ class ProjectFilterExportView(View):
             try:
                 row += (
                     ",".join(
-                        [target.site_name for target in targetLocation if target.site_name in selectedData["site_name"]]
+                        [
+                            target.classification
+                            for target in targetLocation
+                            if target.classification in selectedData["classification"]
+                        ]
                     ),
                 )
             except Exception:
                 pass
+            # facility monitoring
             try:
                 row += (
                     ",".join(
                         [
-                            target.site_lat
+                            target.facility_monitoring
                             for target in targetLocation
-                            if target.site_lat in selectedData["site_latitude"]
+                            if target.facility_monitoring in selectedData["facility_monitoring"]
                         ]
                     ),
                 )
@@ -446,9 +507,44 @@ class ProjectFilterExportView(View):
                 row += (
                     ",".join(
                         [
-                            target.site_long
+                            target.facility_id
                             for target in targetLocation
-                            if target.site_long in selectedData["site_longitude"]
+                            if target.location_type.name in selectedData["facility_id"]
+                        ]
+                    ),
+                )
+            except Exception:
+                pass
+            try:
+                row += (
+                    ",".join(
+                        [
+                            target.facility_name 
+                            for target in targetLocation 
+                            if target.facility_name in selectedData["facility_name"]]
+                    ),
+                )
+            except Exception:
+                pass
+            try:
+                row += (
+                    ",".join(
+                        [
+                            target.facility_lat
+                            for target in targetLocation
+                            if target.site_lat in selectedData["facility_latitude"]
+                        ]
+                    ),
+                )
+            except Exception:
+                pass
+            try:
+                row += (
+                    ",".join(
+                        [
+                            target.facility_long
+                            for target in targetLocation
+                            if target.facility_long in selectedData["facility_longitude"]
                         ]
                     ),
                 )

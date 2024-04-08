@@ -418,13 +418,13 @@
                                             </div>
                                             <div class="field-col">
                                                 <div class="input-holder">
-                                                    <label for="siteName-{{targetLocation.facility_monitoring.id}}" 
+                                                    <label for="facilitymonitoring-" 
                                                     class="text-read-only">Facility monitoring</label>
-                                                    <input type="checkbox" id="siteName-{{targetLocation.facility_monitoring.id}}" 
+                                                    <input type="checkbox" id="facilitymonitoring-{{targetLocation.id}}" 
                                                     class="facility-monitoring-check"
                                                     value="{{targetLocation.facility_monitoring}}"
                                                     name="facility_monitoring"> 
-                                                    <label for="siteName-{{targetLocation.facility_monitoring.id}}" 
+                                                    <label for="facilitymonitoring-{{targetLocation.id}}" 
                                                     class="label">{{targetLocation.facility_monitoring}}</label>
                                                 </div>
                                             </div>
@@ -492,11 +492,11 @@
                                             
                                             <div class="field-col">
                                                 <div class="input-holder">
-                                                    <input type="checkbox" id="disaggregation" 
+                                                    <input type="checkbox" id="disaggregation-{{targetLocation.id}}" 
                                                     class="disaggregation-check"
                                                     value="{{targetLocation.id}}"
                                                     name="disaggregations"> 
-                                                    <label for="disaggregation" 
+                                                    <label for="disaggregation-{{targetLocation.id}}" 
                                                     class="label">Select All Disaggregaions</label>
                                                    
                                                 </div>

@@ -64,7 +64,6 @@ $("#downloadFilterForm").click(function(e) {
     let currencyData = [];
     let donorData = [];
     let clusterData = [];
-    let activityDomainData = [];
     let implementingPartnerData = [];
     let programPartnerData = [];
 
@@ -80,12 +79,7 @@ $("#downloadFilterForm").click(function(e) {
         clusterData.push(checkedCluster[i].value);
       }
     }
-    const checkedActivityDomainData = document.querySelectorAll(".input-check-activityDomain");
-    for(let i = 0; i < checkedActivityDomainData.length; i++){
-      if(checkedActivityDomainData[i].checked == true){
-        activityDomainData.push(checkedActivityDomainData[i].value);
-      }
-    }
+ 
     const checkImplement = document.querySelectorAll(".input-check-implement");
     for(let i = 0; i < checkImplement.length; i++){
       if(checkImplement[i].checked == true ) {
@@ -160,7 +154,7 @@ $("#downloadFilterForm").click(function(e) {
         BCategory.push(checkBCategory[i].value);
       }
     }
-    const descriptionCheck = document.querySelectorAll(".description");
+    const descriptionCheck = document.querySelectorAll(".description-check");
     for(let i = 0; i < descriptionCheck.length; i++) {
       if(descriptionCheck[i].checked == true){
         activityDescription.push(descriptionCheck[i].value);
@@ -247,10 +241,11 @@ $("#downloadFilterForm").click(function(e) {
      if(activityDomain.length != 0){exportData['activity_domain'] = activityDomain;}
      if(activityType.length != 0){exportData['activity_type'] = activityType;}
      if(activityDetail.length != 0){exportData['activity_detail'] = activityDetail;}
-     if(activityDescription.length != 0){exportData['activity_description'] = activityDescription;}
+     
      if(indicator.length != 0){exportData['indicator'] = indicator;}
      if(beneficiary.length != 0){exportData['beneficiary'] =beneficiary;}
      if(BCategory.length != 0){exportData['beneficiary_category'] =BCategory;}
+     if(activityDescription.length != 0){exportData['activity_description'] = activityDescription;}
  
      if(province.length != 0){
       exportData['admin1name'] = province;

@@ -613,7 +613,6 @@ class TargetLocation(models.Model):
         blank=True,
     )
     location_type = models.ForeignKey(LocationType, on_delete=models.SET_NULL, null=True, blank=True)
-    classification = models.CharField(max_length=15, choices=TARGET_CLASSIFICATION, blank=True, null=True)
 
     implementing_partner = models.ForeignKey(Organization, on_delete=models.SET_NULL, null=True, blank=True)
 

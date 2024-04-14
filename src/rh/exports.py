@@ -246,9 +246,11 @@ class ProjectFilterExportView(View):
                     projectFields.insert(i, keys)
                     i += 1
             print(projectFields)
+           
             try:
                 projectFields.remove("admin1pcode")
                 projectFields.remove("admin2pcode")
+                projectFields.remove("classification")
             except Exception:
                 pass
             
@@ -481,14 +483,39 @@ class ProjectFilterExportView(View):
                 target_location_rows += (
                     ",".join(
                         [
-                            target.location_type.name
+                            target.district.classification
                             for target in targetLocation
-                            if str(target.location_type.id) in selectedData["location_type"]
+                            if str(target.district.id) in selectedData["admin2name"] 
+                        ]
+                    ),
+                )
+            except Exception:
+                target_location_rows += (None,)
+            try:
+                target_location_rows += (
+                    ",".join(
+                        [
+                            target.facility_site_type.name
+                            for target in targetLocation
+                            if str(target.facility_site_type.id) in selectedData["facility_site_type"]
                         ]
                     ),
                 )
             except Exception:
                 pass
+            
+            # try:
+            #     target_location_rows += (
+            #         ",".join(
+            #             [
+            #                 target.location_type.name
+            #                 for target in targetLocation
+            #                 if str(target.location_type.id) in selectedData["location_type"]
+            #             ]
+            #         ),
+            #     )
+            # except Exception:
+            #     pass
             try:
                 target_location_rows += (
                     ",".join(
@@ -501,62 +528,62 @@ class ProjectFilterExportView(View):
                 )
             except Exception:
                 pass
-            
+            facility_monitoring_rows = []
             # facility monitoring
             try:
-                row += (
+                facility_monitoring_rows += (
                     ",".join(
                         [
                             target.facility_monitoring
                             for target in targetLocation
-                            if target.facility_monitoring in selectedData["facility_monitoring"]
+                            if str(target.id) in selectedData["facility_monitoring"]
                         ]
                     ),
                 )
             except Exception:
                 pass
             try:
-                row += (
+                facility_monitoring_rows += (
                     ",".join(
                         [
                             target.facility_id
                             for target in targetLocation
-                            if target.location_type.name in selectedData["facility_id"]
+                            if str(target.id) in selectedData["facility_id"]
                         ]
                     ),
                 )
             except Exception:
                 pass
             try:
-                row += (
+                facility_monitoring_rows += (
                     ",".join(
                         [
                             target.facility_name 
                             for target in targetLocation 
-                            if target.facility_name in selectedData["facility_name"]]
+                            if str(target.id) in selectedData["facility_name"]]
                     ),
                 )
             except Exception:
                 pass
             try:
-                row += (
+                facility_monitoring_rows += (
                     ",".join(
                         [
                             target.facility_lat
                             for target in targetLocation
-                            if target.site_lat in selectedData["facility_latitude"]
+                            if str(target.id) in selectedData["facility_latitude"]
                         ]
                     ),
                 )
             except Exception:
                 pass
             try:
-                row += (
+                facility_monitoring_rows += (
                     ",".join(
                         [
                             target.facility_long
                             for target in targetLocation
-                            if target.facility_long in selectedData["facility_longitude"]
+                            if str(target.id) in selectedData["facility_longitude"]
                         ]
                     ),
                 )
@@ -565,7 +592,7 @@ class ProjectFilterExportView(View):
             row.extend(project_planning_rows)
             row.extend(activity_planning_rows)
             row.extend(target_location_rows)
-            print(project_planning_rows)
+            row.extend(facility_monitoring_rows)
            
             for col_idx, value in enumerate(row, start=1):
                 sheet.cell(row=2, column=col_idx, value=value)

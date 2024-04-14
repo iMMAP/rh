@@ -163,8 +163,8 @@ $("#downloadFilterForm").click(function(e) {
      // Target Location fields
      let province =[];
      let district = [];
-     let locationType = [];
-     let classifications = [];
+    //  let locationType = [];
+     let facilitySiteType = [];
      let facilityName = [];
      let facilityMonitoring = [];
      let facilityId = [];
@@ -182,18 +182,13 @@ $("#downloadFilterForm").click(function(e) {
          district.push(districtCheck[i].value);
        }
      }
-     const locationtypeCheck = document.querySelectorAll(".location-type-check");
-     for(let i=0; i<locationtypeCheck.length; i++){
-       if(locationtypeCheck[i].checked == true) {
-         locationType.push(locationtypeCheck[i].value)
+     const facilitySiteTypeCheck = document.querySelectorAll(".facility-site-type-check");
+     for(let i=0; i<facilitySiteTypeCheck.length; i++){
+       if(facilitySiteTypeCheck[i].checked == true) {
+        facilitySiteType.push(facilitySiteTypeCheck[i].value)
        }
      }
-     const classificationCheck = document.querySelectorAll(".classification-check");
-     for(let i=0; i<classificationCheck.length; i++){
-       if(classificationCheck[i].checked == true) {
-         classifications.push(classificationCheck[i].value)
-       }
-     }
+    
      const facilityMonitoringCheck = document.querySelectorAll(".facility-monitoring-check");
      for(let i=0; i<facilityMonitoringCheck.length; i++){
        if(facilityMonitoringCheck[i].checked == true) {
@@ -255,9 +250,12 @@ $("#downloadFilterForm").click(function(e) {
      if(district.length > 0){
       exportData['admin2name'] = district;
       exportData['admin2pcode'] = 'admin2pcode';
+      exportData['classification'] = 'classification';
     }
-     if(locationType.length !=0){exportData['location_type'] = locationType;}
-     if(classifications.length != 0){exportData['classification'] = classifications;}
+    if(facilitySiteType.length > 0 ){
+      exportData['facility_site_type'] = facilitySiteType;
+    }
+    
      if(facilityMonitoring.length != 0){exportData['facility_monitoring'] = facilityMonitoring;}
      if(facilityId.length != 0){exportData['facility_id'] = facilityId;}
      if(facilityName.length != 0){exportData['facility_name'] = facilityName;}

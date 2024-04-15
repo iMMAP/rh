@@ -169,7 +169,7 @@ class ProjectExportExcelView(View):
                         project.user.profile.organization.type
                         if project.user and project.user.profile and project.user.profile.organization
                         else None,
-                        ", ".join([clusters.name for clusters in project.clusters.all()]),
+                        ", ".join([clusters.code for clusters in project.clusters.all()]),
                         project.hrp_code,
                         project.start_date.astimezone(timezone.utc).replace(tzinfo=None)
                         if project.start_date

@@ -246,14 +246,14 @@ class ProjectFilterExportView(View):
                     projectFields.insert(i, keys)
                     i += 1
             print(projectFields)
-           
+
             try:
                 projectFields.remove("admin1pcode")
                 projectFields.remove("admin2pcode")
                 projectFields.remove("classification")
             except Exception:
                 pass
-            
+
             workbook = Workbook()
             sheet = workbook.active
             sheet.title = "Project"
@@ -262,11 +262,13 @@ class ProjectFilterExportView(View):
             for keys, values in selectedData.items():
                 if not keys == "disaggregation":
                     columns += ({"header": keys, "type": "string", "width": 20},)
+
+            disaggregation_list = []
             try:
-                if selectedData['disaggregation']:
+                if selectedData["disaggregation"]:
                     disaggregation_cols = []
                     disaggregations = Disaggregation.objects.all()
-                    disaggregation_list = []
+
                     for disaggregation in disaggregations:
                         if disaggregation.name not in disaggregation_list:
                             disaggregation_list.append(disaggregation.name)
@@ -276,9 +278,10 @@ class ProjectFilterExportView(View):
                     if disaggregations:
                         for disaggregation_col in disaggregation_cols:
                             columns.append(disaggregation_col)
+
             except Exception:
                 pass
-                  
+
             # adding disaggregation column if it is selected for export
 
             for idx, column in enumerate(columns, start=1):
@@ -293,7 +296,7 @@ class ProjectFilterExportView(View):
 
                 sheet.column_dimensions[column_letter].width = column["width"]
             row = []
-            #fetching the selected data from table
+            # fetching the selected data from table
             project_planning_rows = []
             try:
                 if len(selectedData["focal_point"]) > 0:
@@ -305,14 +308,16 @@ class ProjectFilterExportView(View):
                     selected_feild = Project.objects.values_list(*projectFields).get(id=projectId)
                     for field in selected_feild:
                         if isinstance(field, datetime.datetime):
-                            project_planning_rows.append(field.astimezone(timezone.utc).replace(tzinfo=None),)
+                            project_planning_rows.append(
+                                field.astimezone(timezone.utc).replace(tzinfo=None),
+                            )
                         else:
-                            project_planning_rows += (field, )
+                            project_planning_rows += (field,)
                 else:
                     pass
             except Exception:
                 pass
-            
+
             try:
                 if len(selectedData["currency"]) > 0:
                     project_planning_rows += (project.budget_currency.name,)
@@ -343,7 +348,7 @@ class ProjectFilterExportView(View):
                 project_planning_rows += (",".join([program for program in programPartner]),)
             except Exception:
                 pass
-            
+
             activity_planning_rows = []
             activity_plans = project.activityplan_set.all()
             try:
@@ -386,24 +391,23 @@ class ProjectFilterExportView(View):
                 pass
 
             try:
-                
                 activity_planning_rows += (
                     ",".join(
                         [
                             plan.indicator.name
-                            for plan in activity_plans 
-                            if str(plan.indicator.id) in selectedData['indicator']
+                            for plan in activity_plans
+                            if str(plan.indicator.id) in selectedData["indicator"]
                         ]
                     ),
                 )
             except Exception:
                 pass
-            
+
             try:
                 activity_planning_rows += (
                     ",".join(
                         [
-                            ben.beneficiary.name 
+                            ben.beneficiary.name
                             for ben in activity_plans
                             if str(ben.beneficiary.id) in selectedData["beneficiary"]
                         ]
@@ -412,15 +416,17 @@ class ProjectFilterExportView(View):
             except Exception:
                 pass
             try:
-                activity_planning_rows += (",".join([b_category for b_category in selectedData["beneficiary_category"]]),)
+                activity_planning_rows += (
+                    ",".join([b_category for b_category in selectedData["beneficiary_category"]]),
+                )
             except Exception:
                 pass
             try:
                 activity_planning_rows += (
                     ",".join(
                         [
-                            plan.description 
-                            for plan in activity_plans 
+                            plan.description
+                            for plan in activity_plans
                             if str(plan.id) in selectedData["activity_description"]
                         ]
                     ),
@@ -480,17 +486,18 @@ class ProjectFilterExportView(View):
             except Exception:
                 pass
             try:
-                target_location_rows += (
-                    ",".join(
-                        [
-                            target.district.classification
-                            for target in targetLocation
-                            if str(target.district.id) in selectedData["admin2name"] 
-                        ]
-                    ),
-                )
+                classification_data = []
+                for target in targetLocation:
+                    # check if district selected or not
+                    if str(target.district.id) in selectedData["admin2name"]:
+                        if target.district.classification:
+                            classification_data.append(target.district.classification)
+                if classification_data:
+                    target_location_rows += (",".join([item for item in classification_data]),)
+                else:
+                    target_location_rows.append("None")
             except Exception:
-                target_location_rows += (None,)
+                pass
             try:
                 target_location_rows += (
                     ",".join(
@@ -503,7 +510,7 @@ class ProjectFilterExportView(View):
                 )
             except Exception:
                 pass
-            
+
             # try:
             #     target_location_rows += (
             #         ",".join(
@@ -516,25 +523,14 @@ class ProjectFilterExportView(View):
             #     )
             # except Exception:
             #     pass
-            try:
-                target_location_rows += (
-                    ",".join(
-                        [
-                            target.classification
-                            for target in targetLocation
-                            if str(target.id) in selectedData["classification"]
-                        ]
-                    ),
-                )
-            except Exception:
-                pass
+
             facility_monitoring_rows = []
             # facility monitoring
             try:
                 facility_monitoring_rows += (
                     ",".join(
                         [
-                            target.facility_monitoring
+                            str(target.facility_monitoring)
                             for target in targetLocation
                             if str(target.id) in selectedData["facility_monitoring"]
                         ]
@@ -558,9 +554,10 @@ class ProjectFilterExportView(View):
                 facility_monitoring_rows += (
                     ",".join(
                         [
-                            target.facility_name 
-                            for target in targetLocation 
-                            if str(target.id) in selectedData["facility_name"]]
+                            target.facility_name
+                            for target in targetLocation
+                            if str(target.id) in selectedData["facility_name"]
+                        ]
                     ),
                 )
             except Exception:
@@ -593,7 +590,25 @@ class ProjectFilterExportView(View):
             row.extend(activity_planning_rows)
             row.extend(target_location_rows)
             row.extend(facility_monitoring_rows)
-           
+            # try:
+            # Iterate through disaggregation locations and get disaggregation values
+            dis_name = {}
+            disaggregation_rows = []
+            for tr in targetLocation:
+                for d in tr.disaggregations.all():
+                    dis_name.update(
+                        {
+                            d.name: (",".join([str(dl.target) for dl in d.disaggregationlocation_set.all()]),),
+                        }
+                    )
+            for item in disaggregation_list:
+                if item in dis_name:
+                    disaggregation_rows.append(
+                        ",".join([key for key in dis_name[item]]),
+                    )
+                else:
+                    disaggregation_rows.append("0")
+            row.extend(disaggregation_rows)
             for col_idx, value in enumerate(row, start=1):
                 sheet.cell(row=2, column=col_idx, value=value)
 

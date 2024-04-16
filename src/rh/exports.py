@@ -10,7 +10,7 @@ from openpyxl import Workbook
 from openpyxl.styles import Font, NamedStyle
 from openpyxl.utils import get_column_letter
 
-from .models import Disaggregation, Project
+from .models import Disaggregation, Project, TargetLocation
 
 #############################################
 ############### Export Views #################
@@ -590,24 +590,40 @@ class ProjectFilterExportView(View):
             row.extend(activity_planning_rows)
             row.extend(target_location_rows)
             row.extend(facility_monitoring_rows)
-            # try:
-            # Iterate through disaggregation locations and get disaggregation values
-            dis_name = {}
-            disaggregation_rows = []
-            for tr in targetLocation:
-                for d in tr.disaggregations.all():
-                    dis_name.update(
-                        {
-                            d.name: (",".join([str(dl.target) for dl in d.disaggregationlocation_set.all()]),),
-                        }
-                    )
-            for item in disaggregation_list:
-                if item in dis_name:
-                    disaggregation_rows.append(
-                        ",".join([key for key in dis_name[item]]),
-                    )
+            try:
+                # Iterate through disaggregation locations and get disaggregation values
+                dis_name = {}
+                disaggregation_rows = []
+
+                target_location = TargetLocation.objects.filter(id__in=selectedData["disaggregation"])
+                if len(selectedData["disaggregation"]) > 1:
+                    for tr in target_location:
+                        for d in tr.disaggregations.all():
+                            dis_name.update(
+                                {
+                                    d.name: (",".join([str(dl.target) for dl in d.disaggregationlocation_set.all()]),),
+                                }
+                            )
+                    for item in disaggregation_list:
+                        if item in dis_name:
+                            disaggregation_rows.append(
+                                ",".join([key for key in dis_name[item]]),
+                            )
+                        else:
+                            disaggregation_rows.append("0")
                 else:
-                    disaggregation_rows.append("0")
+                    for tr in target_location:
+                        for dl in tr.disaggregationlocation_set.all():
+                            dis_name.update({dl.disaggregation.name: str(dl.target)})
+                    for item in disaggregation_list:
+                        if item in dis_name:
+                            disaggregation_rows.append(dis_name[item])
+
+                        else:
+                            disaggregation_rows.append("0")
+            except Exception:
+                pass
+
             row.extend(disaggregation_rows)
             for col_idx, value in enumerate(row, start=1):
                 sheet.cell(row=2, column=col_idx, value=value)

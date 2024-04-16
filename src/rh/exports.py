@@ -52,7 +52,6 @@ class ProjectExportExcelView(View):
                 + base64.b64encode(excel_file.read()).decode("utf-8"),
                 "file_name": "export.xlsx",
             }
-
             return JsonResponse(response)
         except Exception as e:
             response = {"error": str(e)}

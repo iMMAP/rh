@@ -76,13 +76,9 @@
                                             </span>
                                         </a>
                                     </button>
-                                    <button class="export-button btn btn-gray">
-                                        <a href="#"
-                                            data-url="{% url 'export_project_excel' project.pk %}"
-                                            class="text-decoration-none btn-text"
-                                            title="Export CSV">
-                                            <span class="text">
-                                                CSV
+                                    <button class="btn btn-gray">
+                                        <a class="text-decoration-none btn-text" href="{% url 'export_porjcet_CSV' 'csv' project.id %}">
+                                            <span class="text">CSV
                                                 <span class="icon-download"></span>
                                             </span>
                                         </a>
@@ -396,17 +392,7 @@
                                                     class="label">{{targetLocation.location_type}}</label>
                                                 </div>
                                             </div> -->
-                                            <!-- <div class="field-col">
-                                                <div class="input-holder">
-                                                    <label for="locationType-{{targetLocation.classification}}" class="text-read-only">Classification</label>
-                                                    <input type="checkbox" id="locationType-{{targetLocation.classification}}" 
-                                                    class="classification-check"
-                                                    value="{{targetLocation.id}}"
-                                                    name="classification"> 
-                                                    <label for="locationType-{{targetLocation.classification}}" 
-                                                    class="label">{{targetLocation.classification | linebreaksbr }}</label>
-                                                </div>
-                                            </div> -->
+                                            
                                             <div class="field-col target-location-container">
                                                 <span class="target-location-badge">
                                                     <span>

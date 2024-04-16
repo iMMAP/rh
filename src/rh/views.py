@@ -1029,6 +1029,22 @@ def ProjectListView(request, flag):
 
 
 @login_required
+def ProjectExportView(request, flag, pk):
+    project = Project.objects.filter(id=pk)
+    dataset = ProjectResource().export(project)
+    format = flag
+    if format == "xls":
+        ds = dataset.xls
+    elif format == "csv":
+        ds = dataset.csv
+    else:
+        ds = dataset.json
+    response = HttpResponse(ds, content_type=f"{format}")
+    response["Content-Disposition"] = f"attachment; filename=project.{format}"
+    return response
+
+
+@login_required
 def update_indicator_type(request):
     """Indicator related types fields"""
     if request.method == "POST":

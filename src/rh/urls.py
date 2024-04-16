@@ -136,10 +136,17 @@ urlpatterns = [
         export_views.ProjectFilterExportView.as_view(),
         name="export_project_filter",
     ),
+    # bulk export
     path(
         "project/active/bulk_export/<flag>",
         user_views.ProjectListView,
         name="export_porjcet_list",
+    ),
+    # single project csv export
+    path(
+        "project/export/CSV/<flag>/<pk>",
+        user_views.ProjectExportView,
+        name="export_porjcet_CSV",
     ),
     path(
         "project/activityplan/indicator-type",

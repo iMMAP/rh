@@ -10,7 +10,7 @@ from openpyxl import Workbook
 from openpyxl.styles import Font, NamedStyle
 from openpyxl.utils import get_column_letter
 
-from .models import Disaggregation, Project
+from .models import Disaggregation, Project, TargetLocation
 
 #############################################
 ############### Export Views #################
@@ -169,7 +169,7 @@ class ProjectExportExcelView(View):
                         project.user.profile.organization.type
                         if project.user and project.user.profile and project.user.profile.organization
                         else None,
-                        ", ".join([clusters.name for clusters in project.clusters.all()]),
+                        ", ".join([clusters.code for clusters in project.clusters.all()]),
                         project.hrp_code,
                         project.start_date.astimezone(timezone.utc).replace(tzinfo=None)
                         if project.start_date
@@ -245,14 +245,44 @@ class ProjectFilterExportView(View):
                 if not isinstance(values, list):
                     projectFields.insert(i, keys)
                     i += 1
+            print(projectFields)
+
+            try:
+                projectFields.remove("admin1pcode")
+                projectFields.remove("admin2pcode")
+                projectFields.remove("classification")
+            except Exception:
+                pass
+
             workbook = Workbook()
             sheet = workbook.active
             sheet.title = "Project"
             # defining columns
-
             columns = []
             for keys, values in selectedData.items():
-                columns += ({"header": keys, "type": "string", "width": 20},)
+                if not keys == "disaggregation":
+                    columns += ({"header": keys, "type": "string", "width": 20},)
+
+            disaggregation_list = []
+            try:
+                if selectedData["disaggregation"]:
+                    disaggregation_cols = []
+                    disaggregations = Disaggregation.objects.all()
+
+                    for disaggregation in disaggregations:
+                        if disaggregation.name not in disaggregation_list:
+                            disaggregation_list.append(disaggregation.name)
+                            disaggregation_cols.append({"header": disaggregation.name, "type": "string", "width": 30})
+                        else:
+                            continue
+                    if disaggregations:
+                        for disaggregation_col in disaggregation_cols:
+                            columns.append(disaggregation_col)
+
+            except Exception:
+                pass
+
+            # adding disaggregation column if it is selected for export
 
             for idx, column in enumerate(columns, start=1):
                 cell = sheet.cell(row=1, column=idx, value=column["header"])
@@ -266,10 +296,11 @@ class ProjectFilterExportView(View):
 
                 sheet.column_dimensions[column_letter].width = column["width"]
             row = []
-            # retriving data from database accordeing to selected field by user and defining rows
+            # fetching the selected data from table
+            project_planning_rows = []
             try:
                 if len(selectedData["focal_point"]) > 0:
-                    row += (project.user.username,)
+                    project_planning_rows += (project.user.username,)
             except Exception:
                 pass
             try:
@@ -277,9 +308,11 @@ class ProjectFilterExportView(View):
                     selected_feild = Project.objects.values_list(*projectFields).get(id=projectId)
                     for field in selected_feild:
                         if isinstance(field, datetime.datetime):
-                            row += (field.astimezone(timezone.utc).replace(tzinfo=None),)
+                            project_planning_rows.append(
+                                field.astimezone(timezone.utc).replace(tzinfo=None),
+                            )
                         else:
-                            row += (field,)
+                            project_planning_rows += (field,)
                 else:
                     pass
             except Exception:
@@ -287,17 +320,17 @@ class ProjectFilterExportView(View):
 
             try:
                 if len(selectedData["currency"]) > 0:
-                    row += (project.budget_currency.name,)
+                    project_planning_rows += (project.budget_currency.name,)
             except Exception:
                 pass
             try:
                 donorData = project.donors.values_list("name", flat=True).filter(id__in=selectedData["donors"])
-                row += (",".join([donor for donor in donorData]),)
+                project_planning_rows += (",".join([donor for donor in donorData]),)
             except Exception:
                 pass
             try:
                 clusterData = project.clusters.values_list("title", flat=True).filter(id__in=selectedData["clusters"])
-                row += (",".join([cluster for cluster in clusterData]),)
+                project_planning_rows += (",".join([cluster for cluster in clusterData]),)
             except Exception:
                 pass
 
@@ -305,25 +338,26 @@ class ProjectFilterExportView(View):
                 implementingPartner = project.implementing_partners.values_list("code", flat=True).filter(
                     id__in=selectedData["implementing_partners"]
                 )
-                row += (",".join([implement for implement in implementingPartner]),)
+                project_planning_rows += (",".join([implement for implement in implementingPartner]),)
             except Exception:
                 pass
             try:
                 programPartner = project.programme_partners.values_list("code", flat=True).filter(
                     id__in=selectedData["programme_partners"]
                 )
-                row += (",".join([program for program in programPartner]),)
+                project_planning_rows += (",".join([program for program in programPartner]),)
             except Exception:
                 pass
 
+            activity_planning_rows = []
             activity_plans = project.activityplan_set.all()
             try:
-                row += (
+                activity_planning_rows += (
                     ",".join(
                         [
                             plan.activity_domain.name
                             for plan in activity_plans
-                            if plan.activity_domain.name in selectedData["activity_domain"]
+                            if str(plan.activity_domain.id) in selectedData["activity_domain"]
                         ]
                     ),
                 )
@@ -331,12 +365,12 @@ class ProjectFilterExportView(View):
                 pass
 
             try:
-                row += (
+                activity_planning_rows += (
                     ",".join(
                         [
                             plan.activity_type.name
                             for plan in activity_plans
-                            if plan.activity_type.name in selectedData["activity_type"]
+                            if str(plan.activity_type.id) in selectedData["activity_type"]
                         ]
                     ),
                 )
@@ -344,12 +378,12 @@ class ProjectFilterExportView(View):
                 pass
 
             try:
-                row += (
+                activity_planning_rows += (
                     ",".join(
                         [
                             plan.activity_detail.name
                             for plan in activity_plans
-                            if plan.activity_detail.name in selectedData["activity_detail"]
+                            if str(plan.activity_detail.id) in selectedData["activity_detail"]
                         ]
                     ),
                 )
@@ -357,104 +391,240 @@ class ProjectFilterExportView(View):
                 pass
 
             try:
-                inds = []
-                for plan in activity_plans:
-                    for indicator in plan.indicators.all():
-                        if indicator.name in selectedData["indicator"]:
-                            value = str(indicator.name)
-                            inds += (",".join([value]),)
-                row += (",".join([i for i in inds]),)
-            except Exception:
-                pass
-
-            try:
-                row += (",".join([ben.name for ben in activity_plans if ben.name in selectedData["beneficiary"]]),)
-            except Exception:
-                pass
-            try:
-                row += (",".join([b_category for b_category in selectedData["beneficiary_category"]]),)
-            except Exception:
-                pass
-            try:
-                row += (
+                activity_planning_rows += (
                     ",".join(
-                        [desc.name for desc in activity_plans if desc.name in selectedData["activity_description"]]
+                        [
+                            plan.indicator.name
+                            for plan in activity_plans
+                            if str(plan.indicator.id) in selectedData["indicator"]
+                        ]
                     ),
                 )
             except Exception:
                 pass
+
+            try:
+                activity_planning_rows += (
+                    ",".join(
+                        [
+                            ben.beneficiary.name
+                            for ben in activity_plans
+                            if str(ben.beneficiary.id) in selectedData["beneficiary"]
+                        ]
+                    ),
+                )
+            except Exception:
+                pass
+            try:
+                activity_planning_rows += (
+                    ",".join([b_category for b_category in selectedData["beneficiary_category"]]),
+                )
+            except Exception:
+                pass
+            try:
+                activity_planning_rows += (
+                    ",".join(
+                        [
+                            plan.description
+                            for plan in activity_plans
+                            if str(plan.id) in selectedData["activity_description"]
+                        ]
+                    ),
+                )
+            except Exception:
+                pass
+            target_location_rows = []
             # # Target location
             targetLocation = project.targetlocation_set.all()
 
             try:
-                row += (
+                target_location_rows += (
                     ",".join(
                         [
                             target.province.name
                             for target in targetLocation
-                            if target.province.name in selectedData["province"]
+                            if str(target.province.id) in selectedData["admin1name"]
                         ]
                     ),
                 )
             except Exception:
                 pass
             try:
-                row += (
+                target_location_rows += (
+                    ",".join(
+                        [
+                            target.province.code
+                            for target in targetLocation
+                            if str(target.province.id) in selectedData["admin1name"]
+                        ]
+                    ),
+                )
+            except Exception:
+                pass
+            try:
+                target_location_rows += (
                     ",".join(
                         [
                             target.district.name
                             for target in targetLocation
-                            if target.district.name in selectedData["district"]
+                            if str(target.district.id) in selectedData["admin2name"]
                         ]
                     ),
                 )
             except Exception:
                 pass
             try:
-                row += (
+                target_location_rows += (
                     ",".join(
                         [
-                            target.location_type.name
+                            target.district.code
                             for target in targetLocation
-                            if target.location_type.name in selectedData["location_type"]
+                            if str(target.district.id) in selectedData["admin2name"]
                         ]
                     ),
                 )
             except Exception:
                 pass
             try:
-                row += (
-                    ",".join(
-                        [target.site_name for target in targetLocation if target.site_name in selectedData["site_name"]]
-                    ),
-                )
+                classification_data = []
+                for target in targetLocation:
+                    # check if district selected or not
+                    if str(target.district.id) in selectedData["admin2name"]:
+                        if target.district.classification:
+                            classification_data.append(target.district.classification)
+                if classification_data:
+                    target_location_rows += (",".join([item for item in classification_data]),)
+                else:
+                    target_location_rows.append("None")
             except Exception:
                 pass
             try:
-                row += (
+                target_location_rows += (
                     ",".join(
                         [
-                            target.site_lat
+                            target.facility_site_type.name
                             for target in targetLocation
-                            if target.site_lat in selectedData["site_latitude"]
-                        ]
-                    ),
-                )
-            except Exception:
-                pass
-            try:
-                row += (
-                    ",".join(
-                        [
-                            target.site_long
-                            for target in targetLocation
-                            if target.site_long in selectedData["site_longitude"]
+                            if str(target.facility_site_type.id) in selectedData["facility_site_type"]
                         ]
                     ),
                 )
             except Exception:
                 pass
 
+            # try:
+            #     target_location_rows += (
+            #         ",".join(
+            #             [
+            #                 target.location_type.name
+            #                 for target in targetLocation
+            #                 if str(target.location_type.id) in selectedData["location_type"]
+            #             ]
+            #         ),
+            #     )
+            # except Exception:
+            #     pass
+
+            facility_monitoring_rows = []
+            # facility monitoring
+            try:
+                facility_monitoring_rows += (
+                    ",".join(
+                        [
+                            str(target.facility_monitoring)
+                            for target in targetLocation
+                            if str(target.id) in selectedData["facility_monitoring"]
+                        ]
+                    ),
+                )
+            except Exception:
+                pass
+            try:
+                facility_monitoring_rows += (
+                    ",".join(
+                        [
+                            target.facility_id
+                            for target in targetLocation
+                            if str(target.id) in selectedData["facility_id"]
+                        ]
+                    ),
+                )
+            except Exception:
+                pass
+            try:
+                facility_monitoring_rows += (
+                    ",".join(
+                        [
+                            target.facility_name
+                            for target in targetLocation
+                            if str(target.id) in selectedData["facility_name"]
+                        ]
+                    ),
+                )
+            except Exception:
+                pass
+            try:
+                facility_monitoring_rows += (
+                    ",".join(
+                        [
+                            target.facility_lat
+                            for target in targetLocation
+                            if str(target.id) in selectedData["facility_latitude"]
+                        ]
+                    ),
+                )
+            except Exception:
+                pass
+            try:
+                facility_monitoring_rows += (
+                    ",".join(
+                        [
+                            target.facility_long
+                            for target in targetLocation
+                            if str(target.id) in selectedData["facility_longitude"]
+                        ]
+                    ),
+                )
+            except Exception:
+                pass
+            row.extend(project_planning_rows)
+            row.extend(activity_planning_rows)
+            row.extend(target_location_rows)
+            row.extend(facility_monitoring_rows)
+            try:
+                # Iterate through disaggregation locations and get disaggregation values
+                dis_name = {}
+                disaggregation_rows = []
+
+                target_location = TargetLocation.objects.filter(id__in=selectedData["disaggregation"])
+                if len(selectedData["disaggregation"]) > 1:
+                    for tr in target_location:
+                        for d in tr.disaggregations.all():
+                            dis_name.update(
+                                {
+                                    d.name: (",".join([str(dl.target) for dl in d.disaggregationlocation_set.all()]),),
+                                }
+                            )
+                    for item in disaggregation_list:
+                        if item in dis_name:
+                            disaggregation_rows.append(
+                                ",".join([key for key in dis_name[item]]),
+                            )
+                        else:
+                            disaggregation_rows.append("0")
+                else:
+                    for tr in target_location:
+                        for dl in tr.disaggregationlocation_set.all():
+                            dis_name.update({dl.disaggregation.name: str(dl.target)})
+                    for item in disaggregation_list:
+                        if item in dis_name:
+                            disaggregation_rows.append(dis_name[item])
+
+                        else:
+                            disaggregation_rows.append("0")
+            except Exception:
+                pass
+
+            row.extend(disaggregation_rows)
             for col_idx, value in enumerate(row, start=1):
                 sheet.cell(row=2, column=col_idx, value=value)
 

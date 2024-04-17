@@ -107,7 +107,7 @@ $("#downloadFilterForm").click(function(e) {
     const checkedItem = document.querySelectorAll(".input-check");
     for(let i = 0; i < checkedItem.length; i++) {
       if(checkedItem[i].checked == true) {
-        exportData[checkedItem[i].name] = checkedItem[i].name;
+        exportData[checkedItem[i].name] = checkedItem[i].value;
       }
     }
     // ACTIVITY PLANNING

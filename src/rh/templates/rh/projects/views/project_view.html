@@ -105,7 +105,7 @@
                                             {% if project.title %}
                                             <div class="field-col">
                                                 <div class="input-holder">
-                                                    <input type="checkbox" id="title" class="input-check" name="title" >
+                                                    <input type="checkbox" id="title" class="input-check" name="title" value="{{project.id}}" >
                                                     <label for="title">Title</label>
                                                 </div>
                                             </div>
@@ -113,7 +113,7 @@
                                             {% if project.code %}
                                             <div class="field-col">
                                                 <div class="input-holder">
-                                                    <input type="checkbox" id="code" class="input-check" name="code">
+                                                    <input type="checkbox" id="code" class="input-check" name="code" value="{{project.id}}">
                                                     <label for="code">Code</label>
                                                 </div>
                                             </div>
@@ -121,7 +121,7 @@
                                             {% if project.budget %}
                                             <div class="field-col">
                                                 <div class="input-holder">
-                                                    <input type="checkbox" id="budget" class="input-check" name="budget">
+                                                    <input type="checkbox" id="budget" class="input-check" name="budget" value="{{project.id}}">
                                                     <label for="budget">Budget</label>
                                                 </div>
                                             </div>
@@ -129,7 +129,7 @@
                                             {% if project.budget_received %}
                                             <div class="field-col">
                                                 <div class="input-holder">
-                                                    <input type="checkbox" id="budgetReceived" class="input-check" name="budget_received">
+                                                    <input type="checkbox" id="budgetReceived" class="input-check" name="budget_received" value="{{project.id}}">
                                                     <label for="budgetReceived">Received Budget</label>
                                                 </div>
                                             </div>
@@ -145,7 +145,7 @@
                                             {% if project.start_date %}
                                             <div class="field-col">
                                                 <div class="input-holder">
-                                                    <input type="checkbox" id="startDate" class="input-check" name="start_date">
+                                                    <input type="checkbox" id="startDate" class="input-check" name="start_date" value="{{project.id}}">
                                                     <label for="startDate">Start Date</label>
                                                 </div>
                                             </div>
@@ -154,7 +154,7 @@
                                             <div class="field-col">
                                                 <div class="input-holder">
                                                     <input type="checkbox" id="state" 
-                                                    class="input-check" name="state">
+                                                    class="input-check" name="state" value="{{project.id}}">
                                                     <label for="state">State</label>
                                                 </div>
                                             </div>
@@ -163,7 +163,7 @@
                                             <div class="field-col">
                                                 <div class="input-holder">
                                                     <input type="checkbox" id="budgetGap" 
-                                                    class="input-check" name="budget_gap">
+                                                    class="input-check" name="budget_gap" value="{{project.id}}">
                                                     <label for="budgetGap">Budget Gap</label>
                                                 </div>
                                             </div>
@@ -172,16 +172,16 @@
                                             <div class="field-col">
                                                 <div class="input-holder">
                                                     <input type="checkbox" id="isHRPProject" 
-                                                    class="input-check" name="is_hrp_project">
+                                                    class="input-check" name="is_hrp_project" value="{{project.id}}">
                                                     <label for="isHRPProject">Is HRP Project</label>
                                                 </div>
                                             </div>
                                             {% endif %}
-                                            {% if project.hrp_code %}
+                                            {% if project.has_hrp_code %}
                                             <div class="field-col">
                                                 <div class="input-holder">
                                                     <input type="checkbox" id="hrpCode" 
-                                                    class="input-check" name="hrp_code">
+                                                    class="input-check" name="hrp_code" value="{{project.id}}">
                                                     <label for="hrpCode">HRP Code</label>
                                                 </div>
                                             </div>
@@ -199,7 +199,7 @@
                                             <div class="field-col">
                                                 <div class="input-holder">
                                                     <input type="checkbox" id="endDate" 
-                                                    class="input-check" name="end_date">
+                                                    class="input-check" name="end_date" value="{{project.id}}">
                                                     <label for="endDate">End Date</label>
                                                 </div>
                                             </div>
@@ -207,7 +207,7 @@
                                             {% if project.description %}
                                             <div class="field-col">
                                                 <div class="input-holder">
-                                                    <input type="checkbox" id="description" class="input-check" name="description">
+                                                    <input type="checkbox" id="description" class="input-check" name="description" value="{{project.id}}">
                                                     <label for="description">Description</label>
                                                 </div>
                                             </div>

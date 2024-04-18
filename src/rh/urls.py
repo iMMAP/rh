@@ -144,8 +144,8 @@ urlpatterns = [
     ),
     # single project csv export
     path(
-        "project/export/CSV/<flag>/<pk>",
-        user_views.ProjectExportView,
+        "project/export/CSV/<int:project_id>",
+        export_views.ProjectExportCSV.as_view(),
         name="export_porjcet_CSV",
     ),
     path(

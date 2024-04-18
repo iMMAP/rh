@@ -398,3 +398,31 @@ $(".radio-select").on("click", function(e){
       },
   });
 });
+const exportCSVProject = document.querySelector(".export-button-csv").addEventListener(
+  "click", function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    let export_url = this.getAttribute('data-csvlink');
+    
+    fetch(export_url,{
+      method: 'POST',
+      headers:{
+        'Content-Type':'application/json',
+        'X-CSRFToken':csrftoken,
+       }, 
+      }).then(response => response.blob())
+      .then(blob => {
+          const url = window.URL.createObjectURL(new Blob([blob]));
+          const a = document.createElement('a');
+          a.style.display = 'none';
+          a.href = url;
+          a.download = 'export.csv';
+          document.body.appendChild(a);
+          a.click();
+          window.URL.revokeObjectURL(url);
+      })
+      .catch(error => {
+          console.error('Error downloading CSV:', error);
+      });
+  
+  });

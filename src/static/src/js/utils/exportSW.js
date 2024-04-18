@@ -398,12 +398,13 @@ $(".radio-select").on("click", function(e){
       },
   });
 });
+// project export in csv file 
 const exportCSVProject = document.querySelector(".export-button-csv").addEventListener(
   "click", function(e) {
     e.preventDefault();
     e.stopPropagation();
+   
     let export_url = this.getAttribute('data-csvlink');
-    
     fetch(export_url,{
       method: 'POST',
       headers:{
@@ -412,6 +413,7 @@ const exportCSVProject = document.querySelector(".export-button-csv").addEventLi
        }, 
       }).then(response => response.blob())
       .then(blob => {
+        // create a download link for downloading the csv file 
           const url = window.URL.createObjectURL(new Blob([blob]));
           const a = document.createElement('a');
           a.style.display = 'none';

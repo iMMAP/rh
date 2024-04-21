@@ -122,14 +122,15 @@ input[type="search"] {
   .copy-btn {
     @include transition(color);
 
-    font-size: 13px;
+    font-size: 15px;
     color: $gray-92;
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
+    background-color: white;
 
     &:hover {
-      color: $gray-35;
+      color: $red-be;
     }
   }
 

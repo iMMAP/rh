@@ -7,6 +7,8 @@ $("input[type=checkbox]").change(function(){
 
 //Reset the checkbox
 $("#resetFilterButton").on("click", function(){
+  
+  selectedCount = 0;
   let checkbox = $("input[type=checkbox]");
   if(checkbox.is(':checked')){
     checkbox.prop('checked',false);
@@ -16,6 +18,7 @@ $("#resetFilterButton").on("click", function(){
       $("#not-checked-message").text("");
     },3000);
   }
+  countSpan.textContent = selectedCount;
 });
 
 $("tr[data-url]").click(function () {

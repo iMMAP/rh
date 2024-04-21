@@ -1,6 +1,8 @@
 // changing the checkbox color when it checked
+
 $("input[type=checkbox]").change(function(){
   $(this).css("accent-color","#af4745");
+  
 });
 
 //Reset the checkbox
@@ -428,3 +430,25 @@ const exportCSVProject = document.querySelector(".export-button-csv").addEventLi
       });
   
   });
+
+  var checkboxes = document.querySelectorAll('input[type=checkbox]');
+  // Get the span element to display the count
+  var countSpan = document.getElementById('selectedCount');
+  // Initialize counter variable
+  var selectedCount = 0;
+  countSpan.textContent = selectedCount;
+  // Add click event listener to each checkbox
+  checkboxes.forEach(function(checkbox) {
+      checkbox.addEventListener('click', function() {
+          // If checkbox is checked, increment counter; otherwise, decrement
+          if (checkbox.checked) {
+              selectedCount++;
+          } else {
+              selectedCount--;
+          }
+          // Update the count displayed in the span element
+          countSpan.textContent = selectedCount;
+      });
+  });
+
+  

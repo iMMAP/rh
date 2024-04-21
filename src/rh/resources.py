@@ -225,7 +225,9 @@ class ProjectResource(resources.ModelResource):
 
     def dehydrate_classification(self, project):
         target_location = list(project.targetlocation_set.all())
-        return ",".join([location.classification for location in target_location if location.classification])
+        return ",".join(
+            [location.district.classification for location in target_location if location.district.classification]
+        )
 
     def dehydrate_facility_site_type(self, project):
         target_location = list(project.targetlocation_set.all())
@@ -392,7 +394,7 @@ class ProjectResource(resources.ModelResource):
                 if dl.disaggregation.name == getattr(self.fields["boys617"], "column_name"):
                     value = str(dl.target)
                     value_list += (", ".join([value]),)
-        return ",".join([item for item in value_list if item])
+        return ", ".join([item for item in value_list if item])
 
     def dehydrate_boys05(self, project):
         target_location = project.targetlocation_set.all()

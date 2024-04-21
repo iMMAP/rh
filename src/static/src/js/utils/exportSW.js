@@ -430,7 +430,7 @@ const exportCSVProject = document.querySelector(".export-button-csv").addEventLi
       });
   
   });
-
+// Counting the selected field in filter and export module 
   var checkboxes = document.querySelectorAll('input[type=checkbox]');
   // Get the span element to display the count
   var countSpan = document.getElementById('selectedCount');

@@ -1013,7 +1013,6 @@ def organization_register(request):
 @login_required
 def ProjectListView(request, flag):
     # project_list =json.loads(request.POST.get("projectList"))
-
     project = Project.objects.all()
     dataset = ProjectResource().export(project)
     format = flag
@@ -1026,7 +1025,6 @@ def ProjectListView(request, flag):
     response = HttpResponse(ds, content_type=f"{format}")
     response["Content-Disposition"] = f"attachment; filename=project.{format}"
     return response
-
 
 @login_required
 def update_indicator_type(request):

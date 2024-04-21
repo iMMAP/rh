@@ -1,6 +1,8 @@
 // changing the checkbox color when it checked
+
 $("input[type=checkbox]").change(function(){
   $(this).css("accent-color","#af4745");
+  
 });
 
 //Reset the checkbox
@@ -107,7 +109,7 @@ $("#downloadFilterForm").click(function(e) {
     const checkedItem = document.querySelectorAll(".input-check");
     for(let i = 0; i < checkedItem.length; i++) {
       if(checkedItem[i].checked == true) {
-        exportData[checkedItem[i].name] = checkedItem[i].name;
+        exportData[checkedItem[i].name] = checkedItem[i].value;
       }
     }
     // ACTIVITY PLANNING
@@ -398,3 +400,55 @@ $(".radio-select").on("click", function(e){
       },
   });
 });
+// project export in csv file 
+const exportCSVProject = document.querySelector(".export-button-csv").addEventListener(
+  "click", function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+   
+    let export_url = this.getAttribute('data-csvlink');
+    fetch(export_url,{
+      method: 'POST',
+      headers:{
+        'Content-Type':'application/json',
+        'X-CSRFToken':csrftoken,
+       }, 
+      }).then(response => response.blob())
+      .then(blob => {
+        // create a download link for downloading the csv file 
+          const url = window.URL.createObjectURL(new Blob([blob]));
+          const a = document.createElement('a');
+          a.style.display = 'none';
+          a.href = url;
+          a.download = 'export.csv';
+          document.body.appendChild(a);
+          a.click();
+          window.URL.revokeObjectURL(url);
+      })
+      .catch(error => {
+          console.error('Error downloading CSV:', error);
+      });
+  
+  });
+// Counting the selected field in filter and export module 
+  var checkboxes = document.querySelectorAll('input[type=checkbox]');
+  // Get the span element to display the count
+  var countSpan = document.getElementById('selectedCount');
+  // Initialize counter variable
+  var selectedCount = 0;
+  countSpan.textContent = selectedCount;
+  // Add click event listener to each checkbox
+  checkboxes.forEach(function(checkbox) {
+      checkbox.addEventListener('click', function() {
+          // If checkbox is checked, increment counter; otherwise, decrement
+          if (checkbox.checked) {
+              selectedCount++;
+          } else {
+              selectedCount--;
+          }
+          // Update the count displayed in the span element
+          countSpan.textContent = selectedCount;
+      });
+  });
+
+  

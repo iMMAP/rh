@@ -1026,6 +1026,7 @@ def ProjectListView(request, flag):
     response["Content-Disposition"] = f"attachment; filename=project.{format}"
     return response
 
+
 @login_required
 def update_indicator_type(request):
     """Indicator related types fields"""

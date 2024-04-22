@@ -103,7 +103,7 @@ class BeneficiaryType(models.Model):
 
 class Organization(models.Model):
     """Organizations Model"""
-    
+
     class Meta:
         ordering = ["code"]
 

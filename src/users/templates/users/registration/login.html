@@ -89,10 +89,10 @@
         event.preventDefault();
 
         if (input.type === 'password') {
-            button.innerHTML = '<span class="icon-eye-off"></span>';
-            input.type = 'text';
-        } else {
             button.innerHTML = '<span class="icon-eye"></span>';
+            input.type = 'text';
+        } else if (input.type === 'text'){
+            button.innerHTML = '<span class="icon-eye-off"></span>';
             input.type = 'password';
         }
     });

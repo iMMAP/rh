@@ -357,22 +357,22 @@
                                             {% for targetLocation in activityPlan.targetlocation_set.all %} 
                                             <div class="field-col">
                                                 <div class="input-holder">
-                                                    <label for="province-{{targetLocation.province.id}}" class="text-read-only">Province</label>
-                                                    <input type="checkbox" id="province-{{targetLocation.province.id}}" class="province-check"
+                                                    <label for="province-{{targetLocation.province}}" class="text-read-only">Province</label>
+                                                    <input type="checkbox" id="province-{{targetLocation.province}}" class="province-check"
                                                     value="{{targetLocation.province.id}}"
                                                     name="province"> 
-                                                    <label for="province-{{targetLocation.province.id}}" 
+                                                    <label for="province-{{targetLocation.province}}" 
                                                     class="label">{{targetLocation.province}}</label>
                                                 </div>
                                             </div>
                                             
                                             <div class="field-col">
                                                 <div class="input-holder">
-                                                    <label for="district-{{targetLocation.district.id}}" class="text-read-only">District</label>
-                                                    <input type="checkbox" id="district-{{targetLocation.district.id}}" class="district-check"
+                                                    <label for="district-{{targetLocation.district}}" class="text-read-only">District</label>
+                                                    <input type="checkbox" id="district-{{targetLocation.district}}" class="district-check"
                                                     value="{{targetLocation.district.id}}"
                                                     name="district"> 
-                                                    <label for="district-{{targetLocation.district.id}}" 
+                                                    <label for="district-{{targetLocation.district}}" 
                                                     class="label">{{targetLocation.district}}</label>
                                                 </div>
                                             </div>

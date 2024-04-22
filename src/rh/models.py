@@ -103,6 +103,9 @@ class BeneficiaryType(models.Model):
 
 class Organization(models.Model):
     """Organizations Model"""
+    
+    class Meta:
+        ordering = ["code"]
 
     TYPE_CHOICES = [
         ("National NGO", "National NGO"),

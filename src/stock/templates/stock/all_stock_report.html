@@ -190,13 +190,15 @@
                         </tr>
                     </thead>
                     {% if stock_reports %}
-                        <tbody class="cursor-pointer">
+                        <tbody>
                             {% for report in stock_reports %}
-                                <tr data-url="{% url 'stock_report' report.id %}">
+                                <tr>
                                     <td class="month-col" data-title="Month">
-                                        <div class="table-flex-holder">
-                                            {{ report.created_at|date:"F, Y" }}
-                                        </div>
+                                        <a href="{% url 'stock_report' report.id %}">
+                                            <div class="table-flex-holder">
+                                                {{ report.created_at|date:"F, Y" }}
+                                            </div>
+                                        </a>
                                     </td>
                                     <td class="progress-col" data-title="Progress Report">Monthly progress for {{ report.created_at|date:"F, Y" }} {% now "r" as todays_date %}</td>
                                 
@@ -233,14 +235,16 @@
                         </tr>
                     </thead>
                     {% if submitted_stock_reports %}
-                        <tbody class="cursor-pointer">
+                        <tbody >
                             {% for report in submitted_stock_reports %}
-                                <tr data-url="{% url 'stock_report' report.id %}">
+                                <tr>
                                     <td class="month-col" data-title="Month">
-                                        <div class="table-flex-holder">
-                                            {{ report.created_at|date:"F, Y" }}
-                                        </div>
-                                    </td>
+                                        <a href="{% url 'stock_report' report.id  %}">
+                                            <div class="table-flex-holder">
+                                                {{ report.created_at|date:"F, Y" }}
+                                            </div>
+                                        </a>
+                                    </td>  
                                 
                                     <td class="progress-col" data-title="Progress Report">Monthly progress for {{ report.created_at|date:"F, Y" }}</td>
                                 

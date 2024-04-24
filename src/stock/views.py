@@ -64,12 +64,13 @@ def stock_index_view(request):
 
 @cache_control(no_store=True)
 @login_required
-def all_stock_report(request):
-    stock_reports = StockReports.objects.filter(submitted=False)
-    submitted_stock_reports = StockReports.objects.filter(submitted=True)
+def all_stock_report(request, flag):
+    stock_reports = StockReports.objects.filter(submitted=flag)
+    # submitted_stock_reports = StockReports.objects.filter(submitted=True)
     context = {
+        "flag":flag,
         "stock_reports": stock_reports,
-        "submitted_stock_reports": submitted_stock_reports,
+        # "submitted_stock_reports": submitted_stock_reports,
     }
     return render(request, "stock/all_stock_report.html", context)
 
@@ -166,7 +167,7 @@ def stock_report_view(request, pk):
 @require_http_methods(["POST"])
 def submit_stock_report_form(request, pk):
     StockReports.objects.filter(id=pk).update(submitted=True, submitted_at=datetime.datetime.now())
-    return redirect("all_stock_report")
+    return redirect("all_stock_report", 'True')
 
 
 @cache_control(no_store=True)

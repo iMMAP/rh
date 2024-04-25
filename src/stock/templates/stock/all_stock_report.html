@@ -13,7 +13,7 @@
                             <a href="{% url 'stocks' %}">warehouse locations</a>
                         </li>
                         <li class="active">
-                            <a href="{% url 'all_stock_report' %}">Stock report</a>
+                            <a href="{% url 'all_stock_report' 'todo' %}">Stock report</a>
                         </li>
                     </ul>
                 </div>
@@ -156,12 +156,22 @@
                 <div class="holder tabs-nav-holder">
                     <div>
                         <ul class="tabs-nav js-tabs-nav tabs-nav-small">
-                            <li class="active">
-                                <strong><a href="#stock_reports_todo">Stock Reports Todo</a></strong>
-                            </li>
-        
-                            <li class="">
-                                <strong><a href="#reports_complete">Stock Reports Completed</a></strong>   
+                            {% if flag == 'todo' %}
+                                <li class="active">
+                            {% else %}
+                                <li>
+                            {% endif %}
+                                <strong><a href="{% url 'all_stock_report' 'todo' %}">Stock Reports Todo</a></strong>
+                                </li>
+                                </li>
+
+                            {% if flag == 'submitted' %}
+                                <li class="active">
+                            {% else %}
+                                <li>
+                            {% endif %}
+                                    <strong><a href="{% url 'all_stock_report' 'submitted' %}">Stock Reports Completed</a></strong>   
+                                </li>
                             </li>
                         </ul>
                     </div>
@@ -181,7 +191,11 @@
                             </th>
             
                             <th class="date-col">
-                                <strong class="table-title">Due date</strong>
+                                {% if flag == "todo" %}
+                                <strong class="table-title">Due Date</strong>
+                                {% else %}
+                                <strong class="table-title">Completed Date</strong>
+                                {% endif %}
                             </th>
             
                             <th class="month-col">
@@ -190,28 +204,37 @@
                         </tr>
                     </thead>
                     {% if stock_reports %}
-                        <tbody class="cursor-pointer">
+                        <tbody>
                             {% for report in stock_reports %}
-                                <tr data-url="{% url 'stock_report' report.id %}">
+                                <tr>
                                     <td class="month-col" data-title="Month">
-                                        <div class="table-flex-holder">
-                                            {{ report.created_at|date:"F, Y" }}
-                                        </div>
+                                        <a href="{% url 'stock_report' report.id %}">
+                                            <div class="table-flex-holder">
+                                                {{ report.created_at|date:"F, Y" }}
+                                            </div>
+                                        </a>
                                     </td>
                                     <td class="progress-col" data-title="Progress Report">Monthly progress for {{ report.created_at|date:"F, Y" }} {% now "r" as todays_date %}</td>
                                 
                                     <td class="date-col" data-title="Due date">{{ report.due_date|date:"d F, Y" }}</td>
                                 
-                                    <td class="date-col" data-title="Status">Pending</td>
+                                    <td class="date-col" data-title="Status">
+                                        {% if report.state == 'submitted' %}
+                                            submitted
+                                        {% else %}
+                                            Pending
+                                        {% endif %}
+                                    </td>
                                 </tr>    
 
                             {% endfor %}
                         </tbody>
                     {% endif %}
+                    
                 </table>                   
             </div>
 
-            <div id="reports_complete">
+            <!-- <div id="reports_complete">
                 <table class="table responsive-table report-table">
                     <thead>
                         <tr>
@@ -233,14 +256,16 @@
                         </tr>
                     </thead>
                     {% if submitted_stock_reports %}
-                        <tbody class="cursor-pointer">
+                        <tbody >
                             {% for report in submitted_stock_reports %}
-                                <tr data-url="{% url 'stock_report' report.id %}">
+                                <tr>
                                     <td class="month-col" data-title="Month">
-                                        <div class="table-flex-holder">
-                                            {{ report.created_at|date:"F, Y" }}
-                                        </div>
-                                    </td>
+                                        <a href="{% url 'stock_report' report.id  %}">
+                                            <div class="table-flex-holder">
+                                                {{ report.created_at|date:"F, Y" }}
+                                            </div>
+                                        </a>
+                                    </td>  
                                 
                                     <td class="progress-col" data-title="Progress Report">Monthly progress for {{ report.created_at|date:"F, Y" }}</td>
                                 
@@ -253,7 +278,7 @@
                         </tbody>
                     {% endif %}
                 </table>  
-            </div>
+            </div> -->
         </div>
     </div>
 </div>
@@ -261,4 +286,5 @@
 
 {% block scripts %}
     <script src="{% static 'src/js/components/initTabs.js' %}"></script>
+    
 {% endblock scripts %}

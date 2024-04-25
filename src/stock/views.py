@@ -65,8 +65,7 @@ def stock_index_view(request):
 @cache_control(no_store=True)
 @login_required
 def all_stock_report(request, flag):
-    stock_reports = StockReports.objects.filter(submitted=flag)
-    # submitted_stock_reports = StockReports.objects.filter(submitted=True)
+    stock_reports = StockReports.objects.filter(state=flag)
     context = {
         "flag":flag,
         "stock_reports": stock_reports,
@@ -84,7 +83,7 @@ def stock_report_view(request, pk):
     warehouse_locations = WarehouseLocation.objects.all()
     warehouse_location_stocks = {}
 
-    if stock_report.submitted:
+    if stock_report.state=='submitted':
         for warehouse in warehouse_locations:
             warehouse_stock_details = stock_location_details.filter(warehouse_location__id=warehouse.id)
             warehouse_location_stocks.update({warehouse: warehouse_stock_details})
@@ -166,12 +165,12 @@ def stock_report_view(request, pk):
 @login_required
 @require_http_methods(["POST"])
 def submit_stock_report_form(request, pk):
-    StockReports.objects.filter(id=pk).update(submitted=True, submitted_at=datetime.datetime.now())
-    return redirect("all_stock_report", 'True')
+    StockReports.objects.filter(id=pk).update(state='submitted', submitted_at=datetime.datetime.now())
+    return redirect("all_stock_report", 'submitted')
 
 
 @cache_control(no_store=True)
 @login_required
 def update_stock_report(request, pk):
-    StockReports.objects.filter(id=pk).update(submitted=False)
+    StockReports.objects.filter(id=pk).update(state='todo')
     return redirect("stock_report", pk=pk)

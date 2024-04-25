@@ -13,7 +13,7 @@
                             <a href="{% url 'stocks' %}">warehouse locations</a>
                         </li>
                         <li class="active">
-                            <a href="{% url 'all_stock_report' 'False' %}">Stock report</a>
+                            <a href="{% url 'all_stock_report' 'todo' %}">Stock report</a>
                         </li>
                     </ul>
                 </div>
@@ -156,21 +156,21 @@
                 <div class="holder tabs-nav-holder">
                     <div>
                         <ul class="tabs-nav js-tabs-nav tabs-nav-small">
-                            {% if flag == 'False' %}
+                            {% if flag == 'todo' %}
                                 <li class="active">
                             {% else %}
                                 <li>
                             {% endif %}
-                                <strong><a href="{% url 'all_stock_report' 'False' %}">Stock Reports Todo</a></strong>
+                                <strong><a href="{% url 'all_stock_report' 'todo' %}">Stock Reports Todo</a></strong>
                                 </li>
                                 </li>
 
-                            {% if flag == 'True' %}
+                            {% if flag == 'submitted' %}
                                 <li class="active">
                             {% else %}
                                 <li>
                             {% endif %}
-                                    <strong><a href="{% url 'all_stock_report' 'True' %}">Stock Reports Completed</a></strong>   
+                                    <strong><a href="{% url 'all_stock_report' 'submitted' %}">Stock Reports Completed</a></strong>   
                                 </li>
                             </li>
                         </ul>
@@ -191,7 +191,7 @@
                             </th>
             
                             <th class="date-col">
-                                {% if flag == "False" %}
+                                {% if flag == "todo" %}
                                 <strong class="table-title">Due Date</strong>
                                 {% else %}
                                 <strong class="table-title">Completed Date</strong>
@@ -219,7 +219,7 @@
                                     <td class="date-col" data-title="Due date">{{ report.due_date|date:"d F, Y" }}</td>
                                 
                                     <td class="date-col" data-title="Status">
-                                        {% if report.submitted %}
+                                        {% if report.state == 'submitted' %}
                                             submitted
                                         {% else %}
                                             Pending
@@ -230,6 +230,7 @@
                             {% endfor %}
                         </tbody>
                     {% endif %}
+                    
                 </table>                   
             </div>
 

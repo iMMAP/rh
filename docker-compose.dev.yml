@@ -1,8 +1,6 @@
-version: '3.10'
-
 services:
-  django:
-    container_name: django
+  rh_django:
+    container_name: rh_django
     build:
       context: .
       dockerfile: ./docker/Dockerfile.python
@@ -12,13 +10,13 @@ services:
     ports:
       - 8000:8000
     depends_on:
-      - db
+      - rh_db
     env_file: .env
     environment:
       - DJANGO_SETTINGS_MODULE=core.settings.local
 
-  npm:
-    container_name: npm
+  rh_npm:
+    container_name: rh_npm
     build: 
       context: .
       dockerfile: ./docker/Dockerfile.npm
@@ -28,8 +26,8 @@ services:
       - 5173:5173
     entrypoint: ["make","vite"]
 
-  db:
-    container_name: postgres_db
+  rh_db:
+    container_name: rh_postgres_db
     image: postgres:14.2-alpine
     restart: unless-stopped
     ports:

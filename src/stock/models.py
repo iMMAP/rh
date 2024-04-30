@@ -93,6 +93,8 @@ class StockLocationDetails(models.Model):
     qty_in_stock = models.IntegerField(default=0, verbose_name="Qty in Stock", null=True, blank=True)
     qty_in_pipeline = models.IntegerField(default=0, verbose_name="Qty in Pipeline", null=True, blank=True)
     beneficiary_coverage = models.IntegerField(default=0, blank=True, null=True)
+    unit_required = models.IntegerField(default=0, verbose_name="No Unit Required", null=True, blank=True)
+    people_to_assisted = models.IntegerField(default=0, verbose_name="No People to be assisted", null=True, blank=True)
 
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, null=True)

@@ -8,7 +8,8 @@ install-no-dev:
 
 .PHONY: lint
 lint:
-	ruff check --output-format=github ./src && ruff format ./src
+	ruff check --output-format=github ./src
+	ruff format ./src
 
 .PHONY: migrate
 migrate:
@@ -80,4 +81,5 @@ shell_plus:
 
 .PHONY: seed
 seed:
+	cd scripts && python migrate_mongodb.py
 	poetry run python src/manage.py seed

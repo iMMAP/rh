@@ -93,7 +93,6 @@ class DisaggregationFactory(DjangoModelFactory):
         model = Disaggregation
 
     name = factory.Faker("word")
-    type = factory.Iterator(D_TYPES, getter=lambda c: c[0])
 
     @factory.post_generation
     def indicators(self, create, extracted, **kwargs):

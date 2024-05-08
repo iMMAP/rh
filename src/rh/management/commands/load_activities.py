@@ -19,6 +19,7 @@ from rh.models import (
     TransferMechanismType,
     UnitType,
 )
+from django.contrib.auth.models import Group
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent.parent
 
@@ -27,6 +28,14 @@ class Command(BaseCommand):
     help = "Import activities from a 'output_2024' CSV file."
 
     def _import_data(self):
+        Group.objects.bulk_create(
+                    [
+                        ResponseType(name="user"),
+                        ResponseType(name="org_admin"),
+                        ResponseType(name="cluster_admin"),
+                        ResponseType(name="immap_imo"),
+                    ]
+                )
         ResponseType.objects.bulk_create(
             [
                 ResponseType(name="Winterization"),

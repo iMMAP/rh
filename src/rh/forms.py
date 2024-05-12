@@ -86,7 +86,7 @@ class ProjectForm(forms.ModelForm):
         self.fields["donors"].queryset = Donor.objects.order_by("name")
         self.fields["budget_currency"].queryset = Currency.objects.order_by("name")
 
-        orgs = Organization.objects.order_by("name").values_list("pk", "name")
+        orgs = Organization.objects.order_by("name").values_list("pk", "code")
 
         self.fields["implementing_partners"].choices = orgs
         self.fields["programme_partners"].choices = orgs

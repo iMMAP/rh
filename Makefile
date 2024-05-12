@@ -19,9 +19,10 @@ migrate:
 migrations:
 	poetry run python src/manage.py makemigrations
 
+env ?= local
 .PHONY: serve
 serve:
-	poetry run python src/manage.py runserver
+	poetry run python src/manage.py runserver --setting=core.settings.$(env)
 
 .PHONY: vite
 vite:
@@ -39,12 +40,16 @@ npm-install:
 npm-build:
 	cd src/static && npm run build
 
+.PHONY: npm-update
+npm-update:
+	npm-install npm-build;
+
 .PHONY: superuser
 superuser:
 	poetry run python src/manage.py createsuperuser
 
 .PHONY: update
-update: install migrate;
+update: install migrate npm-update;
 
 .PHONY: test
 test:
@@ -53,6 +58,11 @@ test:
 .PHONY: db-seed
 db-seed:
 	poetry run python src/manage.py seed 
+
+.PHONY: seed
+seed:
+	cd scripts && python migrate_mongodb.py
+	poetry run python src/manage.py seed
 
 .PHONY: format-templates
 format-templates:
@@ -70,7 +80,6 @@ collectstatic:
 run-dependencies:
 	docker-compose -f docker-compose.dev.yml up -d --build
 
-
 .PHONY: shell
 shell:
 	poetry run python src/manage.py shell
@@ -78,8 +87,3 @@ shell:
 .PHONY: shell_plus
 shell_plus:
 	poetry run python src/manage.py shell_plus
-
-.PHONY: seed
-seed:
-	cd scripts && python migrate_mongodb.py
-	poetry run python src/manage.py seed

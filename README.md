@@ -29,21 +29,21 @@ docker-compose -f docker-compose.dev.yml run --rm npm make npm-build
 ```
 
 ### No Docker
-#### Install poetry
-Make sure Poetry is installed on your machine
-```shell
-poetry --version
-```
-
-If not installed, install Poetry with:
-
-```shell
-pip install poetry
-```
 
 #### Create a virtualenv 
 ```shell
 virtualenv .venv
+```
+
+### Activate virtualenv
+```shell
+source ./.venv/bin/activate
+```
+
+#### Install poetry
+install Poetry with:
+```shell
+pip install poetry
 ```
 
 #### Install the dependencies
@@ -52,6 +52,7 @@ Make sure to 'make' installed for your machine.
 ```shell
 make install # to install python package
 make npm-install # to install npm packges inside static folder
+make migrate
 ```
 
 #### Run the project:
@@ -59,6 +60,9 @@ make npm-install # to install npm packges inside static folder
 Run Django development server
 ```shell
 make serve
+
+make server env=local
+make server env=production
 ```
 Run the vite developement server
 
@@ -69,16 +73,4 @@ make vite
 #### Run the linter
 ```shell
 make lint
-```
-
-#### Install additional package
-
-```shell
-poetry add package_name
-```
-
-#### Install dev package
-
-```shell
-poetry add --dev package_name
 ```

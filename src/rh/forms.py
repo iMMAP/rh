@@ -45,6 +45,7 @@ class ProjectForm(forms.ModelForm):
                     "type": "date",
                     "onfocus": "(this.type='date')",
                     "onblur": "(this.type='text')",
+                    "class":"start-date",
                 }
             ),
             "end_date": forms.widgets.DateInput(
@@ -52,6 +53,7 @@ class ProjectForm(forms.ModelForm):
                     "type": "date",
                     "onfocus": "(this.type='date')",
                     "onblur": "(this.type='text')",
+                    "class": "end-date",
                 }
             ),
             "active": forms.widgets.HiddenInput(),

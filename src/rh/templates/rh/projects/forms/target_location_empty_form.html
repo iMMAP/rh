@@ -109,7 +109,7 @@
                 <div class="col col-lg">
                     <div class="multiple-fields-row two-items">
                         <div class="field-col">
-                            <div class="input-field">
+                            <div class="input-field is-required">
                                 <label for="{{ target_location_form.facility_name.id_for_label }}">
                                     Facility / Site Name
                                 </label>
@@ -117,9 +117,9 @@
                             </div>
                         </div>
                          <div class="field-col">
-                             <div class="input-field">
+                             <div class="input-field is-required">
                                  <label for="{{ target_location_form.facility_id.id_for_label }}">
-                                     Facility / Site ID
+                                     Facility / Site ID [HMIS code]
                                  </label>
                                  <div class="input-holder">{{ target_location_form.facility_id }}</div>
                              </div>

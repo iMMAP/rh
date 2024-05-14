@@ -154,6 +154,7 @@ class TargetLocationForm(forms.ModelForm):
                 "locations-queries-url": reverse_lazy("ajax-load-locations"),
             }
         )
+        
 
 
 TargetLocationFormSet = inlineformset_factory(

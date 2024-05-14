@@ -45,7 +45,7 @@ class ProjectForm(forms.ModelForm):
                     "type": "date",
                     "onfocus": "(this.type='date')",
                     "onblur": "(this.type='text')",
-                    "class":"start-date",
+                    "class": "start-date",
                 }
             ),
             "end_date": forms.widgets.DateInput(
@@ -156,7 +156,6 @@ class TargetLocationForm(forms.ModelForm):
                 "locations-queries-url": reverse_lazy("ajax-load-locations"),
             }
         )
-        
 
 
 TargetLocationFormSet = inlineformset_factory(

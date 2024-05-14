@@ -168,31 +168,52 @@ class ProjectResource(resources.ModelResource):
     # activity planning start
     def dehydrate_activity_domain(self, project):
         activity_pans = list(project.activityplan_set.all())
-        return ",".join([ap.activity_domain.name for ap in activity_pans if ap.activity_domain.name])
+        try:
+            return ",".join([ap.activity_domain.name for ap in activity_pans if ap.activity_domain.name])
+        except Exception:
+            return None
 
     def dehydrate_activity_type(self, project):
         activity_types = list(project.activityplan_set.all())
-        return ",".join([ap.activity_type.name for ap in activity_types if ap.activity_type.name])
+        try:
+            return ",".join([ap.activity_type.name for ap in activity_types if ap.activity_type.name])
+        except Exception:
+            return None
 
     def dehydrate_indicator(self, project):
         activity_plans = list(project.activityplan_set.all())
-        return ",".join([ap.indicator.name for ap in activity_plans if ap.indicator.name])
+        try:
+            return ",".join([ap.indicator.name for ap in activity_plans if ap.indicator.name])
+        except Exception:
+            return None
 
     def dehydrate_beneficiary(self, project):
         activity_plans = list(project.activityplan_set.all())
-        return ",".join([ap.beneficiary.name for ap in activity_plans if ap.beneficiary.name])
+        try:
+            return ",".join([ap.beneficiary.name for ap in activity_plans if ap.beneficiary.name])
+        except Exception:
+            return None
 
     def dehydrate_beneficiary_category(self, project):
         activity_plans = project.activityplan_set.all()
-        return ",".join([ap.beneficiary_category for ap in activity_plans if ap.beneficiary_category])
+        try:
+            return ",".join([ap.beneficiary_category for ap in activity_plans if ap.beneficiary_category])
+        except Exception:
+            return None
 
     def dehydrate_hrp_beneficiary(self, project):
         activity_plans = list(project.activityplan_set.all())
-        return ",".join([ap.hrp_beneficiary for ap in activity_plans if ap.hrp_beneficiary])
+        try:
+            return ",".join([ap.hrp_beneficiary for ap in activity_plans if ap.hrp_beneficiary])
+        except Exception:
+            return None
 
     def dehydrate_description(self, project):
         activity_plans = list(project.activityplan_set.all())
-        return ",".join([ap.description for ap in activity_plans if ap.description])
+        try:
+            return ",".join([ap.description for ap in activity_plans if ap.description])
+        except Exception:
+            return None
 
     # activity planning ends
 

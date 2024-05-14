@@ -1014,7 +1014,7 @@ def organization_register(request):
 
 @login_required
 def ProjectListView(request, flag):
-    if request.method == 'POST':
+    if request.method == "POST":
         data = json.loads(request.body)
         print(data)
         project = Project.objects.filter(id__in=data)

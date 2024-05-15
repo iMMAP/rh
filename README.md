@@ -53,6 +53,9 @@ Make sure to 'make' installed for your machine.
 make install # to install python package
 make npm-install # to install npm packges inside static folder
 make migrate
+
+# Adds default db data
+make seed # migrate_mongodb.py and load_activities
 ```
 
 #### Run the project:
@@ -61,8 +64,8 @@ Run Django development server
 ```shell
 make serve
 
-make server env=local
-make server env=production
+make serve env=local
+make serve env=production
 ```
 Run the vite developement server
 

@@ -642,8 +642,8 @@ class TargetLocation(models.Model):
         blank=True,
         null=True,
     )
-    facility_lat = models.CharField(max_length=NAME_MAX_LENGTH, null=True, blank=True)
-    facility_long = models.CharField(max_length=NAME_MAX_LENGTH, null=True, blank=True)
+    facility_lat = models.FloatField(null=True, blank=True)
+    facility_long = models.FloatField(null=True, blank=True)
 
     disaggregations = models.ManyToManyField(
         "Disaggregation", through="DisaggregationLocation", related_name="disaggregations"

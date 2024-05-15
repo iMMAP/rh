@@ -80,8 +80,11 @@
                             <span class="sign-up-field-error">{{form.hrp_code.errors}}</span>
                         </div>
                     </div>
-
+                    
                     <div class="col col">
+                        <span class="sign-up-field-error" id="date-validation-error">
+                            <i class='icon-info'></i> Start date cannot be greater then end date.
+                        </span>
                         <div class="multiple-fields-row">
                             <div class="field-col input-field is-required">
                                 <div class=" date start">
@@ -98,7 +101,6 @@
                                 </div>
                             </div>
                         </div>
-
                         <div class="multiple-fields-row">
                             <div class="field-col">
                                 <div class="input-field">
@@ -113,9 +115,7 @@
                                 <span class="sign-up-field-error">{{form.budget_currency.errors}}</span>
                             </div>
                         </div>
-
                         <small id="budget_received_message"></small>
-                        
                         <div class="multiple-fields-row">
                             <div class="field-col">
                                 <div class="input-field">
@@ -132,7 +132,6 @@
                                 </div>
                             </div>
                         </div>
-
                     </div>
 
                     <div class="col col-lg">
@@ -222,6 +221,17 @@
             },
             shouldSort: false,
         });
-    })
+    });
+//  start date and end date validation 
+    document.querySelector(".end-date").addEventListener("change", function(e){
+        let end_date = e.target.value;
+        let start_date = document.querySelector(".start-date");
+
+        if((start_date.value) > end_date){
+            document.getElementById("date-validation-error").style.display = "inline-block";
+            e.target.value = null;
+        }
+    });
+
 </script>
 {% endblock scripts %}

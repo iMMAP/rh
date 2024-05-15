@@ -110,10 +110,10 @@ class StockLocationDetails(models.Model):
 class StockReports(models.Model):
     stock_location_details = models.ManyToManyField(StockLocationDetails)
     STOCK_State = (
-        ('todo', 'To Do'),
-        ('submitted', 'Submitted'),
+        ("todo", "To Do"),
+        ("submitted", "Submitted"),
     )
-    state = models.CharField(max_length=10, choices=STOCK_State, default='todo')
+    state = models.CharField(max_length=10, choices=STOCK_State, default="todo")
     created_at = models.DateTimeField(blank=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, blank=True, null=True)
     due_date = models.DateTimeField(blank=True, null=True)

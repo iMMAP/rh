@@ -11,6 +11,12 @@
 //--------------------------------
 //Random added style start
 //----------------------------------
+.date .date-picker-field{
+  margin-bottom: 5px;
+}
+#date-validation-error{
+  display: none;
+}
 .export-badge{
  position:absolute;
  right: 50px;

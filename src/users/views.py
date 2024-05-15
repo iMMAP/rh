@@ -67,7 +67,7 @@ def send_account_activation_email(request, user, to_email):
         )
 
 
-@cache_control(no_store=True)
+
 @unauthenticated_user
 def register_view(request):
     if request.method == "POST":
@@ -115,7 +115,7 @@ def register_view(request):
     return render(request, "users/registration/signup.html", context)
 
 
-@cache_control(no_store=True)
+
 @unauthenticated_user
 def login_view(request):
     template = loader.get_template("users/registration/login.html")
@@ -145,7 +145,7 @@ def logout_view(request):
 #############################################
 ############### Profile Views #################
 #############################################
-@cache_control(no_store=True)
+
 @login_required
 def profile(request):
     template = loader.get_template("users/profile.html")

@@ -43,7 +43,7 @@ from .models import ActivityPlanReport, DisaggregationLocationReport, ProjectMon
 RECORDS_PER_PAGE = 10
 
 
-@cache_control(no_store=True)
+
 @login_required
 def index_project_report_view(request, project):
     """Project Monthly Report View"""
@@ -80,7 +80,7 @@ def index_project_report_view(request, project):
     return render(request, "project_reports/views/monthly_reports_view_base.html", context)
 
 
-@cache_control(no_store=True)
+
 @login_required
 def create_project_monthly_report_view(request, project):
     """View for creating a project."""
@@ -328,7 +328,7 @@ def unarchive_project_monthly_report_view(request, report):
     return JsonResponse(response_data)
 
 
-@cache_control(no_store=True)
+
 @login_required
 def details_monthly_progress_view(request, project, report):
     """Project Monthly Report Read View"""
@@ -386,7 +386,7 @@ def get_target_locations_domain(target_locations):
     return (target_location_provinces, target_location_districts, target_location_zones)
 
 
-@cache_control(no_store=True)
+
 @login_required
 def create_project_monthly_report_progress_view(request, project, report):
     """Create View"""
@@ -555,7 +555,7 @@ def create_project_monthly_report_progress_view(request, project, report):
     return render(request, "project_reports/forms/monthly_report_progress_form.html", context)
 
 
-@cache_control(no_store=True)
+
 @login_required
 def update_project_monthly_report_progress_view(request, project, report):
     """Update View"""
@@ -809,7 +809,7 @@ def get_location_report_empty_form(request):
     return JsonResponse({"html": html})
 
 
-@cache_control(no_store=True)
+
 @login_required
 def load_target_locations_details(request):
     parent_ids = [int(i) for i in request.POST.getlist("parents[]") if i]
@@ -910,7 +910,7 @@ def recompute_target_achieved(plan_report):
     plan_report.save()
 
 
-@cache_control(no_store=True)
+
 @login_required
 def delete_location_report_view(request, location_report):
     """Delete the target location report"""

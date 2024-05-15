@@ -14,6 +14,9 @@ DESCRIPTION_MAX_LENGTH = 600
 class Location(models.Model):
     """Locations Model"""
 
+    class Meta:
+        ordering = ["name"]
+
     LOCATION_CLASSIFICATIONS = [("urban", "Urban"), ("rural", "Rural")]
 
     LOCATION_TYPES = [

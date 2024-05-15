@@ -10,7 +10,7 @@
             {% comment %} <div class="input-check-holder">
                 <input type="checkbox" name="selected_ids[]" value="{{ project.id }}" />
                 <label for="table-check-11">
-                    <span class="input" id="check_project_{{project.id}}"></span>
+                    <span class="input" id="check_project_{{project.id}}" data-project-id="{{project.id}}"></span>
                 </label>
             </div> {% endcomment %}
             {{ project.title }}

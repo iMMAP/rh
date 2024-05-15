@@ -49,7 +49,7 @@ superuser:
 	poetry run python src/manage.py createsuperuser
 
 .PHONY: update
-update: install migrate npm-update;
+update: install migrate npm-install npm-build;
 
 .PHONY: test
 test:
@@ -57,12 +57,12 @@ test:
 
 .PHONY: db-seed
 db-seed:
-	poetry run python src/manage.py seed 
+	poetry run python src/manage.py seed
 
 .PHONY: seed
 seed:
 	cd scripts && python migrate_mongodb.py
-	poetry run python src/manage.py seed
+	poetry run python src/manage.py load_activities
 
 .PHONY: format-templates
 format-templates:

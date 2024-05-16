@@ -11,6 +11,7 @@ from rh.models import (
     LocationType,
     PackageType,
     Project,
+    TargetLocation,
     TransferCategory,
     TransferMechanismType,
     UnitType,
@@ -99,6 +100,8 @@ class TargetLocationReport(models.Model):
     """Target Locations model"""
 
     activity_plan_report = models.ForeignKey(ActivityPlanReport, on_delete=models.CASCADE, null=True, blank=True)
+
+    target_location = models.ForeignKey(TargetLocation, on_delete=models.CASCADE, null=True, blank=True)
 
     country = models.ForeignKey(
         Location,

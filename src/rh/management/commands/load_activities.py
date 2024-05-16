@@ -4,8 +4,8 @@ from pathlib import Path
 import pandas as pd
 from django.contrib.auth.models import User
 from django.core.management.base import BaseCommand
-
 from project_reports.models import ResponseType
+
 from rh.models import (
     ActivityDetail,
     ActivityDomain,
@@ -34,6 +34,7 @@ class Command(BaseCommand):
                 ResponseType(name="Flood"),
                 ResponseType(name="Drought"),
                 ResponseType(name="Earthquake Response"),
+                ResponseType(name="Cholera"),
             ]
         )
 

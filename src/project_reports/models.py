@@ -1,4 +1,5 @@
 from django.db import models
+
 from rh.models import (
     ActivityPlan,
     Currency,
@@ -146,8 +147,8 @@ class TargetLocationReport(models.Model):
         blank=True,
         null=True,
     )
-    facility_lat = models.CharField(max_length=200, null=True, blank=True)
-    facility_long = models.CharField(max_length=200, null=True, blank=True)
+    facility_lat = models.FloatField(null=True, blank=True)
+    facility_long = models.FloatField(null=True, blank=True)
     nhs_code = models.CharField(
         max_length=200,
         blank=True,

@@ -74,9 +74,11 @@ class TargetLocationReportForm(forms.ModelForm):
             self.fields["nhs_code"] = forms.CharField(max_length=200, required=True)
         else:
             self.fields.pop("nhs_code", None)
-            
+
         if plan_report:
-            self.fields["target_location"].queryset = TargetLocation.objects.filter(activity_plan=plan_report.activity_plan)
+            self.fields["target_location"].queryset = TargetLocation.objects.filter(
+                activity_plan=plan_report.activity_plan
+            )
 
 
 TargetLocationReportFormSet = inlineformset_factory(

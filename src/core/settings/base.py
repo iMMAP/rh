@@ -102,6 +102,9 @@ AUTHENTICATION_BACKENDS = [
     'guardian.backends.ObjectPermissionBackend',
 ]
 
+# Guadian Anonymous User
+ANONYMOUS_USER_ID = -1
+
 PASSWORD_HASHERS = [
     "django.contrib.auth.hashers.BCryptPasswordHasher",
 ]

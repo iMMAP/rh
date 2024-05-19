@@ -67,6 +67,7 @@ sentry-sdk = {extras = ["django"], version = "^1.39.1"}
 ruff = "^0.2.1"
 django-htmx = "^1.17.2"
 psycopg2-binary = "^2.9.9"
+django-guardian = "^2.4.0"
 
 
 [tool.poetry.group.dev.dependencies]

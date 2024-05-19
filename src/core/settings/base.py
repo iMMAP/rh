@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     "import_export",
     "django_htmx",
     "compressor",
+    "guardian",
     # RH apps
     "rh.apps.RhConfig",
     "users.apps.UsersConfig",
@@ -98,6 +99,7 @@ AUTH_PASSWORD_VALIDATORS = [
 AUTHENTICATION_BACKENDS = [
     "django.contrib.auth.backends.ModelBackend",
     "users.backends.EmailBackend",
+    'guardian.backends.ObjectPermissionBackend',
 ]
 
 PASSWORD_HASHERS = [

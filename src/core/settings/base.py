@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     "import_export",
     "django_htmx",
     "compressor",
+    "guardian",
     # RH apps
     "rh.apps.RhConfig",
     "users.apps.UsersConfig",
@@ -98,7 +99,11 @@ AUTH_PASSWORD_VALIDATORS = [
 AUTHENTICATION_BACKENDS = [
     "django.contrib.auth.backends.ModelBackend",
     "users.backends.EmailBackend",
+    'guardian.backends.ObjectPermissionBackend',
 ]
+
+# Guadian Anonymous User
+ANONYMOUS_USER_ID = -1
 
 PASSWORD_HASHERS = [
     "django.contrib.auth.hashers.BCryptPasswordHasher",

@@ -2,10 +2,10 @@ import os
 from pathlib import Path
 
 import pandas as pd
-from django.contrib.auth.models import User
+from django.contrib.auth.models import Group, Permission, User
 from django.core.management.base import BaseCommand
-from project_reports.models import ResponseType
 
+from project_reports.models import ResponseType
 from rh.models import (
     ActivityDetail,
     ActivityDomain,
@@ -26,7 +26,25 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent.parent
 class Command(BaseCommand):
     help = "Import activities from a 'output_2024' CSV file."
 
+    def _import_groups(self):
+        groups = ['SUPERADMIN', 'iMMAP IMO', 'CLUSTER LEAD', 'ORGANIZATION LEAD', 'ORGANIZATION USER']
+        for group_name in groups:
+            group, created = Group.objects.get_or_create(name=group_name)
+            if created:
+                self.stdout.write(self.style.SUCCESS(f'Group "{group_name}" created successfully'))
+                if group_name == 'SUPERADMIN':
+                    all_permissions = Permission.objects.all()
+                    group.permissions.set(all_permissions)
+                    self.stdout.write(self.style.SUCCESS(f'All permissions assigned to group "{group_name}"'))
+            else:
+                self.stdout.write(self.style.WARNING(f'Group "{group_name}" already exists'))
+
+
     def _import_data(self):
+        
+        # Handle groups creation
+        self._import_groups()
+
         ResponseType.objects.bulk_create(
             [
                 ResponseType(name="Winterization"),

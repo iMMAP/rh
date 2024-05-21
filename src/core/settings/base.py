@@ -99,7 +99,7 @@ AUTH_PASSWORD_VALIDATORS = [
 AUTHENTICATION_BACKENDS = [
     "django.contrib.auth.backends.ModelBackend",
     "users.backends.EmailBackend",
-    'guardian.backends.ObjectPermissionBackend',
+    "guardian.backends.ObjectPermissionBackend",
 ]
 
 # Guadian Anonymous User

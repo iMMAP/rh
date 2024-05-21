@@ -167,7 +167,14 @@
                         <div class="multiple-fields-row two-items">
                             <div class="field-col">
                                 <div class="select-field">
-                                    <label for="{{ form.implementing_partners.id_for_label }}">Implementing Partners
+                                    <label for="{{ form.implementing_partners.id_for_label }}">
+                                        Implementing Partners[implement the project in the field]
+                                        <div class="implement-info">
+                                            <i class="icon-info"></i>
+                                            <span class="implement-text">
+                                                The partner who takes the project and implement the project in the field.
+                                            </span>
+                                        </div>
                                     </label>
                                     {{ form.implementing_partners }}
                                     <span class="sign-up-field-error">{{form.implementing_partners.errors}}</span>
@@ -175,7 +182,15 @@
                             </div>
                             <div class="field-col">
                                 <div class="select-field">
-                                    <label for="{{ form.programme_partners.id_for_label }}">Programme Partners
+                                    <label for="{{ form.programme_partners.id_for_label }}">
+                                        Programme Partners[lead and administrate the project]
+                                        <div class="programme-info">
+                                            <i class="icon-info "></i>
+                                            <span class="programme-text">
+                                                The partner who is leading and adminstrating the project
+                                            </span>
+                                        </div>
+                                        
                                     </label>
                                     {{ form.programme_partners }}
                                     <span class="sign-up-field-error">{{form.programme_partners.errors}}</span>

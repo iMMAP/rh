@@ -224,7 +224,55 @@
                             </div>
                         </div>
 
-                            <!-- Indicator types start to diaplay -->
+                        {% if activity_report.instance.indicator.enable_retargeting or activity_report.initial.indicator.enable_retargeting %}
+                        <div class="row mtb20">
+                            <div class="col col-lg">
+                                <div class="multiple-fields-row two-items">
+                                    <div class="field-col">
+                                        <div class="input-field">
+                                            <span class="label">Beneficiaries Retargeted due to seasonality</span>
+                                            <div class="input-holder">
+                                                <span class="text-read-only">
+                                                    {% if activity_report.seasonal_retargeting %}
+                                                    Yes
+                                                    {% else %}
+                                                    No
+                                                    {% endif %}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="field-col">
+                                        <div class="input-field">
+                                            <span class="label">Beneficiaries Retargeted due to change in modality</span>
+                                            <div class="input-holder">
+                                                <span class="text-read-only">
+                                                    {% if activity_report.modality_retargeting %}
+                                                    Yes
+                                                    {% else %}
+                                                    No
+                                                    {% endif %}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>	
+                        </div>
+                        {% endif %}
+
+                        <div class="field-col">
+                            <div class="input-field">
+                                <label>Beneficiary Status</label>
+                                <span class="text-read-only">
+                                    <span class="">
+                                        {{ activity_report.get_beneficiary_status_display }}
+                                    </span>
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Indicator types start to diaplay -->
                         <div class="multiple-fields-row">
                             {% if activity_report.indicator.package_type %}
                             <div class="field-col">

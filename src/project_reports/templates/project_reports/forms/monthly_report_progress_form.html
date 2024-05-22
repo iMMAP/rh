@@ -154,6 +154,42 @@
 						</div>
 					</div>
 
+					{% if activity_report_form.instance.indicator.enable_retargeting or activity_report_form.initial.indicator.enable_retargeting %}
+					<div class="row mtb20">
+						<div class="col col-lg">
+							<div class="multiple-fields-row two-items">
+								<div class="field-col">
+									<div class="input-check-holder">
+										<input type="checkbox" class="text-read-only" id="{{ activity_report_form.seasonal_retargeting.id_for_label }}" name="{{ activity_report_form.seasonal_retargeting.html_name }}" {% if activity_report_form.seasonal_retargeting.value %}checked{% endif %}>
+										<label for="{{ activity_report_form.seasonal_retargeting.id_for_label }}">
+											<span class="input"></span>
+											<span class="text">Beneficiaries Retargeted due to seasonality</span>
+										</label>
+									</div> 
+								</div>
+								<div class="field-col">
+									<div class="input-check-holder">
+										<input type="checkbox" class="text-read-only" id="{{ activity_report_form.modality_retargeting.id_for_label }}" name="{{ activity_report_form.modality_retargeting.html_name }}" {% if activity_report_form.modality_retargeting.value %}checked{% endif %}>
+										<label for="{{ activity_report_form.modality_retargeting.id_for_label }}">
+											<span class="input"></span>
+											<span class="text">Beneficiaries Retargeted due to change in modality</span>
+										</label>
+									</div> 
+								</div>
+							</div>
+						</div>	
+					</div>
+					{% endif %}
+
+					<div class="multiple-fields-row">
+						<div class="field-col">
+							<div class="select-field">
+								<label>{{activity_report_form.beneficiary_status.label}}</label>
+								{{ activity_report_form.beneficiary_status}}
+							</div>
+						</div>
+					</div>
+
 					<!-- Indicator types start to diaplay -->
 					<div class="multiple-fields-row">
 						{% if activity_report_form.instance.indicator.package_type or activity_report_form.initial.indicator.package_type %}

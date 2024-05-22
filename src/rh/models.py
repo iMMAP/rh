@@ -347,6 +347,7 @@ class ActivityType(models.Model):
         return self.name
 
     class Meta:
+        # ordering = ['id']
         verbose_name = "Activity Type"
         verbose_name_plural = "Activity Types"
         constraints = [

@@ -143,12 +143,29 @@
 							</div>
 						</div>
 						<div class="col">
-							<div class="field-col">
-								<div class="select-field">
-									<label for="{{ activity_report_form.report_types.id_for_label }}">
-										Response Types
-									</label>
-									<div class="input-holder">{{ activity_report_form.report_types }}</div>
+							<div class="multiple-fields-row two-items">
+								<div class="field-col">
+									<div class="select-field">
+										<label for="{{ activity_report_form.report_types.id_for_label }}">
+											Response Types
+										</label>
+										<div class="input-holder">{{ activity_report_form.report_types }}</div>
+									</div>
+								</div>
+								<div class="field-col">
+									<div class="select-field">
+										<label for="{{ activity_report_form.implementing_partners.id_for_label }}">
+											Implementing Partners[implement the project in the field]
+											<div class="implement-info">
+												<i class="icon-info"></i>
+												<span class="implement-text">
+													The partner who takes the project and implement the project in the field.
+												</span>
+											</div>
+										</label>
+										{{ activity_report_form.implementing_partners }}
+										<span class="sign-up-field-error">{{activity_report_form.implementing_partners.errors}}</span>
+									</div>
 								</div>
 							</div>
 						</div>
@@ -160,16 +177,16 @@
 							<div class="multiple-fields-row two-items">
 								<div class="field-col">
 									<div class="input-check-holder">
-										<input type="checkbox" class="text-read-only" id="{{ activity_report_form.seasonal_retargeting.id_for_label }}" name="{{ activity_report_form.seasonal_retargeting.html_name }}" {% if activity_report_form.seasonal_retargeting.value %}checked{% endif %}>
+										{{ activity_report_form.seasonal_retargeting }}
 										<label for="{{ activity_report_form.seasonal_retargeting.id_for_label }}">
 											<span class="input"></span>
 											<span class="text">Beneficiaries Retargeted due to seasonality</span>
 										</label>
-									</div> 
+									</div>
 								</div>
 								<div class="field-col">
 									<div class="input-check-holder">
-										<input type="checkbox" class="text-read-only" id="{{ activity_report_form.modality_retargeting.id_for_label }}" name="{{ activity_report_form.modality_retargeting.html_name }}" {% if activity_report_form.modality_retargeting.value %}checked{% endif %}>
+										{{ activity_report_form.modality_retargeting }}
 										<label for="{{ activity_report_form.modality_retargeting.id_for_label }}">
 											<span class="input"></span>
 											<span class="text">Beneficiaries Retargeted due to change in modality</span>
@@ -177,9 +194,9 @@
 									</div> 
 								</div>
 							</div>
-						</div>	
+						</div>  
 					</div>
-					{% endif %}
+				{% endif %}
 
 					<div class="multiple-fields-row">
 						<div class="field-col">

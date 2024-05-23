@@ -420,9 +420,12 @@ def create_project_monthly_report_progress_view(request, project, report):
         can_delete=True,
     )
 
+    initial_data = []
+    for _ in activity_plans:
+        initial_data.append({"monthly_report": monthly_report_instance.id})
+
     activity_report_formset = ActivityReportFormset(
-        request.POST or None,
-        instance=monthly_report_instance,
+        request.POST or None, instance=monthly_report_instance, initial=initial_data
     )
 
     location_report_formsets = []

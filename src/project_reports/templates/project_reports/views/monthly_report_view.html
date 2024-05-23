@@ -211,20 +211,32 @@
                                 </div>
                             </div>
                             <div class="col">
-                                <div class="field-col">
-                                    <div class="select-field">
-                                        <label>Report Types</label>
-                                        <span class="text-read-only m2m-badges">
-                                            {% for report_type in activity_report.report_types.all %}
-                                            <span class="btn btn-red"> {{ report_type.name }}</span>
-                                            {% endfor %}
-                                        </span>
+                                <div class="multiple-fields-row two-items">
+                                    <div class="field-col">
+                                        <div class="select-field">
+                                            <label>Report Types</label>
+                                            <span class="text-read-only m2m-badges">
+                                                {% for report_type in activity_report.report_types.all %}
+                                                <span class="btn btn-red"> {{ report_type.name }}</span>
+                                                {% endfor %}
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="field-col">
+                                        <div class="select-field">
+                                            <label>Implementing Partners</label>
+                                            <span class="text-read-only m2m-badges">
+                                                {% for implementing_partner in activity_report.implementing_partners.all %}
+                                                <span class="btn btn-red"> {{ implementing_partner.code }}</span>
+                                                {% endfor %}
+                                            </span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        {% if activity_report.instance.indicator.enable_retargeting or activity_report.initial.indicator.enable_retargeting %}
+                        {% if activity_report.indicator.enable_retargeting%}
                         <div class="row mtb20">
                             <div class="col col-lg">
                                 <div class="multiple-fields-row two-items">

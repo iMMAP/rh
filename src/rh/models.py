@@ -387,6 +387,8 @@ class Indicator(models.Model):
     denominator = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
     description = models.CharField(max_length=1200, blank=True, null=True)
 
+    enable_retargeting = models.BooleanField(blank=True, null=True)
+
     # RELATIONSHIPS
     package_type = models.ForeignKey(PackageType, on_delete=models.SET_NULL, null=True, blank=True)
     unit_type = models.ForeignKey(UnitType, on_delete=models.SET_NULL, null=True, blank=True)

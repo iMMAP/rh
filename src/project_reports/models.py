@@ -92,6 +92,19 @@ class ActivityPlanReport(models.Model):
         ImplementationModalityType, on_delete=models.SET_NULL, null=True, blank=True
     )
 
+    seasonal_retargeting = models.BooleanField(blank=True, null=True)
+    modality_retargeting = models.BooleanField(blank=True, null=True)
+
+    beneficiary_status = models.CharField(
+        max_length=15,
+        choices=[
+            ("new_beneficiary", "New Beneficiary"),
+            ("old_beneficiary", "Old Beneficiary"),
+        ],
+        null=True,
+        blank=True,
+    )
+
     class Meta:
         verbose_name = "Activity Plan Report"
         verbose_name_plural = "Activity Plan Reports"

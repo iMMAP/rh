@@ -10,6 +10,7 @@ from rh.models import (
     Indicator,
     Location,
     LocationType,
+    Organization,
     PackageType,
     Project,
     TargetLocation,
@@ -75,6 +76,9 @@ class ActivityPlanReport(models.Model):
     monthly_report = models.ForeignKey(ProjectMonthlyReport, on_delete=models.CASCADE, null=True, blank=True)
     activity_plan = models.ForeignKey(ActivityPlan, on_delete=models.CASCADE, null=True, blank=True)
     indicator = models.ForeignKey(Indicator, on_delete=models.SET_NULL, null=True)
+    implementing_partners = models.ManyToManyField(
+        Organization, related_name="reporting_implementing_partners", blank=True
+    )
 
     report_types = models.ManyToManyField(ResponseType, blank=True)
     target_achieved = models.IntegerField(default=0, null=True, blank=True)

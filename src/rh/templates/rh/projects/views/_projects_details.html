@@ -13,7 +13,7 @@
                     <span class="input" id="check_project_{{project.id}}" data-project-id="{{project.id}}"></span>
                 </label>
             </div> {% endcomment %}
-            {{ project.title }}
+            {{ project.title|truncatechars:100 }}
         </a>
     </td>
     <td class="title-col">
@@ -35,7 +35,7 @@
         {% endfor %}
     </td>
     {% comment %} <td class="update-date-col">{{ project.updated_at }}</td> {% endcomment %}
-    <td class="description-col">{{ project.description }}</td>
+    <td class="description-col">{{ project.description|truncatechars:100 }}</td>
     <td class="status-col">
         <span class="{{ project.state }}">
             {{ project.get_state_display }}

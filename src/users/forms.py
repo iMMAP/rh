@@ -25,7 +25,7 @@ class UserRegisterForm(UserCreationForm):
         username = self.cleaned_data.get("username")
         qs = User.objects.filter(username__iexact=username)
         if qs.exists():
-            raise forms.ValidationError(f"{username} is an invalid username, please pick another.")
+            raise forms.ValidationError(f"Username {username} already exists, please choose another.")
         return username
 
     def clean_email(self):
@@ -33,7 +33,7 @@ class UserRegisterForm(UserCreationForm):
         email = self.cleaned_data.get("email")
         qs = User.objects.filter(email__iexact=email)
         if qs.exists():
-            raise forms.ValidationError(f"{email} is an invalid email address, please pick another.")
+            raise forms.ValidationError(f"Email {email} already exists, please choose another.")
         return email
 
 

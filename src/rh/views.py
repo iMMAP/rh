@@ -999,11 +999,11 @@ def organization_register(request):
     if request.method == "POST":
         org_form = OrganizationRegisterForm(request.POST)
         if org_form.is_valid():
-            name = org_form.cleaned_data.get("name")
             code = org_form.cleaned_data.get("code")
+            org_code = code.upper()
             organization = org_form.save()
             if organization:
-                messages.success(request, f"[{code}] {name} is registered successfully !")
+                messages.success(request, f"{org_code} is registered successfully !")
             else:
                 messages.error(request, "Something went wrong ! please try again ")
     else:

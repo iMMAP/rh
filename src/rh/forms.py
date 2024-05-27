@@ -23,7 +23,6 @@ class ProjectForm(forms.ModelForm):
         fields = "__all__"
 
         widgets = {
-            "budget": forms.NumberInput(attrs={"max": 20000000}),
             "clusters": forms.SelectMultiple(
                 attrs={
                     "class": "custom-select",

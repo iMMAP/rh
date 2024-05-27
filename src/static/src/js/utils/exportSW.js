@@ -63,7 +63,7 @@ $("#downloadFilterForm").click(function(e) {
   e.stopPropagation();
   
     const routeUrl = $(this).find("a").data("url");
-    console.log(routeUrl)
+    // console.log(routeUrl)
     let exportData = {};
     let userData = [];
     let currencyData = [];
@@ -267,7 +267,7 @@ $("#downloadFilterForm").click(function(e) {
      if(facilityLat.length != 0){exportData['facility_latitude'] = facilityLat;}
      if(facilityLong.length != 0){exportData['facility_longitude'] = facilityLong;}
      if(disaggregation.length != 0){exportData['disaggregation'] = disaggregation;}
-     console.log(exportData);
+    //  console.log(exportData);
     $.post({
       url: routeUrl,
       method: "POST",
@@ -476,7 +476,8 @@ const exportCSVProject = document.querySelector(".export-button-csv").addEventLi
     }).then(response => {
       // getting filename
       const contentDisposition = response.headers.get('Content-Disposition');
-      const filename = contentDisposition.split(';')[1].trim().split('=')[1].replace(/"/g, '');
+      console.log(contentDisposition);
+      const filename = contentDisposition.split('=')[1].replace(/"/g, '');
       return response.blob().then(blob => {
           const url = window.URL.createObjectURL(blob);
           const a = document.createElement('a');

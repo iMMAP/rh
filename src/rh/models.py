@@ -438,9 +438,9 @@ class Project(models.Model):
     implementing_partners = models.ManyToManyField(Organization, related_name="implementing_partners", blank=True)
     programme_partners = models.ManyToManyField(Organization, related_name="programme_partners", blank=True)
 
-    budget = models.BigIntegerField(null=True, blank=True)
-    budget_received = models.BigIntegerField(null=True, blank=True)
-    budget_gap = models.BigIntegerField(null=True, blank=True)
+    budget = models.IntegerField(null=True, blank=True)
+    budget_received = models.IntegerField(null=True, blank=True)
+    budget_gap = models.IntegerField(null=True, blank=True)
     budget_currency = models.ForeignKey(Currency, on_delete=models.SET_NULL, null=True, blank=True)
 
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)

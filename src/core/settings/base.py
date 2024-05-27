@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     "django_htmx",
     "compressor",
     "guardian",
+    "dbbackup",
     # RH apps
     "rh.apps.RhConfig",
     "users.apps.UsersConfig",
@@ -186,3 +187,20 @@ MAINTENANCE_MODE_REDIRECT_ROUTE = env("MAINTENANCE_MODE_REDIRECT_ROUTE", default
 # secret code to bypass maintenance mode for the user
 # /reporthub.immap.org/?MAINTENANCE_BYPASS_QUERY
 MAINTENANCE_BYPASS_QUERY = env("MAINTENANCE_BYPASS_QUERY", default="")
+
+####################
+# DB Backup Settings 
+####################
+
+# Backup to the local filesystem
+# DBBACKUP_STORAGE = 'django.core.files.storage.FileSystemStorage'
+# DBBACKUP_STORAGE_OPTIONS = {'location': os.path.join(BASE_DIR.parent, "db-backups")}
+
+# Backup to DropBox
+DBBACKUP_STORAGE = "storages.backends.dropbox.DropBoxStorage"
+DBBACKUP_STORAGE_OPTIONS = {
+    "oauth2_access_token": env("DROPBOX_ACCESS_TOKEN", default=""),
+    "app_key": env("DROPBOX_APP_KEY", default=""),
+    "app_secret": env("DROPBOX_APP_SECRET", default=""),
+    # "root_path":"",
+}

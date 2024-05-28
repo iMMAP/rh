@@ -2,15 +2,14 @@ var DETAILS_TOGGLE_DURATION = 500
 /**
 * Handle Add Dynamic Target Location Report Form
 **/
-function addTargetLocationReportForm(prefix, project, nextFormIndex, activityDomain) {
+function addTargetLocationReportForm(prefix, project, nextFormIndex, activityDomain, activityPlan) {
 	const activityReportFormPrefix = prefix
 	const projectID = project
 
 	// Use JavaScript Cookie library
-
 	$.ajax({
 		url: '/ajax/get_location_report_empty_form/',
-		data: {'prefix_index': nextFormIndex, 'project': projectID, 'activity_domain': activityDomain},
+		data: {'prefix_index': nextFormIndex, 'project': projectID, 'activity_domain': activityDomain, 'activity_plan': activityPlan},
 		type: 'POST',
 		dataType: 'json',
 		beforeSend: function(xhr, settings) {
@@ -54,23 +53,11 @@ function addTargetLocationReportForm(prefix, project, nextFormIndex, activityDom
 					event.stopPropagation(); // Prevent the default behavior (propagation)
 					innerHolder.toggleClass('target-location-accordion-active')
 					parentDiv.toggleClass('js-acc-hidden')
-					// $(this).next('.target-location-accordion-slide').slideToggle(DETAILS_TOGGLE_DURATION);
 				});
 
 				if (addedForm){
 					const locationReportPrefix = addedForm[0].dataset.locationPrefix
-					// 	// Load Locations (districts and zones)
-					getLocations(locationReportPrefix, 'district', 'province');
-					getLocations(locationReportPrefix, 'zone', 'district');
-						
-					// Add Load Locations (districts and zones) event for new form
-					$(`#id_${locationReportPrefix}-province`).on('change', function() {
-						getLocations(locationReportPrefix, 'district', 'province', clearZone=true);
-					});
-					$(`#id_${locationReportPrefix}-district`).on('change', function() {
-						getLocations(locationReportPrefix, 'zone', 'district');
-					});
-					
+										
 					// 	// Update disaggregations based on indicators for the new added form 
 					const activityReportFormIndex = formPrefix.match(/activityplanreport_set-(\d+)/)[1] 
 					var $indicator = $(`#id_activityplanreport_set-${activityReportFormIndex}-indicator`);
@@ -79,14 +66,16 @@ function addTargetLocationReportForm(prefix, project, nextFormIndex, activityDom
 						handleDisaggregationReportForms($indicator[0], selectedID, [locationReportPrefix])
 					}
 
-					// Call Facility Monitoring function when page loads.
-					handleFacilityMonitoring(locationReportPrefix, addedForm);
-					let $facilityMonitoring = $(addedForm).find(
-						`#id_${locationReportPrefix}-facility_monitoring`
-					);
-					$facilityMonitoring.change(function () {
-						handleFacilityMonitoring(locationReportPrefix, addedForm);
+					// Handle Target Location fields.
+					let $targetLocation = $(addedForm).find(`#id_${locationReportPrefix}-target_location`);
+					$targetLocation.change(function () {
+						var targetLocationId = $(this).val();
+						autoPopulateTargetLocationReport(targetLocationId, locationReportPrefix, addedForm);
 					});
+					
+					// Hide Facility Details when new form is added
+					let facilityDetails = addedForm.find(`#facility_details_${locationReportPrefix}`);
+					facilityDetails.hide()
 				}
 			}
 		},
@@ -155,7 +144,6 @@ function handleDisaggregationReportForms(indicatorsSelect, selectedID, locations
 						event.stopPropagation(); // Prevent the default behavior (propagation)
 						innerHolder.toggleClass('disaggregation-accordion-active')
 						parentDiv.toggleClass('js-acc-hidden')
-						// parentDiv.slideToggle(DETAILS_TOGGLE_DURATION);
 					});
                 });
             }
@@ -168,84 +156,58 @@ function handleDisaggregationReportForms(indicatorsSelect, selectedID, locations
 
 
 /**
-* Get Districts and Zpnes for Target Location Form
-**/
-function getLocations(locationPrefix, locationType, parentType, clearZone = null) {
-    // Get the URL for fetching locations
-    const locationUrl = $(`#id_${locationPrefix}-${locationType}`).attr(`target-locations-queries-url`);
-    
-    // Get an array of location IDs
-    const locationIds = $(`select#id_${locationPrefix}-${locationType} option`)
-        .map((_, option) => option.value)
-        .get();
-
-    // Get the parent IDs
-    const parentIds = [$(`#id_${locationPrefix}-${parentType}`).val()];
-
-    // Get the selected locations
-    const selectedLocations = $(`select#id_${locationPrefix}-${locationType}`).val();
-
-    
-	try {
-		if (locationUrl) {
-			// Make an AJAX request to fetch locations data
-			$.ajax({
-				type: "POST",
-				url: locationUrl,
-				data: {
-					parents: parentIds,
-					listed_locations: locationIds,
-				},
-				beforeSend: function (xhr, settings) {
-					xhr.setRequestHeader("X-CSRFToken", csrftoken);
-				},
-				success: function (data) {
-
-					// Clear zone if needed
-					if (parentType === 'province' && clearZone === true) {
-						$(`#id_${locationPrefix}-zone`).html('').val('');
-					}
-					if (data){
-						// Update the location select element
-						$(`#id_${locationPrefix}-${locationType}`).html(data);
-						$(`select#id_${locationPrefix}-${locationType}`).val(selectedLocations);
-					}
-
-				},
-				error: function (error) {
-					console.log('Error fetching empty form:', error);
-				}
-			});
-		}
-	} catch (error) {
-		console.error(`Error fetching ${locationType}: ${error}`);
-	}
-}
-
-
-/**
-* Handle Facility Monitoring field
+* Handle Auto-population of target location report fields.
 @param {string} locationPrefix - Form Location Prefix.
 @param {string} formElement - Form Element.
 **/
-function handleFacilityMonitoring(locationPrefix, formElement) {
-	$formElement = $(formElement)
-	let $facilityMonitoring = $(`#id_${locationPrefix}-facility_monitoring`);
-	let $facilityName = $formElement.find(
-		`#id_${locationPrefix}-facility_name`
-	);
-	let $facilityId = $formElement.find(`#id_${locationPrefix}-facility_id`);
-	let $facilityDetails = $formElement.find(
-		`#facility_details_${locationPrefix}`
-	);
+function autoPopulateTargetLocationReport(targetLocationId, locationPrefix, formElement) {
+	formElement = $(formElement)	
+	locationPrefix = locationPrefix
+	$.ajax({
+		url: '/ajax/get_target_location_auto_fields/',
+		data: {'target_location': targetLocationId},
+		type: 'POST',
+		dataType: 'json',
+		beforeSend: function(xhr, settings) {
+			xhr.setRequestHeader("X-CSRFToken", csrftoken);
+		},
+		success: function (data) {
+			let country = formElement.find(`#id_${locationPrefix}-country`);
+			let province = formElement.find(`#id_${locationPrefix}-province`);
+			let district = formElement.find(`#id_${locationPrefix}-district`);
+			let zone = formElement.find(`#id_${locationPrefix}-zone`);
+			let facility_site_type = formElement.find(`#id_${locationPrefix}-facility_site_type`);
+			let facility_monitoring = formElement.find(`#id_${locationPrefix}-facility_monitoring`);
+			let facility_name = formElement.find(`#id_${locationPrefix}-facility_name`);
+			let facility_id = formElement.find(`#id_${locationPrefix}-facility_id`);
+			let facility_lat = formElement.find(`#id_${locationPrefix}-facility_lat`);
+			let facility_long = formElement.find(`#id_${locationPrefix}-facility_long`);
+			let nhs_code = formElement.find(`#id_${locationPrefix}-nhs_code`);
+			let facilityDetails = formElement.find(`#facility_details_${locationPrefix}`);
 
-	if (!$facilityMonitoring.is(":checked")) {
-		$facilityDetails.hide();
-		$facilityName.prop("required", false).removeClass("is-required");
-	} else {
-		$facilityDetails.show();
-		$facilityName.prop("required", true).addClass("is-required");
-	}
+			country.val(data.country);
+			province.val(data.province);
+			district.val(data.district);
+			zone.val(data.zone);
+			facility_site_type.val(data.facility_site_type);
+			facility_monitoring.prop('checked', data.facility_monitoring);
+			nhs_code.val(data.nhs_code);
+			
+			
+			if (data.facility_monitoring){
+				facilityDetails.show();
+				facility_name.val(data.facility_name);
+				facility_id.val(data.facility_id);
+				facility_lat.val(data.facility_lat);
+				facility_long.val(data.facility_long);
+			}else{
+				facilityDetails.hide();
+			}
+		},
+		error: function (error) {
+			console.log('Error fetching empty form:', error);
+		}
+	});
 }
 
 
@@ -253,7 +215,6 @@ function handleFacilityMonitoring(locationPrefix, formElement) {
 * Ready Function
 **/
 $(function () {
-	
 	// Button to handle addition of new target location form.
 	$(document).on('click', '.add-target-location-form-button', function(event) {
 		event.preventDefault(); // Prevent the default behavior (form submission)
@@ -261,37 +222,22 @@ $(function () {
 		const activityReportFormPrefix = event.currentTarget.dataset.formPrefix
 		const activityProject = event.currentTarget.dataset.project
 		const activityDomain = event.currentTarget.dataset.activityDomain
+		const activityPlan = event.currentTarget.dataset.activityPlan
 		const activityReportFormIndex = activityReportFormPrefix.match(/\d+/)[0]
-		addTargetLocationReportForm(activityReportFormPrefix, activityProject, activityReportFormIndex, activityDomain); // Call the function to add a new activity form
+		addTargetLocationReportForm(activityReportFormPrefix, activityProject, activityReportFormIndex, activityDomain, activityPlan); // Call the function to add a new activity form
 	});
 
 	const $locationBlock = $(".location_report_form");
 	$locationBlock.each(function (formIndex, formElement) {
-
 		const locationReportPrefix = formElement.dataset.locationPrefix
 
-		// Update the Target Locations Titles
-		// updateLocationBlockTitles(locationReportPrefix);
-
-		// Initial load for districts and zones
-		getLocations(locationReportPrefix, 'district', 'province');
-		getLocations(locationReportPrefix, 'zone', 'district');
-
-		$(`#id_${locationReportPrefix}-province`).on('change', function() {
-			getLocations(locationReportPrefix, 'district', 'province', clearZone=true);
-		});
-		$(`#id_${locationReportPrefix}-district`).on('change', function() {
-			getLocations(locationReportPrefix, 'zone', 'district');
-		});
-
-		// Call Facility Monitoring function when page loads.
-		handleFacilityMonitoring(locationReportPrefix, formElement);
-		
-		let $facilityMonitoring = $(formElement).find(
-			`#id_${locationReportPrefix}-facility_monitoring`
+		// autoPopulateTargetLocationReport(locationReportPrefix, formElement);
+		let $targetLocation = $(formElement).find(
+			`#id_${locationReportPrefix}-target_location`
 		);
-		$facilityMonitoring.change(function () {
-			handleFacilityMonitoring(locationReportPrefix, formElement);
+		$targetLocation.change(function () {
+			var targetLocationId = $(this).val();
+			autoPopulateTargetLocationReport(targetLocationId, locationReportPrefix, formElement);
 		});
 	});
 

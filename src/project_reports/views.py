@@ -38,7 +38,12 @@ from .forms import (
     ProjectMonthlyReportForm,
     TargetLocationReportFormSet,
 )
-from .models import ActivityPlanReport, DisaggregationLocationReport, ProjectMonthlyReport, TargetLocationReport
+from .models import (
+    ActivityPlanReport,
+    DisaggregationLocationReport,
+    ProjectMonthlyReport,
+    TargetLocationReport,
+)
 
 RECORDS_PER_PAGE = 10
 
@@ -415,9 +420,12 @@ def create_project_monthly_report_progress_view(request, project, report):
         can_delete=True,
     )
 
+    initial_data = []
+    for _ in activity_plans:
+        initial_data.append({"monthly_report": monthly_report_instance.id})
+
     activity_report_formset = ActivityReportFormset(
-        request.POST or None,
-        instance=monthly_report_instance,
+        request.POST or None, instance=monthly_report_instance, initial=initial_data
     )
 
     location_report_formsets = []
@@ -767,6 +775,13 @@ def get_location_report_empty_form(request):
     # Create a disaggregation formset for each target location form
     location_report_form = location_report_formset.empty_form
 
+    # Set the Target locations domain based on the activity plan
+    activity_plan = request.POST.get("activity_plan", None)
+    if activity_plan:
+        location_report_form.fields["target_location"].queryset = TargetLocation.objects.filter(
+            activity_plan=activity_plan
+        )
+
     # Check if the activity plan is selected
     if activity_domain:
         # Get clusters associated with the activity plan's domain
@@ -809,7 +824,30 @@ def get_location_report_empty_form(request):
     return JsonResponse({"html": html})
 
 
+@login_required
+def get_target_location_auto_fields(request):
+    try:
+        target_location = TargetLocation.objects.get(pk=request.POST.get("target_location"))
+        data = {
+            "country": target_location.country.id if target_location.country else None,
+            "province": target_location.province.id if target_location.province else None,
+            "district": target_location.district.id if target_location.district else None,
+            "zone": target_location.zone.id if target_location.zone else None,
+            # 'location_type': target_location.location_type.id if target_location.location_type else None,
+            "facility_site_type": target_location.facility_site_type.id if target_location.facility_site_type else None,
+            "facility_monitoring": target_location.facility_monitoring,
+            "facility_name": target_location.facility_name,
+            "facility_id": target_location.facility_id,
+            "facility_lat": target_location.facility_lat,
+            "facility_long": target_location.facility_long,
+            "nhs_code": target_location.nhs_code,
+        }
+        return JsonResponse(data)
+    except TargetLocation.DoesNotExist:
+        return JsonResponse({"error": "TargetLocation not found"}, status=404)
 
+
+@cache_control(no_store=True)
 @login_required
 def load_target_locations_details(request):
     parent_ids = [int(i) for i in request.POST.getlist("parents[]") if i]

@@ -1,4 +1,5 @@
 from django.db import models
+
 from rh.models import (
     ActivityPlan,
     Currency,
@@ -9,8 +10,10 @@ from rh.models import (
     Indicator,
     Location,
     LocationType,
+    Organization,
     PackageType,
     Project,
+    TargetLocation,
     TransferCategory,
     TransferMechanismType,
     UnitType,
@@ -73,6 +76,9 @@ class ActivityPlanReport(models.Model):
     monthly_report = models.ForeignKey(ProjectMonthlyReport, on_delete=models.CASCADE, null=True, blank=True)
     activity_plan = models.ForeignKey(ActivityPlan, on_delete=models.CASCADE, null=True, blank=True)
     indicator = models.ForeignKey(Indicator, on_delete=models.SET_NULL, null=True)
+    implementing_partners = models.ManyToManyField(
+        Organization, related_name="reporting_implementing_partners", blank=True
+    )
 
     report_types = models.ManyToManyField(ResponseType, blank=True)
     target_achieved = models.IntegerField(default=0, null=True, blank=True)
@@ -90,6 +96,19 @@ class ActivityPlanReport(models.Model):
         ImplementationModalityType, on_delete=models.SET_NULL, null=True, blank=True
     )
 
+    seasonal_retargeting = models.BooleanField(blank=True, null=True)
+    modality_retargeting = models.BooleanField(blank=True, null=True)
+
+    beneficiary_status = models.CharField(
+        max_length=15,
+        choices=[
+            ("new_beneficiary", "New Beneficiary"),
+            ("old_beneficiary", "Old Beneficiary"),
+        ],
+        null=True,
+        blank=True,
+    )
+
     class Meta:
         verbose_name = "Activity Plan Report"
         verbose_name_plural = "Activity Plan Reports"
@@ -99,6 +118,8 @@ class TargetLocationReport(models.Model):
     """Target Locations model"""
 
     activity_plan_report = models.ForeignKey(ActivityPlanReport, on_delete=models.CASCADE, null=True, blank=True)
+
+    target_location = models.ForeignKey(TargetLocation, on_delete=models.CASCADE, null=True, blank=True)
 
     country = models.ForeignKey(
         Location,
@@ -143,8 +164,8 @@ class TargetLocationReport(models.Model):
         blank=True,
         null=True,
     )
-    facility_lat = models.CharField(max_length=200, null=True, blank=True)
-    facility_long = models.CharField(max_length=200, null=True, blank=True)
+    facility_lat = models.FloatField(null=True, blank=True)
+    facility_long = models.FloatField(null=True, blank=True)
     nhs_code = models.CharField(
         max_length=200,
         blank=True,

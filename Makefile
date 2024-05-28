@@ -87,3 +87,7 @@ shell:
 .PHONY: shell_plus
 shell_plus:
 	poetry run python src/manage.py shell_plus
+
+.PHONY: dbbackup
+dbbackup:
+	poetry run python src/manage.py dbbackup

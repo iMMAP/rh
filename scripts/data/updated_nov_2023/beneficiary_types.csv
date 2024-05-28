@@ -1,5 +1,6 @@
 _id,admin0pcode,cluster_code,beneficiary_type_id,beneficiary_type_name,description,end_date,start_date,year,is_active,type
 ,AF,health,new-idps-in-2024,New IDPs in 2024,,,2024-01-01,2024,TRUE,hrp
+,AF,health,vulnerable-people-with-humanitarian-needs,Vulnerable people with humanitarian needs,,,2024-01-01,2024,TRUE,hrp
 ,AF,health,cross-border-returnees-from-pakistan-in-2024-district-of-return,Cross-Border Returnees from Pakistan in 2024 (District of Return),,,2024-01-01,2024,TRUE,hrp
 ,AF,health,cross-border-returnees-from-iran-in-2024-district-of-return,Cross-Border Returnees from Iran in 2024 (District of Return),,,2024-01-01,2024,TRUE,hrp
 ,AF,health,cross-border-returnees-from-iran-and-pakistan-in-2024-border-or-encashment-transit-centres,Cross-Border Returnees from Iran and Pakistan in 2024  (Border or Encashment / Transit Centres),,,2024-01-01,2024,TRUE,hrp

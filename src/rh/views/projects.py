@@ -1,3 +1,6 @@
+import json
+
+from datetime import date
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
@@ -385,16 +388,20 @@ def copy_project(request, pk):
 
 @login_required
 def ProjectListView(request, flag):
-    # project_list =json.loads(request.POST.get("projectList"))
-    project = Project.objects.all()
-    dataset = ProjectResource().export(project)
-    format = flag
-    if format == "xls":
-        ds = dataset.xls
-    elif format == "csv":
-        ds = dataset.csv
-    else:
-        ds = dataset.json
-    response = HttpResponse(ds, content_type=f"{format}")
-    response["Content-Disposition"] = f"attachment; filename=project.{format}"
-    return response
+    if request.method == "POST":
+        data = json.loads(request.body)
+        print(data)
+        project = Project.objects.filter(id__in=data)
+        dataset = ProjectResource().export(project)
+        format = flag
+        if format == "xls":
+            ds = dataset.xls
+        elif format == "csv":
+            ds = dataset.csv
+        else:
+            ds = dataset.json
+        today_date = date.today()
+        file_name = f"projects_{today_date}"
+        response = HttpResponse(ds, content_type=f"{format}")
+        response["Content-Disposition"] = f"attachment; filename={file_name}.{format}"
+        return response

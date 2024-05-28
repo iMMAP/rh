@@ -14,6 +14,9 @@ DESCRIPTION_MAX_LENGTH = 600
 class Location(models.Model):
     """Locations Model"""
 
+    class Meta:
+        ordering = ["name"]
+
     LOCATION_CLASSIFICATIONS = [("urban", "Urban"), ("rural", "Rural")]
 
     LOCATION_TYPES = [
@@ -344,6 +347,7 @@ class ActivityType(models.Model):
         return self.name
 
     class Meta:
+        # ordering = ['id']
         verbose_name = "Activity Type"
         verbose_name_plural = "Activity Types"
         constraints = [
@@ -382,6 +386,8 @@ class Indicator(models.Model):
     numerator = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
     denominator = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
     description = models.CharField(max_length=1200, blank=True, null=True)
+
+    enable_retargeting = models.BooleanField(blank=True, null=True)
 
     # RELATIONSHIPS
     package_type = models.ForeignKey(PackageType, on_delete=models.SET_NULL, null=True, blank=True)
@@ -639,8 +645,8 @@ class TargetLocation(models.Model):
         blank=True,
         null=True,
     )
-    facility_lat = models.CharField(max_length=NAME_MAX_LENGTH, null=True, blank=True)
-    facility_long = models.CharField(max_length=NAME_MAX_LENGTH, null=True, blank=True)
+    facility_lat = models.FloatField(null=True, blank=True)
+    facility_long = models.FloatField(null=True, blank=True)
 
     disaggregations = models.ManyToManyField(
         "Disaggregation", through="DisaggregationLocation", related_name="disaggregations"

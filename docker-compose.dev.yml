@@ -32,13 +32,17 @@ services:
     restart: unless-stopped
     ports:
       - 5432:5432
+    env_file: .env
     environment:
       POSTGRES_DB: rh
       POSTGRES_USER: rh_user
       POSTGRES_PASSWORD: rh_1234
     volumes:
       - postgresql-data:/var/lib/postgresql/data
+      - dbbackups:/pg_backups
 
 volumes:
   postgresql-data:
     driver: local
+  dbbackups:
+    name: dbbackups

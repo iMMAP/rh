@@ -148,62 +148,31 @@
                     <div class="export-formats">
                         <span class="title">File format</span>
                         <div class="format-list">
-                            <div class="export-link-holder">
-                                <a class="export-link" href="{% url 'export_porjcet_list' 'csv' %}">
+                            <div class="export-link-holder" 
+                                onclick="exportButton(event)"
+                                data-file-format="csv" 
+                                data-export-url="{% url 'export_porjcet_list' 'csv' %}">
+                                <a class="export-link" href="#">
                                     CSV
                                 </a>
                             </div>
-                            <div class="export-link-holder">
-                                <a class="export-link" href="{% url 'export_porjcet_list' 'xls' %}">
+                            <div class="export-link-holder" 
+                                onclick="exportButton(event)"
+                                data-file-format="xls" 
+                                data-export-url="{% url 'export_porjcet_list' 'xls' %}">
+                                <a class="export-link" href="#">
                                     Excel
                                 </a>
                             </div>
-                            <div class="export-link-holder">
-                                <a class="export-link" href="{% url 'export_porjcet_list' 'json' %}" >
+                            <div class="export-link-holder" 
+                                onclick="exportButton(event)"
+                                data-file-format="json" 
+                                data-export-url="{% url 'export_porjcet_list' 'json' %}">
+                                <a class="export-link" href="#">
                                     JSON
                                 </a>
                             </div>
                         </div>
-                        <!--<ul class="formats-list">
-                             <li>
-                                <div class="input-check-holder">
-                                    <input type="radio" id="radio1" name="exportFormat" />
-                                    <label for="radio1">
-                                        <span class="input"></span>
-                                        <span class="text">Docs</span>
-                                    </label>
-                                </div>
-                            </li>
-                            <li>
-                                <a href="">
-                                    <div class="input-check-holder">
-                                        <input type="radio" id="radio2" name="exportFormat" />
-                                        <label for="radio2">
-                                            <span class="input"></span>
-                                            <span class="text">CVS</span>
-                                        </label>
-                                    </div>
-                                </a>  
-                            </li>
-                            <li>
-                                <div class="input-check-holder">
-                                    <input type="radio" id="radio3" name="exportFormat" />
-                                    <label for="radio3">
-                                        <span class="input"></span>
-                                        <span class="text">Excel</span>
-                                    </label>
-                                </div>
-                            </li>
-                            <li>
-                                <div class="input-check-holder">
-                                    <input type="radio" id="radio4" name="exportFormat" />
-                                    <label for="radio4">
-                                        <span class="input"></span>
-                                        <span class="text">PDF</span>
-                                    </label>
-                                </div>
-                            </li> 
-                        </ul>-->
                     </div>
                 </div>
             </div>
@@ -325,7 +294,10 @@
                 },
                 shouldSort: false,
             });
-        })
+        });
+       
+        
+        
     </script>
     <script src="{% static 'src/js/utils/exportSW.js' %}"></script>
     {% compress js inline %}

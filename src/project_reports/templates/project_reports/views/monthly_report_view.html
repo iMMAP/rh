@@ -211,20 +211,80 @@
                                 </div>
                             </div>
                             <div class="col">
-                                <div class="field-col">
-                                    <div class="select-field">
-                                        <label>Report Types</label>
-                                        <span class="text-read-only m2m-badges">
-                                            {% for report_type in activity_report.report_types.all %}
-                                            <span class="btn btn-red"> {{ report_type.name }}</span>
-                                            {% endfor %}
-                                        </span>
+                                <div class="multiple-fields-row two-items">
+                                    <div class="field-col">
+                                        <div class="select-field">
+                                            <label>Report Types</label>
+                                            <span class="text-read-only m2m-badges">
+                                                {% for report_type in activity_report.report_types.all %}
+                                                <span class="btn btn-red"> {{ report_type.name }}</span>
+                                                {% endfor %}
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="field-col">
+                                        <div class="select-field">
+                                            <label>Implementing Partners</label>
+                                            <span class="text-read-only m2m-badges">
+                                                {% for implementing_partner in activity_report.implementing_partners.all %}
+                                                <span class="btn btn-red"> {{ implementing_partner.code }}</span>
+                                                {% endfor %}
+                                            </span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                            <!-- Indicator types start to diaplay -->
+                        {% if activity_report.indicator.enable_retargeting%}
+                        <div class="row mtb20">
+                            <div class="col col-lg">
+                                <div class="multiple-fields-row two-items">
+                                    <div class="field-col">
+                                        <div class="input-field">
+                                            <span class="label">Beneficiaries Retargeted due to seasonality</span>
+                                            <div class="input-holder">
+                                                <span class="text-read-only">
+                                                    {% if activity_report.seasonal_retargeting %}
+                                                    Yes
+                                                    {% else %}
+                                                    No
+                                                    {% endif %}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="field-col">
+                                        <div class="input-field">
+                                            <span class="label">Beneficiaries Retargeted due to change in modality</span>
+                                            <div class="input-holder">
+                                                <span class="text-read-only">
+                                                    {% if activity_report.modality_retargeting %}
+                                                    Yes
+                                                    {% else %}
+                                                    No
+                                                    {% endif %}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>	
+                        </div>
+                        {% endif %}
+
+                        <div class="field-col">
+                            <div class="input-field">
+                                <label>Beneficiary Status</label>
+                                <span class="text-read-only">
+                                    <span class="">
+                                        {{ activity_report.get_beneficiary_status_display }}
+                                    </span>
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Indicator types start to diaplay -->
                         <div class="multiple-fields-row">
                             {% if activity_report.indicator.package_type %}
                             <div class="field-col">
@@ -321,6 +381,12 @@
                                                 </div>
                                                 <div class="row">
                                                     <div class="col col-lg">
+                                                        <div class="field-col">    
+                                                            <div class="select-field is-required">
+                                                                <span class="label">Project Target Location</span>
+                                                                <span class="text-read-only">{{ location_report.target_location }}</span>
+                                                            </div>
+                                                        </div>
                                                         <div class="multiple-fields-row {% if location_report.zone %}three{% else %}two{% endif %}-items">
                                                             <div class="field-col">    
                                                                 <div class="select-field is-required">

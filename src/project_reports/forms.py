@@ -1,9 +1,16 @@
 from django import forms
 from django.forms.models import inlineformset_factory
+from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
-from rh.models import FacilitySiteType, Indicator
 
-from .models import ActivityPlanReport, DisaggregationLocationReport, ProjectMonthlyReport, TargetLocationReport
+from rh.models import FacilitySiteType, Indicator, Organization, TargetLocation
+
+from .models import (
+    ActivityPlanReport,
+    DisaggregationLocationReport,
+    ProjectMonthlyReport,
+    TargetLocationReport,
+)
 
 
 class ProjectMonthlyReportForm(forms.ModelForm):
@@ -69,6 +76,11 @@ class TargetLocationReportForm(forms.ModelForm):
         else:
             self.fields.pop("nhs_code", None)
 
+        if plan_report:
+            self.fields["target_location"].queryset = TargetLocation.objects.filter(
+                activity_plan=plan_report.activity_plan
+            )
+
 
 TargetLocationReportFormSet = inlineformset_factory(
     ActivityPlanReport,
@@ -94,12 +106,29 @@ class ActivityPlanReportForm(forms.ModelForm):
         widgets = {
             "activity_plan": forms.widgets.HiddenInput(),
             "report_types": forms.SelectMultiple(attrs={"class": "js_multiselect"}),
+            "implementing_partners": forms.SelectMultiple(attrs={"class": "js_multiselect"}),
         }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        (self.fields["indicator"].widget.attrs.update({"hidden": ""}),)
+        # Retrieve the monthly_report_instance from initial data or instance
+        monthly_report_id = self.initial.get("monthly_report")
+        monthly_report_instance = get_object_or_404(ProjectMonthlyReport, pk=monthly_report_id)
+
+        if monthly_report_instance:
+            project = monthly_report_instance.project
+            if project and project.implementing_partners.exists():
+                organizations = project.implementing_partners.all()
+            else:
+                organizations = Organization.objects.all().order_by("name")
+        else:
+            organizations = Organization.objects.all().order_by("name")
+
+        self.fields["indicator"].widget.attrs.update({"hidden": ""})
+        self.fields["implementing_partners"].queryset = organizations
+        self.fields["seasonal_retargeting"].widget = forms.CheckboxInput()
+        self.fields["modality_retargeting"].widget = forms.CheckboxInput()
 
 
 class RejectMonthlyReportForm(forms.Form):

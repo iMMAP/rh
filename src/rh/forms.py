@@ -23,7 +23,6 @@ class ProjectForm(forms.ModelForm):
         fields = "__all__"
 
         widgets = {
-            "budget": forms.NumberInput(attrs={"max": 20000000}),
             "clusters": forms.SelectMultiple(
                 attrs={
                     "class": "custom-select",
@@ -45,6 +44,7 @@ class ProjectForm(forms.ModelForm):
                     "type": "date",
                     "onfocus": "(this.type='date')",
                     "onblur": "(this.type='text')",
+                    "class": "start-date",
                 }
             ),
             "end_date": forms.widgets.DateInput(
@@ -52,6 +52,7 @@ class ProjectForm(forms.ModelForm):
                     "type": "date",
                     "onfocus": "(this.type='date')",
                     "onblur": "(this.type='text')",
+                    "class": "end-date",
                 }
             ),
             "active": forms.widgets.HiddenInput(),
@@ -86,7 +87,7 @@ class ProjectForm(forms.ModelForm):
         self.fields["donors"].queryset = Donor.objects.order_by("name")
         self.fields["budget_currency"].queryset = Currency.objects.order_by("name")
 
-        orgs = Organization.objects.order_by("name").values_list("pk", "name")
+        orgs = Organization.objects.order_by("name").values_list("pk", "code")
 
         self.fields["implementing_partners"].choices = orgs
         self.fields["programme_partners"].choices = orgs

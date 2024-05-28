@@ -80,8 +80,11 @@
                             <span class="sign-up-field-error">{{form.hrp_code.errors}}</span>
                         </div>
                     </div>
-
+                    
                     <div class="col col">
+                        <span class="sign-up-field-error" id="date-validation-error">
+                            <i class='icon-info'></i> Start date cannot be greater then end date.
+                        </span>
                         <div class="multiple-fields-row">
                             <div class="field-col input-field is-required">
                                 <div class=" date start">
@@ -98,7 +101,6 @@
                                 </div>
                             </div>
                         </div>
-
                         <div class="multiple-fields-row">
                             <div class="field-col">
                                 <div class="input-field">
@@ -113,9 +115,7 @@
                                 <span class="sign-up-field-error">{{form.budget_currency.errors}}</span>
                             </div>
                         </div>
-
                         <small id="budget_received_message"></small>
-                        
                         <div class="multiple-fields-row">
                             <div class="field-col">
                                 <div class="input-field">
@@ -132,7 +132,6 @@
                                 </div>
                             </div>
                         </div>
-
                     </div>
 
                     <div class="col col-lg">
@@ -156,8 +155,8 @@
                     <div class="col col-lg">
                         <div class="field-col">
                             <div class="select-field is-required">
-                                <label for="{{ form.donors.id_for_label }}">Project Donor [Hold Control/Command button to select
-                                    multiple]</label>
+                                <label for="{{ form.donors.id_for_label }}">Project Donor [ Please contact us if your project donor is not
+                                     in the list]</label>
                                 <div class="input-holder">{{ form.donors }}</div>
                                 <span class="sign-up-field-error">{{form.donors.errors}}</span>
                             </div>
@@ -168,7 +167,14 @@
                         <div class="multiple-fields-row two-items">
                             <div class="field-col">
                                 <div class="select-field">
-                                    <label for="{{ form.implementing_partners.id_for_label }}">Implementing Partners
+                                    <label for="{{ form.implementing_partners.id_for_label }}">
+                                        Implementing Partners[implement the project in the field]
+                                        <div class="implement-info">
+                                            <i class="icon-info"></i>
+                                            <span class="implement-text">
+                                                The partner who takes the project and implement the project in the field.
+                                            </span>
+                                        </div>
                                     </label>
                                     {{ form.implementing_partners }}
                                     <span class="sign-up-field-error">{{form.implementing_partners.errors}}</span>
@@ -176,7 +182,15 @@
                             </div>
                             <div class="field-col">
                                 <div class="select-field">
-                                    <label for="{{ form.programme_partners.id_for_label }}">Programme Partners
+                                    <label for="{{ form.programme_partners.id_for_label }}">
+                                        Programme Partners[lead and administrate the project]
+                                        <div class="programme-info">
+                                            <i class="icon-info "></i>
+                                            <span class="programme-text">
+                                                The partner who is leading and administrating the project
+                                            </span>
+                                        </div>
+                                        
                                     </label>
                                     {{ form.programme_partners }}
                                     <span class="sign-up-field-error">{{form.programme_partners.errors}}</span>
@@ -222,6 +236,17 @@
             },
             shouldSort: false,
         });
-    })
+    });
+//  start date and end date validation 
+    document.querySelector(".end-date").addEventListener("change", function(e){
+        let end_date = e.target.value;
+        let start_date = document.querySelector(".start-date");
+
+        if((start_date.value) > end_date){
+            document.getElementById("date-validation-error").style.display = "inline-block";
+            e.target.value = null;
+        }
+    });
+
 </script>
 {% endblock scripts %}

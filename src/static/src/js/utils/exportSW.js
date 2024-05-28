@@ -63,7 +63,7 @@ $("#downloadFilterForm").click(function(e) {
   e.stopPropagation();
   
     const routeUrl = $(this).find("a").data("url");
-    console.log(routeUrl)
+    // console.log(routeUrl)
     let exportData = {};
     let userData = [];
     let currencyData = [];
@@ -267,7 +267,7 @@ $("#downloadFilterForm").click(function(e) {
      if(facilityLat.length != 0){exportData['facility_latitude'] = facilityLat;}
      if(facilityLong.length != 0){exportData['facility_longitude'] = facilityLong;}
      if(disaggregation.length != 0){exportData['disaggregation'] = disaggregation;}
-     console.log(exportData);
+    //  console.log(exportData);
     $.post({
       url: routeUrl,
       method: "POST",
@@ -453,5 +453,44 @@ const exportCSVProject = document.querySelector(".export-button-csv").addEventLi
           countSpan.textContent = selectedCount;
       });
   });
-
+  // bulk export fetch request
+  function exportButton(event){
+    event.preventDefault();
+    // getting export url
+    let export_url = event.currentTarget.dataset.exportUrl;
+    
+    selected_project_list = [];
+    const selectedProject = document.querySelectorAll(".project-checkbox");
+    for(let i = 0; i < selectedProject.length; i++) {
+        if(selectedProject[i].checked){
+            selected_project_list.push(selectedProject[i].value);
+        }
+    }
+    fetch(export_url,{
+      method: 'POST',
+      headers:{
+        'Content-Type':'application/json',
+        'X-CSRFToken':csrftoken,
+       }, 
+       body: JSON.stringify(selected_project_list)
+    }).then(response => {
+      // getting filename
+      const contentDisposition = response.headers.get('Content-Disposition');
+      console.log(contentDisposition);
+      const filename = contentDisposition.split('=')[1].replace(/"/g, '');
+      return response.blob().then(blob => {
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = filename;
+          document.body.appendChild(a);
+          a.click();
+          window.URL.revokeObjectURL(url);
+      });
+  })
+    .catch(error => {
+        console.error('Error downloading:', error);
+    });
+    
+  }
   

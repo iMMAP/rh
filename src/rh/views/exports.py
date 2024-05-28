@@ -10,7 +10,7 @@ from openpyxl import Workbook
 from openpyxl.styles import Font, NamedStyle
 from openpyxl.utils import get_column_letter
 
-from .models import Disaggregation, Project
+from ..models import Disaggregation, Project
 
 #############################################
 ############### Export Views #################

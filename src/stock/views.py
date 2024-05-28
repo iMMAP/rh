@@ -7,14 +7,12 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.forms import modelformset_factory
 from django.shortcuts import redirect, render
-from django.views.decorators.cache import cache_control
 from django.views.decorators.http import require_http_methods
 
 from .forms import StockLocationDetailsForm, StockReportForm, WarehouseLocationForm
 from .models import StockLocationDetails, StockReports, WarehouseLocation
 
 
-@cache_control(no_store=True)
 @login_required
 def stock_index_view(request):
     """Stock Views"""
@@ -62,7 +60,6 @@ def stock_index_view(request):
     return render(request, "stock/stocks_index.html", context)
 
 
-@cache_control(no_store=True)
 @login_required
 def all_stock_report(request, flag):
     stock_reports = StockReports.objects.filter(state=flag)
@@ -74,7 +71,6 @@ def all_stock_report(request, flag):
     return render(request, "stock/all_stock_report.html", context)
 
 
-@cache_control(no_store=True)
 @login_required
 def stock_report_view(request, pk):
     stock_report = StockReports.objects.get(id=pk)
@@ -161,7 +157,6 @@ def stock_report_view(request, pk):
     return render(request, "stock/stock_report_form.html", context)
 
 
-@cache_control(no_store=True)
 @login_required
 @require_http_methods(["POST"])
 def submit_stock_report_form(request, pk):
@@ -169,7 +164,6 @@ def submit_stock_report_form(request, pk):
     return redirect("all_stock_report", "submitted")
 
 
-@cache_control(no_store=True)
 @login_required
 def update_stock_report(request, pk):
     StockReports.objects.filter(id=pk).update(state="todo")

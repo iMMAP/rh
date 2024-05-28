@@ -17,7 +17,6 @@ class ProjectMonthlyReportForm(forms.ModelForm):
     class Meta:
         model = ProjectMonthlyReport
         fields = "__all__"
-
         widgets = {
             "report_date": forms.widgets.DateInput(
                 attrs={
@@ -31,7 +30,6 @@ class ProjectMonthlyReportForm(forms.ModelForm):
                     "type": "date",
                     "onfocus": "(this.type='date')",
                     "onblur": "(this.type='text')",
-                    "readonly": "",
                 }
             ),
         }

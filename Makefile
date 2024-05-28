@@ -81,3 +81,7 @@ shell_plus:
 .PHONY: seed
 seed:
 	poetry run python src/manage.py seed
+
+.PHONY: dbbackup
+dbbackup:
+	poetry run python src/manage.py dbbackup

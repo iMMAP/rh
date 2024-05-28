@@ -83,11 +83,8 @@ class ReportTemplateExportView(View):
             {"header": "admin0pcode", "type": "string", "width": 20},
             {"header": "admin1pcode", "type": "string", "width": 20},
             {"header": "admin1name", "type": "string", "width": 20},
-            {"header": "region name", "type": "string", "width": 20},
             {"header": "admin2pcode", "type": "string", "width": 20},
             {"header": "admin2name", "type": "string", "width": 20},
-            {"header": "province", "type": "string", "width": 20},
-            {"header": "district", "type": "string", "width": 20},
             {"header": "zone", "type": "string", "width": 20},
             {"header": "location_type", "type": "string", "width": 20},
         ]

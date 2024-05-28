@@ -198,9 +198,13 @@ MAINTENANCE_BYPASS_QUERY = env("MAINTENANCE_BYPASS_QUERY", default="")
 
 # Backup to DropBox
 DBBACKUP_STORAGE = "storages.backends.dropbox.DropBoxStorage"
+DBBACKUP_SEND_EMAIL = False
 DBBACKUP_STORAGE_OPTIONS = {
-    "oauth2_access_token": env("DROPBOX_ACCESS_TOKEN", default=""),
+    "oauth2_access_token": env(
+        "DROPBOX_ACCESS_TOKEN",
+        default="",
+    ),
     "app_key": env("DROPBOX_APP_KEY", default=""),
     "app_secret": env("DROPBOX_APP_SECRET", default=""),
-    # "root_path":"",
+    # "root_path": "RH-2-Backups",
 }

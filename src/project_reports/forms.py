@@ -1,3 +1,4 @@
+import calendar
 from django import forms
 from django.forms.models import inlineformset_factory
 from django.urls import reverse_lazy
@@ -13,10 +14,10 @@ from .models import (
 
 
 class ProjectMonthlyReportForm(forms.ModelForm):
+    
     class Meta:
         model = ProjectMonthlyReport
         fields = "__all__"
-
         widgets = {
             "report_date": forms.widgets.DateInput(
                 attrs={
@@ -30,11 +31,10 @@ class ProjectMonthlyReportForm(forms.ModelForm):
                     "type": "date",
                     "onfocus": "(this.type='date')",
                     "onblur": "(this.type='text')",
-                    "readonly": "",
+                    
                 }
             ),
         }
-
 
 class TargetLocationReportForm(forms.ModelForm):
     class Meta:

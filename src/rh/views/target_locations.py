@@ -47,7 +47,6 @@ def copy_target_location(request, project, location):
     return JsonResponse(response_data)
 
 
-
 @login_required
 def get_target_location_empty_form(request):
     """Get an empty target location form for a project"""

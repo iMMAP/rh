@@ -25,7 +25,6 @@ from .views import copy_project_target_location, copy_target_location_disaggrega
 RECORDS_PER_PAGE = 10
 
 
-
 @login_required
 def projects_list(request):
     """Projects"""
@@ -89,7 +88,6 @@ def projects_detail(request, pk):
     return render(request, "rh/projects/views/project_view.html", context)
 
 
-
 @login_required
 def create_project_view(request):
     if request.method == "POST":
@@ -119,7 +117,6 @@ def create_project_view(request):
     return render(request, "rh/projects/forms/project_form.html", context)
 
 
-
 @login_required
 def update_project_view(request, pk):
     """View for updating a project."""
@@ -143,7 +140,6 @@ def update_project_view(request, pk):
         "reports_view": False,
     }
     return render(request, "rh/projects/forms/project_form.html", context)
-
 
 
 @login_required
@@ -192,10 +188,6 @@ def submit_project(request, pk):
     return JsonResponse(response_data)
 
 
-
-
-
-
 @login_required
 def archive_project(request, pk):
     """Archiving Project"""
@@ -237,9 +229,6 @@ def archive_project(request, pk):
     return JsonResponse(response_data)
 
     # return JsonResponse({"success": True})
-    
-
-
 
 
 @login_required
@@ -298,8 +287,6 @@ def delete_project(request, pk):
     return JsonResponse(response_data)
 
 
-
-
 def copy_project_activity_plan(project, plan):
     """Copy Activity Plans"""
     try:
@@ -326,8 +313,6 @@ def copy_project_activity_plan(project, plan):
     except Exception as _:
         # If an exception occurs, return False to indicate the copy operation was not successful.
         return False
-
-
 
 
 @login_required
@@ -382,8 +367,6 @@ def copy_project(request, pk):
         # Return the URL in a JSON response
         response_data = {"redirect_url": url}
         return JsonResponse(response_data)
-
-
 
 
 @login_required

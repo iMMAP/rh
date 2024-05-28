@@ -13,7 +13,6 @@ from .forms import StockLocationDetailsForm, StockReportForm, WarehouseLocationF
 from .models import StockLocationDetails, StockReports, WarehouseLocation
 
 
-
 @login_required
 def stock_index_view(request):
     """Stock Views"""
@@ -61,7 +60,6 @@ def stock_index_view(request):
     return render(request, "stock/stocks_index.html", context)
 
 
-
 @login_required
 def all_stock_report(request, flag):
     stock_reports = StockReports.objects.filter(state=flag)
@@ -71,7 +69,6 @@ def all_stock_report(request, flag):
         # "submitted_stock_reports": submitted_stock_reports,
     }
     return render(request, "stock/all_stock_report.html", context)
-
 
 
 @login_required
@@ -160,13 +157,11 @@ def stock_report_view(request, pk):
     return render(request, "stock/stock_report_form.html", context)
 
 
-
 @login_required
 @require_http_methods(["POST"])
 def submit_stock_report_form(request, pk):
     StockReports.objects.filter(id=pk).update(state="submitted", submitted_at=datetime.datetime.now())
     return redirect("all_stock_report", "submitted")
-
 
 
 @login_required

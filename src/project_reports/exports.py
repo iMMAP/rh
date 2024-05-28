@@ -363,7 +363,6 @@ class ReportsExportView(View):
                             location_report.province.region_name if location_report.province else None,
                             location_report.district.code if location_report.district else None,
                             location_report.district.name if location_report.district else None,
-
                             location_report.facility_site_type.name if location_report.facility_site_type else None,
                             location_report.facility_name,
                             location_report.facility_id,

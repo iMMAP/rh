@@ -26,4 +26,3 @@ def load_locations_details(request):
     )
 
     return JsonResponse(response, safe=False)
-

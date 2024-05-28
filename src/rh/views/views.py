@@ -50,9 +50,11 @@ def download_user_guide(request):
 
     return response
 
+
 #############################################
 #               Project Views
 #############################################
+
 
 def copy_target_location_disaggregation_locations(location, disaggregation_location):
     """Copy Disaggregation Locations"""

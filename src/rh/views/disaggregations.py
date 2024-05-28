@@ -1,5 +1,5 @@
 from django.contrib.auth.decorators import login_required
-from django.http import  JsonResponse
+from django.http import JsonResponse
 from django.template.loader import render_to_string
 
 from ..forms import (
@@ -55,7 +55,3 @@ def get_disaggregations_forms(request):
 
     # Return JSON response containing generated HTML forms
     return JsonResponse(location_disaggregation_dict)
-
-
-
-

@@ -62,11 +62,6 @@ def copy_activity_plan(request, project, plan):
     return JsonResponse(response_data)
 
 
-
-
-
-
-
 @login_required
 def create_project_activity_plan(request, project):
     project = get_object_or_404(Project, pk=project)
@@ -199,9 +194,6 @@ def create_project_activity_plan(request, project):
     return render(request, "rh/projects/forms/project_activity_plan_form.html", context)
 
 
-
-
-
 @login_required
 def get_activity_empty_form(request):
     """Get an empty activity form"""
@@ -234,7 +226,6 @@ def get_activity_empty_form(request):
 
     # Return JSON response containing the generated HTML
     return JsonResponse({"html": html})
-
 
 
 @login_required

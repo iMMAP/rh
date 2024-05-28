@@ -8,7 +8,6 @@ from .models import ProjectMonthlyReport
 RECORDS_PER_PAGE = 5
 
 
-
 @login_required
 def reports_dashboard_view(request):
     """Reports Dashboard"""

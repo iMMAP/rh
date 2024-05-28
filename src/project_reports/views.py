@@ -48,7 +48,6 @@ from .models import (
 RECORDS_PER_PAGE = 10
 
 
-
 @login_required
 def index_project_report_view(request, project):
     """Project Monthly Report View"""
@@ -83,7 +82,6 @@ def index_project_report_view(request, project):
     }
 
     return render(request, "project_reports/views/monthly_reports_view_base.html", context)
-
 
 
 @login_required
@@ -333,7 +331,6 @@ def unarchive_project_monthly_report_view(request, report):
     return JsonResponse(response_data)
 
 
-
 @login_required
 def details_monthly_progress_view(request, project, report):
     """Project Monthly Report Read View"""
@@ -389,7 +386,6 @@ def get_target_locations_domain(target_locations):
     target_location_zones = Location.objects.filter(zone_q)
 
     return (target_location_provinces, target_location_districts, target_location_zones)
-
 
 
 @login_required
@@ -561,7 +557,6 @@ def create_project_monthly_report_progress_view(request, project, report):
     }
 
     return render(request, "project_reports/forms/monthly_report_progress_form.html", context)
-
 
 
 @login_required
@@ -946,7 +941,6 @@ def recompute_target_achieved(plan_report):
             activity_report_target += disaggregation_location_report.target
     plan_report.target_achieved = activity_report_target
     plan_report.save()
-
 
 
 @login_required

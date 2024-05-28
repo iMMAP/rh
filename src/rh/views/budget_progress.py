@@ -18,7 +18,6 @@ from ..models import (
 #############################################
 
 
-
 @login_required
 def create_project_budget_progress_view(request, project):
     project = get_object_or_404(Project, pk=project)
@@ -61,7 +60,6 @@ def create_project_budget_progress_view(request, project):
     return render(request, "rh/financial_reports/project_budget_progress.html", context)
 
 
-
 @login_required
 def copy_budget_progress(request, project, budget):
     project = get_object_or_404(Project, pk=project)
@@ -76,7 +74,6 @@ def copy_budget_progress(request, project, budget):
         new_budget_progress.title = f"[COPY] - {budget_progress.title}"
         new_budget_progress.save()
     return JsonResponse({"success": True})
-
 
 
 @login_required

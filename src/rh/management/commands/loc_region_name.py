@@ -21,7 +21,7 @@ class Command(BaseCommand):
         for index, row in df.iterrows():
             try:
                 obj = Location.objects.get(code=row["adm2_pcode"])
-                
+
                 obj.region_name = row["region_name"]
                 obj.save()
 
@@ -29,7 +29,7 @@ class Command(BaseCommand):
 
             except Location.DoesNotExist:
                 self.stdout.write(self.style.WARNING(f"No entry found with id: {row['id']}"))
-         
+
         self.stdout.write(self.style.SUCCESS("Database update complete"))
 
     def handle(self, *args, **options):

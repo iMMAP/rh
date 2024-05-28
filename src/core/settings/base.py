@@ -189,7 +189,7 @@ MAINTENANCE_MODE_REDIRECT_ROUTE = env("MAINTENANCE_MODE_REDIRECT_ROUTE", default
 MAINTENANCE_BYPASS_QUERY = env("MAINTENANCE_BYPASS_QUERY", default="")
 
 ####################
-# DB Backup Settings 
+# DB Backup Settings
 ####################
 
 # Backup to the local filesystem

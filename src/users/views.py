@@ -9,7 +9,6 @@ from django.shortcuts import redirect, render
 from django.template import loader
 from django.utils.encoding import force_bytes, force_str
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
-from django.views.decorators.cache import cache_control
 from .decorators import unauthenticated_user
 from .forms import ProfileCreateForm, ProfileUpdateForm, UserRegisterForm, UserUpdateForm
 from .tokens import account_activation_token
@@ -67,7 +66,6 @@ def send_account_activation_email(request, user, to_email):
         )
 
 
-@cache_control(no_store=True)
 @unauthenticated_user
 def register_view(request):
     if request.method == "POST":
@@ -115,7 +113,6 @@ def register_view(request):
     return render(request, "users/registration/signup.html", context)
 
 
-@cache_control(no_store=True)
 @unauthenticated_user
 def login_view(request):
     template = loader.get_template("users/registration/login.html")
@@ -145,7 +142,8 @@ def logout_view(request):
 #############################################
 ############### Profile Views #################
 #############################################
-@cache_control(no_store=True)
+
+
 @login_required
 def profile(request):
     template = loader.get_template("users/profile.html")

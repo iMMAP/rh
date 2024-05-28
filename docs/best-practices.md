@@ -48,6 +48,16 @@ app_name = 'projects'
 'projects/<int:pk>/update/' ->  name = 'projects-update'
 'projects/<int:pk>/delete/' -> name = 'projects-delete';
 ```
+- ***REST Route conventions***:
+    | Verb      | URI                  | Action  | Route Name     |   
+    | --------- | -------------------- | ------- | -------------- |
+    | GET       | /projects              | index   | projects.index   |  
+    | GET       | /projects/create       | create  | projects.create  |     
+    | POST      | /projects              | store   | projects.store   |   
+    | GET       | /projects/{photo}      | show    | projects.show    |  
+    | GET       | /projects/{photo}/edit | edit    | projects.edit    |   
+    | PUT/PATCH | /projects/{photo}      | update  | projects.update  |    
+    | DELETE    | /projects/{photo}      | destroy | projects.destroy | 
 
 
 - ***Indentation and Formatting***:
@@ -146,37 +156,6 @@ logger.critical('Critical message')
     - Paramterise SQL queries.
     - Use secure password hashing algorithms like bcrypt or Argon2 for user authentication.
     - Ensure the protection of sensitive data by encrypting it when necessary.
-
-Example of input sanitisation:
-```python 
-import html
-
-def sanitize_input(user_input):
-    """
-    Sanitizes user input by escaping HTML special characters.
-    """
-    sanitized_input = html.escape(user_input)
-    return sanitized_input
-```
-
-Example of SQL parameterisation: 
-```python
-def insert_user(username, password):
-    """
-    Inserts a new user into the database using parameterized SQL.
-    """
-    conn = sqlite3.connect('mydatabase.db')
-    cursor = conn.cursor()
-
-    # Using parameterised SQL query
-    query = "INSERT INTO users (username, password) VALUES (?, ?)"
-    params = (username, password)
-
-    cursor.execute(query, params)
-    conn.commit()
-
-    conn.close()
-```
 
 - Be aware of the Top 10 OWASP (2017 - the list if frequently updated) while coding for web applications: 
     - Injection: This vulnerability refers to the ability for attackers to inject malicious code or commands into an application. Common examples include SQL injection, OS command injection, and LDAP injection.

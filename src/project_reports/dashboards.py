@@ -1,6 +1,5 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
-from django.views.decorators.cache import cache_control
 from rh.models import Organization, Project
 
 from .filters import ReportFilterForm
@@ -9,7 +8,6 @@ from .models import ProjectMonthlyReport
 RECORDS_PER_PAGE = 5
 
 
-@cache_control(no_store=True)
 @login_required
 def reports_dashboard_view(request):
     """Reports Dashboard"""

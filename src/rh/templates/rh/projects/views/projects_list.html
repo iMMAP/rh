@@ -188,7 +188,35 @@
                 </ul>
             </div>
         </div>
-
+        <!-- filter applied  -->
+        <div class="filter-container" id="filter-container">
+            <span class="heading" id="heading">Filter Applied On: </span>
+            {% if project_filter.form.clusters.data %}
+            <span class="title" id="title">{{project_filter.form.clusters.name}}</span>
+            {% endif %}
+            {% if project_filter.form.donors.data %}
+                <span class="title" id="title">{{project_filter.form.donors.name}}</span>
+            {% endif %}
+            {% if project_filter.form.activity_domains.data %}
+                <span class="title" id="title">{{project_filter.form.activity_domains.name}}</span>
+            {% endif %}
+            {% if project_filter.form.implementing_partners.data %}
+                <span class="title" id="title">{{project_filter.form.implementing_partners.name}}</span>
+            {% endif %}
+            {% if project_filter.form.programme_partners.data %}
+                <span class="title" id="title">{{project_filter.form.programme_partners.name}}</span>
+            {% endif %}
+            {% if project_filter.form.start_date.data %}
+                <span class="title" id="title">{{project_filter.form.start_date.name}}</span>
+            {% endif %}
+            {% if project_filter.form.end_date.data %}
+                <span class="title" id="title">{{project_filter.form.end_date.name}}</span>
+            {% endif %}
+            {% if project_filter.form.user.data %}
+                <span class="title" id="title">{{project_filter.form.user.name}}</span>
+            {% endif %}
+        </div>
+        <!-- filter applied end -->
         <div class="content-block top-border bottom-border">
             <div id="tab-1">
                 <div class="table-wrapper-scrollable">
@@ -295,6 +323,11 @@
                 shouldSort: false,
             });
         });
+        if(document.getElementById("title").innerHTML){
+            document.getElementById("heading").style.display = "inline";
+        } else {
+            document.getElementById("heading").style.display = "none";
+        }
        
         
         

@@ -247,6 +247,7 @@ class ProjectResource(resources.ModelResource):
             return ",".join([location.district.code for location in target_location])
         except Exception:
             return None
+
     def dehydrate_admin2name(self, project):
         target_location = list(project.targetlocation_set.all())
         try:

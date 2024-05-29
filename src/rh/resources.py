@@ -220,61 +220,100 @@ class ProjectResource(resources.ModelResource):
     # target loacation starts
     def dehydrate_admin1name(self, project):
         target_location = list(project.targetlocation_set.all())
-        return ",".join([location.province.name for location in target_location])
+        try:
+            return ",".join([location.province.name for location in target_location])
+        except Exception:
+            return None
 
     def dehydrate_region(self, project):
         target_location = list(project.targetlocation_set.all())
-        return ",".join(
-            [location.province.region_name for location in target_location if location.province.region_name]
-        )
+        try:
+            return ",".join(
+                [location.province.region_name for location in target_location if location.province.region_name]
+            )
+        except Exception:
+            return None
 
     def dehydrate_admin1pcode(self, project):
         target_location = list(project.targetlocation_set.all())
-        return ",".join([location.province.code for location in target_location])
+        try:
+            return ",".join([location.province.code for location in target_location])
+        except Exception:
+            return None
 
     def dehydrate_admin2pcode(self, project):
         target_location = list(project.targetlocation_set.all())
-        return ",".join([location.district.code for location in target_location])
+        try:
+            return ",".join([location.district.code for location in target_location])
+        except Exception:
+            return None
 
     def dehydrate_admin2name(self, project):
         target_location = list(project.targetlocation_set.all())
-        return ",".join([location.district.name for location in target_location])
+        try:
+            return ",".join([location.district.name for location in target_location])
+        except Exception:
+            return None
 
     def dehydrate_location_type(self, project):
         target_location = list(project.targetlocation_set.all())
-        return ",".join([location.location_type for location in target_location if location.location_type])
+        try:
+            return ",".join([location.location_type for location in target_location if location.location_type])
+        except Exception:
+            return None
 
     def dehydrate_classification(self, project):
         target_location = list(project.targetlocation_set.all())
-        return ",".join(
-            [location.district.classification for location in target_location if location.district.classification]
-        )
+        try:
+            return ",".join(
+                [location.district.classification for location in target_location if location.district.classification]
+            )
+        except Exception:
+            return None
 
     def dehydrate_facility_site_type(self, project):
         target_location = list(project.targetlocation_set.all())
-        return ",".join(
-            [location.facility_site_type.name for location in target_location if location.facility_site_type]
-        )
+        try:
+            return ",".join(
+                [location.facility_site_type.name for location in target_location if location.facility_site_type]
+            )
+        except Exception:
+            return None
 
     def dehydrate_facility_monitoring(self, project):
         target_location = list(project.targetlocation_set.all())
-        return ",".join(["Yes" for location in target_location if location.facility_monitoring])
+        try:
+            return ",".join(["Yes" for location in target_location if location.facility_monitoring])
+        except Exception:
+            return None
 
     def dehydrate_facility_name(self, project):
         target_location = list(project.targetlocation_set.all())
-        return ",".join([location.facility_name for location in target_location if location.facility_name])
+        try:
+            return ",".join([location.facility_name for location in target_location if location.facility_name])
+        except Exception:
+            return None
 
     def dehydrate_facility_id(self, project):
         target_location = list(project.targetlocation_set.all())
-        return ",".join([location.facility_id for location in target_location if location.facility_id])
+        try:
+            return ",".join([location.facility_id for location in target_location if location.facility_id])
+        except Exception:
+            return None
 
     def dehydrate_facility_lat(self, project):
         target_location = list(project.targetlocation_set.all())
-        return ",".join([location.facility_lat for location in target_location if location.facility_lat])
+        try:
+            return ",".join([location.facility_lat for location in target_location if location.facility_lat])
+        except Exception:
+            return None
 
     def dehydrate_facility_long(self, project):
         target_location = list(project.targetlocation_set.all())
-        return ",".join([location.facility_long for location in target_location if location.facility_long])
+        try:
+            return ",".join([location.facility_long for location in target_location if location.facility_long])
+        except Exception:
+            return None
 
     # fetching disaggregain in excel file  start
     def dehydrate_female_headed(self, project):

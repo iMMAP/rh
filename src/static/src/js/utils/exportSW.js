@@ -404,7 +404,7 @@ $(".radio-select").on("click", function(e){
   });
 });
 // project export in csv file 
-const exportCSVProject = document.querySelector(".export-button-csv").addEventListener(
+document.querySelector(".export-button-csv").addEventListener(
   "click", function(e) {
     e.preventDefault();
     e.stopPropagation();

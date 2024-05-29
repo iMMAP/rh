@@ -404,36 +404,41 @@ $(".radio-select").on("click", function(e){
   });
 });
 // project export in csv file 
-document.querySelector(".export-button-csv").addEventListener(
-  "click", function(e) {
-    e.preventDefault();
-    e.stopPropagation();
-   
-    let export_url = this.getAttribute('data-csvlink');
-    fetch(export_url,{
-      method: 'POST',
-      headers:{
-        'Content-Type':'application/json',
-        'X-CSRFToken':csrftoken,
-       }, 
-      }).then(response => response.blob())
-      .then(blob => {
-        // create a download link for downloading the csv file 
-          const url = window.URL.createObjectURL(new Blob([blob]));
-          const a = document.createElement('a');
-          a.style.display = 'none';
-          a.href = url;
-          a.download = 'export.csv';
-          document.body.appendChild(a);
-          a.click();
-          window.URL.revokeObjectURL(url);
-      })
-      .catch(error => {
-          console.error('Error downloading CSV:', error);
-      });
-  
-  });
-// Counting the selected field in filter and export module 
+  const exportCsvFile = document.querySelector(".export-button-csv");
+  if(exportCsvFile) {
+    exportCsvFile.addEventListener(
+    "click", function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+     
+      let export_url = this.getAttribute('data-csvlink');
+      fetch(export_url,{
+        method: 'POST',
+        headers:{
+          'Content-Type':'application/json',
+          'X-CSRFToken':csrftoken,
+         }, 
+        }).then(response => response.blob())
+        .then(blob => {
+          // create a download link for downloading the csv file 
+            const url = window.URL.createObjectURL(new Blob([blob]));
+            const a = document.createElement('a');
+            a.style.display = 'none';
+            a.href = url;
+            a.download = 'export.csv';
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+        })
+        .catch(error => {
+            console.error('Error downloading CSV:', error);
+        });
+    
+    });
+  }
+
+try{
+  // Counting the selected field in filter and export module 
   var checkboxes = document.querySelectorAll('input[type=checkbox]');
   // Get the span element to display the count
   var countSpan = document.getElementById('selectedCount');
@@ -453,6 +458,8 @@ document.querySelector(".export-button-csv").addEventListener(
           countSpan.textContent = selectedCount;
       });
   });
+}catch{}
+
   // bulk export fetch request
   function exportButton(event){
     event.preventDefault();

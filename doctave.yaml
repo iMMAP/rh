@@ -11,6 +11,5 @@ navigation:
   - path: docs/get-started.md
   - path: docs/external-services.md
   - path: docs/best-practices.md
-  - path: docs/clean-architecture.md
   - path: docs/Models
     children: "*"

@@ -9,8 +9,15 @@ from django.shortcuts import redirect, render
 from django.template import loader
 from django.utils.encoding import force_bytes, force_str
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
+
+
 from .decorators import unauthenticated_user
-from .forms import ProfileCreateForm, ProfileUpdateForm, UserRegisterForm, UserUpdateForm
+from .forms import (
+    ProfileCreateForm,
+    ProfileUpdateForm,
+    UserRegisterForm,
+    UserUpdateForm,
+)
 from .tokens import account_activation_token
 
 
@@ -120,14 +127,16 @@ def login_view(request):
         email = request.POST["email"]
         password = request.POST.get("password")
         user = authenticate(request, username=email, email=email, password=password)
-
         if user is not None:
-            login(request, user)
-            if "next" in request.POST:
-                return redirect(request.POST.get("next"))
-            return redirect("landing")
+            if user.is_active:
+                login(request, user)
+                if "next" in request.POST:
+                    return redirect(request.POST.get("next"))
+                return redirect("landing")
+            else:
+                messages.error(request, "This account is inactive. Please contact support.")
         else:
-            messages.error(request, "Enter correct email and password.")
+            messages.error(request, "Enter correct email or password.")
     context = {}
     return HttpResponse(template.render(context, request))
 

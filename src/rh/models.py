@@ -536,6 +536,7 @@ class ActivityPlan(models.Model):
     )
 
     total_target = models.IntegerField(default=0, blank=True, null=True)
+    total_set_target = models.IntegerField(default=0, blank=True, null=True)
     description = models.TextField(blank=True, null=True)
     # old_id = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
 

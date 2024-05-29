@@ -48,13 +48,13 @@ class FacilitySiteTypeAdmin(admin.ModelAdmin):
 admin.site.register(FacilitySiteType, FacilitySiteTypeAdmin)
 
 
-class ActivityPlanModelAdminForm(forms.ModelForm):
-    class Meta:
-        model = ActivityPlan
-        fields = "__all__"
-        widgets = {
-            "indicator": FilteredSelectMultiple("Indicator", False),
-        }
+# class ActivityPlanModelAdminForm(forms.ModelForm):
+#     class Meta:
+#         model = ActivityPlan
+#         fields = "__all__"
+#         widgets = {
+#             "indicator": FilteredSelectMultiple("Indicator", False),
+#         }
 
 
 class DisseggregationModelAdminForm(forms.ModelForm):
@@ -259,7 +259,6 @@ class ActivityPlanAdmin(admin.ModelAdmin):
     )
     search_fields = ("state", "active", "project__title")
     list_filter = ("state", "active", "project__code")
-    form = ActivityPlanModelAdminForm
 
 
 admin.site.register(ActivityPlan, ActivityPlanAdmin)

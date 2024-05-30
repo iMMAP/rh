@@ -27,7 +27,7 @@ class Command(BaseCommand):
     help = "Import activities from a 'output_2024' CSV file."
 
     def _import_groups(self):
-        groups = ["SUPERADMIN", "iMMAP IMO", "CLUSTER LEAD", "ORGANIZATION LEAD", "ORGANIZATION USER"]
+        groups = ["CLUSTER_LEAD", "ORG_LEAD", "ORG_USER", "iMMAP_IMO"]
         for group_name in groups:
             group, created = Group.objects.get_or_create(name=group_name)
             if created:

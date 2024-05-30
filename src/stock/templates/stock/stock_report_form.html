@@ -14,26 +14,6 @@
               {{ report.created_at|date:"F, Y" }}
             </h3>
 
-            <!-- MESSAGE SECTION STARTS -->
-            {% if messages %}
-                <div class="message-container">
-                {% for message in messages %}
-                    {% if message.tags == 'success' %}
-                    <div class="message-success-alert">
-                        {{message}}
-                        <span class="close-alert-message">&#x2715;</span>
-                    </div>
-                    {% elif message.tags == 'error' %}
-                    <div class="message-danger-alert">
-                        {{message}}
-                        <span class="close-alert-message">&#x2715;</span>
-                    </div>
-                    {% endif %}
-                {% endfor %}
-                </div>
-            {% endif %}
-        <!-- MESSAGE SECTION ENDS -->
-
             <h5 class="p-3">
               <span class="badge bg-success">{{ warehouse_location_stocks|length }}</span>
               Selected Locations

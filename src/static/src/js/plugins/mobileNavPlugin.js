@@ -3,7 +3,7 @@
 /*
  * Simple Mobile Navigation
  */
-;(function($) {
+;((($) => {
 	function MobileNav(options) {
 		this.options = $.extend({
 			container: null,
@@ -26,25 +26,24 @@
       this.makeCallback('onInit');
 		},
 		attachEvents: function() {
-			var self = this;
 
 			if(activateResizeHandler) {
 				activateResizeHandler();
 				activateResizeHandler = null;
 			}
 
-			this.outsideClickHandler = function(e) {
-				if(self.isOpened()) {
-					var target = $(e.target);
-					if(!target.closest(self.opener).length && !target.closest(self.drop).length) {
-						self.hide();
+			this.outsideClickHandler = (e) => {
+				if(this.isOpened()) {
+					const target = $(e.target);
+					if(!target.closest(this.opener).length && !target.closest(this.drop).length) {
+						this.hide();
 					}
 				}
 			};
 
-			this.openerClickHandler = function(e) {
+			this.openerClickHandler = (e) => {
 				e.preventDefault();
-				self.toggle();
+				this.toggle();
 			};
 
 			this.opener.on(this.options.toggleEvent, this.openerClickHandler);
@@ -80,6 +79,7 @@
     },
     makeCallback (name) {
       if (typeof this.options[name] === 'function') {
+        // biome-ignore lint/style/noArguments: <explanation>
         const args = Array.prototype.slice.call(arguments);
         args.shift();
         this.options[name].apply(this, args);
@@ -87,16 +87,17 @@
     },
 	};
 
-	var activateResizeHandler = function() {
-		var win = $(window),
-			doc = $('html'),
-			resizeClass = 'resize-active',
-			flag, timer;
-		var removeClassHandler = function() {
+	let activateResizeHandler = () => {
+		const win = $(window);
+		const doc = $('html');
+		const resizeClass = 'resize-active';
+		let flag;
+		let timer;
+		const removeClassHandler = () => {
 			flag = false;
 			doc.removeClass(resizeClass);
 		};
-		var resizeHandler = function() {
+		const resizeHandler = () => {
 			if(!flag) {
 				flag = true;
 				doc.addClass(resizeClass);
@@ -108,12 +109,13 @@
 	};
 
 	$.fn.mobileNav = function(opt) {
-		var args = Array.prototype.slice.call(arguments);
-		var method = args[0];
+		// biome-ignore lint/style/noArguments: <explanation>
+		const args = Array.prototype.slice.call(arguments);
+		const method = args[0];
 
 		return this.each(function() {
-			var $container = jQuery(this);
-			var instance = $container.data('MobileNav');
+			const $container = jQuery(this);
+			const instance = $container.data('MobileNav');
 
 			if (typeof opt === 'object' || typeof opt === 'undefined') {
 				$container.data('MobileNav', new MobileNav($.extend({
@@ -127,4 +129,4 @@
 			}
 		});
 	};
-}(jQuery));
+})(jQuery));

@@ -10,8 +10,7 @@
     background-color: $gray-fa;
     margin-bottom: 40px;
 
-    &:before,
-    &:after {
+    &:before {
       content: '';
       position: absolute;
       display: block;

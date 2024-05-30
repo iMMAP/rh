@@ -68,6 +68,9 @@ class ProjectMonthlyReport(models.Model):
     class Meta:
         verbose_name = "Monthly Report"
         verbose_name_plural = "Monthly Reports"
+        permissions = [
+            ("view_5w_dashboard", "View 5W dashboard"),
+        ]
 
 
 class ActivityPlanReport(models.Model):

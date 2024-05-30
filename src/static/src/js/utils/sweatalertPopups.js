@@ -8,15 +8,19 @@ export default function initSWPopup() {
       	event.stopPropagation();
 
       	// Get the relevant data attributes from the clicked element
-		let dataURL = event.currentTarget.dataset.url;
-		let name = event.currentTarget.dataset.name;
-		let popupType = event.currentTarget.dataset.type;
-		let dataVerify = event.currentTarget.dataset.verify;
+		const dataURL = event.currentTarget.dataset.url;
+		const name = event.currentTarget.dataset.name;
+		const popupType = event.currentTarget.dataset.type;
+		const dataVerify = event.currentTarget.dataset.verify;
 		let unable = false;
 		let confirmButtonClass = 'btn btn-red';
 		let cancelButton = 'btn btn-danger';
       	// Initialize variables to be used in the SweetAlert2 modal
-		let title, text, icon, successMessage, confirmButtonText;
+		let title;
+		let text;
+		let icon;
+		let successMessage;
+		let confirmButtonText;
 
 		// Set the modal variables based on the type of popup requested
 		if (popupType === "copy") {
@@ -74,11 +78,9 @@ export default function initSWPopup() {
 					const response = await $.ajax({
 						method: "GET",
 						url: dataURL,
-						data: {'message': message},
-						success: function (data) {
-							return data
-						},
-						error: function (error) {
+						data: {message: message},
+						success: (data) => data,
+						error: (error) => {
 							Swal.showValidationMessage(`
 								Request failed: ${error}
 							`);
@@ -136,25 +138,25 @@ export default function initSWPopup() {
 		event.preventDefault();
 		event.stopPropagation();
 		// Get the relevant data attributes from the clicked element
-		let dataURL = event.currentTarget.dataset.url;
-		let dataButtonText = event.currentTarget.dataset.button;
+		const dataURL = event.currentTarget.dataset.url;
+		const dataButtonText = event.currentTarget.dataset.button;
 		let message = ''
 		let textInput = false
 		let title = ''
-		if (dataButtonText == 'Reject Report'){
+		if (dataButtonText === 'Reject Report'){
 			message = 'Report has been rejected!'
 			title = 'Please provide a short rejection reason?'
 			textInput = 'text'
 		}
-		if (dataButtonText == 'Submit Report'){
+		if (dataButtonText === 'Submit Report'){
 			message = 'Report has been submitted!'
 			title = 'Are you sure you want to submit report?'
 		}
-		if (dataButtonText == 'Approve Report'){
+		if (dataButtonText === 'Approve Report'){
 			message = 'Report has been approved!'
 			title = 'Are you sure you want to approve report?'
 		}
-		if (dataButtonText == 'Submit Project'){
+		if (dataButtonText === 'Submit Project'){
 			message = 'Project has been submitted!'
 			title = 'Are you sure you want to submit this project?'
 		}
@@ -178,11 +180,9 @@ export default function initSWPopup() {
 					const response = await $.ajax({
 						method: "GET",
 						url: dataURL,
-						data: {'message': message},
-						success: function (data) {
-							return data
-						},
-						error: function (error) {
+						data: {message: message},
+						success: (data) => data,
+						error: (error) => {
 							Swal.showValidationMessage(`
 								Request failed: ${error}
 							`);
@@ -221,7 +221,7 @@ export default function initSWPopup() {
 		event.stopPropagation();
 
 		// Get the relevant data attributes from the clicked element
-	  	let dataURL = event.currentTarget.dataset.url;
+	  	const dataURL = event.currentTarget.dataset.url;
 
 		const { value: file } = await Swal.fire({
 			title: 'Select File',
@@ -241,7 +241,7 @@ export default function initSWPopup() {
 		});	
 		
 		if (file) {
-			let formData = new FormData();		
+			const formData = new FormData();		
 
 			// Get CSRF token from the page
 			const csrfToken = $('[name=csrfmiddlewaretoken]').val();
@@ -260,7 +260,7 @@ export default function initSWPopup() {
 					headers: {
 						'X-CSRFToken': csrfToken
 					},
-					success: function (data) {
+					success: (data) => {
 						Swal.hideLoading();
 						if (data.success) {
 							// Show success notification first
@@ -283,14 +283,14 @@ export default function initSWPopup() {
 								icon: "error",
 								html: `<div>${data.message}</div>`,
 								showCloseButton: true,
-								confirmButtonText: `Ok`,
+								confirmButtonText: "Ok",
 								customClass: {
 									confirmButton: 'btn btn-red',
 								},
 							});
 						}
 					},
-					error: function (error) {
+					error: (error) => {
 						Swal.showValidationMessage(`
 							Request failed: ${error}
 						`);
@@ -304,15 +304,15 @@ export default function initSWPopup() {
 	}
 
 	// Attach the click event listener to all elements with class "show_confirm"
-	$(".show-sw-action-popup").on("click", function(event) {
+	$(".show-sw-action-popup").on("click", (event) => {
 		showActionConfirmPopup(event)
 	});
 
-	$(".show-sw-confirm-button").on("click", function(event) {
+	$(".show-sw-confirm-button").on("click", (event) => {
 		showConfirmationPopup(event)
 	});
 
-	$(".show-sw-import-popup").on("click", function(event) {
+	$(".show-sw-import-popup").on("click", (event) => {
 		showImportFilePopup(event)
 	});
 }

@@ -390,10 +390,10 @@ def export(request, format):
         ds = dataset.csv
     else:
         ds = dataset.json
-    
+
     today_date = date.today()
     file_name = f"projects_{today_date}"
     response = HttpResponse(ds, content_type=f"{format}")
     response["Content-Disposition"] = f"attachment; filename={file_name}.{format}"
-    
+
     return response

@@ -3,8 +3,7 @@
 /*
  * jQuery Accordion plugin new
  */
-(function (root, factory) {
-  "use strict";
+((root, factory) => {
   if (typeof define === "function" && define.amd) {
     define(["jquery"], factory);
   } else if (typeof exports === "object") {
@@ -15,9 +14,8 @@
   } else {
     root.SlideAccordion = factory(jQuery);
   }
-})(window, function ($) {
-  "use strict";
-  var accHiddenClass = "js-acc-hidden";
+})(window, ($) => {
+  const accHiddenClass = "js-acc-hidden";
 
   function SlideAccordion(options) {
     this.options = $.extend(
@@ -54,11 +52,11 @@
 
     findElements: function () {
       this.$holder = $(this.options.holder).data("SlideAccordion", this);
-      this.$items = this.$holder.find(":has(" + this.options.slider + ")");
+      this.$items = this.$holder.find(`:has(${this.options.slider})`);
     },
 
     setStateOnInit: function () {
-      var self = this;
+      const self = this;
 
       this.$items.each(function () {
         if (!$(this).hasClass(self.options.activeClass)) {
@@ -68,11 +66,11 @@
     },
 
     attachEvents: function () {
-      var self = this;
+      const self = this;
 
       this.accordionToggle = function (e) {
-        var $item = jQuery(this).closest(self.$items);
-        var $actiItem = self.getActiveItem($item);
+        const $item = jQuery(this).closest(self.$items);
+        const $actiItem = self.getActiveItem($item);
 
         if (
           !self.options.allowClickWhenExpanded ||
@@ -105,7 +103,7 @@
     },
 
     show: function ($item) {
-      var $slider = $item.find(this.options.slider);
+      const $slider = $item.find(this.options.slider);
 
       $item.addClass(this.options.activeClass);
       $slider
@@ -130,7 +128,7 @@
     },
 
     hide: function ($item) {
-      var $slider = $item.find(this.options.slider);
+      const $slider = $item.find(this.options.slider);
 
       $item.removeClass(this.options.activeClass);
       $slider
@@ -149,7 +147,7 @@
     },
 
     goToItem: function ($item) {
-      var itemOffset = $item.offset().top;
+      let itemOffset = $item.offset().top;
 
       if (itemOffset < $(window).scrollTop()) {
         // handle extra offset
@@ -171,12 +169,13 @@
     },
 
     getActiveItem: function ($item) {
-      return $item.siblings().filter("." + this.options.activeClass);
+      return $item.siblings().filter(`.${this.options.activeClass}`);
     },
 
     makeCallback: function (name) {
       if (typeof this.options[name] === "function") {
-        var args = Array.prototype.slice.call(arguments);
+        // biome-ignore lint/style/noArguments: <explanation>
+        const args = Array.prototype.slice.call(arguments);
         args.shift();
         this.options[name].apply(this, args);
       }
@@ -202,12 +201,13 @@
   };
 
   $.fn.slideAccordion = function (opt) {
-    var args = Array.prototype.slice.call(arguments);
-    var method = args[0];
+    // biome-ignore lint/style/noArguments: <explanation>
+    const args = Array.prototype.slice.call(arguments);
+    const method = args[0];
 
     return this.each(function () {
-      var $holder = jQuery(this);
-      var instance = $holder.data("SlideAccordion");
+      const $holder = jQuery(this);
+      const instance = $holder.data("SlideAccordion");
 
       if (typeof opt === "object" || typeof opt === "undefined") {
         new SlideAccordion(
@@ -228,9 +228,9 @@
     });
   };
 
-  (function () {
-    var tabStyleSheet = $('<style type="text/css">')[0];
-    var tabStyleRule = "." + accHiddenClass;
+  (() => {
+    const tabStyleSheet = $('<style type="text/css">')[0];
+    let tabStyleRule = `.${accHiddenClass}`;
     tabStyleRule +=
       "{position:absolute !important;left:-9999px !important;top:-9999px !important;display:block !important; width: 100% !important;}";
     if (tabStyleSheet.styleSheet) {

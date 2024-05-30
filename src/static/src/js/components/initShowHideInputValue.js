@@ -1,3 +1,4 @@
+// biome-ignore lint/complexity/noForEach: <explanation>
 document.querySelectorAll('.js-show-hide-field').forEach((element) => {
   const BUTTON = element.querySelector('.show-hide-btn');
   const INPUT = element.querySelector('input');

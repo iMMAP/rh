@@ -1,4 +1,4 @@
-(function (window) {
+((window) => {
   const activeClass = 'resize-active';
   const resetDelay = 500;
   let flag = false;

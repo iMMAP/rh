@@ -57,7 +57,9 @@ export const isTouch = (obj = window) => touchevents(obj);
   ready(() => init());
 */
 
-export default Document.prototype.ready = (fn) => {
+
+// biome-ignore lint/suspicious/noAssignInExpressions: <explanation>
+export  default Document.prototype.ready = (fn) => {
   if (fn && typeof fn === 'function') {
     document.addEventListener('DOMContentLoaded', () => {
       if (document.readyState === 'interactive' || document.readyState === 'complete') {

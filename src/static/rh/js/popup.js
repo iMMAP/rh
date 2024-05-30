@@ -1,5 +1,5 @@
-$(function () {
-    $('.show_confirm').on('click', function(event) {
+$(() => {
+    $('.show_confirm').on('click', (event) => {
         Swal.fire({
             title: "Submit your Github username",
             input: "text",

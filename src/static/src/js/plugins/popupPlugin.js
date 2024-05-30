@@ -3,7 +3,7 @@
 /*
  * Popups plugin
  */
-;(function($) {
+;((($) => {
 	function ContentPopup(opt) {
 		this.options = $.extend({
 			holder: null,
@@ -33,19 +33,17 @@
 			this.btnClose = this.holder.find(this.options.btnClose);
 		},
 		attachEvents: function() {
-			// handle popup openers
-			var self = this;
-			this.clickMode = isTouchDevice || (self.options.mode === self.options.clickEvent);
+			this.clickMode = isTouchDevice || (this.options.mode === this.options.clickEvent);
 
 			if (this.clickMode) {
 				// handle click mode
-				this.btnOpen.bind(self.options.clickEvent + '.popup', function(e) {
-					if (self.holder.hasClass(self.options.openClass)) {
-						if (self.options.hideOnClickLink) {
-							self.hidePopup();
+				this.btnOpen.bind(`${this.options.clickEvent}.popup`, (e) => {
+					if (this.holder.hasClass(this.options.openClass)) {
+						if (this.options.hideOnClickLink) {
+							this.hidePopup();
 						}
 					} else {
-						self.showPopup();
+						this.showPopup();
 					}
 					e.preventDefault();
 				});
@@ -54,33 +52,34 @@
 				this.outsideClickHandler = this.bind(this.outsideClickHandler, this);
 			} else {
 				// handle hover mode
-				var timer, delayedFunc = function(func) {
+				let timer;
+				const delayedFunc = (func) => {
 					clearTimeout(timer);
-					timer = setTimeout(function() {
-						func.call(self);
-					}, self.options.delay);
+					timer = setTimeout(() => {
+						func.call(this);
+					}, this.options.delay);
 				};
-				this.btnOpen.on('mouseover.popup', function() {
-					delayedFunc(self.showPopup);
-				}).on('mouseout.popup', function() {
-					delayedFunc(self.hidePopup);
+				this.btnOpen.on('mouseover.popup', () => {
+					delayedFunc(this.showPopup);
+				}).on('mouseout.popup', () => {
+					delayedFunc(this.hidePopup);
 				});
-				this.popup.on('mouseover.popup', function() {
-					delayedFunc(self.showPopup);
-				}).on('mouseout.popup', function() {
-					delayedFunc(self.hidePopup);
+				this.popup.on('mouseover.popup', () => {
+					delayedFunc(this.showPopup);
+				}).on('mouseout.popup', () => {
+					delayedFunc(this.hidePopup);
 				});
 			}
 
 			// handle close buttons
-			this.btnClose.on(self.options.clickEvent + '.popup', function(e) {
-				self.hidePopup();
+			this.btnClose.on(`${this.options.clickEvent}.popup`, (e) => {
+				this.hidePopup();
 				e.preventDefault();
 			});
 		},
 		outsideClickHandler: function(e) {
 			// hide popup if clicked outside
-			var targetNode = $((e.changedTouches ? e.changedTouches[0] : e).target);
+			const targetNode = $((e.changedTouches ? e.changedTouches[0] : e).target);
 			if (!targetNode.closest(this.popup).length && !targetNode.closest(this.btnOpen).length) {
 				this.hidePopup();
 			}
@@ -125,16 +124,17 @@
 	};
 
 	// detect touch devices
-	var isTouchDevice = /Windows Phone/.test(navigator.userAgent) || ('ontouchstart' in window) || window.DocumentTouch && document instanceof DocumentTouch;
+	const isTouchDevice = /Windows Phone/.test(navigator.userAgent) || ('ontouchstart' in window) || window.DocumentTouch && document instanceof DocumentTouch;
 
 	// jQuery plugin interface
 	$.fn.contentPopup = function(opt) {
-		var args = Array.prototype.slice.call(arguments);
-		var method = args[0];
+		// biome-ignore lint/style/noArguments: <explanation>
+		const args = Array.prototype.slice.call(arguments);
+		const method = args[0];
 
 		return this.each(function() {
-			var $holder = jQuery(this);
-			var instance = $holder.data('ContentPopup');
+			const $holder = jQuery(this);
+			const instance = $holder.data('ContentPopup');
 
 			if (typeof opt === 'object' || typeof opt === 'undefined') {
 				$holder.data('ContentPopup', new ContentPopup($.extend({
@@ -148,4 +148,4 @@
 			}
 		});
 	};
-}(jQuery));
+})(jQuery));

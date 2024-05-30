@@ -10,13 +10,12 @@ const touchevents = (obj = window, toggleClass = false) => {
       HTML.classList.add(touchClass);
     }
     return true;
-  } else {
+  }
     if (toggleClass) {
       HTML.classList.remove(touchClass);
       HTML.classList.add(noTouchClass);
     }
     return false;
-  }
 };
 
 touchevents(window, true);

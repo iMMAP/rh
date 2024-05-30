@@ -28,8 +28,7 @@
     border-width: 2px 0;
     background-color: $gray-fa;
 
-    &:before,
-    &:after {
+    &:before {
       content: '';
       position: absolute;
       display: block;

@@ -1,4 +1,4 @@
-var DETAILS_TOGGLE_DURATION = 500;
+const DETAILS_TOGGLE_DURATION = 500;
 /**
  * Handle Add Dynamic Activity Form
  **/
@@ -13,10 +13,10 @@ function addActivityForm(prefix, project, nextFormIndex) {
 		data: { project: projectID, prefix_index: nextFormIndex },
 		type: "POST",
 		dataType: "json",
-		beforeSend: function (xhr, settings) {
+		beforeSend: (xhr, settings) => {
 			xhr.setRequestHeader("X-CSRFToken", csrftoken);
 		},
-		success: function (data) {
+		success: (data) => {
 			if (data.html) {
 				const emptyFormTemplate = data.html;
 
@@ -51,15 +51,15 @@ function addActivityForm(prefix, project, nextFormIndex) {
 						// $(this).next('.target-location-accordion-slide').slideToggle(DETAILS_TOGGLE_DURATION);
 					});
 
-				setTimeout(function () {
+				setTimeout(() => {
 					// Initialize chained and chainedm2m fields for the newly added form
 					const activityTypeSelect = $(
 						`select[id^='id_activityplan_set-${formIdx}-activity_type']`,
 					);
 					const activityDomainSelectID =
-						"#id_" + activityTypeSelect.data("chainfield");
+						`#id_${activityTypeSelect.data("chainfield")}`;
 					const activityTypeUrl = activityTypeSelect.data("url");
-					const activityTypeID = "#" + activityTypeSelect.attr("id");
+					const activityTypeID = `#${activityTypeSelect.attr("id")}`;
 					chainedfk.init(
 						activityDomainSelectID,
 						activityTypeUrl,
@@ -73,9 +73,9 @@ function addActivityForm(prefix, project, nextFormIndex) {
 						`select[id^='id_activityplan_set-${formIdx}-activity_detail']`,
 					);
 					const activityTypeSelectID =
-						"#id_" + activityDetailSelect.data("chainfield");
+						`#id_${activityDetailSelect.data("chainfield")}`;
 					const activityDetailUrl = activityDetailSelect.data("url");
-					const activityDetailID = "#" + activityDetailSelect.attr("id");
+					const activityDetailID = `#${activityDetailSelect.attr("id")}`;
 					chainedfk.init(
 						activityTypeSelectID,
 						activityDetailUrl,
@@ -89,7 +89,7 @@ function addActivityForm(prefix, project, nextFormIndex) {
 						`select[id^='id_activityplan_set-${formIdx}-indicator']`,
 					);
 					const IndicatorsUrl = indicatorsSelect.data("url");
-					const IndicatorsID = "#" + indicatorsSelect.attr("id");
+					const IndicatorsID = `#${indicatorsSelect.attr("id")}`;
 					// chainedm2m.init(activityTypeSelectID, IndicatorsUrl, IndicatorsID, '', '--------', true);
 					chainedfk.init(
 						activityTypeSelectID,
@@ -103,14 +103,14 @@ function addActivityForm(prefix, project, nextFormIndex) {
 				}, 100);
 			}
 		},
-		error: function (error) {
+		error: (error) => {
 			console.log("Error fetching empty form:", error);
 		},
 	});
 
 	// Update the management form values
 	const managementForm = $(`input[name="${prefix}-TOTAL_FORMS"]`);
-	const totalForms = parseInt(managementForm.val()) + 1;
+	const totalForms = Number.parseInt(managementForm.val()) + 1;
 	managementForm.val(totalForms.toString());
 }
 
@@ -126,10 +126,10 @@ function addTargetLocationForm(prefix, project, nextFormIndex, activityDomain) {
 		data: { project: projectID, prefix_index: nextFormIndex, activity_domain: activityDomain },
 		type: "POST",
 		dataType: "json",
-		beforeSend: function (xhr, settings) {
+		beforeSend: (xhr, settings) => {
 			xhr.setRequestHeader("X-CSRFToken", csrftoken);
 		},
-		success: function (data) {
+		success: (data) => {
 			if (data.html) {
 				const emptyFormTemplate = data.html;
 
@@ -154,7 +154,7 @@ function addTargetLocationForm(prefix, project, nextFormIndex, activityDomain) {
 				const managementForm = $(
 					`input[name="target_locations_${formPrefix}-TOTAL_FORMS"]`,
 				);
-				const totalForms = parseInt(managementForm.val()) + 1;
+				const totalForms = Number.parseInt(managementForm.val()) + 1;
 				managementForm.val(totalForms.toString());
 
 				// Open/Activate the accordion
@@ -184,15 +184,15 @@ function addTargetLocationForm(prefix, project, nextFormIndex, activityDomain) {
 					getLocations(locationPrefix, "zone", "district");
 
 					// Add Load Locations (districts and zones) event for new form
-					$(`#id_${locationPrefix}-province`).on("change", function () {
+					$(`#id_${locationPrefix}-province`).on("change", () => {
 						getLocations(
 							locationPrefix,
 							"district",
 							"province",
-							(clearZone = true),
+							true,
 						);
 					});
-					$(`#id_${locationPrefix}-district`).on("change", function () {
+					$(`#id_${locationPrefix}-district`).on("change", () => {
 						getLocations(locationPrefix, "zone", "district");
 					});
 
@@ -200,28 +200,28 @@ function addTargetLocationForm(prefix, project, nextFormIndex, activityDomain) {
 					const activityFormIndex = formPrefix.match(
 						/activityplan_set-(\d+)/,
 					)[1];
-					let $select2Event = $(
+					const $select2Event = $(
 						`#id_activityplan_set-${activityFormIndex}-indicator`,
 					);
 
-					let selectedID = $select2Event[0].value
+					const selectedID = $select2Event[0].value
 					handleDisaggregationForms($select2Event[0], selectedID, [
 						locationPrefix,
 					]);
 
 					// Call Facility Monitoring function when page loads.
 					handleFacilityMonitoring(locationPrefix, addedForm);
-					let $facilityMonitoring = $(addedForm).find(
+					const $facilityMonitoring = $(addedForm).find(
 						`#id_${locationPrefix}-facility_monitoring`
 					);
-					$facilityMonitoring.change(function () {
+					$facilityMonitoring.change(() => {
 						handleFacilityMonitoring(locationPrefix, addedForm);
 					});
 
 				}
 			}
 		},
-		error: function (error) {
+		error: (error) => {
 			console.log("Error fetching empty form:", error);
 		},
 	});
@@ -241,14 +241,14 @@ function handleDisaggregationForms(
 		/activityplan_set-(\d+)/,
 	)[1];
 	// Get all target location forms
-	var targetLocationForms = $(
+	const targetLocationForms = $(
 		`#Locations-activityplan_set-${activityIndex} .target_location_form`,
 	);
 
 	// Extract locations prefixes from target location forms
 	if (locationsPrefixes.length === 0) {
-		targetLocationForms.each(function (index, element) {
-			var locationPrefix = $(element).data("location-prefix");
+		targetLocationForms.each((index, element) => {
+			const locationPrefix = $(element).data("location-prefix");
 			locationsPrefixes.push(locationPrefix);
 		});
 	}
@@ -259,22 +259,22 @@ function handleDisaggregationForms(
 		data: { indicator: selectedID, locations_prefixes: locationsPrefixes },
 		type: "POST",
 		dataType: "json",
-		beforeSend: function (xhr, settings) {
+		beforeSend: (xhr, settings) => {
 			xhr.setRequestHeader("X-CSRFToken", csrftoken);
 		},
-		success: function (data) {
+		success: (data) => {
 			if (data) {
-				$.each(locationsPrefixes, function (locationIndex) {
+				$.each(locationsPrefixes, (locationIndex) => {
 					const locationPrefix = locationsPrefixes[locationIndex];
 					const disaggregationFormsArray = data[locationPrefix];
 					// Remove existing forms
-					$("#" + locationPrefix)
+					$(`#${locationPrefix}`)
 						.find(".location-inner-holder")
 						.remove();
 
 					if (disaggregationFormsArray) {
 						// Append new disaggregation forms
-						$("#" + locationPrefix)
+						$(`#${locationPrefix}`)
 							.find(".disaggregation-accordion-slide")
 							.append(disaggregationFormsArray.join(" "));
 					}
@@ -284,11 +284,11 @@ function handleDisaggregationForms(
 						const managementForm = $(
 							`input[name="disaggregation_${locationPrefix}-TOTAL_FORMS"]`,
 						);
-						const totalForms = parseInt(disaggregationFormsArray.length);
+						const totalForms = Number.parseInt(disaggregationFormsArray.length);
 						managementForm.val(totalForms.toString());
 					}
 					// Open/Activate the accordion
-					const parentDiv = $("#" + locationPrefix).find(
+					const parentDiv = $(`#${locationPrefix}`).find(
 						".disaggregation-accordion-slide",
 					);
 					const innerHolder = parentDiv.closest(".inner-holder");
@@ -297,7 +297,7 @@ function handleDisaggregationForms(
 					innerHolder.find(".disaggregation-accordion-opener").off("click");
 					innerHolder
 						.find(".disaggregation-accordion-opener")
-						.on("click", function (event) {
+						.on("click", (event) => {
 							event.preventDefault(); // Prevent the default behavior
 							event.stopPropagation(); // Prevent the default behavior (propagation)
 							innerHolder.toggleClass("disaggregation-accordion-active");
@@ -307,7 +307,7 @@ function handleDisaggregationForms(
 				});
 			}
 		},
-		error: function (error) {
+		error: (error) => {
 			console.log("Error fetching empty form:", error);
 		},
 	});
@@ -317,13 +317,13 @@ function handleDisaggregationForms(
 Updates the titles of the activity form sections based on the selected values of the input element.
 **/
 function updateActivityTitle(formPrefix, inputElementId) {
-	const selectedValue = $("#" + inputElementId).val();
-	const selectedText = $("#" + inputElementId + " option:selected").text();
+	const selectedValue = $(`#${inputElementId}`).val();
+	const selectedText = $(`#${inputElementId} option:selected`).text();
 
 	const titleElements = {
-		activity_domain: $("#title-domain-" + formPrefix),
-		activity_type: $("#title-type-" + formPrefix),
-		activity_detail: $("#title-detail-" + formPrefix),
+		activity_domain: $(`#title-domain-${formPrefix}`),
+		activity_type: $(`#title-type-${formPrefix}`),
+		activity_detail: $(`#title-detail-${formPrefix}`),
 	};
 
 	for (const [key, value] of Object.entries(titleElements)) {
@@ -331,7 +331,7 @@ function updateActivityTitle(formPrefix, inputElementId) {
 			if (key === "activity_detail") {
 				value.text(selectedValue ? selectedText : "");
 			} else {
-				value.text(selectedValue ? selectedText + ", " : "");
+				value.text(selectedValue ? `${selectedText}, ` : "");
 			}
 		}
 	}
@@ -343,14 +343,14 @@ Updates the titles of the activity form sections based on the selected values of
 @param {string} locationInputElementId - The ID of the input element that triggered the update.
 **/
 function updateLocationTitle(locationPrefix, locationInputElementId) {
-	const selectedLocationValue = $("#" + locationInputElementId).val();
+	const selectedLocationValue = $(`#${locationInputElementId}`).val();
 	const selectedLocationText = $(
-		"#" + locationInputElementId + " option:selected",
+		`#${locationInputElementId} option:selected`,
 	).text();
 
 	const locationTitleElements = {
-		province: $("#title-province-" + locationPrefix),
-		district: $("#title-district-" + locationPrefix),
+		province: $(`#title-province-${locationPrefix}`),
+		district: $(`#title-district-${locationPrefix}`),
 		// TODO: Update for site and zone
 		// site_name: $("#title-site_name-" + locationPrefix),
 	};
@@ -360,7 +360,7 @@ function updateLocationTitle(locationPrefix, locationInputElementId) {
 			if (key === "district") {
 				value.text(selectedLocationValue ? selectedLocationText : "");
 			} else {
-				value.text(selectedLocationValue ? selectedLocationText + "," : "");
+				value.text(selectedLocationValue ? `${selectedLocationText},` : "");
 			}
 		}
 	}
@@ -388,7 +388,7 @@ function getLocations(
 ) {
 	// Get the URL for fetching locations
 	const locationUrl = $(`#id_${locationPrefix}-${locationType}`).attr(
-		`locations-queries-url`,
+		"locations-queries-url",
 	);
 
 	// Get an array of location IDs
@@ -413,10 +413,10 @@ function getLocations(
 			},
 			type: "POST",
 			dataType: "json",
-			beforeSend: function (xhr, settings) {
+			beforeSend: (xhr, settings) => {
 				xhr.setRequestHeader("X-CSRFToken", csrftoken);
 			},
-			success: function (data) {
+			success: (data) => {
 				// Clear zone if needed
 				if (parentType === "province" && clearZone === true) {
 					$(`#id_${locationPrefix}-zone`).html("").val("");
@@ -435,7 +435,7 @@ function getLocations(
 				// 	$(`#id_${locationPrefix}-${locationType}`).parent().show();
 				// }
 			},
-			error: function (error) {
+			error: (error) => {
 				console.log("Error fetching empty form:", error);
 			},
 		});
@@ -450,11 +450,11 @@ function getLocations(
 **/
 function handleFacilityMonitoring(locationPrefix, formElement) {
 	$formElement = $(formElement)
-	let $facilityMonitoring = $(`#id_${locationPrefix}-facility_monitoring`);
-	let $facilityName = $formElement.find(
+	const $facilityMonitoring = $(`#id_${locationPrefix}-facility_monitoring`);
+	const $facilityName = $formElement.find(
 		`#id_${locationPrefix}-facility_name`
 	);
-	let $facilityDetails = $formElement.find(
+	const $facilityDetails = $formElement.find(
 		`#facility_details_${locationPrefix}`
 	);
 
@@ -470,7 +470,7 @@ function handleFacilityMonitoring(locationPrefix, formElement) {
 /**
  * Ready Function
  **/
-$(function () {
+$(() => {
 	// Initialize indicators with django select except for the empty form
 	$(
 		// "select:not(#id_activityplan_set-__prefix__-indicator)",
@@ -482,7 +482,7 @@ $(function () {
 	// Button to handle addition of new activity form.
 	$("#add-activity-form-button")
 		.off("click")
-		.on("click", function (event) {
+		.on("click", (event) => {
 			event.preventDefault(); // Prevent the default behavior (form submission)
 			event.stopPropagation();
 			const activityFormPrefix = event.currentTarget.dataset.formPrefix;
@@ -494,7 +494,7 @@ $(function () {
 	// Button to handle addition of new target location form.
 	$(document)
 		.off("click")
-		.on("click", ".add-target-location-form-button", function (event) {
+		.on("click", ".add-target-location-form-button", (event) => {
 			event.preventDefault(); // Prevent the default behavior (form submission)
 			event.stopPropagation(); // Prevent the default behavior (propagation)
 
@@ -510,8 +510,8 @@ $(function () {
 			); // Call the function to add a new activity form
 		});
 
-	let $activityBlockHolder = $(".activity_form");
-	$activityBlockHolder.each(function (formIndex, formElement) {
+	const $activityBlockHolder = $(".activity_form");
+	$activityBlockHolder.each((formIndex, formElement) => {
 		// Call updateActivityTitle for activity_domain manually as on page load as it is not triggered for
 		updateActivityTitle(
 			`activityplan_set-${formIndex}`,
@@ -519,24 +519,24 @@ $(function () {
 		);
 
 		// Update disaggregations based on indicators
-		var $select2Event = $(`#id_activityplan_set-${formIndex}-indicator`);
-		$select2Event.on("select2:select", function (event) {
-			let indicatorsSelect = event.currentTarget;
-			let selectedID = $(indicatorsSelect)[0].value
+		const $select2Event = $(`#id_activityplan_set-${formIndex}-indicator`);
+		$select2Event.on("select2:select", (event) => {
+			const indicatorsSelect = event.currentTarget;
+			const selectedID = $(indicatorsSelect)[0].value
 
 			handleDisaggregationForms(indicatorsSelect, selectedID);
 		});
 
-		$select2Event.on("select2:unselect", function (event) {
-			let indicatorsSelect = event.currentTarget;
-			let selectedID = $(indicatorsSelect)[0].value
+		$select2Event.on("select2:unselect", (event) => {
+			const indicatorsSelect = event.currentTarget;
+			const selectedID = $(indicatorsSelect)[0].value
 			handleDisaggregationForms(indicatorsSelect, selectedID);
 		});
 
 	});
 
 	const $locationBlock = $(".target_location_form");
-	$locationBlock.each(function (formIndex, formElement) {
+	$locationBlock.each((formIndex, formElement) => {
 		const locationPrefix = formElement.dataset.locationPrefix;
 
 		// Update the Target Locations Titles
@@ -547,19 +547,19 @@ $(function () {
 		getLocations(locationPrefix, "district", "province");
 		getLocations(locationPrefix, "zone", "district");
 
-		$(`#id_${locationPrefix}-province`).on("change", function () {
-			getLocations(locationPrefix, "district", "province", (clearZone = true));
+		$(`#id_${locationPrefix}-province`).on("change", () => {
+			getLocations(locationPrefix, "district", "province",true);
 		});
-		$(`#id_${locationPrefix}-district`).on("change", function () {
+		$(`#id_${locationPrefix}-district`).on("change", () => {
 			getLocations(locationPrefix, "zone", "district");
 		});
 		// Call Facility Monitoring function when page loads.
 		handleFacilityMonitoring(locationPrefix, formElement);
 
-		let $facilityMonitoring = $(formElement).find(
+		const $facilityMonitoring = $(formElement).find(
 			`#id_${locationPrefix}-facility_monitoring`
 		);
-		$facilityMonitoring.change(function () {
+		$facilityMonitoring.change(() => {
 			handleFacilityMonitoring(locationPrefix, formElement);
 		});
 	});
@@ -568,12 +568,11 @@ $(function () {
 
 // update indicator types 
 function updateIndicatorTypes(e){
-	let id = e.target.value;
-	let prefix = e.target.dataset.prefix
-	let activityPlan = e.target.dataset.activityPlan
+	const id = e.target.value;
+	const prefix = e.target.dataset.prefix
+	const activityPlan = e.target.dataset.activityPlan
 
-	console.log(id);
-	let indicatorUrl = e.target.dataset.indicatorUrl;
+	const indicatorUrl = e.target.dataset.indicatorUrl;
 
 	const formData = new FormData();
 	formData.append('id',id);
@@ -585,11 +584,10 @@ function updateIndicatorTypes(e){
 			method: 'POST',
 			body: formData
 		}).then(async response => {
-			let data = await response.json()
+			const data = await response.json()
 			document.getElementById(`${prefix}-indicator-types`).innerHTML = data.html;
 		}).catch(error => {
 			console.log(error);
 		});
 	}
-
 }

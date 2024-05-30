@@ -70,8 +70,7 @@
     border: 2px solid $gray-e6;
     border-width: 2px 0;
 
-    &:before,
-    &:after {
+    &:before {
       content: '';
       position: absolute;
       display: block;

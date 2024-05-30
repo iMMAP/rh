@@ -21,13 +21,16 @@ from ..models import (
 )
 
 from .views import copy_project_target_location, copy_target_location_disaggregation_locations
+from django.views.decorators.http import require_http_methods
 
 RECORDS_PER_PAGE = 10
 
 
 @login_required
 def projects_list(request):
-    """Projects"""
+    """List Projects
+    url: /projects
+    """
     # Setup Filter
     project_filter = ProjectsFilter(
         request.GET,
@@ -52,13 +55,14 @@ def projects_list(request):
         "project_filter": project_filter,
         "total_pages": total_pages,
     }
+
     return render(request, "rh/projects/views/projects_list.html", context)
 
 
 @login_required
 def projects_detail(request, pk):
     """View for viewing a project.
-    url: projects/<str:pk>/
+    url: projects/<int:pk>/
     """
     project = get_object_or_404(
         Project.objects.prefetch_related(
@@ -370,21 +374,26 @@ def copy_project(request, pk):
 
 
 @login_required
-def ProjectListView(request, flag):
-    if request.method == "POST":
-        data = json.loads(request.body)
-        print(data)
-        project = Project.objects.filter(id__in=data)
-        dataset = ProjectResource().export(project)
-        format = flag
-        if format == "xls":
-            ds = dataset.xls
-        elif format == "csv":
-            ds = dataset.csv
-        else:
-            ds = dataset.json
-        today_date = date.today()
-        file_name = f"projects_{today_date}"
-        response = HttpResponse(ds, content_type=f"{format}")
-        response["Content-Disposition"] = f"attachment; filename={file_name}.{format}"
-        return response
+@require_http_methods(["POST"])
+def export(request, format):
+    """Export project and its activity
+    url: /project/active/bulk_export/<format>,
+    name: export_porjcet_list",
+    """
+    data = json.loads(request.body)
+    project = Project.objects.filter(id__in=data)
+    dataset = ProjectResource().export(project)
+
+    if format == "xls":
+        ds = dataset.xls
+    elif format == "csv":
+        ds = dataset.csv
+    else:
+        ds = dataset.json
+    
+    today_date = date.today()
+    file_name = f"projects_{today_date}"
+    response = HttpResponse(ds, content_type=f"{format}")
+    response["Content-Disposition"] = f"attachment; filename={file_name}.{format}"
+    
+    return response

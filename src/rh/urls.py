@@ -149,8 +149,8 @@ urlpatterns = [
     ),
     # bulk export
     path(
-        "project/active/bulk_export/<flag>",
-        projects.ProjectListView,
+        "project/active/bulk_export/<format>",
+        projects.export,
         name="export_porjcet_list",
     ),
     # single project csv export

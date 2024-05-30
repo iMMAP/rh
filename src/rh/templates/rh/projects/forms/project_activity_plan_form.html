@@ -10,25 +10,7 @@
     </div>
     <div class="main-content">
         <div class="activity-planning create-activity">
-            <!-- MESSAGE SECTION STARTS -->
-            {% if messages %}
-                <div class="message-container">
-                {% for message in messages %}
-                    {% if message.tags == 'success' %}
-                    <div class="message-success-alert">
-                        {{message}}
-                        <span class="close-alert-message">&#x2715;</span>
-                    </div>
-                    {% elif message.tags == 'error' %}
-                    <div class="message-danger-alert">
-                        {{message}}
-                        <span class="close-alert-message">&#x2715;</span>
-                    </div>
-                    {% endif %}
-                {% endfor %}
-                </div>
-            {% endif %}
-        <!-- MESSAGE SECTION ENDS -->
+            
             <form method="post" enctype="multipart/form-data" id="activity-formset-form">
                 <div class="main-heading">
                     <div class="main-activity-holder main-target">

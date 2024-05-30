@@ -68,7 +68,6 @@
         {% endblock head %}
     </head>
     <body>
-        
         <div class="wrapper" id="wrapper">
             <div class="wrapper-inner">
                 <header class="header logged-in" id="header">
@@ -139,12 +138,27 @@
                         {% endif %}
                     </div>
                 </header>
+
                 <main id="main" class="main" style="position: relative;">
+                    <!-- MESSAGE SECTION STARTS -->
+                    {% if messages %}
+                        <div class="message-container">
+                            {% for message in messages %}
+                                <div class="{{message.tags}}">
+                                    {{message}}
+                                    <span class="close-alert-message">&#x2715;</span>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                    <!-- MESSAGE SECTION ENDS -->
+
                     <div class="base-section">
                         {% block content %}
                         {% endblock content %}
                     </div>
                 </main>
+
                 <footer class="footer">
                     <div class="container">
                         <div class="footer-inner">

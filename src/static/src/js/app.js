@@ -21,13 +21,10 @@ ready(() => {
   initTooltip();
   initSWPopup();
 
-  const msgAlert = document.querySelector('.close-alert-message')
+  const msgAlert = document.querySelector(".message-container");
   if(msgAlert){
-      msgAlert.addEventListener('click', function() {
-          const msgContainer = document.querySelector('.message-container')
-          if(msgContainer){
-              msgContainer.style.display = 'none';
-          }
+      msgAlert.addEventListener('click', (e) => {
+        e.target.closest("div").style.display = "none";
       });
   }
 });

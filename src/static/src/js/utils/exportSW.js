@@ -98,12 +98,16 @@ $("#downloadFilterForm").click(function(e) {
       }
     }
     const checkUser = document.querySelector(".input-user");
-    if(checkUser.checked == true) {
-      userData.push(checkUser.name);
+    if(checkUser){
+      if(checkUser.checked == true) {
+        userData.push(checkUser.name);
+      }
     }
     const checkCurrency = document.querySelector(".input-currency");
-    if(checkCurrency.checked == true){
-      currencyData.push(checkCurrency.name)
+    if(checkCurrency){
+      if(checkCurrency.checked == true){
+        currencyData.push(checkCurrency.name)
+      }
     }
 
 

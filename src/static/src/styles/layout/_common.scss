@@ -186,38 +186,33 @@ ul{
 }
 
 .message-container{
-  z-index: 100;
   text-align: center;
-  margin: auto;
-  padding: 0;
   transition: all 0.5s ease-in-out;
-  vertical-align: middle;
+  gap:5px;
+
+  .error {
+      background-color: #fff1f3;
+      border: 1px solid #fdb0b7;
+      color: $red-be;
+      padding: 16px 20px 16px 40px;
+    }
+  
+    .success {
+      background-color: #ecfff1;
+      border: 1px solid #a4f5b7;
+      color: #35712F;
+      padding: 16px 20px 16px 40px;
+    }
+
+    .close-alert-message {
+      color: $red-be;
+      margin-left: 16px;
+      cursor: pointer;
+    }
 }
-.message-success-alert{
-  background-color: #ecfff1;
-  border: 1px solid #a4f5b7;
-  color: #35712F;
-  display: inline-block;
-  border-radius: 5px;
-  padding: 16px 20px 16px 40px;
-}
-.message-danger-alert{
-  background-color: #fff1f3;
-  border: 1px solid #fdb0b7;
-  color: $red-be;
-  display: inline-block;
-  border-radius: 5px;
-  padding: 16px 20px 16px 40px;
-}
-.close-alert-message{
-  color:$red-be;
-  margin-left: 16px;
-  cursor: pointer;
-}
-.close-alert-message:hover{
-  font-weight: bold;
-  transition: all 0.5s ease-in-out;
-}
+
+
+
 .show-password{
   float: inline-end;
 }

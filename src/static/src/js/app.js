@@ -21,10 +21,12 @@ ready(() => {
   initTooltip();
   initSWPopup();
 
-  const msgAlert = document.querySelector(".message-container");
-  if(msgAlert){
-      msgAlert.addEventListener('click', (e) => {
+  const msgAlerts = document.querySelectorAll(".close-alert-message");
+  if(msgAlerts){
+    for(const el of msgAlerts){
+      el.addEventListener("click", (e) => {
         e.target.closest("div").style.display = "none";
       });
+    }
   }
 });

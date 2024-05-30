@@ -1,6 +1,6 @@
-(function (window, document) {
+((window, document) => {
   function vw() {
-    let vw = document.documentElement.clientWidth;
+    const vw = document.documentElement.clientWidth;
     document.documentElement.style.setProperty('--vw', `${vw}px`);
   }
 

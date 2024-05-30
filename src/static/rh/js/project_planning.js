@@ -1,4 +1,4 @@
-$(function () {
+$(() => {
 	const isHrpProject = $("#id_is_hrp_project");
 	const hasHrpCode = $("#id_has_hrp_code");
 	const prHasHRPCodeEl = $("#prHasHRPCodeEl");
@@ -45,14 +45,14 @@ $(function () {
 
 	toggleHrpCode();
 	toggleRequired();
-	isHrpProject.on("change", function() {toggleHrpCode()});
-	hasHrpCode.on("change", function() {toggleRequired()});
+	isHrpProject.on("change", () => {toggleHrpCode()});
+	hasHrpCode.on("change", () => {toggleRequired()});
 
 	// Define a function to calculate the budget gap
 	function calculateBudgetGap() {
 		// Get the values of the budget and budget received fields
-		var budget = parseFloat($("#id_budget").val());
-		var budgetReceived = parseFloat($("#id_budget_received").val());
+		const budget = Number.parseFloat($("#id_budget").val());
+		const budgetReceived = Number.parseFloat($("#id_budget_received").val());
 		if(budgetReceived > budget){
 			$("#budget_received_message").text("The received budget can not be more than the whole budget !!");
 			$("#budget_received_message").css("color","red");
@@ -64,7 +64,7 @@ $(function () {
 			}, 3000);
 		} else {
 			// Calculate the budget gap
-		var budgetGap = budget - budgetReceived;
+		const budgetGap = budget - budgetReceived;
 
 		// Set the value of the budget gap field
 		$("#id_budget_gap").val(budgetGap.toFixed(0));
@@ -107,10 +107,10 @@ $(function () {
 			type: "POST",
 			url: domainsUrl,
 			data: requestData,
-			beforeSend: function(xhr, settings) {
+			beforeSend: (xhr, settings) => {
 				xhr.setRequestHeader("X-CSRFToken", csrftoken);
 			},
-			success: function (data) {
+			success: (data) => {
 				choice.setChoices(data,'value','label',true);
 				
 			},
@@ -122,7 +122,7 @@ $(function () {
 		get_activity_domains();
 	}
 	
-	$("#id_clusters").on("change", function() {
+	$("#id_clusters").on("change", () => {
 		get_activity_domains();
 	})
 });

@@ -1,18 +1,6 @@
 <tr>
     <td class="cluster-col">
         <a class="table-flex-holder" href="{% url 'projects-detail' project.id %}">
-            <div class="input-check-holder">
-                <input type="checkbox" id="table-check-{{project.pk}}" class="project-checkbox" value="{{project.pk}}" name="table-check{{project.pk}}" />
-                <label for="table-check-{{project.pk}}">
-                    <span class="input"></span>
-                </label>
-            </div>
-            {% comment %} <div class="input-check-holder">
-                <input type="checkbox" name="selected_ids[]" value="{{ project.id }}" />
-                <label for="table-check-11">
-                    <span class="input" id="check_project_{{project.id}}" data-project-id="{{project.id}}"></span>
-                </label>
-            </div> {% endcomment %}
             {{ project.title }}
         </a>
     </td>
@@ -44,6 +32,12 @@
     <td class="action-col">
         <div class="table-flex-holder">
             <ul class="table-options-buttons ">
+                <li>
+                    <a href="{% url 'projects-update' project.pk %}" data-tippy-content="Edit project and its activity plan">
+                        Edit
+                    </a>
+                </li>
+
                 <li>
                     <button class="export-button">
                         <a href="#"
@@ -118,47 +112,6 @@
                     </button>
                 </li>
             </ul>
-            <a href="table-slide-{{ forloop.counter0 }}"
-               class="table-slide-opener"
-               >
-                <span class="icon-chevron-down"></span>
-            </a>
-        </div>
-    </td>
-    <td class="project-details-col" id="table-slide-{{ forloop.counter0 }}">
-        <div class="table-flex-holder">
-            <div class="col">
-                <strong class="title">Number of people targeting:</strong>
-                <dl>
-                    <dt>Female:</dt>
-                    <dd>
-                        1000
-                    </dd>
-                </dl>
-                <dl>
-                    <dt>Male:</dt>
-                    <dd>
-                        12,765
-                    </dd>
-                </dl>
-            </div>
-            {% comment %} <div class="col">
-                <div class="input-check-holder">
-                    <input type="checkbox" id="table-check-18" checked />
-                    <label for="table-check-18">
-                        <span class="input"></span>
-                        <span class="text">HRP project</span>
-                    </label>
-                </div>
-            </div> {% endcomment %}
-            <div class="col">
-                <dl>
-                    <dt>Activity types:</dt>
-                    <dd>
-                        Flood
-                    </dd>
-                </dl>
-            </div>
         </div>
     </td>
 </tr>

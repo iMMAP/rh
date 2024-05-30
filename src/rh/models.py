@@ -71,6 +71,11 @@ class Cluster(models.Model):
     def __str__(self):
         return f"[{self.code}] - {self.title}"
 
+    class Meta:
+        permissions = [
+            ("activate_deactivate_cluster_users", "activate/deactivate cluster users"),
+        ]
+
 
 class BeneficiaryType(models.Model):
     """Beneficiary Types Model"""
@@ -109,6 +114,9 @@ class Organization(models.Model):
 
     class Meta:
         ordering = ["code"]
+        permissions = [
+            ("activate_deactivate_user", "Activate/Deactivate users of organization"),
+        ]
 
     TYPE_CHOICES = [
         ("National NGO", "National NGO"),
@@ -458,6 +466,11 @@ class Project(models.Model):
 
     def __str__(self):
         return self.title
+
+    class Meta:
+        permissions = [
+            ("archive_unarchive_project", "Archive/UnArchive project"),
+        ]
 
 
 class ActivityPlan(models.Model):

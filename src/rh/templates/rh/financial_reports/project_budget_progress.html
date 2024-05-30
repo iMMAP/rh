@@ -65,31 +65,31 @@
                                         {{ form.instance.title }}
                                     {% endif %}
                                 </span>
-                                <div class="block-location-activity">
-                                    <div id="{{ form.prefix }}-actions">
-                                        <button href="#"
-                                                data-url="{% url 'copy_budget' project=project.pk budget=form.instance.pk %}"
-                                                data-return-url="{% url 'create_project_budget_progress' project=project.pk %}"
-                                                data-type="copy"
-                                                data-project=""
-                                                class="btn btn-gray-outline show_confirm">
-                                            <span class="icon-copy"></span>
-                                            <span class="btn-text">Duplicate</span>
-                                        </button>
-                                        <button href="#"
-                                                data-url="{% url 'delete_budget' form.instance.pk %}"
-                                                data-return-url="{% url 'create_project_budget_progress' project=project.pk %}"
-                                                data-type="delete"
-                                                data-project=""
-                                                class="btn btn-gray-outline show_confirm">
-                                            <span class="icon-trashbin"></span>
-                                            <span class="btn-text">Delete</span>
-                                        </button>
-                                        <button type="submit"
-                                                class="btn btn-red save"
-                                                value="true"
-                                                name="{{ form.prefix }}-save">Save</button>
-                                    </div>
+                            </div>
+                            <div class="block-location-activity">
+                                <div id="{{ form.prefix }}-actions">
+                                    <button href="#"
+                                            data-url="{% url 'copy_budget' project=project.pk budget=form.instance.pk %}"
+                                            data-return-url="{% url 'create_project_budget_progress' project=project.pk %}"
+                                            data-type="copy"
+                                            data-project=""
+                                            class="btn btn-gray-outline show_confirm">
+                                        <span class="icon-copy"></span>
+                                        <span class="btn-text">Duplicate</span>
+                                    </button>
+                                    <button href="#"
+                                            data-url="{% url 'delete_budget' form.instance.pk %}"
+                                            data-return-url="{% url 'create_project_budget_progress' project=project.pk %}"
+                                            data-type="delete"
+                                            data-project=""
+                                            class="btn btn-gray-outline show_confirm">
+                                        <span class="icon-trashbin"></span>
+                                        <span class="btn-text">Delete</span>
+                                    </button>
+                                    <button type="submit"
+                                            class="btn btn-red save"
+                                            value="true"
+                                            name="{{ form.prefix }}-save">Save</button>
                                 </div>
                             </div>
                             <div class="project-activity-accordion-slide" id="{{ form.prefix }}-details">

@@ -13,9 +13,7 @@ class ProfileInline(admin.StackedInline):
     can_delete = False
     verbose_name_plural = "profiles"
 
-    filter_horizontal = (
-        "clusters",
-    )
+    filter_horizontal = ("clusters",)
 
 
 class UserAdminCustom(UserAdmin):
@@ -80,7 +78,7 @@ class ProfileAdmin(admin.ModelAdmin):
     def user_link(self, obj):
         url = reverse("admin:auth_user_change", args=[obj.user.id])
         return format_html('<a href="{}">{}</a>', url, obj.user)
-    
+
     # Hides the profile from admin sidebar
     def has_module_permission(self, request):
         return False

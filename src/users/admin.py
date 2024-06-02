@@ -8,6 +8,16 @@ from django.utils.html import format_html
 from .models import Profile
 
 
+class ProfileInline(admin.StackedInline):
+    model = Profile
+    can_delete = False
+    verbose_name_plural = "profiles"
+
+    filter_horizontal = (
+        "clusters",
+    )
+
+
 class UserAdminCustom(UserAdmin):
     list_display = (
         "email",
@@ -21,6 +31,8 @@ class UserAdminCustom(UserAdmin):
         "date_joined",
         "is_superuser",
     )
+
+    inlines = (ProfileInline,)
 
     def profile_link(self, obj):
         url = reverse("admin:users_profile_change", args=[obj.profile.id])
@@ -59,6 +71,8 @@ class ProfileAdmin(admin.ModelAdmin):
     list_filter = ("country", "clusters")
     form = ProfileForm
 
+    filter_horizontal = ("clusters",)
+
     def Clusters(self, obj):
         clusters = obj.clusters.all()
         return ", ".join([c.title for c in clusters])
@@ -66,6 +80,10 @@ class ProfileAdmin(admin.ModelAdmin):
     def user_link(self, obj):
         url = reverse("admin:auth_user_change", args=[obj.user.id])
         return format_html('<a href="{}">{}</a>', url, obj.user)
+    
+    # Hides the profile from admin sidebar
+    def has_module_permission(self, request):
+        return False
 
 
 admin.site.register(Profile, ProfileAdmin)

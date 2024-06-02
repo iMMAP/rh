@@ -191,24 +191,46 @@ ul{
   gap:5px;
 
   .error {
-      background-color: #fff1f3;
-      border: 1px solid #fdb0b7;
-      color: $red-be;
-      padding: 16px 20px 16px 40px;
-    }
+    background-color: #fff1f3;
+    border: 1px solid #fdb0b7;
+    color: $red-be;
+    padding: 16px 20px 16px 40px;
+  }
   
-    .success {
-      background-color: #ecfff1;
-      border: 1px solid #a4f5b7;
-      color: #35712F;
-      padding: 16px 20px 16px 40px;
-    }
+  .success {
+    background-color: #ecfff1;
+    border: 1px solid #a4f5b7;
+    color: #35712F;
+    padding: 16px 20px 16px 40px;
+  }
 
-    .close-alert-message {
-      color: $red-be;
-      margin-left: 16px;
-      cursor: pointer;
-    }
+
+  .debug{
+      background-color: #ccfbf1;
+      border: 1px solid #14b8a6;
+      color: #0f766e;
+      padding: 16px 20px 16px 40px;
+  }
+
+  .info{
+      background-color: #dbeafe;
+      border: 1px solid #3b82f6;
+      color: #1d4ed8;
+      padding: 16px 20px 16px 40px;
+  }
+
+  .warning{
+      background-color: #ffedd5;
+      border: 1px solid #f97316;
+      color: #c2410c;
+      padding: 16px 20px 16px 40px;
+  }
+
+  .close-alert-message {
+    color: $red-be;
+    margin-left: 16px;
+    cursor: pointer;
+  }
 }
 
 

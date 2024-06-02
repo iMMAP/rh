@@ -509,7 +509,13 @@ function exportButton(event) {
 	event.preventDefault();
 	// getting export url
 	const export_url = event.currentTarget.dataset.exportUrl;
-
+	const downloadButton = document.querySelector(".export-open");
+	const downloading_spinner = document.querySelector(".downloading");
+	const icon_downloading = document.querySelector(".icon-download");
+	downloadButton.setAttribute("disabled", "disabled");
+	downloading_spinner.style.display = "inline-block";
+	icon_downloading.style.display = "none";
+	
 	selected_project_list = [];
 	const selectedProject = document.querySelectorAll(".project-checkbox");
 	for (let i = 0; i < selectedProject.length; i++) {
@@ -530,6 +536,11 @@ function exportButton(event) {
 			const contentDisposition = response.headers.get("Content-Disposition");
 			console.log(contentDisposition);
 			const filename = contentDisposition.split("=")[1].replace(/"/g, "");
+
+			downloadButton.setAttribute("disabled", "false");
+			downloading_spinner.style.display = "none";
+			icon_downloading.style.display = "inline-block";
+
 			return response.blob().then((blob) => {
 				const url = window.URL.createObjectURL(blob);
 				const a = document.createElement("a");

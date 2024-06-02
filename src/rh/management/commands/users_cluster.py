@@ -28,7 +28,7 @@ class Command(BaseCommand):
 
                 try:
                     profile = user.profile
-                    
+
                     try:
                         cluster = Cluster.objects.get(code=row["cluster_id"])
                     except Cluster.DoesNotExist:

@@ -95,7 +95,7 @@ def projects_detail(request, pk):
 @login_required
 def create_project_view(request):
     if request.method == "POST":
-        form = ProjectForm(request.POST)
+        form = ProjectForm(request.POST,user=request.user)
         if form.is_valid():
             project = form.save()
             return redirect("create_project_activity_plan", project=project.pk)
@@ -104,10 +104,8 @@ def create_project_view(request):
         messages.error(request, "Something went wrong. Please fix the errors below.")
     else:
         # Use user's country and clusters as default values if available
-        if request.user.profile and request.user.profile.country:
-            country = request.user.profile.country
-            # clusters = request.user.profile.clusters.all()
-            form = ProjectForm(initial={"user": request.user, "country": country})
+        if  request.user.profile and request.user.profile.country:
+            form = ProjectForm(user=request.user)
         else:
             form = ProjectForm()
 
@@ -128,12 +126,12 @@ def update_project_view(request, pk):
     project = get_object_or_404(Project, pk=pk)
 
     if request.method == "POST":
-        form = ProjectForm(request.POST, instance=project)
+        form = ProjectForm(request.POST, instance=project, user=request.user)
         if form.is_valid():
             project = form.save()
             return redirect("create_project_activity_plan", project=project.pk)
     else:
-        form = ProjectForm(instance=project)
+        form = ProjectForm(instance=project, user=request.user)
 
     context = {
         "form": form,

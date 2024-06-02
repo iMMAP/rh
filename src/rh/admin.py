@@ -100,6 +100,8 @@ class OrganizationAdmin(admin.ModelAdmin):
     search_fields = ("name", "type")
     list_filter = ("type",)
 
+    filter_horizontal = ("countries","clusters",)
+
     def countries_count(self, obj):
         return obj.countries.count()
 
@@ -173,6 +175,8 @@ class IndicatorAdmin(admin.ModelAdmin):
         DisaggregationInline,
     ]
 
+    filter_horizontal = ("activity_types",)
+
 
 admin.site.register(Indicator, IndicatorAdmin)
 
@@ -181,6 +185,8 @@ class ActivityDomainAdmin(admin.ModelAdmin):
     list_display = ("name", "code", "is_active")
     search_fields = ("name", "clusters__title", "code", "countries__name")
     list_filter = ("clusters", "countries")
+
+    filter_horizontal = ("clusters","countries",)
 
 
 admin.site.register(ActivityDomain, ActivityDomainAdmin)
@@ -196,6 +202,8 @@ class ActivityTypeAdmin(admin.ModelAdmin):
         "countries__name",
     )
     list_filter = ("activity_domain", "clusters", "countries")
+
+    filter_horizontal = ("clusters",)
 
 
 admin.site.register(ActivityType, ActivityTypeAdmin)

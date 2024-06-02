@@ -104,7 +104,7 @@ def create_project_view(request):
         messages.error(request, "Something went wrong. Please fix the errors below.")
     else:
         # Use user's country and clusters as default values if available
-        if request.user.is_authenticated and request.user.profile and request.user.profile.country:
+        if request.user.profile and request.user.profile.country:
             country = request.user.profile.country
             # clusters = request.user.profile.clusters.all()
             form = ProjectForm(initial={"user": request.user, "country": country})

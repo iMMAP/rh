@@ -14,6 +14,7 @@ from .models import (
     Project,
     ProjectIndicatorType,
     TargetLocation,
+    Cluster,
 )
 
 
@@ -42,56 +43,48 @@ class ProjectForm(forms.ModelForm):
             "start_date": forms.widgets.DateInput(
                 attrs={
                     "type": "date",
-                    "onfocus": "(this.type='date')",
-                    "onblur": "(this.type='text')",
                     "class": "start-date",
                 }
             ),
             "end_date": forms.widgets.DateInput(
                 attrs={
                     "type": "date",
-                    "onfocus": "(this.type='date')",
-                    "onblur": "(this.type='text')",
                     "class": "end-date",
                 }
             ),
             "active": forms.widgets.HiddenInput(),
         }
 
-    def __init__(self, *args, **kargs):
-        super().__init__(*args, **kargs)
-        user_profile = False
-        user_clusters = []
-        if self.initial.get("user", False):
-            if isinstance(self.initial.get("user"), int):
-                user_profile = User.objects.get(pk=self.initial.get("user")).profile
-            else:
-                user_profile = User.objects.get(pk=self.initial.get("user").pk).profile
-        if args and args[0].get("user", False):
-            user_profile = User.objects.get(pk=args[0].get("user")).profile
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop("user", None)
+        super().__init__(*args, **kwargs)
 
-        if user_profile and user_profile.clusters:
-            user_clusters = list(user_profile.clusters.all().values_list("pk", flat=True))
-
-        # should not be empty when form is used in updating
         if self.instance.pk:
             # Update mode
             self.fields["activity_domains"].choices = (
                 self.instance.activity_domains.all().order_by("name").values_list("pk", "name")
             )
+
+            # join the project selected clusters with the user's current clusters
+            user_clusters = self.instance.user.profile.clusters.all()
+            project_clusters = self.instance.clusters.all()
+            self.fields["clusters"].queryset = Cluster.objects.filter(
+                pk__in=user_clusters.union(project_clusters).values("pk")
+            )
         else:
             # Create mode
             self.fields["activity_domains"].choices = []
+            self.fields["clusters"].queryset = user.profile.clusters.all()
 
-        self.fields["clusters"].queryset = self.fields["clusters"].queryset.filter(id__in=user_clusters)
         self.fields["donors"].queryset = Donor.objects.order_by("name")
         self.fields["budget_currency"].queryset = Currency.objects.order_by("name")
 
         orgs = Organization.objects.order_by("name").values_list("pk", "code")
-
         self.fields["implementing_partners"].choices = orgs
         self.fields["programme_partners"].choices = orgs
-        self.fields["user"].queryset = User.objects.order_by("username")
+
+        # Show only the user's organization members
+        self.fields["user"].queryset = User.objects.filter(profile__organization=user.profile.organization)
 
 
 class TargetLocationForm(forms.ModelForm):

@@ -1,6 +1,12 @@
 <tr>
     <td class="cluster-col">
         <a class="table-flex-holder" href="{% url 'projects-detail' project.id %}">
+            <div class="input-check-holder">
+                <input type="checkbox" id="table-check-{{project.pk}}" class="project-checkbox" value="{{project.pk}}" name="table-check{{project.pk}}" />
+                <label for="table-check-{{project.pk}}">
+                    <span class="input"></span>
+                </label>
+            </div>
             {{ project.title }}
         </a>
     </td>

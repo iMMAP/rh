@@ -225,6 +225,14 @@
                             <tr>
                                 <th class="cluster-col">
                                     <div class="table-flex-holder">
+                                        <div class="input-check-holder">
+                                            <input type="checkbox"
+                                                    id="table-head-check-01"
+                                                    data-check-pattern="[name^='table-check']" />
+                                            <label for="table-head-check-01">
+                                                <span class="input"></span>
+                                            </label>
+                                        </div>
                                         <strong class="table-title">Project title</strong>
                                         <div class="table-sort-buttons">
                                             <button type="button">
@@ -317,4 +325,7 @@
         });
     </script>
     <script src="{% static 'src/js/utils/exportSW.js' %}"></script>
+    {% compress js inline %}
+        <script src="{% static 'src/js/components/initCheckAllCheckboxes.js' %}"></script>
+    {% endcompress %}
 {% endblock scripts %}

@@ -100,7 +100,10 @@ class OrganizationAdmin(admin.ModelAdmin):
     search_fields = ("name", "type")
     list_filter = ("type",)
 
-    filter_horizontal = ("countries","clusters",)
+    filter_horizontal = (
+        "countries",
+        "clusters",
+    )
 
     def countries_count(self, obj):
         return obj.countries.count()
@@ -186,7 +189,10 @@ class ActivityDomainAdmin(admin.ModelAdmin):
     search_fields = ("name", "clusters__title", "code", "countries__name")
     list_filter = ("clusters", "countries")
 
-    filter_horizontal = ("clusters","countries",)
+    filter_horizontal = (
+        "clusters",
+        "countries",
+    )
 
 
 admin.site.register(ActivityDomain, ActivityDomainAdmin)

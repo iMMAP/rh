@@ -5,12 +5,12 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import EmailMultiAlternatives
 from django.http import HttpResponse
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect, render, get_object_or_404
 from django.template import loader
 from django.utils.encoding import force_bytes, force_str
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from django.contrib.auth.models import User
-
+from django.views.decorators.http import require_http_methods
 
 from .decorators import unauthenticated_user
 from .forms import (
@@ -36,6 +36,7 @@ class UsersFilter(django_filters.FilterSet):
 #############################################
 ############### Members ####################
 #############################################
+
 
 def clustes_users_list(request):
     user_clusters = request.user.profile.clusters.all()
@@ -95,6 +96,25 @@ def org_users_list(request):
     }
 
     return render(request, "users/users_list.html", context)
+
+
+@login_required
+@require_http_methods(["POST"])
+def toggle_status(request, user_id):
+    user = get_object_or_404(User, pk=user_id)
+
+    if user.is_active:
+        user.is_active = False
+        user.save()
+        messages.success(request, f"{user.username} is deactivated.")
+    else:
+        user.is_active = True
+        user.save()
+        messages.success(request, f"{user.username} is activated.")
+
+    context = {"user": user}
+
+    return render(request, "users/partials/user_tr.html", context)
 
 
 #############################################

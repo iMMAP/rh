@@ -125,75 +125,7 @@
                         <tbody>
                             <!--Include The Active Projects Details Here -->
                             {% for user in users %}
-                                <tr>
-                                    <td class="cluster-col">
-                                        {{ user.first_name }} {{user.last_name}} <em>({{ user.username }})</em>
-                                    </td>
-                                    <td class="description-col">
-                                        {{ user.email }}
-                                    </td>
-                                    <td class="cluster-col">
-                                       {% for cluster in user.profile.clusters.all %}
-                                            {{ cluster.title }}
-                                            {% if not forloop.last %},{% endif %}
-                                        {% endfor %}
-                                    </td>
-                                    <td class="organisation-col">
-                                       {{ user.date_joined }}
-                                    </td>
-                                    <td class="location-col">
-                                        {{user.last_login}}
-                                    </td>
-                                    <td class="status-col">
-                                        {% if user.is_active %}
-                                            <span class="in-progress">
-                                                Active
-                                            </span>
-                                        {% else %}
-                                            <span class="archive">
-                                                Deactive
-                                            </span>
-                                        {% endif %}
-                                    </td>
-                                    <td class="action-col">
-                                        <div class="table-flex-holder">
-                                            <ul class="table-options-buttons ">
-                                                {% if user.is_active %}
-                                                <li>
-                                                    <button>
-                                                        <a href="#"
-                                                            data-url="#"
-                                                            data-type="delete"
-                                                            data-verify="{{user.is_active}}" 
-                                                            data-name="project" 
-                                                            data-tippy-content="Deactivate user" 
-                                                            class="show-sw-action-popup"
-                                                        >
-                                                            <span class="project-detail icon-trashbin"></span>
-                                                            Deactivate
-                                                        </a>
-                                                    </button>
-                                                </li>
-                                                {% else %}
-                                                <li>
-                                                    <button>
-                                                        <a href="#"
-                                                            data-url="#"
-                                                            data-type="delete"
-                                                            data-verify="{{user.is_active}}" 
-                                                            data-name="project" 
-                                                            data-tippy-content="Deactivate user" 
-                                                            class="show-sw-action-popup"
-                                                        >
-                                                            Activate
-                                                        </a>
-                                                    </button>
-                                                </li>
-                                                {% endif %}
-                                            </ul>
-                                        </div>
-                                    </td>
-                                </tr>
+                                {% include 'users/partials/user_tr.html' %}
                             {% endfor %}
                         </tbody>
                     </table>

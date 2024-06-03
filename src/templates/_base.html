@@ -163,18 +163,7 @@
                 </header>
 
                 <main id="main" class="main" style="position: relative;">
-                    <!-- MESSAGE SECTION STARTS -->
-                    {% if messages %}
-                        <div class="message-container">
-                            {% for message in messages %}
-                                <div class="{{message.tags}}">
-                                    {{message}}
-                                    <span class="close-alert-message">&#x2715;</span>
-                                </div>
-                            {% endfor %}
-                        </div>
-                    {% endif %}
-                    <!-- MESSAGE SECTION ENDS -->
+                    {% include "_messages.html" %}
 
                     <div class="base-section">
                         {% block content %}

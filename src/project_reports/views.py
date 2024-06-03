@@ -1064,9 +1064,9 @@ def import_monthly_reports(request, report):
                         activity_domain_name = row.get("activity_domain")
                         activity_type_name = row.get("activity_type")
                         activity_detail_name = row.get("activity_detail")
-                        country_name = row.get("country")
-                        province_name = row.get("province")
-                        district_name = row.get("district")
+                        country_name = row.get("admin0pcode")
+                        province_name = row.get("admin1pcode")
+                        district_name = row.get("admin2pcode")
                         zone_name = row.get("zone")
                         location_type_name = row.get("location_type")
                         facility_site_type_name = row.get("facility_site_type")
@@ -1076,9 +1076,9 @@ def import_monthly_reports(request, report):
                             "indicator",
                             "activity_domain",
                             "activity_type",
-                            "country",
-                            "province",
-                            "district",
+                            "admin0pcode",
+                            "admin1pcode",
+                            "admin2pcode",
                         ]
                         required_column_missing = False
                         for column in columns_to_check:
@@ -1137,9 +1137,9 @@ def import_monthly_reports(request, report):
 
                         # Handle Location details
                         try:
-                            country = get_object_or_404(Location, name=country_name)
-                            province = get_object_or_404(Location, name=province_name)
-                            district = get_object_or_404(Location, name=district_name)
+                            country = get_object_or_404(Location, code=country_name)
+                            province = get_object_or_404(Location, code=province_name)
+                            district = get_object_or_404(Location, code=district_name)
                         except Exception as e:
                             success = False
                             message += f"<span>Row [{index + 2}]: {e} </span><br/>"

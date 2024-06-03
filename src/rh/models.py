@@ -431,7 +431,7 @@ class Project(models.Model):
         ("done", "Completed"),
         ("archive", "Archived"),
     ]
-    
+
     organization = models.ForeignKey(Organization, on_delete=models.SET_NULL, null=True, blank=True)
 
     clusters = models.ManyToManyField(Cluster)

@@ -1,0 +1,249 @@
+{% extends "_base.html" %}
+
+{% load static %}
+{% load compress %}
+
+{% block page_title %}
+    ReportHub Users
+{% endblock page_title %}
+
+{% block content %}
+    <div class="container">
+        <div class="page-top-panel">
+            <div class="tabs-nav-holder">
+                <ul class="tabs-nav">
+                    <li class=" {% if not request.GET.is_active  %}active{% endif %}">
+                        <a href="{% url 'users-organization' %}">All Users
+                            ({{ users_count }})
+                        </a>
+                    </li>
+                    <li class=" {% if request.GET.is_active == 'true' %}active{% endif %}">
+                        <a href="{{request.GET.url}}?is_active=true">Active Users
+                            (
+                            {% if active_users_count %}
+                                {{ active_users_count }}
+                            {% else %}
+                                {{ active_users | length }}
+                            {% endif %}
+                            )
+                        </a>
+                    </li>
+                    <li class=" {% if request.GET.is_active == 'false' %}active{% endif %}">
+                        <a href="{{request.GET.url}}?is_active=false">Deactivated Users
+                            (
+                            {% if deactive_users_count %}
+                                {{ deactive_users_count }}
+                            {% endif %}
+                            )
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="actions-panel">
+                <div class="export-formats-holder">
+                    <a href="#" class="btn btn-gray export-open">
+                        <span class="btn-text">Export</span>
+                        <!-- spinner start-->
+                        <span class="downloading">
+                            <svg  width="24" height="24" viewBox="0 0 24 24"
+                            stroke="#555555" 
+                            xmlns="http://www.w3.org/2000/svg">
+                                <g class="spinner_V8m1">
+                                    <circle cx="12" cy="12" r="9.5" fill="none" stroke-width="3">
+                                    </circle>
+                                </g>
+                            </svg>
+                        </span>
+                        <!-- spinner end -->
+                        <span class="icon-download"></span>
+                    </a>
+                    <div class="export-formats">
+                        <span class="title">File format</span>
+                        <div class="format-list">
+                            <div class="export-link-holder" 
+                                onclick="exportButton(event)"
+                                data-file-format="csv" 
+                                data-export-url="{% url 'export_porjcet_list' 'csv' %}">
+                                <a class="export-link" href="#">
+                                    CSV
+                                </a>
+                            </div>
+                            <div class="export-link-holder" 
+                                onclick="exportButton(event)"
+                                data-file-format="xls" 
+                                data-export-url="{% url 'export_porjcet_list' 'xls' %}">
+                                <a class="export-link" href="#">
+                                    Excel
+                                </a>
+                            </div>
+                            <div class="export-link-holder" 
+                                onclick="exportButton(event)"
+                                data-file-format="json" 
+                                data-export-url="{% url 'export_porjcet_list' 'json' %}">
+                                <a class="export-link" href="#">
+                                    JSON
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <br>
+
+        <div class="content-block top-border bottom-border">
+            <div id="tab-1">
+                <div class="table-wrapper-scrollable">
+                    <table class="table all-projects-table js-collapsible-table">
+                        <thead>
+                            <tr>
+                                <th class="cluster-col">
+                                    <strong class="table-title">Name</strong>
+                                </th>
+                                <th class="description-col">
+                                    <strong class="table-title">Email</strong>
+                                </th>
+                                <th class="cluster-col">
+                                    <strong class="table-title">Clusters</strong>
+                                </th>
+                                <th class="organisation-col">
+                                    <strong class="table-title">Date Joined</strong>
+                                </th>
+                                <th class="location-col">
+                                    <strong class="table-title">Last Login</strong>
+                                </th>
+                                <th class="status-col">
+                                    <strong class="table-title">Status</strong>
+                                </th>
+                                <th class="action-col">
+                                    <strong class="table-title">Action</strong>
+                                </th>
+                            </tr>
+                        </thead>
+                        
+                        <tbody>
+                            <!--Include The Active Projects Details Here -->
+                            {% for user in users %}
+                                <tr>
+                                    <td class="cluster-col">
+                                        {{ user.first_name }} {{user.last_name}} <em>({{ user.username }})</em>
+                                    </td>
+                                    <td class="description-col">
+                                        {{ user.email }}
+                                    </td>
+                                    <td class="cluster-col">
+                                       {% for cluster in user.profile.clusters.all %}
+                                            {{ cluster.title }}
+                                            {% if not forloop.last %},{% endif %}
+                                        {% endfor %}
+                                    </td>
+                                    <td class="organisation-col">
+                                       {{ user.date_joined }}
+                                    </td>
+                                    <td class="location-col">
+                                        {{user.last_login}}
+                                    </td>
+                                    <td class="status-col">
+                                        {% if user.is_active %}
+                                            <span class="in-progress">
+                                                Active
+                                            </span>
+                                        {% else %}
+                                            <span class="archive">
+                                                Deactive
+                                            </span>
+                                        {% endif %}
+                                    </td>
+                                    <td class="action-col">
+                                        <div class="table-flex-holder">
+                                            <ul class="table-options-buttons ">
+                                                {% if user.is_active %}
+                                                <li>
+                                                    <button>
+                                                        <a href="#"
+                                                            data-url="#"
+                                                            data-type="delete"
+                                                            data-verify="{{user.is_active}}" 
+                                                            data-name="project" 
+                                                            data-tippy-content="Deactivate user" 
+                                                            class="show-sw-action-popup"
+                                                        >
+                                                            <span class="project-detail icon-trashbin"></span>
+                                                            Deactivate
+                                                        </a>
+                                                    </button>
+                                                </li>
+                                                {% else %}
+                                                <li>
+                                                    <button>
+                                                        <a href="#"
+                                                            data-url="#"
+                                                            data-type="delete"
+                                                            data-verify="{{user.is_active}}" 
+                                                            data-name="project" 
+                                                            data-tippy-content="Deactivate user" 
+                                                            class="show-sw-action-popup"
+                                                        >
+                                                            Activate
+                                                        </a>
+                                                    </button>
+                                                </li>
+                                                {% endif %}
+                                            </ul>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        {% comment %} Pager {% endcomment %}
+        {% if users %}
+            <div class="pagination-holder">
+                <div class="select-field view-options"></div>
+                <div class="pagination-wrapper">
+                    <ul class="pagination">
+                        {% if users.has_previous %}
+                            <li class="page-item prev">
+                                <a class="page-link" href="?page={{ users.previous_page_number }}">Previous</a>
+                            </li>
+                        {% else %}
+                            <li class="page-item prev disabled">
+                                <a class="page-link" href="#">Previous</a>
+                            </li>
+                        {% endif %}
+                        {% for i in total_pages %}
+                            <li class="page-item {% if users.number == forloop.counter %}current-page{% endif %}">
+                                <a class="page-link" href="?page={{ forloop.counter }}">{{ forloop.counter }}</a>
+                            </li>
+                        {% endfor %}
+                        {% if users.has_next %}
+                            <li class="page-item next">
+                                <a class="page-link" href="?page={{ users.next_page_number }}">Next</a>
+                            </li>
+                        {% else %}
+                            <li class="page-item next disabled">
+                                <a class="page-link" href="#">Next</a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        {% else %}
+            <div class="view_nocontent">
+                <div class="nocontent_help">
+                    <h4>No users found.</h4>
+                    <p>Ask your organization members to register for a new account in ReportHub.</p>
+                </div>
+            </div>
+        {% endif %}
+        {% comment %} endpager {% endcomment %}
+    </div>
+{% endblock content %}
+
+{% block scripts %}
+{% endblock scripts %}

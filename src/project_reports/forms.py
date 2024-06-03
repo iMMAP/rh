@@ -88,12 +88,17 @@ TargetLocationReportFormSet = inlineformset_factory(
     can_delete=True,  # Allow deletion of existing forms
 )
 
-DisaggregationReportFormSet = inlineformset_factory(
+class DisaggregationReportFormSet(inlineformset_factory(
     TargetLocationReport,
     DisaggregationLocationReport,
     fields="__all__",
-    extra=0,  # Number of empty forms to display
-)
+    extra=0,
+)):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for form in self.forms:
+            form.fields["disaggregation"].widget.attrs["disabled"] = "disabled"
+
 
 
 class ActivityPlanReportForm(forms.ModelForm):

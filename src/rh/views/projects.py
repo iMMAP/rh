@@ -22,19 +22,23 @@ from ..models import (
 
 from .views import copy_project_target_location, copy_target_location_disaggregation_locations
 from django.views.decorators.http import require_http_methods
+from django.db.models import Count, Q
+
 
 RECORDS_PER_PAGE = 10
 
 
 @login_required
 def projects_list(request):
-    """List Projects
+    """List Projects for user's organization
     url: /projects
     """
+    user_org = request.user.profile.organization
+
     # Setup Filter
     project_filter = ProjectsFilter(
         request.GET,
-        queryset=Project.objects.all()
+        queryset=Project.objects.filter(organization=user_org)
         .prefetch_related("clusters", "programme_partners", "implementing_partners")
         .order_by("-id"),
     )
@@ -45,13 +49,21 @@ def projects_list(request):
     p_projects = p.get_page(page)
     total_pages = "a" * p_projects.paginator.num_pages
 
+    projects = Project.objects.filter(organization=user_org).aggregate(
+        projects_count=Count("id"),
+        draft_projects_count=Count("id", filter=Q(state="draft")),
+        active_projects_count=Count("id", filter=Q(state="in-progress")),
+        completed_projects_count=Count("id", filter=Q(state="done")),
+        archived_projects_count=Count("id", filter=Q(state="archive")),
+    )
+
     context = {
-        "projects_count": Project.objects.all().count,
         "projects": p_projects,
-        "draft_projects_count": Project.objects.filter(state="draft").count(),
-        "active_projects_count": Project.objects.filter(state="in-progress").count(),
-        "completed_projects_count": Project.objects.filter(state="done").count(),
-        "archived_projects_count": Project.objects.filter(state="archive").count(),
+        "projects_count": projects['projects_count'],
+        "draft_projects_count": projects['draft_projects_count'],
+        "active_projects_count": projects['active_projects_count'],
+        "completed_projects_count": projects['completed_projects_count'],
+        "archived_projects_count": projects['archived_projects_count'],
         "project_filter": project_filter,
         "total_pages": total_pages,
     }
@@ -93,7 +105,7 @@ def projects_detail(request, pk):
 
 
 @login_required
-def create_project_view(request):
+def create_project(request):
     if request.method == "POST":
         form = ProjectForm(request.POST, user=request.user)
         if form.is_valid():
@@ -120,7 +132,7 @@ def create_project_view(request):
 
 
 @login_required
-def update_project_view(request, pk):
+def update_project(request, pk):
     """View for updating a project."""
 
     project = get_object_or_404(Project, pk=pk)

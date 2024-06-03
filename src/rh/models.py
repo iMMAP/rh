@@ -425,22 +425,14 @@ class Indicator(models.Model):
 
 
 class Project(models.Model):
-    """Projects model"""
-
     PROJECT_STATES = [
         ("draft", "Draft"),
         ("in-progress", "In Progress"),
         ("done", "Completed"),
         ("archive", "Archived"),
     ]
-    state = models.CharField(max_length=15, choices=PROJECT_STATES, default="draft", null=True, blank=True)
-    active = models.BooleanField(default=True)
-    title = models.CharField(max_length=NAME_MAX_LENGTH)
-    code = models.CharField(max_length=NAME_MAX_LENGTH, unique=True)
-
-    is_hrp_project = models.BooleanField(default=False)
-    has_hrp_code = models.BooleanField(default=False)
-    hrp_code = models.CharField(max_length=NAME_MAX_LENGTH, null=True, blank=True, unique=True)
+    
+    organization = models.ForeignKey(Organization, on_delete=models.SET_NULL, null=True, blank=True)
 
     clusters = models.ManyToManyField(Cluster)
     activity_domains = models.ManyToManyField(ActivityDomain, related_name="activity_domains")
@@ -449,10 +441,20 @@ class Project(models.Model):
     implementing_partners = models.ManyToManyField(Organization, related_name="implementing_partners", blank=True)
     programme_partners = models.ManyToManyField(Organization, related_name="programme_partners", blank=True)
 
+    state = models.CharField(max_length=15, choices=PROJECT_STATES, default="draft", null=True, blank=True)
+    active = models.BooleanField(default=True)
+
+    title = models.CharField(max_length=NAME_MAX_LENGTH)
+    code = models.CharField(max_length=NAME_MAX_LENGTH, unique=True)
+
+    is_hrp_project = models.BooleanField(default=False)
+    has_hrp_code = models.BooleanField(default=False)
+    hrp_code = models.CharField(max_length=NAME_MAX_LENGTH, null=True, blank=True, unique=True)
+
+    budget_currency = models.ForeignKey(Currency, on_delete=models.SET_NULL, null=True, blank=True)
     budget = models.IntegerField(null=True, blank=True)
     budget_received = models.IntegerField(null=True, blank=True)
     budget_gap = models.IntegerField(null=True, blank=True)
-    budget_currency = models.ForeignKey(Currency, on_delete=models.SET_NULL, null=True, blank=True)
 
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
     description = models.TextField(blank=True, null=True)

@@ -20,6 +20,7 @@ urlpatterns = [
     path("organizations/create/", organizations.organization_register, name="organizations-create"),
     # Projects CRUD
     path("projects/", projects.projects_list, name="projects-list"),
+    path("projects/clusters", projects.clusters_projects_list, name="clusters-projects-list"),
     path("projects/create/", projects.create_project, name="projects-create"),
     path(
         "projects/<str:pk>/",

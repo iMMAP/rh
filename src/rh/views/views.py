@@ -30,7 +30,7 @@ def landing_page(request):
         "reports": reports_count,
     }
 
-    return render(request,"landing.html",context)
+    return render(request, "landing.html", context)
 
 
 @login_required

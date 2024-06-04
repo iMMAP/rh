@@ -2,7 +2,7 @@ import os
 from pathlib import Path
 
 import pandas as pd
-from django.contrib.auth.models import Group, Permission, User
+from django.contrib.auth.models import Group, User
 from django.core.management.base import BaseCommand
 
 from project_reports.models import ResponseType
@@ -29,13 +29,9 @@ class Command(BaseCommand):
     def _import_groups(self):
         groups = ["CLUSTER_LEAD", "ORG_LEAD", "ORG_USER", "iMMAP_IMO"]
         for group_name in groups:
-            group, created = Group.objects.get_or_create(name=group_name)
+            _, created = Group.objects.get_or_create(name=group_name)
             if created:
                 self.stdout.write(self.style.SUCCESS(f'Group "{group_name}" created successfully'))
-                if group_name == "SUPERADMIN":
-                    all_permissions = Permission.objects.all()
-                    group.permissions.set(all_permissions)
-                    self.stdout.write(self.style.SUCCESS(f'All permissions assigned to group "{group_name}"'))
             else:
                 self.stdout.write(self.style.WARNING(f'Group "{group_name}" already exists'))
 

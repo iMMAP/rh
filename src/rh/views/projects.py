@@ -2,7 +2,7 @@ import json
 
 from datetime import date
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 from django.core.paginator import Paginator
 from django.db.models import Prefetch
 from django.http import HttpResponse, JsonResponse
@@ -29,6 +29,7 @@ RECORDS_PER_PAGE = 10
 
 
 @login_required
+@permission_required("rh.view_clusters_projects", raise_exception=True)
 def clusters_projects_list(request):
     """List Projects for user's cluster
     url: /projects/clusters
@@ -73,6 +74,7 @@ def clusters_projects_list(request):
 
 
 @login_required
+@permission_required("rh.view_org_projects", raise_exception=True)
 def projects_list(request):
     """List Projects for user's organization
     url: /projects

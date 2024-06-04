@@ -1,5 +1,5 @@
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 
 from django.shortcuts import render
 
@@ -10,6 +10,7 @@ from ..forms import (
 
 # Registration Organizations
 @login_required
+@permission_required("rh.add_organization", raise_exception=True)
 def organization_register(request):
     if request.method == "POST":
         org_form = OrganizationRegisterForm(request.POST)

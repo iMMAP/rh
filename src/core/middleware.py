@@ -16,7 +16,7 @@ class HtmxMessageMiddleware(MiddlewareMixin):
         ):
             response.write(
                 render_to_string(
-                    "_messages.html",
+                    "components/messages.html",
                     {"messages": get_messages(request)},
                 )
             )

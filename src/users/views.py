@@ -107,7 +107,6 @@ def org_users_list(request):
 @permission_required("rh.activate_deactivate_user", raise_exception=True)
 def toggle_status(request, user_id):
     user = get_object_or_404(User, pk=user_id)
-    user.has_per
 
     if user.is_active:
         user.is_active = False

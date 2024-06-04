@@ -175,7 +175,7 @@ class DisaggregationLocationForm(forms.ModelForm):
 
         # TODO: limit this to the acitivity plan indicator specific disaggredations
         self.fields["disaggregation"].queryset = self.fields["disaggregation"].queryset
-        self.fields["disaggregation"].widget.attrs["disabled"] = "disabled"
+
 
 DisaggregationFormSet = inlineformset_factory(
     parent_model=TargetLocation,

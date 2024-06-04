@@ -1,0 +1,106 @@
+{% load static %}
+
+<header class="header logged-in" id="header">
+    <div class="container">
+        <div class="logo-holder">
+            <strong class="logo">
+                <a href="{% url 'landing' %}">
+                    <img src="{% static 'rh/images/immap-logo.svg' %}" alt="IMMAP" />
+                </a>
+            </strong>
+            <strong class="logo-text">ReportHub</strong>
+        </div>
+        {% if user.is_authenticated %}
+            <button type="button" class="mobile-menu-opener">
+                <span class="bar bar1"></span>
+                <span class="bar bar2"></span>
+                <span class="bar bar3"></span>
+                <span class="bar bar4"></span>
+            </button>
+            <div class="mobile-menu-holder">
+                <ul class="main-nav">
+
+                    {% if 'users.view_cluster_users' in perms or 'rh.view_cluster_projects' in perms %}
+                    <li class="main-nav-item has-drop-down js-main-nav-openclose">
+                        <a class="main-nav-link openclose-opener" href="#">Cluster</a>
+                            <div class="inner-drop">
+                            <ul class="inner-nav">
+                                {% if perms.rh.view_cluster_projects %}
+                                <li class="inner-nav-item">
+                                    <a class="inner-nav-link" href="{% url 'clusters-projects-list' %}">Projects</a>
+                                </li>
+                                {% endif %}
+
+                                {% if perms.users.view_cluster_users %}
+                                <hr>
+                                <li class="inner-nav-item">
+                                    <a class="inner-nav-link" href="{% url 'users-cluters' %}">Members</a>
+                                </li>
+                                {% endif %}
+                            </ul>
+                        </div>
+                    </li>
+                    {% endif %}
+
+                    <li class="main-nav-item has-drop-down js-main-nav-openclose">
+                        <a class="main-nav-link openclose-opener" href="#">Organization</a>
+                            <div class="inner-drop">
+                            <ul class="inner-nav">
+                                <li class="inner-nav-item">
+                                    <a class="inner-nav-link" href="{% url 'projects-list' %}">Projects</a>
+                                </li>
+                                <li class="inner-nav-item">
+                                    <a class="inner-nav-link" href="{% url 'projects-create' %}">Create Project</a>
+                                </li>
+                                {% if perms.rh.view_org_users %}
+                                <hr>
+                                <li class="inner-nav-item">
+                                    <a class="inner-nav-link" href="{% url 'users-organization' %}">Members</a>
+                                </li>
+                                {% endif %}
+                            </ul>
+                        </div>
+                    </li>
+
+                    <li class="main-nav-item has-drop-down js-main-nav-openclose">
+                        <a class="main-nav-link" href="{% url 'stocks' %}">Stocks</a>
+                    </li>
+                
+                    <li class="main-nav-item has-drop-down js-main-nav-openclose">
+                        <a class="main-nav-link openclose-opener" href="#">Account</a>
+                        <div class="inner-drop">
+                            <ul class="inner-nav">
+                                {% if user.is_superuser %}
+                                    <li class="inner-nav-item">
+                                        <a class="inner-nav-link" href="/admin">Admin Dashboard</a>
+                                    </li>
+                                {% endif %}
+                                <li class="inner-nav-item">
+                                    <a class="inner-nav-link" href="{% url 'profile' %}">My Profile</a>
+                                </li>
+                                <li class="inner-nav-item">
+                                    <a class="inner-nav-link" href="{% url 'view_my_dashboard' %}">My Cluster/Org</a>
+                                </li>
+
+                                {% if perms.rh.add_organization %}
+                                <li class="inner-nav-item">
+                                    <a class="inner-nav-link" href="{% url 'organizations-create' %}">Add Organization</a>
+                                </li>
+                                {% endif %}
+                                
+                                <li class="inner-nav-item">
+                                    <a href="{% url 'logout' %}" class="inner-nav-link logout-link">Logout</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        {% else %}
+            <div class="header-options-wrapper">
+                <a href="{% url 'login' %}" class="btn btn-red">Login</a>
+                <a href="{% url 'register' %}" class="btn btn-gray-outline">Register</a>
+            </div>
+        {% endif %}
+    </div>
+</header>

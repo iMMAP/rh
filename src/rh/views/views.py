@@ -3,11 +3,10 @@ from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.db.models import Prefetch
-from django.http import FileResponse, HttpResponse, HttpResponseForbidden, JsonResponse
-from django.shortcuts import get_object_or_404
-from django.template import loader
+from django.http import FileResponse, HttpResponseForbidden, JsonResponse
 
 from project_reports.models import ProjectMonthlyReport as Report
+from django.shortcuts import get_object_or_404, render
 
 from ..models import (
     ActivityDomain,
@@ -20,21 +19,18 @@ from ..models import (
 RECORDS_PER_PAGE = 10
 
 
-#############################################
-#                Index Views
-#############################################
 def landing_page(request):
-    template = loader.get_template("landing.html")
-
     users_count = User.objects.all().count()
     locations_count = Location.objects.all().count()
     reports_count = Report.objects.all().count()
+
     context = {
         "users": users_count,
         "locations": locations_count,
         "reports": reports_count,
     }
-    return HttpResponse(template.render(context, request))
+
+    return render(request, "landing.html", context)
 
 
 @login_required

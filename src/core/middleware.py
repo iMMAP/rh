@@ -2,6 +2,26 @@ from django.shortcuts import redirect
 from django.conf import settings
 from django.urls import reverse
 
+from django.contrib.messages import get_messages
+from django.template.loader import render_to_string
+from django.utils.deprecation import MiddlewareMixin
+
+
+class HtmxMessageMiddleware(MiddlewareMixin):
+    def process_response(self, request, response):
+        if (
+            "HX-Request" in request.headers
+            and not 300 <= response.status_code < 400
+            and "HX-Redirect" not in response.headers
+        ):
+            response.write(
+                render_to_string(
+                    "_messages.html",
+                    {"messages": get_messages(request)},
+                )
+            )
+        return response
+
 
 class MaintenanceModeMiddleware:
     def __init__(self, get_response):

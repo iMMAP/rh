@@ -3,6 +3,7 @@ import sentry_sdk
 
 from .base import *
 
+APP_ENV = env("APP_ENV", default="production")
 SENTRY_DSN = env("SENTRY_DSN", default="")
 
 sentry_sdk.init(
@@ -16,7 +17,6 @@ sentry_sdk.init(
     profiles_sample_rate=1.0,
 )
 
-APP_ENV = "production"
 
 DATABASES = {
     "sqlite": {

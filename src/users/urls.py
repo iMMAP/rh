@@ -5,6 +5,9 @@ from . import views as user_views
 from .forms import UserPasswordChangeForm, UserPasswordResetForm, UserSetPasswordForm
 
 urlpatterns = [
+    path("users/organization", user_views.org_users_list, name="users-organization"),
+    path("users/clusters", user_views.clustes_users_list, name="users-cluters"),
+    path("users/<int:user_id>/toggle_status", user_views.toggle_status, name="toggle-status"),
     path("register/", user_views.register_view, name="register"),
     path(
         "activate/<uidb64>/<token>",

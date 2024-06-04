@@ -17,23 +17,21 @@
   flex-wrap: wrap;
   padding: 4px;
 }
-.filter-container .title{
+.filter-container .filter-items .title{
   padding: 2px 3px;
   background-color: $red-be;
   color: white;
   border-radius: 3px;
-  font-weight: 500;
+  font-weight: 600;
   font-size: 12px;
   border: 1px solid $red;
+  box-shadow: 0 0 16px rgba($gray-d1, 0.3);
 }
-.filter-container .heading{
-  font-weight: 600;
-  font-size: 13px;
-  padding: 2px 10px;
-  background-color: rgb(61, 60, 60);
-  color:white;
+.deactivated{
   display: none;
-  
+}
+.active{
+  display: inline;
 }
 .disaggregation-accordion-slide .errorlist{
   display: none;

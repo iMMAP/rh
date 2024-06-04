@@ -271,10 +271,6 @@
             {% vite 'static/src/js/utils/initSentry.js' %}
         {% endif %}
 
-        <script>
-            var csrftoken = '{{ csrf_token }}';
-        </script>
-
         <!-- jQuery CDN -->
         <script 
             src="https://code.jquery.com/jquery-3.6.1.min.js"
@@ -284,8 +280,11 @@
         </script>
 
         {% comment %} HTMX {% endcomment %}
-        <script src="https://unpkg.com/htmx.org@1.9.10" integrity="sha384-D1Kt99CQMDuVetoL1lrYwg5t+9QdHe7NLX/SoJYkXDFfX37iInKRy5xLSi8nO7UC" crossorigin="anonymous"></script>
-        
+        <script src="https://unpkg.com/htmx.org@1.9.12" integrity="sha384-ujb1lZYygJmzgSwoxRggbCHcjc0rB2XoQrxeTUQyRjrOnlCoYta87iKBWq3EsdM2" crossorigin="anonymous"></script>
+        <script>
+            const csrftoken = '{{ csrf_token }}';
+            htmx.config.useTemplateFragments = true;
+        </script>
         <!-- Full Path relative to location of manage.py file -->
         {% vite 'static/src/js/app.js' %}
 

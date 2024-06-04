@@ -37,3 +37,7 @@ class Profile(models.Model):
     class Meta:
         verbose_name = "User Profile"
         verbose_name_plural = "User Profiles"
+        permissions = [
+            ("view_cluster_users", "View users of your organization"),
+            ("view_org_users", "View users of your clusters"),
+        ]

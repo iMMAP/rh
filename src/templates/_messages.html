@@ -1,0 +1,22 @@
+<div 
+    id="messages" 
+    class="message-container" 
+    hx-swap-oob="true"
+>
+    {% for message in messages %}
+        <div class="{{message.tags}}">
+            {{message}}
+            <span class="close-alert-message">&#x2715;</span>
+        </div>
+    {% endfor %}
+</div>
+
+{% block scripts %}
+<script>
+    for(const el of document.querySelectorAll(".close-alert-message")){
+        el.addEventListener("click", (e) => {
+            e.target.closest("div").remove()
+        });
+    }
+</script>
+{% endblock scripts %}

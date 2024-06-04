@@ -1,15 +1,16 @@
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import authenticate, get_user_model, login, logout
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import EmailMultiAlternatives
 from django.http import HttpResponse
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect, render, get_object_or_404
 from django.template import loader
 from django.utils.encoding import force_bytes, force_str
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
-
+from django.contrib.auth.models import User
+from django.views.decorators.http import require_http_methods
 
 from .decorators import unauthenticated_user
 from .forms import (
@@ -19,6 +20,107 @@ from .forms import (
     UserUpdateForm,
 )
 from .tokens import account_activation_token
+from django.core.paginator import Paginator
+import django_filters
+from django.db.models import Count, Q
+
+RECORDS_PER_PAGE = 15
+
+
+class UsersFilter(django_filters.FilterSet):
+    class Meta:
+        model = User
+        fields = "__all__"
+
+
+#############################################
+############### Members ####################
+#############################################
+
+
+@permission_required("users.view_cluster_users", raise_exception=True)
+@login_required
+def clustes_users_list(request):
+    user_clusters = request.user.profile.clusters.all()
+    users_filter = UsersFilter(
+        request.GET,
+        queryset=User.objects.filter(profile__clusters__in=user_clusters).select_related("profile").order_by("-id"),
+    )
+
+    p = Paginator(users_filter.qs, RECORDS_PER_PAGE)
+    page = request.GET.get("page")
+    paginated_users = p.get_page(page)
+    total_pages = "a" * paginated_users.paginator.num_pages
+
+    users = User.objects.filter(profile__clusters__in=user_clusters).aggregate(
+        users_count=Count("id"),
+        active_users_count=Count("id", filter=Q(is_active=True)),
+        deactive_users_count=Count("id", filter=Q(is_active=False)),
+    )
+
+    context = {
+        "users": paginated_users,
+        "users_filter": users_filter,
+        "total_pages": total_pages,
+        "users_count": users["users_count"],
+        "active_users_count": users["active_users_count"],
+        "deactive_users_count": users["deactive_users_count"],
+    }
+
+    return render(request, "users/users_list.html", context)
+
+
+@permission_required("users.view_org_users", raise_exception=True)
+@login_required
+def org_users_list(request):
+    user_org = request.user.profile.organization
+    users_filter = UsersFilter(
+        request.GET,
+        queryset=User.objects.filter(profile__organization=user_org).select_related("profile").order_by("-id"),
+    )
+
+    p = Paginator(users_filter.qs, RECORDS_PER_PAGE)
+    page = request.GET.get("page")
+    paginated_users = p.get_page(page)
+    total_pages = "a" * paginated_users.paginator.num_pages
+
+    users = User.objects.filter(profile__organization=user_org).aggregate(
+        users_count=Count("id"),
+        active_users_count=Count("id", filter=Q(is_active=True)),
+        deactive_users_count=Count("id", filter=Q(is_active=False)),
+    )
+
+    context = {
+        "users": paginated_users,
+        "users_filter": users_filter,
+        "total_pages": total_pages,
+        "users_count": users["users_count"],
+        "active_users_count": users["active_users_count"],
+        "deactive_users_count": users["deactive_users_count"],
+    }
+
+    return render(request, "users/users_list.html", context)
+
+
+@login_required
+@require_http_methods(["POST"])
+@permission_required("rh.activate_deactivate_user", raise_exception=True)
+def toggle_status(request, user_id):
+    user = get_object_or_404(User, pk=user_id)
+    user.has_per
+
+    if user.is_active:
+        user.is_active = False
+        user.save()
+        messages.success(request, f"{user.username} is deactivated.")
+    else:
+        user.is_active = True
+        user.save()
+        messages.success(request, f"{user.username} is activated.")
+
+    context = {"user": user}
+
+    return render(request, "users/partials/user_tr.html", context)
 
 
 #############################################

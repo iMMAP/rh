@@ -1,0 +1,60 @@
+{% load static %}
+
+<tr id="user-{{user.id}}">
+    <td class="cluster-col">
+        {{ user.first_name }} {{user.last_name}} <em>({{ user.username }})</em>
+    </td>
+    <td class="description-col">
+        {{ user.email }}
+    </td>
+    <td class="cluster-col">
+        {% for cluster in user.profile.clusters.all %}
+        {{ cluster.title }}
+        {% if not forloop.last %},{% endif %}
+        {% endfor %}
+    </td>
+    <td class="organisation-col">
+        {{ user.date_joined }}
+    </td>
+    <td class="location-col">
+        {{user.last_login}}
+    </td>
+    <td class="status-col">
+        {% if user.is_active %}
+        <span class="in-progress">
+            Active
+        </span>
+        {% else %}
+        <span class="archive">
+            Deactive
+        </span>
+        {% endif %}
+    </td>
+    <td class="action-col">
+        <div class="table-flex-holder">
+            <ul class="table-options-buttons">
+                <li>
+                    <form 
+                        method="post"
+                        hx-post="{% url 'toggle-status' user.id %}" 
+                        hx-swap="outerHTML" 
+                        hx-target="#user-{{user.id}}" 
+                        hx-disable-element="#dectivate-button-{{user.id}}"
+                        hx-ext="disable-element"
+                    >
+                        {% csrf_token %}
+                        <button style="background:unset" type="submit" id="dectivate-button-{{user.id}}">
+                            <img class='htmx-indicator' style="width: 1.2rem;" src="{% static 'src/images/spinner.gif' %}" />
+                            {% if user.is_active %}
+                            <span class="project-detail icon-trashbin"></span>
+                            Deactivate
+                            {% else %}
+                            Activate
+                            {% endif %}
+                        </button>
+                    </form>
+                </li>
+            </ul>
+        </div>
+    </td>
+</tr>

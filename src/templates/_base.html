@@ -89,15 +89,35 @@
                             </button>
                             <div class="mobile-menu-holder">
                                 <ul class="main-nav">
+
                                     <li class="main-nav-item has-drop-down js-main-nav-openclose">
-                                        <a class="main-nav-link openclose-opener" href="{% url 'projects-list' %}">Projects</a>
+                                        <a class="main-nav-link openclose-opener" href="#">Cluster</a>
                                           <div class="inner-drop">
                                             <ul class="inner-nav">
                                                 <li class="inner-nav-item">
-                                                    <a class="inner-nav-link" href="{% url 'projects-list' %}">Projects List</a>
+                                                    <a class="inner-nav-link" href="{% url 'clusters-projects-list' %}">Projects</a>
+                                                </li>
+                                                <hr>
+                                                <li class="inner-nav-item">
+                                                    <a class="inner-nav-link" href="{% url 'users-cluters' %}">Members</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </li>
+
+                                    <li class="main-nav-item has-drop-down js-main-nav-openclose">
+                                        <a class="main-nav-link openclose-opener" href="#">Organization</a>
+                                          <div class="inner-drop">
+                                            <ul class="inner-nav">
+                                                <li class="inner-nav-item">
+                                                    <a class="inner-nav-link" href="{% url 'projects-list' %}">Projects</a>
                                                 </li>
                                                 <li class="inner-nav-item">
                                                     <a class="inner-nav-link" href="{% url 'projects-create' %}">Create Project</a>
+                                                </li>
+                                                <hr>
+                                                <li class="inner-nav-item">
+                                                    <a class="inner-nav-link" href="{% url 'users-organization' %}">Members</a>
                                                 </li>
                                             </ul>
                                         </div>
@@ -143,18 +163,7 @@
                 </header>
 
                 <main id="main" class="main" style="position: relative;">
-                    <!-- MESSAGE SECTION STARTS -->
-                    {% if messages %}
-                        <div class="message-container">
-                            {% for message in messages %}
-                                <div class="{{message.tags}}">
-                                    {{message}}
-                                    <span class="close-alert-message">&#x2715;</span>
-                                </div>
-                            {% endfor %}
-                        </div>
-                    {% endif %}
-                    <!-- MESSAGE SECTION ENDS -->
+                    {% include "_messages.html" %}
 
                     <div class="base-section">
                         {% block content %}
@@ -262,10 +271,6 @@
             {% vite 'static/src/js/utils/initSentry.js' %}
         {% endif %}
 
-        <script>
-            var csrftoken = '{{ csrf_token }}';
-        </script>
-
         <!-- jQuery CDN -->
         <script 
             src="https://code.jquery.com/jquery-3.6.1.min.js"
@@ -275,8 +280,11 @@
         </script>
 
         {% comment %} HTMX {% endcomment %}
-        <script src="https://unpkg.com/htmx.org@1.9.10" integrity="sha384-D1Kt99CQMDuVetoL1lrYwg5t+9QdHe7NLX/SoJYkXDFfX37iInKRy5xLSi8nO7UC" crossorigin="anonymous"></script>
-        
+        <script src="https://unpkg.com/htmx.org@1.9.12" integrity="sha384-ujb1lZYygJmzgSwoxRggbCHcjc0rB2XoQrxeTUQyRjrOnlCoYta87iKBWq3EsdM2" crossorigin="anonymous"></script>
+        <script>
+            const csrftoken = '{{ csrf_token }}';
+            htmx.config.useTemplateFragments = true;
+        </script>
         <!-- Full Path relative to location of manage.py file -->
         {% vite 'static/src/js/app.js' %}
 

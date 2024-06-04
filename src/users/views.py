@@ -23,6 +23,7 @@ from .tokens import account_activation_token
 from django.core.paginator import Paginator
 import django_filters
 from django.db.models import Count, Q
+from datetime import datetime
 
 RECORDS_PER_PAGE = 15
 
@@ -139,6 +140,10 @@ def activate_account(request, uidb64, token):
     if user is not None and account_activation_token.check_token(user, token):
         user.is_active = True
         user.save()
+
+        user.profile.email_verified_at = datetime.now()
+        user.profile.save()
+        
         messages.success(request, "Thank you for your email confirmation, you can login now into your account.")
     else:
         messages.error(request, "Activation link is invalid!")
@@ -241,7 +246,12 @@ def login_view(request):
                     return redirect(request.POST.get("next"))
                 return redirect("landing")
             else:
-                messages.error(request, "This account is inactive. Please contact support.")
+                if not user.profile.email_verified_at:
+                    # User is not verified, send them another verification email
+                    send_account_activation_email(request, user, user.email)
+                    messages.info(request, "Your account is not verified. We have sent you an email with instructions to verify your account.")
+                else:
+                    messages.error(request, "This account is deactivated. Please contact support.")
         else:
             messages.error(request, "Enter correct email or password.")
     context = {}

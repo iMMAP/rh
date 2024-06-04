@@ -5,17 +5,16 @@ from . import views as user_views
 from .forms import UserPasswordChangeForm, UserPasswordResetForm, UserSetPasswordForm
 
 urlpatterns = [
+    # Profile routes
+    path("profile/", user_views.profile, name="profile"),
+
     path("users/organization", user_views.org_users_list, name="users-organization"),
     path("users/clusters", user_views.clustes_users_list, name="users-cluters"),
     path("users/<int:user_id>/toggle_status", user_views.toggle_status, name="toggle-status"),
     path("register/", user_views.register_view, name="register"),
-    path(
-        "activate/<uidb64>/<token>",
-        user_views.activate_account,
-        name="activate_account",
-    ),
     path("login/", user_views.login_view, name="login"),
     path("logout/", user_views.logout_view, name="logout"),
+    
     # Password change routes
     path(
         "password_change/",
@@ -57,6 +56,9 @@ urlpatterns = [
         auth_views.PasswordResetCompleteView.as_view(template_name="users/registration/password_reset_complete.html"),
         name="password_reset_complete",
     ),
-    # Profile routes
-    path("profile/", user_views.profile, name="profile"),
+    path(
+        "activate/<uidb64>/<token>",
+        user_views.activate_account,
+        name="activate_account",
+    ),
 ]

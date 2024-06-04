@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import authenticate, get_user_model, login, logout
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import EmailMultiAlternatives
 from django.http import HttpResponse
@@ -38,6 +38,8 @@ class UsersFilter(django_filters.FilterSet):
 #############################################
 
 
+@permission_required("users.view_cluster_users", raise_exception=True)
+@login_required
 def clustes_users_list(request):
     user_clusters = request.user.profile.clusters.all()
     users_filter = UsersFilter(
@@ -68,6 +70,8 @@ def clustes_users_list(request):
     return render(request, "users/users_list.html", context)
 
 
+@permission_required("users.view_org_users", raise_exception=True)
+@login_required
 def org_users_list(request):
     user_org = request.user.profile.organization
     users_filter = UsersFilter(
@@ -100,8 +104,10 @@ def org_users_list(request):
 
 @login_required
 @require_http_methods(["POST"])
+@permission_required("rh.activate_deactivate_user", raise_exception=True)
 def toggle_status(request, user_id):
     user = get_object_or_404(User, pk=user_id)
+    user.has_per
 
     if user.is_active:
         user.is_active = False

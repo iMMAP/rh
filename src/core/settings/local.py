@@ -3,7 +3,7 @@ import logging
 
 from .base import *
 
-APP_ENV = "local"
+APP_ENV = env("APP_ENV", default="local")
 
 LOCAL_INSTALLED_APPS = [
     "debug_toolbar",

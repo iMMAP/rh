@@ -37,7 +37,8 @@
                     <form 
                         method="post"
                         hx-post="{% url 'toggle-status' user.id %}" 
-                        hx-swap="outerHTML" hx-target="#user-{{user.id}}" 
+                        hx-swap="outerHTML" 
+                        hx-target="#user-{{user.id}}" 
                         hx-disable-element="#dectivate-button-{{user.id}}"
                         hx-ext="disable-element"
                     >

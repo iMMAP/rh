@@ -9,7 +9,7 @@ from django.shortcuts import redirect, render, get_object_or_404
 from django.template import loader
 from django.utils.encoding import force_bytes, force_str
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 from django.views.decorators.http import require_http_methods
 
 from .decorators import unauthenticated_user
@@ -192,6 +192,9 @@ def register_view(request):
 
                 user_profile.save()
                 p_form.save_m2m()
+
+                user.groups.add(Group.objects.get(name="ORG_USER"))
+
                 messages.success(request, f"Account created successfully for {username}.")
                 return redirect("login")
             else:
@@ -204,6 +207,9 @@ def register_view(request):
 
                 user_profile.save()
                 p_form.save_m2m()
+
+                user.groups.add(Group.objects.get(name="ORG_USER"))
+
                 return send_account_activation_email(request, user, email)
         # else:
         #     for error in list(u_form.errors.values()):

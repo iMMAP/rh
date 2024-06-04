@@ -38,8 +38,8 @@ class UsersFilter(django_filters.FilterSet):
 #############################################
 
 
-@permission_required("users.view_cluster_users", raise_exception=True)
 @login_required
+@permission_required("users.view_cluster_users", raise_exception=True)
 def clustes_users_list(request):
     user_clusters = request.user.profile.clusters.all()
     users_filter = UsersFilter(
@@ -70,8 +70,8 @@ def clustes_users_list(request):
     return render(request, "users/users_list.html", context)
 
 
-@permission_required("users.view_org_users", raise_exception=True)
 @login_required
+@permission_required("users.view_org_users", raise_exception=True)
 def org_users_list(request):
     user_org = request.user.profile.organization
     users_filter = UsersFilter(

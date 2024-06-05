@@ -5,7 +5,6 @@ from datetime import datetime
 import pandas as pd
 from sqlalchemy import create_engine
 
-
 # CSV DATA FILES
 CURRENCIES_CSV = "./data/updated_nov_2023/currencies.csv"
 LOCATIONS_CSV = "./data/updated_nov_2023/af_loc.csv"
@@ -203,298 +202,6 @@ def import_clusters_from_csv(conn, clusters_csv):
             engine_connection.rollback()
 
 
-def import_indicators_from_csv(conn, indicators_csv):
-    """
-    Import Indicators from CSV
-    """
-    
-    df = pd.read_csv(indicators_csv)
-
-    if len(df) > 0:
-        table = "rh_indicator"
-
-        df.to_sql("tmp_indicator", conn, if_exists="replace", index=False)
-        try:
-            c.execute(
-                "select activity_description_id,indicator_name from tmp_indicator"
-            )
-            indicators = c.fetchall()
-            for indicator in indicators:
-                indicator = list(indicator)
-                activity_type = indicator[0]
-
-                if activity_type:
-                    c.execute(
-                        f"select id from rh_activitytype where code='{activity_type}'"
-                    )
-                    activity_type_id = c.fetchone()
-                    if activity_type_id:
-                        activity_type = activity_type_id[0]
-                    else:
-                        activity_type = None
-
-                indicator.pop(0)
-                # indicator.append(None)
-                # indicator.append(None)
-                # indicator.append(None)
-
-                aquery = f"""insert into {table}(name) 
-                values (%s)
-                """
-                            
-                try:
-                    c.execute(aquery, indicator)
-                except Exception as exception:
-                    print(f"LOG Indicators: {exception}")
-                    continue
-
-                last_indicator_id = c.lastrowid
-
-                if last_indicator_id and activity_type:
-                    aquery = f"""
-                        insert into 
-                        rh_indicator_activity_types(indicator_id, activitytype_id) 
-                        values({last_indicator_id}, {activity_type})
-                    """
-                    c.execute(aquery)
-
-            c.execute("DROP TABLE tmp_indicator;")
-        except Exception as exception:
-            print(f"ERROR: import_indicators_from_csv: {exception}")
-            engine_connection.rollback()
-
-
-def import_activity_domains_from_csv(conn, activity_domain_csv):
-    """
-    Import updated clusters from CSV
-    """
-    
-    df = pd.read_csv(activity_domain_csv)
-
-    if len(df) > 0:
-        table = "rh_activitydomain"
-
-        df.to_sql("tmp_activitydomain", conn, if_exists="replace", index=False)
-
-        try:
-            c.execute(
-                "select activity_type_id,activity_type_name,cluster_id from tmp_activitydomain"
-            )
-            activity_domains = c.fetchall()
-            for domain in activity_domains:
-                domain = list(domain)
-                cluster = domain[2]
-                country = "AF"
-
-                if country:
-                    c.execute(f"select id from rh_location where code='{country}'")
-                    location_id = c.fetchone()
-                    if location_id:
-                        country = location_id[0]
-                    else:
-                        country = None
-
-                if cluster:
-                    c.execute(f"select id from rh_cluster where code='{cluster}'")
-                    cluster_id = c.fetchone()
-                    if cluster_id:
-                        cluster = cluster_id[0]
-                    else:
-                        cluster = None
-
-                domain.append(True)
-                # m2m_records.append({'cluster': cluster, 'country': country})
-                domain.pop(2)
-
-                aquery = f"""insert into {table}(code, name, is_active) values (%s, %s, %s)
-                """
-                c.execute(aquery, domain)
-                last_domain_id = c.lastrowid
-
-                if last_domain_id and country:
-                    coquery = f"""
-                        insert into 
-                        rh_activitydomain_countries(activitydomain_id, location_id) 
-                        values({last_domain_id}, {country})
-                    """
-                    c.execute(coquery)
-                if last_domain_id and cluster:
-                    clquery = f"""
-                           insert into 
-                           rh_activitydomain_clusters(activitydomain_id, cluster_id) 
-                           values({last_domain_id}, {cluster})
-                       """
-                    c.execute(clquery)
-
-            c.execute("DROP TABLE tmp_activitydomain;")
-        except Exception as exception:
-            print(f"ERROR: import_activity_domain: {exception}")
-            engine_connection.rollback()
-
-
-def import_activity_descriptions_from_csv(conn, activity_description_csv):
-    
-    df = pd.read_csv(activity_description_csv)
-
-    if len(df) > 0:
-        table = "rh_activitytype"
-
-        df.to_sql("tmp_activitytype", conn, if_exists="replace", index=False)
-
-        try:
-            c.execute(
-                """select activity_description_id,activity_description_name,activity_type_id,cluster_id 
-                from tmp_activitytype
-            """
-            )
-            activity_types = c.fetchall()
-            count = 0
-            for activity_type in activity_types:
-                activity_type = list(activity_type)
-                activity_domain = activity_type[2] # activity_type_id
-                cluster = activity_type[3] # cluster_id
-                country = "AF"
-
-                if activity_domain:
-                    c.execute(
-                        f"select id from rh_activitydomain where code='{activity_domain}'"
-                    )
-                    activity_domain_id = c.fetchone()
-                    if activity_domain_id:
-                        activity_domain = activity_domain_id[0]
-                    else:
-                        activity_domain = None
-
-                if cluster:
-                    c.execute(f"select id from rh_cluster where code='{cluster}'")
-                    cluster_id = c.fetchone()
-                    if cluster_id:
-                        cluster = cluster_id[0]
-                    else:
-                        cluster = None
-
-                if country:
-                    c.execute(f"select id from rh_location where code='{country}'")
-                    location_id = c.fetchone()
-                    if location_id:
-                        country = location_id[0]
-                    else:
-                        country = None
-
-                activity_type.append(True)
-                activity_type.pop(3)
-
-                activity_type[2] = activity_domain
-                activity_type.append(None)
-                activity_type.append(None)
-                activity_type.append(None)
-                activity_type.append(None)
-                activity_type.append(None)
-                activity_type.append(None)
-                activity_type.append(None)
-
-                # activity_type[4] = indicator
-
-                aquery = f"""insert into {table}(code,name,activity_domain_id,is_active,activity_date,
-                hrp_code,code_indicator,start_date,end_date,ocha_code,objective_id) 
-                    values (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
-                """
-
-                try:
-                    c.execute(aquery, activity_type)
-                except Exception as exception:
-                    # print(f"EXEC: {exception}")
-                    count = count + 1
-                    continue
-                
-                last_activity_type_id = c.lastrowid
-
-                if last_activity_type_id and country:
-                    coquery = f"""
-                        insert into 
-                        rh_activitytype_countries(activitytype_id, location_id) 
-                        values({last_activity_type_id}, {country})
-                    """
-                    c.execute(coquery)
-                if last_activity_type_id and cluster:
-                    clquery = f"""
-                        insert into 
-                        rh_activitytype_clusters(activitytype_id, cluster_id) 
-                        values({last_activity_type_id}, {cluster})
-                    """
-                    c.execute(clquery)
-                # if last_activity_type_id and indicator:
-                #     inquery = f"""
-                #         insert into
-                #         rh_activitytype_indicators(activitytype_id, indicator_id)
-                #         values({last_activity_type_id}, {indicator})
-                #     """
-                #     c.execute(inquery)
-            if count > 0:
-                print(f"Log: {count} activitytype was not inserted to the DB due to constraint error")
-            c.execute("DROP TABLE tmp_activitytype;")
-        except Exception as exception:
-            print(f"ERROR: import_activity_description: {exception}")
-            engine_connection.rollback()
-
-
-def import_activity_details_from_csv(conn, activity_details_csv):
-    """
-    Import updated clusters from CSV
-    """
-    
-    df = pd.read_csv(activity_details_csv)
-
-    if len(df) > 0:
-        table = "rh_activitydetail"
-
-        df.to_sql("tmp_activitydetail", conn, if_exists="replace", index=False)
-
-        try:
-            c.execute(
-                "select activity_description_id,activity_detail_id,activity_detail_name from tmp_activitydetail"
-            )
-            activity_details = c.fetchall()
-            m2m_records = []
-            count = 0
-            for activity_detail in activity_details:
-                activity_detail = list(activity_detail)
-                activity_type = activity_detail[0]
-                # country = 'AF'
-
-                if activity_type:
-                    c.execute(
-                        f"select id from rh_activitytype where code='{activity_type}'"
-                    )
-                    activity_type_id = c.fetchone()
-                    if activity_type_id:
-                        activity_type = activity_type_id[0]
-                    else:
-                        activity_type = None
-
-                activity_detail[0] = activity_type
-
-                aquery = f"""insert into {table}(activity_type_id, code, name) values (%s, %s, %s)
-                """
-
-               
-
-                try:
-                    c.execute(aquery, activity_detail)
-                except Exception as exception:
-                    print(f"LOG: EXEC acitivity-details: {exception}")
-                    count = count + 1
-                    continue
-            
-            if count > 0:
-                print(f"Log: {count} activitydetail was not inserted to the DB due to constraint error")
-
-            c.execute("DROP TABLE tmp_activitydetail;")
-        except Exception as exception:
-            print(f"ERROR: import_activity_details_from_csv: {exception}")
-            engine_connection.rollback()
-
-
 def import_beneficiary_types_from_csv(conn, beneficiary_type_csv):
     """
     Import beneficiary types from CSV
@@ -572,10 +279,14 @@ def import_organizations_from_csv(conn, organizations_csv):
                 oquery = f"""
                         insert into 
                         {table}(old_id, created_at, code, name, type, updated_at) 
-                        values (%s, %s, %s, %s, %s, %s)
+                        values (%s, %s, %s, %s, %s, %s) RETURNING id
                     """
                 c.execute(oquery, organization)
-                last_org_id = c.lastrowid
+
+                last_org_id = False
+                last_row = c.fetchone()
+                if last_row:
+                    last_org_id = last_row[0]
 
                 lquery = f"""select id from rh_location where code='{country}'"""
                 c.execute(lquery)
@@ -625,10 +336,16 @@ def import_donors_from_csv(conn, donors_csv):
                 dquery = f"""
                         insert into 
                         {table}(old_id, updated_at, code, name, created_at) 
-                        values (%s, %s, %s, %s, %s)
+                        values (%s, %s, %s, %s, %s) RETURNING id
                     """
                 c.execute(dquery, donor)
                 last_donor_id = c.lastrowid
+
+                
+                last_donor_id = False
+                last_row = c.fetchone()
+                if last_row:
+                    last_donor_id = last_row[0]
 
                 lquery = f"""select id from rh_location where code='{country}'"""
                 c.execute(lquery)
@@ -665,7 +382,7 @@ def import_users_from_csv(conn, users_csv):
 
         try:
             c.execute(
-                "select admin0pcode,cluster_id,organization_id,phone,position,skype,username from tmp_accounts"
+                "select admin0pcode,cluster_id,organization,organization_tag,phone,position,skype,username from tmp_accounts"
             )
             profile_info = c.fetchall()
             c.execute(
@@ -675,12 +392,13 @@ def import_users_from_csv(conn, users_csv):
             profiles_list = []
             for profile in profile_info:
                 profile = list(profile)
-                skype = profile[5]
+                skype = profile[6]
                 if not skype:
                     profile[5] = None
                 country = profile[0]
                 cluster = profile[1]
                 organization = profile[2]
+                organization_tag = profile[3]
                 if country:
                     c.execute(f"select id from rh_location where code='{country}'")
                     location_id = c.fetchone()
@@ -706,31 +424,37 @@ def import_users_from_csv(conn, users_csv):
                         profile[1] = None
 
                 if organization:
-                    c.execute(
-                        f"select id from rh_organization where old_id='{organization}'"
-                    )
+                    query = """SELECT id FROM rh_organization WHERE code IN (%s, %s)"""
+                    params = (organization, organization_tag)
+                    c.execute(query, params)
                     organization_id = c.fetchone()
                     if organization_id:
                         profile[2] = organization_id[0]
                     else:
                         profile[2] = None
-
+                profile.pop(3)
                 profile = tuple(profile)
                 profiles_list.append(profile)
 
             for user in users:
                 user = list(user)
+                name = user[6] or ""
 
-                name = user[6].split(" ")
-                # fix index 1 out or range
-                if len(name) == 1:
-                    name.append("")
+                # Split the name into a list of names
+                name_list = name.split()
 
-                user[6]=name[0] # firsname
-                user.append(name[1]) # lastname
+                # Ensure there are always two elements in the list
+                first_name = name_list[0] if len(name_list) > 0 else ""
+                last_name = name_list[1] if len(name_list) > 1 else ""
+
+                # Assuming `user` is a list and you want to update its elements
+                user[6] = first_name  # firstname
+                user.append(last_name)  # lastname
 
                 if user[4] == "active":
                     user[4] = True
+                else:
+                    user[4] = False
 
                 if not user[5]: # username
                     continue
@@ -753,9 +477,7 @@ def import_users_from_csv(conn, users_csv):
 
                 c.execute(f"select username from {table} where id={user_id}")
                 db_user = c.fetchone()
-                # print(user)
-                # print(db_user)
-                # print("marker")
+
                 u_profile = next(item for item in profiles_list if db_user[0] in item)
                 
                 profile_cluster_id = False
@@ -769,10 +491,13 @@ def import_users_from_csv(conn, users_csv):
                 pquery = f"""
                         insert into 
                         users_profile(country_id,organization_id,phone,position,skype,user_id,is_cluster_contact) 
-                        values (%s, %s, %s, %s, %s, %s, %s)
+                        values (%s, %s, %s, %s, %s, %s, %s) RETURNING id
                     """
                 c.execute(pquery, u_profile)
-                last_profile_id = c.lastrowid
+                last_row = c.fetchone()
+                last_profile_id = False
+                if last_row:
+                    last_profile_id = last_row[0]
 
                 if last_profile_id and profile_cluster_id:
                     alquery = f"""
@@ -883,25 +608,17 @@ def import_dissaggregation_from_csv(conn, diss_csv):
             engine_connection.rollback()
 
 
-
-
 # Try to import the data from different sources.
 try:
     import_currencies_from_csv(connection, CURRENCIES_CSV)
     import_locations(connection, LOCATIONS_CSV)
     import_clusters_from_csv(connection, CLUSTERS)
 
-    # Moved to load_acvtivities
-    # import_activity_domains_from_csv(connection, ACTIVITY_DOMAIN_CSV) # Moved to load_acvtivities
-    # import_activity_descriptions_from_csv(connection, ACTIVITY_DESCRIPTION_CSV) # Moved to load_acvtivities
-    # import_activity_details_from_csv(connection, ACTIVITY_DETAIL_CSV) # Moved to load_acvtivities
-    # import_indicators_from_csv(connection, INDICATORS_CSV) # Moved to load_acvtivities
-
     import_organizations_from_csv(connection, ORGANIZATIONS_CSV)
 
     import_donors_from_csv(connection, DONORS_CSV)
 
-    import_users_from_csv(connection, USERS_CSV) # Moved to load_acvtivities
+    import_users_from_csv(connection, USERS_CSV)
 
     import_facilities_from_csv(connection, FACILITIES)
 

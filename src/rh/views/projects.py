@@ -47,7 +47,7 @@ def clusters_projects_list(request):
 
     # Setup Pagination
     p = Paginator(project_filter.qs, RECORDS_PER_PAGE)
-    page = request.GET.get("page",1)
+    page = request.GET.get("page", 1)
     p_projects = p.get_page(page)
     p_projects.adjusted_elided_pages = p.get_elided_page_range(page)
 
@@ -92,7 +92,7 @@ def projects_list(request):
 
     # Setup Pagination
     p = Paginator(project_filter.qs, RECORDS_PER_PAGE)
-    page = request.GET.get("page",1)
+    page = request.GET.get("page", 1)
     p_projects = p.get_page(page)
     p_projects.adjusted_elided_pages = p.get_elided_page_range(page)
 

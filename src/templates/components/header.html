@@ -20,7 +20,7 @@
             <div class="mobile-menu-holder">
                 <ul class="main-nav">
 
-                    {% if 'users.view_cluster_users' in perms or 'rh.view_cluster_projects' in perms %}
+                    {% if 'rh.view_cluster_projects' in perms %}
                     <li class="main-nav-item has-drop-down js-main-nav-openclose">
                         <a class="main-nav-link openclose-opener" href="#">Cluster</a>
                             <div class="inner-drop">
@@ -28,13 +28,6 @@
                                 {% if perms.rh.view_cluster_projects %}
                                 <li class="inner-nav-item">
                                     <a class="inner-nav-link" href="{% url 'clusters-projects-list' %}">Projects</a>
-                                </li>
-                                {% endif %}
-
-                                {% if perms.users.view_cluster_users %}
-                                <hr>
-                                <li class="inner-nav-item">
-                                    <a class="inner-nav-link" href="{% url 'users-cluters' %}">Members</a>
                                 </li>
                                 {% endif %}
                             </ul>

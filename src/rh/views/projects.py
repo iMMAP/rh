@@ -47,9 +47,9 @@ def clusters_projects_list(request):
 
     # Setup Pagination
     p = Paginator(project_filter.qs, RECORDS_PER_PAGE)
-    page = request.GET.get("page")
+    page = request.GET.get("page",1)
     p_projects = p.get_page(page)
-    total_pages = "a" * p_projects.paginator.num_pages
+    p_projects.adjusted_elided_pages = p.get_elided_page_range(page)
 
     projects = Project.objects.filter(clusters__in=user_clusters).aggregate(
         projects_count=Count("id"),
@@ -67,7 +67,6 @@ def clusters_projects_list(request):
         "completed_projects_count": projects["completed_projects_count"],
         "archived_projects_count": projects["archived_projects_count"],
         "project_filter": project_filter,
-        "total_pages": total_pages,
     }
 
     return render(request, "rh/projects/views/projects_list.html", context)
@@ -93,9 +92,9 @@ def projects_list(request):
 
     # Setup Pagination
     p = Paginator(project_filter.qs, RECORDS_PER_PAGE)
-    page = request.GET.get("page")
+    page = request.GET.get("page",1)
     p_projects = p.get_page(page)
-    total_pages = "a" * p_projects.paginator.num_pages
+    p_projects.adjusted_elided_pages = p.get_elided_page_range(page)
 
     projects = Project.objects.filter(organization=user_org).aggregate(
         projects_count=Count("id"),
@@ -113,7 +112,6 @@ def projects_list(request):
         "completed_projects_count": projects["completed_projects_count"],
         "archived_projects_count": projects["archived_projects_count"],
         "project_filter": project_filter,
-        "total_pages": total_pages,
     }
 
     return render(request, "rh/projects/views/projects_list.html", context)

@@ -9,7 +9,6 @@ urlpatterns = [
     path("profile/", user_views.profile, name="profile"),
 
     path("users/organization", user_views.org_users_list, name="users-organization"),
-    path("users/clusters", user_views.clustes_users_list, name="users-cluters"),
     path("users/<int:user_id>/toggle_status", user_views.toggle_status, name="toggle-status"),
     path("register/", user_views.register_view, name="register"),
     path("login/", user_views.login_view, name="login"),

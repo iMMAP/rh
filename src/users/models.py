@@ -40,6 +40,5 @@ class Profile(models.Model):
         verbose_name = "User Profile"
         verbose_name_plural = "User Profiles"
         permissions = [
-            ("view_cluster_users", "View users of your cluster"),
             ("view_org_users", "View users of your organization"),
         ]

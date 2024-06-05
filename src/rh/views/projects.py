@@ -69,7 +69,7 @@ def clusters_projects_list(request):
         "project_filter": project_filter,
     }
 
-    return render(request, "rh/projects/views/projects_list.html", context)
+    return render(request, "rh/projects/views/projects_list_cluster.html", context)
 
 
 @login_required
@@ -114,7 +114,7 @@ def projects_list(request):
         "project_filter": project_filter,
     }
 
-    return render(request, "rh/projects/views/projects_list.html", context)
+    return render(request, "rh/projects/views/projects_list_org.html", context)
 
 
 @login_required
@@ -431,14 +431,52 @@ def copy_project(request, pk):
 
 @login_required
 @require_http_methods(["POST"])
-def export(request, format):
-    """Export project and its activity
-    url: /project/active/bulk_export/<format>,
-    name: export_porjcet_list",
+# @permission_required("rh.view_clusters_projects", raise_exception=True)
+def export_cluster_projects(request, format):
+    """Export your all of your org projects and its activities
+    url: /projects/bulk_export/<format>/cluster
+    name: export-clusters-projects
     """
-    data = json.loads(request.body)
-    project = Project.objects.filter(id__in=data)
-    dataset = ProjectResource().export(project)
+    selected_projects_id = json.loads(request.body)
+
+    projects = Project.objects.filter(clusters__in=request.user.profile.clusters.all())
+
+    if selected_projects_id:
+        projects = projects.filter(id__in=selected_projects_id)
+
+    dataset = ProjectResource().export(projects)
+
+    if format == "xls":
+        ds = dataset.xls
+    elif format == "csv":
+        ds = dataset.csv
+    else:
+        ds = dataset.json
+
+    today_date = date.today()
+    file_name = f"projects_{today_date}"
+    response = HttpResponse(ds, content_type=f"{format}")
+    response["Content-Disposition"] = f"attachment; filename={file_name}.{format}"
+
+    return response
+
+
+@login_required
+@require_http_methods(["POST"])
+# @permission_required("rh.view_clusters_projects", raise_exception=True)
+def export_org_projects(request, format):
+    """Export your all of your org projects and its activities
+    url: /projects/bulk_export/<format>/org
+    name: export-org-projects
+    """
+    selected_projects_id = json.loads(request.body)
+
+    projects = Project.objects.filter(organization=request.user.profile.organization)
+
+    if selected_projects_id:
+        projects = projects.filter(id__in=selected_projects_id)
+
+    dataset = ProjectResource().export(projects)
 
     if format == "xls":
         ds = dataset.xls

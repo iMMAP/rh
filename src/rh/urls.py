@@ -150,9 +150,14 @@ urlpatterns = [
     ),
     # bulk export
     path(
-        "project/active/bulk_export/<format>",
-        projects.export,
-        name="export_porjcet_list",
+        "projects/bulk_export/<str:format>/org",
+        projects.export_org_projects,
+        name="export-org-projects",
+    ),
+    path(
+        "projects/bulk_export/<str:format>/clusters",
+        projects.export_cluster_projects,
+        name="export-clusters-projects",
     ),
     # single project csv export
     path(

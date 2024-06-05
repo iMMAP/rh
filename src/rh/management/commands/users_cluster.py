@@ -27,15 +27,15 @@ class Command(BaseCommand):
 
                 try:
                     profile = user.profile
-                    
+
                     try:
                         cluster = Cluster.objects.get(code=row["cluster_id"])
                     except Cluster.DoesNotExist:
                         continue
-                    
+
                     # Add organizations from user.csv file if already not added.
                     try:
-                        organization = Organization.objects.get(code__in=[row["organization"], row['organization_tag']])
+                        organization = Organization.objects.get(code__in=[row["organization"], row["organization_tag"]])
                         profile.organization_id = organization.id
                         profile.save()
                     except Organization.DoesNotExist:

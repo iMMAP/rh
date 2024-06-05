@@ -447,7 +447,8 @@ $(".radio-select").on("click", function (e) {
 		},
 	});
 });
-// project export in csv file
+
+// project activity plan export in csv file
 const exportCsvFile = document.querySelector(".export-button-csv");
 if (exportCsvFile) {
 	exportCsvFile.addEventListener("click", function (e) {
@@ -480,29 +481,6 @@ if (exportCsvFile) {
 	});
 }
 
-try {
-	// Counting the selected field in filter and export module
-	const checkboxes = document.querySelectorAll("input[type=checkbox]");
-	// Get the span element to display the count
-	const countSpan = document.getElementById("selectedCount");
-	// Initialize counter variable
-	let selectedCount = 0;
-	countSpan.textContent = selectedCount;
-	// Add click event listener to each checkbox
-	// biome-ignore lint/complexity/noForEach: <explanation>
-		checkboxes.forEach((checkbox) => {
-		checkbox.addEventListener("click", () => {
-			// If checkbox is checked, increment counter; otherwise, decrement
-			if (checkbox.checked) {
-				selectedCount++;
-			} else {
-				selectedCount--;
-			}
-			// Update the count displayed in the span element
-			countSpan.textContent = selectedCount;
-		});
-	});
-} catch {}
 
 // bulk export fetch request
 function exportButton(event) {
@@ -512,17 +490,19 @@ function exportButton(event) {
 	const downloadButton = document.querySelector(".export-open");
 	const downloading_spinner = document.querySelector(".downloading");
 	const icon_downloading = document.querySelector(".icon-download");
+
 	downloadButton.setAttribute("disabled", "disabled");
 	downloading_spinner.style.display = "inline-block";
 	icon_downloading.style.display = "none";
 	
-	selected_project_list = [];
+	const selected_project_list = [];
 	const selectedProject = document.querySelectorAll(".project-checkbox");
 	for (let i = 0; i < selectedProject.length; i++) {
 		if (selectedProject[i].checked) {
 			selected_project_list.push(selectedProject[i].value);
 		}
 	}
+
 	fetch(export_url, {
 		method: "POST",
 		headers: {
@@ -531,27 +511,25 @@ function exportButton(event) {
 		},
 		body: JSON.stringify(selected_project_list),
 	})
-		.then((response) => {
+		.then(async (response) => {
 			// getting filename
 			const contentDisposition = response.headers.get("Content-Disposition");
-			console.log(contentDisposition);
 			const filename = contentDisposition.split("=")[1].replace(/"/g, "");
 
-			downloadButton.setAttribute("disabled", "false");
-			downloading_spinner.style.display = "none";
-			icon_downloading.style.display = "inline-block";
-
-			return response.blob().then((blob) => {
-				const url = window.URL.createObjectURL(blob);
-				const a = document.createElement("a");
-				a.href = url;
-				a.download = filename;
-				document.body.appendChild(a);
-				a.click();
-				window.URL.revokeObjectURL(url);
-			});
+			const blob = await response.blob();
+			const url = window.URL.createObjectURL(blob);
+			const a = document.createElement("a");
+			a.href = url;
+			a.download = filename;
+			document.body.appendChild(a);
+			a.click();
+			window.URL.revokeObjectURL(url);
 		})
 		.catch((error) => {
 			console.error("Error downloading:", error);
+		}).finally(()=>{
+			downloadButton.setAttribute("disabled", "false");
+			downloading_spinner.style.display = "none";
+			icon_downloading.style.display = "inline-block";
 		});
 }

@@ -1,34 +1,30 @@
-/*
- * jQuery check all plugin
- */
-/* eslint-disable */
-(($) => {
+// biome-ignore lint/complexity/noForEach: <explanation>
+document.querySelectorAll("[data-check-pattern]").forEach((el) => {
+	const mainCheckbox = el;
+	const selector = mainCheckbox.getAttribute("data-check-pattern");
 
-	$.fn.checkAll = function (options) {
-		return this.each(function () {
-			const mainCheckbox = $(this);
-			const selector = mainCheckbox.attr("data-check-pattern");
-			var onChangeHandler = (e) => {
-				const $currentCheckbox = $(e.currentTarget);
-				// biome-ignore lint/style/noVar: <explanation>
-				var $subCheckboxes;
+	const onChangeHandler = (e) => {
+		const currentCheckbox = e.target;
+		let subCheckboxes;
 
-				if ($currentCheckbox.is(mainCheckbox)) {
-					$subCheckboxes = $(selector);
-					$subCheckboxes.prop("checked", mainCheckbox.prop("checked"));
-				} else if ($currentCheckbox.is(selector)) {
-					$subCheckboxes = $(selector);
-					mainCheckbox.prop(
-						"checked",
-						$subCheckboxes.filter(":checked").length === $subCheckboxes.length,
-					);
-				}
-			};
-
-			$(document).on("change", 'input[type="checkbox"]', onChangeHandler);
-		});
+		if (currentCheckbox === mainCheckbox) {
+			subCheckboxes = document.querySelectorAll(selector);
+			// biome-ignore lint/complexity/noForEach: <explanation>
+			subCheckboxes.forEach((checkbox) => {
+				checkbox.checked = mainCheckbox.checked;
+			});
+		} else if (currentCheckbox.matches(selector)) {
+			subCheckboxes = document.querySelectorAll(selector);
+			mainCheckbox.checked = Array.from(subCheckboxes).every(
+				(checkbox) => checkbox.checked,
+			);
+		}
 	};
-})(jQuery);
-/* eslint-enable */
 
-jQuery("[data-check-pattern]").checkAll();
+	// biome-ignore lint/complexity/noForEach: <explanation>
+	document
+		.querySelectorAll('input[type="checkbox"]')
+		.forEach((checkbox) => {
+			checkbox.addEventListener("change", onChangeHandler);
+		});
+});

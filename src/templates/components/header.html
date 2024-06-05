@@ -20,7 +20,7 @@
             <div class="mobile-menu-holder">
                 <ul class="main-nav">
 
-                    {% if 'rh.view_cluster_projects' in perms %}
+                    {% if 'rh.view_cluster_projects' in perms or 'rh.add_organization' in prems %}
                     <li class="main-nav-item has-drop-down js-main-nav-openclose">
                         <a class="main-nav-link openclose-opener" href="#">Cluster</a>
                             <div class="inner-drop">
@@ -28,6 +28,11 @@
                                 {% if perms.rh.view_cluster_projects %}
                                 <li class="inner-nav-item">
                                     <a class="inner-nav-link" href="{% url 'clusters-projects-list' %}">Projects</a>
+                                </li>
+                                {% endif %}
+                                {% if perms.rh.add_organization %}
+                                <li class="inner-nav-item">
+                                    <a class="inner-nav-link" href="{% url 'organizations-create' %}">Add Organization</a>
                                 </li>
                                 {% endif %}
                             </ul>
@@ -74,12 +79,6 @@
                                 <li class="inner-nav-item">
                                     <a class="inner-nav-link" href="{% url 'view_my_dashboard' %}">My Cluster/Org</a>
                                 </li>
-
-                                {% if perms.rh.add_organization %}
-                                <li class="inner-nav-item">
-                                    <a class="inner-nav-link" href="{% url 'organizations-create' %}">Add Organization</a>
-                                </li>
-                                {% endif %}
                                 
                                 <li class="inner-nav-item">
                                     <a href="{% url 'logout' %}" class="inner-nav-link logout-link">Logout</a>

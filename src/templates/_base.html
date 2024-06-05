@@ -67,7 +67,7 @@
         {% block head %}
         {% endblock head %}
     </head>
-    <body>
+    <body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
         <div class="wrapper" id="wrapper">
             <div class="wrapper-inner">
                 {% include "components/header.html" %}

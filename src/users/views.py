@@ -38,6 +38,7 @@ class UsersFilter(django_filters.FilterSet):
 ############### Members ####################
 #############################################
 
+
 @login_required
 @permission_required("users.view_org_users", raise_exception=True)
 def org_users_list(request):
@@ -48,7 +49,7 @@ def org_users_list(request):
     )
 
     paginator = Paginator(users_filter.qs, RECORDS_PER_PAGE)
-    page_number = request.GET.get("page",1)
+    page_number = request.GET.get("page", 1)
     paginated_users = paginator.get_page(page_number)
     paginated_users.adjusted_elided_pages = paginator.get_elided_page_range(page_number)
 
@@ -109,7 +110,7 @@ def activate_account(request, uidb64, token):
 
         user.profile.email_verified_at = datetime.now()
         user.profile.save()
-        
+
         messages.success(request, "Thank you for your email confirmation, you can login now into your account.")
     else:
         messages.error(request, "Activation link is invalid!")
@@ -215,7 +216,10 @@ def login_view(request):
                 if not user.profile.email_verified_at:
                     # User is not verified, send them another verification email
                     send_account_activation_email(request, user, user.email)
-                    messages.info(request, "Your account is not verified. We have sent you an email with instructions to verify your account.")
+                    messages.info(
+                        request,
+                        "Your account is not verified. We have sent you an email with instructions to verify your account.",
+                    )
                 else:
                     messages.error(request, "This account is deactivated. Please contact support.")
         else:

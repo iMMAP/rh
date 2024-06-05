@@ -2,11 +2,11 @@ import os
 from pathlib import Path
 
 import pandas as pd
+from django.contrib.auth.models import User
 from django.core.management.base import BaseCommand
 
-from django.contrib.auth.models import User
+from rh.models import Cluster, Organization
 from users.models import Profile
-from rh.models import Cluster
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent.parent
 
@@ -22,7 +22,6 @@ class Command(BaseCommand):
             try:
                 users = User.objects.filter(email=row["email"])
                 user = users.first()
-
                 # delete duplicates
                 users.exclude(id=users.first().id).delete()
 
@@ -32,6 +31,15 @@ class Command(BaseCommand):
                     try:
                         cluster = Cluster.objects.get(code=row["cluster_id"])
                     except Cluster.DoesNotExist:
+                        continue
+
+                    # Add organizations from user.csv file if already not added.
+                    try:
+                        organization = Organization.objects.get(code__in=[row["organization"], row["organization_tag"]])
+                        profile.organization_id = organization.id
+                        profile.save()
+                    except Organization.DoesNotExist:
+                        self.stdout.write(self.style.WARNING(f"{profile} not assigned:"))
                         continue
 
                     profile.clusters.add(cluster)

@@ -1,0 +1,88 @@
+<div class="filter-holder">
+    <a href="#" class="btn btn-red filter-open">Filter
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 23 23" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 1 1-3 0m3 0a1.5 1.5 0 1 0-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-9.75 0h9.75" />
+        </svg>
+    </a>
+    <form action="#" class="filter-form">
+        <div class="filter-options">
+            <div class="block-top">
+                <span class="title">Filter</span>
+                <a class="filter-close" href="#"></a>
+            </div>
+            <div class="filter-heading-text">
+                <span>
+                    <span class="info-sign"></span>
+                    Get your project data sorted.
+                </span>
+                
+            </div>
+            <div class="block-body">
+                <div class="select-field">
+                    <label for="{{ project_filter.form.donors.id_for_label }}">Donors</label>
+                    <div class="small-label">[hold down the control/command button to select multiple]</div>
+                    {{ project_filter.form.donors }}
+                </div>
+                <div class="select-field ">
+                    <label for="{{ project_filter.form.clusters.id_for_label }}">Clusters / Sectors</label>
+                    <div class="small-label">[hold down the control/command button to select multiple]</div>
+                    {{ project_filter.form.clusters }}
+                </div>
+                <div class="select-field">
+                    <label for="{{ project_filter.form.activity_domains.id_for_label }}">Activity Domain</label>
+                    <div class="small-label">[hold down the control/command button to select multiple]</div>
+                    {{ project_filter.form.activity_domains }}
+                </div>
+                <div class="date-picker-field">
+                    <div class="date start">
+                        <label for="{{ project_filter.form.start_date.id_for_label }}">Start Date</label>
+                        {{ project_filter.form.start_date }}
+                    </div>
+                    <div class="date end">
+                        <label for="{{ project_filter.form.end_date.id_for_label }}">End Date</label>
+                        {{ project_filter.form.end_date }}
+                    </div>
+                </div>
+                <div class="select-field">
+                    <label for="{{ project_filter.form.implementing_partners.id_for_label }}">Implementing Partner</label>
+                    <div class="small-label">[hold down the control/command button to select multiple]</div>
+                    {{ project_filter.form.implementing_partners }}
+                </div>
+                <div class="select-field">
+                    <label for="{{ project_filter.form.programme_partners.id_for_label }}">Programme Partner</label>
+                    <div class="small-label">[hold down the control/command button to select multiple]</div>
+                    {{ project_filter.form.programme_partners }}
+                </div>
+                <div class="select-field">
+                    <label for="{{ project_filter.form.user.id_for_label }}">Focal Person</label>
+                    {{ project_filter.form.user }}
+                </div>
+            </div>
+            <div class="block-footer">
+                <div class="btn-wrapper">
+                    <a class="btn btn-gray-outline"
+                        href="?state={{request.GET.state}}">Reset</a>
+                    <button type="submit" class="btn btn-red">Apply</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+{% comment %} used in the filter drawer {% endcomment %}
+{% block scripts %}    
+<script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+<script>
+    document.querySelectorAll('select').forEach((select) => {
+        const choice = new Choices(select, {
+            searchEnabled: true,
+            itemSelectText: '',
+            removeItemButton: true,
+            classNames: {
+                listDropdown: 'choices__list--dropdown',
+            },
+            shouldSort: false,
+        });
+    });
+</script>
+{% endblock scripts %}

@@ -60,28 +60,9 @@
                     <div class="export-formats">
                         <span class="title">File format</span>
                         <div class="format-list">
-                            <div class="export-link-holder" 
-                                onclick="exportButton(event)"
-                                data-file-format="csv" 
-                                data-export-url="{% url 'export_porjcet_list' 'csv' %}">
+                            <div class="export-link-holder">
                                 <a class="export-link" href="#">
                                     CSV
-                                </a>
-                            </div>
-                            <div class="export-link-holder" 
-                                onclick="exportButton(event)"
-                                data-file-format="xls" 
-                                data-export-url="{% url 'export_porjcet_list' 'xls' %}">
-                                <a class="export-link" href="#">
-                                    Excel
-                                </a>
-                            </div>
-                            <div class="export-link-holder" 
-                                onclick="exportButton(event)"
-                                data-file-format="json" 
-                                data-export-url="{% url 'export_porjcet_list' 'json' %}">
-                                <a class="export-link" href="#">
-                                    JSON
                                 </a>
                             </div>
                         </div>

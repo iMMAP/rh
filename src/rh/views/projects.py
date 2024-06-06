@@ -155,17 +155,16 @@ def create_project(request):
     if request.method == "POST":
         form = ProjectForm(request.POST, user=request.user)
         if form.is_valid():
-            project = form.save()
+            project = form.save(commit=False)
+            project.organization = request.user.profile.organization
+            project.save()
+            form.save_m2m()
             return redirect("create_project_activity_plan", project=project.pk)
-
         # Form is not valid
         messages.error(request, "Something went wrong. Please fix the errors below.")
     else:
-        # Use user's country and clusters as default values if available
-        if request.user.profile and request.user.profile.country:
-            form = ProjectForm(user=request.user)
-        else:
-            form = ProjectForm()
+        form = ProjectForm(user=request.user)
+        
 
     context = {
         "form": form,

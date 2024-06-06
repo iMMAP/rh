@@ -6,6 +6,7 @@ from django.urls import reverse_lazy
 from .models import (
     ActivityPlan,
     BudgetProgress,
+    Cluster,
     Currency,
     DisaggregationLocation,
     Donor,
@@ -14,7 +15,6 @@ from .models import (
     Project,
     ProjectIndicatorType,
     TargetLocation,
-    Cluster,
 )
 
 
@@ -66,12 +66,13 @@ class ProjectForm(forms.ModelForm):
                 self.instance.activity_domains.all().order_by("name").values_list("pk", "name")
             )
 
-            # join the project selected clusters with the user's current clusters
-            user_clusters = self.instance.user.profile.clusters.all()
-            project_clusters = self.instance.clusters.all()
-            self.fields["clusters"].queryset = Cluster.objects.filter(
-                pk__in=user_clusters.union(project_clusters).values("pk")
-            )
+            if self.instance.user:
+                # join the project selected clusters with the user's current clusters
+                user_clusters = self.instance.user.profile.clusters.all()
+                project_clusters = self.instance.clusters.all()
+                self.fields["clusters"].queryset = Cluster.objects.filter(
+                    pk__in=user_clusters.union(project_clusters).values("pk")
+                )
         else:
             # Create mode
             self.fields["activity_domains"].choices = []

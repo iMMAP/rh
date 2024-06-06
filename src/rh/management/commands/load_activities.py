@@ -108,12 +108,12 @@ class Command(BaseCommand):
         # Unit Types
         UnitType.objects.bulk_create(
             [
-                UnitType(name="AF"),
-                UnitType(name="USD"),
-                UnitType(name="KG"),
-                UnitType(name="MT"),
-                UnitType(name="EUR"),
-                UnitType(name="Kit"),
+                UnitType(name="AF", code="af"),
+                UnitType(name="USD", code="usd"),
+                UnitType(name="KGs", code="kg"),
+                UnitType(name="MTs", code="mt"),
+                UnitType(name="EUR", code="eur"),
+                UnitType(name="Kit", code="kit"),
             ]
         )
 

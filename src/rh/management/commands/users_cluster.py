@@ -15,7 +15,7 @@ class Command(BaseCommand):
     help = "Load users cluster to profile"
 
     def _import_data(self):
-        path = os.path.join(BASE_DIR.parent, "scripts/data/updated_nov_2023/user.csv")
+        path = os.path.join(BASE_DIR.parent, "scripts/data/updated_nov_2023/user-2024.csv")
         df = pd.read_csv(path)
 
         for index, row in df.iterrows():

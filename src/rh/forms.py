@@ -86,6 +86,7 @@ class ProjectForm(forms.ModelForm):
 
         # Show only the user's organization members
         self.fields["user"].queryset = User.objects.filter(profile__organization=user.profile.organization)
+        self.fields['user'].initial = user
 
 class TargetLocationForm(forms.ModelForm):
     class Meta:

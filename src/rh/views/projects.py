@@ -160,18 +160,10 @@ def create_project(request):
             project.save()
             form.save_m2m()
             return redirect("create_project_activity_plan", project=project.pk)
-
         # Form is not valid
         messages.error(request, "Something went wrong. Please fix the errors below.")
     else:
-        form = ProjectForm(
-            user=request.user,
-            initial={
-                "user": request.user,
-                "organization": request.user.profile.organization,
-            },
-        )
-        # form = ProjectForm(user=request.user)
+        form = ProjectForm(user=request.user)
         
 
     context = {

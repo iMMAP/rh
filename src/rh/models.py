@@ -444,7 +444,7 @@ class Project(models.Model):
     state = models.CharField(max_length=15, choices=PROJECT_STATES, default="draft", null=True, blank=True)
     active = models.BooleanField(default=True)
 
-    title = models.CharField(max_length=NAME_MAX_LENGTH)
+    title = models.CharField(max_length=DESCRIPTION_MAX_LENGTH)
     code = models.CharField(max_length=NAME_MAX_LENGTH, unique=True)
 
     is_hrp_project = models.BooleanField(default=False)
@@ -554,6 +554,7 @@ class ActivityPlan(models.Model):
     )
 
     total_target = models.IntegerField(default=0, blank=True, null=True)
+    total_set_target = models.IntegerField(default=0, blank=True, null=True)
     description = models.TextField(blank=True, null=True)
     # old_id = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
 

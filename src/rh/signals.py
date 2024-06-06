@@ -1,7 +1,7 @@
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.contrib.auth.models import Group
-from .models import Cluster,Organization
+from .models import Cluster, Organization
 from users.utils import assign_default_permissions_to_group
 
 
@@ -11,13 +11,13 @@ def post_create_cluster(sender, instance, created, **kwargs):
         group, created = Group.objects.get_or_create(name=f"{instance.code.upper()}_CLUSTER_LEADS")
         if created:
             # Assign default permissions to the group
-            assign_default_permissions_to_group(source_group_name="CLUSTER_LEAD",target_group=group)
+            assign_default_permissions_to_group(source_group_name="CLUSTER_LEAD", target_group=group)
 
 
 @receiver(post_save, sender=Organization)
 def post_create_org(sender, instance, created, **kwargs):
     if created:
-        group, created = Group.objects.get_or_create(name=f"{instance.code.upper()}_ORG_LEAD")
+        group, created = Group.objects.get_or_create(name=f"{instance.code.upper()}_ORG_LEADS")
         if created:
             # Assign default permissions to the group
             assign_default_permissions_to_group(source_group_name="ORG_LEAD", target_group=group)

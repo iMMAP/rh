@@ -39,6 +39,7 @@ class Command(BaseCommand):
     def _import_data(self):
         self.stdout.write("Loading `output_2024.csv` file data...")
 
+
         # Import the actvity_domain, activity_types, activity_details
         path = os.path.join(BASE_DIR.parent, "scripts/data/output_2024.csv")
         df = pd.read_csv(path)

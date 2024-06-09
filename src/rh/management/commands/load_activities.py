@@ -2,22 +2,16 @@ import os
 from pathlib import Path
 
 import pandas as pd
-from django.contrib.auth.models import Group, User
+from django.contrib.auth.models import User
 from django.core.management.base import BaseCommand
+from django.core.management import call_command
 
-from project_reports.models import ResponseType
 from rh.models import (
     ActivityDetail,
     ActivityDomain,
     ActivityType,
     Cluster,
-    GrantType,
-    ImplementationModalityType,
     Indicator,
-    PackageType,
-    TransferCategory,
-    TransferMechanismType,
-    UnitType,
 )
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent.parent
@@ -26,96 +20,24 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent.parent
 class Command(BaseCommand):
     help = "Import activities from a 'output_2024' CSV file."
 
-    def _import_groups(self):
-        groups = ["CLUSTER_LEAD", "ORG_LEAD", "ORG_USER", "iMMAP_IMO"]
-        for group_name in groups:
-            _, created = Group.objects.get_or_create(name=group_name)
-            if created:
-                self.stdout.write(self.style.SUCCESS(f'Group "{group_name}" created successfully'))
-            else:
-                self.stdout.write(self.style.WARNING(f'Group "{group_name}" already exists'))
+    def _import_types_fixtures(self):
+        self.stdout.write("Loading types fixture data...")
+        try:
+            call_command("loaddata", "types.json")
+            self.stdout.write(self.style.SUCCESS("Successfully loaded types fixture data"))
+        except Exception as e:
+            self.stdout.write(self.style.ERROR(f"Error loading types fixture data: {e}"))
+
+    def _import_groups_fixtures(self):
+        self.stdout.write("Loading groups fixture data...")
+        try:
+            call_command("loaddata", "groups.json")
+            self.stdout.write(self.style.SUCCESS("Successfully loaded groups fixture data"))
+        except Exception as e:
+            self.stdout.write(self.style.ERROR(f"Error loading groups fixture data: {e}"))
 
     def _import_data(self):
-        # Handle groups creation
-        self._import_groups()
-
-        ResponseType.objects.bulk_create(
-            [
-                ResponseType(name="Winterization"),
-                ResponseType(name="HRP Response"),
-                ResponseType(name="Flood"),
-                ResponseType(name="Drought"),
-                ResponseType(name="Earthquake Response"),
-                ResponseType(name="Cholera"),
-            ]
-        )
-
-        # (Implementation Modality) MPC Delivery Type id
-        ImplementationModalityType.objects.bulk_create(
-            [
-                ImplementationModalityType(name="Cash"),
-                ImplementationModalityType(name="Voucher"),
-                ImplementationModalityType(name="In kind"),
-                ImplementationModalityType(name="Bonus"),
-            ]
-        )
-
-        # MechanismType
-        TransferMechanismType.objects.bulk_create(
-            [
-                TransferMechanismType(name="Hawala"),
-                TransferMechanismType(name="Cash in Envelope"),
-                TransferMechanismType(name="Bank"),
-                TransferMechanismType(name="Mobile Cash"),
-                TransferMechanismType(name="E Cash"),
-                TransferMechanismType(name="Token System"),
-                TransferMechanismType(name="Paper Voucher"),
-                TransferMechanismType(name="Commodity Voucher"),
-                TransferMechanismType(name="Value Voucher"),
-                TransferMechanismType(name="Mobile Voucher"),
-                TransferMechanismType(name="E Voucher"),
-                TransferMechanismType(name="Distribution"),
-                TransferMechanismType(name="Electronic Card - Vouchers"),
-            ]
-        )
-
-        # Package Type
-        PackageType.objects.bulk_create(
-            [
-                PackageType(name="Standard"),
-                PackageType(name="Non-standard"),
-            ]
-        )
-
-        # mpc_transfer_category_id
-        TransferCategory.objects.bulk_create(
-            [
-                TransferCategory(name="Individual"),
-                TransferCategory(name="Household"),
-            ]
-        )
-
-        # Grant Type
-        GrantType.objects.bulk_create(
-            [
-                GrantType(name="Conditional"),
-                GrantType(name="Unconditional"),
-                GrantType(name="Restrcited"),
-                GrantType(name="Unrestricted"),
-            ]
-        )
-
-        # Unit Types
-        UnitType.objects.bulk_create(
-            [
-                UnitType(name="AF"),
-                UnitType(name="USD"),
-                UnitType(name="KG"),
-                UnitType(name="MT"),
-                UnitType(name="EUR"),
-                UnitType(name="Kit"),
-            ]
-        )
+        self.stdout.write("Loading `output_2024.csv` file data...")
 
         # Import the actvity_domain, activity_types, activity_details
         path = os.path.join(BASE_DIR.parent, "scripts/data/output_2024.csv")
@@ -171,3 +93,8 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         self._import_data()
+
+        self._import_types_fixtures()
+
+        # Handle groups creation
+        self._import_groups_fixtures()

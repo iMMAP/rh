@@ -46,7 +46,9 @@ jobs:
             poetry --version
             node -v
             npm -v
+            git stash
             git pull origin main
+            git stash pop
             poetry install --without dev 
             make migrate
             make npm-install

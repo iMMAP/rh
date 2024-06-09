@@ -16,7 +16,6 @@ ACTIVITY_DETAIL_CSV = "./data/updated_nov_2023/activity_details.csv"
 BENEFICIARY_TYPES_CSV = "./data/updated_nov_2023/beneficiary_types.csv"
 ORGANIZATIONS_CSV = "./data/updated_nov_2023/organizations.csv"
 DONORS_CSV = "./data/updated_nov_2023/donors.csv"
-USERS_CSV = "./data/updated_nov_2023/user-2024.csv"
 FACILITIES = "./data/updated_nov_2023/facility_site_types.csv"
 DISS_CSV = "./data/updated_nov_2023/dissaggregation.csv"
 STOCKUNIT_CSV = "./data/updated_nov_2023/stockunits.csv"
@@ -366,152 +365,6 @@ def import_donors_from_csv(conn, donors_csv):
             engine_connection.rollback()
 
 
-def import_users_from_csv(conn, users_csv):
-    """
-    Import Users from CSV
-    """
-    
-
-    df = pd.DataFrame()
-    df = pd.read_csv(users_csv)
-
-    if len(df) > 0:
-        table = "auth_user"
-
-        df.to_sql("tmp_accounts", conn, if_exists="replace", index=False)
-
-        try:
-            c.execute(
-                "select admin0pcode,cluster_id,organization,organization_tag,phone,position,skype,username from tmp_accounts"
-            )
-            profile_info = c.fetchall()
-            c.execute(
-                """select "createdAt",email,last_logged_in,password,status,username,name from tmp_accounts"""
-            )
-            users = c.fetchall()
-            profiles_list = []
-            for profile in profile_info:
-                profile = list(profile)
-                skype = profile[6]
-                if not skype:
-                    profile[5] = None
-                country = profile[0]
-                cluster = profile[1]
-                organization = profile[2]
-                organization_tag = profile[3]
-                if country:
-                    c.execute(f"select id from rh_location where code='{country}'")
-                    location_id = c.fetchone()
-                    if location_id:
-                        profile[0] = location_id[0]
-                    else:
-                        profile[0] = None
-
-                if cluster:
-                    if cluster in ["coordination", "smsd"]:
-                        cluster = "cccm"
-                    if cluster == "agriculture":
-                        cluster = "fsac"
-                    if cluster == "rnr_chapter":
-                        cluster = "protection"
-                    c.execute(
-                        f"select id from rh_cluster where code='{cluster}' or title='{cluster}' or name='{cluster}'"
-                    )
-                    cluster_id = c.fetchone()
-                    if cluster_id:
-                        profile[1] = cluster_id[0]
-                    else:
-                        profile[1] = None
-
-                if organization:
-                    query = """SELECT id FROM rh_organization WHERE code IN (%s, %s)"""
-                    params = (organization, organization_tag)
-                    c.execute(query, params)
-                    organization_id = c.fetchone()
-                    if organization_id:
-                        profile[2] = organization_id[0]
-                    else:
-                        profile[2] = None
-                profile.pop(3)
-                profile = tuple(profile)
-                profiles_list.append(profile)
-
-            for user in users:
-                user = list(user)
-                name = user[6] or ""
-
-                # Split the name into a list of names
-                name_list = name.split()
-
-                # Ensure there are always two elements in the list
-                first_name = name_list[0] if len(name_list) > 0 else ""
-                last_name = name_list[1] if len(name_list) > 1 else ""
-
-                # Assuming `user` is a list and you want to update its elements
-                user[6] = first_name  # firstname
-                user.append(last_name)  # lastname
-
-                if user[4] == "active":
-                    user[4] = True
-                else:
-                    user[4] = False
-
-                if not user[5]: # username
-                    continue
-
-                password = user[3]
-                if password:
-                    user[3] = "bcrypt$" + password
-
-                # user = ['NULL' if a==None else a for a in user]
-                user = tuple(user)
-                aquery = f"""
-                        insert into 
-                        {table}(date_joined, email, last_login, password,is_active ,username, last_name, first_name,is_superuser,is_staff) 
-                        values (%s, %s, %s, %s, %s, %s, %s, %s,False,False)
-                    """
-                
-                c.execute(aquery, user)
-                c.execute("SELECT lastval();")
-                user_id = c.fetchone()[0]
-
-                c.execute(f"select username from {table} where id={user_id}")
-                db_user = c.fetchone()
-
-                u_profile = next(item for item in profiles_list if db_user[0] in item)
-                
-                profile_cluster_id = False
-                if u_profile:
-                    u_profile = list(u_profile)
-                    u_profile.pop(-1)
-                    profile_cluster_id = u_profile.pop(1)
-                    u_profile.append(user_id)
-                    u_profile.append(False)
-                    u_profile = tuple(u_profile)
-                pquery = f"""
-                        insert into 
-                        users_profile(country_id,organization_id,phone,position,skype,user_id,is_cluster_contact) 
-                        values (%s, %s, %s, %s, %s, %s, %s) RETURNING id
-                    """
-                c.execute(pquery, u_profile)
-                last_row = c.fetchone()
-                last_profile_id = False
-                if last_row:
-                    last_profile_id = last_row[0]
-
-                if last_profile_id and profile_cluster_id:
-                    alquery = f"""
-                                insert into 
-                                users_profile_clusters(profile_id, cluster_id) 
-                                values({last_profile_id}, {profile_cluster_id})
-                            """
-                    c.execute(alquery)
-
-            c.execute("DROP TABLE tmp_accounts;")
-        except Exception as exception:
-            print("***********IMPORT ERROR - USER ************ ", exception)
-            engine_connection.rollback()
-
 
 def import_facilities_from_csv(conn, facilities_csv):
     """
@@ -618,7 +471,6 @@ try:
 
     import_donors_from_csv(connection, DONORS_CSV)
 
-    import_users_from_csv(connection, USERS_CSV)
 
     import_facilities_from_csv(connection, FACILITIES)
 

@@ -39,6 +39,7 @@ def clusters_projects_list(request):
     # Setup Filter
     project_filter = ProjectsFilter(
         request.GET,
+        request=request,
         queryset=Project.objects.filter(clusters__in=user_clusters)
         .select_related("organization")
         .prefetch_related("clusters", "programme_partners", "implementing_partners")
@@ -84,6 +85,7 @@ def projects_list(request):
     # Setup Filter
     project_filter = ProjectsFilter(
         request.GET,
+        request=request,
         queryset=Project.objects.filter(organization=user_org)
         .select_related("organization")
         .prefetch_related("clusters", "programme_partners", "implementing_partners")

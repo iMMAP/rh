@@ -12,6 +12,7 @@ def clusters(request):
 
     return request.user.profile.clusters.all()
 
+
 # def organization(request):
 #     if request is None:
 #         return Organization.objects.none()
@@ -47,11 +48,11 @@ class ProjectsFilter(django_filters.FilterSet):
     class Meta:
         model = Project
         fields = {
-            'title': ['contains'], 
-            'code': ['exact'], 
-            "start_date":["exact"],
-            "end_date":["exact"],
-            "is_hrp_project":["exact"]
+            "title": ["contains"],
+            "code": ["exact"],
+            "start_date": ["exact"],
+            "end_date": ["exact"],
+            "is_hrp_project": ["exact"],
         }
         filter_overrides = {
             models.DateTimeField: {

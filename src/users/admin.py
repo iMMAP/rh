@@ -17,24 +17,16 @@ class ProfileInline(admin.StackedInline):
 
 
 class UserAdminCustom(UserAdmin):
-    list_display = (
-        "email",
-        "username",
-        "first_name",
-        "last_name",
-        "is_active",
-        "profile_link",
-        "last_login",
-        "is_staff",
-        "date_joined",
-        "is_superuser",
-    )
+    list_display = ("email", "username", "name", "is_active", "user_groups", "last_login")
 
     inlines = (ProfileInline,)
 
-    def profile_link(self, obj):
+    def user_groups(self, obj):
+        return ", ".join([g.name for g in obj.groups.all()])
+
+    def name(self, obj):
         url = reverse("admin:users_profile_change", args=[obj.profile.id])
-        return format_html("<a href='{}'>{}'s Profile</a>", url, obj.username)
+        return format_html("{} <em>(<a href='{}'>Profile</a></em>)", obj.get_full_name(), url)
 
 
 admin.site.unregister(User)

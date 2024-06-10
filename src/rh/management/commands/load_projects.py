@@ -35,17 +35,17 @@ class Command(BaseCommand):
 
     def _create_activity_plans(self):
         # Import the actvity_domain, activity_types, activity_details
-        path = os.path.join(BASE_DIR.parent, "scripts/data/updated_nov_2023/plans.xlsx")
+        path = os.path.join(BASE_DIR.parent, "scripts/data/updated_nov_2023/activity_plans.xlsx")
         df = pd.read_excel(path)
         df.fillna(False, inplace=True)
 
         plans = df.to_dict(orient="records")
         for index, plan in enumerate(plans):
             project = Project.objects.filter(old_id=plan.get("project_id", "")).first()
-            activity_domain = ActivityDomain.objects.filter(code=plan.get("activity_type_id", "")).first()
-            activity_type = ActivityType.objects.filter(code=plan.get("activity_description_id", "")).first()
-            activity_detail = ActivityDetail.objects.filter(code=plan.get("activity_type_id", "")).first()
-            indicator = Indicator.objects.filter(name=plan.get("indicator_id", "")).first()
+            activity_domain = ActivityDomain.objects.filter(code=plan.get("activity_type_id", "").strip()).first()
+            activity_type = ActivityType.objects.filter(code=plan.get("activity_description_id", "").strip()).first()
+            activity_detail = ActivityDetail.objects.filter(code=plan.get("activity_type_id", "").strip()).first()
+            indicator = Indicator.objects.filter(name=plan.get("indicator_id", "").strip()).first()
             package_type = PackageType.objects.filter(name=plan.get("package_type_name", "")).first()
             unit_type = UnitType.objects.filter(name=plan.get("unit_type_name", "")).first()
             grant_type = GrantType.objects.filter(name=plan.get("grant_type_name", "")).first()
@@ -150,6 +150,7 @@ class Command(BaseCommand):
                 if users.exists():
                     user = users.first()
                     project.user = user
+                    project.organization = user.profile.organization
 
                 budget_currencies = Currency.objects.filter(
                     name=project_vals.get("project_budget_currency", "usd").upper()

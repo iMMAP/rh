@@ -164,7 +164,6 @@ def create_project(request):
         messages.error(request, "Something went wrong. Please fix the errors below.")
     else:
         form = ProjectForm(user=request.user)
-        
 
     context = {
         "form": form,

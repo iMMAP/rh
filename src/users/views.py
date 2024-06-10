@@ -45,6 +45,7 @@ def org_users_list(request):
     user_org = request.user.profile.organization
     users_filter = UsersFilter(
         request.GET,
+        request=request,
         queryset=User.objects.filter(profile__organization=user_org).select_related("profile").order_by("-id"),
     )
 

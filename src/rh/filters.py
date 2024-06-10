@@ -51,15 +51,9 @@ class ProjectsFilter(django_filters.FilterSet):
             'code': ['exact'], 
             "start_date":["exact"],
             "end_date":["exact"],
-            "is_hrp_project":["exact"],
+            "is_hrp_project":["exact"]
         }
         filter_overrides = {
-            models.BooleanField: {
-                "filter_class": django_filters.BooleanFilter,
-                "extra": lambda f: {
-                    "widget": forms.CheckboxInput,
-                },
-            },
             models.DateTimeField: {
                 "filter_class": django_filters.DateFilter,
                 "extra": lambda f: {

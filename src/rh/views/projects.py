@@ -23,9 +23,63 @@ from ..models import (
 from .views import copy_project_target_location, copy_target_location_disaggregation_locations
 from django.views.decorators.http import require_http_methods
 from django.db.models import Count, Q
-
+from django.core.exceptions import PermissionDenied
 
 RECORDS_PER_PAGE = 10
+
+# Have permission to view_org_projects
+
+# AND
+
+# You are owner of the project
+# OR
+# You are the project's org admin
+# OR
+# You are superuser
+# You are is_staff
+
+
+@login_required
+@permission_required("rh.view_project", raise_exception=True)
+def projects_detail(request, pk):
+    """View for viewing a project.
+    url: projects/<int:pk>/
+    """
+    project = get_object_or_404(
+        Project.objects.select_related("organization").prefetch_related(
+            "clusters",
+            "donors",
+            "programme_partners",
+            "implementing_partners",
+            Prefetch(
+                "activityplan_set",
+                ActivityPlan.objects.select_related("activity_domain", "beneficiary", "indicator").prefetch_related(
+                    "targetlocation_set", "activity_type", "activity_detail"
+                ),
+            ),
+        ),
+        pk=pk,
+    )
+
+    if not (
+        request.user == project.user
+        or request.user.groups.filter(name=f"{project.organization.name.upper()}_ORG_LEADS").exists()
+        or request.user.is_staff
+        or request.user.is_superuser
+    ):
+        raise PermissionDenied
+
+    activity_plans = project.activityplan_set.all()
+
+    context = {
+        "project": project,
+        "project_view": True,
+        "financial_view": False,
+        "reports_view": False,
+        "project_filter": project,
+        "activity_plans": activity_plans,
+    }
+    return render(request, "rh/projects/views/project_view.html", context)
 
 
 @login_required
@@ -120,39 +174,7 @@ def projects_list(request):
 
 
 @login_required
-def projects_detail(request, pk):
-    """View for viewing a project.
-    url: projects/<int:pk>/
-    """
-    project = get_object_or_404(
-        Project.objects.prefetch_related(
-            "clusters",
-            "donors",
-            "programme_partners",
-            "implementing_partners",
-            Prefetch(
-                "activityplan_set",
-                ActivityPlan.objects.select_related("activity_domain", "beneficiary", "indicator").prefetch_related(
-                    "targetlocation_set", "activity_type", "activity_detail"
-                ),
-            ),
-        ),
-        pk=pk,
-    )
-    activity_plans = project.activityplan_set.all()
-
-    context = {
-        "project": project,
-        "project_view": True,
-        "financial_view": False,
-        "reports_view": False,
-        "project_filter": project,
-        "activity_plans": activity_plans,
-    }
-    return render(request, "rh/projects/views/project_view.html", context)
-
-
-@login_required
+@permission_required("rh.add_project", raise_exception=True)
 def create_project(request):
     if request.method == "POST":
         form = ProjectForm(request.POST, user=request.user)

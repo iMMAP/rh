@@ -58,6 +58,7 @@ class ProjectForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         user = kwargs.pop("user", None)
+
         super().__init__(*args, **kwargs)
 
         if self.instance.pk:
@@ -73,10 +74,16 @@ class ProjectForm(forms.ModelForm):
                 self.fields["clusters"].queryset = Cluster.objects.filter(
                     pk__in=user_clusters.union(project_clusters).values("pk")
                 )
+
+            # Show only the project's organization members
+            self.fields["user"].queryset = User.objects.filter(profile__organization=self.instance.organization)
         else:
             # Create mode
             self.fields["activity_domains"].choices = []
             self.fields["clusters"].queryset = user.profile.clusters.all()
+            # Show only the user's organization members
+            self.fields["user"].queryset = User.objects.filter(profile__organization=user.profile.organization)
+            self.fields["user"].initial = user
 
         self.fields["donors"].queryset = Donor.objects.order_by("name")
         self.fields["budget_currency"].queryset = Currency.objects.order_by("name")
@@ -85,9 +92,6 @@ class ProjectForm(forms.ModelForm):
         self.fields["implementing_partners"].choices = orgs
         self.fields["programme_partners"].choices = orgs
 
-        # Show only the user's organization members
-        self.fields["user"].queryset = User.objects.filter(profile__organization=user.profile.organization)
-        self.fields['user'].initial = user
 
 class TargetLocationForm(forms.ModelForm):
     class Meta:

@@ -24,6 +24,7 @@ from django.core.paginator import Paginator
 import django_filters
 from django.db.models import Count, Q
 from datetime import datetime
+from django.core.exceptions import PermissionDenied
 
 RECORDS_PER_PAGE = 10
 
@@ -40,6 +41,7 @@ class UsersFilter(django_filters.FilterSet):
 
 
 @login_required
+@require_http_methods(["GET"])
 @permission_required("users.view_org_users", raise_exception=True)
 def org_users_list(request):
     user_org = request.user.profile.organization
@@ -77,6 +79,15 @@ def org_users_list(request):
 def toggle_status(request, user_id):
     user = get_object_or_404(User, pk=user_id)
 
+    # check if req.user is admin of the user organization
+    # OR superadmin
+    if not (
+        request.user.profile.organization == user.profile.organization
+        or request.user.groups.filter(name=f"{user.profile.organization.name.upper()}_ORG_LEADS").exists()
+        or request.user.is_superuser
+    ):
+        raise PermissionDenied
+
     if user.is_active:
         user.is_active = False
         user.save()
@@ -92,7 +103,58 @@ def toggle_status(request, user_id):
 
 
 #############################################
-########### Authntication Views #############
+############### Profile Views #################
+#############################################
+
+
+@login_required
+@permission_required("users.change_profile", raise_exception=True)
+def profile(request):
+    template = loader.get_template("users/profile.html")
+    user = request.user
+
+    if request.method == "POST":
+        u_form = UserUpdateForm(request.POST, instance=user)
+        p_form = ProfileUpdateForm(request.POST, instance=user.profile)
+
+        country = None
+        organization = None
+        if user.profile:
+            if user.profile.country:
+                country = user.profile.country
+            if user.profile.organization:
+                organization = user.profile.organization
+
+        if u_form.is_valid() and p_form.is_valid():
+            user = u_form.save()
+            user_profile = p_form.save(commit=False)
+            user_profile.country = country
+            user_profile.organization = organization
+
+            user_profile.save()
+            p_form.save_m2m()
+            messages.success(request, "Profile Updated successfully")
+            return redirect("profile")
+
+        else:
+            for error in list(u_form.errors.values()):
+                messages.error(request, error)
+            for error in list(p_form.errors.values()):
+                messages.error(request, error)
+    else:
+        u_form = UserUpdateForm(instance=user)
+        p_form = ProfileUpdateForm(instance=user.profile)
+
+    context = {
+        "user": user,
+        "u_form": u_form,
+        "p_form": p_form,
+    }
+    return HttpResponse(template.render(context, request))
+
+
+#############################################
+########### Authentication Views #############
 #############################################
 def activate_account(request, uidb64, token):
     """Activate User account"""
@@ -235,52 +297,3 @@ def logout_view(request):
     logout(request)
     return redirect("/login")
 
-
-#############################################
-############### Profile Views #################
-#############################################
-
-
-@login_required
-def profile(request):
-    template = loader.get_template("users/profile.html")
-    user = request.user
-
-    if request.method == "POST":
-        u_form = UserUpdateForm(request.POST, instance=user)
-        p_form = ProfileUpdateForm(request.POST, instance=user.profile)
-
-        country = None
-        organization = None
-        if user.profile:
-            if user.profile.country:
-                country = user.profile.country
-            if user.profile.organization:
-                organization = user.profile.organization
-
-        if u_form.is_valid() and p_form.is_valid():
-            user = u_form.save()
-            user_profile = p_form.save(commit=False)
-            user_profile.country = country
-            user_profile.organization = organization
-
-            user_profile.save()
-            p_form.save_m2m()
-            messages.success(request, "Profile Updated successfully")
-            return redirect("profile")
-
-        else:
-            for error in list(u_form.errors.values()):
-                messages.error(request, error)
-            for error in list(p_form.errors.values()):
-                messages.error(request, error)
-    else:
-        u_form = UserUpdateForm(instance=user)
-        p_form = ProfileUpdateForm(instance=user.profile)
-
-    context = {
-        "user": user,
-        "u_form": u_form,
-        "p_form": p_form,
-    }
-    return HttpResponse(template.render(context, request))

@@ -15,10 +15,7 @@ from ..filters import ProjectsFilter
 from ..forms import (
     ProjectForm,
 )
-from ..models import (
-    ActivityPlan,
-    Project,
-)
+from ..models import ActivityPlan, Project, Cluster
 
 from .views import copy_project_target_location, copy_target_location_disaggregation_locations
 from django.views.decorators.http import require_http_methods
@@ -26,17 +23,6 @@ from django.db.models import Count, Q
 from django.core.exceptions import PermissionDenied
 
 RECORDS_PER_PAGE = 10
-
-# Have permission to view_org_projects
-
-# AND
-
-# You are owner of the project
-# OR
-# You are the project's org admin
-# OR
-# You are superuser
-# You are is_staff
 
 
 @login_required
@@ -83,8 +69,64 @@ def projects_detail(request, pk):
 
 
 @login_required
+def cluster_projects_list(request, cluster: str):
+    """List Project's of a specified {cluster}
+    url: /projects/clusters/{cluster}
+    """
+    # check if req.user is in the {cluster}_CLUSTER_LEADS group
+    if not (request.user.groups.filter(name=f"{cluster.upper()}_CLUSTER_LEADS").exists() or request.user.is_superuser):
+        raise PermissionDenied
+
+    cluster = Cluster.objects.get(code=cluster)
+
+    # Setup Filter
+    project_filter = ProjectsFilter(
+        request.GET,
+        request=request,
+        queryset=Project.objects.filter(
+            clusters__in=[
+                cluster,
+            ]
+        )
+        .select_related("organization")
+        .prefetch_related("clusters", "programme_partners", "implementing_partners")
+        .order_by("-id"),
+    )
+
+    # Setup Pagination
+    p = Paginator(project_filter.qs, RECORDS_PER_PAGE)
+    page = request.GET.get("page", 1)
+    p_projects = p.get_page(page)
+    p_projects.adjusted_elided_pages = p.get_elided_page_range(page)
+
+    projects = Project.objects.filter(
+        clusters__in=[
+            cluster,
+        ]
+    ).aggregate(
+        projects_count=Count("id"),
+        draft_projects_count=Count("id", filter=Q(state="draft")),
+        active_projects_count=Count("id", filter=Q(state="in-progress")),
+        completed_projects_count=Count("id", filter=Q(state="done")),
+        archived_projects_count=Count("id", filter=Q(state="archive")),
+    )
+
+    context = {
+        "projects": p_projects,
+        "projects_count": projects["projects_count"],
+        "draft_projects_count": projects["draft_projects_count"],
+        "active_projects_count": projects["active_projects_count"],
+        "completed_projects_count": projects["completed_projects_count"],
+        "archived_projects_count": projects["archived_projects_count"],
+        "project_filter": project_filter,
+    }
+
+    return render(request, "rh/projects/views/projects_list_cluster.html", context)
+
+
+@login_required
 @permission_required("rh.view_clusters_projects", raise_exception=True)
-def clusters_projects_list(request):
+def users_clusters_projects_list(request):
     """List Projects for user's cluster
     url: /projects/clusters
     """
@@ -129,7 +171,7 @@ def clusters_projects_list(request):
 
 @login_required
 @permission_required("rh.view_org_projects", raise_exception=True)
-def projects_list(request):
+def org_projects_list(request):
     """List Projects for user's organization
     url: /projects
     """

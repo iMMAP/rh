@@ -474,6 +474,7 @@ class Project(models.Model):
             ("archive_unarchive_project", "Archive/UnArchive project"),
             ("view_org_projects", "View your organization's projects"),
             ("view_cluster_projects", "View your clusters projects"),
+            ("view_all_clusters_projects", "View all clusters projects"),
             ("copy_project", "Can copy project"),
         ]
 

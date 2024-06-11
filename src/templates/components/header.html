@@ -27,7 +27,7 @@
                             <ul class="inner-nav">
                                 {% if perms.rh.view_cluster_projects %}
                                 <li class="inner-nav-item">
-                                    <a class="inner-nav-link" href="{% url 'clusters-projects-list' %}">Projects</a>
+                                    <a class="inner-nav-link" href="{% url 'user-clusters-projects-list' %}">Your Clusters Projects</a>
                                 </li>
                                 {% endif %}
                                 {% if perms.rh.add_organization %}

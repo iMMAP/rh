@@ -65,6 +65,17 @@
                     </div>
                 {% endif %}
                 <!-- ERRORS SECTION ENDS -->
+                
+                {% if form.total_set_target.value > 0 %}
+                <div class="field-col">
+                    <div class="input-field">
+                        <span class="label">Total Set Target</span>
+                        <div class="input-holder">
+                            <span class="text-read-only">{{ form.total_set_target }}</span>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
 
                 <div class="row">
                     <div class="col">

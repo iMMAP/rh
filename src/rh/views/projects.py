@@ -1,29 +1,25 @@
 import json
-
 from datetime import date
+
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
+from django.core.exceptions import PermissionDenied
 from django.core.paginator import Paginator
-from django.db.models import Prefetch
+from django.db.models import Count, Prefetch, Q
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
-
+from django.utils.http import urlencode
+from django.views.decorators.http import require_http_methods
 from rh.resources import ProjectResource
 
 from ..filters import ProjectsFilter
-from ..forms import (
-    ProjectForm,
+from ..forms import ProjectForm
+from ..models import ActivityPlan, Project
+from .views import (
+    copy_project_target_location,
+    copy_target_location_disaggregation_locations,
 )
-from ..models import (
-    ActivityPlan,
-    Project,
-)
-
-from .views import copy_project_target_location, copy_target_location_disaggregation_locations
-from django.views.decorators.http import require_http_methods
-from django.db.models import Count, Q
-from django.core.exceptions import PermissionDenied
 
 RECORDS_PER_PAGE = 10
 
@@ -114,6 +110,13 @@ def clusters_projects_list(request):
         archived_projects_count=Count("id", filter=Q(state="archive")),
     )
 
+    # Preserve query parameters
+    query_params = request.GET.copy()
+    query_params = {k: v for k, v in query_params.items() if v}
+    if "page" in query_params:
+        del query_params["page"]
+    query_string = urlencode(query_params)
+
     context = {
         "projects": p_projects,
         "projects_count": projects["projects_count"],
@@ -122,6 +125,7 @@ def clusters_projects_list(request):
         "completed_projects_count": projects["completed_projects_count"],
         "archived_projects_count": projects["archived_projects_count"],
         "project_filter": project_filter,
+        "query_string": query_string,
     }
 
     return render(request, "rh/projects/views/projects_list_cluster.html", context)
@@ -160,6 +164,13 @@ def projects_list(request):
         archived_projects_count=Count("id", filter=Q(state="archive")),
     )
 
+    # Preserve query parameters
+    query_params = request.GET.copy()
+    query_params = {k: v for k, v in query_params.items() if v}
+    if "page" in query_params:
+        del query_params["page"]
+    query_string = urlencode(query_params)
+
     context = {
         "projects": p_projects,
         "projects_count": projects["projects_count"],
@@ -168,6 +179,7 @@ def projects_list(request):
         "completed_projects_count": projects["completed_projects_count"],
         "archived_projects_count": projects["archived_projects_count"],
         "project_filter": project_filter,
+        "query_string": query_string,
     }
 
     return render(request, "rh/projects/views/projects_list_org.html", context)

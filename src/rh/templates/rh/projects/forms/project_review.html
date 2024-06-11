@@ -274,6 +274,17 @@
                     </div>
                 </div>
                 <div class="activity-acc-accordion-slide">
+                    {% if activity_plan.total_set_target > 0 %}
+                    <div class="field-col">
+                        <div class="input-field">
+                            <span class="label">Total Set Target</span>
+                            <div class="input-holder">
+                                <span class="text-read-only">{{ activity_plan.total_set_target }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    
                     <div class="row">
                         <div class="col">
                             <div class="multiple-fields-row two-items">

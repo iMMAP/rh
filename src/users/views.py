@@ -296,4 +296,3 @@ def logout_view(request):
     messages.info(request, f"{request.user} logged out.")
     logout(request)
     return redirect("/login")
-

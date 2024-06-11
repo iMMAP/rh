@@ -50,7 +50,7 @@
                                 <li class="inner-nav-item">
                                     <a class="inner-nav-link" href="{% url 'projects-create' %}">Create Project</a>
                                 </li>
-                                {% if perms.rh.view_org_users %}
+                                {% if perms.users.view_org_users %}
                                 <hr>
                                 <li class="inner-nav-item">
                                     <a class="inner-nav-link" href="{% url 'users-organization' %}">Members</a>

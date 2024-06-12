@@ -72,7 +72,7 @@ def toggle_status(request, user_id):
     # OR superadmin
     if not (
         request.user.profile.organization == user.profile.organization
-        or request.user.groups.filter(name=f"{user.profile.organization.name.upper()}_ORG_LEADS").exists()
+        or request.user.groups.filter(name="ORG_LEADS").exists()
         or request.user.is_superuser
     ):
         raise PermissionDenied

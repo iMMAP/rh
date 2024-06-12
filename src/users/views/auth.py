@@ -52,7 +52,7 @@ def send_account_activation_email(request, user, to_email):
     current_site = get_current_site(request)
     mail_subject = "Email Activation link"
     message = loader.render_to_string(
-        "users/registration/activation_email_template.html",
+        "users/auth/activation_email_template.html",
         {
             "user": user,
             "domain": current_site.domain,
@@ -65,7 +65,7 @@ def send_account_activation_email(request, user, to_email):
     email = EmailMultiAlternatives(mail_subject, "Testing", to=[to_email])
     email.attach_alternative(message, "text/html")
     if email.send():
-        template = loader.get_template("users/registration/activation_email_done.html")
+        template = loader.get_template("users/auth/activation_email_done.html")
         context = {"user": user, "to_email": to_email}
         return HttpResponse(template.render(context, request))
     else:
@@ -125,12 +125,12 @@ def register_view(request):
         "u_form": u_form,
         "p_form": p_form,
     }
-    return render(request, "users/registration/signup.html", context)
+    return render(request, "users/auth/signup.html", context)
 
 
 @unauthenticated_user
 def login_view(request):
-    template = loader.get_template("users/registration/login.html")
+    template = loader.get_template("users/auth/login.html")
     if request.method == "POST":
         email = request.POST["email"]
         password = request.POST.get("password")

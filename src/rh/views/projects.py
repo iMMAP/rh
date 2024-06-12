@@ -49,7 +49,7 @@ def projects_detail(request, pk):
 
     if not (
         request.user == project.user
-        or request.user.groups.filter(name=f"{project.organization.name.upper()}_ORG_LEADS").exists()
+        or request.user.groups.filter(name="ORG_LEADS").exists()
         or request.user.is_staff
         or request.user.is_superuser
     ):

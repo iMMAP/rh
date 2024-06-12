@@ -1,4 +1,5 @@
 {% load static %}
+{% load  user_lead_clusters %}
 
 <header class="header logged-in" id="header">
     <div class="container">
@@ -20,16 +21,27 @@
             <div class="mobile-menu-holder">
                 <ul class="main-nav">
 
-                    {% if 'rh.view_cluster_projects' in perms or 'rh.add_organization' in prems %}
+                    {% user_lead_clusters request.user as clusters %}
+                    {% if 'rh.view_cluster_projects' in perms or 'rh.add_organization' in prems or clusters %}
                     <li class="main-nav-item has-drop-down js-main-nav-openclose">
                         <a class="main-nav-link openclose-opener" href="#">Cluster</a>
                             <div class="inner-drop">
                             <ul class="inner-nav">
+
                                 {% if perms.rh.view_cluster_projects %}
                                 <li class="inner-nav-item">
                                     <a class="inner-nav-link" href="{% url 'user-clusters-projects-list' %}">Your Clusters Projects</a>
                                 </li>
+                                <hr>
                                 {% endif %}
+
+                                    {% for cluster in clusters %}
+                                     <li class="inner-nav-item">
+                                        <a class="inner-nav-link" href="{% url 'cluster-projects-list' cluster.code %}">{{cluster.code}}'s Projects</a>
+                                    </li>
+                                    {% endfor %}
+                                    <hr>
+
                                 {% if perms.rh.add_organization %}
                                 <li class="inner-nav-item">
                                     <a class="inner-nav-link" href="{% url 'organizations-create' %}">Add Organization</a>

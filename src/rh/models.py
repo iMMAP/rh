@@ -473,8 +473,12 @@ class Project(models.Model):
         permissions = [
             ("archive_unarchive_project", "Archive/UnArchive project"),
             ("view_org_projects", "View your organization's projects"),
+            ("export_org_projects", "View your organization's projects"),
             ("view_cluster_projects", "View your clusters projects"),
+            ("export_cluster_projects", "Export your clusters projects"),
             ("copy_project", "Can copy project"),
+            ("review_project_activity_plan_review", "Can view a project's activity plan review"),
+            ("submit_project", "Can submit a project"),
         ]
 
 

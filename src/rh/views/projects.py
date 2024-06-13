@@ -49,8 +49,7 @@ def projects_detail(request, pk):
 
     if not (
         request.user == project.user
-        or request.user.groups.filter(name="ORG_LEADS").exists()
-        or request.user.is_staff
+        or request.user.profile.organization == project.organization
         or request.user.is_superuser
     ):
         raise PermissionDenied
@@ -74,7 +73,10 @@ def cluster_projects_list(request, cluster: str):
     url: /projects/clusters/{cluster}
     """
     # check if req.user is in the {cluster}_CLUSTER_LEADS group
-    if not (request.user.groups.filter(name=f"{cluster.upper()}_CLUSTER_LEADS").exists() or request.user.is_superuser):
+    if not (
+        request.user.groups.filter(name=f"{cluster.upper()}_CLUSTER_LEADS").exists() 
+        or request.user.is_superuser
+    ):
         raise PermissionDenied
 
     cluster = Cluster.objects.get(code=cluster)
@@ -242,10 +244,18 @@ def create_project(request):
 
 
 @login_required
+@permission_required("rh.change_project", raise_exception=True)
 def update_project(request, pk):
     """View for updating a project."""
 
     project = get_object_or_404(Project, pk=pk)
+
+    if not (
+        request.user == project.user
+        or request.user.profile.organization == project.organization
+        or request.user.is_superuser
+    ):
+        raise PermissionDenied
 
     if request.method == "POST":
         form = ProjectForm(request.POST, instance=project, user=request.user)
@@ -267,11 +277,18 @@ def update_project(request, pk):
 
 
 @login_required
-def project_planning_review(request, **kwargs):
-    """Projects Plans"""
+def project_planning_review(request, project:int):
+    """Projects Plans Review"""
 
-    pk = int(kwargs["project"])
-    project = get_object_or_404(Project, pk=pk)
+    project = get_object_or_404(Project, pk=project)
+
+    if not (
+        request.user == project.user
+        or request.user.profile.organization == project.organization
+        or request.user.is_superuser
+    ):
+        raise PermissionDenied
+
     activity_plans = project.activityplan_set.all()
     target_locations = [activity_plan.targetlocation_set.all() for activity_plan in activity_plans]
 
@@ -288,10 +305,19 @@ def project_planning_review(request, **kwargs):
 
 
 @login_required
+@permission_required("rh.submit_project", raise_exception=True)
 def submit_project(request, pk):
     """Project Submission"""
 
     project = get_object_or_404(Project, pk=pk)
+
+    if not ( 
+        request.user == project.user 
+        or request.user.profile.organization == project.organization 
+        or request.user.is_superuser
+    ):
+        raise PermissionDenied
+
     if project:
         project.state = "in-progress"
         project.save()
@@ -313,6 +339,7 @@ def submit_project(request, pk):
 
 
 @login_required
+@permission_required("rh.archive_unarchive_project", raise_exception=True)
 def archive_project(request, pk):
     """Archiving Project"""
     project = get_object_or_404(Project, pk=pk)
@@ -356,6 +383,7 @@ def archive_project(request, pk):
 
 
 @login_required
+@permission_required("rh.archive_unarchive_project", raise_exception=True)
 def unarchive_project(request, pk):
     """Unarchiving Project"""
     project = get_object_or_404(Project, pk=pk)
@@ -396,20 +424,15 @@ def unarchive_project(request, pk):
 
 
 @login_required
+@permission_required("rh.delete_project", raise_exception=True)
 def delete_project(request, pk):
     """Delete Project View"""
     project = get_object_or_404(Project, pk=pk)
     if project.state != "archive":
-        if project:
-            project.delete()
-        url = reverse(
-            "projects-list",
-        )
+        project.delete()
+        messages.success(request, 'Project deleted successfully')
 
-    # Return the URL in a JSON response
-    response_data = {"redirect_url": url}
-    return JsonResponse(response_data)
-
+    return redirect('projects-list')
 
 def copy_project_activity_plan(project, plan):
     """Copy Activity Plans"""
@@ -495,7 +518,7 @@ def copy_project(request, pk):
 
 @login_required
 @require_http_methods(["POST"])
-# @permission_required("rh.view_clusters_projects", raise_exception=True)
+@permission_required("rh.export_clusters_projects", raise_exception=True)
 def export_cluster_projects(request, format):
     """Export your all of your org projects and its activities
     url: /projects/bulk_export/<format>/cluster
@@ -527,7 +550,7 @@ def export_cluster_projects(request, format):
 
 @login_required
 @require_http_methods(["POST"])
-# @permission_required("rh.view_clusters_projects", raise_exception=True)
+@permission_required("rh.export_clusters_projects", raise_exception=True)
 def export_org_projects(request, format):
     """Export your all of your org projects and its activities
     url: /projects/bulk_export/<format>/org

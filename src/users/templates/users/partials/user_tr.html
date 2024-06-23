@@ -33,6 +33,7 @@
     <td class="action-col">
         <div class="table-flex-holder">
             <ul class="table-options-buttons">
+                {% if perms.rh.activate_deactivate_user %}
                 <li>
                     <form 
                         method="post"
@@ -54,6 +55,7 @@
                         </button>
                     </form>
                 </li>
+                {% endif %}
             </ul>
         </div>
     </td>

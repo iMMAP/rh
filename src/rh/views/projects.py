@@ -15,10 +15,7 @@ from ..filters import ProjectsFilter
 from ..forms import (
     ProjectForm,
 )
-from ..models import (
-    ActivityPlan,
-    Project,
-)
+from ..models import ActivityPlan, Project, Cluster
 
 from .views import copy_project_target_location, copy_target_location_disaggregation_locations
 from django.views.decorators.http import require_http_methods
@@ -26,17 +23,6 @@ from django.db.models import Count, Q
 from django.core.exceptions import PermissionDenied
 
 RECORDS_PER_PAGE = 10
-
-# Have permission to view_org_projects
-
-# AND
-
-# You are owner of the project
-# OR
-# You are the project's org admin
-# OR
-# You are superuser
-# You are is_staff
 
 
 @login_required
@@ -63,8 +49,7 @@ def projects_detail(request, pk):
 
     if not (
         request.user == project.user
-        or request.user.groups.filter(name=f"{project.organization.name.upper()}_ORG_LEADS").exists()
-        or request.user.is_staff
+        or request.user.profile.organization == project.organization
         or request.user.is_superuser
     ):
         raise PermissionDenied
@@ -83,8 +68,67 @@ def projects_detail(request, pk):
 
 
 @login_required
+def cluster_projects_list(request, cluster: str):
+    """List Project's of a specified {cluster}
+    url: /projects/clusters/{cluster}
+    """
+    # check if req.user is in the {cluster}_CLUSTER_LEADS group
+    if not (
+        request.user.groups.filter(name=f"{cluster.upper()}_CLUSTER_LEADS").exists() 
+        or request.user.is_superuser
+    ):
+        raise PermissionDenied
+
+    cluster = Cluster.objects.get(code=cluster)
+
+    # Setup Filter
+    project_filter = ProjectsFilter(
+        request.GET,
+        request=request,
+        queryset=Project.objects.filter(
+            clusters__in=[
+                cluster,
+            ]
+        )
+        .select_related("organization")
+        .prefetch_related("clusters", "programme_partners", "implementing_partners")
+        .order_by("-id"),
+    )
+
+    # Setup Pagination
+    p = Paginator(project_filter.qs, RECORDS_PER_PAGE)
+    page = request.GET.get("page", 1)
+    p_projects = p.get_page(page)
+    p_projects.adjusted_elided_pages = p.get_elided_page_range(page)
+
+    projects = Project.objects.filter(
+        clusters__in=[
+            cluster,
+        ]
+    ).aggregate(
+        projects_count=Count("id"),
+        draft_projects_count=Count("id", filter=Q(state="draft")),
+        active_projects_count=Count("id", filter=Q(state="in-progress")),
+        completed_projects_count=Count("id", filter=Q(state="done")),
+        archived_projects_count=Count("id", filter=Q(state="archive")),
+    )
+
+    context = {
+        "projects": p_projects,
+        "projects_count": projects["projects_count"],
+        "draft_projects_count": projects["draft_projects_count"],
+        "active_projects_count": projects["active_projects_count"],
+        "completed_projects_count": projects["completed_projects_count"],
+        "archived_projects_count": projects["archived_projects_count"],
+        "project_filter": project_filter,
+    }
+
+    return render(request, "rh/projects/views/projects_list_cluster.html", context)
+
+
+@login_required
 @permission_required("rh.view_clusters_projects", raise_exception=True)
-def clusters_projects_list(request):
+def users_clusters_projects_list(request):
     """List Projects for user's cluster
     url: /projects/clusters
     """
@@ -129,7 +173,7 @@ def clusters_projects_list(request):
 
 @login_required
 @permission_required("rh.view_org_projects", raise_exception=True)
-def projects_list(request):
+def org_projects_list(request):
     """List Projects for user's organization
     url: /projects
     """
@@ -200,10 +244,18 @@ def create_project(request):
 
 
 @login_required
+@permission_required("rh.change_project", raise_exception=True)
 def update_project(request, pk):
     """View for updating a project."""
 
     project = get_object_or_404(Project, pk=pk)
+
+    if not (
+        request.user == project.user
+        or request.user.profile.organization == project.organization
+        or request.user.is_superuser
+    ):
+        raise PermissionDenied
 
     if request.method == "POST":
         form = ProjectForm(request.POST, instance=project, user=request.user)
@@ -225,11 +277,18 @@ def update_project(request, pk):
 
 
 @login_required
-def project_planning_review(request, **kwargs):
-    """Projects Plans"""
+def project_planning_review(request, project:int):
+    """Projects Plans Review"""
 
-    pk = int(kwargs["project"])
-    project = get_object_or_404(Project, pk=pk)
+    project = get_object_or_404(Project, pk=project)
+
+    if not (
+        request.user == project.user
+        or request.user.profile.organization == project.organization
+        or request.user.is_superuser
+    ):
+        raise PermissionDenied
+
     activity_plans = project.activityplan_set.all()
     target_locations = [activity_plan.targetlocation_set.all() for activity_plan in activity_plans]
 
@@ -246,10 +305,19 @@ def project_planning_review(request, **kwargs):
 
 
 @login_required
+@permission_required("rh.submit_project", raise_exception=True)
 def submit_project(request, pk):
     """Project Submission"""
 
     project = get_object_or_404(Project, pk=pk)
+
+    if not ( 
+        request.user == project.user 
+        or request.user.profile.organization == project.organization 
+        or request.user.is_superuser
+    ):
+        raise PermissionDenied
+
     if project:
         project.state = "in-progress"
         project.save()
@@ -271,6 +339,7 @@ def submit_project(request, pk):
 
 
 @login_required
+@permission_required("rh.archive_unarchive_project", raise_exception=True)
 def archive_project(request, pk):
     """Archiving Project"""
     project = get_object_or_404(Project, pk=pk)
@@ -314,6 +383,7 @@ def archive_project(request, pk):
 
 
 @login_required
+@permission_required("rh.archive_unarchive_project", raise_exception=True)
 def unarchive_project(request, pk):
     """Unarchiving Project"""
     project = get_object_or_404(Project, pk=pk)
@@ -354,20 +424,15 @@ def unarchive_project(request, pk):
 
 
 @login_required
+@permission_required("rh.delete_project", raise_exception=True)
 def delete_project(request, pk):
     """Delete Project View"""
     project = get_object_or_404(Project, pk=pk)
     if project.state != "archive":
-        if project:
-            project.delete()
-        url = reverse(
-            "projects-list",
-        )
+        project.delete()
+        messages.success(request, 'Project deleted successfully')
 
-    # Return the URL in a JSON response
-    response_data = {"redirect_url": url}
-    return JsonResponse(response_data)
-
+    return redirect('projects-list')
 
 def copy_project_activity_plan(project, plan):
     """Copy Activity Plans"""
@@ -453,7 +518,7 @@ def copy_project(request, pk):
 
 @login_required
 @require_http_methods(["POST"])
-# @permission_required("rh.view_clusters_projects", raise_exception=True)
+@permission_required("rh.export_clusters_projects", raise_exception=True)
 def export_cluster_projects(request, format):
     """Export your all of your org projects and its activities
     url: /projects/bulk_export/<format>/cluster
@@ -485,7 +550,7 @@ def export_cluster_projects(request, format):
 
 @login_required
 @require_http_methods(["POST"])
-# @permission_required("rh.view_clusters_projects", raise_exception=True)
+@permission_required("rh.export_clusters_projects", raise_exception=True)
 def export_org_projects(request, format):
     """Export your all of your org projects and its activities
     url: /projects/bulk_export/<format>/org

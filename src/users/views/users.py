@@ -18,6 +18,7 @@ from ..utils import has_permission
 
 RECORDS_PER_PAGE = 10
 
+
 class UsersFilter(django_filters.FilterSet):
     class Meta:
         model = User
@@ -70,7 +71,7 @@ def toggle_status(request, user_id):
 
     # check if req.user is admin of the user organization
     # OR superadmin
-    if not has_permission(user=request.user,user_obj=user):
+    if not has_permission(user=request.user, user_obj=user):
         raise PermissionDenied
 
     if user.is_active:

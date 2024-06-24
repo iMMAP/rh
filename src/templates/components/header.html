@@ -27,7 +27,6 @@
                         <a class="main-nav-link openclose-opener" href="#">Cluster</a>
                             <div class="inner-drop">
                             <ul class="inner-nav">
-
                                 {% if perms.rh.view_cluster_projects %}
                                 <li class="inner-nav-item">
                                     <a class="inner-nav-link" href="{% url 'user-clusters-projects-list' %}">Your Clusters Projects</a>
@@ -35,12 +34,11 @@
                                 <hr>
                                 {% endif %}
 
-                                    {% for cluster in clusters %}
-                                     <li class="inner-nav-item">
-                                        <a class="inner-nav-link" href="{% url 'cluster-projects-list' cluster.code %}">{{cluster.code}}'s Projects</a>
-                                    </li>
-                                    {% endfor %}
-                                    <hr>
+                                {% for cluster in clusters %}
+                                    <li class="inner-nav-item">
+                                    <a class="inner-nav-link" href="{% url 'cluster-projects-list' cluster.code %}">{{cluster.code}}'s Projects</a>
+                                </li>
+                                {% endfor %}
 
                                 {% if perms.rh.add_organization %}
                                 <li class="inner-nav-item">
@@ -77,7 +75,14 @@
                     </li>
                 
                     <li class="main-nav-item has-drop-down js-main-nav-openclose">
-                        <a class="main-nav-link openclose-opener" href="#">Account</a>
+                           
+                        <a class="main-nav-link openclose-opener" href="#">
+                            <svg style="width: 1.7rem;margin:2px 7px 0 0px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
+                                <path fill-rule="evenodd" d="M18.685 19.097A9.723 9.723 0 0 0 21.75 12c0-5.385-4.365-9.75-9.75-9.75S2.25 6.615 2.25 12a9.723 9.723 0 0 0 3.065 7.097A9.716 9.716 0 0 0 12 21.75a9.716 9.716 0 0 0 6.685-2.653Zm-12.54-1.285A7.486 7.486 0 0 1 12 15a7.486 7.486 0 0 1 5.855 2.812A8.224 8.224 0 0 1 12 20.25a8.224 8.224 0 0 1-5.855-2.438ZM15.75 9a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z" clip-rule="evenodd" />
+                            </svg>
+                            <span> {{user.username}} </span>
+                        </a>
+
                         <div class="inner-drop">
                             <ul class="inner-nav">
                                 {% if user.is_superuser %}

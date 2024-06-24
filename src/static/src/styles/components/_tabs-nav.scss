@@ -3,12 +3,13 @@
 
   display: flex;
   flex-wrap: wrap;
-  margin: 0 -10px;
+  // gap:0.7rem;
+  // margin: 0 -10px;
   font-size: 14px;
   line-height: 1.2;
 
   @include media('>=desktop') {
-    margin: 0 -20px;
+    // margin: 0 -20px;
     font-size: 16px;
   }
 
@@ -28,10 +29,17 @@
 
   li {
     padding: 0 10px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    
+    border-top: 2px solid $gray-e6;
+    border-left: 2px solid $gray-e6;
+    border-right: 2px solid $gray-e6;
 
-    @include media('>=desktop') {
-      padding: 0 20px;
-    }
+
+    // @include media('>=desktop') {
+      // padding: 0 20px;
+    // }
   }
 
   a {
@@ -63,11 +71,17 @@
   }
 
   .active {
+    background-color: $red;
+
+    border-top: 2px solid $red;
+    border-left: 2px solid $red;
+    border-right: 2px solid $red;
+
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+
     a {
-      &:after {
-        font-weight: 600;
-        background-color: $red-be;
-      }
+      color: $white;
     }
   }
 }

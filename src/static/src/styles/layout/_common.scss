@@ -390,8 +390,8 @@ ul{
 }
 
 .page-top-panel {
-  border-bottom: 2px solid $gray-e6;
-  padding-bottom: 16px;
+  // border-bottom: 2px solid $gray-e6;
+  // padding-bottom: 16px;
 
   @include media('>=tablet') {
     display: flex;

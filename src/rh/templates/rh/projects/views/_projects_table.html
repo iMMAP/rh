@@ -5,10 +5,10 @@
     <div class="content-block top-border bottom-border">
         <div id="tab-1">
             <div class="table-wrapper-scrollable">
-                <table class="table all-projects-table js-collapsible-table">
+                <table class="table all-projects-table">
                     <thead>
                         <tr>
-                            <th class="cluster-col">
+                            <th class="">
                                 <div class="table-flex-holder">
                                     <div class="input-check-holder">
                                         <input type="checkbox"
@@ -29,7 +29,7 @@
                                     </div>
                                 </div>
                             </th>
-                            <th class="title-col">
+                            <th class="">
                                 <div class="table-flex-holder">
                                     <strong class="table-title">Cluster/Sector</strong>
                                     <div class="table-sort-buttons">
@@ -42,7 +42,7 @@
                                     </div>
                                 </div>
                             </th>
-                            <th class="organisation-col">
+                            <th class="">
                                 <div class="table-flex-holder">
                                     <strong class="table-title">Implementing Partners</strong>
                                     <div class="table-sort-buttons">
@@ -55,23 +55,22 @@
                                     </div>
                                 </div>
                             </th>
-                            <th class="location-col">
+                            <th class="">
                                 <div class="table-flex-holder">
                                     <strong class="table-title">Programme Partners</strong>
                                 </div>
                             </th>
-                            
-                            <th class="description-col">
+                            <th class="">
                                 <div class="table-flex-holder">
                                     <strong class="table-title">Organization</strong>
                                 </div>
                             </th>
-                            <th class="status-col">
+                            <th class="">
                                 <div class="table-flex-holder">
                                     <strong class="table-title">Status</strong>
                                 </div>
                             </th>
-                            <th class="action-col">
+                            <th class="">
                                 <div class="table-flex-holder">
                                     <strong class="table-title">Action</strong>
                                 </div>
@@ -83,7 +82,7 @@
                         <!--Include The Projects Details Here -->
                         {% for project in projects %}
                             <tr>
-                                <td class="cluster-col">
+                                <td class="">
                                     <a class="table-flex-holder" href="{% url 'projects-detail' project.id %}">
                                         <div class="input-check-holder">
                                             <input type="checkbox" id="table-check-{{project.pk}}" class="project-checkbox" value="{{project.pk}}" name="table-check{{project.pk}}" />
@@ -94,33 +93,33 @@
                                         {{ project.title|truncatechars:100 }}
                                     </a>
                                 </td>
-                                <td class="title-col">
+                                <td class="">
                                     {% for cluster in project.clusters.all %}
                                         {{ cluster.title }}
                                         {% if not forloop.last %},{% endif %}
                                     {% endfor %}
                                 </td>
-                                <td class="organisation-col">
+                                <td class="">
                                     {% for partner in project.implementing_partners.all %}
                                         {{ partner.code }}
                                         {% if not forloop.last %},{% endif %}
                                     {% endfor %}
                                 </td>
-                                <td class="location-col">
+                                <td class="">
                                     {% for p_partner in project.programme_partners.all %}
                                         {{ p_partner.code }}
                                         {% if not forloop.last %},{% endif %}
                                     {% endfor %}
                                 </td>
-                                <td class="description-col">
+                                <td class="">
                                     {{ project.organization }}
                                 </td>
-                                <td class="status-col">
+                                <td class="">
                                     <span class="{{ project.state }}">
                                         {{ project.get_state_display }}
                                     </span>
                                 </td>
-                                <td class="action-col">
+                                <td class="">
                                     <div class="table-flex-holder">
                                         <ul class="table-options-buttons ">
                                             <li>

@@ -54,12 +54,18 @@
                         <a class="main-nav-link openclose-opener" href="#">Organization</a>
                             <div class="inner-drop">
                             <ul class="inner-nav">
+                                {% if perms.rh.view_org_projects %}
                                 <li class="inner-nav-item">
                                     <a class="inner-nav-link" href="{% url 'projects-list' %}">Projects</a>
                                 </li>
+                                {% endif %}
+                                
+                                {% if perms.rh.add_project %}
                                 <li class="inner-nav-item">
                                     <a class="inner-nav-link" href="{% url 'projects-create' %}">Create Project</a>
                                 </li>
+                                 {% endif %}
+
                                 {% if perms.users.view_org_users %}
                                 <hr>
                                 <li class="inner-nav-item">

@@ -20,6 +20,7 @@ class ProfileInline(admin.StackedInline):
 def make_active(modeladmin, request, queryset):
     queryset.update(is_active=True)
 
+
 @admin.action(description="Mark selected users as inactive")
 def make_inactive(modeladmin, request, queryset):
     queryset.update(is_active=False)

@@ -21,6 +21,7 @@ from .views import copy_project_target_location, copy_target_location_disaggrega
 from django.views.decorators.http import require_http_methods
 from django.db.models import Count, Q
 from django.core.exceptions import PermissionDenied
+from ..utils import has_permission
 
 RECORDS_PER_PAGE = 10
 
@@ -47,11 +48,7 @@ def projects_detail(request, pk):
         pk=pk,
     )
 
-    if not (
-        request.user == project.user
-        or request.user.profile.organization == project.organization
-        or request.user.is_superuser
-    ):
+    if not has_permission(request.user, project):
         raise PermissionDenied
 
     activity_plans = project.activityplan_set.all()
@@ -73,10 +70,7 @@ def cluster_projects_list(request, cluster: str):
     url: /projects/clusters/{cluster}
     """
     # check if req.user is in the {cluster}_CLUSTER_LEADS group
-    if not (
-        request.user.groups.filter(name=f"{cluster.upper()}_CLUSTER_LEADS").exists() 
-        or request.user.is_superuser
-    ):
+    if not has_permission(request.user, clusters=[cluster]):
         raise PermissionDenied
 
     cluster = Cluster.objects.get(code=cluster)
@@ -250,11 +244,7 @@ def update_project(request, pk):
 
     project = get_object_or_404(Project, pk=pk)
 
-    if not (
-        request.user == project.user
-        or request.user.profile.organization == project.organization
-        or request.user.is_superuser
-    ):
+    if not has_permission(user=request.user, project=project):
         raise PermissionDenied
 
     if request.method == "POST":
@@ -277,16 +267,12 @@ def update_project(request, pk):
 
 
 @login_required
-def project_planning_review(request, project:int):
+def project_planning_review(request, project: int):
     """Projects Plans Review"""
 
     project = get_object_or_404(Project, pk=project)
 
-    if not (
-        request.user == project.user
-        or request.user.profile.organization == project.organization
-        or request.user.is_superuser
-    ):
+    if not has_permission(user=request.user, project=project):
         raise PermissionDenied
 
     activity_plans = project.activityplan_set.all()
@@ -311,11 +297,7 @@ def submit_project(request, pk):
 
     project = get_object_or_404(Project, pk=pk)
 
-    if not ( 
-        request.user == project.user 
-        or request.user.profile.organization == project.organization 
-        or request.user.is_superuser
-    ):
+    if not has_permission(user=request.user, project=project):
         raise PermissionDenied
 
     if project:
@@ -430,9 +412,10 @@ def delete_project(request, pk):
     project = get_object_or_404(Project, pk=pk)
     if project.state != "archive":
         project.delete()
-        messages.success(request, 'Project deleted successfully')
+        messages.success(request, "Project deleted successfully")
 
-    return redirect('projects-list')
+    return redirect("projects-list")
+
 
 def copy_project_activity_plan(project, plan):
     """Copy Activity Plans"""

@@ -14,9 +14,9 @@ from django.core.paginator import Paginator
 import django_filters
 from django.db.models import Count, Q
 from django.core.exceptions import PermissionDenied
+from ..utils import has_permission
 
 RECORDS_PER_PAGE = 10
-
 
 class UsersFilter(django_filters.FilterSet):
     class Meta:
@@ -70,10 +70,7 @@ def toggle_status(request, user_id):
 
     # check if req.user is admin of the user organization
     # OR superadmin
-    if not (
-        request.user.profile.organization == user.profile.organization
-        or request.user.is_superuser
-    ):
+    if not has_permission(user=request.user,user_obj=user):
         raise PermissionDenied
 
     if user.is_active:

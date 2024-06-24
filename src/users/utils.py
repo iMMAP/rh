@@ -1,9 +1,10 @@
-from django.contrib.auth.models import Group,User
+from django.contrib.auth.models import Group, User
 
-def has_permission(user: User,user_obj:User, permission: str = "") -> bool:
+
+def has_permission(user: User, user_obj: User, permission: str = "") -> bool:
     if user.is_superuser:
         return True
-    
+
     if permission:
         if not user.has_perm(permission):
             return False
@@ -12,6 +13,7 @@ def has_permission(user: User,user_obj:User, permission: str = "") -> bool:
         return False
 
     return True
+
 
 def assign_default_permissions_to_group(source_group_name: str, target_group: Group):
     try:

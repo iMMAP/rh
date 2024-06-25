@@ -775,7 +775,7 @@ def get_location_report_empty_form(request):
     if activity_plan:
         location_report_form.fields["target_location"].queryset = TargetLocation.objects.filter(
             activity_plan=activity_plan
-        )
+        ).select_related("province", "district", "project")
 
     # Check if the activity plan is selected
     if activity_domain:

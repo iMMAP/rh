@@ -2,12 +2,16 @@ from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.template.loader import render_to_string
+from django.db.models import Prefetch
+
 from django.urls import reverse
 
 from ..forms import ActivityPlanFormSet, DisaggregationFormSet, TargetLocationFormSet, ProjectIndicatorTypeForm
 
 from ..models import (
     ActivityPlan,
+    TargetLocation,
+    DisaggregationLocation,
     Project,
     Indicator,
 )
@@ -63,8 +67,30 @@ def copy_activity_plan(request, project, plan):
 
 
 @login_required
-def create_project_activity_plan(request, project):
-    project = get_object_or_404(Project, pk=project)
+def create_project_activity_plan(request, project_id):
+    project = get_object_or_404(
+        Project.objects.select_related("organization").prefetch_related(
+            "clusters",
+            "donors",
+            "programme_partners",
+            "implementing_partners",
+            Prefetch(
+                "activityplan_set",
+                ActivityPlan.objects.select_related("activity_domain", "beneficiary", "indicator").prefetch_related(
+                    Prefetch(
+                        "targetlocation_set",
+                        TargetLocation.objects.select_related("province", "district", "activity_plan").prefetch_related(
+                            Prefetch(
+                                "disaggregationlocation_set",
+                                DisaggregationLocation.objects.select_related("disaggregation")
+                            ),
+                        ),
+                    ),
+                    "activity_type",
+                    "activity_detail"
+                ),
+            ),
+        ), pk=project_id)
 
     # Get all existing activity plans for the project
     # Create the activity plan formset with initial data from the project
@@ -192,7 +218,6 @@ def create_project_activity_plan(request, project):
     }
     # Render the template with the context data
     return render(request, "rh/projects/forms/project_activity_plan_form.html", context)
-
 
 @login_required
 def get_activity_empty_form(request):

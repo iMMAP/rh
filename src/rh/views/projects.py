@@ -16,8 +16,11 @@ from ..forms import (
     ProjectForm,
 )
 from ..models import (
-    ActivityPlan,
     Project,
+    ActivityPlan,
+    TargetLocation,
+    DisaggregationLocation,
+
 )
 
 from .views import copy_project_target_location, copy_target_location_disaggregation_locations
@@ -54,7 +57,17 @@ def projects_detail(request, pk):
             Prefetch(
                 "activityplan_set",
                 ActivityPlan.objects.select_related("activity_domain", "beneficiary", "indicator").prefetch_related(
-                    "targetlocation_set", "activity_type", "activity_detail"
+                    Prefetch(
+                        "targetlocation_set",
+                        TargetLocation.objects.select_related("province", "district").prefetch_related(
+                            Prefetch(
+                                "disaggregationlocation_set",
+                                DisaggregationLocation.objects.select_related("disaggregation")
+                            ),
+                        ),
+                    ),
+                    "activity_type",
+                    "activity_detail"
                 ),
             ),
         ),

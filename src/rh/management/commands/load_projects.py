@@ -7,12 +7,14 @@ from django.core.management.base import BaseCommand
 from django.db.models import Q
 from django.utils import timezone
 
-from rh.models import (  # TargetLocation,
+from rh.models import (
+    TargetLocation,
     ActivityDetail,
     ActivityDomain,
     ActivityPlan,
     ActivityType,
     BeneficiaryType,
+    Location,
     Cluster,
     Currency,
     Donor,
@@ -33,7 +35,32 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent.parent
 class Command(BaseCommand):
     help = "Import Projects"
 
-    def _create_activity_plans(self):
+    def _load_target_locations(self):
+        # Import the actvity_domain, activity_types, activity_details
+        path = os.path.join(BASE_DIR.parent, "scripts/data/updated_nov_2023/target_locations.xlsx")
+        df = pd.read_excel(path)
+        df.fillna(False, inplace=True)
+
+        locations = df.to_dict(orient="records")
+        for index, location in enumerate(locations):
+            project = Project.objects.filter(old_id=location.get("project_id", "")).first()
+            country = Location.objects.filter(code='AF').first()
+            province = Location.objects.filter(code=location.get("admin1pcode", "").strip()).first()
+            district = Location.objects.filter(code=location.get("admin2pcode", "").strip()).first()
+            activity_plans = project.activityplan_set.all()
+            for activity_plan in activity_plans:
+                target_location, created = TargetLocation.objects.get_or_create(
+                    project_id=project.id,
+                    active=True,
+                    state="in-progress",
+                    activity_plan_id=activity_plan.id,
+                    country_id=country.id,
+                    province_id=province.id,
+                    district_id=district.id,
+                )
+                target_location.save()
+
+    def _load_activity_plans(self):
         # Import the actvity_domain, activity_types, activity_details
         path = os.path.join(BASE_DIR.parent, "scripts/data/updated_nov_2023/activity_plans.xlsx")
         df = pd.read_excel(path)
@@ -80,7 +107,7 @@ class Command(BaseCommand):
             )
             activity_plan.save()
 
-    def _import_projects(self):
+    def _load_projects(self):
         # Import the actvity_domain, activity_types, activity_details
         path = os.path.join(BASE_DIR.parent, "scripts/data/updated_nov_2023/projects.xlsx")
         df = pd.read_excel(path)
@@ -165,8 +192,9 @@ class Command(BaseCommand):
 
     def _import_data(self):
         # Import Projects
-        self._import_projects()
-        self._create_activity_plans()
+        # self._load_projects()
+        # self._load_activity_plans()
+        self._load_target_locations()
 
     def handle(self, *args, **options):
         self._import_data()

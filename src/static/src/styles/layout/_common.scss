@@ -392,9 +392,13 @@ ul{
 .page-top-panel {
   // border-bottom: 2px solid $gray-e6;
   // padding-bottom: 16px;
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 0.2rem;
 
   @include media('>=tablet') {
     display: flex;
+    flex-direction: row;
     align-items: start;
     justify-content: space-between;
     padding-bottom: 0;
@@ -406,7 +410,7 @@ ul{
   }
 
   .tabs-nav-holder {
-    margin-bottom: 8px;
+    // margin-bottom: 8px;
 
     @include media('>=tablet') {
       margin-bottom: 0;

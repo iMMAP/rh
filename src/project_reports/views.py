@@ -14,6 +14,7 @@ from django.template.loader import render_to_string
 from django.urls import reverse
 from django.utils import timezone
 from django.views.decorators.cache import cache_control
+from django.contrib import messages
 
 # from rh.forms import ProjectIndicatorTypeForm
 from rh.models import (
@@ -125,6 +126,8 @@ def create_project_monthly_report_view(request, project):
             "reports_view": True,
         }
         return render(request, "project_reports/forms/monthly_report_form.html", context)
+
+    messages.error(request, "Your project is not ready for reporting! Please submit your project first.")
 
     return redirect(
         "project_reports_home",

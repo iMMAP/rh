@@ -1,25 +1,26 @@
 {% load static %}
+{% load humanize %}
 
 <tr id="user-{{user.id}}">
-    <td class="cluster-col">
+    <td >
         {{ user.first_name }} {{user.last_name}} <em>({{ user.username }})</em>
     </td>
-    <td class="description-col">
+    <td >
         {{ user.email }}
     </td>
-    <td class="cluster-col">
+    <td >
         {% for cluster in user.profile.clusters.all %}
         {{ cluster.title }}
         {% if not forloop.last %},{% endif %}
         {% endfor %}
     </td>
-    <td class="organisation-col">
-        {{ user.date_joined }}
+    <td >
+        {{ user.date_joined|naturaltime}}
     </td>
-    <td class="location-col">
-        {{user.last_login}}
+    <td >
+        {{user.last_login|naturaltime}}
     </td>
-    <td class="status-col">
+    <td >
         {% if user.is_active %}
         <span class="in-progress">
             Active
@@ -30,7 +31,7 @@
         </span>
         {% endif %}
     </td>
-    <td class="action-col">
+    <td>
         <div class="table-flex-holder">
             <ul class="table-options-buttons">
                 {% if perms.rh.activate_deactivate_user %}

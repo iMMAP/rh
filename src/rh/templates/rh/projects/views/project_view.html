@@ -573,12 +573,9 @@
                         </svg>
                     </a>
                 {% endif %}
-                <a href="#"
-                    data-url="{% url 'projects-delete' project.pk %}"
-                    data-type="delete" 
-                    data-name="project"
-                    data-verify="{{project.state}}"  
-                    class="btn btn-gray show-sw-action-popup">
+                <a 
+                    href="{% url 'projects-delete' project.pk %}"
+                    class="btn btn-gray">
                     <span class="btn-text">Delete</span>
                     <span class="icon-trashbin-outline"></span>
                 </a>

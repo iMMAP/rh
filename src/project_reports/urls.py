@@ -7,7 +7,7 @@ from . import views as user_views
 urlpatterns = [
     # Projects CRUD
     path(
-        "project/monthly_progress/?project=<str:project>/",
+        "project/<str:project>/monthly_progress",
         user_views.index_project_report_view,
         name="project_reports_home",
     ),
@@ -145,7 +145,7 @@ urlpatterns = [
     #     name="get_indicator_reference",
     # ),
     path(
-        "project/monthly_progress/?project=<str:project>/",
+        "project/monthly_progress/<str:project>/",
         user_views.index_project_report_view,
         name="project_reports_home",
     ),

@@ -1,6 +1,7 @@
 {% extends "../projects_index.html" %}
 
 {% load static %}
+{% load humanize %}
 
 {% block project_body %}
     <div class="breadcrumbs-nav-panel">
@@ -601,7 +602,7 @@
                     <span class="label">Clusters</span>
                     <span class="text-read-only m2m-badges">
                         {% for cluster in project.clusters.all %}
-                        <span class="btn btn-red"> {{ cluster.title }}</span>
+                        <span class="btn btn-gray"> {{ cluster.title }}</span>
                         {% endfor %}
                     </span>
                 </div>
@@ -609,7 +610,7 @@
                     <span class="label">Project donor</span>
                     <span class="text-read-only m2m-badges">
                         {% for donor in project.donors.all %}
-                        <span class="btn btn-red"> {{ donor.name }}</span>
+                        <span class="btn btn-gray"> {{ donor.name }}</span>
                         {% endfor %}
                     </span>
                 </div>
@@ -617,7 +618,7 @@
                     <span class="label">Implementing Partners</span>
                     <span class="text-read-only m2m-badges">
                         {% for implementing_partner in project.implementing_partners.all %}
-                        <span class="btn btn-red"> {{ implementing_partner.code }}</span>
+                        <span class="btn btn-gray"> {{ implementing_partner.code }}</span>
                         {% endfor %}
                     </span>
                 </div>
@@ -625,7 +626,7 @@
                     <span class="label">Programme Partners</span>
                     <span class="text-read-only m2m-badges">
                         {% for programme_partner in project.programme_partners.all %}
-                        <span class="btn btn-red"> {{ programme_partner.code }}</span>
+                        <span class="btn btn-gray"> {{ programme_partner.code }}</span>
                         {% endfor %}
                     </span>
                 </div>
@@ -644,9 +645,9 @@
                 <div class="multiple-fields-row">
                     <div class="field-col">
                         <div class="input-field">
-                            <span class="label">Project budget</span>
+                            <span class="label">Project budget </span>
                             <div class="input-holder">
-                                <span class="text-read-only">{{ project.budget }}</span>
+                                <span class="text-read-only">{{ project.budget|intcomma }}</span>
                             </div>
                         </div>
                     </div>
@@ -662,7 +663,7 @@
                         <div class="input-field">
                             <span class="label">Budget Received</span>
                             <div class="input-holder">
-                                <span class="text-read-only">{{ project.budget_received }}</span>
+                                <span class="text-read-only">{{ project.budget_received|intcomma }}</span>
                             </div>
                         </div>
                     </div>
@@ -670,7 +671,7 @@
                         <div class="input-field">
                             <span class="label">Budget Gap</span>
                             <div class="input-holder">
-                                <span class="text-read-only">{{ project.budget_gap }}</span>
+                                <span class="text-read-only">{{ project.budget_gap|intcomma }}</span>
                             </div>
                         </div>
                     </div>
@@ -721,7 +722,7 @@
                     <span class="label">Activity Domains</span>
                     <span class="text-read-only m2m-badges">
                         {% for activity_domain in project.activity_domains.all %}
-                        <span class="btn btn-red"> {{ activity_domain.name }}</span>
+                        <span class="btn btn-gray "> {{ activity_domain.name }}</span>
                         {% endfor %}
                     </span>
                 </div>
@@ -756,7 +757,7 @@
                     <span>
                     Activities Planning
                     </span>
-                    <span class="btn btn-red" style="float:right"> {{ activity_plans | length }}</span>
+                    <span class="btn btn-gray" style="float:right"> {{ activity_plans | length }}</span>
                 </span>
                 
             </div>

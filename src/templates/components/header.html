@@ -36,7 +36,7 @@
 
                                 {% for cluster in clusters %}
                                     <li class="inner-nav-item">
-                                    <a class="inner-nav-link" href="{% url 'cluster-projects-list' cluster.code %}">{{cluster.code}}'s Projects</a>
+                                    <a class="inner-nav-link" href="{% url 'cluster-projects-list' cluster.code %}">{{cluster.code|upper}}'s Projects</a>
                                 </li>
                                 {% endfor %}
 

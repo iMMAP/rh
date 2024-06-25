@@ -294,13 +294,9 @@
                                             {% if perms.rh.delete_project %}
                                             <li>
                                                 <button>
-                                                    <a href="#"
-                                                        data-url="{% url 'projects-delete' project.pk %}"
-                                                        data-type="delete"
-                                                        data-verify="{{project.state}}" 
-                                                        data-name="project" 
+                                                    <a href="{% url 'projects-delete' project.pk %}"
                                                         data-tippy-content="Delete Project" 
-                                                        class="show-sw-action-popup">
+                                                        class="">
                                                         <span class="project-detail icon-trashbin"></span></a>
                                                 </button>
                                             </li>

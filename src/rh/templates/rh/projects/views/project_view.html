@@ -1,6 +1,7 @@
 {% extends "../projects_index.html" %}
 
 {% load static %}
+{% load humanize %}
 
 {% block project_body %}
     <div class="breadcrumbs-nav-panel">
@@ -644,9 +645,9 @@
                 <div class="multiple-fields-row">
                     <div class="field-col">
                         <div class="input-field">
-                            <span class="label">Project budget</span>
+                            <span class="label">Project budget </span>
                             <div class="input-holder">
-                                <span class="text-read-only">{{ project.budget }}</span>
+                                <span class="text-read-only">{{ project.budget|intcomma }}</span>
                             </div>
                         </div>
                     </div>
@@ -662,7 +663,7 @@
                         <div class="input-field">
                             <span class="label">Budget Received</span>
                             <div class="input-holder">
-                                <span class="text-read-only">{{ project.budget_received }}</span>
+                                <span class="text-read-only">{{ project.budget_received|intcomma }}</span>
                             </div>
                         </div>
                     </div>
@@ -670,7 +671,7 @@
                         <div class="input-field">
                             <span class="label">Budget Gap</span>
                             <div class="input-holder">
-                                <span class="text-read-only">{{ project.budget_gap }}</span>
+                                <span class="text-read-only">{{ project.budget_gap|intcomma }}</span>
                             </div>
                         </div>
                     </div>

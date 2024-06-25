@@ -408,13 +408,15 @@ def unarchive_project(request, pk):
 @login_required
 @permission_required("rh.delete_project", raise_exception=True)
 def delete_project(request, pk):
-    """Delete Project View"""
     project = get_object_or_404(Project, pk=pk)
-    if project.state != "archive":
-        project.delete()
-        messages.success(request, "Project deleted successfully")
 
-    return redirect("projects-list")
+    if request.method == "GET":
+        return render(request, "rh/projects/views/delete_confirmation.html", {"project": project})
+    elif request.method == "POST":
+        if project.state != "archive":
+            project.delete()
+            messages.success(request, "Project deleted successfully")
+            return redirect("projects-list")
 
 
 def copy_project_activity_plan(project, plan):

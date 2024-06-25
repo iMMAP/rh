@@ -9,6 +9,45 @@
 
 {% block content %}
     <div class="container">
+        <!-- filter applied  -->
+        <div class="filter-container" id="filter-container">
+            <span class="filter-applied deactivated" id="filter-applied">
+                <svg xmlns="http://www.w3.org/2000/svg" 
+                fill="none" viewBox="0 0 23 23" 
+                stroke-width="1.5" 
+                stroke="currentColor"  
+                width="20" height="20">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 1 1-3 0m3 0a1.5 1.5 0 1 0-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-9.75 0h9.75" />
+                </svg>
+            </span>
+            <span class="filter-items" id="filter-items">
+                {% if project_filter.form.clusters.data %}
+                <span class="title" id="title">{{project_filter.form.clusters.name}}</span>
+                {% endif %}
+                {% if project_filter.form.donors.data %}
+                    <span class="title" id="title">{{project_filter.form.donors.name}}</span>
+                {% endif %}
+                {% if project_filter.form.activity_domains.data %}
+                    <span class="title" id="title">{{project_filter.form.activity_domains.name}}</span>
+                {% endif %}
+                {% if project_filter.form.implementing_partners.data %}
+                    <span class="title" id="title">{{project_filter.form.implementing_partners.name}}</span>
+                {% endif %}
+                {% if project_filter.form.programme_partners.data %}
+                    <span class="title" id="title">{{project_filter.form.programme_partners.name}}</span>
+                {% endif %}
+                {% if project_filter.form.start_date.data %}
+                    <span class="title" id="title">{{project_filter.form.start_date.name}}</span>
+                {% endif %}
+                {% if project_filter.form.end_date.data %}
+                    <span class="title" id="title">{{project_filter.form.end_date.name}}</span>
+                {% endif %}
+                {% if project_filter.form.user.data %}
+                    <span class="title" id="title">{{project_filter.form.user.name}}</span>
+                {% endif %}
+            </span>
+        </div>
+        <!-- filter applied end -->
         <div class="page-top-panel">
             <div class="tabs-nav-holder">
                 <ul class="tabs-nav">
@@ -17,6 +56,7 @@
                             ({{ projects_count }})
                         </a>
                     </li>
+                    {% if active_projects_count %}
                     <li class=" {% if request.GET.state == 'in-progress' %}active{% endif %}">
                         <a href="{{request.GET.url}}?state=in-progress">Active Projects
                             (
@@ -26,6 +66,9 @@
                             )
                         </a>
                     </li>
+                    {% endif %}
+
+                    {% if draft_projects_count %}
                     <li class=" {% if request.GET.state == 'draft' %}active{% endif %}">
                         <a href="{{request.GET.url}}?state=draft">Draft Projects
                             (
@@ -35,7 +78,8 @@
                             )
                         </a>
                     </li>
-                    {% if completed_projects_count or completed_projects %}
+                    {% endif %}
+                    {% if completed_projects_count%}
                         <li class=" {% if request.GET.state == 'done' %}active{% endif %}">
                             <a href="{{request.GET.url}}?state=done">Completed Projects
                                 (
@@ -46,7 +90,7 @@
                             </a>
                         </li>
                     {% endif %}
-                    {% if archived_projects_count or archived_projects %}
+                    {% if archived_projects_count %}
                         <li class=" {% if request.GET.state == 'archive' %}active{% endif %}">
                             <a href="{{request.GET.url}}?state=archive">Archived Projects
                                 (
@@ -99,46 +143,6 @@
                 </div>
             </div>
         </div>
-
-        <!-- filter applied  -->
-        <div class="filter-container" id="filter-container">
-            <span class="filter-applied deactivated" id="filter-applied">
-                <svg xmlns="http://www.w3.org/2000/svg" 
-                fill="none" viewBox="0 0 23 23" 
-                stroke-width="1.5" 
-                stroke="currentColor"  
-                width="20" height="20">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 1 1-3 0m3 0a1.5 1.5 0 1 0-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-9.75 0h9.75" />
-                </svg>
-            </span>
-            <span class="filter-items" id="filter-items">
-                {% if project_filter.form.clusters.data %}
-                <span class="title" id="title">{{project_filter.form.clusters.name}}</span>
-                {% endif %}
-                {% if project_filter.form.donors.data %}
-                    <span class="title" id="title">{{project_filter.form.donors.name}}</span>
-                {% endif %}
-                {% if project_filter.form.activity_domains.data %}
-                    <span class="title" id="title">{{project_filter.form.activity_domains.name}}</span>
-                {% endif %}
-                {% if project_filter.form.implementing_partners.data %}
-                    <span class="title" id="title">{{project_filter.form.implementing_partners.name}}</span>
-                {% endif %}
-                {% if project_filter.form.programme_partners.data %}
-                    <span class="title" id="title">{{project_filter.form.programme_partners.name}}</span>
-                {% endif %}
-                {% if project_filter.form.start_date.data %}
-                    <span class="title" id="title">{{project_filter.form.start_date.name}}</span>
-                {% endif %}
-                {% if project_filter.form.end_date.data %}
-                    <span class="title" id="title">{{project_filter.form.end_date.name}}</span>
-                {% endif %}
-                {% if project_filter.form.user.data %}
-                    <span class="title" id="title">{{project_filter.form.user.name}}</span>
-                {% endif %}
-            </span>
-        </div>
-        <!-- filter applied end -->
         
         {% include "rh/projects/views/_projects_table.html" %}
     </div>

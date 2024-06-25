@@ -122,11 +122,13 @@
                                 <td class="">
                                     <div class="table-flex-holder">
                                         <ul class="table-options-buttons ">
+                                            {% if perms.rh.change_project %}
                                             <li>
                                                 <a href="{% url 'projects-update' project.pk %}" data-tippy-content="Edit project and its activity plan">
                                                     Edit
                                                 </a>
                                             </li>
+                                            {% endif %}
 
                                             <li>
                                                 <button class="export-button">
@@ -140,6 +142,8 @@
                                                     </a>
                                                 </button>
                                             </li>
+
+                                            {% if perms.rh.copy_project %}
                                             <li>
                                                 <button>
                                                     <a href="#"
@@ -152,6 +156,9 @@
                                                     </a>
                                                 </button>
                                             </li>
+                                            {% endif %}
+
+                                            {% if prems.rh.archive_unarchive_project %}
                                             <li>
                                                 <button class="button-archive-unarchive">
                                                     {% if project.active %}
@@ -189,6 +196,9 @@
                                                     {% endif %}
                                                 </button>
                                             </li>
+                                            {% endif %}
+
+                                            {% if perms.rh.delete_project %}
                                             <li>
                                                 <button>
                                                     <a href="#"
@@ -201,6 +211,7 @@
                                                         <span class="project-detail icon-trashbin"></span></a>
                                                 </button>
                                             </li>
+                                            {% endif %}
                                         </ul>
                                     </div>
                                 </td>

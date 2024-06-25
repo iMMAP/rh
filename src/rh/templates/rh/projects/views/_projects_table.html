@@ -4,6 +4,18 @@
 {% if projects %}
     <div class="content-block bottom-border">
 
+ <!-- filter applied  -->
+        <div class="filter-container" id="filter-container">
+            {% for field in project_filter.form%}
+                    {% if field.value and field.name != 'state' %}
+                        <span class="filter-item title" id="title">
+                            {{field.name}}
+                        </span>
+                    {% endif %}
+            {% endfor %}
+        </div>
+        <!-- filter applied end -->
+
         {% comment %} Table Actions and filters {% endcomment %}
         <div class="page-top-panel">
             <div class="tabs-nav-holder">

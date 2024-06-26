@@ -5,6 +5,7 @@ from django.urls import include, path
 from django.views.generic import TemplateView
 
 admin.site.site_header = "ReportHub Admin"
+admin.site.site_title = settings.APP_NAME
 
 urlpatterns = [
     path("", include("rh.urls")),

@@ -15,6 +15,7 @@ DJANGO_SETTINGS_MODULE = env("DJANGO_SETTINGS_MODULE", default="core.settings.lo
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env("DEBUG", default=True)
+APP_NAME = env("APP_NAME", default="ReportHub")
 
 ALLOWED_HOSTS = ["*"]
 
@@ -27,6 +28,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "django.contrib.humanize",
     # Installed packages apps
     "django_filters",
     "smart_selects",

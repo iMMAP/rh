@@ -21,12 +21,14 @@
       }
 
       &:last-child {
+
         /* stylelint-disable */
         td {
           @include media('<tablet') {
             border-bottom: 1px solid $gray-e6;
           }
         }
+
         /* stylelint-enable */
       }
     }
@@ -101,10 +103,12 @@
   tbody {
     tr {
       &:last-child {
+
         /* stylelint-disable */
         td {
           border-bottom: 0;
         }
+
         /* stylelint-enable */
       }
     }
@@ -113,28 +117,29 @@
 
 //all projects table
 .all-projects-table {
-  table-layout: fixed;
+  // table-layout: fixed;
   min-width: 1150px;
 
   th {
     height: auto;
     min-height: 46px;
-    display: flex;
+    // display: flex;
     align-items: center;
-    padding: 8px !important;
+    padding: 16px !important;
   }
 
   td {
-    padding: 11px 8px !important;
+    padding: 14px 8px !important;
   }
 
   tr {
-    display: flex;
-    flex-wrap: wrap;
+    // display: flex;
+    // flex-wrap: wrap;
 
     &:hover {
       background-color: #f2f2f2;
     }
+
     &:hover td {
       color: #be2126;
     }
@@ -148,10 +153,12 @@
     }
 
     .table-slide-opener {
+
       /* stylelint-disable */
       [class*=icon-] {
         transform: rotate(-180deg);
       }
+
       /* stylelint-enable */
     }
   }
@@ -215,7 +222,7 @@
 
   }
 
-  .project-status{
+  .project-status {
     background-color: #be2126;
   }
 
@@ -404,12 +411,14 @@
   tbody {
     tr {
       &:last-child {
+
         /* stylelint-disable */
         td {
           @include media('>=tablet') {
             border-bottom: 1px solid $gray-d1;
           }
         }
+
         /* stylelint-enable */
       }
     }
@@ -421,7 +430,7 @@
       vertical-align: middle;
     }
 
-    > a {
+    >a {
       display: inline-block;
       vertical-align: top;
       margin-bottom: 14px;
@@ -519,12 +528,14 @@
   tbody {
     tr {
       &:last-child {
+
         /* stylelint-disable */
         td {
           @include media('>=tablet') {
             border-bottom: 1px solid $gray-d1;
           }
         }
+
         /* stylelint-enable */
       }
     }
@@ -612,12 +623,14 @@
   tbody {
     tr {
       &:last-child {
+
         /* stylelint-disable */
         td {
           @include media('>=tablet') {
             border-bottom: 1px solid $gray-d1;
           }
         }
+
         /* stylelint-enable */
       }
     }
@@ -630,7 +643,7 @@
       height: 72px;
     }
   }
- 
+
   .sector-col {
     @include media('>=desktop') {
       width: 11.6%;

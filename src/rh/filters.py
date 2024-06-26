@@ -53,6 +53,7 @@ class ProjectsFilter(django_filters.FilterSet):
             "start_date": ["exact"],
             "end_date": ["exact"],
             "is_hrp_project": ["exact"],
+            "state": ["exact"],
         }
         filter_overrides = {
             models.DateTimeField: {

@@ -59,13 +59,10 @@ STORAGES = {
     "default": {
         "BACKEND": "django.core.files.storage.FileSystemStorage",
     },
-    # "staticfiles": {
-    #     "BACKEND":  "django.contrib.staticfiles.storage.ManifestStaticFilesStorage"
-    # },
+    "staticfiles": {
+        "BACKEND":  "django.contrib.staticfiles.storage.ManifestStaticFilesStorage"
+    },
 }
-
-STATICFILES_STORAGE = "django.contrib.staticfiles.storage.ManifestStaticFilesStorage"
-
 
 #
 NPLUSONE_LOGGER = logging.getLogger("nplusone")

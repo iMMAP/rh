@@ -3,6 +3,10 @@
 {% load static %}
 {% load humanize %}
 
+{% block page_title %}
+    Project: {{project.title}}
+{% endblock page_title %}
+
 {% block project_body %}
     <div class="breadcrumbs-nav-panel">
         <div class="holder">

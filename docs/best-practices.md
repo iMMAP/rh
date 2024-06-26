@@ -171,7 +171,7 @@ logger.critical('Critical message')
 
 ### Django specific guidelines
 
-Follow the Django coding style guide (https://docs.djangoproject.com/en/dev/internals/contributing/writing-code/coding-style/).
+Follow the Django coding style guide. [here](https://docs.djangoproject.com/en/dev/internals/contributing/writing-code/coding-style/).
 
   - Use Django's ORM (Object-Relational Mapping) for database access and avoid writing raw SQL queries whenever possible.
   - Organize your Django project using the recommended project structure (https://docs.djangoproject.com/en/dev/intro/reusable-apps/).

@@ -4,6 +4,11 @@
 {% load compress %}
 {% load vite %}
 
+{% block page_title %} 
+Profile: {{user.username}}
+{% endblock page_title %}
+
+
 {% block content %}
     <div class="base-section">
         <div class="container">

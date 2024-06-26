@@ -13,7 +13,7 @@ from ..forms import (
 @permission_required("rh.add_organization", raise_exception=True)
 def organization_register(request):
     if request.method == "POST":
-        org_form = OrganizationRegisterForm(request.POST)
+        org_form = OrganizationRegisterForm(request.POST,user=request.user)
         if org_form.is_valid():
             code = org_form.cleaned_data.get("code")
             org_code = code.upper()
@@ -23,6 +23,6 @@ def organization_register(request):
             else:
                 messages.error(request, "Something went wrong ! please try again ")
     else:
-        org_form = OrganizationRegisterForm()
+        org_form = OrganizationRegisterForm(user=request.user)
     context = {"org_form": org_form}
     return render(request, "rh/projects/forms/organization_register_form.html", context)

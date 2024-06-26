@@ -1,8 +1,10 @@
 {% extends "rh/projects/forms/project_form_base.html" %}
 {% load static %}
 
-{% block header %}
-{% endblock header %}
+{% block page_title %} 
+    Plan: {{project.title}} Activities
+{% endblock page_title %}
+
 
 {% block project_contents %}
     <div class="project-title-holder">

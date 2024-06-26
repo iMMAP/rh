@@ -14,7 +14,7 @@
                     </li>
                     {% if project %}
                         <li>
-                            <a id="return-url" href="{% url 'clusters-projects-list' %}?state={{project.state}}">
+                            <a id="return-url" href="{% url 'projects-list' %}?state={{project.state}}">
                                 {% if project.state == 'in-progress' %}
                                     Active Projects
                                 {% elif project.state == 'draft' %}

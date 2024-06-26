@@ -1,0 +1,98 @@
+{% extends "_base.html" %}
+
+{% load static %}
+
+{% block page_title %}
+    Delete Confirmation: {{project.title}}
+{% endblock page_title %}
+
+
+{% block content %}
+<div class="container">
+    <div class="breadcrumbs-nav-panel">
+        <div class="holder">
+            <ul class="breadcrumbs">
+                <li>
+                    <a href="{% url 'landing' %}">Home</a>
+                </li>
+                    <li>
+                        <a id="return-url" href="{{request.GET.url}}?state={{project.state}}">
+                            {% if project.state == 'in-progress' %}
+                                Active Projects
+                            {% elif project.state == 'draft' %}
+                                Draft Projects
+                            {% elif project.state == 'archive' %}
+                                Archived Projects
+                            {% elif project.state == 'done' %}
+                                Completed Projects
+                            {% endif %}
+                        </a>
+                    </li>   
+                    <li class="current">{{ project.code }}</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="project-options-panel">
+        <div class="top-block">
+            <ul class="">
+                <h1>Are you sure you want to delete the poroject? </h1> 
+            </ul>
+        </div>
+    </div>
+    
+    <div class="profile-info-holder">
+        <div class="profile-info-block">
+            <h2>
+                <a href="{% url 'projects-detail' project.pk %}" class="edit-btn" type="button"><span class="icon-pen"></span></a>
+                {{ project.title }}
+            </h1>
+            <em class="">{{project.description}}</em>
+         
+        </div>
+        <div class="profile-info-block">
+            <div class="subtitle-block">
+                <strong class="subtitle">Project information</strong>
+            </div>
+            <ul class="user-profile-contacts">
+                <li>
+                    <strong class="title">Clusters</strong>
+                    {% for cluster in project.clusters.all %}{{ cluster.title }},&nbsp; {% endfor %}
+                </li>
+                <li>
+                    <strong class="title">Implementing Partners</strong>
+                    {% for partner in project.implementing_partners.all %}{{ partner.name }},&nbsp; {% endfor %}
+                </li>
+                <li>
+                    <strong class="title">Focal Point</strong>
+                    <address>
+                        <a href="mailto:{{ project.user.email }}">{{ project.user.email }}</a>,
+                        {% if project.user.profile.phone %}
+                            <a href="tel:{{ project.user.profile.phone }}">{{ project.user.profile.phone }}</a>
+                        {% endif %}
+                    </address>
+                </li>
+                <li>
+                    <strong class="title">Is HRP Project</strong>
+                    {% if project.is_hrp_project %}
+                        Yes
+                    {% else %}
+                        No
+                    {% endif %}
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <form method="post" class="plan-submit-holder" >
+        {% csrf_token %}
+        <input type="submit" class="btn btn-gray" value="Yes, I’m sure">
+        <a href="#" class="btn btn-red cancel-link">No, take me back</a>
+    </form>
+</div>
+{% endblock %}
+
+
+{% block scripts %}
+    <script src="{% static 'admin/js/cancel.js' %}" async></script>
+{% endblock scripts %}

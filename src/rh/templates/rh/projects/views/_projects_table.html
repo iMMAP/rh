@@ -3,13 +3,118 @@
 {% load template_tags %}
 
 {% if projects %}
-    <div class="content-block top-border bottom-border">
+    <div class="content-block bottom-border">
+
+ <!-- filter applied  -->
+        <div class="filter-container" id="filter-container">
+            {% for field in project_filter.form%}
+                    {% if field.value and field.name != 'state' %}
+                        <span class="filter-item title" id="title">
+                            {{field.name}}
+                        </span>
+                    {% endif %}
+            {% endfor %}
+        </div>
+        <!-- filter applied end -->
+
+        {% comment %} Table Actions and filters {% endcomment %}
+        <div class="page-top-panel">
+            <div class="tabs-nav-holder">
+                <ul class="tabs-nav">
+                    <li class=" {% if not request.GET.state  %}active{% endif %}">
+                        <a href="{{request.path}}">All Projects
+                            ({{ projects_count }})
+                        </a>
+                    </li>
+                    <li class=" {% if request.GET.state == 'in-progress' %}active{% endif %}">
+                        <a href="{{request.GET.url}}?state=in-progress">Active Projects
+                            (
+                            {% if active_projects_count %}
+                                {{ active_projects_count }}
+                            {% endif %}
+                            )
+                        </a>
+                    </li>
+                    <li class=" {% if request.GET.state == 'draft' %}active{% endif %}">
+                        <a href="{{request.GET.url}}?state=draft">Draft Projects
+                            (
+                            {% if draft_projects_count %}
+                                {{ draft_projects_count }}
+                            {% endif %}
+                            )
+                        </a>
+                    </li>
+                    {% if completed_projects_count or completed_projects %}
+                        <li class=" {% if request.GET.state == 'done' %}active{% endif %}">
+                            <a href="{{request.GET.url}}?state=done">Completed Projects
+                                (
+                                {% if completed_projects_count %}
+                                    {{ completed_projects_count }}
+                                {% endif %}
+                                )
+                            </a>
+                        </li>
+                    {% endif %}
+                    {% if archived_projects_count or archived_projects %}
+                        <li class=" {% if request.GET.state == 'archive' %}active{% endif %}">
+                            <a href="{{request.GET.url}}?state=archive">Archived Projects
+                                (
+                                {% if archived_projects_count %}
+                                    {{ archived_projects_count }}
+                                {% endif %}
+                                )
+                            </a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+            <div class="actions-panel">
+                {% include "rh/projects/views/_projects_filters_drawer.html" %}
+                <div class="export-formats-holder">
+                    <span class="btn btn-gray export-open">
+                        <span class="btn-text">Export</span>
+                        <!-- spinner start-->
+                        <img class='downloading' style="width: 1.2rem;" src="{% static 'src/images/spinner.gif' %}" />
+                        <!-- spinner end -->
+                        <span class="icon-download"></span>
+                    </span>
+                    <div class="export-formats">
+                        <span class="title">File format</span>
+                        <div class="format-list">
+                            <div class="export-link-holder" 
+                                onclick="exportButton(event)"
+                                data-export-url="{% url 'export-org-projects' 'csv' %}">
+                                <span class="export-link cursor-pointer">
+                                    CSV
+                                </span>
+                            </div>
+                            <div class="export-link-holder" 
+                                onclick="exportButton(event)"
+                                data-export-url="{% url 'export-org-projects' 'xls' %}">
+                                <span class="export-link cursor-pointer" >
+                                    Excel
+                                </span>
+                            </div>
+                            <div class="export-link-holder" 
+                                onclick="exportButton(event)"
+                                data-export-url="{% url 'export-org-projects' 'json' %}">
+                                <span class="export-link cursor-pointer">
+                                    JSON
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {% comment %} Table {% endcomment %}
         <div id="tab-1">
             <div class="table-wrapper-scrollable">
-                <table class="table all-projects-table js-collapsible-table">
-                    <thead>
+                <table class="table all-projects-table">
+                    <thead class="content-block top-border">
                         <tr>
-                            <th class="cluster-col">
+                            <th class="">
                                 <div class="table-flex-holder">
                                     <div class="input-check-holder">
                                         <input type="checkbox"
@@ -30,7 +135,7 @@
                                     </div>
                                 </div>
                             </th>
-                            <th class="title-col">
+                            <th class="">
                                 <div class="table-flex-holder">
                                     <strong class="table-title">Cluster/Sector</strong>
                                     <div class="table-sort-buttons">
@@ -43,7 +148,7 @@
                                     </div>
                                 </div>
                             </th>
-                            <th class="organisation-col">
+                            <th class="">
                                 <div class="table-flex-holder">
                                     <strong class="table-title">Implementing Partners</strong>
                                     <div class="table-sort-buttons">
@@ -56,23 +161,22 @@
                                     </div>
                                 </div>
                             </th>
-                            <th class="location-col">
+                            <th class="">
                                 <div class="table-flex-holder">
                                     <strong class="table-title">Programme Partners</strong>
                                 </div>
                             </th>
-                            
-                            <th class="description-col">
+                            <th class="">
                                 <div class="table-flex-holder">
                                     <strong class="table-title">Organization</strong>
                                 </div>
                             </th>
-                            <th class="status-col">
+                            <th class="">
                                 <div class="table-flex-holder">
                                     <strong class="table-title">Status</strong>
                                 </div>
                             </th>
-                            <th class="action-col">
+                            <th class="">
                                 <div class="table-flex-holder">
                                     <strong class="table-title">Action</strong>
                                 </div>
@@ -84,7 +188,7 @@
                         <!--Include The Projects Details Here -->
                         {% for project in projects %}
                             <tr>
-                                <td class="cluster-col">
+                                <td class="">
                                     <a class="table-flex-holder" href="{% url 'projects-detail' project.id %}">
                                         <div class="input-check-holder">
                                             <input type="checkbox" id="table-check-{{project.pk}}" class="project-checkbox" value="{{project.pk}}" name="table-check{{project.pk}}" />
@@ -95,40 +199,42 @@
                                         {{ project.title|truncatechars:100 }}
                                     </a>
                                 </td>
-                                <td class="title-col">
+                                <td class="">
                                     {% for cluster in project.clusters.all %}
                                         {{ cluster.title }}
                                         {% if not forloop.last %},{% endif %}
                                     {% endfor %}
                                 </td>
-                                <td class="organisation-col">
+                                <td class="">
                                     {% for partner in project.implementing_partners.all %}
                                         {{ partner.code }}
                                         {% if not forloop.last %},{% endif %}
                                     {% endfor %}
                                 </td>
-                                <td class="location-col">
+                                <td class="">
                                     {% for p_partner in project.programme_partners.all %}
                                         {{ p_partner.code }}
                                         {% if not forloop.last %},{% endif %}
                                     {% endfor %}
                                 </td>
-                                <td class="description-col">
+                                <td class="">
                                     {{ project.organization }}
                                 </td>
-                                <td class="status-col">
+                                <td class="">
                                     <span class="{{ project.state }}">
                                         {{ project.get_state_display }}
                                     </span>
                                 </td>
-                                <td class="action-col">
+                                <td class="">
                                     <div class="table-flex-holder">
                                         <ul class="table-options-buttons ">
+                                            {% if perms.rh.change_project %}
                                             <li>
                                                 <a href="{% url 'projects-update' project.pk %}" data-tippy-content="Edit project and its activity plan">
                                                     Edit
                                                 </a>
                                             </li>
+                                            {% endif %}
 
                                             <li>
                                                 <button class="export-button">
@@ -142,6 +248,8 @@
                                                     </a>
                                                 </button>
                                             </li>
+
+                                            {% if perms.rh.copy_project %}
                                             <li>
                                                 <button>
                                                     <a href="#"
@@ -154,6 +262,9 @@
                                                     </a>
                                                 </button>
                                             </li>
+                                            {% endif %}
+
+                                            {% if perms.rh.archive_unarchive_project %}
                                             <li>
                                                 <button class="button-archive-unarchive">
                                                     {% if project.active %}
@@ -191,18 +302,18 @@
                                                     {% endif %}
                                                 </button>
                                             </li>
+                                            {% endif %}
+
+                                            {% if perms.rh.delete_project %}
                                             <li>
                                                 <button>
-                                                    <a href="#"
-                                                        data-url="{% url 'projects-delete' project.pk %}"
-                                                        data-type="delete"
-                                                        data-verify="{{project.state}}" 
-                                                        data-name="project" 
+                                                    <a href="{% url 'projects-delete' project.pk %}"
                                                         data-tippy-content="Delete Project" 
-                                                        class="show-sw-action-popup">
+                                                        class="">
                                                         <span class="project-detail icon-trashbin"></span></a>
                                                 </button>
                                             </li>
+                                            {% endif %}
                                         </ul>
                                     </div>
                                 </td>

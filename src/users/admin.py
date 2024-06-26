@@ -16,10 +16,22 @@ class ProfileInline(admin.StackedInline):
     filter_horizontal = ("clusters",)
 
 
+@admin.action(description="Mark selected users as active")
+def make_active(modeladmin, request, queryset):
+    queryset.update(is_active=True)
+
+
+@admin.action(description="Mark selected users as inactive")
+def make_inactive(modeladmin, request, queryset):
+    queryset.update(is_active=False)
+
+
 class UserAdminCustom(UserAdmin):
     list_display = ("email", "username", "name", "is_active", "user_groups", "last_login")
+    list_select_related = ["profile"]
 
     inlines = (ProfileInline,)
+    actions = [make_active, make_inactive]
 
     def user_groups(self, obj):
         return ", ".join([g.name for g in obj.groups.all()])

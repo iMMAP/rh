@@ -1,4 +1,5 @@
 import os
+import sys
 from pathlib import Path
 
 import environ
@@ -191,3 +192,5 @@ DBBACKUP_STORAGE_OPTIONS = {
     "app_key": env("DROPBOX_APP_KEY", default=""),
     "app_secret": env("DROPBOX_APP_SECRET", default=""),
 }
+
+TESTING = "test" in sys.argv

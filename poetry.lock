@@ -13,14 +13,17 @@ files = [
 
 [[package]]
 name = "asgiref"
-version = "3.6.0"
+version = "3.8.1"
 description = "ASGI specs, helper code, and adapters"
 optional = false
-python-versions = ">=3.7"
+python-versions = ">=3.8"
 files = [
-    {file = "asgiref-3.6.0-py3-none-any.whl", hash = "sha256:71e68008da809b957b7ee4b43dbccff33d1b23519fb8344e33f049897077afac"},
-    {file = "asgiref-3.6.0.tar.gz", hash = "sha256:9567dfe7bd8d3c8c892227827c41cce860b368104c3431da67a0c5a65a949506"},
+    {file = "asgiref-3.8.1-py3-none-any.whl", hash = "sha256:3e1e3ecc849832fe52ccf2cb6686b7a55f82bb1d6aee72a58826471390335e47"},
+    {file = "asgiref-3.8.1.tar.gz", hash = "sha256:c343bd80a0bec947a9860adb4c432ffa7db769836c64238fc34bdc3fec84d590"},
 ]
+
+[package.dependencies]
+typing-extensions = {version = ">=4", markers = "python_version < \"3.11\""}
 
 [package.extras]
 tests = ["mypy (>=0.800)", "pytest", "pytest-asyncio"]
@@ -96,13 +99,13 @@ typecheck = ["mypy"]
 
 [[package]]
 name = "blinker"
-version = "1.7.0"
+version = "1.8.2"
 description = "Fast, simple object-to-object and broadcast signaling"
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "blinker-1.7.0-py3-none-any.whl", hash = "sha256:c3f865d4d54db7abc53758a01601cf343fe55b84c1de4e3fa910e420b438d5b9"},
-    {file = "blinker-1.7.0.tar.gz", hash = "sha256:e6820ff6fa4e4d1d8e2747c2283749c3f547e4fee112b98555cdcdae32996182"},
+    {file = "blinker-1.8.2-py3-none-any.whl", hash = "sha256:1779309f71bf239144b9399d06ae925637cf6634cf6bd131104184531bf67c01"},
+    {file = "blinker-1.8.2.tar.gz", hash = "sha256:8f77b09d3bf7c795e969e9486f39c2c5e9c39d4ee07424be2bc594ece9642d83"},
 ]
 
 [[package]]
@@ -222,18 +225,18 @@ files = [
 
 [[package]]
 name = "django"
-version = "4.0.6"
+version = "5.0.6"
 description = "A high-level Python web framework that encourages rapid development and clean, pragmatic design."
 optional = false
-python-versions = ">=3.8"
+python-versions = ">=3.10"
 files = [
-    {file = "Django-4.0.6-py3-none-any.whl", hash = "sha256:ca54ebedfcbc60d191391efbf02ba68fb52165b8bf6ccd6fe71f098cac1fe59e"},
-    {file = "Django-4.0.6.tar.gz", hash = "sha256:a67a793ff6827fd373555537dca0da293a63a316fe34cb7f367f898ccca3c3ae"},
+    {file = "Django-5.0.6-py3-none-any.whl", hash = "sha256:8363ac062bb4ef7c3f12d078f6fa5d154031d129a15170a1066412af49d30905"},
+    {file = "Django-5.0.6.tar.gz", hash = "sha256:ff1b61005004e476e0aeea47c7f79b85864c70124030e95146315396f1e7951f"},
 ]
 
 [package.dependencies]
-asgiref = ">=3.4.1,<4"
-sqlparse = ">=0.2.2"
+asgiref = ">=3.7.0,<4"
+sqlparse = ">=0.3.1"
 tzdata = {version = "*", markers = "sys_platform == \"win32\""}
 
 [package.extras]
@@ -301,17 +304,17 @@ pytz = "*"
 
 [[package]]
 name = "django-debug-toolbar"
-version = "4.3.0"
+version = "4.4.2"
 description = "A configurable set of panels that display various debug information about the current request/response."
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "django_debug_toolbar-4.3.0-py3-none-any.whl", hash = "sha256:e09b7dcb8417b743234dfc57c95a7c1d1d87a88844abd13b4c5387f807b31bf6"},
-    {file = "django_debug_toolbar-4.3.0.tar.gz", hash = "sha256:0b0dddee5ea29b9cb678593bc0d7a6d76b21d7799cb68e091a2148341a80f3c4"},
+    {file = "django_debug_toolbar-4.4.2-py3-none-any.whl", hash = "sha256:5d7afb2ea5f8730241e5b0735396e16cd1fd8c6b53a2f3e1e30bbab9abb23728"},
+    {file = "django_debug_toolbar-4.4.2.tar.gz", hash = "sha256:9204050fcb1e4f74216c5b024bc76081451926a6303993d6c513f5e142675927"},
 ]
 
 [package.dependencies]
-django = ">=3.2.4"
+django = ">=4.2.9"
 sqlparse = ">=0.2"
 
 [[package]]
@@ -346,17 +349,17 @@ Django = ">=3.2"
 
 [[package]]
 name = "django-filter"
-version = "23.1"
+version = "24.2"
 description = "Django-filter is a reusable Django application for allowing users to filter querysets dynamically."
 optional = false
-python-versions = ">=3.7"
+python-versions = ">=3.8"
 files = [
-    {file = "django-filter-23.1.tar.gz", hash = "sha256:dee5dcf2cea4d7f767e271b6d01f767fce7500676d5e5dc58dac8154000b87df"},
-    {file = "django_filter-23.1-py3-none-any.whl", hash = "sha256:e3c52ad83c32fb5882125105efb5fea2a1d6a85e7dc64b04ef52edbf14451b6c"},
+    {file = "django-filter-24.2.tar.gz", hash = "sha256:48e5fc1da3ccd6ca0d5f9bb550973518ce977a4edde9d2a8a154a7f4f0b9f96e"},
+    {file = "django_filter-24.2-py3-none-any.whl", hash = "sha256:df2ee9857e18d38bed203c8745f62a803fa0f31688c9fe6f8e868120b1848e48"},
 ]
 
 [package.dependencies]
-Django = ">=3.2"
+Django = ">=4.2"
 
 [[package]]
 name = "django-guardian"
@@ -374,28 +377,28 @@ Django = ">=2.2"
 
 [[package]]
 name = "django-htmx"
-version = "1.17.3"
+version = "1.18.0"
 description = "Extensions for using Django with htmx."
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "django-htmx-1.17.3.tar.gz", hash = "sha256:a2069219920d7ef0883ddbf5e8d931069db145a0d4a8a032a2708f840c7a68a6"},
-    {file = "django_htmx-1.17.3-py3-none-any.whl", hash = "sha256:0de964ca257eda2a4ebeeaa8181320119378fa5f95a2fc2f2bfbdd35034ed424"},
+    {file = "django_htmx-1.18.0-py3-none-any.whl", hash = "sha256:48f3b8a784467bfcc30562067b87ecbc4ad9b739cc269eec5f3789c16d2cb2ce"},
+    {file = "django_htmx-1.18.0.tar.gz", hash = "sha256:db8a0cc15bcd0f7ae929bcb9108d9e6be228843092aca7956d977c31c4d95aae"},
 ]
 
 [package.dependencies]
 asgiref = ">=3.6"
-Django = ">=3.2"
+django = ">=3.2"
 
 [[package]]
 name = "django-import-export"
-version = "3.3.7"
+version = "3.3.9"
 description = "Django application and library for importing and exporting data with included admin integration."
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "django-import-export-3.3.7.tar.gz", hash = "sha256:39a4216c26a2dba6429b64c68b3fe282a6279bb71afb4015c13df0696bdbb4cd"},
-    {file = "django_import_export-3.3.7-py3-none-any.whl", hash = "sha256:dffedd53bed33cfcceb3b2f13d4fd93a21826f9a2ae37b9926a1e1f4be24bcb9"},
+    {file = "django_import_export-3.3.9-py3-none-any.whl", hash = "sha256:dd6cabc08ed6d1bd37a392e7fb542bd7d196b615c800168f5c69f0f55f49b103"},
+    {file = "django_import_export-3.3.9.tar.gz", hash = "sha256:16797965e93a8001fe812c61e3b71fb858c57c1bd16da195fe276d6de685348e"},
 ]
 
 [package.dependencies]
@@ -434,17 +437,21 @@ jsonschema = "*"
 
 [[package]]
 name = "django-smart-selects"
-version = "1.6.0"
+version = "1.7.1"
 description = "Django application to handle chained model fields."
 optional = false
-python-versions = ">=3.6"
-files = [
-    {file = "django-smart-selects-1.6.0.tar.gz", hash = "sha256:67ce449bf456ddb6fc5434fa1a55f21194ef11a3b6871d7454f7f7c5a30bf493"},
-    {file = "django_smart_selects-1.6.0-py3-none-any.whl", hash = "sha256:bd8320a9d0f0a5e1d264f5563a3a068d4499e51481ee68a7712fe53272d572b0"},
-]
+python-versions = ">=3.8"
+files = []
+develop = false
 
 [package.dependencies]
-django = ">=2.2"
+django = ">=3.2"
+
+[package.source]
+type = "git"
+url = "https://github.com/jazzband/django-smart-selects.git"
+reference = "HEAD"
+resolved_reference = "1f3ac7c08a31d2e8cc792f1de484a027a25eef1f"
 
 [[package]]
 name = "django-storages"
@@ -541,21 +548,20 @@ tqdm = ">=4.62.2,<5.0.0"
 
 [[package]]
 name = "dropbox"
-version = "12.0.0"
+version = "12.0.2"
 description = "Official Dropbox API Client"
 optional = false
 python-versions = "*"
 files = [
-    {file = "dropbox-12.0.0-py2-none-any.whl", hash = "sha256:ebe32dd98f39c3e3361a517deb4242a812f738f7f2f397c18fa5e0cee8bcde37"},
-    {file = "dropbox-12.0.0-py3-none-any.whl", hash = "sha256:65e264bf2fe76fc779a3254fd90d4f9a7b4d8725f08f09c538cffd0f3ef6c3d5"},
-    {file = "dropbox-12.0.0.tar.gz", hash = "sha256:facd1af160c246fcceff4a9d2b9732c46db03a95618937a2d8fae9412ebfe60b"},
+    {file = "dropbox-12.0.2-py2-none-any.whl", hash = "sha256:4b8207a9f4afd33726ec886c0d223f4bbc42fe649b87718690a24704f5e24c0c"},
+    {file = "dropbox-12.0.2-py3-none-any.whl", hash = "sha256:c5b7e9c2668adb6b12dcecd84342565dc50f7d35ab6a748d155cb79040979d1c"},
+    {file = "dropbox-12.0.2.tar.gz", hash = "sha256:50057fd5ad5fcf047f542dfc6747a896e7ef982f1b5f8500daf51f3abd609962"},
 ]
 
 [package.dependencies]
-requests = "<2.30"
+requests = ">=2.16.2"
 six = ">=1.12.0"
 stone = ">=2,<3.3.3"
-urllib3 = "<2"
 
 [[package]]
 name = "editorconfig"
@@ -580,13 +586,13 @@ files = [
 
 [[package]]
 name = "exceptiongroup"
-version = "1.2.0"
+version = "1.2.1"
 description = "Backport of PEP 654 (exception groups)"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "exceptiongroup-1.2.0-py3-none-any.whl", hash = "sha256:4bfd3996ac73b41e9b9628b04e079f193850720ea5945fc96a08633c66912f14"},
-    {file = "exceptiongroup-1.2.0.tar.gz", hash = "sha256:91f5c769735f051a4290d52edd0858999b57e5876e9f85937691bd4c9fa3ed68"},
+    {file = "exceptiongroup-1.2.1-py3-none-any.whl", hash = "sha256:5258b9ed329c5bbdd31a309f53cbfb0b155341807f6ff7606a1e801a891b29ad"},
+    {file = "exceptiongroup-1.2.1.tar.gz", hash = "sha256:a4785e48b045528f5bfe627b6ad554ff32def154f42372786903b7abcfe1aa16"},
 ]
 
 [package.extras]
@@ -626,18 +632,18 @@ python-dateutil = ">=2.4"
 
 [[package]]
 name = "filelock"
-version = "3.13.1"
+version = "3.15.4"
 description = "A platform independent file lock."
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "filelock-3.13.1-py3-none-any.whl", hash = "sha256:57dbda9b35157b05fb3e58ee91448612eb674172fab98ee235ccb0b5bee19a1c"},
-    {file = "filelock-3.13.1.tar.gz", hash = "sha256:521f5f56c50f8426f5e03ad3b281b490a87ef15bc6c526f168290f0c7148d44e"},
+    {file = "filelock-3.15.4-py3-none-any.whl", hash = "sha256:6ca1fffae96225dab4c6eaf1c4f4f28cd2568d3ec2a44e15a08520504de468e7"},
+    {file = "filelock-3.15.4.tar.gz", hash = "sha256:2207938cbc1844345cb01a5a95524dae30f0ce089eba5b00378295a17e3e90cb"},
 ]
 
 [package.extras]
-docs = ["furo (>=2023.9.10)", "sphinx (>=7.2.6)", "sphinx-autodoc-typehints (>=1.24)"]
-testing = ["covdefaults (>=2.3)", "coverage (>=7.3.2)", "diff-cover (>=8)", "pytest (>=7.4.3)", "pytest-cov (>=4.1)", "pytest-mock (>=3.12)", "pytest-timeout (>=2.2)"]
+docs = ["furo (>=2023.9.10)", "sphinx (>=7.2.6)", "sphinx-autodoc-typehints (>=1.25.2)"]
+testing = ["covdefaults (>=2.3)", "coverage (>=7.3.2)", "diff-cover (>=8.0.1)", "pytest (>=7.4.3)", "pytest-asyncio (>=0.21)", "pytest-cov (>=4.1)", "pytest-mock (>=3.12)", "pytest-timeout (>=2.2)", "virtualenv (>=20.26.2)"]
 typing = ["typing-extensions (>=4.8)"]
 
 [[package]]
@@ -810,13 +816,13 @@ six = ">=1.13.0"
 
 [[package]]
 name = "json5"
-version = "0.9.24"
+version = "0.9.25"
 description = "A Python implementation of the JSON5 data format."
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "json5-0.9.24-py3-none-any.whl", hash = "sha256:4ca101fd5c7cb47960c055ef8f4d0e31e15a7c6c48c3b6f1473fc83b6c462a13"},
-    {file = "json5-0.9.24.tar.gz", hash = "sha256:0c638399421da959a20952782800e5c1a78c14e08e1dc9738fa10d8ec14d58c8"},
+    {file = "json5-0.9.25-py3-none-any.whl", hash = "sha256:34ed7d834b1341a86987ed52f3f76cd8ee184394906b6e22a1e0deb9ab294e8f"},
+    {file = "json5-0.9.25.tar.gz", hash = "sha256:548e41b9be043f9426776f05df8635a00fe06104ea51ed24b67f908856e151ae"},
 ]
 
 [[package]]
@@ -953,13 +959,13 @@ files = [
 
 [[package]]
 name = "mdit-py-plugins"
-version = "0.4.0"
+version = "0.4.1"
 description = "Collection of plugins for markdown-it-py"
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "mdit_py_plugins-0.4.0-py3-none-any.whl", hash = "sha256:b51b3bb70691f57f974e257e367107857a93b36f322a9e6d44ca5bf28ec2def9"},
-    {file = "mdit_py_plugins-0.4.0.tar.gz", hash = "sha256:d8ab27e9aed6c38aa716819fedfde15ca275715955f8a185a8e1cf90fb1d2c1b"},
+    {file = "mdit_py_plugins-0.4.1-py3-none-any.whl", hash = "sha256:1020dfe4e6bfc2c79fb49ae4e3f5b297f5ccd20f010187acc52af2921e27dc6a"},
+    {file = "mdit_py_plugins-0.4.1.tar.gz", hash = "sha256:834b8ac23d1cd60cec703646ffd22ae97b7955a6d596eb1d304be1e251ae499c"},
 ]
 
 [package.dependencies]
@@ -1081,13 +1087,13 @@ et-xmlfile = "*"
 
 [[package]]
 name = "packaging"
-version = "24.0"
+version = "24.1"
 description = "Core utilities for Python packages"
 optional = false
-python-versions = ">=3.7"
+python-versions = ">=3.8"
 files = [
-    {file = "packaging-24.0-py3-none-any.whl", hash = "sha256:2ddfb553fdf02fb784c234c7ba6ccc288296ceabec964ad2eae3777778130bc5"},
-    {file = "packaging-24.0.tar.gz", hash = "sha256:eb82c5e3e56209074766e6885bb04b8c38a0c015d0a30036ebe7ece34c9989e9"},
+    {file = "packaging-24.1-py3-none-any.whl", hash = "sha256:5b8f2217dbdbd2f7f384c41c628544e6d52f2d0f53c6d0c3ea61aa5d1d7ff124"},
+    {file = "packaging-24.1.tar.gz", hash = "sha256:026ed72c8ed3fcce5bf8950572258698927fd1dbda10a5e981cdf0ac37f4f002"},
 ]
 
 [[package]]
@@ -1156,13 +1162,13 @@ test = ["appdirs (==1.4.4)", "covdefaults (>=2.3)", "pytest (>=7.4)", "pytest-co
 
 [[package]]
 name = "pluggy"
-version = "1.4.0"
+version = "1.5.0"
 description = "plugin and hook calling mechanisms for python"
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "pluggy-1.4.0-py3-none-any.whl", hash = "sha256:7db9f7b503d67d1c5b95f59773ebb58a8c1c288129a88665838012cfb07b8981"},
-    {file = "pluggy-1.4.0.tar.gz", hash = "sha256:8c85c2876142a764e5b7548e7d9a0e0ddb46f5185161049a79b7e974454223be"},
+    {file = "pluggy-1.5.0-py3-none-any.whl", hash = "sha256:44e1ad92c8ca002de6377e165f3e0f1be63266ab4d554740532335b9d75ea669"},
+    {file = "pluggy-1.5.0.tar.gz", hash = "sha256:2cffa88e94fdc978c4c574f15f9e59b7f4201d439195c3715ca9e2486f1d0cf1"},
 ]
 
 [package.extras]
@@ -1296,17 +1302,16 @@ files = [
 
 [[package]]
 name = "pygments"
-version = "2.17.2"
+version = "2.18.0"
 description = "Pygments is a syntax highlighting package written in Python."
 optional = false
-python-versions = ">=3.7"
+python-versions = ">=3.8"
 files = [
-    {file = "pygments-2.17.2-py3-none-any.whl", hash = "sha256:b27c2826c47d0f3219f29554824c30c5e8945175d888647acd804ddd04af846c"},
-    {file = "pygments-2.17.2.tar.gz", hash = "sha256:da46cec9fd2de5be3a8a784f434e4c4ab670b4ff54d605c4c2717e9d49c4c367"},
+    {file = "pygments-2.18.0-py3-none-any.whl", hash = "sha256:b8e6aca0523f3ab76fee51799c488e38782ac06eafcf95e7ba832985c8e7b13a"},
+    {file = "pygments-2.18.0.tar.gz", hash = "sha256:786ff802f32e91311bff3889f6e9a86e81505fe99f2735bb6d60ae0c5004f199"},
 ]
 
 [package.extras]
-plugins = ["importlib-metadata"]
 windows-terminal = ["colorama (>=0.4.6)"]
 
 [[package]]
@@ -1726,13 +1731,13 @@ files = [
 
 [[package]]
 name = "sentry-sdk"
-version = "1.42.0"
+version = "1.45.0"
 description = "Python client for Sentry (https://sentry.io)"
 optional = false
 python-versions = "*"
 files = [
-    {file = "sentry-sdk-1.42.0.tar.gz", hash = "sha256:4a8364b8f7edbf47f95f7163e48334c96100d9c098f0ae6606e2e18183c223e6"},
-    {file = "sentry_sdk-1.42.0-py2.py3-none-any.whl", hash = "sha256:a654ee7e497a3f5f6368b36d4f04baeab1fe92b3105f7f6965d6ef0de35a9ba4"},
+    {file = "sentry-sdk-1.45.0.tar.gz", hash = "sha256:509aa9678c0512344ca886281766c2e538682f8acfa50fd8d405f8c417ad0625"},
+    {file = "sentry_sdk-1.45.0-py2.py3-none-any.whl", hash = "sha256:1ce29e30240cc289a027011103a8c83885b15ef2f316a60bcc7c5300afa144f1"},
 ]
 
 [package.dependencies]
@@ -1747,6 +1752,7 @@ asyncpg = ["asyncpg (>=0.23)"]
 beam = ["apache-beam (>=2.12)"]
 bottle = ["bottle (>=0.12.13)"]
 celery = ["celery (>=3)"]
+celery-redbeat = ["celery-redbeat (>=2)"]
 chalice = ["chalice (>=1.16.0)"]
 clickhouse-driver = ["clickhouse-driver (>=0.2.0)"]
 django = ["django (>=1.8)"]
@@ -1840,24 +1846,24 @@ yaml = ["pyyaml"]
 
 [[package]]
 name = "textual"
-version = "0.53.1"
+version = "0.70.0"
 description = "Modern Text User Interface framework"
 optional = false
-python-versions = ">=3.8,<4.0"
+python-versions = "<4.0,>=3.8"
 files = [
-    {file = "textual-0.53.1-py3-none-any.whl", hash = "sha256:32201aa9d334ed064d5e670f15fe3d7f19c736ca54cecb054a5b995691104434"},
-    {file = "textual-0.53.1.tar.gz", hash = "sha256:23ba673be7974819ded35ea88d28df7117987e53d58f15b2cc890ac2ecf56401"},
+    {file = "textual-0.70.0-py3-none-any.whl", hash = "sha256:774bf45782193760ca273b915fd685cada37d0836237d61dc57d5bcdbe2c7ddb"},
+    {file = "textual-0.70.0.tar.gz", hash = "sha256:9ca3f615b5cf442246325e40ef8255424c42b4241d3c62f9c0f96951bab82b1e"},
 ]
 
 [package.dependencies]
 markdown-it-py = {version = ">=2.1.0", extras = ["linkify", "plugins"]}
 rich = ">=13.3.3"
 tree-sitter = {version = ">=0.20.1,<0.21.0", optional = true, markers = "extra == \"syntax\""}
-tree_sitter_languages = {version = ">=1.7.0", optional = true, markers = "extra == \"syntax\""}
+tree-sitter-languages = {version = "1.10.2", optional = true, markers = "extra == \"syntax\""}
 typing-extensions = ">=4.4.0,<5.0.0"
 
 [package.extras]
-syntax = ["tree-sitter (>=0.20.1,<0.21.0)", "tree_sitter_languages (>=1.7.0)"]
+syntax = ["tree-sitter (>=0.20.1,<0.21.0)", "tree-sitter-languages (==1.10.2)"]
 
 [[package]]
 name = "tomli"
@@ -1883,13 +1889,13 @@ files = [
 
 [[package]]
 name = "tqdm"
-version = "4.66.2"
+version = "4.66.4"
 description = "Fast, Extensible Progress Meter"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "tqdm-4.66.2-py3-none-any.whl", hash = "sha256:1ee4f8a893eb9bef51c6e35730cebf234d5d0b6bd112b0271e10ed7c24a02bd9"},
-    {file = "tqdm-4.66.2.tar.gz", hash = "sha256:6cd52cdf0fef0e0f543299cfc96fec90d7b8a7e88745f411ec33eb44d5ed3531"},
+    {file = "tqdm-4.66.4-py3-none-any.whl", hash = "sha256:b75ca56b413b030bc3f00af51fd2c1a1a5eac6a0c1cca83cbb37a5c52abce644"},
+    {file = "tqdm-4.66.4.tar.gz", hash = "sha256:e4d936c9de8727928f3be6079590e97d9abfe8d39a590be678eb5919ffc186bb"},
 ]
 
 [package.dependencies]
@@ -2126,13 +2132,13 @@ socks = ["PySocks (>=1.5.6,!=1.5.7,<2.0)"]
 
 [[package]]
 name = "virtualenv"
-version = "20.25.1"
+version = "20.26.3"
 description = "Virtual Python Environment builder"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "virtualenv-20.25.1-py3-none-any.whl", hash = "sha256:961c026ac520bac5f69acb8ea063e8a4f071bcc9457b9c1f28f6b085c511583a"},
-    {file = "virtualenv-20.25.1.tar.gz", hash = "sha256:e08e13ecdca7a0bd53798f356d5831434afa5b07b93f0abdf0797b7a06ffe197"},
+    {file = "virtualenv-20.26.3-py3-none-any.whl", hash = "sha256:8cc4a31139e796e9a7de2cd5cf2489de1217193116a8fd42328f1bd65f434589"},
+    {file = "virtualenv-20.26.3.tar.gz", hash = "sha256:4c43a2a236279d9ea36a0d76f98d84bd6ca94ac4e0f4a3b9d46d05e10fea542a"},
 ]
 
 [package.dependencies]
@@ -2141,7 +2147,7 @@ filelock = ">=3.12.2,<4"
 platformdirs = ">=3.9.1,<5"
 
 [package.extras]
-docs = ["furo (>=2023.7.26)", "proselint (>=0.13)", "sphinx (>=7.1.2)", "sphinx-argparse (>=0.4)", "sphinxcontrib-towncrier (>=0.2.1a0)", "towncrier (>=23.6)"]
+docs = ["furo (>=2023.7.26)", "proselint (>=0.13)", "sphinx (>=7.1.2,!=7.3)", "sphinx-argparse (>=0.4)", "sphinxcontrib-towncrier (>=0.2.1a0)", "towncrier (>=23.6)"]
 test = ["covdefaults (>=2.3)", "coverage (>=7.2.7)", "coverage-enable-subprocess (>=1)", "flaky (>=3.7)", "packaging (>=23.1)", "pytest (>=7.4)", "pytest-env (>=0.8.2)", "pytest-freezer (>=0.4.8)", "pytest-mock (>=3.11.1)", "pytest-randomly (>=3.12)", "pytest-timeout (>=2.1)", "setuptools (>=68)", "time-machine (>=2.10)"]
 
 [[package]]
@@ -2257,4 +2263,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "413086e74f13ccb4b8e2ef8476692c4214a5c632e077e06526619b001e64a4ec"
+content-hash = "b7c7de5614dea963586d1f5a6c96120372f5f387901d1e3304716c940ed87ecd"

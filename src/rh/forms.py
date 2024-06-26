@@ -295,7 +295,18 @@ class OrganizationRegisterForm(forms.ModelForm):
         }
 
     def __init__(self, *args, **kwargs):
+        user = kwargs.pop("user", None)
         super().__init__(*args, **kwargs)
+
+        if user:
+            user_groups = user.groups.filter(name__endswith="_CLUSTER_LEADS")
+            cluster_ids = [group.name.split("_")[0].lower() for group in user_groups]
+            self.fields["clusters"].queryset = Cluster.objects.filter(code__in=cluster_ids)
+        else:
+            self.fields["clusters"].queryset = [] 
+        
+        if user and hasattr(user, 'profile') and user.profile.country:
+            self.fields["countries"].initial = user.profile.country
 
     def clean_name(self):
         """check if organization name already exits"""

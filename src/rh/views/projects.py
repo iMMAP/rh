@@ -14,20 +14,13 @@ from rh.resources import ProjectResource
 
 from ..filters import ProjectsFilter
 from ..forms import ProjectForm
-from ..models import ActivityPlan, Project
+from ..models import ActivityPlan, Project, Cluster
 from .views import (
     copy_project_target_location,
     copy_target_location_disaggregation_locations,
 )
 
-from ..models import ActivityPlan, Project, Cluster
-
-from .views import copy_project_target_location, copy_target_location_disaggregation_locations
-from django.views.decorators.http import require_http_methods
-from django.db.models import Count, Q
-from django.core.exceptions import PermissionDenied
 from ..utils import has_permission
-
 
 RECORDS_PER_PAGE = 10
 

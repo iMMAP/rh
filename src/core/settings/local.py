@@ -5,8 +5,17 @@ from .base import *
 
 APP_ENV = env("APP_ENV", default="local")
 
+if not TESTING:
+    INSTALLED_APPS = [
+        *INSTALLED_APPS,
+        "debug_toolbar",
+    ]
+    MIDDLEWARE = [
+        *MIDDLEWARE,
+        "debug_toolbar.middleware.DebugToolbarMiddleware",
+    ]
+
 LOCAL_INSTALLED_APPS = [
-    "debug_toolbar",
     "django_extensions",
     "nplusone.ext.django",
     "django_tui",
@@ -17,7 +26,6 @@ INSTALLED_APPS = INSTALLED_APPS + LOCAL_INSTALLED_APPS
 
 
 LOCAL_MIDDLEWARE = [
-    "debug_toolbar.middleware.DebugToolbarMiddleware",
     "nplusone.ext.django.NPlusOneMiddleware",
 ]
 

@@ -1,6 +1,16 @@
 {% extends "rh/projects/forms/project_form_base.html" %}
+
 {% load static %}
 {% load vite %}
+
+
+{% block page_title %}
+{% if project %}
+    Update Project
+{% else %}
+    Create Project
+{% endif %}
+{% endblock page_title %}
 
 {% block project_contents %}
     <div class="project-title-holder">

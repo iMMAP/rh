@@ -13,7 +13,7 @@ from ..forms import (
 @permission_required("rh.add_organization", raise_exception=True)
 def organization_register(request):
     if request.method == "POST":
-        org_form = OrganizationRegisterForm(request.POST,user=request.user)
+        org_form = OrganizationRegisterForm(request.POST, user=request.user)
         if org_form.is_valid():
             code = org_form.cleaned_data.get("code")
             org_code = code.upper()

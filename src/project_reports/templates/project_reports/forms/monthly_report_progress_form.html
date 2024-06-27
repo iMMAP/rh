@@ -55,9 +55,9 @@ Project Report
 						<span class="tooltip-info icon-info" data-tippy-content="Lorem lorem lorem"></span>
 						
 						{% if activity_report_form.initial.activity_plan and not activity_report_form.instance.pk %}
-							{{ activity_report_form.initial.activity_plan.activity_domain.name }}
+							Activity Domain -- {{ activity_report_form.initial.activity_plan.activity_domain.name }}
 						{% else %}
-						{{ activity_report_form.instance.activity_plan.activity_domain.name }}
+							Activity Domain -- {{ activity_report_form.instance.activity_plan.activity_domain.name }}
 						{% endif %}
 						{{ activity_report_form.activity_plan }}
 						

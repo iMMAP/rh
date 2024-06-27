@@ -87,8 +87,6 @@ def create_project_activity_plan(request, project):
             # HERE
 
             initial_data = []
-            for disaggregation in target_location_form.instance.disaggregationlocation_set.all():
-                initial_data.append({"disaggregation": disaggregation})
 
             disaggregation_formset = DisaggregationFormSet(
                 request.POST or None,

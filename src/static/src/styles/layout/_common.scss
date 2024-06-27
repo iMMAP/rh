@@ -498,7 +498,7 @@ ul{
 .two-cols-layout {
   @include media('>=desktop') {
     display: grid;
-    grid-template-columns: 272px 1fr;
+    grid-template-columns: 230px 1fr;
     grid-gap: 0 24px;
     grid-template-rows: auto auto;
   }
@@ -524,7 +524,7 @@ ul{
   .project-title-holder {
     border-top: 2px solid $red-be;
     padding: 9px 0;
-    display: flex;
+    // display: flex;
     align-items: center;
     justify-content: space-between;
 
@@ -846,4 +846,24 @@ a.text-decoration-none{
   @extend .c-pill;
   border: 1px solid #ff4436;
   background: #ffd5d1;
+}
+
+.unset-before::before {
+  content: none !important;
+}
+
+
+// 
+
+.target_location_form{
+  background-color: $gray-f3;
+  padding: 12px 20px;
+  border-radius: 4px;
+  margin:16px 0px;
+}
+
+.shadow {
+  --tw-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1)/* #0000001a */, 0 1px 2px -1px rgb(0 0 0 / 0.1)/* #0000001a */;
+  --tw-shadow-colored: 0 1px 3px 0 var(--tw-shadow-color), 0 1px 2px -1px var(--tw-shadow-color);
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
 }

@@ -1,4 +1,4 @@
-<div class="target_location_form" data-location-prefix="{{ target_location_form.prefix }}">
+<div class="target_location_form " data-location-prefix="{{ target_location_form.prefix }}">
     {{ target_location_form.id }}
     <div class="location-inner-holder">
         <div class="block-top">
@@ -66,12 +66,15 @@
                             </div>
                         </div>
                         {% endif %}
+
+                        {% if  target_location_form.facility_site_type.value %}
                         <div class="field-col">
                             <div class="select-field">
                                 <label for="{{target_location_form.facility_site_type.id_for_label}}">Facility Site Type</label>
                                 {{ target_location_form.facility_site_type }}
                             </div>
                         </div>
+                        {% endif %}
                         <!-- <div class="field-col">
                             <div class="select-field is is-required">
                                 <label for="{{target_location_form.classification_for_label}}">Classification</label>

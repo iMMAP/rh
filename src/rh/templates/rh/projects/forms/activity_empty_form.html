@@ -6,7 +6,7 @@
            value="{{ project.id }}"/>
     <div class="project-activity-block project-activity-accordion"
          data-form-id="{{ form.prefix }}">
-        <div class="inner-holder">
+        <div class="inner-holder unset-before">
             <div class="block-activity mb-3">
                 <div id="{{ form.prefix }}-actions">
                     <button href="#"
@@ -126,6 +126,12 @@
                         </div>
                     </div>
                 </div>
+                 <div class="row">
+                    <div class="input-field is-required">
+                        <label for="{{ form.description.id_for_label}}">Activity Description</label>
+                        <div class="input-holder">{{ form.description }}</div>
+                    </div>
+                </div>
                
                 <!-- Indicator types start to diaplay -->
                 <div class="row" id="{{ form.prefix }}-indicator-types">
@@ -139,7 +145,7 @@
                                             class="btn btn-red add-target-location-form-button">Add Target Location
                                     </button>
                                 </div>
-                                <div class="block-top target-location-accordion-opener">
+                                <div class="block-top cursor-pointer target-location-accordion-opener">
                                     <div class="location-block-holder">
                                         <div class="block-top-title">
                                             <span class="title">
@@ -161,12 +167,7 @@
                     </div>
                 </div>
 
-                <div class="row">
-                    <div class="input-field is-required">
-                        <label for="{{ form.description.id_for_label}}">Activity Description</label>
-                        <div class="input-holder">{{ form.description }}</div>
-                    </div>
-                </div>
+               
             </div>
         </div>
     </div>

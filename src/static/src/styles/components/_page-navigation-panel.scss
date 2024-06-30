@@ -10,11 +10,10 @@
   }
 
   .tabs-nav {
-    @include media('>=tablet') {
-      justify-content: center;
-      margin: 0;
-    }
-
+    // @include media('>=tablet') {
+    //   // justify-content: center;
+    //   // margin: 0;
+    // }
     li {
       @include media('>=laptop') {
         padding: 0 35px;
@@ -24,5 +23,6 @@
 
   .tabs-nav-holder {
     grid-column: 2 / 3;
+   
   }
 }

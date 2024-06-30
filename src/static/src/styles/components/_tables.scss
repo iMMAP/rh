@@ -3,6 +3,14 @@
   overflow-x: auto;
 }
 
+.table-container{
+  background-color: $gray-fa;
+  padding: 1rem;
+  border-radius: 0.4rem;
+  border: 1px solid $gray-e6;
+}
+
+
 .table {
   width: 100%;
   border-collapse: collapse;

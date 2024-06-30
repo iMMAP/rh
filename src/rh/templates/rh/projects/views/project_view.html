@@ -1,4 +1,4 @@
-{% extends "../projects_index.html" %}
+{% extends "_base.html" %}
 
 {% load static %}
 {% load humanize %}
@@ -7,9 +7,30 @@
     Project: {{project.title}}
 {% endblock page_title %}
 
-{% block project_body %}
-    <div class="breadcrumbs-nav-panel">
+
+{% block content %}
+<div class="container">
+    <div class="page-navigation-panel">
         <div class="holder">
+            <div class="tabs-nav-holder">
+                <ul class="tabs-nav">
+                    <li class="{% if project_view %}active{% endif %}">
+                        <a href="{% if project %}{% url 'projects-detail' project.pk %}{% else %}{% url 'projects-create' %}{% endif %}">Project
+                        planning</a>
+                    </li>
+                    <li class="{% if financial_view %}active{% endif %}">
+                        <a href="{% if project %}{% url 'create_project_budget_progress' project.pk %}{% else %}#{% endif %}">Financial Reports</a>
+                    </li>
+                    <li class="{% if reports_view %}active{% endif %}">
+                        <a href="{% if project %}{% url 'project_reports_home' project.pk %}{% else %}#{% endif %}">Monthly Progress</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="breadcrumbs-nav-panel">
+        <div class="holder"> 
             <ul class="breadcrumbs">
                 <li>
                     <a href="{% url 'landing' %}">Home</a>
@@ -35,22 +56,13 @@
             </ul>
         </div>
     </div>
+
     <div class="project-options-panel">
         <div class="top-block">
             <ul class="project-breadcrumbs">
-                <li>
-                    {% if user.profile.country %}{{ user.profile.country }}{% endif %}
-                </li>
-                <li>{{ project.code }}</li>
-                <li>
-                    {% for cluster in project.clusters.all %}
-                        {{ cluster.title }}
-                        {% if not forloop.last %},{% endif %}
-                    {% endfor %}
-                </li>
+                <li> {{project.title}} </li>
             </ul>
             <a href="{% url 'projects-update' project.pk %}" class="btn btn-red">Edit</a>
-            
         </div>
         <div class="bottom-block">
             <div class="actions-panel">
@@ -587,15 +599,10 @@
             </div>
         </div>
     </div>
+
     <div class="project-plan read-only">
         <div class="row">
-            <div class="col">
-                <div class="input-field">
-                    <span class="label">Project title</span>
-                    <div class="input-holder">
-                        <span id="title" class="text-read-only">{{ project.title }}</span>
-                    </div>
-                </div>
+            <div class="col"> 
                 <div class="input-field">
                     <span class="label">Project code</span>
                     <div class="input-holder">
@@ -768,356 +775,356 @@
         </div>
     </div>
 
-   
-
     {% for activity_plan in project.activityplan_set.all %}
-    <div class="activity-planning read-only">
-        <div class="activity-acc-block activity-acc-accordion">
-            <div class="inner-holder">
-                <div class="review-block-top activity-acc-accordion-opener">
-                    <span class="title">
-                        {{ activity_plan.activity_domain }},
-                        {{ activity_plan.activity_type }}{% if activity_plan.activity_detail %}, {{ activity_plan.activity_detail }}{% endif %}
-                    </span>
-                    <div class="block-activity">
-                        <span class="people">
-                            <span class="icon-group"></span>
-                            {{ activity_plan.total_target }}
+        <div class="activity-planning read-only">
+            <div class="activity-acc-block activity-acc-accordion">
+                <div class="inner-holder">
+                    <div class="review-block-top activity-acc-accordion-opener">
+                        <span class="title">
+                            {{ activity_plan.activity_domain }},
+                            {{ activity_plan.activity_type }}{% if activity_plan.activity_detail %}, {{ activity_plan.activity_detail }}{% endif %}
                         </span>
-                    </div>
-                </div>
-                <div class="activity-acc-accordion-slide">
-                    {% if activity_plan.total_set_target > 0 %}
-                    <div class="field-col">
-                        <div class="input-field">
-                            <span class="label">Total Set Target</span>
-                            <div class="input-holder">
-                                <span class="text-read-only">{{ activity_plan.total_set_target }}</span>
-                            </div>
+                        <div class="block-activity">
+                            <span class="people">
+                                <span class="icon-group"></span>
+                                {{ activity_plan.total_target }}
+                            </span>
                         </div>
                     </div>
-                    {% endif %}
-                    <div class="row">
-                        <div class="col">
-                            <div class="multiple-fields-row two-items">
-                                <div class="field-col">
-                                    <div class="select-field">
-                                        <span class="label">Activity Domain</span>
-                                        <span class="text-read-only">{{ activity_plan.activity_domain }}</span>
-                                    </div>
-                                </div>
-                                <div class="field-col">
-                                    <div class="select-field">
-                                        <span class="label">Activity Type</span>
-                                        <span class="text-read-only">{{ activity_plan.activity_type }}</span>
-                                    </div>
-                                </div>
-                            </div>
-                            {% if activity_plan.activity_detail %}
-                            <div class="select-field">
-                                <span class="label">Activity Details</span>
-                                <span class="text-read-only">{{ activity_plan.activity_detail }}</span>
-                            </div>
-                            {% endif %}
-                            <div class="select-field">
-                                <span class="label">Indicator</span>
-                                <span class="text-read-only">
-                                    {{ activity_plan.indicator.name }} <br>
-                                </span>
-                            </div>
-                        </div>
-
-                        <div class="col col-lg">
-                            <div class="multiple-fields-row">
-                                <div class="field-col">
-                                    <div class="select-field">
-                                        <span class="label">Beneficiary</span>
-                                        <span class="text-read-only">{{ activity_plan.beneficiary }}</span>
-                                    </div>
-                                </div>
-                                <div class="field-col">
-                                    <div class="select-field">
-                                        <span class="label">Beneficiary Category</span>
-                                        <span class="text-read-only">{{ activity_plan.beneficiary_category }}</span>
-                                    </div>
+                    <div class="activity-acc-accordion-slide">
+                        {% if activity_plan.total_set_target > 0 %}
+                        <div class="field-col">
+                            <div class="input-field">
+                                <span class="label">Total Set Target</span>
+                                <div class="input-holder">
+                                    <span class="text-read-only">{{ activity_plan.total_set_target }}</span>
                                 </div>
                             </div>
                         </div>
-                        <div class="col col-lg">
-                            <div class="multiple-fields-row">
-                                {% if activity_plan.package_type %}
+                        {% endif %}
+                        <div class="row">
+                            <div class="col">
+                                <div class="multiple-fields-row two-items">
                                     <div class="field-col">
                                         <div class="select-field">
-                                            <span class="label">Package Type</span>
-                                            <span class="text-read-only">{{ activity_plan.package_type }}</span>
+                                            <span class="label">Activity Domain</span>
+                                            <span class="text-read-only">{{ activity_plan.activity_domain }}</span>
                                         </div>
                                     </div>
-                                {% endif %}
-                                {% if activity_plan.unit_type %}
-                                <div class="field-col">
-                                    <div class="select-field">
-                                        <span class="label">Unit Type</span>
-                                        <span class="text-read-only">{{ activity_plan.unit_type }}</span>
-                                    </div>
-                                </div>
-                                {% endif %}
-                                {% if activity_plan.grant_type %}
-                                <div class="field-col">
-                                    <div class="select-field">
-                                        <span class="label">Grant Type</span>
-                                        <span class="text-read-only">{{ activity_plan.grant_type }}</span>
-                                    </div>
-                                </div>
-                                {% endif %}
-                                {% if activity_plan.transfer_category %}
-                                <div class="field-col">
-                                    <div class="select-field">
-                                        <span class="label">Transfer Category</span>
-                                        <span class="text-read-only">{{ activity_plan.transfer_category }}</span>
-                                    </div>
-                                </div>
-                                {% endif %}
-                                {% if activity_plan.currency %}
-                                <div class="field-col">
-                                    <div class="select-field">
-                                        <span class="label">Currency</span>
-                                        <span class="text-read-only">{{ activity_plan.currency }}</span>
-                                    </div>
-                                </div>
-                                {% endif %}
-                                {% if activity_plan.transfer_mechanism_type %}
-                                <div class="field-col">
-                                    <div class="select-field">
-                                        <span class="label">Transfer Mechanism Type</span>
-                                        <span class="text-read-only">{{ activity_plan.transfer_mechanism_type }}</span>
-                                    </div>
-                                </div>
-                                {% endif %}
-                                {% if activity_plan.implement_modility_type %}
-                                <div class="field-col">
-                                    <div class="select-field">
-                                        <span class="label">Implementation Modility Type</span>
-                                        <span class="text-read-only">{{ activity_plan.implement_modility_type }}</span>
-                                    </div>
-                                </div>
-                                {% endif %}
-                            </div>
-                        </div>
-                        <div class="col col-lg">
-                            <div class="input-field is-required">
-                                <span class="label">Activity Description</span>
-                                <div class="input-holder">
-                                    <span class="text-read-only">{{ activity_plan.description | linebreaksbr }}</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <br/>
-                    <div class="target-location-block target-location-accordion">
-                        <div class="inner-holder">
-                            <a href="#" class="block-top target-location-accordion-opener">
-                                <div class="location-block-holder">
-                                    <div class="block-top-title">
-                                        <div class="title">
-                                            Target Locations
+                                    <div class="field-col">
+                                        <div class="select-field">
+                                            <span class="label">Activity Type</span>
+                                            <span class="text-read-only">{{ activity_plan.activity_type }}</span>
                                         </div>
                                     </div>
                                 </div>
-                                <span class="btn btn-red" style="float:right"> {{ activity_plan.targetlocation_set.all | length }}</span>
-                            </a>
-                            <div class="target-location-accordion-slide js-acc-hidden">
-                            {% for target_location in activity_plan.targetlocation_set.all %}                                
-                                <div class="target-location read-only">
-                                    <div class="location-block-holder">
-                                        <div class="inner-holder">
-                                            <div class="block-top">
-                                                <span class="title">
-                                                    {% if target_location.province %}
-                                                    {{ target_location.province }},
-                                                    {% endif %}
-                                                    {{ target_location.district }}
-                                                </span>
-                                                {% if target_location.site_name %}
-                                                <span class="subtitle">{{ target_location.site_name }}</span>
-                                                {% endif %}
+                                {% if activity_plan.activity_detail %}
+                                <div class="select-field">
+                                    <span class="label">Activity Details</span>
+                                    <span class="text-read-only">{{ activity_plan.activity_detail }}</span>
+                                </div>
+                                {% endif %}
+                                <div class="select-field">
+                                    <span class="label">Indicator</span>
+                                    <span class="text-read-only">
+                                        {{ activity_plan.indicator.name }} <br>
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="col col-lg">
+                                <div class="multiple-fields-row">
+                                    <div class="field-col">
+                                        <div class="select-field">
+                                            <span class="label">Beneficiary</span>
+                                            <span class="text-read-only">{{ activity_plan.beneficiary }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="field-col">
+                                        <div class="select-field">
+                                            <span class="label">Beneficiary Category</span>
+                                            <span class="text-read-only">{{ activity_plan.beneficiary_category }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col col-lg">
+                                <div class="multiple-fields-row">
+                                    {% if activity_plan.package_type %}
+                                        <div class="field-col">
+                                            <div class="select-field">
+                                                <span class="label">Package Type</span>
+                                                <span class="text-read-only">{{ activity_plan.package_type }}</span>
                                             </div>
-                                            <div class="row">
-                                                <div class="col col-lg">
-                                                    <div class="multiple-fields-row {% if target_location.zone %}three{% else %}two{% endif %}-items">
-                                                        <div class="field-col">
-                                                            <div class="select-field is-required">
-                                                                <span class="label">Province</span>
-                                                                <span class="text-read-only">{{ target_location.province }}</span>
-                                                            </div>
-                                                        </div>
-                                                        <div class="field-col">
-                                                            <div class="input-field">
-                                                                <span class="label">District</span>
-                                                                <div class="input-holder">
-                                                                    <span class="text-read-only">{{ target_location.district }}</span>
+                                        </div>
+                                    {% endif %}
+                                    {% if activity_plan.unit_type %}
+                                    <div class="field-col">
+                                        <div class="select-field">
+                                            <span class="label">Unit Type</span>
+                                            <span class="text-read-only">{{ activity_plan.unit_type }}</span>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                    {% if activity_plan.grant_type %}
+                                    <div class="field-col">
+                                        <div class="select-field">
+                                            <span class="label">Grant Type</span>
+                                            <span class="text-read-only">{{ activity_plan.grant_type }}</span>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                    {% if activity_plan.transfer_category %}
+                                    <div class="field-col">
+                                        <div class="select-field">
+                                            <span class="label">Transfer Category</span>
+                                            <span class="text-read-only">{{ activity_plan.transfer_category }}</span>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                    {% if activity_plan.currency %}
+                                    <div class="field-col">
+                                        <div class="select-field">
+                                            <span class="label">Currency</span>
+                                            <span class="text-read-only">{{ activity_plan.currency }}</span>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                    {% if activity_plan.transfer_mechanism_type %}
+                                    <div class="field-col">
+                                        <div class="select-field">
+                                            <span class="label">Transfer Mechanism Type</span>
+                                            <span class="text-read-only">{{ activity_plan.transfer_mechanism_type }}</span>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                    {% if activity_plan.implement_modility_type %}
+                                    <div class="field-col">
+                                        <div class="select-field">
+                                            <span class="label">Implementation Modility Type</span>
+                                            <span class="text-read-only">{{ activity_plan.implement_modility_type }}</span>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col col-lg">
+                                <div class="input-field is-required">
+                                    <span class="label">Activity Description</span>
+                                    <div class="input-holder">
+                                        <span class="text-read-only">{{ activity_plan.description | linebreaksbr }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <br/>
+                        <div class="target-location-block target-location-accordion">
+                            <div class="inner-holder">
+                                <a href="#" class="block-top target-location-accordion-opener">
+                                    <div class="location-block-holder">
+                                        <div class="block-top-title">
+                                            <div class="title">
+                                                Target Locations
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <span class="btn btn-red" style="float:right"> {{ activity_plan.targetlocation_set.all | length }}</span>
+                                </a>
+                                <div class="target-location-accordion-slide js-acc-hidden">
+                                {% for target_location in activity_plan.targetlocation_set.all %}                                
+                                    <div class="target-location read-only">
+                                        <div class="location-block-holder">
+                                            <div class="inner-holder">
+                                                <div class="block-top">
+                                                    <span class="title">
+                                                        {% if target_location.province %}
+                                                        {{ target_location.province }},
+                                                        {% endif %}
+                                                        {{ target_location.district }}
+                                                    </span>
+                                                    {% if target_location.site_name %}
+                                                    <span class="subtitle">{{ target_location.site_name }}</span>
+                                                    {% endif %}
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col col-lg">
+                                                        <div class="multiple-fields-row {% if target_location.zone %}three{% else %}two{% endif %}-items">
+                                                            <div class="field-col">
+                                                                <div class="select-field is-required">
+                                                                    <span class="label">Province</span>
+                                                                    <span class="text-read-only">{{ target_location.province }}</span>
                                                                 </div>
                                                             </div>
-                                                        </div>
-                                                        {% if target_location.zone %}
                                                             <div class="field-col">
                                                                 <div class="input-field">
-                                                                    <span class="label">Zone</span>
+                                                                    <span class="label">District</span>
                                                                     <div class="input-holder">
-                                                                        <span class="text-read-only">{{ target_location.zone }}</span>
+                                                                        <span class="text-read-only">{{ target_location.district }}</span>
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                        {% endif %}
-                                                    </div>
-                                                </div>
-                                                <div class="col">
-                                                    <div class="multiple-fields-row {% if target_location.nhs_code %}three{% else %}two{% endif %}-items">
-                                                        <div class="field-col">
-                                                            <div class="select-field">
-                                                                <span class="label">Location Type</span>
-                                                                <span class="text-read-only">{{ target_location.location_type }}</span>
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="field-col">
-                                                            <div class="select-field">
-                                                                <label class="label">Classification</label>
-                                                                <span class="text-read-only">{{ target_location.classification }}</span>
-                                                            </div>
-                                                        </div>
-
-                                                        {% if target_location.nhs_code %}
-                                                        <div class="field-col">
-                                                            <div class="input-field">
-                                                                <span class="label">NHS Code</span>
-                                                                <div class="input-holder">
-                                                                    <span class="text-read-only">{{ target_location.nhs_code }}</span>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        {% endif %}
-                                                    </div>
-                                                </div>
-                                                <div class="col">
-                                                    <div class="field-col">
-                                                        <div class="input-field">
-                                                            <span class="label">Facility Monitoring</span>
-                                                            <div class="input-holder">
-                                                                <span class="text-read-only">
-                                                                    {% if target_location.facility_monitoring %}
-                                                                    Yes
-                                                                    {% else %}
-                                                                    No
-                                                                    {% endif %}
-                                                                </span>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <br/>
-                                            <div class="row">
-                                                {% if target_location.facility_monitoring %}
-                                                <div class="col">
-                                                    <div class="multiple-fields-row two-items">
-                                                        <div class="field-col">
-                                                            <div class="select-field">
-                                                                <span class="label">Facility / Site Name</span>
-                                                                <span class="text-read-only">{{ target_location.facility_name }}</span>
-                                                            </div>
-                                                        </div>
-                                                        <div class="field-col">
-                                                            <div class="input-field">
-                                                                <span class="label">Facility / Site ID</span>
-                                                                <div class="input-holder">
-                                                                    <span class="text-read-only">{{ target_location.facility_id }}</span>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col">
-                                                    <div class="multiple-fields-row two-items">
-                                                        <div class="field-col">
-                                                            <div class="input-field">
-                                                                <span class="label">Facility / Site Latitude</span>
-                                                                <div class="input-holder">
-                                                                    <span class="text-read-only">{{ target_location.facility_lat }}</span>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="field-col">
-                                                            <div class="input-field">
-                                                                <span class="label">Facility / Site Longitude</span>
-                                                                <div class="input-holder">
-                                                                    <span class="text-read-only">{{ target_location.facility_long }}</span>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                {% endif %}
-                                            </div>
-                                            <br/>
-                                            <div class="disaggregation-block disaggregation-accordion">
-                                                <div class="inner-holder">
-                                                    <a href="#" class="block-top disaggregation-accordion-opener">
-                                                        <div class="location-block-holder">
-                                                            <div class="block-top-title">
-                                                                <div class="title">
-                                                                    Disaggregations
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <span class="btn btn-red" style="float:right"> {{ target_location.disaggregationlocation_set.all | length }}</span>
-                                                    </a>
-                                                    <div class="disaggregation-accordion-slide">
-                                                        {% for disaggregation_location in target_location.disaggregationlocation_set.all %}
-                                                            <div class="location-inner-holder">  
-                                                                <div class="col col-lg">
-                                                                    <div class="multiple-fields-row two-items">
-                                                                        <div class="field-col">
-                                                                            <div class="select-field">
-                                                                                <span class="label">Disaggregation</span>
-                                                                                <span class="text-read-only">{{ disaggregation_location.disaggregation }}</span>
-                                                                            </div>
+                                                            {% if target_location.zone %}
+                                                                <div class="field-col">
+                                                                    <div class="input-field">
+                                                                        <span class="label">Zone</span>
+                                                                        <div class="input-holder">
+                                                                            <span class="text-read-only">{{ target_location.zone }}</span>
                                                                         </div>
-                                                                        <div class="field-col">
-                                                                            <div class="input-field">
-                                                                                <span class="label">Target</span>
-                                                                                <div class="input-holder">
-                                                                                    <span class="text-read-only">{{ disaggregation_location.target }}</span>
+                                                                    </div>
+                                                                </div>
+                                                            {% endif %}
+                                                        </div>
+                                                    </div>
+                                                    <div class="col">
+                                                        <div class="multiple-fields-row {% if target_location.nhs_code %}three{% else %}two{% endif %}-items">
+                                                            <div class="field-col">
+                                                                <div class="select-field">
+                                                                    <span class="label">Location Type</span>
+                                                                    <span class="text-read-only">{{ target_location.location_type }}</span>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="field-col">
+                                                                <div class="select-field">
+                                                                    <label class="label">Classification</label>
+                                                                    <span class="text-read-only">{{ target_location.classification }}</span>
+                                                                </div>
+                                                            </div>
+
+                                                            {% if target_location.nhs_code %}
+                                                            <div class="field-col">
+                                                                <div class="input-field">
+                                                                    <span class="label">NHS Code</span>
+                                                                    <div class="input-holder">
+                                                                        <span class="text-read-only">{{ target_location.nhs_code }}</span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            {% endif %}
+                                                        </div>
+                                                    </div>
+                                                    <div class="col">
+                                                        <div class="field-col">
+                                                            <div class="input-field">
+                                                                <span class="label">Facility Monitoring</span>
+                                                                <div class="input-holder">
+                                                                    <span class="text-read-only">
+                                                                        {% if target_location.facility_monitoring %}
+                                                                        Yes
+                                                                        {% else %}
+                                                                        No
+                                                                        {% endif %}
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <br/>
+                                                <div class="row">
+                                                    {% if target_location.facility_monitoring %}
+                                                    <div class="col">
+                                                        <div class="multiple-fields-row two-items">
+                                                            <div class="field-col">
+                                                                <div class="select-field">
+                                                                    <span class="label">Facility / Site Name</span>
+                                                                    <span class="text-read-only">{{ target_location.facility_name }}</span>
+                                                                </div>
+                                                            </div>
+                                                            <div class="field-col">
+                                                                <div class="input-field">
+                                                                    <span class="label">Facility / Site ID</span>
+                                                                    <div class="input-holder">
+                                                                        <span class="text-read-only">{{ target_location.facility_id }}</span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col">
+                                                        <div class="multiple-fields-row two-items">
+                                                            <div class="field-col">
+                                                                <div class="input-field">
+                                                                    <span class="label">Facility / Site Latitude</span>
+                                                                    <div class="input-holder">
+                                                                        <span class="text-read-only">{{ target_location.facility_lat }}</span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="field-col">
+                                                                <div class="input-field">
+                                                                    <span class="label">Facility / Site Longitude</span>
+                                                                    <div class="input-holder">
+                                                                        <span class="text-read-only">{{ target_location.facility_long }}</span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    {% endif %}
+                                                </div>
+                                                <br/>
+                                                <div class="disaggregation-block disaggregation-accordion">
+                                                    <div class="inner-holder">
+                                                        <a href="#" class="block-top disaggregation-accordion-opener">
+                                                            <div class="location-block-holder">
+                                                                <div class="block-top-title">
+                                                                    <div class="title">
+                                                                        Disaggregations
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <span class="btn btn-red" style="float:right"> {{ target_location.disaggregationlocation_set.all | length }}</span>
+                                                        </a>
+                                                        <div class="disaggregation-accordion-slide">
+                                                            {% for disaggregation_location in target_location.disaggregationlocation_set.all %}
+                                                                <div class="location-inner-holder">  
+                                                                    <div class="col col-lg">
+                                                                        <div class="multiple-fields-row two-items">
+                                                                            <div class="field-col">
+                                                                                <div class="select-field">
+                                                                                    <span class="label">Disaggregation</span>
+                                                                                    <span class="text-read-only">{{ disaggregation_location.disaggregation }}</span>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="field-col">
+                                                                                <div class="input-field">
+                                                                                    <span class="label">Target</span>
+                                                                                    <div class="input-holder">
+                                                                                        <span class="text-read-only">{{ disaggregation_location.target }}</span>
+                                                                                    </div>
                                                                                 </div>
                                                                             </div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                            </div>
-                                                            <br/>
-                                                        {% endfor %} 
+                                                                <br/>
+                                                            {% endfor %} 
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
+                                {% endfor %} 
                                 </div>
-                            {% endfor %} 
                             </div>
-                        </div>
-                    </div> 
+                        </div> 
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
     {% endfor %}
-   
-    
-    
-{% endblock project_body %}
+</div>
+{% endblock content %}
 
 
 {% block scripts %}
 {{ block.super }}
+
+<script type="module" src="{% static 'src/js/components/initAccordion.js' %}"></script>
+<script type="module" src="{% static 'src/js/utils/exportSW.js' %}"></script>
+
 <script>
     document.querySelector(".project-planning").addEventListener('click', function(){
         document.querySelector(".project-chevron").classList.toggle("object-rotation");

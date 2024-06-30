@@ -20,12 +20,12 @@
 
 .filter-item {
   padding: 2px 3px;
-  background-color: $red-be;
+  background-color: $gray-7d;
   color: white;
   border-radius: 3px;
   font-weight: 600;
   font-size: 12px;
-  border: 1px solid $red;
+  // border: 1px solid $red;
   box-shadow: 0 0 16px rgba($gray-d1, 0.3);
 }
 
@@ -391,13 +391,13 @@ ul{
   display: flex;
   flex-direction: column-reverse;
   gap: 0.2rem;
+  padding: 0.4rem;
 
   @include media('>=tablet') {
     display: flex;
     flex-direction: row;
     align-items: start;
     justify-content: space-between;
-    padding-bottom: 0;
   }
 
   &.page-top-panel-large {
@@ -409,7 +409,7 @@ ul{
     // margin-bottom: 8px;
 
     @include media('>=tablet') {
-      margin-bottom: 0;
+      // margin-bottom: 0;
     }
 
     &:only-child {
@@ -443,7 +443,7 @@ ul{
     margin-bottom: 8px;
 
     @include media('>=tablet') {
-      margin-bottom: 0;
+      // margin-bottom: 0;
     }
 
     &:only-child {
@@ -867,3 +867,7 @@ a.text-decoration-none{
   --tw-shadow-colored: 0 1px 3px 0 var(--tw-shadow-color), 0 1px 2px -1px var(--tw-shadow-color);
   box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
 }
+
+.bottom-border {
+    border-bottom: 2px solid $red-be;
+  }

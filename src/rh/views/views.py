@@ -76,11 +76,11 @@ def copy_target_location_disaggregation_locations(location, disaggregation_locat
 @login_required
 def load_activity_domains(request):
     cluster_ids = [int(i) for i in request.POST.getlist("clusters[]") if i]
-
+    user_location = request.user.profile.country
     # Define a Prefetch object to optimize the related activitydomain_set
     prefetch_activitydomain = Prefetch(
         "activitydomain_set",
-        queryset=ActivityDomain.objects.order_by("name"),
+        queryset=ActivityDomain.objects.filter(countries = user_location).order_by("name"),
     )
 
     clusters = Cluster.objects.filter(pk__in=cluster_ids).prefetch_related(prefetch_activitydomain)

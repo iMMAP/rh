@@ -10,7 +10,6 @@ from .models import (
     Currency,
     DisaggregationLocation,
     Donor,
-    FacilitySiteType,
     Organization,
     Project,
     ProjectIndicatorType,
@@ -97,7 +96,16 @@ class TargetLocationForm(forms.ModelForm):
     class Meta:
         model = TargetLocation
         fields = "__all__"
-        exclude = ("disaggregations",)
+        exclude = (
+            "disaggregations",
+            "project",
+            "active",
+            "state",
+            "locations_group_by",
+            "group_by_province",
+            "group_by_district",
+            "group_by_custom",
+        )
         widgets = {
             "country": forms.widgets.HiddenInput(),
             "active": forms.widgets.HiddenInput(),
@@ -109,45 +117,20 @@ class TargetLocationForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields["save"] = forms.BooleanField(
-            required=False,
-            initial=False,
-            widget=forms.HiddenInput(attrs={"name": self.prefix + "-save"}),
-        )
-
-        cluster_has_nhs_code = False
-        activity_plan = False
-        if "instance" in kwargs and kwargs["instance"]:
-            activity_plan = kwargs["instance"].activity_plan
-            if activity_plan:
-                cluster_has_nhs_code = any(
-                    cluster.has_nhs_code for cluster in activity_plan.activity_domain.clusters.all()
-                )
-        nhs_code = f"{kwargs.get('prefix')}-nhs_code"
-        has_nhs_code = nhs_code in kwargs.get("data", {})
-
-        if cluster_has_nhs_code or has_nhs_code:
-            self.fields["nhs_code"] = forms.CharField(max_length=200, required=True)
-        else:
-            self.fields.pop("nhs_code", None)
 
         self.fields["province"].queryset = self.fields["province"].queryset.filter(type="Province")
         self.fields["district"].queryset = self.fields["district"].queryset.filter(type="District")
 
         # Get only the relevant facility types - related to cluster
-        if activity_plan:
-            self.fields["facility_site_type"].queryset = FacilitySiteType.objects.filter(
-                cluster__in=activity_plan.activity_domain.clusters.all()
-            )
-        else:
-            self.fields["facility_site_type"].queryset = FacilitySiteType.objects.all()
         self.fields["zone"].queryset = self.fields["zone"].queryset.filter(type="Zone")
+
         self.fields["province"].widget.attrs.update(
             {
                 "data-form-prefix": f"{kwargs.get('prefix')}",
                 "onchange": f"updateLocationTitle('{kwargs.get('prefix')}', 'id_{kwargs.get('prefix')}-province');",
             }
         )
+
         self.fields["district"].widget.attrs.update(
             {
                 "onchange": f"updateLocationTitle('{kwargs.get('prefix')}', 'id_{kwargs.get('prefix')}-district');",
@@ -160,7 +143,7 @@ TargetLocationFormSet = inlineformset_factory(
     ActivityPlan,
     TargetLocation,
     form=TargetLocationForm,
-    extra=0,  # Number of empty forms to display
+    extra=2,  # Number of empty forms to display
     can_delete=True,  # Allow deletion of existing forms
 )
 
@@ -195,39 +178,11 @@ class ActivityPlanForm(forms.ModelForm):
     class Meta:
         model = ActivityPlan
         fields = "__all__"
+        exclude = ["state", "active", "project"]
 
-    def __init__(self, *args, project, **kwargs):
+    def __init__(self, *args, **kwargs):
+        # user = kwargs.pop("user", None)
         super().__init__(*args, **kwargs)
-        prefix = kwargs.get("prefix")
-        instance = kwargs.get("instance", "")
-        instance_id = ""
-        if instance:
-            instance_id = instance.pk
-
-        self.fields["save"] = forms.BooleanField(
-            required=False,
-            initial=False,
-            widget=forms.HiddenInput(attrs={"name": self.prefix + "-save"}),
-        )
-        self.fields["activity_domain"].queryset = project.activity_domains.all()
-        self.fields["activity_domain"].widget.attrs.update(
-            {
-                "data-form-prefix": f"{prefix}",
-                "onchange": f"updateActivityTitle('{prefix}', 'id_{prefix}-activity_domain');",
-            }
-        )
-        self.fields["activity_type"].widget.attrs.update(
-            {"onchange": f"updateActivityTitle('{prefix}', 'id_{prefix}-activity_type');"}
-        )
-        self.fields["activity_detail"].widget.attrs.update(
-            {"onchange": f"updateActivityTitle('{prefix}', 'id_{prefix}-activity_detail');"}
-        )
-        self.fields["indicator"].widget.attrs.update(
-            {"style": "20px", "data-prefix": prefix, "data-activity-plan": instance_id}
-        )
-        self.fields["indicator"].widget.attrs.update(
-            {"onchange": "updateIndicatorTypes(event)", "data-indicator-url": reverse_lazy("update_indicator_type")}
-        )
 
 
 ActivityPlanFormSet = inlineformset_factory(

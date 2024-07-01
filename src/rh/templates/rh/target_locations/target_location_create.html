@@ -2,13 +2,13 @@
 {% load static %}
 
 {% block page_title %} 
-    Plan: {{project.title}} Activities
+    New Target Location 
 {% endblock page_title %}
 
 
 {% block project_contents %}
     <div class="project-title-holder" style="display: flex;">
-        <h2 class="plan-title"> <em>Project: </em> {{ project.title }}</h2>
+        <h2 class="plan-title"> Activity Plan: {{activity_plan}}</h2>
     </div>
 
     <div class="main-content">
@@ -19,9 +19,8 @@
                         <div class="top-activity-block">
                             <span class="activity-title">
                                 <span>
-                                    Activity Plans
+                                    New Target Location
                                 </span>
-                                <span class="btn btn-gray" style="float:right"> {{ project.activityplan_set.all | length }}</span>
                             </span>
                             <br>
                             <span class="">
@@ -31,14 +30,9 @@
                     </div>
                 </div>
 
-                {% include "rh/activity_plans/_activity_plan_table.html"  with object_list=project.activityplan_set.all %}
-
-                {% comment %} {{ activity_plan_formset.management_form }} {% csrf_token %} {% endcomment %}
-                {% comment %} <div id="activity-formset">
-                    {% for form, target_location_formset in combined_formset %}
-                        {% include "rh/projects/forms/activity_empty_form.html" with form=form target_location_formset=target_location_formset %}
-                    {% endfor %}
-                </div> {% endcomment %}
+                <div class="target-location-form">
+                    {{ form.as_p }}
+                </div>
             </div>
         </div>
     </div>

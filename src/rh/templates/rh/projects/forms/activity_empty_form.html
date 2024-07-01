@@ -10,7 +10,7 @@
             <div class="block-activity mb-3">
                 <div id="{{ form.prefix }}-actions">
                     <button href="#"
-                            data-url="{% url 'copy_plan' project=project.pk plan=form.instance.pk %}"
+                            {% comment %} data-url="{% url 'copy_plan' project=project.pk plan=form.instance.pk %}" {% endcomment %}
                             data-type="copy" 
                             data-name="activity" 
                             class="btn btn-gray-outline show-sw-action-popup">
@@ -18,7 +18,7 @@
                         <span class="btn-text">Duplicate</span>
                     </button>
                     <button href="#"
-                            data-url="{% url 'delete_plan' form.instance.pk %}"
+                            {% comment %} data-url="{% url 'delete_plan' form.instance.pk %}" {% endcomment %}
                             data-type="delete" 
                             data-name="activity" 
                             class="btn btn-gray-outline show-sw-action-popup">
@@ -136,38 +136,7 @@
                 <!-- Indicator types start to diaplay -->
                 <div class="row" id="{{ form.prefix }}-indicator-types">
                 </div>
-                <div class="row" id="Locations-{{form.prefix}}">
-                    <div class="col col-lg">
-                        <div class="target-location-block target-location-accordion">
-                            <div class="inner-holder">
-                                <div class="add_button">
-                                    <button data-form-prefix="{{form.prefix}}" data-project="{{project.pk}}" type="button"
-                                            class="btn btn-red add-target-location-form-button">Add Target Location
-                                    </button>
-                                </div>
-                                <div class="block-top cursor-pointer target-location-accordion-opener">
-                                    <div class="location-block-holder">
-                                        <div class="block-top-title">
-                                            <span class="title">
-                                                Target Locations
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="target-location-accordion-slide">
-                                    {{ target_location_formset.management_form }}
-                                    <div id="{{form.prefix}}">
-                                        {% for target_location_form in target_location_formset %}
-                                            {% include "rh/projects/forms/target_location_empty_form.html" with target_location_form=target_location_form %}
-                                        {% endfor %}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
 
-               
             </div>
         </div>
     </div>

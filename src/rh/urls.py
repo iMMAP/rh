@@ -55,6 +55,11 @@ urlpatterns = [
     ),
     # Projects Activity Plannings CRUD
     path(
+        "activity-plans/project/<int:project>/create",
+        activity_plans.create_activity_plan,
+        name="activity-plans-create",
+    ),
+    path(
         "projects/<int:project>/activity_plan/<str:plan>/copy/",
         activity_plans.copy_activity_plan,
         name="copy_plan",
@@ -65,11 +70,21 @@ urlpatterns = [
         name="delete_plan",
     ),
     path(
-        "projects/<int:project>/activity_plan/create",
-        activity_plans.create_project_activity_plan,
-        name="create_project_activity_plan",
+        "projects/<int:project>/target-locations",
+        target_locations.list_target_locations,
+        name="target-locations-list",
+    ),
+    path(
+        "projects/<int:project>/activity-plans",
+        activity_plans.list_activity_plans,
+        name="activity-plans-list",
     ),
     # Projects Target Locations CRUD
+    path(
+        "target-locations/activity-plan/<int:activity_plan>/create",
+        target_locations.create_target_location,
+        name="target-locations-create",
+    ),
     path(
         "projects/<int:project>/target_location/<str:location>/copy/",
         target_locations.copy_target_location,

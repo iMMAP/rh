@@ -1,13 +1,35 @@
-{% extends "rh/projects/projects_index.html" %}
+{% extends "_base.html" %}
+
+{% load static %}
 
 {% block page_title %} 
     Financial Report 
 {% endblock page_title %}
 
 
-{% block project_body %}
-    <div class="breadcrumbs-nav-panel">
-        <div class="holder">
+{% block content %}
+    <div class="container">
+        <div class="page-navigation-panel">
+            <div class="holder">
+                <div class="tabs-nav-holder">
+                    <ul class="tabs-nav">
+                        <li class="{% if project_view %}active{% endif %}">
+                            <a href="{% if project %}{% url 'projects-detail' project.pk %}{% else %}{% url 'projects-create' %}{% endif %}">Project
+                            planning</a>
+                        </li>
+                        <li class="{% if financial_view %}active{% endif %}">
+                            <a href="{% if project %}{% url 'create_project_budget_progress' project.pk %}{% else %}#{% endif %}">Financial Reports</a>
+                        </li>
+                        <li class="{% if reports_view %}active{% endif %}">
+                            <a href="{% if project %}{% url 'project_reports_home' project.pk %}{% else %}#{% endif %}">Monthly Progress</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="breadcrumbs-nav-panel">
+            <div class="holder">
             <ul class="breadcrumbs">
                 <li>
                     <a href="{% url 'landing' %}">Home</a>
@@ -159,4 +181,9 @@
             </form>
         </div>
     </div>
-{% endblock project_body %}
+    </div>
+{% endblock content %}
+
+{% block scripts %}
+    <script type="module" src="{% static 'src/js/components/initAccordion.js' %}"></script>
+{% endblock scripts %}

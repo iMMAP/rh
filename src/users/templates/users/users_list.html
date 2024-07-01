@@ -114,7 +114,7 @@
 
         {% comment %} Pager {% endcomment %}
         {% if users %}
-            {% include 'rh/projects/views/_pagination.html' with object_list=users %}
+            {% include 'components/_pagination.html' with object_list=users %}
         {% else %}
             <div class="view_nocontent">
                 <div class="nocontent_help">

@@ -50,15 +50,9 @@ def projects_detail(request, pk):
     if not has_permission(request.user, project):
         raise PermissionDenied
 
-    activity_plans = project.activityplan_set.all()
 
     context = {
         "project": project,
-        "project_view": True,
-        "financial_view": False,
-        "reports_view": False,
-        "project_filter": project,
-        "activity_plans": activity_plans,
     }
     return render(request, "rh/projects/views/project_view.html", context)
 

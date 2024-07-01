@@ -1,0 +1,86 @@
+{% load compress %}
+{% load static %}
+
+<div class="content-block bottom-border table-container">
+    {% comment %} Table Actions and filters {% endcomment %}
+    <div class="page-top-panel bottom-border">
+        <div class="actions-panel">
+            <label for="query">Search</label>
+            <div class="input-holder row">
+                <input type="text" id="query" placeholder="Search Activity Plans" />
+            </div>
+        </div>
+
+        <div class="actions-panel">
+            <div class="export-formats-holder">
+                <span class="btn btn-gray export-open">
+                    <span class="btn-text">Export</span>
+                    <!-- spinner start-->
+                    <img class='downloading' style="width: 1.2rem;" src="{% static 'src/images/spinner.gif' %}" />
+                    <!-- spinner end -->
+                    <span class="icon-download"></span>
+                </span>
+            </div>
+            <button class="btn btn-red">New Activity Plan</button>
+        </div>
+    </div>
+
+    {% comment %} Table {% endcomment %}
+    {% if object_list %}
+    <div class="table-wrapper-scrollable">
+        <table class="table all-projects-table">
+            <thead class="content-block ">
+                <tr>
+                         <th>
+                             <strong class="table-title">
+                                Activity Domain
+                            </strong>
+                        </th>
+                        <th>
+                             <strong class="table-title">
+                                Activity Type 
+                            </strong>
+                        </th>
+
+                         <th>
+                             <strong class="table-title">
+                               Indicator 
+                            </strong>
+                        </th>
+
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            
+            <tbody>
+                <!--Include The Projects Details Here -->
+                {% for row in object_list %}
+                <tr>
+                    <td>
+                        {{row.activity_domain}}
+                    </td>
+                    <td>{{row.activity_type}}</td>
+                    <td>{{row.indicator}}</td>
+
+                    <td>Edit</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+        <div class="view_nocontent">
+            <div class="nocontent_help">
+                <h4>No Activity Plans found. Let's create one!</h4>
+            </div>
+        </div>
+    {% endif %}
+
+    {% comment %} Pagination {% endcomment %}
+    {% include 'components/_pagination.html' with object_list=object_list %}
+</div>
+
+
+{% compress js inline %}
+    <script src="{% static 'src/js/components/initCheckAllCheckboxes.js' %}"></script>
+{% endcompress %}

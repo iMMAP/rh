@@ -878,7 +878,7 @@ def load_target_locations_details(request):
             response += "</optgroup>"
 
     return JsonResponse(response, safe=False)
-@login_required
+
 def get_disaggregations_report_empty_forms(request):
     """Get target location empty form"""
 
@@ -902,6 +902,7 @@ def get_disaggregations_report_empty_forms(request):
                     if disaggregation_location.target is not None:
                         initial_data.append({
                             "disaggregation": disaggregation_location.disaggregation,
+                            "target": disaggregation_location.target,
                         })
 
             # Create DisaggregationReportFormSet for each location prefix
@@ -932,7 +933,6 @@ def get_disaggregations_report_empty_forms(request):
 
     # Return JSON response containing generated HTML forms
     return JsonResponse(location_disaggregation_report_dict)
-
 
 def recompute_target_achieved(plan_report):
     """Recompute the target achieved for each activity plan report"""

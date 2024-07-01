@@ -9,78 +9,67 @@
 
 {% block content %}
     <div class="container">
-        {% if project %}
         <div class="page-navigation-panel">
             <div class="holder">
                 <div class="tabs-nav-holder">
                     <ul class="tabs-nav">
-                        <li class="{% if project_view %}active{% endif %}">
-                            <a href="{% if project %}{% url 'projects-detail' project.pk %}{% else %}{% url 'projects-create' %}{% endif %}">Project
+                                                <li class="{% if request.resolver_match.url_name == 'projects-update' %}active{% endif %}">
+
+                            <a href="{% if project %}{% url 'projects-update' project.pk %}{% else %}{% url 'projects-create' %}{% endif %}">Project
+
                             planning</a>
+
                         </li>
-                        <li class="{% if financial_view %}active{% endif %}">
-                            <a href="{% if project %}{% url 'create_project_budget_progress' project.pk %}{% else %}#{% endif %}">Financial Reports</a>
+
+                        <li class="{% if request.resolver_match.url_name == 'activity-plans-list' %}active{% endif %}">
+
+                            <a href="{% if project %}{% url 'activity-plans-list' project.pk %}{% else %}#{% endif %}">Activity Plans</a>
+
                         </li>
-                        <li class="{% if reports_view %}active{% endif %}">
-                            <a href="{% if project %}{% url 'project_reports_home' project.pk %}{% else %}#{% endif %}">Monthly Progress</a>
+
+                        <li class="{% if request.resolver_match.url_name == 'target-locations-list' %}active{% endif %}">
+
+                            <a href="{% if project %}{% url 'target-locations-list' project.pk %}{% else %}#{% endif %}">Target Locations</a>
+
                         </li>
                     </ul>
                 </div>
             </div>
         </div>
-        {% endif %}
-
-        <div class="two-cols-layout">
-            <div class="breadcrumbs-nav-panel">
-                <div class="holder">
-                    <ul class="breadcrumbs">
+        
+        <div class="breadcrumbs-nav-panel">
+            <div class="holder">
+                <ul class="breadcrumbs">
+                    <li>
+                        <a href="{% url 'landing' %}">Home</a>
+                    </li>
+                    {% if project %}
                         <li>
-                            <a href="{% url 'landing' %}">Home</a>
-                        </li>
-                        {% if project %}
-                            <li>
-                                <a id="return-url" href="{% url 'projects-list' %}?state={{project.state}}">
-                                    {% if project.state == 'in-progress' %}
-                                        Active Projects
-                                    {% elif project.state == 'draft' %}
-                                        Draft Projects
-                                    {% elif project.state == 'archive' %}
-                                        Archived Projects
-                                    {% elif project.state == 'done' %}
-                                        Completed Projects
-                                    {% endif %}
-                                </a>
-                            </li>
-                            <li class="current">{{ project.code }}</li>
-                        {% else %}
-                            <li class="current">New Project</li>
-                        {% endif %}
-                    </ul>
-                </div>
-            </div>
-            
-            <aside class="sidebar">
-                <div class="sidebar-nav-holder">
-                    <ul class="sidebar-nav">
-                        <li class="{% if project_planning %}current{% endif %}">
-                            <a href="{% if project %}{% url 'projects-update' project.pk %}{% else %}{% url 'projects-create' %}{% endif %}">
-                                Project Planning
+                            <a id="return-url" href="{% url 'projects-list' %}?state={{project.state}}">
+                                {% if project.state == 'in-progress' %}
+                                    Active Projects
+                                {% elif project.state == 'draft' %}
+                                    Draft Projects
+                                {% elif project.state == 'archive' %}
+                                    Archived Projects
+                                {% elif project.state == 'done' %}
+                                    Completed Projects
+                                {% endif %}
                             </a>
                         </li>
-                        <li class="{% if activity_planning %}current{% endif %}">
-                            <a class="{% if not project %}disabled-link{% endif %}"
-                                href="{% if project %}{% url 'create_project_activity_plan' project.pk %}{% else %}#{% endif %}">Activities
-                            Planning</a>
+                        <li class="current">
+                            <a href="{% url 'projects-detail' project.id %}">
+                                {{ project.code }}
+                            </a>
                         </li>
-                        <li class="{% if project_review %}current{% endif %}">
-                            
-                            <a class="disabled-link"
-                                href="{% if project %} {% url 'project_plan_review' project.pk %} {% else %}#{% endif %}">Review</a>
-                        </li>
-                    </ul>
-                </div>
-            </aside>
-            
+                    {% else %}
+                        <li class="current">New Project</li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div> 
+
+        <div class="main-content">        
             {% block project_contents %}
             {% endblock project_contents %}
             

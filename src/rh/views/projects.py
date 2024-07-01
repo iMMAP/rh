@@ -50,7 +50,6 @@ def projects_detail(request, pk):
     if not has_permission(request.user, project):
         raise PermissionDenied
 
-
     context = {
         "project": project,
     }

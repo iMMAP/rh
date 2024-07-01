@@ -7,12 +7,12 @@
         <div class="actions-panel">
             <label for="query">Search</label>
             <div class="input-holder row">
-                <input type="text" id="query" placeholder="Search Activity Plans" />
+                <input type="text" id="query" placeholder="Search Traget Locations" />
             </div>
         </div>
 
         <div class="actions-panel">
-            <a href="{% url 'activity-plans-create' project.id %}" class="btn btn-red">New Activity Plan</a>
+            <a href="{% url 'target-locations-create' project.id %}" class="btn btn-red">New Traget Location</a>
         </div>
     </div>
 
@@ -24,22 +24,20 @@
                     <tr>
                             <th>
                                 <strong class="table-title">
-                                    Activity Domain
-                                </strong>
-                            </th>
-                            <th>
-                                <strong class="table-title">
-                                    Activity Type 
+                                    Location
                                 </strong>
                             </th>
 
                             <th>
                                 <strong class="table-title">
-                                Indicator 
+                                    Location Type
+                                </strong>
+                            </th>   
+                            <th>
+                                <strong class="table-title">
+                                    State
                                 </strong>
                             </th>
-
-                            <th><strong>Target Locations</strong></th>
 
                         <th>Actions</th>
                     </tr>
@@ -49,16 +47,10 @@
                     <!--Include The Projects Details Here -->
                     {% for row in object_list %}
                     <tr>
-                        <td>
-                            {{row.activity_domain}}
-                        </td>
-                        <td>{{row.activity_type}}</td>
-                        <td>{{row.indicator}}</td>
-                        <td>{{row.targetlocation_count}}</td>
-
-                        <td>
-                            <a href="{% url 'target-locations-create' row.id %}" class="pill">New Traget Location</a>
-                        </td>
+                        <td> {{row.zone}},{{row.district}},{{row.province}},{{row.country}} </td>
+                        <td>{{row.location_type}}</td>
+                        <td> <span class="{{row.state}}"> {{row.state}} </span> </td>
+                        <td>Edit</td>
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -67,7 +59,7 @@
     {% else %}
         <div class="view_nocontent">
             <div class="nocontent_help">
-                <h4>No Activity Plans found. Let's create one!</h4>
+                <h4>No Target Location found. Let's create one!</h4>
             </div>
         </div>
     {% endif %}

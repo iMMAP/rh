@@ -504,7 +504,7 @@ ul{
   }
 
   @include media('>=widescreen') {
-    grid-gap: 0 48px;
+    // grid-gap: 0 48px;
   }
 
   .breadcrumbs-nav-panel {

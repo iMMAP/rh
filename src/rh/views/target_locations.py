@@ -1,23 +1,55 @@
 from django import forms
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
-from django.shortcuts import get_object_or_404
 from django.template.loader import render_to_string
 from django.urls import reverse
+from django.shortcuts import get_object_or_404, render, redirect
 
-from ..forms import (
-    ActivityPlanFormSet,
-    DisaggregationFormSet,
-    TargetLocationFormSet,
-)
-from ..models import (
-    ActivityDomain,
-    FacilitySiteType,
-    Project,
-    TargetLocation,
-)
+from ..forms import ActivityPlanFormSet, DisaggregationFormSet, TargetLocationFormSet, TargetLocationForm
+from ..models import ActivityDomain, FacilitySiteType, Project, TargetLocation, ActivityPlan
 
 from .views import copy_target_location_disaggregation_locations
+from django.core.paginator import Paginator
+
+
+@login_required
+def create_target_location(request, activity_plan):
+    """Create a new target location for a specific activity plan within a project"""
+    activity_plan = get_object_or_404(ActivityPlan, pk=activity_plan)
+
+    if request.method == "POST":
+        form = TargetLocationForm(request.POST)
+        if form.is_valid():
+            target_location = form.save(commit=False)
+            target_location.activity_plan = activity_plan
+            target_location.save()
+            return redirect("list_target_locations", project=activity_plan.project.pk)
+    else:
+        form = TargetLocationForm()
+
+    return render(
+        request, "rh/target_locations/target_location_create.html", {"form": form, "activity_plan": activity_plan}
+    )
+
+
+@login_required
+def list_target_locations(request, project):
+    """List Activity Plans for a specific project"""
+    project = get_object_or_404(Project, pk=project)
+
+    target_locations = TargetLocation.objects.filter(activity_plan__project=project)
+
+    paginator = Paginator(target_locations, 10)  # Show 10 activity plans per page
+    page = request.GET.get("page", 1)
+    target_locations = paginator.get_page(page)
+    target_locations.adjusted_elided_pages = paginator.get_elided_page_range(page)
+
+    context = {
+        "project": project,
+        "target_locations": target_locations,
+    }
+
+    return render(request, "rh/target_locations/target_locations_list.html", context)
 
 
 @login_required

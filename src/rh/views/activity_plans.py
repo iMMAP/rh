@@ -4,7 +4,13 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.template.loader import render_to_string
 from django.urls import reverse
 
-from ..forms import ActivityPlanFormSet, DisaggregationFormSet, TargetLocationFormSet, ProjectIndicatorTypeForm
+from ..forms import (
+    ActivityPlanFormSet,
+    DisaggregationFormSet,
+    TargetLocationFormSet,
+    ProjectIndicatorTypeForm,
+    ActivityPlanForm,
+)
 
 from ..models import (
     ActivityPlan,
@@ -12,6 +18,26 @@ from ..models import (
     Indicator,
 )
 from .views import copy_project_target_location, copy_target_location_disaggregation_locations
+from django.core.paginator import Paginator
+from django.db.models import Count
+
+
+@login_required
+def create_activity_plan(request, project):
+    """Create a new activity plan for a specific project"""
+    project = get_object_or_404(Project, pk=project)
+
+    if request.method == "POST":
+        form = ActivityPlanForm(request.POST, user=request.user)
+        if form.is_valid():
+            activity_plan = form.save(commit=False)
+            activity_plan.project = project
+            activity_plan.save()
+            return redirect("create_project_activity_plan", project_pk=project.pk)
+    else:
+        form = ActivityPlanForm()
+
+    return render(request, "rh/activity_plans/activity_plan_create.html", {"form": form, "project": project})
 
 
 @login_required
@@ -60,6 +86,28 @@ def copy_activity_plan(request, project, plan):
     # Return the URL in a JSON response
     response_data = {"redirect_url": url}
     return JsonResponse(response_data)
+
+
+@login_required
+def list_activity_plans(request, project):
+    """List Activity Plans for a specific project"""
+    project = get_object_or_404(Project, pk=project)
+
+    activity_plans = ActivityPlan.objects.filter(project=project).annotate(
+        target_location_count=Count("targetlocation")
+    )
+
+    paginator = Paginator(activity_plans, 10)  # Show 10 activity plans per page
+    page = request.GET.get("page", 1)
+    activity_plans = paginator.get_page(page)
+    activity_plans.adjusted_elided_pages = paginator.get_elided_page_range(page)
+
+    context = {
+        "project": project,
+        "activity_plans": activity_plans,
+    }
+
+    return render(request, "rh/activity_plans/activity_plans_list.html", context)
 
 
 @login_required

@@ -5,32 +5,38 @@ from django.template.loader import render_to_string
 from django.urls import reverse
 from django.shortcuts import get_object_or_404, render, redirect
 
-from ..forms import ActivityPlanFormSet, DisaggregationFormSet, TargetLocationFormSet, TargetLocationForm
-from ..models import ActivityDomain, FacilitySiteType, Project, TargetLocation, ActivityPlan
+from ..forms import ActivityPlanFormSet, DisaggregationFormSet, TargetLocationFormSet, TargetLocationForm,DisaggregationLocationForm
+from ..models import ActivityDomain, FacilitySiteType, Project, TargetLocation, ActivityPlan,DisaggregationLocation
 
 from .views import copy_target_location_disaggregation_locations
 from django.core.paginator import Paginator
+from django.forms import modelformset_factory
 
 
-@login_required
 def create_target_location(request, activity_plan):
-    """Create a new target location for a specific activity plan within a project"""
     activity_plan = get_object_or_404(ActivityPlan, pk=activity_plan)
+    DisaggregationFormSet = modelformset_factory(DisaggregationLocation, form=DisaggregationLocationForm, extra=1, can_delete=True)
 
-    if request.method == "POST":
-        form = TargetLocationForm(request.POST)
-        if form.is_valid():
-            target_location = form.save(commit=False)
-            target_location.activity_plan = activity_plan
+    if request.method == 'POST':
+        target_location_form = TargetLocationForm(request.POST)
+        disaggregation_formset = DisaggregationFormSet(request.POST, queryset=DisaggregationLocation.objects.none())
+
+        if target_location_form.is_valid() and disaggregation_formset.is_valid():
+            target_location = target_location_form.save(commit=False)
+            target_location.project = activity_plan.project
             target_location.save()
+            disaggregation_formset.instance = target_location
+            disaggregation_formset.save()
             return redirect("list_target_locations", project=activity_plan.project.pk)
     else:
-        form = TargetLocationForm()
+        target_location_form = TargetLocationForm()
+        disaggregation_formset = DisaggregationFormSet(queryset=DisaggregationLocation.objects.none())
 
-    return render(
-        request, "rh/target_locations/target_location_create.html", {"form": form, "activity_plan": activity_plan}
-    )
-
+    return render(request, 'rh/target_locations/target_location_create.html', {
+        'target_location_form': target_location_form,
+        'disaggregation_formset': disaggregation_formset,
+        'activity_plan': activity_plan,
+    })
 
 @login_required
 def list_target_locations(request, project):

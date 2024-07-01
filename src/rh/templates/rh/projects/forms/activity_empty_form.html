@@ -1,11 +1,7 @@
 <div class="activity_form">
     {{ form.id }} {{ form.save }}
-    <input type="hidden"
-           name="project_id"
-           id="project_id"
-           value="{{ project.id }}"/>
-    <div class="project-activity-block project-activity-accordion"
-         data-form-id="{{ form.prefix }}">
+    <input type="hidden" name="project_id" id="project_id" value="{{ project.id }}"/>
+    <div class="project-activity-block project-activity-accordion" data-form-id="{{ form.prefix }}">
         <div class="inner-holder unset-before">
             <div class="block-activity mb-3">
                 <div id="{{ form.prefix }}-actions">
@@ -32,7 +28,6 @@
                     </button>
                 </div>
             </div>
-
             <div class="block-top project-activity-accordion-opener">
                 <span class="title ">
                     {% if form.total_target.value %}
@@ -126,6 +121,7 @@
                         </div>
                     </div>
                 </div>
+
                  <div class="row">
                     <div class="input-field is-required">
                         <label for="{{ form.description.id_for_label}}">Activity Description</label>
@@ -136,7 +132,6 @@
                 <!-- Indicator types start to diaplay -->
                 <div class="row" id="{{ form.prefix }}-indicator-types">
                 </div>
-
             </div>
         </div>
     </div>

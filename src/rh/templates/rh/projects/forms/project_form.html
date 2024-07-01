@@ -13,20 +13,31 @@
 {% endblock page_title %}
 
 {% block project_contents %}
-    <div class="project-title-holder">
-        <h2 class="plan-title">{{ project.title }}</h2>
-    </div>
+    {% if project %}
+        <div class="project-title-holder" style="display: flex;">
+            <h2 class="plan-title"> <em>Project: </em> {{ project.title }}</h2>
+        </div>
+    {% endif %}
+
     <div class="main-content">
         <div class="project-plan create-plan">
-            <div class="main-heading">
-                {% if project %}
-                    <h2 class="plan-title">Update Project Plan</h2>
-                {% else %}
-                    <h2 class="plan-title">Create Project Plan</h2>
-                {% endif %}
+            <div class="activity-planning read-only">
+                <div class="activity-block-holder">
+                    <div class="top-activity-block">
+                        <span class="activity-title">
+                            <span>
+                                {% if project %}
+                                    Update Project Plan
+                                {% else %}
+                                    Create Project Plan
+                                {% endif %}
+                            </span>
+                        </span>
+                    </div>
+                </div>
             </div>
          
-            <form method="post">
+            <form method="post" class="form-container">
                 {% csrf_token %}
                 {{ form.active }}
                 <div class="row">

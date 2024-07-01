@@ -22,17 +22,111 @@
                                     New Activity Plan
                                 </span>
                             </span>
-                            <br>
-                            <span class="">
-                                Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloremque quod quam fugiat aperiam sint, blanditiis pariatur perspiciatis officiis ipsa at accusantium cupiditate magni voluptatum odio ipsam voluptatem error necessitatibus molestiae!
-                            </span>
                         </div>
                     </div>
                 </div>
 
                 <div class="activity_form">
-                    {{ form.as_p }}
+                    <form method="post" class="form-container">
+                        {% csrf_token %}
+                        <div class="project-activity-block" data-form-id="{{ form.prefix }}">
+                            <div class="inner-holder unset-before">
+                                <div class="project-activity-accordion-slide" id="{{ form.prefix }}-details">
+                                    <!-- ERRORS SECTION STARTS -->
+                                    {% if form.errors %}
+                                        <div class="message-container">
+                                        {% for error in form.errors %}
+                                            <div class="message-danger-alert">
+                                                {{error}}
+                                                <span class="close-alert-message">&#x2715;</span>
+                                            </div>
+                                        {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                    <!-- ERRORS SECTION ENDS -->
+                                    
+                                    {% if form.total_set_target.value > 0 %}
+                                    <div class="field-col">
+                                        <div class="input-field">
+                                            <span class="label">Total Set Target</span>
+                                            <div class="input-holder">
+                                                <span class="text-read-only">{{ form.total_set_target }}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+
+                                    <div class="row">
+                                        <div class="col">
+                                            <div class="multiple-fields-row two-items">
+                                                <div class="field-col">
+                                                    <div class="select-field is-required">
+                                                        <label for="{{form.activity_domain.id_for_label}}">Activity Domain</label>
+                                                        {{ form.activity_domain }}
+                                                    </div>
+                                                </div>
+                                                <div class="field-col">
+                                                    <div class="select-field is-required">
+                                                        <label for="{{form.activity_type.id_for_label}}">Activity Type</label>
+                                                        {{ form.activity_type }}
+                                                    </div>
+                                                </div>
+                                                <div class="field-col" style="display:none">
+                                                    <div class="select-field">
+                                                        <label for="{{form.activity_detail.id_for_label}}">Activity Detail</label>
+                                                        {{ form.activity_detail }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="row">
+                                        <div class="col">
+                                            <div class="select-field">
+                                                <label for="{{form.indicator.id_for_label}}">
+                                                    Indicator
+                                                </label>
+                                                {{ form.indicator }}
+                                            </div>
+                                            <div class="multiple-fields-row">
+                                                <div class="field-col">
+                                                    <div class="select-field">
+                                                        <label for="{{form.beneficiary.id_for_label}}">Beneficiary</label>
+                                                        {{ form.beneficiary }}
+                                                    </div>
+                                                </div>
+                                                <div class="field-col">
+                                                    <div class="select-field">
+                                                        <label for="{{form.beneficiary_category.id_for_label}}">Beneficiary Category</label>
+                                                        {{ form.beneficiary_category }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="input-field is-required">
+                                            <label for="{{ form.description.id_for_label}}">Activity Description</label>
+                                            <div class="input-holder">{{ form.description }}</div>
+                                        </div>
+                                    </div>
+                                
+                                    <!-- Indicator types start to diaplay -->
+                                    <div class="row" id="{{ form.prefix }}-indicator-types">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="plan-submit-holder">
+                            <button type="submit" class="btn btn-gray">Save and add another</button>
+                            <button type="submit" class="btn btn-gray">Save and continue editing</button>
+                            <button type="submit" class="btn btn-red">Save</button>
+                        </div>
+                    </form>
                 </div>
+
             </div>
         </div>
     </div>

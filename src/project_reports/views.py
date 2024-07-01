@@ -990,60 +990,6 @@ def get_disaggregations_report_empty_forms(request):
     # Return JSON response containing generated HTML forms
     return JsonResponse(location_disaggregation_report_dict)
 
-
-
-# def get_disaggregations_report_empty_forms(request):
-#     """Get target location empty form"""
-
-#     # Create a dictionary to hold disaggregation forms per location prefix
-#     location_disaggregation_report_dict = {}
-#     if request.POST.get("indicator"):
-#         indicator = get_object_or_404(Indicator, pk=int(request.POST.get("indicator")))
-
-#         # Get selected locations prefixes
-#         locations_report_prefix = request.POST.getlist("locations_prefixes[]")
-
-#         # Loop through each Indicator and retrieve its related Disaggregations
-#         related_disaggregations = indicator.disaggregation_set.all()
-
-#         initial_data = []
-
-#         # # Populate initial data with related disaggregations
-#         if related_disaggregations:
-#            for disaggregation in related_disaggregations:
-#             initial_data.append({"disaggregation": disaggregation})
-
-#             # Create DisaggregationReportFormSet for each location prefix
-#             for location_report_prefix in locations_report_prefix:
-#                 DisaggregationReportFormSet.extra = len(related_disaggregations)
-#                 disaggregation_report_formset = DisaggregationReportFormSet(
-#                     prefix=f"disaggregation_report_{location_report_prefix}",
-#                     initial=initial_data,
-#                 )
-
-#                 # Generate HTML for each disaggregation form and store in dictionary
-#                 for disaggregation_report_form in disaggregation_report_formset.forms:
-#                     context = {
-#                         "disaggregation_report_form": disaggregation_report_form,
-#                     }
-#                     html = render_to_string(
-#                         "project_reports/forms/disaggregation_report_empty_form.html",
-#                         context,
-#                     )
-
-#                     if location_report_prefix in location_disaggregation_report_dict:
-#                         location_disaggregation_report_dict[location_report_prefix].append(html)
-#                     else:
-#                         location_disaggregation_report_dict.update({location_report_prefix: [html]})
-
-#         # Set back extra to 0 to avoid empty forms if refreshed.
-#         DisaggregationReportFormSet.extra = 0
-
-#     # Return JSON response containing generated HTML forms
-#     return JsonResponse(location_disaggregation_report_dict)
-
-
-
 def recompute_target_achieved(plan_report):
     """Recompute the target achieved for each activity plan report"""
     location_reports = plan_report.targetlocationreport_set.all()

@@ -19,8 +19,13 @@
                         <div class="top-activity-block">
                             <span class="activity-title">
                                 <span>
-                                    New Activity Plan
+                                    {% if activity_plan %}
+                                        Update Activity Plan
+                                    {% else %}
+                                        New Activity Plan
+                                    {% endif %}
                                 </span>
+                                <span class="btn btn-gray" style="float:right">Target Locations</span>
                             </span>
                         </div>
                     </div>

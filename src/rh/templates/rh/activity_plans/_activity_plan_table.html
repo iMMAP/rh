@@ -54,10 +54,11 @@
                         </td>
                         <td>{{row.activity_type}}</td>
                         <td>{{row.indicator}}</td>
-                        <td>{{row.targetlocation_count}}</td>
+                        <td>{{row.target_location_count}}</td>
 
                         <td>
-                            <a href="{% url 'target-locations-create' row.id %}" class="pill">New Traget Location</a>
+                            <a href="{% url 'activity-plans-update' row.id %}" class="btn btn-gray">Edit</a>
+                            <a href="{% url 'target-locations-create' row.id %}" class="btn ">New Traget Location</a>
                         </td>
                     </tr>
                     {% endfor %}

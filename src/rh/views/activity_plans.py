@@ -23,21 +23,38 @@ from django.db.models import Count
 
 
 @login_required
+def update_activity_plan(request, pk):
+    """Update an existing activity plan"""
+    activity_plan = get_object_or_404(ActivityPlan.objects.select_related("project"), pk=pk)
+
+    if request.method == "POST":
+        form = ActivityPlanForm(request.POST, instance=activity_plan)
+        if form.is_valid():
+            form.save()
+            return redirect("activity-plans-list", project=activity_plan.project.pk)
+    else:
+        form = ActivityPlanForm(instance=activity_plan)
+
+    return render(request, "rh/activity_plans/activity_plan_form.html", {"form": form, "activity_plan": activity_plan,"project":activity_plan.project})
+
+
+
+@login_required
 def create_activity_plan(request, project):
     """Create a new activity plan for a specific project"""
     project = get_object_or_404(Project, pk=project)
 
     if request.method == "POST":
-        form = ActivityPlanForm(request.POST, user=request.user)
+        form = ActivityPlanForm(request.POST)
         if form.is_valid():
             activity_plan = form.save(commit=False)
             activity_plan.project = project
             activity_plan.save()
-            return redirect("create_project_activity_plan", project_pk=project.pk)
+            return redirect("activity-plans-list", project=project.pk)
     else:
         form = ActivityPlanForm()
 
-    return render(request, "rh/activity_plans/activity_plan_create.html", {"form": form, "project": project})
+    return render(request, "rh/activity_plans/activity_plan_form.html", {"form": form, "project": project})
 
 
 @login_required

@@ -186,11 +186,17 @@
                                                             <td colspan="2">{{ form.non_field_errors }}</td>
                                                         </tr>
                                                     {% endif %}
+                                                    {% if form.errors %}
+                                                        <tr class="row-form-errors">
+                                                            <td colspan="2">{{ form.errors }}</td>
+                                                        </tr>
+                                                    {% endif %}
+
                                                     <tr
                                                         class="form-row"
                                                         id="{{ disaggregation_formset.prefix }}-{{ forloop.counter0 }}"
                                                     >
-                                                        {% for field in form.visible_fields %}
+                                                         {% for field in form %}
                                                             <td>{{ field }}</td>
                                                         {% endfor %}
                                                     </tr>

@@ -18,7 +18,7 @@
                                 Project planning
                             </a>
                         </li>
-                        <li class="{% if request.resolver_match.url_name == 'activity-plans-list' or  request.resolver_match.url_name == 'activity-plans-create' %}active{% endif %}">
+                        <li class="{% if request.resolver_match.url_name == 'activity-plans-list' or  request.resolver_match.url_name == 'activity-plans-create' or request.resolver_match.url_name == 'activity-plans-update' %}active{% endif %}">
                             <a href="{% if project %}{% url 'activity-plans-list' project.pk %}{% else %}#{% endif %}">Activity Plans</a>
                         </li>
                         <li class="{% if request.resolver_match.url_name == 'target-locations-list' or  request.resolver_match.url_name == 'target-locations-create'%}active{% endif %}">
@@ -74,7 +74,6 @@
 
 {% block scripts %}
     {{ block.super }}
-    <script type="module" src="{% static 'src/js/components/initAccordion.js' %}"></script>
     <script type="module" src="{% static 'src/js/utils/exportSW.js' %}"></script>
     <!-- Select2 CDN -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js" integrity="sha512-2ImtlRlf2VVmiGZsjm9bEyhjGW4dU7B6TNwh/hx/iSByxNENtj3WVE6o/9Lj4TJeVXPi4bnOIMXFIJJAeufa0A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>

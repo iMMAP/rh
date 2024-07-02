@@ -21,12 +21,9 @@
         <div class="table-wrapper-scrollable">
             <table class="table all-projects-table">
                 <thead class="content-block ">
-                    <tr>
-                            <th>
-                                <strong class="table-title">
-                                    Location
-                                </strong>
-                            </th>
+                    <tr> 
+                        <th> <strong class="table-title"> Activity Plan</strong> </th>
+                            <th> <strong class="table-title"> Location </strong> </th>
 
                             <th>
                                 <strong class="table-title">
@@ -47,10 +44,13 @@
                     <!--Include The Projects Details Here -->
                     {% for row in object_list %}
                     <tr>
+                        <td>{{row.activity_plan}}</td>
                         <td> {{row.zone}},{{row.district}},{{row.province}},{{row.country}} </td>
                         <td>{{row.location_type}}</td>
                         <td> <span class="{{row.state}}"> {{row.state}} </span> </td>
-                        <td>Edit</td>
+                        <td>
+                            <a href="{% url 'target-locations-update' row.id %}" class="btn btn-gray">Edit</a> 
+                        </td>
                     </tr>
                     {% endfor %}
                 </tbody>

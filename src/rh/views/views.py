@@ -80,7 +80,7 @@ def load_activity_domains(request):
     # Define a Prefetch object to optimize the related activitydomain_set
     prefetch_activitydomain = Prefetch(
         "activitydomain_set",
-        queryset=ActivityDomain.objects.filter(countries = user_location).order_by("name"),
+        queryset=ActivityDomain.objects.filter(countries=user_location).order_by("name"),
     )
 
     clusters = Cluster.objects.filter(pk__in=cluster_ids).prefetch_related(prefetch_activitydomain)

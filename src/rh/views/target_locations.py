@@ -14,7 +14,7 @@ from django.forms import modelformset_factory
 
 
 def create_target_location(request, activity_plan):
-    activity_plan = get_object_or_404(ActivityPlan, pk=activity_plan)
+    activity_plan = get_object_or_404(ActivityPlan.objects.select_related('project'), pk=activity_plan)
     DisaggregationFormSet = modelformset_factory(DisaggregationLocation, form=DisaggregationLocationForm, extra=1, can_delete=True)
 
     if request.method == 'POST':
@@ -36,6 +36,7 @@ def create_target_location(request, activity_plan):
         'target_location_form': target_location_form,
         'disaggregation_formset': disaggregation_formset,
         'activity_plan': activity_plan,
+        'project':activity_plan.project
     })
 
 @login_required

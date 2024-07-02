@@ -13,24 +13,16 @@
             <div class="holder">
                 <div class="tabs-nav-holder">
                     <ul class="tabs-nav">
-                                                <li class="{% if request.resolver_match.url_name == 'projects-update' %}active{% endif %}">
-
-                            <a href="{% if project %}{% url 'projects-update' project.pk %}{% else %}{% url 'projects-create' %}{% endif %}">Project
-
-                            planning</a>
-
+                        <li class="{% if request.resolver_match.url_name == 'projects-update' %}active{% endif %}">
+                            <a href="{% if project %}{% url 'projects-update' project.pk %}{% else %}{% url 'projects-create' %}{% endif %}">
+                                Project planning
+                            </a>
                         </li>
-
-                        <li class="{% if request.resolver_match.url_name == 'activity-plans-list' %}active{% endif %}">
-
+                        <li class="{% if request.resolver_match.url_name == 'activity-plans-list' or  request.resolver_match.url_name == 'activity-plans-create' %}active{% endif %}">
                             <a href="{% if project %}{% url 'activity-plans-list' project.pk %}{% else %}#{% endif %}">Activity Plans</a>
-
                         </li>
-
-                        <li class="{% if request.resolver_match.url_name == 'target-locations-list' %}active{% endif %}">
-
+                        <li class="{% if request.resolver_match.url_name == 'target-locations-list' or  request.resolver_match.url_name == 'target-locations-create'%}active{% endif %}">
                             <a href="{% if project %}{% url 'target-locations-list' project.pk %}{% else %}#{% endif %}">Target Locations</a>
-
                         </li>
                     </ul>
                 </div>

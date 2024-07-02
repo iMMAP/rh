@@ -153,8 +153,13 @@
                                 </div>
                             </div>
 
-                            <div class="disaggregation-block disaggregation-accordion">
-                                <div class="inner-holder">
+                            <div 
+                                class="disaggregation-block js-inline-admin-formset disaggregation-accordion inline-group" 
+                                id="{{ disaggregation_formset.prefix }}-group" 
+                                data-inline-type="tabular" 
+                                data-inline-formset='{"name":"#{{disaggregation_formset.prefix}}","options":{"prefix":"{{disaggregation_formset.prefix}}","addText":"Add another","deleteText":"Delete"}}'
+                            >
+                                <div class="inner-holder tabular inline-related">
                                     <div class="block-top disaggregation-accordion-opener">
                                         <div class="location-block-holder">
                                             <div class="block-top-title">
@@ -164,26 +169,43 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <fieldset class="module aligned">
-                                        {{ disaggregation_formset.management_form }}
-                                        <table class="table table-striped">
-                                            <thead>
-                                                <tr>
-                                                    {% for form in disaggregation_formset.empty_form %}
+                                    {{ disaggregation_formset.management_form }}
+                                    <fieldset class="module aligned table-wrapper-scrollable">
+                                        <table class="table table-striped ">
+                                            <thead class="content-block">
+                                                <tr >
+                                                    {% for form in disaggregation_formset.empty_form.visible_fields %}
                                                         <th>{{ form.label_tag }}</th>
                                                     {% endfor %}
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 {% for form in disaggregation_formset %}
-                                                    <tr>
-                                                        {% for field in form %}
+                                                    {% if form.non_field_errors %}
+                                                        <tr class="row-form-errors">
+                                                            <td colspan="2">{{ form.non_field_errors }}</td>
+                                                        </tr>
+                                                    {% endif %}
+                                                    <tr
+                                                        class="form-row"
+                                                        id="{{ disaggregation_formset.prefix }}-{{ forloop.counter0 }}"
+                                                    >
+                                                        {% for field in form.visible_fields %}
                                                             <td>{{ field }}</td>
                                                         {% endfor %}
                                                     </tr>
                                                 {% endfor %}
+                                                <tr 
+                                                    class="form-row empty-form" 
+                                                    id="{{ disaggregation_formset.prefix }}-empty"
+                                                >
+                                                    {% for field in disaggregation_formset.empty_form.visible_fields %}
+                                                        <td>{{ field }}</td>
+                                                    {% endfor %}
+                                                </tr>
                                             </tbody>
-                                        </table>
+                                        </table> 
+
                                     </fieldset>
                                 </div>
                             </div>
@@ -202,5 +224,6 @@
 {% endblock project_contents %}
 
 {% block project_form_scripts %}
+    <script defer src="{% static 'src/js/utils/inlines.js' %}"></script>
     <script defer src="{% static 'rh/js/activity_planning.js' %}"></script>
 {% endblock project_form_scripts %}

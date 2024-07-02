@@ -869,5 +869,9 @@ a.text-decoration-none{
 }
 
 .bottom-border {
-    border-bottom: 2px solid $red-be;
-  }
+  border-bottom: 2px solid $red-be;
+}
+
+.empty-form{
+  display: none;
+}

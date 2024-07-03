@@ -17,6 +17,8 @@ from ..models import ActivityDomain, FacilitySiteType, Project, TargetLocation, 
 from .views import copy_target_location_disaggregation_locations
 from django.core.paginator import Paginator
 from django.forms import modelformset_factory
+from django.contrib import messages
+from django.utils.safestring import mark_safe
 
 
 @login_required
@@ -35,11 +37,24 @@ def update_target_location(request, pk):
 
         if target_location_form.is_valid() and disaggregation_formset.is_valid():
             new_target_location = target_location_form.save(commit=False)
-            new_target_location.activity_plan=target_location.activity_plan
+            new_target_location.activity_plan = target_location.activity_plan
             new_target_location.save()
-            disaggregation_formset.instance = new_target_location 
+            disaggregation_formset.instance = new_target_location
             disaggregation_formset.save()
-            return redirect("target-locations-list", project=target_location.activity_plan.project.pk)
+
+            messages.success(
+                request,
+                mark_safe(
+                    f'The Target Location "<a href="{reverse("target-locations-update", args=[target_location.pk])}">{target_location}</a>" was changed successfully.'
+                ),
+            )
+            if "_continue" in request.POST:
+                return redirect("target-locations-update", pk=target_location.pk)
+            elif "_save" in request.POST:
+                return redirect("target-locations-list", project=target_location.activity_plan.project.pk)
+            elif "_addanother" in request.POST:
+                return redirect("target-locations-create", activity_plan=target_location.activity_plan.pk)
+
     else:
         target_location_form = TargetLocationForm(instance=target_location)
         disaggregation_formset = DisaggregationFormSet(
@@ -75,7 +90,20 @@ def create_target_location(request, activity_plan):
             target_location.save()
             disaggregation_formset.instance = target_location
             disaggregation_formset.save()
-            return redirect("target-locations-list", project=activity_plan.project.pk)
+
+            messages.success(
+                request,
+                mark_safe(
+                    f'The Target Location "<a href="{reverse("target-locations-update", args=[target_location.pk])}">{target_location}</a>" was added successfully.'
+                ),
+            )
+            if "_continue" in request.POST:
+                return redirect("target-locations-update", pk=target_location.pk)
+            elif "_save" in request.POST:
+                return redirect("activity-plans-list", project=activity_plan.project.pk)
+            elif "_addanother" in request.POST:
+                return redirect("target-locations-create", activity_plan=activity_plan.pk)
+
     else:
         target_location_form = TargetLocationForm()
         disaggregation_formset = DisaggregationFormSet(queryset=DisaggregationLocation.objects.none())

@@ -53,7 +53,7 @@ class TargetLocationReportForm(forms.ModelForm):
         cluster_has_nhs_code = False
         plan_report = False
         if "instance" in kwargs and kwargs["instance"]:
-            plan_report = kwargs["instance"].activity_plan_report
+            plan_report = kwargs["instance"]
             if plan_report:
                 cluster_has_nhs_code = any(
                     cluster.has_nhs_code for cluster in plan_report.activity_plan.activity_domain.clusters.all()
@@ -88,10 +88,23 @@ TargetLocationReportFormSet = inlineformset_factory(
     can_delete=True,  # Allow deletion of existing forms
 )
 
+
+class DisaggregationLocationReportForm(forms.ModelForm):
+    class Meta:
+        model = DisaggregationLocationReport
+        fields = (
+            "disaggregation",
+            "target",
+        )
+
+
 DisaggregationReportFormSet = inlineformset_factory(
     TargetLocationReport,
     DisaggregationLocationReport,
-    fields="__all__",
+    fields=(
+        "disaggregation",
+        "target",
+    ),
     extra=0,  # Number of empty forms to display
 )
 
@@ -103,8 +116,8 @@ class ActivityPlanReportForm(forms.ModelForm):
 
         widgets = {
             "activity_plan": forms.widgets.HiddenInput(),
-            "report_types": forms.SelectMultiple(attrs={"class": "js_multiselect"}),
-            "implementing_partners": forms.SelectMultiple(attrs={"class": "js_multiselect"}),
+            "report_types": forms.SelectMultiple(attrs={"class": "custom-select"}),
+            "implementing_partners": forms.SelectMultiple(attrs={"class": "custom-select"}),
         }
 
     def __init__(self, *args, **kwargs):
@@ -124,6 +137,8 @@ class ActivityPlanReportForm(forms.ModelForm):
             organizations = Organization.objects.all().order_by("name")
 
         self.fields["indicator"].widget.attrs.update({"hidden": ""})
+        self.fields["monthly_report"].widget.attrs.update({"hidden": ""})
+        self.fields["activity_plan"].widget.attrs.update({"hidden": ""})
         self.fields["implementing_partners"].queryset = organizations
         self.fields["seasonal_retargeting"].widget = forms.CheckboxInput()
         self.fields["modality_retargeting"].widget = forms.CheckboxInput()

@@ -1,0 +1,40 @@
+{% extends "rh/projects/forms/project_form_base.html" %}
+{% load static %}
+
+{% block page_title %} 
+    Target Locations 
+{% endblock page_title %}
+
+
+{% block project_contents %}
+<div class="content-block top-border">
+    <div class="main-content">
+        <div class="activity-planning create-activity">
+            <div id="activity-formset-form">
+                <div class="activity-planning read-only">
+                    <div class="activity-block-holder">
+                        <div class="top-activity-block">
+                            <span class="activity-title">
+                                <span>
+                                    {{ monthly_report.report_date | date:"F Y" }}: Report Target Locations
+                                </span>
+                                <span class="btn btn-gray" style="float:right"> {{ report_target_locations | length }}</span>
+                            </span>
+                            <br>
+                            <span class="">
+                                Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloremque quod quam fugiat aperiam sint, blanditiis pariatur perspiciatis officiis ipsa at accusantium cupiditate magni voluptatum odio ipsam voluptatem error necessitatibus molestiae!
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                {% include "project_reports/report_target_locations/_target_location_table.html"  with object_list=report_target_locations project=project report=monthly_report%}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock project_contents %}
+
+{% block project_form_scripts %}
+    <script defer src="{% static 'rh/js/activity_planning.js' %}"></script>
+{% endblock project_form_scripts %}

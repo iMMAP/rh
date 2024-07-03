@@ -1,0 +1,261 @@
+{% extends "project_reports/forms/monthly_report_progress_form_base.html" %}
+{% load static %}
+
+{% block page_title %} 
+    New Target Location 
+{% endblock page_title %}
+
+
+{% block project_body %}
+<div class="content-block top-border">
+    <div class="main-content">
+        <div class="activity-planning create-activity">
+            <div id="activity-formset-form">
+                <div class="activity-planning read-only">
+                    <div class="activity-block-holder">
+                        <div class="top-activity-block">
+                            <span class="activity-title">
+                                <span>
+                                    New Report Target Location
+                                </span>
+                            </span>
+                            <br>
+                            <span class="">
+                                Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloremque quod quam fugiat aperiam sint, blanditiis pariatur perspiciatis officiis ipsa at accusantium cupiditate magni voluptatum odio ipsam voluptatem error necessitatibus molestiae!
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="target-location-form">
+                    <form action="" method="post" class="form-container">
+                        {% csrf_token %}
+                        <div id="">       
+                            <!-- ERRORS SECTION STARTS -->
+                            {% if location_report_form.errors %}
+                                <div class="message-container">
+                                {% for error in location_report_form.errors %}
+                                    <div class="message-danger-alert">
+                                        {{error}}
+                                        <span class="close-alert-message">&#x2715;</span>
+                                    </div>
+                                {% endfor %}
+                                </div>
+                            {% endif %}
+                            <!-- ERRORS SECTION ENDS -->
+
+                            <div class="row">
+                                <div class="col">
+                                    <div class="field-col">
+                                        <div class="select-field">
+                                            <span class="label">Project Target Location</span>
+                                                {{ location_report_form.target_location }}
+                                        </div>
+                                    </div>
+                                    <br/>
+                                    <div class="multiple-fields-row {% if location_report_form.zone.choices %}three{% else %}two{% endif %}-items">
+                                        <div class="field-col">
+                                            <div class="select-field is-required">
+                                                <label for="{{location_report_form.province.id_for_label}}" >Province / State</label>
+                                                <span class="text-read-only">
+                                                    {{ location_report_form.province }}
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="field-col">
+                                            <div class="input-field is-required">
+                                                <label for="{{location_report_form.district.id_for_label}}">District</label>
+                                                <span class="text-read-only">
+                                                    {{ location_report_form.district }}
+                                                </span>
+                                            </div>
+                                        </div>
+                                        {% if location_report_form.zone.choices %}
+                                        <div class="field-col">
+                                            <div class="input-field">
+                                                <label for="{{location_report_form.zone.id_for_label}}">Ward / Zone</label>
+                                                <span class="text-read-only">
+                                                    {{ location_report_form.zone }}
+                                                </span>
+                                            </div>
+                                        </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col">
+                                    <div class="multiple-fields-row two-items">
+                                        <div class="field-col">
+                                            <div class="input-field">
+                                                <label for="{{location_report_form.facility_site_type.id_for_label}}">Facility Site Type</label>
+                                                <span class="text-read-only">
+                                                    {{ location_report_form.facility_site_type }}
+                                                </span>
+                                            </div>
+                                        </div>
+                                        {% if location_report_form.nhs_code %}
+                                        <div class="field-col">
+                                            <div class="select-field is is-required">
+                                                <label for="{{location_report_form.nhs_code_for_label}}">NHS Code</label>
+                                                {{ location_report_form.nhs_code }}
+                                            </div>
+                                        </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row mtb20">
+                                <div class="col">
+                                    <div class="field-col">
+                                        <div class="input-check-holder">
+                                            <input type="checkbox" class="text-read-only" id="{{ location_report_form.facility_monitoring.id_for_label }}" name="{{ location_report_form.facility_monitoring.html_name }}" {% if location_report_form.facility_monitoring.value %}checked{% endif %}>
+                                            <label for="{{ location_report_form.facility_monitoring.id_for_label }}">
+                                                <span class="input"></span>
+                                                <span class="text">Facility Monitoring</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row mtb20" id="facility_details_{{ location_report_form.prefix }}">
+                                <div class="col col-lg">
+                                    <div class="multiple-fields-row two-items mtb20">
+                                        <div class="field-col">
+                                            <div class="input-field">
+                                                <label for="{{ location_report_form.facility_name.id_for_label }}">
+                                                    Facility / Site Name
+                                                </label>
+                                                <div class="input-holder">
+                                                    <span class="text-read-only">
+                                                        {{ location_report_form.facility_name }}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                         <div class="field-col">
+                                             <div class="input-field">
+                                                 <label for="{{ location_report_form.facility_id.id_for_label }}">
+                                                     Facility / Site ID
+                                                 </label>
+                                                 <div class="input-holder">
+                                                    <span class="text-read-only">
+                                                        {{ location_report_form.facility_id }}
+                                                    </span>
+                                                </div>
+                                             </div>
+                                         </div>
+                                    </div>
+                                    <div class="multiple-fields-row two-items">
+                                        <div class="field-col">
+                                            <div class="input-field">
+                                                <label for="{{ location_report_form.facility_lat.id_for_label }}">
+                                                    Facility / Site Latitude
+                                                </label>
+                                                <div class="input-holder">
+                                                    <span class="text-read-only">
+                                                        {{ location_report_form.facility_lat }}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="field-col">
+                                            <div class="input-field">
+                                                <label for="{{ location_report_form.facility_long.id_for_label }}">
+                                                    Facility / Site Longitude
+                                                </label>
+                                                <div class="input-holder">
+                                                    <span class="text-read-only">
+                                                        {{ location_report_form.facility_long }}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div 
+                                class="disaggregation-block js-inline-admin-formset disaggregation-accordion inline-group" 
+                                id="{{ report_disaggregation_formset.prefix }}-group"
+                                data-inline-type="tabular" 
+                                data-inline-formset='{"name":"#{{report_disaggregation_formset.prefix}}","options":{"prefix":"{{report_disaggregation_formset.prefix}}","addText":"Add another","deleteText":"Delete"}}'
+                            >
+                                <div class="inner-holder tabular inline-related">
+                                    <div class="block-top disaggregation-accordion-opener">
+                                        <div class="location-block-holder">
+                                            <div class="block-top-title">
+                                                <div class="title">
+                                                    Disaggregations
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {{ report_disaggregation_formset.management_form }}
+                                    <fieldset class="module aligned table-wrapper-scrollable">
+                                        <table class="table table-striped ">
+                                            <thead class="content-block">
+                                                <tr >
+                                                    {% for form in report_disaggregation_formset %}
+                                                        <th>{{ form.label_tag }}</th>
+                                                    {% endfor %}
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for form in report_disaggregation_formset %}
+                                                    {% if form.non_field_errors %}
+                                                        <tr class="row-form-errors">
+                                                            <td colspan="2">{{ form.non_field_errors }}</td>
+                                                        </tr>
+                                                    {% endif %}
+                                                    {% if form.errors %}
+                                                        <tr class="row-form-errors">
+                                                            <td colspan="2">{{ form.errors }}</td>
+                                                        </tr>
+                                                    {% endif %}
+
+                                                    <tr
+                                                        class="form-row"
+                                                        id="{{ report_disaggregation_formset.prefix }}-{{ forloop.counter0 }}"
+                                                    >
+                                                         {% for field in form %}
+                                                            <td>{{ field }}</td>
+                                                        {% endfor %}
+                                                    </tr>
+                                                {% endfor %}
+                                                <tr 
+                                                    class="form-row empty-form" 
+                                                    id="{{ report_disaggregation_formset.prefix }}-empty"
+                                                >
+                                                    {% for field in report_disaggregation_formset.empty_form.visible_fields %}
+                                                        <td>{{ field }}</td>
+                                                    {% endfor %}
+                                                </tr>
+                                            </tbody>
+                                        </table> 
+
+                                    </fieldset>
+                                </div>
+                            </div>
+                        </div>
+                          <div class="plan-submit-holder">
+                            <button type="submit" class="btn btn-gray">Save and add another</button>
+                            <button type="submit" class="btn btn-gray">Save and continue editing</button>
+                            <button type="submit" class="btn btn-red">Save</button>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock project_body %}
+
+{% block project_form_scripts %}
+    <script defer src="{% static 'src/js/utils/inlines.js' %}"></script>
+    <script defer src="{% static 'rh/js/activity_planning.js' %}"></script>
+{% endblock project_form_scripts %}

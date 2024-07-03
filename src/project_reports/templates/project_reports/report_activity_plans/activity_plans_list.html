@@ -1,0 +1,36 @@
+{% extends "project_reports/forms/monthly_report_progress_form_base.html" %}
+{% load static %}
+
+{% block page_title %} 
+    Monthly Report Activities
+{% endblock page_title %}
+
+
+{% block project_body %}
+<div class="content-block top-border">
+    <div class="main-content">
+        <div class="activity-planning create-activity">
+            <div id="activity-formset-form">
+                <div class="activity-planning read-only">
+                    <div class="activity-block-holder">
+                        <div class="top-activity-block">
+                            <span class="activity-title">
+                                <span>
+                                    {{ monthly_report.report_date | date:"F Y" }}: Report Activity Plans
+                                </span>
+                                <span class="btn btn-gray" style="float:right"> {{ monthly_report.activityplanreport_set.all | length }}</span>
+                            </span>
+                            <br>
+                            <span class="">
+                                Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloremque quod quam fugiat aperiam sint, blanditiis pariatur perspiciatis officiis ipsa at accusantium cupiditate magni voluptatum odio ipsam voluptatem error necessitatibus molestiae!
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                {% include "project_reports/report_activity_plans/_activity_plan_table.html"  with object_list=report_plans project=project %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock project_body %}

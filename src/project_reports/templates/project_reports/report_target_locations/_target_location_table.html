@@ -1,0 +1,66 @@
+{% load compress %}
+{% load static %}
+
+<div class="content-block bottom-border table-container">
+    {% comment %} Table Actions and filters {% endcomment %}
+    <div class="page-top-panel bottom-border">
+        <div class="actions-panel">
+            <label for="query">Search</label>
+            <div class="input-holder row">
+                <input type="text" id="query" placeholder="Search Traget Locations" />
+            </div>
+        </div>
+
+
+    </div>
+
+    {% if object_list %}
+        <div class="table-wrapper-scrollable">
+            <table class="table all-projects-table">
+                <thead class="content-block ">
+                    <tr> 
+                        <th> <strong class="table-title"> Activity Plan</strong> </th>
+                            <th> <strong class="table-title"> Location </strong> </th>
+
+                            <th>
+                                <strong class="table-title">
+                                    Location Type
+                                </strong>
+                            </th>   
+                            <th>
+                                <strong class="table-title">
+                                    State
+                                </strong>
+                            </th>
+
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                
+                <tbody>
+                    <!--Include The Projects Details Here -->
+                    {% for row in object_list %}
+                    <tr>
+                        <td>{{row.activity_plan}}</td>
+                        <td> {{row.zone}},{{row.district}},{{row.province}},{{row.country}} </td>
+                        <td>{{row.location_type}}</td>
+                        <td> <span class="{{row.state}}"> {{row.state}} </span> </td>
+                        <td>
+                            <a href="{% url 'target-locations-update' row.id %}" class="btn btn-gray">Edit</a> 
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <div class="view_nocontent">
+            <div class="nocontent_help">
+                <h4>No Target Location found. Let's create one!</h4>
+            </div>
+        </div>
+    {% endif %}
+
+    {% comment %} Pagination {% endcomment %}
+    {% include 'components/_pagination.html' with object_list=object_list %}
+</div>

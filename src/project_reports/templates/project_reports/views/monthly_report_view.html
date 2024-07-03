@@ -1,17 +1,53 @@
-{% extends "project_reports/forms/monthly_report_progress_form.html" %}
+{% extends "project_reports/forms/monthly_report_progress_form_base.html" %}
 {% load static %}
 
-{% block report_body %}
+{% block project_body %}
+
     <div class="content-block top-border">
         <div class="project-title">
             <div class="holder">
                 <strong class="h5">{{ monthly_report.report_date | date:"F Y" }}</strong>
                 <ul class="buttons-list-inline">
+                    {% if monthly_report.pk  %}
                     <li>
-                        <a href="#" 
+                        <a href="#"
+                          data-url="{% url 'copy_project_monthly_report' monthly_report.pk %}"
+                          data-type="copy"
+                          data-name="last month activities"
+                          class="btn btn-gray show-sw-action-popup">
+                          <span class="btn-text">Copy last month activities</span>
+                          <span class="icon-copy-outline"></span>
+                        </a>
+                    </li>
+                    {% endif %}
+                    {% if monthly_report %}
+                    <li>
+                        <button class="export-button">
+                            <a href="#"
+                                data-url="{% url 'export_monthly_report_template' monthly_report.pk %}"
+                                class="btn btn-gray project-detail"
+                                title="Export Template">
+                                <span class="btn-text">Export Template</span>
+                                <span class="icon-download"></span>
+                                <!-- <span class="project-detail icon-download"></span> -->
+                            </a>
+                        </button>
+                    </li>
+                    <li>
+                        <a href="#"
+                           data-url="{% url 'import_monthly_reports' monthly_report.pk %}"
+                           class="btn btn-gray show-sw-import-popup">
+                            <span class="btn-text">Import Activities</span>
+                            {% csrf_token %}
+                            <span class="icon-upload"></span>
+                        </a>
+                    </li>
+                    {% endif %}
+                    <li>
+                        <a href="#"
                         data-url="{% url 'delete_project_monthly_report' monthly_report.pk %}"
-                        data-type="delete" 
-                        data-name="Report" 
+                        data-type="delete"
+                        data-name="Report"
                         class="btn btn-gray show-sw-action-popup">
                             <span class="btn-text">Delete</span>
                             <span class="icon-trashbin-outline"></span>
@@ -19,10 +55,10 @@
                     </li>
                     {% if monthly_report.active %}
                     <li>
-                        <a href="#" 
+                        <a href="#"
                         data-url="{% url 'archive_project_monthly_report' monthly_report.pk %}"
-                        data-type="archive" 
-                        data-name="Report" 
+                        data-type="archive"
+                        data-name="Report"
                         class="btn btn-gray show-sw-action-popup">
                             <span class="btn-text">Archive</span>
                             <svg xmlns="http://www.w3.org/2000/svg"
@@ -36,10 +72,10 @@
                     </li>
                     {% else %}
                     <li>
-                        <a href="#" 
+                        <a href="#"
                         data-url="{% url 'unarchive_project_monthly_report' monthly_report.pk %}"
-                        data-type="unarchive" 
-                        data-name="Report" 
+                        data-type="unarchive"
+                        data-name="Report"
                         class="btn btn-gray show-sw-action-popup">
                             <span class="btn-text">Unarchive</span>
                             <svg xmlns="http://www.w3.org/2000/svg"
@@ -58,7 +94,7 @@
                     </li>
                     {% endif %}
                     <li>
-                        <a href="{% url 'update_project_monthly_report_progress' project=project.id report=monthly_report.pk %}" class="btn btn-red">
+                        <a href="{% url 'update_project_monthly_report' project=project.id report=monthly_report.pk %}" class="btn btn-red">
                             Edit
                         </a>
                     </li>
@@ -66,7 +102,7 @@
             </div>
         </div>
         <br/>
-        <div>
+        <div class="table-container">
             <div class="project-monthly_report read-only">
                 <div class="row">
                     <div class="col">
@@ -119,7 +155,7 @@
                                     </div>
                                 </div>
                             {% endif %}
-                            
+
                         </div>
                         <div class="multiple-fields-row two-items">
                             <div class="field-col">
@@ -137,16 +173,26 @@
                 </div>
             </div>
         </div>
-        <br/>
-        <div class="location-block-holder">
-            <div class="block-top-title report-title">
-                <div class="title">
-                    Reporting Activities - {{project.title}}
+
+        <div class="activity-planning read-only">
+            <div class="activity-block-holder">
+                <div class="top-activity-block">
+                    <span class="activity-title">
+                        <span>
+                        Report Activity Plans
+                        </span>
+                        <span class="btn btn-gray" style="float:right"> {{ activity_reports | length }}</span>
+                    </span>
+
                 </div>
             </div>
         </div>
-        {% for activity_report in activity_reports %}
-            <div class="monthly-progress monthly-accordion read-only">
+
+        {% include "project_reports/report_activity_plans/_activity_plan_table.html"  with object_list=activity_reports.all %}
+
+
+        <!--{% for activity_report in activity_reports %}
+            <div class="monthly-progress monthly-accordion read-only table-container">
                 <div class="inner-holder">
                     <a href="#" class="block-top monthly-accordion-opener">
                         <span class="title">
@@ -162,7 +208,7 @@
                             </span>
                         </span>
                         {% endif %}
-                        
+
                         {% if activity_report.activity_plan.total_target %}
                         <span class="people">
                             <span class="icon-group"></span>
@@ -173,7 +219,7 @@
                         </span>
                         {% endif %}
                     </a>
-                    
+
                     <div class="monthly-accordion-slide">
                         <div class="row">
                             <div class="col">
@@ -187,7 +233,7 @@
                                     <div class="field-col">
                                         <div class="select-field">
                                         <label>Activity Type</label>
-                    
+
                                         <span class="text-read-only">{{activity_report.activity_plan.activity_type}}</span>
                                         </div>
                                     </div>
@@ -197,7 +243,7 @@
                                 <div class="field-col">
                                     <div class="select-field">
                                     <label>Activity Details</label>
-                
+
                                     <span class="text-read-only">{{activity_report.activity_plan.activity_detail}}</span>
                                     </div>
                                 </div>
@@ -269,7 +315,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>	
+                            </div>
                         </div>
                         {% endif %}
 
@@ -284,7 +330,7 @@
                             </div>
                         </div>
 
-                        <!-- Indicator types start to diaplay -->
+                        &lt;!&ndash; Indicator types start to diaplay &ndash;&gt;
                         <div class="multiple-fields-row">
                             {% if activity_report.indicator.package_type %}
                             <div class="field-col">
@@ -343,7 +389,7 @@
                             </div>
                             {% endif %}
                         </div>
-                        
+
                         <div class="target_location-block target-location-accordion">
                             <div class="inner-holder">
                                 <div class="block-top target-location-accordion-opener">
@@ -357,7 +403,7 @@
                                     <span class="btn btn-red" style="float:right"> {{ activity_report.targetlocationreport_set.all | length }}</span>
                                 </div>
                                 <div class="target-location-accordion-slide js-acc-hidden">
-                                {% for location_report in activity_report.targetlocationreport_set.all %}                                
+                                {% for location_report in activity_report.targetlocationreport_set.all %}
                                     <div class="target-location read-only">
                                         <div class="location-block-holder">
                                             <div class="inner-holder">
@@ -369,10 +415,10 @@
                                                         {{ location_report.district }}
                                                     </span>
                                                     {% if location_report.pk %}
-                                                        <button 
+                                                        <button
                                                             data-url="{% url 'delete_location_report' location_report.pk %}"
-                                                            data-type="delete" 
-                                                            data-name="Location Report" 
+                                                            data-type="delete"
+                                                            data-name="Location Report"
                                                             class="btn btn-gray show-sw-action-popup">
                                                                 <span class="btn-text">Delete</span>
                                                                 <span class="icon-trashbin-outline"></span>
@@ -381,14 +427,14 @@
                                                 </div>
                                                 <div class="row">
                                                     <div class="col col-lg">
-                                                        <div class="field-col">    
+                                                        <div class="field-col">
                                                             <div class="select-field is-required">
                                                                 <span class="label">Project Target Location</span>
                                                                 <span class="text-read-only">{{ location_report.target_location }}</span>
                                                             </div>
                                                         </div>
                                                         <div class="multiple-fields-row {% if location_report.zone %}three{% else %}two{% endif %}-items">
-                                                            <div class="field-col">    
+                                                            <div class="field-col">
                                                                 <div class="select-field is-required">
                                                                     <span class="label">Province</span>
                                                                     <span class="text-read-only">{{ location_report.province }}</span>
@@ -507,7 +553,7 @@
                                                         </a>
                                                         <div class="disaggregation-accordion-slide">
                                                             {% for disaggregation_report in location_report.disaggregationlocationreport_set.all %}
-                                                                <div class="location-inner-holder">  
+                                                                <div class="location-inner-holder">
                                                                     <div class="col col-lg">
                                                                         <div class="multiple-fields-row two-items">
                                                                             <div class="field-col">
@@ -528,38 +574,25 @@
                                                                     </div>
                                                                 </div>
                                                                 <br/>
-                                                            {% endfor %} 
+                                                            {% endfor %}
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                {% endfor %} 
+                                {% endfor %}
                                 </div>
                             </div>
-                        </div> 
-                        <!-- <div class="monthly-info-block">
-                            <div class="block-heading">
-                                <span class="title">Funding Per Year</span>
-                            </div>
-                            <ul class="monthly-info-list">
-                                <li>Coordination meeting took place with relevant stakeholders at provincial, district and community level.</li>
-                    
-                                <li>Regular Monitoring and supervision conducted from target districts by Badakhshan team.</li>
-                    
-                                <li>PHCC and PDC meeting attended.</li>
-                    
-                                <li>Project report completed and submitted to the provincial health office (PHO).</li>
-                            </ul>
-                        </div> -->
+                        </div>
                     </div>
-            
+
                 </div>
             </div>
-        {% endfor %}
+        {% endfor %}-->
 
-        <div class="monthly-reporting">
+
+        <div class="monthly-reporting table-container">
             <div class="row">
                 <div class="col">
                     <div class="input-field">
@@ -569,9 +602,9 @@
                 </div>
             </div>
         </div>
-        
+
         {% if monthly_report.comments and monthly_report.state == 'reject' %}
-        <div class="monthly-reporting">
+        <div class="monthly-reporting table-container">
             <div class="row">
                 <div class="col">
                     <div class="input-field">
@@ -582,22 +615,22 @@
             </div>
         </div>
         {% endif %}
-        
-        <div class="monthly-progress-submit-holder text-center">
+
+        <div class="monthly-progress-submit-holder text-center table-container">
             {% if monthly_report.state in "pending,todo,reject" %}
                 <a  data-url="{% url 'submit_monthly_report' monthly_report.pk %}"
-                    data-button="Submit Report" 
+                    data-button="Submit Report"
                     class="btn btn-red show-sw-confirm-button">
                     <span class="btn-text">Submit Monthly Report</span>
                 </a>
             {% elif monthly_report.state == "submit" %}
-                <a data-url="{% url 'approve_monthly_report' monthly_report.pk %}" 
+                <a data-url="{% url 'approve_monthly_report' monthly_report.pk %}"
                     data-button="Approve Report"
                     class="btn btn-red show-sw-confirm-button"
                 >
                     <span class="btn-text">Approve Monthly Report</span>
                 </a>
-                <a data-url="{% url 'reject_monthly_report' monthly_report.pk %}" 
+                <a data-url="{% url 'reject_monthly_report' monthly_report.pk %}"
                     data-button="Reject Report"
                     class="btn btn-gray show-sw-confirm-button"
                 >
@@ -607,6 +640,6 @@
         </div>
 
     </div>
-{% endblock report_body %}
+{% endblock project_body %}
 
         

@@ -33,7 +33,6 @@ def update_activity_plan(request, pk):
         form = ActivityPlanForm(request.POST, instance=activity_plan)
         if form.is_valid():
             form.save()
-
             messages.success(
                 request,
                 mark_safe(
@@ -46,6 +45,8 @@ def update_activity_plan(request, pk):
                 return redirect("activity-plans-list", project=activity_plan.project.pk)
             elif "_addanother" in request.POST:
                 return redirect("activity-plans-create", project=activity_plan.project.pk)
+        else:
+            messages.error(request, "The form is invalid. Please check the fields and try again.")
     else:
         form = ActivityPlanForm(instance=activity_plan)
 
@@ -62,7 +63,7 @@ def create_activity_plan(request, project):
     project = get_object_or_404(Project, pk=project)
 
     if request.method == "POST":
-        form = ActivityPlanForm(request.POST)
+        form = ActivityPlanForm(request.POST, project=project)
         if form.is_valid():
             activity_plan = form.save(commit=False)
             activity_plan.project = project
@@ -78,8 +79,10 @@ def create_activity_plan(request, project):
                 return redirect("activity-plans-list", project=project.pk)
             elif "_addanother" in request.POST:
                 return redirect("activity-plans-create", project=project.pk)
+        else:
+            messages.error(request, "The form is invalid. Please check the fields and try again.")
     else:
-        form = ActivityPlanForm()
+        form = ActivityPlanForm(project=project)
 
     return render(request, "rh/activity_plans/activity_plan_form.html", {"form": form, "project": project})
 

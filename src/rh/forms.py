@@ -14,6 +14,7 @@ from .models import (
     Project,
     ProjectIndicatorType,
     TargetLocation,
+    ActivityDomain,
 )
 
 
@@ -105,7 +106,7 @@ class TargetLocationForm(forms.ModelForm):
             "group_by_province",
             "group_by_district",
             "group_by_custom",
-            "activity_plan"
+            "activity_plan",
         )
         widgets = {
             # "country": forms.widgets.HiddenInput(),
@@ -162,6 +163,12 @@ class ActivityPlanForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         # user = kwargs.pop("user", None)
         super().__init__(*args, **kwargs)
+        self.fields["activity_domain"] = forms.ModelChoiceField(
+            queryset=ActivityDomain.objects.all(),
+            required=True,
+            empty_label="---------",
+            widget=forms.Select(attrs={"class": "custom-select"}),
+        )
 
 
 ActivityPlanFormSet = inlineformset_factory(

@@ -20,6 +20,8 @@ from ..models import (
 from .views import copy_project_target_location, copy_target_location_disaggregation_locations
 from django.core.paginator import Paginator
 from django.db.models import Count
+from django.contrib import messages
+from django.utils.safestring import mark_safe
 
 
 @login_required
@@ -31,12 +33,27 @@ def update_activity_plan(request, pk):
         form = ActivityPlanForm(request.POST, instance=activity_plan)
         if form.is_valid():
             form.save()
-            return redirect("activity-plans-list", project=activity_plan.project.pk)
+
+            messages.success(
+                request,
+                mark_safe(
+                    f'The Activity Plan "<a href="{reverse("activity-plans-update", args=[activity_plan.pk])}">{activity_plan}</a>" was changed successfully.'
+                ),
+            )
+            if "_continue" in request.POST:
+                return redirect("activity-plans-update", pk=activity_plan.pk)
+            elif "_save" in request.POST:
+                return redirect("activity-plans-list", project=activity_plan.project.pk)
+            elif "_addanother" in request.POST:
+                return redirect("activity-plans-create", project=activity_plan.project.pk)
     else:
         form = ActivityPlanForm(instance=activity_plan)
 
-    return render(request, "rh/activity_plans/activity_plan_form.html", {"form": form, "activity_plan": activity_plan,"project":activity_plan.project})
-
+    return render(
+        request,
+        "rh/activity_plans/activity_plan_form.html",
+        {"form": form, "activity_plan": activity_plan, "project": activity_plan.project},
+    )
 
 
 @login_required
@@ -50,7 +67,17 @@ def create_activity_plan(request, project):
             activity_plan = form.save(commit=False)
             activity_plan.project = project
             activity_plan.save()
-            return redirect("activity-plans-list", project=project.pk)
+
+            messages.success(
+                request,
+                f'The Activity Plan "<a href="{reverse("activity-plans-update", args=[activity_plan.pk])}">{activity_plan}</a>" was added successfully.',
+            )
+            if "_continue" in request.POST:
+                return redirect("activity-plans-update", pk=activity_plan.pk)
+            elif "_save" in request.POST:
+                return redirect("activity-plans-list", project=project.pk)
+            elif "_addanother" in request.POST:
+                return redirect("activity-plans-create", project=project.pk)
     else:
         form = ActivityPlanForm()
 

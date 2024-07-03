@@ -79,17 +79,11 @@
                                             </div>
                                         </div>
                                         {% endif %}
-                                        <!-- <div class="field-col">
-                                            <div class="select-field is is-required">
-                                                <label for="{{target_location_form.classification_for_label}}">Classification</label>
-                                                {{ target_location_form.classification }}
-                                            </div>
-                                        </div> -->
 
                                         {% if target_location_form.nhs_code %}
                                         <div class="field-col">
                                             <div class="input-field is is-required">
-                                                <label for="{{target_location_form.nhs_code_for_label}}">NHS Code</label>
+                                                <label for="{{target_location_form.nhs_code.id_for_label}}">NHS Code</label>
                                                 {{ target_location_form.nhs_code }}
                                             </div>
                                         </div>
@@ -217,9 +211,11 @@
                             </div>
                         </div>
                           <div class="plan-submit-holder">
-                            <button type="submit" class="btn btn-gray">Save and add another</button>
-                            <button type="submit" class="btn btn-gray">Save and continue editing</button>
-                            <button type="submit" class="btn btn-red">Save</button>
+                            <div></div>
+                            <div>
+                                <input type="submit" name="_addanother" class="btn btn-gray" value="Save and add another">
+                                <input type="submit" name="_continue" class="btn btn-gray" value="Save and continue editing" >
+                                <input type="submit" name="_save" class="btn btn-red" value="Save" >
                         </div>
                     </form>
                 </div>

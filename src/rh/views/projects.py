@@ -213,7 +213,7 @@ def create_project(request):
             project.organization = request.user.profile.organization
             project.save()
             form.save_m2m()
-            return redirect("create_project_activity_plan", project=project.pk)
+            return redirect("activity-plans-create", project=project.pk)
         # Form is not valid
         messages.error(request, "Something went wrong. Please fix the errors below.")
     else:
@@ -243,7 +243,9 @@ def update_project(request, pk):
         form = ProjectForm(request.POST, instance=project, user=request.user)
         if form.is_valid():
             project = form.save()
-            return redirect("create_project_activity_plan", project=project.pk)
+            return redirect("activity-plans-create", project=project.pk)
+        else:
+            messages.error(request, "The form is invalid. Please check the fields and try again.")
     else:
         form = ProjectForm(instance=project, user=request.user)
 

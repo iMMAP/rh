@@ -54,6 +54,8 @@ def update_target_location(request, pk):
                 return redirect("target-locations-list", project=target_location.activity_plan.project.pk)
             elif "_addanother" in request.POST:
                 return redirect("target-locations-create", activity_plan=target_location.activity_plan.pk)
+        else:
+            messages.error(request, "The form is invalid. Please check the fields and try again.")
 
     else:
         target_location_form = TargetLocationForm(instance=target_location)
@@ -103,7 +105,8 @@ def create_target_location(request, activity_plan):
                 return redirect("activity-plans-list", project=activity_plan.project.pk)
             elif "_addanother" in request.POST:
                 return redirect("target-locations-create", activity_plan=activity_plan.pk)
-
+        else:
+            messages.error(request, "The form is invalid. Please check the fields and try again.")
     else:
         target_location_form = TargetLocationForm()
         disaggregation_formset = DisaggregationFormSet(queryset=DisaggregationLocation.objects.none())

@@ -14,7 +14,6 @@ from .models import (
     Project,
     ProjectIndicatorType,
     TargetLocation,
-    ActivityDomain,
 )
 
 
@@ -160,13 +159,14 @@ class ActivityPlanForm(forms.ModelForm):
         fields = "__all__"
         exclude = ["state", "active", "project"]
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, project, *args, **kwargs):
         # user = kwargs.pop("user", None)
         super().__init__(*args, **kwargs)
+
         self.fields["activity_domain"] = forms.ModelChoiceField(
-            queryset=ActivityDomain.objects.all(),
+            queryset=project.activity_domains.all(),
             required=True,
-            empty_label="---------",
+            empty_label="------",
             widget=forms.Select(attrs={"class": "custom-select"}),
         )
 

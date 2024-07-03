@@ -902,7 +902,6 @@ def get_disaggregations_report_empty_forms(request):
                     if disaggregation_location.target is not None:
                         initial_data.append({
                             "disaggregation": disaggregation_location.disaggregation,
-                            "target": disaggregation_location.target,
                         })
 
             # Create DisaggregationReportFormSet for each location prefix

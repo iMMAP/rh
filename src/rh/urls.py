@@ -8,7 +8,6 @@ from .views import (
     activity_plans as activity_plans,
     organizations as organizations,
     budget_progress as budget_progress,
-    disaggregations as disaggregations,
     target_locations as target_locations,
     locations as locations,
 )
@@ -146,21 +145,6 @@ urlpatterns = [
         "ajax/load-facility_sites/",
         load_facility_sites,
         name="ajax-load-facility_sites",
-    ),
-    path(
-        "ajax/get_target_location_empty_form/",
-        target_locations.get_target_location_empty_form,
-        name="get_target_location_empty_form",
-    ),
-    path(
-        "ajax/get_activity_empty_form/",
-        activity_plans.get_activity_empty_form,
-        name="get_activity_empty_form",
-    ),
-    path(
-        "ajax/get_disaggregations_forms/",
-        disaggregations.get_disaggregations_forms,
-        name="get_disaggregations_forms",
     ),
     # Exports
     path(

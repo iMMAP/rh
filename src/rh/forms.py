@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
 from django.forms.models import inlineformset_factory
+from django.forms import BaseInlineFormSet
 from django.urls import reverse_lazy
 
 from .models import (
@@ -107,20 +108,35 @@ class TargetLocationForm(forms.ModelForm):
             "group_by_custom",
             "activity_plan",
         )
-        widgets = {
-            # "country": forms.widgets.HiddenInput(),
-            # "nhs_code": forms.widgets.TextInput(),
-            # "locations_group_by": forms.widgets.RadioSelect(),
-            # "district": forms.Select(attrs={"locations-queries-url": reverse_lazy("ajax-load-locations")}),
-            # "zone": forms.Select(attrs={"locations-queries-url": reverse_lazy("ajax-load-locations")}),
-        }
+        # widgets = {
+        #     # "country": forms.Select(attrs={"disabled": "true", "required":"","class": "cursor-none"}),
+        #     # "nhs_code": forms.widgets.TextInput(),
+        #     # "locations_group_by": forms.widgets.RadioSelect(),
+        #     # "district": forms.Select(attrs={"locations-queries-url": reverse_lazy("ajax-load-locations")}),
+        #     # "zone": forms.Select(attrs={"locations-queries-url": reverse_lazy("ajax-load-locations")}),
+        # }
 
     def __init__(self, *args, **kwargs):
+        user = kwargs.pop("user", None)
         super().__init__(*args, **kwargs)
 
-        self.fields["province"].queryset = self.fields["province"].queryset.filter(type="Province")
-        self.fields["district"].queryset = self.fields["district"].queryset.filter(type="District")
-        self.fields["zone"].queryset = self.fields["zone"].queryset.filter(type="Zone")
+        self.fields["country"].disabled = True
+        self.fields["country"].initial = user.profile.country
+        self.fields["country"].required = True  # Ensure the field is required
+
+        self.fields["province"].queryset = self.fields["province"].queryset.filter(level=1, parent=user.profile.country)
+        self.fields["district"].queryset = self.fields["district"].queryset.filter(level=2)
+        self.fields["zone"].queryset = self.fields["zone"].queryset.filter(level=3)
+
+    def clean_country(self):
+        # Prevent changes to the country field
+        initial_country = self.fields["country"].initial
+        country = self.cleaned_data.get("country")
+
+        if country != initial_country:
+            raise forms.ValidationError("Country field cannot be changed.")
+
+        return initial_country
 
 
 TargetLocationFormSet = inlineformset_factory(
@@ -141,16 +157,35 @@ class DisaggregationLocationForm(forms.ModelForm):
         )
 
     def __init__(self, *args, **kwargs):
+        activity_plan = kwargs.pop("activity_plan", None)
         super().__init__(*args, **kwargs)
-        # TODO: limit this to the acitivity plan indicator specific disaggredations
+
+        if activity_plan:
+            self.fields["disaggregation"].queryset = self.fields["disaggregation"].queryset.filter(
+                indicators=activity_plan.indicator
+            )
+            # keep only the initial
+            # self.fields["disaggregation"].choices = []
+        # else:
+        # print("ELSE ===  NO Target Location in Form",kwargs)
+        #     # Do not display already existing relationships, filter based on target_location.activity_plan.indicator
+        #     existing_disaggregations = DisaggregationLocation.objects.filter(
+        #         target_location=target_location
+        #     ).values_list("disaggregation", flat=True)
+        #     # existing_disaggregation_ids = existing_disaggregations.values_list('disaggregation', flat=True)
+        #     self.fields["disaggregation"].queryset = self.fields["disaggregation"].queryset.exclude(
+        #         id__in=existing_disaggregations
+        #     )
 
 
-DisaggregationFormSet = inlineformset_factory(
-    parent_model=TargetLocation,
-    model=DisaggregationLocation,
-    form=DisaggregationLocationForm,
-    extra=0,  # Number of empty forms to display
-)
+class BaseDisaggregationLocationFormSet(BaseInlineFormSet):
+    def __init__(self, *args, **kwargs):
+        self.activity_plan = kwargs.pop("activity_plan", None)
+        super().__init__(*args, **kwargs)
+
+    def _construct_form(self, i, **kwargs):
+        kwargs["activity_plan"] = self.activity_plan
+        return super()._construct_form(i, **kwargs)
 
 
 class ActivityPlanForm(forms.ModelForm):
@@ -159,9 +194,17 @@ class ActivityPlanForm(forms.ModelForm):
         fields = "__all__"
         exclude = ["state", "active", "project"]
 
-    def __init__(self, project, *args, **kwargs):
-        # user = kwargs.pop("user", None)
+    def __init__(self, *args, **kwargs):
+        project = kwargs.pop("project", None)
         super().__init__(*args, **kwargs)
+
+        project = project or self.instance.project
+        if project is None:
+            raise forms.ValidationError("Project cannot be None.")
+
+        # Updating
+
+        # Creating
 
         self.fields["activity_domain"] = forms.ModelChoiceField(
             queryset=project.activity_domains.all(),

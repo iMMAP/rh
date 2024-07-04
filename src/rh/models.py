@@ -54,7 +54,7 @@ class Location(models.Model):
 class Cluster(models.Model):
     """Clusters Model"""
 
-    countries = models.ManyToManyField(Location, blank=True, limit_choices_to={"type": "Country"})
+    countries = models.ManyToManyField(Location, blank=True, limit_choices_to={"level": 0})
 
     name = models.CharField(max_length=NAME_MAX_LENGTH, unique=True)
     code = models.CharField(max_length=NAME_MAX_LENGTH, unique=True)
@@ -85,7 +85,7 @@ class BeneficiaryType(models.Model):
         blank=True,
         null=True,
         on_delete=models.SET_NULL,
-        limit_choices_to={"type": "Country"},
+        limit_choices_to={"level": 0},
     )
     clusters = models.ManyToManyField(Cluster)
 
@@ -124,7 +124,7 @@ class Organization(models.Model):
         ("Government", "Government"),
         ("Business", "Business"),
     ]
-    countries = models.ManyToManyField(Location, blank=True, limit_choices_to={"type": "Country"})
+    countries = models.ManyToManyField(Location, blank=True, limit_choices_to={"level": 0})
     clusters = models.ManyToManyField(Cluster, blank=True)
 
     name = models.CharField(max_length=NAME_MAX_LENGTH, unique=True)
@@ -143,7 +143,7 @@ class Donor(models.Model):
     code = models.CharField(max_length=NAME_MAX_LENGTH, unique=True)
     name = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
 
-    countries = models.ManyToManyField(Location, blank=True, limit_choices_to={"type": "Country"})
+    countries = models.ManyToManyField(Location, blank=True, limit_choices_to={"level": 0})
 
     clusters = models.ManyToManyField(Cluster, blank=True)
 
@@ -611,10 +611,6 @@ class TargetLocation(models.Model):
         null=True,
         blank=True,
     )
-    locations_group_by = models.CharField(max_length=15, choices=LOCATIONS_GROUP, null=True, blank=True)
-    group_by_province = models.BooleanField(default=True)
-    group_by_district = models.BooleanField(default=True)
-    group_by_custom = models.BooleanField(default=True)
 
     country = models.ForeignKey(
         Location,
@@ -622,6 +618,7 @@ class TargetLocation(models.Model):
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
+        limit_choices_to={"level": 0},
     )
     province = models.ForeignKey(
         Location,
@@ -685,7 +682,7 @@ class TargetLocation(models.Model):
     )
 
     def __str__(self):
-        return f"{self.project}, {self.province}, {self.district}"
+        return f"TargetLocation: {self.province}, {self.district}"
 
     class Meta:
         verbose_name = "Target Location"

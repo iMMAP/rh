@@ -2,14 +2,21 @@ from django.urls import path
 
 from .views import exports as export_views
 
-from .views.views import landing_page, download_user_guide, load_facility_sites, load_activity_domains,get_activity_domain_types,get_activity_type_indicators
+from .views.views import (
+    landing_page,
+    download_user_guide,
+    load_facility_sites,
+    load_activity_domains,
+    get_activity_domain_types,
+    get_activity_type_indicators,
+    get_locations_details,
+)
 from .views import (
     projects as projects,
     activity_plans as activity_plans,
     organizations as organizations,
     budget_progress as budget_progress,
     target_locations as target_locations,
-    locations as locations,
 )
 
 
@@ -154,8 +161,8 @@ urlpatterns = [
     ),
     path(
         "ajax/load-locations-details/",
-        locations.load_locations_details,
-        name="ajax-load-locations",
+        get_locations_details,
+        name="get-locations-details",
     ),
     path(
         "ajax/load-facility_sites/",

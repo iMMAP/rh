@@ -12,7 +12,7 @@ class TestLoggedInViews(TestCase):
         self.client.login(username="testuser", password="testpassword")
 
         self.landing_url = reverse("landing")
-        self.load_locations_details_url = reverse("ajax-load-locations")
+        self.load_locations_details_url = reverse("get-locations-details")
         self.load_facility_sites_url = reverse("ajax-load-facility_sites")
 
     def test_landing_view(self):
@@ -63,7 +63,7 @@ class TestNotLoggedInViews(TestCase):
     def setUp(self):
         self.client = Client()
         self.landing_url = reverse("landing")
-        self.load_locations_details_url = reverse("ajax-load-locations")
+        self.load_locations_details_url = reverse("get-locations-details")
         self.load_facility_sites_url = reverse("ajax-load-facility_sites")
 
     def test_landing_view(self):

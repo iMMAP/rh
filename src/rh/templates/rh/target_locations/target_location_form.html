@@ -75,14 +75,40 @@
                                 <div class="field-col">
                                     <div class="select-field is-required">
                                         <label for="{{target_location_form.province.id_for_label}}" >Province / State</label>
-                                        {{ target_location_form.province }}
+                                        <select 
+                                            name="{{ target_location_form.province.name }}" 
+                                            id="{{target_location_form.province.id_for_label}}" 
+                                            hx-get="{% url 'get-locations-details' %}" 
+                                            hx-target="#{{target_location_form.district.id_for_label}}" 
+                                            hx-swap="innerHTML"
+                                            hx-trigger="change"
+                                            required
+                                        >
+                                            {% for province in target_location_form.province %}
+                                                {{province}}
+                                            {% endfor %}
+                                        </select>
                                         <div class="sign-up-field-error">{{ target_location_form.province.errors}}</div>
                                     </div>
                                 </div>
                                 <div class="field-col">
                                     <div class="input-field is-required">
                                         <label for="{{target_location_form.district.id_for_label}}">District</label>
-                                        {{ target_location_form.district }}
+                                        <select 
+                                            name="{{ target_location_form.district.name}}" 
+                                            id="{{target_location_form.district.id_for_label}}" 
+                                            required
+                                            {% if target_location_form.zone.choices %}
+                                                hx-get="{% url 'ajax-load-locations' %}" 
+                                                hx-target="#{{target_location_form.zone.id_for_label}}" 
+                                                hx-swap="innerHTML"
+                                                hx-trigger="change"
+                                            {% endif %}
+                                        >
+                                            {% for district in target_location_form.district %}
+                                                {{district}}
+                                            {% endfor %}
+                                        </select>
                                         <div class="sign-up-field-error">{{ target_location_form.district.errors}}</div>
                                     </div>
                                 </div>

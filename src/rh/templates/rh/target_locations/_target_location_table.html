@@ -24,18 +24,7 @@
                     <tr> 
                         <th> <strong class="table-title"> Activity Plan</strong> </th>
                             <th> <strong class="table-title"> Location </strong> </th>
-
-                            <th>
-                                <strong class="table-title">
-                                    Location Type
-                                </strong>
-                            </th>   
-                            <th>
-                                <strong class="table-title">
-                                    State
-                                </strong>
-                            </th>
-
+                            <th> <strong class="table-title"> State </strong> </th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -44,9 +33,17 @@
                     <!--Include The Projects Details Here -->
                     {% for row in object_list %}
                     <tr>
-                        <td>{{row.activity_plan}}</td>
-                        <td> {{row.zone}},{{row.district}},{{row.province}},{{row.country}} </td>
-                        <td>{{row.location_type}}</td>
+                        <td>
+                            <a href="{% url 'activity-plans-update' row.activity_plan.pk %}" class="">
+                                <svg data-slot="icon" width="18px" data-darkreader-inline-stroke="" fill="none" stroke-width="1.5" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M13.19 8.688a4.5 4.5 0 0 1 1.242 7.244l-4.5 4.5a4.5 4.5 0 0 1-6.364-6.364l1.757-1.757m13.35-.622 1.757-1.757a4.5 4.5 0 0 0-6.364-6.364l-4.5 4.5a4.5 4.5 0 0 0 1.242 7.244"></path>
+                                </svg>
+                            </a>
+                            {{row.activity_plan}}
+                        </td>
+                        <td> 
+                            {% if row.zone %}{{row.zone}}, {% endif %}{% if row.district %}{{row.district}}, {% endif %}{% if row.province %}{{row.province}}, {% endif %}{% if row.country %}{{row.country}}{% endif %} 
+                        </td>
                         <td> <span class="{{row.state}}"> {{row.state}} </span> </td>
                         <td>
                             <a href="{% url 'target-locations-update' row.id %}" class="btn btn-gray">Edit</a> 

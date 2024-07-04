@@ -36,7 +36,9 @@
 
                         <th><strong>Target Locations</strong></th>
 
-                        <th>Actions</th>
+                        <th style="text-align:center">
+                            <strong>Report Actions</strong>
+                        </th>
                     </tr>
                 </thead>
                 
@@ -53,7 +55,7 @@
 
                         <td>
                             <a href="{% url 'update_report_activity_plans' project.id report_plan.monthly_report.id report_plan.id %}" class="btn btn-gray">Edit</a>
-                            <a href="{% url 'create_report_target_locations' project.id monthly_report.id report_plan.id %}" class="btn btn-red">New Report Target Location</a>
+                            <a href="{% url 'create_report_target_locations' project.id monthly_report.id report_plan.id %}" class="btn btn-red">New Target Location</a>
                         </td>
                     </tr>
                     {% endfor %}

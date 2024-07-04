@@ -1,7 +1,6 @@
 from django import forms
 from django.forms.models import inlineformset_factory
 from django.shortcuts import get_object_or_404
-from django.urls import reverse_lazy
 
 from rh.models import FacilitySiteType, Indicator, Organization, TargetLocation
 
@@ -41,10 +40,12 @@ class TargetLocationReportForm(forms.ModelForm):
         fields = "__all__"
         widgets = {
             "nhs_code": forms.widgets.TextInput(),
-            "district": forms.Select(
-                attrs={"target-locations-queries-url": reverse_lazy("ajax-load-target-locations")}
-            ),
-            "zone": forms.Select(attrs={"target-locations-queries-url": reverse_lazy("ajax-load-target-locations")}),
+            # "district": forms.Select(
+            #     attrs={"target-locations-queries-url": reverse_lazy("ajax-load-target-locations")}
+            # ),
+            # "zone": forms.Select(attrs={"target-locations-queries-url": reverse_lazy("ajax-load-target-locations")}),
+            "facility_site_type": forms.Select(attrs={"class": "custom-select"}),
+            "target_location": forms.Select(attrs={"class": "custom-select"}),
         }
 
     def __init__(self, *args, **kwargs):
@@ -54,9 +55,11 @@ class TargetLocationReportForm(forms.ModelForm):
         plan_report = False
         if "instance" in kwargs and kwargs["instance"]:
             plan_report = kwargs["instance"]
+            # FIXME: FIX this
             if plan_report:
                 cluster_has_nhs_code = any(
-                    cluster.has_nhs_code for cluster in plan_report.activity_plan.activity_domain.clusters.all()
+                    cluster.has_nhs_code
+                    for cluster in plan_report.activity_plan_report.activity_plan.activity_domain.clusters.all()
                 )
         nhs_code = f"{kwargs.get('prefix')}-nhs_code"
         has_nhs_code = nhs_code in kwargs.get("data", {})
@@ -64,7 +67,7 @@ class TargetLocationReportForm(forms.ModelForm):
         # Get only the relevant facility types - related to cluster
         if plan_report:
             self.fields["facility_site_type"].queryset = FacilitySiteType.objects.filter(
-                cluster__in=plan_report.activity_plan.activity_domain.clusters.all()
+                cluster__in=plan_report.activity_plan_report.activity_plan.activity_domain.clusters.all()
             )
         else:
             self.fields["facility_site_type"].queryset = FacilitySiteType.objects.all()
@@ -76,7 +79,7 @@ class TargetLocationReportForm(forms.ModelForm):
 
         if plan_report:
             self.fields["target_location"].queryset = TargetLocation.objects.filter(
-                activity_plan=plan_report.activity_plan
+                activity_plan=plan_report.activity_plan_report.activity_plan
             )
 
 
@@ -85,17 +88,8 @@ TargetLocationReportFormSet = inlineformset_factory(
     TargetLocationReport,
     form=TargetLocationReportForm,
     extra=0,  # Number of empty forms to display
-    can_delete=True,  # Allow deletion of existing forms
+    can_delete=False,  # Allow deletion of existing forms
 )
-
-
-class DisaggregationLocationReportForm(forms.ModelForm):
-    class Meta:
-        model = DisaggregationLocationReport
-        fields = (
-            "disaggregation",
-            "target",
-        )
 
 
 DisaggregationReportFormSet = inlineformset_factory(
@@ -103,9 +97,11 @@ DisaggregationReportFormSet = inlineformset_factory(
     DisaggregationLocationReport,
     fields=(
         "disaggregation",
+        "target_required",
         "target",
     ),
     extra=0,  # Number of empty forms to display
+    can_delete=False,  # Allow deletion of existing forms
 )
 
 
@@ -118,6 +114,14 @@ class ActivityPlanReportForm(forms.ModelForm):
             "activity_plan": forms.widgets.HiddenInput(),
             "report_types": forms.SelectMultiple(attrs={"class": "custom-select"}),
             "implementing_partners": forms.SelectMultiple(attrs={"class": "custom-select"}),
+            "beneficiary_status": forms.Select(attrs={"class": "custom-select"}),
+            "package_type": forms.Select(attrs={"class": "custom-select"}),
+            "unit_type": forms.Select(attrs={"class": "custom-select"}),
+            "grant_type": forms.Select(attrs={"class": "custom-select"}),
+            "transfer_category": forms.Select(attrs={"class": "custom-select"}),
+            "currency": forms.Select(attrs={"class": "custom-select"}),
+            "transfer_mechanism_type": forms.Select(attrs={"class": "custom-select"}),
+            "implement_modility_type": forms.Select(attrs={"class": "custom-select"}),
         }
 
     def __init__(self, *args, **kwargs):

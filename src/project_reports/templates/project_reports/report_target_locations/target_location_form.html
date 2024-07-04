@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block page_title %} 
-    New Target Location 
+    New Report Target Location
 {% endblock page_title %}
 
 
@@ -16,7 +16,11 @@
                         <div class="top-activity-block">
                             <span class="activity-title">
                                 <span>
-                                    New Report Target Location
+                                    {% if location_report %}
+                                        Update Report Target Location
+                                    {% else %}
+                                        New Report Target Location
+                                    {% endif %}
                                 </span>
                             </span>
                             <br>
@@ -28,7 +32,7 @@
                 </div>
 
                 <div class="target-location-form">
-                    <form action="" method="post" class="form-container">
+                    <form action="" method="post" class="form-container" id="location-form">
                         {% csrf_token %}
                         <div id="">       
                             <!-- ERRORS SECTION STARTS -->
@@ -57,7 +61,7 @@
                                         <div class="field-col">
                                             <div class="select-field is-required">
                                                 <label for="{{location_report_form.province.id_for_label}}" >Province / State</label>
-                                                <span class="text-read-only">
+                                                <span class="">
                                                     {{ location_report_form.province }}
                                                 </span>
                                             </div>
@@ -65,7 +69,7 @@
                                         <div class="field-col">
                                             <div class="input-field is-required">
                                                 <label for="{{location_report_form.district.id_for_label}}">District</label>
-                                                <span class="text-read-only">
+                                                <span class="">
                                                     {{ location_report_form.district }}
                                                 </span>
                                             </div>
@@ -74,7 +78,7 @@
                                         <div class="field-col">
                                             <div class="input-field">
                                                 <label for="{{location_report_form.zone.id_for_label}}">Ward / Zone</label>
-                                                <span class="text-read-only">
+                                                <span class="">
                                                     {{ location_report_form.zone }}
                                                 </span>
                                             </div>
@@ -90,7 +94,7 @@
                                         <div class="field-col">
                                             <div class="input-field">
                                                 <label for="{{location_report_form.facility_site_type.id_for_label}}">Facility Site Type</label>
-                                                <span class="text-read-only">
+                                                <span class="">
                                                     {{ location_report_form.facility_site_type }}
                                                 </span>
                                             </div>
@@ -107,11 +111,14 @@
                                 </div>
                             </div>
 
-                            <div class="row mtb20">
+                            <!--<div class="row mtb20">
+                            </div>-->
+
+                            <div class="row mtb20" id="facility_details">
                                 <div class="col">
                                     <div class="field-col">
                                         <div class="input-check-holder">
-                                            <input type="checkbox" class="text-read-only" id="{{ location_report_form.facility_monitoring.id_for_label }}" name="{{ location_report_form.facility_monitoring.html_name }}" {% if location_report_form.facility_monitoring.value %}checked{% endif %}>
+                                            <input type="checkbox" class="" id="{{ location_report_form.facility_monitoring.id_for_label }}" name="{{ location_report_form.facility_monitoring.html_name }}" {% if location_report_form.facility_monitoring.value %}checked{% endif %}>
                                             <label for="{{ location_report_form.facility_monitoring.id_for_label }}">
                                                 <span class="input"></span>
                                                 <span class="text">Facility Monitoring</span>
@@ -119,9 +126,6 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-
-                            <div class="row mtb20" id="facility_details_{{ location_report_form.prefix }}">
                                 <div class="col col-lg">
                                     <div class="multiple-fields-row two-items mtb20">
                                         <div class="field-col">
@@ -130,7 +134,7 @@
                                                     Facility / Site Name
                                                 </label>
                                                 <div class="input-holder">
-                                                    <span class="text-read-only">
+                                                    <span class="">
                                                         {{ location_report_form.facility_name }}
                                                     </span>
                                                 </div>
@@ -142,7 +146,7 @@
                                                      Facility / Site ID
                                                  </label>
                                                  <div class="input-holder">
-                                                    <span class="text-read-only">
+                                                    <span class="">
                                                         {{ location_report_form.facility_id }}
                                                     </span>
                                                 </div>
@@ -156,7 +160,7 @@
                                                     Facility / Site Latitude
                                                 </label>
                                                 <div class="input-holder">
-                                                    <span class="text-read-only">
+                                                    <span class="">
                                                         {{ location_report_form.facility_lat }}
                                                     </span>
                                                 </div>
@@ -168,7 +172,7 @@
                                                     Facility / Site Longitude
                                                 </label>
                                                 <div class="input-holder">
-                                                    <span class="text-read-only">
+                                                    <span class="">
                                                         {{ location_report_form.facility_long }}
                                                     </span>
                                                 </div>
@@ -185,23 +189,24 @@
                                 data-inline-formset='{"name":"#{{report_disaggregation_formset.prefix}}","options":{"prefix":"{{report_disaggregation_formset.prefix}}","addText":"Add another","deleteText":"Delete"}}'
                             >
                                 <div class="inner-holder tabular inline-related">
-                                    <div class="block-top disaggregation-accordion-opener">
-                                        <div class="location-block-holder">
-                                            <div class="block-top-title">
-                                                <div class="title">
-                                                    Disaggregations
-                                                </div>
+                                    <br/>
+                                    <div class="location-block-holder">
+                                        <div class="block-top-title">
+                                            <div class="title">
+                                                Report Disaggregations
                                             </div>
                                         </div>
                                     </div>
+                                    <br/>
+                                    <br/>
                                     {{ report_disaggregation_formset.management_form }}
                                     <fieldset class="module aligned table-wrapper-scrollable">
                                         <table class="table table-striped ">
                                             <thead class="content-block">
                                                 <tr >
-                                                    {% for form in report_disaggregation_formset %}
-                                                        <th>{{ form.label_tag }}</th>
-                                                    {% endfor %}
+                                                    <th>Disaggregation</th>
+                                                    <th>Target Required</th>
+                                                    <th>Target Achieved</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -241,10 +246,13 @@
                                 </div>
                             </div>
                         </div>
-                          <div class="plan-submit-holder">
-                            <button type="submit" class="btn btn-gray">Save and add another</button>
-                            <button type="submit" class="btn btn-gray">Save and continue editing</button>
-                            <button type="submit" class="btn btn-red">Save</button>
+                        <div class="plan-submit-holder">
+                            <div></div>
+                            <div>
+                                <input type="submit" name="_addanother" class="btn btn-gray" value="Save and add another">
+                                <input type="submit" name="_continue" class="btn btn-gray" value="Save and continue editing" >
+                                <input type="submit" name="_save" class="btn btn-red" value="Save" >
+                            </div>
                         </div>
                     </form>
                 </div>
@@ -255,7 +263,77 @@
 </div>
 {% endblock project_body %}
 
-{% block project_form_scripts %}
-    <script defer src="{% static 'src/js/utils/inlines.js' %}"></script>
-    <script defer src="{% static 'rh/js/activity_planning.js' %}"></script>
-{% endblock project_form_scripts %}
+{% block scripts %}
+<script>
+    document.querySelectorAll('.custom-select').forEach((select) => {
+        const choice = new Choices(select, {
+            searchEnabled: true,
+            itemSelectText: '',
+            removeItemButton: true,
+            classNames: {
+                listDropdown: 'choices__list--dropdown',
+            },
+            shouldSort: false,
+        });
+
+        // Attach the change event handler to the original select element
+        select.addEventListener('change', function() {
+            const targetLocationId = this.value;
+            autoPopulateTargetLocationReport(targetLocationId);
+        });
+    });
+
+    /**
+     * Handle Auto-population of target location report fields.
+     * @param {string} targetLocationId - ID of the selected target location.
+     **/
+    function autoPopulateTargetLocationReport(targetLocationId) {
+        const formElement = $('#location-form'); // Adjust the selector as needed
+
+        $.ajax({
+            url: '/ajax/get_target_location_auto_fields/',
+            data: {'target_location': targetLocationId},
+            type: 'POST',
+            dataType: 'json',
+            beforeSend: function(xhr, settings) {
+                xhr.setRequestHeader("X-CSRFToken", $('input[name="csrfmiddlewaretoken"]').val());
+            },
+            success: function (data) {
+            debugger
+                let country = formElement.find(`#id_country`);
+                let province = formElement.find(`#id_province`);
+                let district = formElement.find(`#id_district`);
+                let zone = formElement.find(`#id_zone`);
+                let facility_monitoring = formElement.find(`#id_facility_monitoring`);
+                let facility_name = formElement.find(`#id_facility_name`);
+                let facility_id = formElement.find(`#id_facility_id`);
+                let facility_lat = formElement.find(`#id_facility_lat`);
+                let facility_long = formElement.find(`#id_facility_long`);
+                let nhs_code = formElement.find(`#id_nhs_code`);
+                let facilityDetails = formElement.find(`#facility_details`);
+
+                country.val(data.country);
+                province.val(data.province);
+                district.val(data.district);
+                zone.val(data.zone);
+                facility_monitoring.prop('checked', data.facility_monitoring);
+                nhs_code.val(data.nhs_code);
+
+                if (data.facility_monitoring){
+                    facilityDetails.show();
+                    facility_name.val(data.facility_name);
+                    facility_id.val(data.facility_id);
+                    facility_lat.val(data.facility_lat);
+                    facility_long.val(data.facility_long);
+                } else {
+                    facilityDetails.hide();
+                }
+            },
+            error: function (error) {
+                console.log('Error fetching form data:', error);
+            }
+        });
+    };
+
+</script>
+{% endblock scripts %}

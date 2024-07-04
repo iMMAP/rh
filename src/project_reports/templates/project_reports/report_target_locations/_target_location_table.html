@@ -10,8 +10,9 @@
                 <input type="text" id="query" placeholder="Search Traget Locations" />
             </div>
         </div>
-
-
+        {% if report_plan %}
+        <a href="{% url 'create_report_target_locations' project.id report_plan.monthly_report.id report_plan.id %}" class="btn btn-red">Add Report Target Location</a>
+        {% endif%}
     </div>
 
     {% if object_list %}
@@ -46,7 +47,7 @@
                         <td>{{row.location_type}}</td>
                         <td> <span class="{{row.state}}"> {{row.state}} </span> </td>
                         <td>
-                            <a href="{% url 'target-locations-update' row.id %}" class="btn btn-gray">Edit</a> 
+                            <a href="{% url 'update_report_target_locations' project.id report.id row.activity_plan_report.id row.id %}" class="btn btn-gray">Edit</a>
                         </td>
                     </tr>
                     {% endfor %}

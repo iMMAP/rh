@@ -7,7 +7,7 @@ from django.db import transaction
 from django.db.models import Q
 from django.forms.models import inlineformset_factory
 from django.http import JsonResponse
-from django.shortcuts import get_object_or_404, redirect, render
+from django.shortcuts import get_object_or_404
 from django.template.loader import render_to_string
 from django.urls import reverse
 from django.views.decorators.cache import cache_control
@@ -77,6 +77,7 @@ def get_target_locations_domain(target_locations):
     target_location_zones = Location.objects.filter(zone_q)
 
     return (target_location_provinces, target_location_districts, target_location_zones)
+
 
 @login_required
 def get_location_report_empty_form(request):
@@ -167,29 +168,6 @@ def get_location_report_empty_form(request):
 
     # Return JSON response containing the generated HTML
     return JsonResponse({"html": html})
-
-
-@login_required
-def get_target_location_auto_fields(request):
-    try:
-        target_location = TargetLocation.objects.get(pk=request.POST.get("target_location"))
-        data = {
-            "country": target_location.country.id if target_location.country else None,
-            "province": target_location.province.id if target_location.province else None,
-            "district": target_location.district.id if target_location.district else None,
-            "zone": target_location.zone.id if target_location.zone else None,
-            # 'location_type': target_location.location_type.id if target_location.location_type else None,
-            "facility_site_type": target_location.facility_site_type.id if target_location.facility_site_type else None,
-            "facility_monitoring": target_location.facility_monitoring,
-            "facility_name": target_location.facility_name,
-            "facility_id": target_location.facility_id,
-            "facility_lat": target_location.facility_lat,
-            "facility_long": target_location.facility_long,
-            "nhs_code": target_location.nhs_code,
-        }
-        return JsonResponse(data)
-    except TargetLocation.DoesNotExist:
-        return JsonResponse({"error": "TargetLocation not found"}, status=404)
 
 
 @cache_control(no_store=True)
@@ -317,6 +295,7 @@ def delete_location_report_view(request, location_report):
     # Return the URL in a JSON response
     response_data = {"redirect_url": url}
     return JsonResponse(response_data)
+
 
 def import_monthly_reports(request, report):
     """Import monthly report activities via excel."""

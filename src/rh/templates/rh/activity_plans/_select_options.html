@@ -1,0 +1,6 @@
+{% for op in options %}
+    {% if forloop.first %}
+    <option value selected>Click to select options </option>
+    {% endif %}
+    <option value="{{ op.pk }}">{{ op}}</option>
+{% endfor %}

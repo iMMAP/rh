@@ -1,235 +1,273 @@
 {% extends "rh/projects/forms/project_form_base.html" %}
+
 {% load static %}
+{% load humanize %}
 
 {% block page_title %} 
-    New Target Location 
+    {% if target_location_form.initial %}
+        Edit Target Location 
+    {% else %}
+        New Target Location 
+    {% endif %}
 {% endblock page_title %}
 
 
 {% block project_contents %}
-    <div class="project-title-holder" style="display: flex;">
+    {% comment %} <div class="project-title-holder" style="display: flex;">
         <h2 class="plan-title"> Activity Plan: {{activity_plan}}</h2>
+    </div> {% endcomment %}
+    <div class="multiple-fields-row" style="justify-content: space-between;margin:0px;padding:10px 0px">
+        <div class="">
+            <span class="label">Activity Plan Domain</span>
+            <div class="input-holder">
+                <span class="text-read-only">{{activity_plan.activity_domain}}</span>
+            </div>
+        </div>
+        <div class="">
+            <span class="label">Activity Plan Type</span>
+            <div class="input-holder">
+                <span class="text-read-only">{{activity_plan.activity_type}}</span>
+            </div>
+        </div>
+        <div class="">
+            <span class="label">Activity Plan Indicator</span>
+            <div class="input-holder">
+                <span class="text-read-only">{{ activity_plan.indicator }}</span>
+            </div>
+        </div>
     </div>
 
     <div class="main-content">
-        <div class="activity-planning create-activity">
-            <div id="activity-formset-form">
-                <div class="activity-planning read-only">
-                    <div class="activity-block-holder">
-                        <div class="top-activity-block">
-                            <span class="activity-title">
-                                <span>
-                                    New Target Location
-                                </span>
+        <div class="activity-planning">
+            <div class="activity-planning read-only">
+                <div class="activity-block-holder">
+                    <div class="top-activity-block">
+                        <span class="activity-title">
+                            <span>
+                                  {% if target_location_form.initial %}
+                                        Update Target Location
+                                    {% else %}
+                                        New Target Location
+                                    {% endif %}
                             </span>
-                            <br>
-                            <span class="">
-                                Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloremque quod quam fugiat aperiam sint, blanditiis pariatur perspiciatis officiis ipsa at accusantium cupiditate magni voluptatum odio ipsam voluptatem error necessitatibus molestiae!
-                            </span>
+                        </span>
+                        <br>
+                        <span class="">
+                            Use this form to provide detailed information about the target location for the above activity plan, including the country, province or state, and other relevant details.
+                            Also specify the number of people you aim to reach with your activity in the selected location from the Disaggregation section.
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <form action="" method="post" class="form-container">
+                {% csrf_token %}
+                    <div class="row">
+                        <div class="col">
+                            <div class="multiple-fields-row four-items">
+                                <div class="field-col">
+                                    <div class="select-field is-required">
+                                        <label for="{{target_location_form.country.id_for_label}}" >Country</label>
+                                        {{ target_location_form.country}}
+                                        <div class="sign-up-field-error">{{ target_location_form.country.errors}}</div>
+                                    </div>
+                                </div>
+                                <div class="field-col">
+                                    <div class="select-field is-required">
+                                        <label for="{{target_location_form.province.id_for_label}}" >Province / State</label>
+                                        {{ target_location_form.province }}
+                                        <div class="sign-up-field-error">{{ target_location_form.province.errors}}</div>
+                                    </div>
+                                </div>
+                                <div class="field-col">
+                                    <div class="input-field is-required">
+                                        <label for="{{target_location_form.district.id_for_label}}">District</label>
+                                        {{ target_location_form.district }}
+                                        <div class="sign-up-field-error">{{ target_location_form.district.errors}}</div>
+                                    </div>
+                                </div>
+                                {% if target_location_form.zone.choices %}
+                                <div class="field-col">
+                                    <div class="input-field">
+                                        <label for="{{target_location_form.zone.id_for_label}}">Ward / Zone</label>
+                                        {{ target_location_form.zone }}
+                                        <div class="sign-up-field-error">{{ target_location_form.zone.errors}}</div>
+                                    </div>
+                                </div>
+                                {% endif %}
+
+                                {% if  target_location_form.facility_site_type.value %}
+                                <div class="field-col">
+                                    <div class="select-field">
+                                        <label for="{{target_location_form.facility_site_type.id_for_label}}">Facility Site Type</label>
+                                        {{ target_location_form.facility_site_type }}
+                                            <div class="sign-up-field-error">{{ target_location_form.facility_site_type.errors}}</div>
+                                    </div>
+                                </div>
+                                {% endif %}
+
+                                {% if target_location_form.nhs_code %}
+                                <div class="field-col">
+                                    <div class="input-field is is-required">
+                                        <label for="{{target_location_form.nhs_code.id_for_label}}">NHS Code</label>
+                                        {{ target_location_form.nhs_code }}
+                                        <div class="sign-up-field-error">{{ target_location_form.nhs_code.errors}}</div>
+                                    </div>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row ">
+                        <div class="col">
+                            <div class="field-col">
+                                <div class="input-check-holder">
+                                    {{ target_location_form.facility_monitoring }}
+                                    <label for="{{ target_location_form.facility_monitoring.id_for_label }}">
+                                        <span class="input"></span>
+                                        <span class="text">Facility Monitoring</span>
+                                    </label>
+                                    <div class="sign-up-field-error">{{ target_location_form.facility_monitoring.errors}}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row" id="facility_details">
+                        <div class="col col-lg">
+                            <div class="multiple-fields-row two-items">
+                                <div class="field-col">
+                                    <div class="input-field is-required">
+                                        <label for="{{ target_location_form.facility_name.id_for_label }}">
+                                            Facility / Site Name
+                                        </label>
+                                        <div class="input-holder">{{ target_location_form.facility_name }}</div>
+                                        <div class="sign-up-field-error">{{ target_location_form.facility_facility_name.errors}}</div>
+                                    </div>
+                                </div>
+                                <div class="field-col">
+                                    <div class="input-field is-required">
+                                        <label for="{{ target_location_form.facility_id.id_for_label }}">
+                                            Facility / Site ID [HMIS code]
+                                        </label>
+                                        <div class="input-holder">{{ target_location_form.facility_id }}</div>
+                                        <div class="sign-up-field-error">{{ target_location_form.facility_id.errors}}</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="multiple-fields-row two-items">
+                                <div class="field-col">
+                                    <div class="input-field">
+                                        <label for="{{ target_location_form.facility_lat.id_for_label }}">
+                                            Facility / Site Latitude [Please enter decimal only]
+                                        </label>
+                                        <div class="input-holder">{{ target_location_form.facility_lat }}</div>
+                                        <div class="sign-up-field-error">{{ target_location_form.facility_lat.errors}}</div>
+                                    </div>
+                                </div>
+                                <div class="field-col">
+                                    <div class="input-field">
+                                        <label for="{{ target_location_form.facility_long.id_for_label }}">
+                                            Facility / Site Longitude [Please enter decimal only]
+                                        </label>
+                                        <div class="input-holder">{{ target_location_form.facility_long }}</div>
+                                        <div class="sign-up-field-error">{{ target_location_form.facility_long.errors}}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div 
+                        class="disaggregation-block js-inline-admin-formset disaggregation-accordion inline-group" 
+                        id="{{ disaggregation_formset.prefix }}-group" 
+                        data-inline-type="tabular" 
+                        data-inline-formset='{"name":"#{{disaggregation_formset.prefix}}","options":{"prefix":"{{disaggregation_formset.prefix}}","addText":"Add another","deleteText":"Delete"}}'
+                    >
+                        <div class="tabular inline-related">
+                            <div class="block-top" style="margin:unset">
+                                <div class="">
+                                    <h2 class="title">
+                                        Disaggregations
+                                    </h2>
+                                    <p style="padding:10px 0px">
+                                        The Disaggregation list is selected from the Indicator of your Activity plan. If there is someting missing, please contact your cluster.
+                                    </p>
+                                </div>
+                            </div>
+                            {{ disaggregation_formset.management_form }}
+                            <fieldset class="table-wrapper-scrollable">
+                                <table class="table ">
+                                    <thead class="content-block">
+                                        <tr >
+                                            {% for form in disaggregation_formset.empty_form.visible_fields %}
+                                                <th> {{ form.label }} </th>
+                                            {% endfor %}
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for form in disaggregation_formset %}
+
+                                            {% if form.non_field_errors %}
+                                                <tr class="row-form-errors">
+                                                    <td colspan="2">{{ form.non_field_errors }}</td>
+                                                </tr>
+                                            {% endif %}
+                                            {% if form.errors %}
+                                                <tr class="row-form-errors">
+                                                    <td colspan="2">{{ form.errors }}</td>
+                                                </tr>
+                                            {% endif %}
+
+                                            <tr
+                                                class="form-row {% if forloop.last %} empty-form{% endif %}"
+                                                id="{{ disaggregation_formset.prefix }}-{% if forloop.last %}empty{% else %}{{ forloop.counter0 }}{% endif %}"
+                                            >
+                                                {% for field in form %}
+                                                    <td>{{ field }}</td>
+                                                {% endfor %}
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table> 
+
+                            </fieldset>
                         </div>
                     </div>
                 </div>
-
-                <div class="target-location-form">
-                    <form action="" method="post" class="form-container">
-                        {% csrf_token %}
-                        <div id="">       
-                            <!-- ERRORS SECTION STARTS -->
-                            {% if target_location_form.errors %}
-                                <div class="message-container">
-                                {% for error in target_location_form.errors %}
-                                    <div class="message-danger-alert">
-                                        {{error}}
-                                        <span class="close-alert-message">&#x2715;</span>
-                                    </div>
-                                {% endfor %}
-                                </div>
-                            {% endif %}
-                            <!-- ERRORS SECTION ENDS -->
-
-                            <div class="row">
-                                <div class="col">
-                                    <div class="multiple-fields-row four-items">
-                                        <div class="field-col">
-                                            <div class="select-field is-required">
-                                                <label for="{{target_location_form.province.id_for_label}}" >Province / State</label>
-                                                {{ target_location_form.province }}
-                                            </div>
-                                        </div>
-                                        <div class="field-col">
-                                            <div class="input-field is-required">
-                                                <label for="{{target_location_form.district.id_for_label}}">District</label>
-                                                {{ target_location_form.district }}
-                                            </div>
-                                        </div>
-                                        {% if target_location_form.zone.choices %}
-                                        <div class="field-col">
-                                            <div class="input-field">
-                                                <label for="{{target_location_form.zone.id_for_label}}">Ward / Zone</label>
-                                                {{ target_location_form.zone }}
-                                            </div>
-                                        </div>
-                                        {% endif %}
-
-                                        {% if  target_location_form.facility_site_type.value %}
-                                        <div class="field-col">
-                                            <div class="select-field">
-                                                <label for="{{target_location_form.facility_site_type.id_for_label}}">Facility Site Type</label>
-                                                {{ target_location_form.facility_site_type }}
-                                            </div>
-                                        </div>
-                                        {% endif %}
-                                        <!-- <div class="field-col">
-                                            <div class="select-field is is-required">
-                                                <label for="{{target_location_form.classification_for_label}}">Classification</label>
-                                                {{ target_location_form.classification }}
-                                            </div>
-                                        </div> -->
-
-                                        {% if target_location_form.nhs_code %}
-                                        <div class="field-col">
-                                            <div class="input-field is is-required">
-                                                <label for="{{target_location_form.nhs_code_for_label}}">NHS Code</label>
-                                                {{ target_location_form.nhs_code }}
-                                            </div>
-                                        </div>
-                                        {% endif %}
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="row mtb20">
-                                <div class="col">
-                                    <div class="field-col">
-                                        <div class="input-check-holder">
-                                            {{ target_location_form.facility_monitoring }}
-                                            <label for="{{ target_location_form.facility_monitoring.id_for_label }}">
-                                                <span class="input"></span>
-                                                <span class="text">Facility Monitoring</span>
-                                            </label>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="row mtb20" id="facility_details_{{ target_location_form.prefix }}">
-                                <div class="col col-lg">
-                                    <div class="multiple-fields-row two-items">
-                                        <div class="field-col">
-                                            <div class="input-field is-required">
-                                                <label for="{{ target_location_form.facility_name.id_for_label }}">
-                                                    Facility / Site Name
-                                                </label>
-                                                <div class="input-holder">{{ target_location_form.facility_name }}</div>
-                                            </div>
-                                        </div>
-                                        <div class="field-col">
-                                            <div class="input-field is-required">
-                                                <label for="{{ target_location_form.facility_id.id_for_label }}">
-                                                    Facility / Site ID [HMIS code]
-                                                </label>
-                                                <div class="input-holder">{{ target_location_form.facility_id }}</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="multiple-fields-row two-items">
-                                        <div class="field-col">
-                                            <div class="input-field">
-                                                <label for="{{ target_location_form.facility_lat.id_for_label }}">
-                                                    Facility / Site Latitude [Please enter decimal only]
-                                                </label>
-                                                <div class="input-holder">{{ target_location_form.facility_lat }}</div>
-                                            </div>
-                                        </div>
-                                        <div class="field-col">
-                                            <div class="input-field">
-                                                <label for="{{ target_location_form.facility_long.id_for_label }}">
-                                                    Facility / Site Longitude [Please enter decimal only]
-                                                </label>
-                                                <div class="input-holder">{{ target_location_form.facility_long }}</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div 
-                                class="disaggregation-block js-inline-admin-formset disaggregation-accordion inline-group" 
-                                id="{{ disaggregation_formset.prefix }}-group" 
-                                data-inline-type="tabular" 
-                                data-inline-formset='{"name":"#{{disaggregation_formset.prefix}}","options":{"prefix":"{{disaggregation_formset.prefix}}","addText":"Add another","deleteText":"Delete"}}'
-                            >
-                                <div class="inner-holder tabular inline-related">
-                                    <div class="block-top disaggregation-accordion-opener">
-                                        <div class="location-block-holder">
-                                            <div class="block-top-title">
-                                                <div class="title">
-                                                    Disaggregations
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    {{ disaggregation_formset.management_form }}
-                                    <fieldset class="module aligned table-wrapper-scrollable">
-                                        <table class="table table-striped ">
-                                            <thead class="content-block">
-                                                <tr >
-                                                    {% for form in disaggregation_formset.empty_form.visible_fields %}
-                                                        <th>{{ form.label_tag }}</th>
-                                                    {% endfor %}
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                {% for form in disaggregation_formset %}
-                                                    {% if form.non_field_errors %}
-                                                        <tr class="row-form-errors">
-                                                            <td colspan="2">{{ form.non_field_errors }}</td>
-                                                        </tr>
-                                                    {% endif %}
-                                                    {% if form.errors %}
-                                                        <tr class="row-form-errors">
-                                                            <td colspan="2">{{ form.errors }}</td>
-                                                        </tr>
-                                                    {% endif %}
-
-                                                    <tr
-                                                        class="form-row"
-                                                        id="{{ disaggregation_formset.prefix }}-{{ forloop.counter0 }}"
-                                                    >
-                                                         {% for field in form %}
-                                                            <td>{{ field }}</td>
-                                                        {% endfor %}
-                                                    </tr>
-                                                {% endfor %}
-                                                <tr 
-                                                    class="form-row empty-form" 
-                                                    id="{{ disaggregation_formset.prefix }}-empty"
-                                                >
-                                                    {% for field in disaggregation_formset.empty_form.visible_fields %}
-                                                        <td>{{ field }}</td>
-                                                    {% endfor %}
-                                                </tr>
-                                            </tbody>
-                                        </table> 
-
-                                    </fieldset>
-                                </div>
-                            </div>
-                        </div>
-                          <div class="plan-submit-holder">
-                            <button type="submit" class="btn btn-gray">Save and add another</button>
-                            <button type="submit" class="btn btn-gray">Save and continue editing</button>
-                            <button type="submit" class="btn btn-red">Save</button>
-                        </div>
-                    </form>
-                </div>
-
-            </div>
+                <div class="plan-submit-holder">
+                    <div></div>
+                    <div>
+                        <input type="submit" name="_addanother" class="btn btn-gray" value="Save and add another">
+                        <input type="submit" name="_continue" class="btn btn-gray" value="Save and continue editing" >
+                        <input type="submit" name="_save" class="btn btn-red" value="Save" >
+            </form>
         </div>
     </div>
 {% endblock project_contents %}
 
 {% block project_form_scripts %}
     <script defer src="{% static 'src/js/utils/inlines.js' %}"></script>
-    <script defer src="{% static 'rh/js/activity_planning.js' %}"></script>
+    <script>
+        // Handle Facility Monitoring Toggls
+		const facilityMonitoringCheckBox = document.querySelector(`#id_facility_monitoring`);
+
+        function handleFacilityMonitoringToggle(){
+            const facilityDetailsDiv = document.querySelector(`#facility_details`);
+
+            if (!facilityMonitoringCheckBox.checked) {
+                facilityDetailsDiv.style.display = 'none';
+                return
+            }
+
+            facilityDetailsDiv.style.display = 'block';
+        }
+
+        handleFacilityMonitoringToggle()
+
+        facilityMonitoringCheckBox.addEventListener('change', function() {
+            handleFacilityMonitoringToggle()
+        });
+    </script>
 {% endblock project_form_scripts %}

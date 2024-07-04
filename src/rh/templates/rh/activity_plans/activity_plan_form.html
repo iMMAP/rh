@@ -2,13 +2,32 @@
 {% load static %}
 
 {% block page_title %} 
-    New Activity Plan for {{project.code}} 
+    {% if form.initial %}
+        Edit Activity Plan
+    {% else %}
+        New Activity Plan 
+    {% endif %}
 {% endblock page_title %}
 
 
 {% block project_contents %}
-    <div class="project-title-holder" style="display: flex;">
+    {% comment %} <div class="project-title-holder" style="display: flex;">
         <h2 class="plan-title"> <em>Project: </em> {{ project.title }}</h2>
+    </div> {% endcomment %}
+
+    <div class="multiple-fields-row" style="justify-content: space-between;margin:0px;padding:10px 0px">
+        <div class="">
+            <span class="label">Project</span>
+            <div class="input-holder">
+                <span class="text-read-only">{{project.code}} - {{project.title}}</span>
+            </div>
+        </div>
+        <div class="">
+            <span class="label">Duration</span>
+            <div class="input-holder">
+                <span class="text-read-only">From {{project.start_date}} to {{project.end_date}}</span>
+            </div>
+        </div>
     </div>
 
     <div class="main-content">
@@ -19,14 +38,19 @@
                         <div class="top-activity-block">
                             <span class="activity-title">
                                 <span>
-                                    {% if activity_plan %}
+                                    {% if form.initial %}
                                         Update Activity Plan
                                     {% else %}
                                         New Activity Plan
                                     {% endif %}
                                 </span>
-                                <span class="btn btn-gray" style="float:right">Target Locations</span>
+                                {% comment %} <span class="btn btn-gray" style="float:right">Target Locations</span> {% endcomment %}
                             </span>
+                            <br>
+                        <span class="">
+                            Use this form to provide detailed information about the activity for the above project, including the activity domain,type,indicator and other relevant details.
+                            Activity Domain list is taken from your project. If something is missing please update your project or contact your cluster.
+                        </span>
                         </div>
                     </div>
                 </div>
@@ -37,30 +61,6 @@
                         <div class="project-activity-block" data-form-id="{{ form.prefix }}">
                             <div class="inner-holder unset-before">
                                 <div class="project-activity-accordion-slide" id="{{ form.prefix }}-details">
-                                    <!-- ERRORS SECTION STARTS -->
-                                    {% if form.errors %}
-                                        <div class="message-container">
-                                        {% for error in form.errors %}
-                                            <div class="message-danger-alert">
-                                                {{error}}
-                                                <span class="close-alert-message">&#x2715;</span>
-                                            </div>
-                                        {% endfor %}
-                                        </div>
-                                    {% endif %}
-                                    <!-- ERRORS SECTION ENDS -->
-                                    
-                                    {% if form.total_set_target.value > 0 %}
-                                    <div class="field-col">
-                                        <div class="input-field">
-                                            <span class="label">Total Set Target</span>
-                                            <div class="input-holder">
-                                                <span class="text-read-only">{{ form.total_set_target }}</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    {% endif %}
-
                                     <div class="row">
                                         <div class="col">
                                             <div class="multiple-fields-row two-items">
@@ -68,18 +68,21 @@
                                                     <div class="select-field is-required">
                                                         <label for="{{form.activity_domain.id_for_label}}">Activity Domain</label>
                                                         {{ form.activity_domain }}
+                                                        <div class="sign-up-field-error">{{form.activity_domain.errors}}</div>
                                                     </div>
                                                 </div>
                                                 <div class="field-col">
                                                     <div class="select-field is-required">
                                                         <label for="{{form.activity_type.id_for_label}}">Activity Type</label>
                                                         {{ form.activity_type }}
+                                                        <div class="sign-up-field-error">{{form.activity_type.errors}}</div>
                                                     </div>
                                                 </div>
                                                 <div class="field-col" style="display:none">
                                                     <div class="select-field">
                                                         <label for="{{form.activity_detail.id_for_label}}">Activity Detail</label>
                                                         {{ form.activity_detail }}
+                                                        <div class="sign-up-field-error">{{form.activity_detail.errors}}</div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -93,18 +96,22 @@
                                                     Indicator
                                                 </label>
                                                 {{ form.indicator }}
+                                                <div class="sign-up-field-error">{{form.indicator.errors}}</div>
+
                                             </div>
                                             <div class="multiple-fields-row">
                                                 <div class="field-col">
                                                     <div class="select-field">
                                                         <label for="{{form.beneficiary.id_for_label}}">Beneficiary</label>
                                                         {{ form.beneficiary }}
+                                                       <div class="sign-up-field-error">{{form.beneficiary.errors}}</div>
                                                     </div>
                                                 </div>
                                                 <div class="field-col">
                                                     <div class="select-field">
                                                         <label for="{{form.beneficiary_category.id_for_label}}">Beneficiary Category</label>
                                                         {{ form.beneficiary_category }}
+                                                        <div class="sign-up-field-error">{{form.beneficiary_category.errors}}</div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -115,6 +122,7 @@
                                         <div class="input-field is-required">
                                             <label for="{{ form.description.id_for_label}}">Activity Description</label>
                                             <div class="input-holder">{{ form.description }}</div>
+                                             <div class="sign-up-field-error">{{form.description.errors}}</div>
                                         </div>
                                     </div>
                                 
@@ -125,13 +133,15 @@
                             </div>
                         </div>
                         <div class="plan-submit-holder">
-                            <button type="submit" class="btn btn-gray">Save and add another</button>
-                            <button type="submit" class="btn btn-gray">Save and continue editing</button>
-                            <button type="submit" class="btn btn-red">Save</button>
+                            <a href="#">Delete</a>
+                            <div>
+                                <input type="submit" name="_addanother" class="btn btn-gray" value="Save and add another">
+                                <input type="submit" name="_continue" class="btn btn-gray" value="Save and continue editing" >
+                                <input type="submit" name="_save" class="btn btn-red" value="Save" >
+                            </div>
                         </div>
                     </form>
                 </div>
-
             </div>
         </div>
     </div>

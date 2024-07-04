@@ -90,9 +90,10 @@
   display: flex;
   align-items: center;
   flex-direction: column-reverse;
+  justify-content: space-between;
 
   @include media('>=tablet') {
-    justify-content: flex-end;
+    // justify-content: flex-end;
     flex-direction: row;
   }
 

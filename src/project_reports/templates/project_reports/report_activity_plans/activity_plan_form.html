@@ -20,7 +20,12 @@
                                         Update Report Activity
                                     {% endif %}
                                 </span>
-                                <span class="btn btn-gray" style="float:right">Target Locations</span>
+                                <a href="{% url 'list_report_target_locations_with_plan' project.id monthly_report.pk report_activity_plan.pk %}" class="btn btn-red" style="float:right">Activity Target Locations</a>
+                            </span>
+                            <br>
+                            <span class="">
+                                Use this form to provide detailed information about the report activity for the above the monthly report.
+                                Some fields are auto-populated from the project activity plans.
                             </span>
                         </div>
                     </div>
@@ -239,7 +244,11 @@
                             </div>
                         </div>
                         <div class="plan-submit-holder">
-                            <button type="submit" class="btn btn-red">Save</button>
+                            <div></div>
+                            <div>
+                                <input type="submit" name="_continue" class="btn btn-gray" value="Save and continue editing" >
+                                <input type="submit" name="_save" class="btn btn-red" value="Save" >
+                            </div>
                         </div>
                     </form>
                 </div>

@@ -135,7 +135,12 @@ def update_project_monthly_report_view(request, project, report):
             report = form.save()
             report.project_id = project
             report.save()
-            return redirect("view_monthly_report", project=project, report=report.pk)
+            return redirect(
+                "list_report_activity_plans",
+                project=project,
+                report=report.pk,
+            )
+            # return redirect("view_monthly_report", project=project, report=report.pk)
     else:
         form = ProjectMonthlyReportForm(instance=report)
 
@@ -445,6 +450,7 @@ def reject_monthly_report_view(request, report):
     # Return the URL in a JSON response
     response_data = {"redirect_url": url}
     return JsonResponse(response_data)
+
 
 @login_required
 def import_monthly_reports(request, report):

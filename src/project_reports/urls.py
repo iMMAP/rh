@@ -2,11 +2,17 @@ from django.urls import path
 
 from . import dashboards as dashboard_views
 from . import exports as export_views
-from .views.views import *
+from .views.views import (
+    delete_location_report_view,
+    import_monthly_reports,
+    get_location_report_empty_form,
+    load_target_locations_details,
+    get_disaggregations_report_empty_forms,
+)
 from .views import (
     report_activity_plans as plan_views,
     report_target_locations as location_views,
-    monthly_reports as report_views
+    monthly_reports as report_views,
 )
 
 urlpatterns = [
@@ -58,7 +64,7 @@ urlpatterns = [
     ),
     path(
         "project/<str:project>/monthly_progress/<str:report>/report-activity-plan/<str:plan>/update",
-        plan_views.update_report_activity_plans,
+        plan_views.update_report_activity_plan,
         name="update_report_activity_plans",
     ),
     path(
@@ -72,11 +78,15 @@ urlpatterns = [
         name="list_report_target_locations",
     ),
     path(
-        "project/<str:project>/monthly_progress/<str:report>/report-target-locations/<str:plan>/update",
+        "project/<str:project>/monthly_progress/<str:report>/report_plan/<str:plan>/report-target-locations/view",
+        location_views.list_report_target_locations,
+        name="list_report_target_locations_with_plan",
+    ),
+    path(
+        "project/<str:project>/monthly_progress/<str:report>/report_plan/<str:plan>/report-target-locations/<str:location>/update",
         location_views.update_report_target_locations,
         name="update_report_target_locations",
     ),
-
     path(
         "project/monthly_progress/location_report/delete/<str:location_report>/",
         delete_location_report_view,
@@ -97,7 +107,6 @@ urlpatterns = [
         report_views.reject_monthly_report_view,
         name="reject_monthly_report",
     ),
-
     # Exports
     path(
         "project/monthly_progress/export/<str:report>/",
@@ -116,7 +125,7 @@ urlpatterns = [
     ),
     path(
         "ajax/get_target_location_auto_fields/",
-        get_target_location_auto_fields,
+        location_views.get_target_location_auto_fields,
         name="ajax-get-target-location-auto-fields",
     ),
     path(

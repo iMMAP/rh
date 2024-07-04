@@ -333,7 +333,6 @@ document.addEventListener("DOMContentLoaded", () => {
 	document.querySelectorAll(".js-inline-admin-formset").forEach((element) => {
 		const data = element.dataset;
 		const inlineOptions = JSON.parse(data.inlineFormset);
-		console.log(inlineOptions);
 		let selector;
 		switch (data.inlineType) {
 			case "stacked":
@@ -345,7 +344,6 @@ document.addEventListener("DOMContentLoaded", () => {
 				break;
 			case "tabular":
 				selector = `${inlineOptions.name}-group .tabular.inline-related tbody > tr.form-row`;
-				console.log(document.querySelectorAll(selector));
 				tabularFormset(
 					document.querySelectorAll(selector),
 					inlineOptions.options,

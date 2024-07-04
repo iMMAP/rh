@@ -91,7 +91,9 @@ def create_target_location(request, activity_plan):
 
     if request.method == "POST":
         target_location_form = TargetLocationForm(request.POST, user=request.user)
-        disaggregation_formset = DisaggregationFormSet(request.POST, instance=target_location_form.instance,activity_plan=activity_plan)
+        disaggregation_formset = DisaggregationFormSet(
+            request.POST, instance=target_location_form.instance, activity_plan=activity_plan
+        )
 
         if target_location_form.is_valid() and disaggregation_formset.is_valid():
             target_location = target_location_form.save(commit=False)

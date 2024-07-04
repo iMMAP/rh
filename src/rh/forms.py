@@ -10,6 +10,7 @@ from .models import (
     Currency,
     DisaggregationLocation,
     Donor,
+    Disaggregation,
     Organization,
     Project,
     ProjectIndicatorType,
@@ -116,7 +117,7 @@ class TargetLocationForm(forms.ModelForm):
         self.fields["country"].initial = user.profile.country
         self.fields["country"].required = True  # Ensure the field is required
 
-        self.fields["province"].required = True 
+        self.fields["province"].required = True
         self.fields["province"].queryset = self.fields["province"].queryset.filter(level=1, parent=user.profile.country)
 
         self.fields["district"].queryset = Location.objects.none()
@@ -128,10 +129,10 @@ class TargetLocationForm(forms.ModelForm):
             # Creating
             try:
                 province_id = int(self.data.get("province"))
-                self.fields["district"].queryset = Location.objects.filter(level=2,parent=province_id)
-                
+                self.fields["district"].queryset = Location.objects.filter(level=2, parent=province_id)
+
                 district_id = int(self.data.get("district"))
-                self.fields["zone"].queryset = Location.objects.filter(level=3,parent=district_id)
+                self.fields["zone"].queryset = Location.objects.filter(level=3, parent=district_id)
             except Exception:
                 raise forms.ValidationError("Do not mess with the form!")
 
@@ -163,22 +164,21 @@ class DisaggregationLocationForm(forms.ModelForm):
         activity_plan = kwargs.pop("activity_plan", None)
         super().__init__(*args, **kwargs)
 
+        self.fields["disaggregation"].required = True
+        self.fields["disaggregation"].empty_value = "hell"
+        self.fields["target"].required = True
+
         if activity_plan:
             self.fields["disaggregation"].queryset = self.fields["disaggregation"].queryset.filter(
                 indicators=activity_plan.indicator
             )
             # keep only the initial
-            # self.fields["disaggregation"].choices = []
-        # else:
-        # print("ELSE ===  NO Target Location in Form",kwargs)
-        #     # Do not display already existing relationships, filter based on target_location.activity_plan.indicator
-        #     existing_disaggregations = DisaggregationLocation.objects.filter(
-        #         target_location=target_location
-        #     ).values_list("disaggregation", flat=True)
-        #     # existing_disaggregation_ids = existing_disaggregations.values_list('disaggregation', flat=True)
-        #     self.fields["disaggregation"].queryset = self.fields["disaggregation"].queryset.exclude(
-        #         id__in=existing_disaggregations
-        #     )
+
+        if self.instance.pk:
+            self.fields["disaggregation"].queryset = Disaggregation.objects.filter(
+                disaggregationlocation__target_location=self.instance.target_location,
+                disaggregationlocation__disaggregation=self.instance.disaggregation,
+            )
 
 
 class BaseDisaggregationLocationFormSet(BaseInlineFormSet):
@@ -222,7 +222,9 @@ class ActivityPlanForm(forms.ModelForm):
             try:
                 # Creating
                 activity_domain_id = int(self.data.get("activity_domain"))
-                self.fields["activity_type"].queryset = ActivityType.objects.filter(activity_domain_id=activity_domain_id)
+                self.fields["activity_type"].queryset = ActivityType.objects.filter(
+                    activity_domain_id=activity_domain_id
+                )
 
                 activity_type_id = int(self.data.get("activity_type"))
                 self.fields["indicator"].queryset = Indicator.objects.filter(activity_types=activity_type_id)

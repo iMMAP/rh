@@ -14,6 +14,12 @@ RECORDS_PER_PAGE = 10
 
 
 @login_required
+def get_locations_details(request):
+    parents = Location.objects.filter(pk=list(request.GET.values())[0]).select_related("parent")
+    return render(request, "rh/target_locations/_location_select_options.html", {"parents": parents})
+
+
+@login_required
 def get_activity_domain_types(request):
     """
     View to return activity types for a given activity domain for HTMX response.
@@ -96,6 +102,7 @@ def copy_target_location_disaggregation_locations(location, disaggregation_locat
         # If an exception occurs, return False to indicate the copy operation was not successful.
         return False
 
+
 @login_required
 def load_activity_domains(request):
     """
@@ -120,6 +127,7 @@ def load_activity_domains(request):
     ]
 
     return JsonResponse(clusters, safe=False)
+
 
 def copy_project_target_location(plan, location):
     """Copy Target Locations"""

@@ -1,7 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
-from django.template.loader import render_to_string
 from django.urls import reverse
 
 from ..forms import (
@@ -187,5 +186,4 @@ def update_indicator_type(request):
     indicator_form = ProjectIndicatorTypeForm(initial=initial_data)
     context = {"indicator": indicator, "indicator_form": indicator_form}
 
-    return render(request,"rh/projects/views/_indicator_types.html", context)
-
+    return render(request, "rh/projects/views/_indicator_types.html", context)

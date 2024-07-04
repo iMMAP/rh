@@ -17,6 +17,7 @@ from .models import (
     BeneficiaryType,
     Indicator,
     ActivityType,
+    Location,
 )
 
 
@@ -104,19 +105,8 @@ class TargetLocationForm(forms.ModelForm):
             "project",
             "active",
             "state",
-            "locations_group_by",
-            "group_by_province",
-            "group_by_district",
-            "group_by_custom",
             "activity_plan",
         )
-        # widgets = {
-        #     # "country": forms.Select(attrs={"disabled": "true", "required":"","class": "cursor-none"}),
-        #     # "nhs_code": forms.widgets.TextInput(),
-        #     # "locations_group_by": forms.widgets.RadioSelect(),
-        #     # "district": forms.Select(attrs={"locations-queries-url": reverse_lazy("ajax-load-locations")}),
-        #     # "zone": forms.Select(attrs={"locations-queries-url": reverse_lazy("ajax-load-locations")}),
-        # }
 
     def __init__(self, *args, **kwargs):
         user = kwargs.pop("user", None)
@@ -126,9 +116,29 @@ class TargetLocationForm(forms.ModelForm):
         self.fields["country"].initial = user.profile.country
         self.fields["country"].required = True  # Ensure the field is required
 
+        self.fields["province"].required = True 
         self.fields["province"].queryset = self.fields["province"].queryset.filter(level=1, parent=user.profile.country)
-        self.fields["district"].queryset = self.fields["district"].queryset.filter(level=2)
-        self.fields["zone"].queryset = self.fields["zone"].queryset.filter(level=3)
+
+        self.fields["district"].queryset = Location.objects.none()
+        self.fields["district"].required = True
+
+        self.fields["zone"].queryset = Location.objects.none()
+
+        if self.data:
+            # Creating
+            try:
+                province_id = int(self.data.get("province"))
+                self.fields["district"].queryset = Location.objects.filter(level=2,parent=province_id)
+                
+                district_id = int(self.data.get("district"))
+                self.fields["zone"].queryset = Location.objects.filter(level=3,parent=district_id)
+            except Exception:
+                raise forms.ValidationError("Do not mess with the form!")
+
+        elif self.instance.pk:
+            # Updating
+            self.fields["district"].queryset = self.instance.province.children.all()
+            self.fields["zone"].queryset = self.instance.district.children.all()
 
     def clean_country(self):
         # Prevent changes to the country field
@@ -209,18 +219,19 @@ class ActivityPlanForm(forms.ModelForm):
         self.fields["indicator"].queryset = Indicator.objects.none()
 
         if self.data:
-            # Creating
-            activity_domain_id = int(self.data.get('activity_domain')) 
-            self.fields["activity_type"].queryset = ActivityType.objects.filter(activity_domain_id=activity_domain_id)
+            try:
+                # Creating
+                activity_domain_id = int(self.data.get("activity_domain"))
+                self.fields["activity_type"].queryset = ActivityType.objects.filter(activity_domain_id=activity_domain_id)
 
-            activity_type_id = int(self.data.get('activity_type')) 
-            self.fields["indicator"].queryset = Indicator.objects.filter(activity_types=activity_type_id) 
+                activity_type_id = int(self.data.get("activity_type"))
+                self.fields["indicator"].queryset = Indicator.objects.filter(activity_types=activity_type_id)
+            except Exception:
+                raise forms.ValidationError("Do not mess with the form!")
         elif self.instance.pk:
             # Updating
             self.fields["activity_type"].queryset = self.instance.activity_domain.activitytype_set.all()
-            self.fields["indicator"].queryset = self.instance.activity_type.indicator_set.all() 
-
-
+            self.fields["indicator"].queryset = self.instance.activity_type.indicator_set.all()
 
 
 class BudgetProgressForm(forms.ModelForm):

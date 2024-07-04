@@ -251,7 +251,9 @@
                                                 id="{{ disaggregation_formset.prefix }}-{% if forloop.last %}empty{% else %}{{ forloop.counter0 }}{% endif %}"
                                             >
                                                 {% for field in form %}
-                                                    <td>{{ field }}</td>
+                                                    <td>
+                                                        {{ field }}
+                                                    </td>
                                                 {% endfor %}
                                             </tr>
                                         {% endfor %}
@@ -261,13 +263,14 @@
                             </fieldset>
                         </div>
                     </div>
-                </div>
                 <div class="plan-submit-holder">
                     <div></div>
                     <div>
                         <input type="submit" name="_addanother" class="btn btn-gray" value="Save and add another">
                         <input type="submit" name="_continue" class="btn btn-gray" value="Save and continue editing" >
                         <input type="submit" name="_save" class="btn btn-red" value="Save" >
+                    </div>
+                </div>
             </form>
         </div>
     </div>

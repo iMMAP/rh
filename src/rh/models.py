@@ -576,7 +576,7 @@ class ActivityPlan(models.Model):
     )
 
     def __str__(self):
-        return f"Project {self.project.code} - Activity Plan"
+        return f"Activity Plan: {self.activity_domain} - {self.indicator}"
 
     class Meta:
         verbose_name = "Activity Plan"
@@ -682,7 +682,7 @@ class TargetLocation(models.Model):
     )
 
     def __str__(self):
-        return f"TargetLocation: {self.province}, {self.district}"
+        return f"Target Location: {self.province}, {self.district}"
 
     class Meta:
         verbose_name = "Target Location"

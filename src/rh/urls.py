@@ -2,7 +2,7 @@ from django.urls import path
 
 from .views import exports as export_views
 
-from .views.views import landing_page, download_user_guide, load_facility_sites, load_activity_domains
+from .views.views import landing_page, download_user_guide, load_facility_sites, load_activity_domains,get_activity_domain_types,get_activity_type_indicators
 from .views import (
     projects as projects,
     activity_plans as activity_plans,
@@ -51,6 +51,22 @@ urlpatterns = [
         "projects/project_plan/copy/<str:pk>/",
         projects.copy_project,
         name="copy_project",
+    ),
+    # load
+    path(
+        "activity-domains/activity-types",
+        get_activity_domain_types,
+        name="activity-domains-types",
+    ),
+    path(
+        "activity-types/indicators",
+        get_activity_type_indicators,
+        name="activity-types-indicators",
+    ),
+    path(
+        "indicator/types",
+        activity_plans.update_indicator_type,
+        name="update-indicator-type",
     ),
     # Projects Activity Plannings CRUD
     path(
@@ -174,11 +190,6 @@ urlpatterns = [
         "project/export/CSV/<int:project_id>",
         export_views.ProjectExportCSV.as_view(),
         name="export_porjcet_CSV",
-    ),
-    path(
-        "project/activityplan/indicator-type",
-        activity_plans.update_indicator_type,
-        name="update_indicator_type",
     ),
     # User Guide Download Link
     path("rh/user_guide/download/", download_user_guide, name="download_user_guide"),

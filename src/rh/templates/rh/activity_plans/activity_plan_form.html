@@ -58,24 +58,48 @@
                             <div class="field-col">
                                 <div class="select-field is-required">
                                     <label for="{{form.activity_domain.id_for_label}}">Activity Domain</label>
-                                    {{ form.activity_domain }}
+                                    <select 
+                                        name="{{ form.activity_domain.name }}" 
+                                        id="{{ form.activity_domain.id_for_label }}" 
+                                        class="form-control"
+                                        hx-get="{% url 'activity-domains-types' %}"
+                                        hx-trigger="change"
+                                        hx-target="#{{form.activity_type.id_for_label}}" 
+                                        hx-swap="innerHTML"
+                                    >
+                                        {% for domain in form.activity_domain %}
+                                            {{domain}}
+                                        {% endfor %}
+                                    </select>
                                     <div class="sign-up-field-error">{{form.activity_domain.errors}}</div>
                                 </div>
                             </div>
                             <div class="field-col">
                                 <div class="select-field is-required">
                                     <label for="{{form.activity_type.id_for_label}}">Activity Type</label>
-                                    {{ form.activity_type }}
+                                    <select 
+                                        name="{{ form.activity_type.name }}" 
+                                        id="{{ form.activity_type.id_for_label }}" 
+                                        class="form-control"
+                                        hx-get="{% url 'activity-types-indicators' %}"
+                                        hx-trigger="change"
+                                        hx-target="#{{form.indicator.id_for_label}}" 
+                                        hx-swap="innerHTML"
+                                    >
+                                        {% for type in form.activity_type %}
+                                            {{type}}
+                                        {% endfor %}
+                                    </select>
                                     <div class="sign-up-field-error">{{form.activity_type.errors}}</div>
                                 </div>
                             </div>
-                            <div class="field-col" style="display:none">
+                            {% comment %} <div class="field-col">
                                 <div class="select-field">
                                     <label for="{{form.activity_detail.id_for_label}}">Activity Detail</label>
                                     {{ form.activity_detail }}
                                     <div class="sign-up-field-error">{{form.activity_detail.errors}}</div>
                                 </div>
-                            </div>
+                            </div> {% endcomment %}
                         </div>
                     </div>
                 </div>
@@ -86,7 +110,19 @@
                             <label for="{{form.indicator.id_for_label}}">
                                 Indicator
                             </label>
-                            {{ form.indicator }}
+                            <select 
+                                name="{{ form.indicator.name }}" 
+                                id="{{ form.indicator.id_for_label }}" 
+                                class="form-control"
+                                {% comment %} hx-get="{% url 'update-indicator-type' %}"
+                                hx-trigger="change"
+                                hx-target="#indicator-types"
+                                hx-swap="innerHTML" {% endcomment %}
+                            >
+                                {% for type in form.indicator %}
+                                    {{type}}
+                                {% endfor %}
+                            </select>
                             <div class="sign-up-field-error">{{form.indicator.errors}}</div>
 
                         </div>
@@ -118,7 +154,7 @@
                 </div>
             
                 <!-- Indicator types start to diaplay -->
-                <div class="row" id="{{ form.prefix }}-indicator-types">
+                <div class="row" id="indicator-types">
                 </div>
             </div>
             <div class="plan-submit-holder">
@@ -134,5 +170,5 @@
 {% endblock project_contents %}
 
 {% block project_form_scripts %}
-    <script defer src="{% static 'rh/js/activity_planning.js' %}"></script>
+    {% comment %} <script defer src="{% static 'rh/js/activity_planning.js' %}"></script> {% endcomment %}
 {% endblock project_form_scripts %}

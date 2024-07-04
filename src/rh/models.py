@@ -87,6 +87,7 @@ class BeneficiaryType(models.Model):
         on_delete=models.SET_NULL,
         limit_choices_to={"level": 0},
     )
+
     clusters = models.ManyToManyField(Cluster)
 
     name = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
@@ -102,7 +103,7 @@ class BeneficiaryType(models.Model):
     updated_at = models.DateTimeField(auto_now=True, null=True)
 
     def __str__(self):
-        return self.name
+        return f"[{self.type}] {self.name}"
 
     class Meta:
         verbose_name = "Beneficiary Type"

@@ -1,6 +1,5 @@
 from django import forms
 from django.contrib.auth.models import User
-from django.forms.models import inlineformset_factory
 from django.forms import BaseInlineFormSet
 from django.urls import reverse_lazy
 
@@ -15,6 +14,9 @@ from .models import (
     Project,
     ProjectIndicatorType,
     TargetLocation,
+    BeneficiaryType,
+    Indicator,
+    ActivityType,
 )
 
 
@@ -139,15 +141,6 @@ class TargetLocationForm(forms.ModelForm):
         return initial_country
 
 
-TargetLocationFormSet = inlineformset_factory(
-    ActivityPlan,
-    TargetLocation,
-    form=TargetLocationForm,
-    extra=2,  # Number of empty forms to display
-    can_delete=True,  # Allow deletion of existing forms
-)
-
-
 class DisaggregationLocationForm(forms.ModelForm):
     class Meta:
         model = DisaggregationLocation
@@ -202,25 +195,32 @@ class ActivityPlanForm(forms.ModelForm):
         if project is None:
             raise forms.ValidationError("Project cannot be None.")
 
-        # Updating
+        self.fields["activity_domain"].required = True
+        self.fields["activity_type"].required = True
+        self.fields["indicator"].required = True
+        self.fields["beneficiary"].required = True
 
-        # Creating
+        self.fields["activity_domain"].queryset = project.activity_domains.all()
+        self.fields["beneficiary"].queryset = BeneficiaryType.objects.filter(clusters__in=project.clusters.all())
 
-        self.fields["activity_domain"] = forms.ModelChoiceField(
-            queryset=project.activity_domains.all(),
-            required=True,
-            empty_label="------",
-            widget=forms.Select(attrs={"class": "custom-select"}),
-        )
+        # The choices, does not validate the data ,(self.fields["indicator"].widget.choices = [])
+        # Updating the queryset for validation purposes
+        # If the data does not matche the queryset, it throws error
+        self.fields["indicator"].queryset = Indicator.objects.none()
+
+        if self.data:
+            # Creating
+            activity_domain_id = int(self.data.get('activity_domain')) 
+            self.fields["activity_type"].queryset = ActivityType.objects.filter(activity_domain_id=activity_domain_id)
+
+            activity_type_id = int(self.data.get('activity_type')) 
+            self.fields["indicator"].queryset = Indicator.objects.filter(activity_types=activity_type_id) 
+        elif self.instance.pk:
+            # Updating
+            self.fields["activity_type"].queryset = self.instance.activity_domain.activitytype_set.all()
+            self.fields["indicator"].queryset = self.instance.activity_type.indicator_set.all() 
 
 
-ActivityPlanFormSet = inlineformset_factory(
-    parent_model=Project,
-    model=ActivityPlan,
-    form=ActivityPlanForm,
-    extra=0,
-    can_delete=True,
-)
 
 
 class BudgetProgressForm(forms.ModelForm):

@@ -137,6 +137,9 @@ class BeneficiaryTypeAdmin(admin.ModelAdmin):
     list_display = ("name", "country", "Clusters")
     search_fields = ("code", "name")
     list_filter = ("clusters",)
+    filter_horizontal = (
+        "clusters",
+    )
 
     def Clusters(self, obj):
         clusters = obj.clusters.all()

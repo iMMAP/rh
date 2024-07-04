@@ -111,6 +111,7 @@ class TargetLocationForm(forms.ModelForm):
         # accessing user location
         form_prefix=kwargs.get("prefix")
         prefix_data_list=form_prefix.split(',')
+        print(prefix_data_list)
         user_location=prefix_data_list[0]
         # update the prefix 
         kwargs['prefix']=prefix_data_list[1]

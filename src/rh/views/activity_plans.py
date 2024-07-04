@@ -73,14 +73,14 @@ def create_project_activity_plan(request, project):
     )
 
     target_location_formsets = []
-
+    user_locaiton=request.user.profile.country.id
     # Iterate over activity plan forms in the formset
     for activity_plan_form in activity_plan_formset.forms:
         # Create a target location formset for each activity plan form
         target_location_formset = TargetLocationFormSet(
             request.POST or None,
             instance=activity_plan_form.instance,
-            prefix=f"target_locations_{activity_plan_form.prefix}",
+            prefix=f"{user_locaiton},target_locations_{activity_plan_form.prefix}",
         )
         for target_location_form in target_location_formset.forms:
             # Create a disaggregation formset for each target location form
@@ -206,10 +206,10 @@ def get_activity_empty_form(request):
 
     # Get the prefix index from the request
     prefix_index = request.POST.get("prefix_index")
-
+    user_locaiton=request.user.profile.country.id
     # Create an instance of TargetLocationFormSet with a prefixed name
     target_location_formset = TargetLocationFormSet(
-        prefix=f"target_locations_{activity_plan_formset.prefix}-{prefix_index}"
+        prefix=f"{user_locaiton},target_locations_{activity_plan_formset.prefix}-{prefix_index}"
     )
 
     # Prepare context for rendering the activity empty form template

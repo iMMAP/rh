@@ -21,7 +21,7 @@
                         <li class="{% if request.resolver_match.url_name == 'activity-plans-list' or  request.resolver_match.url_name == 'activity-plans-create' or request.resolver_match.url_name == 'activity-plans-update' %}active{% endif %}">
                             <a href="{% if project %}{% url 'activity-plans-list' project.pk %}{% else %}#{% endif %}">Activity Plans</a>
                         </li>
-                        <li class="{% if request.resolver_match.url_name == 'target-locations-list' or  request.resolver_match.url_name == 'target-locations-create'%}active{% endif %}">
+                        <li class="{% if request.resolver_match.url_name == 'target-locations-list' or  request.resolver_match.url_name == 'target-locations-create' or  request.resolver_match.url_name == 'target-locations-update' %}active{% endif %}">
                             <a href="{% if project %}{% url 'target-locations-list' project.pk %}{% else %}#{% endif %}">Target Locations</a>
                         </li>
                     </ul>

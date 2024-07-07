@@ -5,7 +5,7 @@ from . import exports as export_views
 from .views.views import (
     delete_location_report_view,
     import_monthly_reports,
-    get_location_report_empty_form,
+    # get_location_report_empty_form,
     load_target_locations_details,
     get_disaggregations_report_empty_forms,
 )
@@ -118,11 +118,11 @@ urlpatterns = [
         import_monthly_reports,
         name="import_monthly_reports",
     ),
-    path(
-        "ajax/get_location_report_empty_form/",
-        get_location_report_empty_form,
-        name="get_location_report_empty_form",
-    ),
+    # path(
+    #     "ajax/get_location_report_empty_form/",
+    #     get_location_report_empty_form,
+    #     name="get_location_report_empty_form",
+    # ),
     path(
         "ajax/get_target_location_auto_fields/",
         location_views.get_target_location_auto_fields,

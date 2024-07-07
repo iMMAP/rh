@@ -27,15 +27,14 @@
                                 Activity Type
                             </strong>
                         </th>
-
                         <th>
                             <strong class="table-title">
                             Indicator
                             </strong>
                         </th>
-
-                        <th><strong>Target Locations</strong></th>
-
+                        <th>
+                            <strong>Target Locations</strong>
+                        </th>
                         <th style="text-align:center">
                             <strong>Report Actions</strong>
                         </th>
@@ -47,15 +46,14 @@
                     {% for report_plan in object_list %}
                     <tr>
                         <td>
-                            {{report_plan.activity_plan.activity_domain}}
+                            {{ report_plan.activity_plan.activity_domain }}
                         </td>
-                        <td>{{report_plan.activity_plan.activity_type}}</td>
-                        <td>{{report_plan.indicator}}</td>
-                        <td>{{report_plan.report_target_location_count}}</td>
-
-                        <td>
+                        <td>{{ report_plan.activity_plan.activity_type }}</td>
+                        <td>{{ report_plan.indicator }}</td>
+                        <td>{{ report_plan.report_target_location_count }}</td>
+                        <td class="text-right">
                             <a href="{% url 'update_report_activity_plans' project.id report_plan.monthly_report.id report_plan.id %}" class="btn btn-gray">Edit</a>
-                            <a href="{% url 'create_report_target_locations' project.id monthly_report.id report_plan.id %}" class="btn btn-red">New Target Location</a>
+                            <a href="{% url 'create_report_target_locations' project.id monthly_report.id report_plan.id %}" class="btn btn-red">Add Target Location</a>
                         </td>
                     </tr>
                     {% endfor %}

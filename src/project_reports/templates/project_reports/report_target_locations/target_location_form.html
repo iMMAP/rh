@@ -8,6 +8,28 @@
 
 {% block project_body %}
 <div class="content-block top-border">
+
+    <div class="multiple-fields-row" style="justify-content: space-between;margin:0px;padding:10px 0px">
+        <div class="">
+            <span class="label">Activity Plan Domain</span>
+            <div class="input-holder">
+                <span class="text-read-only">{{ report_plan.activity_plan.activity_domain }}</span>
+            </div>
+        </div>
+        <div class="">
+            <span class="label">Activity Plan Type</span>
+            <div class="input-holder">
+                <span class="text-read-only">{{ report_plan.activity_plan.activity_type }}</span>
+            </div>
+        </div>
+        <div class="">
+            <span class="label">Activity Plan Indicator</span>
+            <div class="input-holder">
+                <span class="text-read-only">{{ report_plan.activity_plan.indicator }}</span>
+            </div>
+        </div>
+    </div>
+
     <div class="main-content">
         <div class="activity-planning create-activity">
             <div id="activity-formset-form">
@@ -25,7 +47,9 @@
                             </span>
                             <br>
                             <span class="">
-                                Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloremque quod quam fugiat aperiam sint, blanditiis pariatur perspiciatis officiis ipsa at accusantium cupiditate magni voluptatum odio ipsam voluptatem error necessitatibus molestiae!
+                                Use this form to provide detailed information about the report target location for the above report activity plan,
+                                including the country, province or state, and other relevant details.
+                                Also specify the number of people you have reached with your activity in the selected report location from the Disaggregation section.
                             </span>
                         </div>
                     </div>
@@ -57,7 +81,13 @@
                                         </div>
                                     </div>
                                     <br/>
-                                    <div class="multiple-fields-row {% if location_report_form.zone.choices %}three{% else %}two{% endif %}-items">
+                                    <div class="multiple-fields-row four-items">
+                                        <div class="field-col">
+                                            <div class="select-field is-required">
+                                                <label for="{{location_report_form.country.id_for_label}}" >Country</label>
+                                                {{ location_report_form.country}}
+                                            </div>
+                                        </div>
                                         <div class="field-col">
                                             <div class="select-field is-required">
                                                 <label for="{{location_report_form.province.id_for_label}}" >Province / State</label>
@@ -110,10 +140,7 @@
                                     </div>
                                 </div>
                             </div>
-
-                            <!--<div class="row mtb20">
-                            </div>-->
-
+                            {% if location_report_form.instance.target_location.facility_monitoring %}
                             <div class="row mtb20" id="facility_details">
                                 <div class="col">
                                     <div class="field-col">
@@ -181,8 +208,9 @@
                                     </div>
                                 </div>
                             </div>
+                            {% endif %}
 
-                            <div 
+                            {% comment %}<!--<div
                                 class="disaggregation-block js-inline-admin-formset disaggregation-accordion inline-group" 
                                 id="{{ report_disaggregation_formset.prefix }}-group"
                                 data-inline-type="tabular" 
@@ -244,6 +272,82 @@
 
                                     </fieldset>
                                 </div>
+                            </div>-->{% endcomment %}
+
+                            <div
+                                class="disaggregation-block js-inline-admin-formset disaggregation-accordion inline-group"
+                                id="{{ report_disaggregation_formset.prefix }}-group"
+                                data-inline-type="tabular"
+                                data-inline-formset='{"name":"#{{report_disaggregation_formset.prefix}}","options":{"prefix":"{{report_disaggregation_formset.prefix}}","addText":"Add another","deleteText":"Delete"}}'
+                            >
+                                <div class="tabular inline-related">
+                                    <div class="block-top" style="margin:unset">
+                                        <div class="">
+                                            <h2 class="title">
+                                                Disaggregations
+                                            </h2>
+                                            <p style="padding:10px 0px">
+                                                The Disaggregation list is selected from the Indicator of your Activity plan. If there is someting missing, please contact your cluster.
+                                            </p>
+                                        </div>
+                                    </div>
+                                    {{ report_disaggregation_formset.management_form }}
+                                    <fieldset class="table-wrapper-scrollable">
+                                        <table class="table ">
+                                            <thead class="content-block">
+                                                <tr>
+                                                    {% for field in report_disaggregation_formset.form.fields %}
+                                                        <th class="column-{{ field.name }}{% if field.required %} required{% endif %}{% if field.widget.is_hidden %} hidden{% endif %}">
+                                                            {{ field|capfirst }}
+                                                        </th>
+                                                    {% endfor %}
+                                                    {% if report_disaggregation_formset.can_delete%}
+                                                        <th>Delete?</th>
+                                                    {% endif %}
+                                                </tr>
+                                            </thead>
+
+                                            <tbody>
+                                                {% for form in report_disaggregation_formset %}
+                                                   {% if form.non_field_errors %}
+                                                        {% for error in form.non_field_errors %}
+                                                            <tr class="row-form-errors">
+                                                                <td>{{ error }}</td>
+                                                            </tr>
+                                                        {% endfor %}
+                                                    {% endif %}
+                                                    {% comment %} {% if form.errors %}
+                                                        <tr class="row-form-errors">
+                                                            <td colspan="2">{{ form.errors }}</td>
+                                                        </tr>
+                                                    {% endif %} {% endcomment %}
+                                                    <tr
+                                                        class="form-row {% if forloop.last %} empty-form{% endif %} {% if form.instance.pk %}has_original{% endif %} "
+                                                        id="{{ report_disaggregation_formset.prefix }}-{% if forloop.last %}empty{% else %}{{ forloop.counter0 }}{% endif %}"
+                                                    >
+
+                                                        {% for field in form %}
+                                                            {% if field.name != "DELETE" %}
+                                                            <td
+                                                                class="{% if field.name %}field-{{ field.name }}{% endif %}{% if field.is_hidden %} hidden{% endif %} "
+                                                            >
+                                                                {{ field.errors.as_ul }}
+                                                                {{ field}}
+                                                            </td>
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                        <td class="delete" style="">
+                                                            {% if form.instance.pk %}
+                                                                {{ form.DELETE}}
+                                                            {% endif %}
+                                                        </td>
+                                                    </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+
+                                    </fieldset>
+                                </div>
                             </div>
                         </div>
                         <div class="plan-submit-holder">
@@ -264,6 +368,7 @@
 {% endblock project_body %}
 
 {% block scripts %}
+<script defer src="{% static 'src/js/utils/inlines.js' %}"></script>
 <script>
     document.querySelectorAll('.custom-select').forEach((select) => {
         const choice = new Choices(select, {

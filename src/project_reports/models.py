@@ -112,6 +112,9 @@ class ActivityPlanReport(models.Model):
         blank=True,
     )
 
+    def __str__(self):
+        return f"Activity Plan: {self.activity_plan.activity_domain} - {self.indicator}"
+
     class Meta:
         verbose_name = "Activity Plan Report"
         verbose_name_plural = "Activity Plan Reports"
@@ -179,7 +182,7 @@ class TargetLocationReport(models.Model):
     updated_at = models.DateTimeField(auto_now=True, null=True)
 
     def __str__(self):
-        return f"{self.activity_plan_report}, {self.province}, {self.district}"
+        return f"Location Report: {self.province}, {self.district}"
 
     class Meta:
         verbose_name = "Target Location Report"

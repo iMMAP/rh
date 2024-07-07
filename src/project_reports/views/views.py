@@ -27,7 +27,7 @@ from rh.models import (
 
 from ..forms import (
     ActivityPlanReportForm,
-    DisaggregationReportFormSet,
+    # DisaggregationReportFormSet,
     MonthlyReportFileUpload,
     TargetLocationReportFormSet,
 )
@@ -79,95 +79,95 @@ def get_target_locations_domain(target_locations):
     return (target_location_provinces, target_location_districts, target_location_zones)
 
 
-@login_required
-def get_location_report_empty_form(request):
-    """Get an empty location Report form for a project"""
-    # Get the project object based on the provided project ID
-    project = get_object_or_404(Project, pk=request.POST.get("project"))
-
-    # Get all existing target locaitions for the project
-    target_locations = project.targetlocation_set.select_related("province", "district", "zone").all()
-
-    (
-        target_location_provinces,
-        target_location_districts,
-        target_location_zones,
-    ) = get_target_locations_domain(target_locations)
-
-    ActivityReportFormset = inlineformset_factory(
-        ProjectMonthlyReport,
-        ActivityPlanReport,
-        form=ActivityPlanReportForm,
-        can_delete=True,
-    )
-
-    # Create an instance of ActivityPlanFormSet using the project instance and form_kwargs
-    activity_report_formset = ActivityReportFormset()
-
-    # Get the prefix index from the request
-    prefix_index = request.POST.get("prefix_index")
-
-    activity_domain_id = request.POST.get("activity_domain", None)
-    activity_domain = None
-    if activity_domain_id:
-        activity_domain = get_object_or_404(ActivityDomain, pk=activity_domain_id)
-
-    # Create an instance of TargetLocationFormSet with a prefixed name
-    location_report_formset = TargetLocationReportFormSet(
-        prefix=f"locations_report_{activity_report_formset.prefix}-{prefix_index}"
-    )
-
-    # for target_location_form in target_location_formset.forms:
-    # Create a disaggregation formset for each target location form
-    location_report_form = location_report_formset.empty_form
-
-    # Set the Target locations domain based on the activity plan
-    activity_plan = request.POST.get("activity_plan", None)
-    if activity_plan:
-        location_report_form.fields["target_location"].queryset = TargetLocation.objects.filter(
-            activity_plan=activity_plan
-        )
-
-    # Check if the activity plan is selected
-    if activity_domain:
-        # Get clusters associated with the activity plan's domain
-        clusters = activity_domain.clusters.all()
-
-        # Get only the relevant facility types - related to cluster
-        location_report_form.fields["facility_site_type"].queryset = FacilitySiteType.objects.filter(
-            cluster__in=clusters
-        )
-
-        cluster_has_nhs_code = any(cluster.has_nhs_code for cluster in clusters)
-        # If at least one cluster has NHS code, add the NHS code field to the form
-        if cluster_has_nhs_code:
-            location_report_form.fields["nhs_code"] = forms.CharField(max_length=200, required=True)
-        else:
-            location_report_form.fields.pop("nhs_code", None)
-    else:
-        location_report_form.fields["facility_site_type"].queryset = FacilitySiteType.objects.all()
-
-    location_report_form.fields["province"].queryset = Location.objects.filter(id__in=target_location_provinces)
-    location_report_form.fields["district"].queryset = Location.objects.filter(id__in=target_location_districts)
-    location_report_form.fields["zone"].queryset = Location.objects.filter(id__in=target_location_zones)
-
-    disaggregation_report_formset = DisaggregationReportFormSet(
-        request.POST or None,
-        instance=location_report_form.instance,
-        prefix=f"disaggregation_report_{location_report_form.prefix}",
-    )
-    location_report_form.disaggregation_report_formset = disaggregation_report_formset
-
-    # Prepare context for rendering the target location form template
-    context = {
-        "location_report_form": location_report_form,
-    }
-
-    # Render the target location form template and generate HTML
-    html = render_to_string("project_reports/forms/location_report_empty_form.html", context)
-
-    # Return JSON response containing the generated HTML
-    return JsonResponse({"html": html})
+# @login_required
+# def get_location_report_empty_form(request):
+#     """Get an empty location Report form for a project"""
+#     # Get the project object based on the provided project ID
+#     project = get_object_or_404(Project, pk=request.POST.get("project"))
+#
+#     # Get all existing target locaitions for the project
+#     target_locations = project.targetlocation_set.select_related("province", "district", "zone").all()
+#
+#     (
+#         target_location_provinces,
+#         target_location_districts,
+#         target_location_zones,
+#     ) = get_target_locations_domain(target_locations)
+#
+#     ActivityReportFormset = inlineformset_factory(
+#         ProjectMonthlyReport,
+#         ActivityPlanReport,
+#         form=ActivityPlanReportForm,
+#         can_delete=True,
+#     )
+#
+#     # Create an instance of ActivityPlanFormSet using the project instance and form_kwargs
+#     activity_report_formset = ActivityReportFormset()
+#
+#     # Get the prefix index from the request
+#     prefix_index = request.POST.get("prefix_index")
+#
+#     activity_domain_id = request.POST.get("activity_domain", None)
+#     activity_domain = None
+#     if activity_domain_id:
+#         activity_domain = get_object_or_404(ActivityDomain, pk=activity_domain_id)
+#
+#     # Create an instance of TargetLocationFormSet with a prefixed name
+#     location_report_formset = TargetLocationReportFormSet(
+#         prefix=f"locations_report_{activity_report_formset.prefix}-{prefix_index}"
+#     )
+#
+#     # for target_location_form in target_location_formset.forms:
+#     # Create a disaggregation formset for each target location form
+#     location_report_form = location_report_formset.empty_form
+#
+#     # Set the Target locations domain based on the activity plan
+#     activity_plan = request.POST.get("activity_plan", None)
+#     if activity_plan:
+#         location_report_form.fields["target_location"].queryset = TargetLocation.objects.filter(
+#             activity_plan=activity_plan
+#         )
+#
+#     # Check if the activity plan is selected
+#     if activity_domain:
+#         # Get clusters associated with the activity plan's domain
+#         clusters = activity_domain.clusters.all()
+#
+#         # Get only the relevant facility types - related to cluster
+#         location_report_form.fields["facility_site_type"].queryset = FacilitySiteType.objects.filter(
+#             cluster__in=clusters
+#         )
+#
+#         cluster_has_nhs_code = any(cluster.has_nhs_code for cluster in clusters)
+#         # If at least one cluster has NHS code, add the NHS code field to the form
+#         if cluster_has_nhs_code:
+#             location_report_form.fields["nhs_code"] = forms.CharField(max_length=200, required=True)
+#         else:
+#             location_report_form.fields.pop("nhs_code", None)
+#     else:
+#         location_report_form.fields["facility_site_type"].queryset = FacilitySiteType.objects.all()
+#
+#     location_report_form.fields["province"].queryset = Location.objects.filter(id__in=target_location_provinces)
+#     location_report_form.fields["district"].queryset = Location.objects.filter(id__in=target_location_districts)
+#     location_report_form.fields["zone"].queryset = Location.objects.filter(id__in=target_location_zones)
+#
+#     disaggregation_report_formset = DisaggregationReportFormSet(
+#         request.POST or None,
+#         instance=location_report_form.instance,
+#         prefix=f"disaggregation_report_{location_report_form.prefix}",
+#     )
+#     location_report_form.disaggregation_report_formset = disaggregation_report_formset
+#
+#     # Prepare context for rendering the target location form template
+#     context = {
+#         "location_report_form": location_report_form,
+#     }
+#
+#     # Render the target location form template and generate HTML
+#     html = render_to_string("project_reports/forms/location_report_empty_form.html", context)
+#
+#     # Return JSON response containing the generated HTML
+#     return JsonResponse({"html": html})
 
 
 @cache_control(no_store=True)

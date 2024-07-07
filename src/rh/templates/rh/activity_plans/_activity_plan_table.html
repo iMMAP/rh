@@ -1,6 +1,9 @@
 {% load static %}
 
 <div class="content-block bottom-border table-container">
+    <div class="progress bg-red">
+        <div class="indeterminate bg-white"></div>
+    </div>
     {% comment %} Table Actions and filters {% endcomment %}
     <div class="page-top-panel bottom-border">
         <div class="actions-panel">
@@ -41,8 +44,7 @@
                             <a href="{% url 'activity-plans-update' row.id %}" class="btn btn-gray">Edit</a>
                             <a href="{% url 'target-locations-create' row.id %}" class="btn ">Add Target Location</a>
                             <button>
-                            <a hx-post="{% url 'activity-plans-delete' row.id %}" hx-trigger="click" hx-confirm="Do you want to delete `{{row}}` and its Target Locations ?" hx-target="closest tr" data-tippy-content="Delete Activity Plan" class="">
-                                <img class='htmx-indicator' style="width: 1.2rem;" src="{% static 'src/images/spinner.gif' %}" />
+                            <a hx-post="{% url 'activity-plans-delete' row.id %}" hx-trigger="click" hx-indicator=".progress" hx-confirm="Do you want to delete `{{row}}` and its Target Locations ?" hx-target="closest tr" data-tippy-content="Delete Activity Plan" class="">
                                 <span class="project-detail icon-trashbin"></span>
                             </a>
                             </button>

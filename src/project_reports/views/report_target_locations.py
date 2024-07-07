@@ -17,7 +17,6 @@ from ..forms import (
     TargetLocationReportForm,
     DisaggregationLocationReportForm,
     BaseDisaggregationLocationReportFormSet,
-
 )
 
 from rh.models import (
@@ -122,13 +121,17 @@ def list_report_target_locations(request, project, report, plan=None):
     if plan:
         report_plan = get_object_or_404(ActivityPlanReport.objects.select_related("monthly_report"), pk=plan)
     if report_plan:
-        report_locations = TargetLocationReport.objects.filter(activity_plan_report_id=report_plan.pk).order_by("-id").annotate(
-        report_disaggregation_locations_count=Count("disaggregationlocationreport")
-    )
+        report_locations = (
+            TargetLocationReport.objects.filter(activity_plan_report_id=report_plan.pk)
+            .order_by("-id")
+            .annotate(report_disaggregation_locations_count=Count("disaggregationlocationreport"))
+        )
     else:
-        report_locations = TargetLocationReport.objects.filter(activity_plan_report__monthly_report=report).order_by(
-            "-id"
-        ).annotate(report_disaggregation_locations_count=Count("disaggregationlocationreport"))
+        report_locations = (
+            TargetLocationReport.objects.filter(activity_plan_report__monthly_report=report)
+            .order_by("-id")
+            .annotate(report_disaggregation_locations_count=Count("disaggregationlocationreport"))
+        )
 
     paginator = Paginator(report_locations, 10)  # Show 10 activity plans per page
     page = request.GET.get("page", 1)
@@ -203,7 +206,9 @@ def update_report_target_locations(request, project, report, plan, location):
             messages.error(request, "The form is invalid. Please check the fields and try again.")
     else:
         location_report_form = TargetLocationReportForm(request.POST or None, instance=location_report)
-        report_disaggregation_formset = DisaggregationReportFormSet(request.POST or None, instance=location_report, plan_report=plan_report)
+        report_disaggregation_formset = DisaggregationReportFormSet(
+            request.POST or None, instance=location_report, plan_report=plan_report
+        )
 
     return render(
         request,

@@ -51,7 +51,7 @@ class TargetLocationReportForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         cluster_has_nhs_code = False
-        plan_report = kwargs.pop('report_plan', None)
+        plan_report = kwargs.pop("report_plan", None)
         super().__init__(*args, **kwargs)
 
         if "instance" in kwargs and kwargs["instance"]:
@@ -60,8 +60,7 @@ class TargetLocationReportForm(forms.ModelForm):
 
         if plan_report:
             cluster_has_nhs_code = any(
-                cluster.has_nhs_code
-                for cluster in plan_report.activity_plan.activity_domain.clusters.all()
+                cluster.has_nhs_code for cluster in plan_report.activity_plan.activity_domain.clusters.all()
             )
         nhs_code = f"{kwargs.get('prefix')}-nhs_code"
         has_nhs_code = nhs_code in kwargs.get("data", {})
@@ -105,6 +104,7 @@ TargetLocationReportFormSet = inlineformset_factory(
 #     extra=0,  # Number of empty forms to display
 #     can_delete=False,  # Allow deletion of existing forms
 # )
+
 
 class BaseDisaggregationLocationReportFormSet(BaseInlineFormSet):
     def __init__(self, *args, **kwargs):

@@ -50,6 +50,9 @@
         </div>
 
         <form method="post" class="form-container">
+            <div class="progress bg-red" style="height:2px">
+                <div class="indeterminate bg-white"></div>
+            </div>
             {% csrf_token %}
             <div class="inner-holder">
                 <div class="row">
@@ -66,6 +69,7 @@
                                         hx-trigger="change"
                                         hx-target="#{{form.activity_type.id_for_label}}" 
                                         hx-swap="innerHTML"
+                                        hx-indicator=".progress"
                                     >
                                         {% for domain in form.activity_domain %}
                                             {{domain}}
@@ -85,6 +89,7 @@
                                         hx-trigger="change"
                                         hx-target="#{{form.indicator.id_for_label}}" 
                                         hx-swap="innerHTML"
+                                        hx-indicator=".progress"
                                     >
                                         {% for type in form.activity_type %}
                                             {{type}}

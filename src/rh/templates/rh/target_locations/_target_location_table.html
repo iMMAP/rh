@@ -1,6 +1,9 @@
 {% load static %}
 
 <div class="content-block bottom-border table-container">
+    <div class="progress bg-red">
+        <div class="indeterminate bg-white"></div>
+    </div>
     {% comment %} Table Actions and filters {% endcomment %}
     <div class="page-top-panel bottom-border">
         <div class="actions-panel">
@@ -18,6 +21,7 @@
     {% comment %} Table {% endcomment %}
     {% if object_list %}
         <div class="table-wrapper-scrollable">
+           
             <table class="table all-projects-table">
                 <thead class="content-block ">
                     <tr> 
@@ -47,8 +51,8 @@
                         <td>
                             <a href="{% url 'target-locations-update' row.id %}" class="btn btn-gray">Edit</a> 
                             <button>
-                                <a hx-post="{% url 'target-locations-delete' row.id %}" hx-trigger="click" hx-confirm="Do you want to delete `{{row}}` and its dependencies ?" hx-target="closest tr" data-tippy-content="Delete Target Location" class="">
-                                    <img class='htmx-indicator' style="width: 1.2rem;" src="{% static 'src/images/spinner.gif' %}" />
+                                <a hx-post="{% url 'target-locations-delete' row.id %}" hx-indicator=".progress" hx-trigger="click" hx-confirm="Do you want to delete `{{row}}` and its dependencies ?" hx-target="closest tr" data-tippy-content="Delete Target Location" class="">
+                                    {% comment %} <img class='htmx-indicator' style="width: 1.2rem;" src="{% static 'src/images/spinner.gif' %}" /> {% endcomment %}
                                     <span class="project-detail icon-trashbin"></span>
                                 </a>
                             </button>

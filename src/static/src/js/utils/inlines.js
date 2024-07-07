@@ -81,6 +81,22 @@ const formset = (elements, opts) => {
 		e.preventDefault();
 		const template = document.getElementById(`${options.prefix}-empty`);
 		const row = template.cloneNode(true);
+		const newRowSelect = row.querySelector('select');
+
+		// delete the prev selected options
+		const selects = document.querySelectorAll('table tbody tr.form-row select');
+		for (const select of selects) {
+			const selectedOptions = Array.from(select.options).filter(option => option.selected);
+			for(const opt of selectedOptions){
+				if (newRowSelect) {
+					const optionToRemove = Array.from(newRowSelect.options).find(option => option.value === opt.value);
+					if (optionToRemove) {
+						optionToRemove.remove();
+					}
+				}
+			}
+		}
+		
 		row.classList.remove(options.emptyCssClass);
 		row.classList.add(options.formCssClass);
 		row.id = `${options.prefix}-${nextIndex}`;

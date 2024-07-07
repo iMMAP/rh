@@ -9,6 +9,8 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.utils import timezone
 from django.contrib import messages
+from django.db.models import Count
+
 
 from rh.models import (
     ActivityDetail,
@@ -367,7 +369,9 @@ def details_monthly_progress_view(request, project, report):
     """Project Monthly Report Read View"""
     project = get_object_or_404(Project, pk=project)
     monthly_report = get_object_or_404(ProjectMonthlyReport, pk=report)
-    activity_reports = monthly_report.activityplanreport_set.select_related("activity_plan", "indicator")
+    activity_reports = monthly_report.activityplanreport_set.select_related("activity_plan", "indicator").annotate(
+            report_target_location_count=Count("targetlocationreport")
+        )
 
     context = {
         "project": project,

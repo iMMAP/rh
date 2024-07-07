@@ -370,8 +370,8 @@ def details_monthly_progress_view(request, project, report):
     project = get_object_or_404(Project, pk=project)
     monthly_report = get_object_or_404(ProjectMonthlyReport, pk=report)
     activity_reports = monthly_report.activityplanreport_set.select_related("activity_plan", "indicator").annotate(
-            report_target_location_count=Count("targetlocationreport")
-        )
+        report_target_location_count=Count("targetlocationreport")
+    )
 
     context = {
         "project": project,

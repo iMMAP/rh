@@ -87,6 +87,7 @@ class BeneficiaryType(models.Model):
         on_delete=models.SET_NULL,
         limit_choices_to={"level": 0},
     )
+
     clusters = models.ManyToManyField(Cluster)
 
     name = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
@@ -102,7 +103,7 @@ class BeneficiaryType(models.Model):
     updated_at = models.DateTimeField(auto_now=True, null=True)
 
     def __str__(self):
-        return self.name
+        return f"[{self.type}] {self.name}"
 
     class Meta:
         verbose_name = "Beneficiary Type"
@@ -708,14 +709,17 @@ class Disaggregation(models.Model):
 
 
 class DisaggregationLocation(models.Model):
-    active = models.BooleanField(default=True)
-    target_location = models.ForeignKey(TargetLocation, on_delete=models.CASCADE, null=True, blank=True)
-    disaggregation = models.ForeignKey(Disaggregation, on_delete=models.CASCADE, null=True, blank=True)
+    target_location = models.ForeignKey(TargetLocation, on_delete=models.CASCADE)
+    disaggregation = models.ForeignKey(Disaggregation, on_delete=models.CASCADE)
 
-    target = models.IntegerField(default=0, null=True, blank=True)
+    target = models.IntegerField(default=0)
+    active = models.BooleanField(default=True)
 
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, null=True)
+
+    class Meta:
+        unique_together = ("target_location", "disaggregation")
 
     def __str__(self):
         return f"{self.disaggregation.name}"

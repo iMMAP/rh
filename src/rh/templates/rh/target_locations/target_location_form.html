@@ -75,14 +75,40 @@
                                 <div class="field-col">
                                     <div class="select-field is-required">
                                         <label for="{{target_location_form.province.id_for_label}}" >Province / State</label>
-                                        {{ target_location_form.province }}
+                                        <select 
+                                            name="{{ target_location_form.province.name }}" 
+                                            id="{{target_location_form.province.id_for_label}}" 
+                                            hx-get="{% url 'get-locations-details' %}" 
+                                            hx-target="#{{target_location_form.district.id_for_label}}" 
+                                            hx-swap="innerHTML"
+                                            hx-trigger="change"
+                                            required
+                                        >
+                                            {% for province in target_location_form.province %}
+                                                {{province}}
+                                            {% endfor %}
+                                        </select>
                                         <div class="sign-up-field-error">{{ target_location_form.province.errors}}</div>
                                     </div>
                                 </div>
                                 <div class="field-col">
                                     <div class="input-field is-required">
                                         <label for="{{target_location_form.district.id_for_label}}">District</label>
-                                        {{ target_location_form.district }}
+                                        <select 
+                                            name="{{ target_location_form.district.name}}" 
+                                            id="{{target_location_form.district.id_for_label}}" 
+                                            required
+                                            {% if target_location_form.zone.choices %}
+                                                hx-get="{% url 'ajax-load-locations' %}" 
+                                                hx-target="#{{target_location_form.zone.id_for_label}}" 
+                                                hx-swap="innerHTML"
+                                                hx-trigger="change"
+                                            {% endif %}
+                                        >
+                                            {% for district in target_location_form.district %}
+                                                {{district}}
+                                            {% endfor %}
+                                        </select>
                                         <div class="sign-up-field-error">{{ target_location_form.district.errors}}</div>
                                     </div>
                                 </div>
@@ -200,33 +226,52 @@
                             <fieldset class="table-wrapper-scrollable">
                                 <table class="table ">
                                     <thead class="content-block">
-                                        <tr >
-                                            {% for form in disaggregation_formset.empty_form.visible_fields %}
-                                                <th> {{ form.label }} </th>
+                                        <tr>
+                                            {% for field in disaggregation_formset.form.fields %}
+                                                <th class="column-{{ field.name }}{% if field.required %} required{% endif %}{% if field.widget.is_hidden %} hidden{% endif %}">
+                                                    {{ field|capfirst }}
+                                                </th>
                                             {% endfor %}
+                                            {% if disaggregation_formset.can_delete%}
+                                                <th>Delete?</th>
+                                            {% endif %}
                                         </tr>
                                     </thead>
+                                    
                                     <tbody>
                                         {% for form in disaggregation_formset %}
-
-                                            {% if form.non_field_errors %}
-                                                <tr class="row-form-errors">
-                                                    <td colspan="2">{{ form.non_field_errors }}</td>
-                                                </tr>
+                                           {% if form.non_field_errors %}
+                                                {% for error in form.non_field_errors %}
+                                                    <tr class="row-form-errors">
+                                                        <td>{{ error }}</td>
+                                                    </tr>
+                                                {% endfor %}
                                             {% endif %}
-                                            {% if form.errors %}
+                                            {% comment %} {% if form.errors %}
                                                 <tr class="row-form-errors">
                                                     <td colspan="2">{{ form.errors }}</td>
                                                 </tr>
-                                            {% endif %}
-
+                                            {% endif %} {% endcomment %}
                                             <tr
-                                                class="form-row {% if forloop.last %} empty-form{% endif %}"
+                                                class="form-row {% if forloop.last %} empty-form{% endif %} {% if form.instance.pk %}has_original{% endif %} "
                                                 id="{{ disaggregation_formset.prefix }}-{% if forloop.last %}empty{% else %}{{ forloop.counter0 }}{% endif %}"
                                             >
+
                                                 {% for field in form %}
-                                                    <td>{{ field }}</td>
+                                                    {% if field.name != "DELETE" %}
+                                                    <td 
+                                                        class="{% if field.name %}field-{{ field.name }}{% endif %}{% if field.is_hidden %} hidden{% endif %} "
+                                                    >
+                                                        {{ field.errors.as_ul }}
+                                                        {{ field}}
+                                                    </td>
+                                                    {% endif %}
                                                 {% endfor %}
+                                                <td class="delete" style="">
+                                                    {% if form.instance.pk %}
+                                                        {{ form.DELETE}}
+                                                    {% endif %}
+                                                </td>
                                             </tr>
                                         {% endfor %}
                                     </tbody>
@@ -235,13 +280,14 @@
                             </fieldset>
                         </div>
                     </div>
-                </div>
                 <div class="plan-submit-holder">
                     <div></div>
                     <div>
                         <input type="submit" name="_addanother" class="btn btn-gray" value="Save and add another">
                         <input type="submit" name="_continue" class="btn btn-gray" value="Save and continue editing" >
                         <input type="submit" name="_save" class="btn btn-red" value="Save" >
+                    </div>
+                </div>
             </form>
         </div>
     </div>

@@ -1,6 +1,5 @@
 from django import forms
 from django.contrib.auth.models import User
-from django.forms.models import inlineformset_factory
 from django.forms import BaseInlineFormSet
 from django.urls import reverse_lazy
 
@@ -11,10 +10,15 @@ from .models import (
     Currency,
     DisaggregationLocation,
     Donor,
+    Disaggregation,
     Organization,
     Project,
     ProjectIndicatorType,
     TargetLocation,
+    BeneficiaryType,
+    Indicator,
+    ActivityType,
+    Location,
 )
 
 
@@ -102,19 +106,8 @@ class TargetLocationForm(forms.ModelForm):
             "project",
             "active",
             "state",
-            "locations_group_by",
-            "group_by_province",
-            "group_by_district",
-            "group_by_custom",
             "activity_plan",
         )
-        # widgets = {
-        #     # "country": forms.Select(attrs={"disabled": "true", "required":"","class": "cursor-none"}),
-        #     # "nhs_code": forms.widgets.TextInput(),
-        #     # "locations_group_by": forms.widgets.RadioSelect(),
-        #     # "district": forms.Select(attrs={"locations-queries-url": reverse_lazy("ajax-load-locations")}),
-        #     # "zone": forms.Select(attrs={"locations-queries-url": reverse_lazy("ajax-load-locations")}),
-        # }
 
     def __init__(self, *args, **kwargs):
         user = kwargs.pop("user", None)
@@ -124,9 +117,29 @@ class TargetLocationForm(forms.ModelForm):
         self.fields["country"].initial = user.profile.country
         self.fields["country"].required = True  # Ensure the field is required
 
+        self.fields["province"].required = True
         self.fields["province"].queryset = self.fields["province"].queryset.filter(level=1, parent=user.profile.country)
-        self.fields["district"].queryset = self.fields["district"].queryset.filter(level=2)
-        self.fields["zone"].queryset = self.fields["zone"].queryset.filter(level=3)
+
+        self.fields["district"].queryset = Location.objects.none()
+        self.fields["district"].required = True
+
+        self.fields["zone"].queryset = Location.objects.none()
+
+        if self.data:
+            # Creating
+            try:
+                province_id = int(self.data.get("province"))
+                self.fields["district"].queryset = Location.objects.filter(level=2, parent=province_id)
+
+                district_id = int(self.data.get("district"))
+                self.fields["zone"].queryset = Location.objects.filter(level=3, parent=district_id)
+            except Exception:
+                raise forms.ValidationError("Do not mess with the form!")
+
+        elif self.instance.pk:
+            # Updating
+            self.fields["district"].queryset = self.instance.province.children.all()
+            self.fields["zone"].queryset = self.instance.district.children.all()
 
     def clean_country(self):
         # Prevent changes to the country field
@@ -137,15 +150,6 @@ class TargetLocationForm(forms.ModelForm):
             raise forms.ValidationError("Country field cannot be changed.")
 
         return initial_country
-
-
-TargetLocationFormSet = inlineformset_factory(
-    ActivityPlan,
-    TargetLocation,
-    form=TargetLocationForm,
-    extra=2,  # Number of empty forms to display
-    can_delete=True,  # Allow deletion of existing forms
-)
 
 
 class DisaggregationLocationForm(forms.ModelForm):
@@ -160,22 +164,21 @@ class DisaggregationLocationForm(forms.ModelForm):
         activity_plan = kwargs.pop("activity_plan", None)
         super().__init__(*args, **kwargs)
 
+        self.fields["disaggregation"].required = True
+        self.fields["disaggregation"].empty_value = "hell"
+        self.fields["target"].required = True
+
         if activity_plan:
             self.fields["disaggregation"].queryset = self.fields["disaggregation"].queryset.filter(
                 indicators=activity_plan.indicator
             )
             # keep only the initial
-            # self.fields["disaggregation"].choices = []
-        # else:
-        # print("ELSE ===  NO Target Location in Form",kwargs)
-        #     # Do not display already existing relationships, filter based on target_location.activity_plan.indicator
-        #     existing_disaggregations = DisaggregationLocation.objects.filter(
-        #         target_location=target_location
-        #     ).values_list("disaggregation", flat=True)
-        #     # existing_disaggregation_ids = existing_disaggregations.values_list('disaggregation', flat=True)
-        #     self.fields["disaggregation"].queryset = self.fields["disaggregation"].queryset.exclude(
-        #         id__in=existing_disaggregations
-        #     )
+
+        if self.instance.pk:
+            self.fields["disaggregation"].queryset = Disaggregation.objects.filter(
+                disaggregationlocation__target_location=self.instance.target_location,
+                disaggregationlocation__disaggregation=self.instance.disaggregation,
+            )
 
 
 class BaseDisaggregationLocationFormSet(BaseInlineFormSet):
@@ -202,25 +205,35 @@ class ActivityPlanForm(forms.ModelForm):
         if project is None:
             raise forms.ValidationError("Project cannot be None.")
 
-        # Updating
+        self.fields["activity_domain"].required = True
+        self.fields["activity_type"].required = True
+        self.fields["indicator"].required = True
+        self.fields["beneficiary"].required = True
 
-        # Creating
+        self.fields["activity_domain"].queryset = project.activity_domains.all()
+        self.fields["beneficiary"].queryset = BeneficiaryType.objects.filter(clusters__in=project.clusters.all())
 
-        self.fields["activity_domain"] = forms.ModelChoiceField(
-            queryset=project.activity_domains.all(),
-            required=True,
-            empty_label="------",
-            widget=forms.Select(attrs={"class": "custom-select"}),
-        )
+        # The choices, does not validate the data ,(self.fields["indicator"].widget.choices = [])
+        # Updating the queryset for validation purposes
+        # If the data does not matche the queryset, it throws error
+        self.fields["indicator"].queryset = Indicator.objects.none()
 
+        if self.data:
+            try:
+                # Creating
+                activity_domain_id = int(self.data.get("activity_domain"))
+                self.fields["activity_type"].queryset = ActivityType.objects.filter(
+                    activity_domain_id=activity_domain_id
+                )
 
-ActivityPlanFormSet = inlineformset_factory(
-    parent_model=Project,
-    model=ActivityPlan,
-    form=ActivityPlanForm,
-    extra=0,
-    can_delete=True,
-)
+                activity_type_id = int(self.data.get("activity_type"))
+                self.fields["indicator"].queryset = Indicator.objects.filter(activity_types=activity_type_id)
+            except Exception:
+                raise forms.ValidationError("Do not mess with the form!")
+        elif self.instance.pk:
+            # Updating
+            self.fields["activity_type"].queryset = self.instance.activity_domain.activitytype_set.all()
+            self.fields["indicator"].queryset = self.instance.activity_type.indicator_set.all()
 
 
 class BudgetProgressForm(forms.ModelForm):

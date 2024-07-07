@@ -82,6 +82,11 @@ urlpatterns = [
         name="activity-plans-update",
     ),
     path(
+        "activity-plans/<int:pk>/delete/",
+        activity_plans.delete_activity_plan,
+        name="activity-plans-delete",
+    ),
+    path(
         "activity-plans/project/<int:project>/create",
         activity_plans.create_activity_plan,
         name="activity-plans-create",
@@ -90,11 +95,6 @@ urlpatterns = [
         "projects/<int:project>/activity_plan/<str:plan>/copy/",
         activity_plans.copy_activity_plan,
         name="copy_plan",
-    ),
-    path(
-        "project/activity_plan/<str:pk>/delete/",
-        activity_plans.delete_activity_plan,
-        name="delete_plan",
     ),
     path(
         "projects/<int:project>/target-locations",
@@ -123,9 +123,9 @@ urlpatterns = [
         name="copy_location",
     ),
     path(
-        "projects/target_location/<str:pk>/delete",
+        "target-locations/<int:pk>/delete",
         target_locations.delete_target_location,
-        name="delete_location",
+        name="target-locations-delete",
     ),
     path(
         "projects/<int:project>/project_plan/review/",

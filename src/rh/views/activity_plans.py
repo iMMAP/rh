@@ -1,5 +1,6 @@
 from django.contrib.auth.decorators import login_required
-from django.http import JsonResponse
+from django.views.decorators.http import require_POST
+from django.http import JsonResponse, HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 
@@ -86,17 +87,16 @@ def create_activity_plan(request, project):
 
 
 @login_required
+@require_POST
 def delete_activity_plan(request, pk):
     """Delete the specific activity plan"""
     activity_plan = get_object_or_404(ActivityPlan, pk=pk)
-    if activity_plan:
-        activity_plan.delete()
 
-    url = reverse("create_project_activity_plan", args=[activity_plan.project.pk])
+    activity_plan.delete()
 
-    # Return the URL in a JSON response
-    response_data = {"redirect_url": url}
-    return JsonResponse(response_data)
+    messages.success(request, "Activity plan and its target locations has been delete.")
+
+    return HttpResponse(status=200)
 
 
 @login_required

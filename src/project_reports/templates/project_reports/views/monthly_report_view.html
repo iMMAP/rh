@@ -10,13 +10,15 @@
                 <ul class="buttons-list-inline">
                     {% if monthly_report.pk  %}
                     <li>
-                        <a href="#"
-                          data-url="{% url 'copy_project_monthly_report' monthly_report.pk %}"
-                          data-type="copy"
-                          data-name="last month activities"
-                          class="btn btn-gray show-sw-action-popup">
-                          <span class="btn-text">Copy last month activities</span>
-                          <span class="icon-copy-outline"></span>
+                        <a hx-post="{% url 'copy_project_monthly_report' monthly_report.pk %}"
+                           hx-trigger="click"
+                           hx-swap="none"
+                           hx-confirm="Are you sure you want to duplicate last month activities?"
+                           data-tippy-content="Copy last month approved report"
+                           class="btn btn-gray">
+                            <img class='htmx-indicator' style="width: 1rem;" src="{% static 'src/images/spinner.gif' %}" />
+                            <span class="icon-copy-outline"></span>
+                            Copy last month activities
                         </a>
                     </li>
                     {% endif %}
@@ -102,8 +104,7 @@
             </div>
         </div>
         <br/>
-        <div class="table-container">
-            <div class="project-monthly_report read-only">
+        <div class="project-monthly_report read-only">
                 <div class="row">
                     <div class="col">
                         <div class="multiple-fields-row two-items">
@@ -172,7 +173,6 @@
                     </div>
                 </div>
             </div>
-        </div>
 
         <div class="activity-planning read-only">
             <div class="activity-block-holder">
@@ -189,410 +189,8 @@
         </div>
 
         {% include "project_reports/report_activity_plans/_activity_plan_table.html"  with object_list=activity_reports.all %}
-
-
-        <!--{% for activity_report in activity_reports %}
-            <div class="monthly-progress monthly-accordion read-only table-container">
-                <div class="inner-holder">
-                    <a href="#" class="block-top monthly-accordion-opener">
-                        <span class="title">
-                            <span class="tooltip-info icon-info" data-tippy-content="Lorem lorem lorem"></span>
-                            {{ activity_report.activity_plan.activity_domain.name }}
-                        </span>
-                        {% if activity_report.target_achieved %}
-                        <span class="people">
-                            <span class="icon-group"></span>
-                            Target Achieved
-                            - <span id="{{ form.prefix }}-people-count">
-                                {{ activity_report.target_achieved }}
-                            </span>
-                        </span>
-                        {% endif %}
-
-                        {% if activity_report.activity_plan.total_target %}
-                        <span class="people">
-                            <span class="icon-group"></span>
-                            Target Required
-                            - <span id="{{ form.prefix }}-people-count">
-                                {{ activity_report.activity_plan.total_target }}
-                            </span>
-                        </span>
-                        {% endif %}
-                    </a>
-
-                    <div class="monthly-accordion-slide">
-                        <div class="row">
-                            <div class="col">
-                                <div class="multiple-fields-row two-items">
-                                    <div class="field-col">
-                                        <div class="select-field">
-                                        <label>Activity Domain</label>
-                                        <span class="text-read-only">{{activity_report.activity_plan.activity_domain}}</span>
-                                        </div>
-                                    </div>
-                                    <div class="field-col">
-                                        <div class="select-field">
-                                        <label>Activity Type</label>
-
-                                        <span class="text-read-only">{{activity_report.activity_plan.activity_type}}</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col">
-                                <div class="field-col">
-                                    <div class="select-field">
-                                    <label>Activity Details</label>
-
-                                    <span class="text-read-only">{{activity_report.activity_plan.activity_detail}}</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col">
-                                <div class="field-col">
-                                    <div class="select-field">
-                                        <label>Indicator</label>
-                                        <span class="text-read-only">{{activity_report.indicator}}</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col">
-                                <div class="multiple-fields-row two-items">
-                                    <div class="field-col">
-                                        <div class="select-field">
-                                            <label>Report Types</label>
-                                            <span class="text-read-only m2m-badges">
-                                                {% for report_type in activity_report.report_types.all %}
-                                                <span class="btn btn-red"> {{ report_type.name }}</span>
-                                                {% endfor %}
-                                            </span>
-                                        </div>
-                                    </div>
-                                    <div class="field-col">
-                                        <div class="select-field">
-                                            <label>Implementing Partners</label>
-                                            <span class="text-read-only m2m-badges">
-                                                {% for implementing_partner in activity_report.implementing_partners.all %}
-                                                <span class="btn btn-red"> {{ implementing_partner.code }}</span>
-                                                {% endfor %}
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        {% if activity_report.indicator.enable_retargeting%}
-                        <div class="row mtb20">
-                            <div class="col col-lg">
-                                <div class="multiple-fields-row two-items">
-                                    <div class="field-col">
-                                        <div class="input-field">
-                                            <span class="label">Beneficiaries Retargeted due to seasonality</span>
-                                            <div class="input-holder">
-                                                <span class="text-read-only">
-                                                    {% if activity_report.seasonal_retargeting %}
-                                                    Yes
-                                                    {% else %}
-                                                    No
-                                                    {% endif %}
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="field-col">
-                                        <div class="input-field">
-                                            <span class="label">Beneficiaries Retargeted due to change in modality</span>
-                                            <div class="input-holder">
-                                                <span class="text-read-only">
-                                                    {% if activity_report.modality_retargeting %}
-                                                    Yes
-                                                    {% else %}
-                                                    No
-                                                    {% endif %}
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        {% endif %}
-
-                        <div class="field-col">
-                            <div class="input-field">
-                                <label>Beneficiary Status</label>
-                                <span class="text-read-only">
-                                    <span class="">
-                                        {{ activity_report.get_beneficiary_status_display }}
-                                    </span>
-                                </span>
-                            </div>
-                        </div>
-
-                        &lt;!&ndash; Indicator types start to diaplay &ndash;&gt;
-                        <div class="multiple-fields-row">
-                            {% if activity_report.indicator.package_type %}
-                            <div class="field-col">
-                                <div class="select-field">
-                                    <label>Package Type</label>
-                                    <span class="text-read-only">{{activity_report.package_type}}</span>
-                                </div>
-                            </div>
-                            {% endif %}
-                            {% if activity_report.indicator.unit_type %}
-                            <div class="field-col">
-                                <div class="select-field">
-                                    <label>Unit Type</label>
-                                    <span class="text-read-only">{{activity_report.unit_type}}</span>
-                                </div>
-                            </div>
-                            {% endif %}
-                            {% if activity_report.indicator.grant_type %}
-                            <div class="field-col">
-                                <div class="select-field">
-                                    <label>Grant Type</label>
-                                    <span class="text-read-only">{{activity_report.grant_type}}</span>
-                                </div>
-                            </div>
-                            {% endif %}
-                            {% if activity_report.indicator.implement_modility_type %}
-                            <div class="field-col">
-                                <div class="select-field">
-                                    <label>Implement Modility Type</label>
-                                    <span class="text-read-only">{{activity_report.implement_modility_type}}</span>
-                                </div>
-                            </div>
-                            {% endif %}
-                            {% if activity_report.indicator.transfer_mechanism_type %}
-                            <div class="field-col">
-                                <div class="select-field">
-                                    <label>Transfer Mechanism Type</label>
-                                    <span class="text-read-only">{{activity_report.transfer_mechanism_type}}</span>
-                                </div>
-                            </div>
-                            {% endif %}
-                            {% if activity_report.indicator.transfer_category %}
-                            <div class="field-col">
-                                <div class="select-field">
-                                    <label>Transfer Category</label>
-                                    <span class="text-read-only">{{activity_report.transfer_category}}</span>
-                                </div>
-                            </div>
-                            {% endif %}
-                            {% if activity_report.indicator.currency %}
-                            <div class="field-col">
-                                <div class="select-field">
-                                    <label>Currency</label>
-                                    <span class="text-read-only">{{activity_report.currency}}</span>
-                                </div>
-                            </div>
-                            {% endif %}
-                        </div>
-
-                        <div class="target_location-block target-location-accordion">
-                            <div class="inner-holder">
-                                <div class="block-top target-location-accordion-opener">
-                                    <div class="location-block-holder">
-                                        <div class="block-top-title">
-                                            <div class="title">
-                                                Reporting Target Locations
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <span class="btn btn-red" style="float:right"> {{ activity_report.targetlocationreport_set.all | length }}</span>
-                                </div>
-                                <div class="target-location-accordion-slide js-acc-hidden">
-                                {% for location_report in activity_report.targetlocationreport_set.all %}
-                                    <div class="target-location read-only">
-                                        <div class="location-block-holder">
-                                            <div class="inner-holder">
-                                                <div class="block-top">
-                                                    <span class="title">
-                                                        {% if location_report.province %}
-                                                        {{ location_report.province }},
-                                                        {% endif %}
-                                                        {{ location_report.district }}
-                                                    </span>
-                                                    {% if location_report.pk %}
-                                                        <button
-                                                            data-url="{% url 'delete_location_report' location_report.pk %}"
-                                                            data-type="delete"
-                                                            data-name="Location Report"
-                                                            class="btn btn-gray show-sw-action-popup">
-                                                                <span class="btn-text">Delete</span>
-                                                                <span class="icon-trashbin-outline"></span>
-                                                        </button>
-                                                    {% endif %}
-                                                </div>
-                                                <div class="row">
-                                                    <div class="col col-lg">
-                                                        <div class="field-col">
-                                                            <div class="select-field is-required">
-                                                                <span class="label">Project Target Location</span>
-                                                                <span class="text-read-only">{{ location_report.target_location }}</span>
-                                                            </div>
-                                                        </div>
-                                                        <div class="multiple-fields-row {% if location_report.zone %}three{% else %}two{% endif %}-items">
-                                                            <div class="field-col">
-                                                                <div class="select-field is-required">
-                                                                    <span class="label">Province</span>
-                                                                    <span class="text-read-only">{{ location_report.province }}</span>
-                                                                </div>
-                                                            </div>
-                                                            <div class="field-col">
-                                                                <div class="input-field">
-                                                                    <span class="label">District</span>
-                                                                    <div class="input-holder">
-                                                                        <span class="text-read-only">{{ location_report.district }}</span>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            {% if location_report.zone %}
-                                                                <div class="field-col">
-                                                                    <div class="input-field">
-                                                                        <span class="label">Zone</span>
-                                                                        <div class="input-holder">
-                                                                            <span class="text-read-only">{{ location_report.district }}</span>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            {% endif %}
-                                                        </div>
-                                                    </div>
-                                                    <div class="col">
-                                                        <div class="multiple-fields-row {% if location_report.nhs_code %}three{% else %}two{% endif %}-items">
-                                                            <div class="field-col">
-                                                                <div class="select-field ">
-                                                                    <span class="label">Location Type</span>
-                                                                    <span class="text-read-only">{{ location_report.location_type }}</span>
-                                                                </div>
-                                                            </div>
-                                                            {% if location_report.nhs_code %}
-                                                            <div class="field-col">
-                                                                <div class="input-field">
-                                                                    <span class="label">NHS Code</span>
-                                                                    <div class="input-holder">
-                                                                        <span class="text-read-only">{{ location_report.nhs_code }}</span>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            {% endif %}
-                                                            <div class="field-col">
-                                                                <div class="input-field">
-                                                                    <span class="label">Facility Monitoring</span>
-                                                                    <div class="input-holder">
-                                                                        <span class="text-read-only">
-                                                                            {% if location_report.facility_monitoring %}
-                                                                            Yes
-                                                                            {% else %}
-                                                                            No
-                                                                            {% endif %}
-                                                                        </span>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <br/>
-                                                <div class="row">
-                                                    {% if location_report.facility_monitoring %}
-                                                    <div class="col">
-                                                        <div class="multiple-fields-row two-items">
-                                                            <div class="field-col">
-                                                                <div class="select-field">
-                                                                    <span class="label">Facility / Site Name</span>
-                                                                    <span class="text-read-only">{{ location_report.facility_name }}</span>
-                                                                </div>
-                                                            </div>
-                                                            <div class="field-col">
-                                                                <div class="input-field">
-                                                                    <span class="label">Facility / Site ID</span>
-                                                                    <div class="input-holder">
-                                                                        <span class="text-read-only">{{ location_report.facility_id }}</span>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col">
-                                                        <div class="multiple-fields-row two-items">
-                                                            <div class="field-col">
-                                                                <div class="input-field">
-                                                                    <span class="label">Facility / Site Latitude</span>
-                                                                    <div class="input-holder">
-                                                                        <span class="text-read-only">{{ location_report.facility_lat }}</span>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="field-col">
-                                                                <div class="input-field">
-                                                                    <span class="label">Facility / Site Longitude</span>
-                                                                    <div class="input-holder">
-                                                                        <span class="text-read-only">{{ location_report.facility_long }}</span>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    {% endif %}
-                                                </div>
-                                                <br/>
-                                                <div class="disaggregation-block disaggregation-accordion">
-                                                    <div class="inner-holder">
-                                                        <a href="#" class="block-top disaggregation-accordion-opener">
-                                                            <div class="location-block-holder">
-                                                                <div class="block-top-title">
-                                                                    <div class="title">
-                                                                        Reporting Disaggregations
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <span class="btn btn-red" style="float:right"> {{ location_report.disaggregationlocationreport_set.all | length }}</span>
-                                                        </a>
-                                                        <div class="disaggregation-accordion-slide">
-                                                            {% for disaggregation_report in location_report.disaggregationlocationreport_set.all %}
-                                                                <div class="location-inner-holder">
-                                                                    <div class="col col-lg">
-                                                                        <div class="multiple-fields-row two-items">
-                                                                            <div class="field-col">
-                                                                                <div class="select-field">
-                                                                                    <span class="label">Disaggregation</span>
-                                                                                    <span class="text-read-only">{{ disaggregation_report.disaggregation }}</span>
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="field-col">
-                                                                                <div class="input-field">
-                                                                                    <span class="label">Target</span>
-                                                                                    <div class="input-holder">
-                                                                                        <span class="text-read-only">{{ disaggregation_report.target }}</span>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                <br/>
-                                                            {% endfor %}
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                {% endfor %}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-        {% endfor %}-->
-
-
-        <div class="monthly-reporting table-container">
+        <br/>
+        <div class="monthly-reporting">
             <div class="row">
                 <div class="col">
                     <div class="input-field">
@@ -604,7 +202,7 @@
         </div>
 
         {% if monthly_report.comments and monthly_report.state == 'reject' %}
-        <div class="monthly-reporting table-container">
+        <div class="monthly-reporting">
             <div class="row">
                 <div class="col">
                     <div class="input-field">
@@ -616,12 +214,16 @@
         </div>
         {% endif %}
 
-        <div class="monthly-progress-submit-holder text-center table-container">
+        <div class="monthly-progress-submit-holder text-center">
             {% if monthly_report.state in "pending,todo,reject" %}
-                <a  data-url="{% url 'submit_monthly_report' monthly_report.pk %}"
-                    data-button="Submit Report"
-                    class="btn btn-red show-sw-confirm-button">
-                    <span class="btn-text">Submit Monthly Report</span>
+                <a hx-post="{% url 'submit_monthly_report' monthly_report.pk %}"
+                   hx-trigger="click"
+                   hx-swap="none"
+                   hx-confirm="Are you sure you want to submit report?"
+                   data-tippy-content="Submit report"
+                   class="btn btn-red">
+                    <img class='htmx-indicator' style="width: 1rem;" src="{% static 'src/images/spinner.gif' %}" />
+                    Submit Monthly Report
                 </a>
             {% elif monthly_report.state == "submit" %}
                 <a data-url="{% url 'approve_monthly_report' monthly_report.pk %}"

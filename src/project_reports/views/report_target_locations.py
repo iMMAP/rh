@@ -231,7 +231,6 @@ def update_report_target_locations(request, project, report, plan, location):
 def delete_location_report_view(request, location_report):
     """Delete the target location report"""
     location_report = get_object_or_404(TargetLocationReport, pk=location_report)
-    plan_report = location_report.activity_plan_report
     monthly_report = location_report.activity_plan_report.monthly_report
     if location_report:
         location_report.delete()

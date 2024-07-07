@@ -4,7 +4,6 @@ from . import dashboards as dashboard_views
 from . import exports as export_views
 from .views.views import (
     import_monthly_reports,
-    load_target_locations_details,
 )
 from .views import (
     report_activity_plans as plan_views,
@@ -69,7 +68,6 @@ urlpatterns = [
         report_views.reject_monthly_report_view,
         name="reject_monthly_report",
     ),
-
     # Activity Plan Report URLS
     path(
         "project/<str:project>/monthly_progress/<str:report>/report-activity-plans/view",
@@ -81,7 +79,6 @@ urlpatterns = [
         plan_views.update_report_activity_plan,
         name="update_report_activity_plans",
     ),
-
     # Location Report URLS
     path(
         "project/<str:project>/monthly_progress/<str:report>/report-plan/<str:plan>/report-target-locations/create",
@@ -113,8 +110,6 @@ urlpatterns = [
         location_views.delete_location_report_view,
         name="delete_location_report",
     ),
-
-
     # Exports
     path(
         "project/monthly_progress/export/<str:report>/",
@@ -126,9 +121,6 @@ urlpatterns = [
         import_monthly_reports,
         name="import_monthly_reports",
     ),
-
-
-
     # Dashboard Paths
     path(
         "projects/monthly_reports/dashboard/",

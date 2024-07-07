@@ -201,9 +201,7 @@ def copy_project_monthly_report_view(request, report):
 
                 # Iterate through disaggregation locations reports and copy them to the new location report.
                 for disaggregation_location_report in disaggregation_location_reports:
-                    success = copy_disaggregation_location_reports(
-                        new_location_report, disaggregation_location_report
-                    )
+                    copy_disaggregation_location_reports(new_location_report, disaggregation_location_report)
         messages.success(request, "Report activities copied successfully.")
 
     else:
@@ -213,9 +211,9 @@ def copy_project_monthly_report_view(request, report):
     monthly_report.state = "todo"
     monthly_report.save()
 
-    url = reverse_lazy('list_report_activity_plans',
-                       kwargs={'project': monthly_report.project.pk,
-                               'report': monthly_report.pk})
+    url = reverse_lazy(
+        "list_report_activity_plans", kwargs={"project": monthly_report.project.pk, "report": monthly_report.pk}
+    )
     return HTTPResponseHXRedirect(redirect_to=url)
 
 
@@ -410,9 +408,9 @@ def submit_monthly_report_view(request, report):
     # Return the URL in a JSON response
     # response_data = {"redirect_url": url}
     # return JsonResponse(response_data)
-    url = reverse_lazy('view_monthly_report',
-                       kwargs={'project': monthly_report.project.pk,
-                               'report': monthly_report.pk})
+    url = reverse_lazy(
+        "view_monthly_report", kwargs={"project": monthly_report.project.pk, "report": monthly_report.pk}
+    )
     return HTTPResponseHXRedirect(redirect_to=url)
 
 

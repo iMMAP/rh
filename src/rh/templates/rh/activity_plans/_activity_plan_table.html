@@ -1,4 +1,3 @@
-{% load compress %}
 {% load static %}
 
 <div class="content-block bottom-border table-container">
@@ -22,25 +21,10 @@
             <table class="table all-projects-table">
                 <thead class="content-block ">
                     <tr>
-                            <th>
-                                <strong class="table-title">
-                                    Activity Domain
-                                </strong>
-                            </th>
-                            <th>
-                                <strong class="table-title">
-                                    Activity Type 
-                                </strong>
-                            </th>
-
-                            <th>
-                                <strong class="table-title">
-                                Indicator 
-                                </strong>
-                            </th>
-
-                            <th><strong>Target Locations</strong></th>
-
+                        <th> <strong class="table-title"> Activity Domain </strong> </th>
+                        <th> <strong class="table-title"> Activity Type </strong> </th>
+                        <th> <strong class="table-title"> Indicator </strong> </th>
+                        <th><strong>Target Locations</strong></th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -49,16 +33,19 @@
                     <!--Include The Projects Details Here -->
                     {% for row in object_list %}
                     <tr>
-                        <td>
-                            {{row.activity_domain}}
-                        </td>
+                        <td> {{row.activity_domain}} </td>
                         <td>{{row.activity_type}}</td>
                         <td>{{row.indicator}}</td>
                         <td>{{row.target_location_count}}</td>
-
                         <td>
                             <a href="{% url 'activity-plans-update' row.id %}" class="btn btn-gray">Edit</a>
-                            <a href="{% url 'target-locations-create' row.id %}" class="btn ">New Target Location</a>
+                            <a href="{% url 'target-locations-create' row.id %}" class="btn ">Add Target Location</a>
+                            <button>
+                            <a hx-post="{% url 'activity-plans-delete' row.id %}" hx-trigger="click" hx-confirm="Do you want to delete `{{row}}` and its Target Locations ?" hx-target="closest tr" data-tippy-content="Delete Activity Plan" class="">
+                                <img class='htmx-indicator' style="width: 1.2rem;" src="{% static 'src/images/spinner.gif' %}" />
+                                <span class="project-detail icon-trashbin"></span>
+                            </a>
+                            </button>
                         </td>
                     </tr>
                     {% endfor %}

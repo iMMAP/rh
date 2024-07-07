@@ -1,7 +1,7 @@
 from django.contrib.auth.decorators import login_required
-from django.http import JsonResponse
+from django.views.decorators.http import require_POST
+from django.http import JsonResponse, HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
-from django.template.loader import render_to_string
 from django.urls import reverse
 
 from ..forms import (
@@ -68,7 +68,9 @@ def create_activity_plan(request, project):
 
             messages.success(
                 request,
-                f'The Activity Plan "<a href="{reverse("activity-plans-update", args=[activity_plan.pk])}">{activity_plan}</a>" was added successfully.',
+                mark_safe(
+                    f'The Activity Plan "<a href="{reverse("activity-plans-update", args=[activity_plan.pk])}">{activity_plan}</a>" was added successfully.',
+                ),
             )
             if "_continue" in request.POST:
                 return redirect("activity-plans-update", pk=activity_plan.pk)
@@ -85,17 +87,16 @@ def create_activity_plan(request, project):
 
 
 @login_required
+@require_POST
 def delete_activity_plan(request, pk):
     """Delete the specific activity plan"""
     activity_plan = get_object_or_404(ActivityPlan, pk=pk)
-    if activity_plan:
-        activity_plan.delete()
 
-    url = reverse("create_project_activity_plan", args=[activity_plan.project.pk])
+    activity_plan.delete()
 
-    # Return the URL in a JSON response
-    response_data = {"redirect_url": url}
-    return JsonResponse(response_data)
+    messages.success(request, "Activity plan and its target locations has been delete.")
+
+    return HttpResponse(status=200)
 
 
 @login_required
@@ -157,35 +158,32 @@ def list_activity_plans(request, project):
 @login_required
 def update_indicator_type(request):
     """Indicator related types fields"""
-    if request.method == "POST":
-        activity_plan_id = request.POST.get("activity_plan", "")
-        indicator_id = request.POST.get("id")
-        prefix = request.POST.get("prefix")
-        indicator_type_fields = [
-            "package_type",
-            "unit_type",
-            "grant_type",
-            "transfer_category",
-            "currency",
-            "transfer_mechanism_type",
-            "implement_modility_type",
-        ]
-        initial_data = {}
-        if activity_plan_id:
-            activity_plan = get_object_or_404(ActivityPlan, pk=activity_plan_id)
-            if (activity_plan.indicator) and (str(activity_plan.indicator.pk) != indicator_id):
-                fields_to_update = {field: None for field in indicator_type_fields}
+    activity_plan_id = request.GET.get("activity_plan", "")
+    indicator_id = request.GET.get("indicator")
 
-                # Update the fields in one query
-                ActivityPlan.objects.filter(pk=activity_plan.pk).update(**fields_to_update)
+    indicator_type_fields = [
+        "package_type",
+        "unit_type",
+        "grant_type",
+        "transfer_category",
+        "currency",
+        "transfer_mechanism_type",
+        "implement_modility_type",
+    ]
 
-            initial_data = {field: getattr(activity_plan, field, None) for field in indicator_type_fields}
+    initial_data = {}
+    if activity_plan_id:
+        activity_plan = get_object_or_404(ActivityPlan, pk=activity_plan_id)
+        if (activity_plan.indicator) and (str(activity_plan.indicator.pk) != indicator_id):
+            fields_to_update = {field: None for field in indicator_type_fields}
 
-        indicator = Indicator.objects.get(id=indicator_id)
-        indicator_form = ProjectIndicatorTypeForm(prefix=prefix, initial=initial_data)
-        context = {"indicator": indicator, "indicator_form": indicator_form}
+            # Update the fields in one query
+            ActivityPlan.objects.filter(pk=activity_plan.pk).update(**fields_to_update)
 
-        html = render_to_string("rh/projects/views/_indicator_types.html", context)
+        initial_data = {field: getattr(activity_plan, field, None) for field in indicator_type_fields}
 
-        # Return JSON response containing the generated HTML
-        return JsonResponse({"html": html})
+    indicator = Indicator.objects.get(id=indicator_id)
+    indicator_form = ProjectIndicatorTypeForm(initial=initial_data)
+    context = {"indicator": indicator, "indicator_form": indicator_form}
+
+    return render(request, "rh/projects/views/_indicator_types.html", context)

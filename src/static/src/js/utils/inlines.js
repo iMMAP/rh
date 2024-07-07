@@ -81,6 +81,22 @@ const formset = (elements, opts) => {
 		e.preventDefault();
 		const template = document.getElementById(`${options.prefix}-empty`);
 		const row = template.cloneNode(true);
+		const newRowSelect = row.querySelector('select');
+
+		// delete the prev selected options
+		const selects = document.querySelectorAll('table tbody tr.form-row select');
+		for (const select of selects) {
+			const selectedOptions = Array.from(select.options).filter(option => option.selected);
+			for(const opt of selectedOptions){
+				if (newRowSelect) {
+					const optionToRemove = Array.from(newRowSelect.options).find(option => option.value === opt.value);
+					if (optionToRemove) {
+						optionToRemove.remove();
+					}
+				}
+			}
+		}
+		
 		row.classList.remove(options.emptyCssClass);
 		row.classList.add(options.formCssClass);
 		row.id = `${options.prefix}-${nextIndex}`;
@@ -333,7 +349,6 @@ document.addEventListener("DOMContentLoaded", () => {
 	document.querySelectorAll(".js-inline-admin-formset").forEach((element) => {
 		const data = element.dataset;
 		const inlineOptions = JSON.parse(data.inlineFormset);
-		console.log(inlineOptions);
 		let selector;
 		switch (data.inlineType) {
 			case "stacked":
@@ -345,7 +360,6 @@ document.addEventListener("DOMContentLoaded", () => {
 				break;
 			case "tabular":
 				selector = `${inlineOptions.name}-group .tabular.inline-related tbody > tr.form-row`;
-				console.log(document.querySelectorAll(selector));
 				tabularFormset(
 					document.querySelectorAll(selector),
 					inlineOptions.options,

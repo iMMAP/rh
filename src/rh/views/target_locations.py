@@ -1,5 +1,6 @@
 from django.contrib.auth.decorators import login_required
-from django.http import JsonResponse
+from django.views.decorators.http import require_POST
+from django.http import JsonResponse, HttpResponse
 from django.urls import reverse
 from django.shortcuts import get_object_or_404, render, redirect
 
@@ -91,7 +92,9 @@ def create_target_location(request, activity_plan):
 
     if request.method == "POST":
         target_location_form = TargetLocationForm(request.POST, user=request.user)
-        disaggregation_formset = DisaggregationFormSet(request.POST, activity_plan=activity_plan)
+        disaggregation_formset = DisaggregationFormSet(
+            request.POST, instance=target_location_form.instance, activity_plan=activity_plan
+        )
 
         if target_location_form.is_valid() and disaggregation_formset.is_valid():
             target_location = target_location_form.save(commit=False)
@@ -179,14 +182,13 @@ def copy_target_location(request, project, location):
 
 
 @login_required
+@require_POST
 def delete_target_location(request, pk):
     """Delete the target location"""
     target_location = get_object_or_404(TargetLocation, pk=pk)
-    if target_location:
-        target_location.delete()
 
-    url = reverse("create_project_activity_plan", args=[target_location.project.pk])
+    target_location.delete()
 
-    # Return the URL in a JSON response
-    response_data = {"redirect_url": url}
-    return JsonResponse(response_data)
+    messages.success(request, "Target Location has been delete.")
+
+    return HttpResponse(status=200)

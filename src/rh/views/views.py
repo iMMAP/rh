@@ -8,15 +8,47 @@ from django.http import FileResponse, HttpResponseForbidden, JsonResponse
 from project_reports.models import ProjectMonthlyReport as Report
 from django.shortcuts import get_object_or_404, render
 
-from ..models import (
-    ActivityDomain,
-    Cluster,
-    DisaggregationLocation,
-    Location,
-    TargetLocation,
-)
+from ..models import ActivityDomain, Cluster, DisaggregationLocation, Location, TargetLocation, ActivityType, Indicator
 
 RECORDS_PER_PAGE = 10
+
+
+@login_required
+def get_locations_details(request):
+    parents = Location.objects.filter(pk=list(request.GET.values())[0]).select_related("parent")
+    return render(request, "rh/target_locations/_location_select_options.html", {"parents": parents})
+
+
+@login_required
+def get_activity_domain_types(request):
+    """
+    View to return activity types for a given activity domain for HTMX response.
+    Route: /activity-domains/activity-types
+    """
+    activity_domain_pk = request.GET.get("activity_domain")
+
+    if activity_domain_pk:
+        activity_types = ActivityType.objects.filter(activity_domain=activity_domain_pk).order_by("name")
+    else:
+        activity_types = ActivityType.objects.none()
+
+    return render(request, "rh/activity_plans/_select_options.html", {"options": activity_types})
+
+
+@login_required
+def get_activity_type_indicators(request):
+    """
+    View to return activity details for a given activity types for HTMX response.
+    Route: /activity-types/indicators
+    """
+    activity_type_pk = request.GET.get("activity_type")
+
+    if activity_type_pk:
+        indicators = Indicator.objects.filter(activity_types=activity_type_pk).order_by("name")
+    else:
+        indicators = Indicator.objects.none()
+
+    return render(request, "rh/activity_plans/_select_options.html", {"options": indicators})
 
 
 def landing_page(request):
@@ -50,8 +82,6 @@ def download_user_guide(request):
 #############################################
 #               Project Views
 #############################################
-
-
 def copy_target_location_disaggregation_locations(location, disaggregation_location):
     """Copy Disaggregation Locations"""
     try:
@@ -75,6 +105,9 @@ def copy_target_location_disaggregation_locations(location, disaggregation_locat
 
 @login_required
 def load_activity_domains(request):
+    """
+    Used in project form
+    """
     cluster_ids = [int(i) for i in request.POST.getlist("clusters[]") if i]
 
     # Define a Prefetch object to optimize the related activitydomain_set

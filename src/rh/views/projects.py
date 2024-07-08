@@ -38,11 +38,12 @@ def projects_detail(request, pk):
             "donors",
             "programme_partners",
             "implementing_partners",
+            "user",
             Prefetch(
                 "activityplan_set",
-                ActivityPlan.objects.select_related("activity_domain", "beneficiary", "indicator").prefetch_related(
-                    "targetlocation_set", "activity_type", "activity_detail"
-                ),
+                ActivityPlan.objects.select_related("activity_domain", "indicator")
+                .prefetch_related("activity_type", "activity_detail")
+                .annotate(target_location_count=Count("targetlocation")),
             ),
         ),
         pk=pk,

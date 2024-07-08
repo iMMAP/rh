@@ -28,7 +28,7 @@
 
         <div class="actions-panel">
             {% if activity_plans_filter %}
-                {% include "rh/projects/views/_projects_filters_drawer.html" with filter=activity_plans_filter %}
+                {% include "components/_filter_drawer.html" with filter=activity_plans_filter %}
             {% endif %}
             <a href="{% url 'activity-plans-create' project.id %}" class="btn btn-red">New Activity Plan</a>
         </div>

@@ -28,7 +28,7 @@
                     </a>
                 </li>
                 <li class=" {% if request.GET.state == 'in-progress' %}active{% endif %}">
-                    <a href="{{request.GET.url}}?state=in-progress">Active Projects
+                    <a href="{{request.GET.url}}?state=in-progress">Active 
                         (
                         {% if active_projects_count %}
                             {{ active_projects_count }}

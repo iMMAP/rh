@@ -31,33 +31,35 @@
             <!-- {{report_form}} -->
             <form method="post" class="form-container" enctype="multipart/form-data" id="activity-formset-form">
                 {% csrf_token %}
-                <div class="monthly-reporting multiple-fields-row two-items">
-                    <div class="field-col">
-                        <div class="date start">
-                            <label for="{{ report_form.report_date.id_for_label }}">Reporting Date</label>
-                            <div class="date-picker-field start-date">{{report_form.report_date}}</div>
+                <div class="inner-holder">
+                    <div class="monthly-reporting multiple-fields-row two-items">
+                        <div class="field-col">
+                            <div class="date start">
+                                <label for="{{ report_form.report_date.id_for_label }}">Reporting Date</label>
+                                <div class="date-picker-field start-date">{{report_form.report_date}}</div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="field-col">
-                        <div class="date end">
-                            <label for="{{ report_form.report_due_date.id_for_label }}">Report Due Date</label>
-                            <div class="date-picker-field end-date">{{report_form.report_due_date}}</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="monthly-reporting">
-                    <div class="row">
-                        <div class="col">
-                            <div class="input-field">
-                                <label for="{{ report_form.description.id_for_label}}">Description &amp;
-                                    Objectives</label>
-                                <div class="input-holder">{{ report_form.description }}</div>
+                        <div class="field-col">
+                            <div class="date end">
+                                <label for="{{ report_form.report_due_date.id_for_label }}">Report Due Date</label>
+                                <div class="date-picker-field end-date">{{report_form.report_due_date}}</div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="monthly-progress-submit-holder text-right">
-                    <button type="submit" class="btn btn-red">Save and Next</button>
+                    <div class="monthly-reporting">
+                        <div class="row">
+                            <div class="col">
+                                <div class="input-field">
+                                    <label for="{{ report_form.description.id_for_label}}">Description &amp;
+                                        Objectives</label>
+                                    <div class="input-holder">{{ report_form.description }}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="monthly-progress-submit-holder text-right">
+                        <button type="submit" class="btn btn-red">Save and Next</button>
+                    </div>
                 </div>
             </form>
         </div>

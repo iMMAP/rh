@@ -1,14 +1,43 @@
 {% load compress %}
 {% load static %}
 
-<div class="content-block bottom-border">
+<div class="content-block bottom-border table-container">
     {% comment %} Table Actions and filters {% endcomment %}
-    <div class="page-top-panel bottom-border">
+
+    {% comment %}<div class="page-top-panel bottom-border">
         <div class="actions-panel">
             <label for="query">Search</label>
             <div class="input-holder row">
                 <input type="text" id="query" placeholder="Search Activity Plans" />
             </div>
+        </div>
+    </div>
+    {% endcomment %}
+    <div class="page-top-panel bottom-border">
+       <div class="actions-panel">
+            <!-- filter applied  -->
+            <div class="filter-container" id="filter-container">
+                {% for field in plans_report_filter.form%}
+                    {% if forloop.first %}
+                        <span>Applied Filters:</span>
+                    {% endif %}
+                    {% if field.value %}
+                        <span class="filter-item title" id="title">
+                            {{field.label}}
+                        </span>
+                    {% if forloop.last %}
+                        <span class="close-alert-message">&#x2715;</span>
+                    {% endif %}
+                    {% endif %}
+                {% endfor %}
+            </div>
+            <!-- filter applied end -->
+       </div>
+
+        <div class="actions-panel">
+            {% if plans_report_filter %}
+                {% include "rh/projects/views/_projects_filters_drawer.html" with filter=plans_report_filter %}
+            {% endif %}
         </div>
     </div>
     {% comment %} Table {% endcomment %}

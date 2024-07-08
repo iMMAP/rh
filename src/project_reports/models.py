@@ -112,6 +112,18 @@ class ActivityPlanReport(models.Model):
         blank=True,
     )
 
+    @property
+    def activity_domain(self):
+        return self.activity_plan.activity_domain if self.activity_plan else None
+
+    @property
+    def activity_type(self):
+        return self.activity_plan.activity_type if self.activity_plan else None
+
+    @property
+    def activity_detail(self):
+        return self.activity_plan.activity_detail if self.activity_plan else None
+
     def __str__(self):
         return f"Activity Plan: {self.activity_plan.activity_domain} - {self.indicator}"
 

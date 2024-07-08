@@ -13,12 +13,12 @@
             <div class="filter-heading-text">
                 <span>
                     <span class="info-sign"></span>
-                    Get your project data sorted.
+                    Get your data filtered.
                 </span>
                 
             </div>
             <div class="block-body">
-                {{ project_filter.form.as_p }}
+                {{ filter.form.as_p }}
                 {% comment %} {% for field in project_filter.form %}
                     <div class="fieldWrapper">
                         {{ field.errors }}

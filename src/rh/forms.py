@@ -15,7 +15,6 @@ from .models import (
     Project,
     ProjectIndicatorType,
     TargetLocation,
-    BeneficiaryType,
     Indicator,
     ActivityType,
     Location,
@@ -125,6 +124,10 @@ class TargetLocationForm(forms.ModelForm):
 
         self.fields["zone"].queryset = Location.objects.none()
 
+        self.fields["implementing_partner"].queryset = self.fields["implementing_partner"].queryset.filter(
+            countries=user.profile.country
+        )
+
         if self.data:
             # Creating
             try:
@@ -140,6 +143,9 @@ class TargetLocationForm(forms.ModelForm):
             # Updating
             self.fields["district"].queryset = self.instance.province.children.all()
             self.fields["zone"].queryset = self.instance.district.children.all()
+            self.fields["implementing_partner"].queryset = self.fields["implementing_partner"].queryset.filter(
+                countries=self.instance.country
+            )
 
     def clean_country(self):
         # Prevent changes to the country field
@@ -208,10 +214,14 @@ class ActivityPlanForm(forms.ModelForm):
         self.fields["activity_domain"].required = True
         self.fields["activity_type"].required = True
         self.fields["indicator"].required = True
-        self.fields["beneficiary"].required = True
 
         self.fields["activity_domain"].queryset = project.activity_domains.all()
-        self.fields["beneficiary"].queryset = BeneficiaryType.objects.filter(clusters__in=project.clusters.all())
+
+        project_clusters = project.clusters.all()
+        self.fields["beneficiary"].queryset = self.fields["beneficiary"].queryset.filter(clusters__in=project_clusters)
+        self.fields["hrp_beneficiary"].queryset = self.fields["hrp_beneficiary"].queryset.filter(
+            clusters__in=project_clusters
+        )
 
         # The choices, does not validate the data ,(self.fields["indicator"].widget.choices = [])
         # Updating the queryset for validation purposes

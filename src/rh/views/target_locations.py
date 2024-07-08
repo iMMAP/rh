@@ -16,6 +16,7 @@ from django.core.paginator import Paginator
 from django.forms import inlineformset_factory
 from django.contrib import messages
 from django.utils.safestring import mark_safe
+from ..filters import TargetLocationFilter
 
 
 @login_required
@@ -139,17 +140,22 @@ def list_target_locations(request, project):
     """List Activity Plans for a specific project"""
     project = get_object_or_404(Project, pk=project)
 
-    target_locations = TargetLocation.objects.filter(activity_plan__project=project).order_by("-id")
+    tl_filter = TargetLocationFilter(
+        request.GET,
+        request=request,
+        queryset=TargetLocation.objects.filter(activity_plan__project=project)
+        .select_related("activity_plan", "country", "province", "district")
+        .order_by("-id"),
+        project=project,
+    )
 
-    paginator = Paginator(target_locations, 10)  # Show 10 activity plans per page
+    per_page = request.GET.get("per_page", 10)
+    paginator = Paginator(tl_filter.qs, per_page=per_page)
     page = request.GET.get("page", 1)
     target_locations = paginator.get_page(page)
     target_locations.adjusted_elided_pages = paginator.get_elided_page_range(page)
 
-    context = {
-        "project": project,
-        "target_locations": target_locations,
-    }
+    context = {"project": project, "target_locations": target_locations, "target_locations_filter": tl_filter}
 
     return render(request, "rh/target_locations/target_locations_list.html", context)
 

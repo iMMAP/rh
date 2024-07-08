@@ -338,7 +338,6 @@ class ActivityType(models.Model):
     active = models.BooleanField(default=True)
     code = models.CharField(max_length=DESCRIPTION_MAX_LENGTH, unique=True)
     name = models.CharField(max_length=DESCRIPTION_MAX_LENGTH)
-    countries = models.ManyToManyField(Location)
     clusters = models.ManyToManyField(Cluster)
     # indicators = models.ManyToManyField(Indicator)
     activity_date = models.DateTimeField(auto_now_add=True, blank=True, null=True)
@@ -546,6 +545,7 @@ class ActivityPlan(models.Model):
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
+        limit_choices_to={"type": "non-hrp"},
     )
     hrp_beneficiary = models.ForeignKey(
         BeneficiaryType,
@@ -553,6 +553,7 @@ class ActivityPlan(models.Model):
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
+        limit_choices_to={"type": "hrp"},
     )
     beneficiary_category = models.CharField(
         max_length=15, choices=CATEGORY_TYPES, default="non-disabled", null=True, blank=True

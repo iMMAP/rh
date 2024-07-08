@@ -128,6 +128,14 @@
                                 </div>
                                 {% endif %}
 
+                                <div class="field-col">
+                                    <div class="input-field">
+                                        <label for="{{target_location_form.implementing_partner.id_for_label}}">Implementing Partner</label>
+                                        {{ target_location_form.implementing_partner}}
+                                        <div class="sign-up-field-error">{{ target_location_form.implementing_partner.errors}}</div>
+                                    </div>
+                                </div>
+
                                 {% if  target_location_form.facility_site_type.value %}
                                 <div class="field-col">
                                     <div class="select-field">
@@ -215,7 +223,7 @@
                         class="disaggregation-block js-inline-admin-formset disaggregation-accordion inline-group" 
                         id="{{ disaggregation_formset.prefix }}-group" 
                         data-inline-type="tabular" 
-                        data-inline-formset='{"name":"#{{disaggregation_formset.prefix}}","options":{"prefix":"{{disaggregation_formset.prefix}}","addText":"Add another","deleteText":"Delete"}}'
+                        data-inline-formset='{"name":"#{{disaggregation_formset.prefix}}","options":{"prefix":"{{disaggregation_formset.prefix}}","addText":"Add Disaggregation","deleteText":"Delete"}}'
                     >
                         <div class="tabular inline-related">
                             <div class="block-top" style="margin:unset">

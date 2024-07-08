@@ -5,17 +5,29 @@
         <div class="indeterminate bg-white"></div>
     </div>
     {% comment %} Table Actions and filters {% endcomment %}
-    <div class="page-top-panel bottom-border">
+    <div class="page-top-panel bottom-border"> 
         <div class="actions-panel">
-            <label for="query">Search</label>
-            <div class="input-holder row">
-                <input type="text" id="query" placeholder="Search Traget Locations" />
+        <!-- filter applied  -->
+            <div class="filter-container" id="filter-container">
+                {% for field in target_locations_filter.form%}
+                    {% if forloop.first %}
+                        <span>Applied Filters:</span>
+                    {% endif %}
+                    {% if field.value %}
+                        <span class="filter-item title" id="title">
+                            {{field.label}}
+                        </span>
+                    {% if forloop.last %}
+                        <span class="close-alert-message">&#x2715;</span>
+                    {% endif %}
+                    {% endif %} 
+                {% endfor %}
             </div>
+        <!-- filter applied end -->
         </div>
-
-        {% comment %} <div class="actions-panel">
-            <a href="#" class="btn btn-red">New Target Location</a>
-        </div> {% endcomment %}
+        <div class="actions-panel">
+            {% include "rh/projects/views/_projects_filters_drawer.html" with filter=target_locations_filter %}
+        </div>
     </div>
 
     {% comment %} Table {% endcomment %}
@@ -37,7 +49,7 @@
                     {% for row in object_list %}
                     <tr>
                         <td>
-                            <a href="{% url 'activity-plans-update' row.activity_plan.pk %}" class="">
+                            <a href="{% url 'activity-plans-update' row.activity_plan.pk %}" class="" style="text-decoration:none">
                                 <svg data-slot="icon" width="18px" data-darkreader-inline-stroke="" fill="none" stroke-width="1.5" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M13.19 8.688a4.5 4.5 0 0 1 1.242 7.244l-4.5 4.5a4.5 4.5 0 0 1-6.364-6.364l1.757-1.757m13.35-.622 1.757-1.757a4.5 4.5 0 0 0-6.364-6.364l-4.5 4.5a4.5 4.5 0 0 0 1.242 7.244"></path>
                                 </svg>

@@ -409,7 +409,7 @@ label,
     font-weight: 500;
     color: $gray-35;
     cursor: pointer;
-    background: transparent;
+    // background: transparent;
     background-image: url("data:image/svg+xml;utf8,<svg width='16' height='16' viewBox='0 0 16 16' fill='none' xmlns='http://www.w3.org/2000/svg'><path d='M14.2222 1.6H13.3333V0H11.5556V1.6H4.44444V0H2.66667V1.6H1.77778C0.791111 1.6 0.00888888 2.32 0.00888888 3.2L0 14.4C0 15.28 0.791111 16 1.77778 16H14.2222C15.2 16 16 15.28 16 14.4V3.2C16 2.32 15.2 1.6 14.2222 1.6ZM14.2222 14.4H1.77778V5.6H14.2222V14.4ZM3.55556 7.2H8V11.2H3.55556V7.2Z' fill='%23929699'/> </svg>");
     background-repeat: no-repeat;
     background-position-x: calc(100% - 10px);

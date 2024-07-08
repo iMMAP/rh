@@ -119,10 +119,11 @@
                                 name="{{ form.indicator.name }}" 
                                 id="{{ form.indicator.id_for_label }}" 
                                 class="form-control"
-                                {% comment %} hx-get="{% url 'update-indicator-type' %}"
+                                hx-get="{% url 'update-indicator-type' %}"
                                 hx-trigger="change"
                                 hx-target="#indicator-types"
-                                hx-swap="innerHTML" {% endcomment %}
+                                hx-swap="innerHTML"
+                                hx-indicator=".progress"
                             >
                                 {% for type in form.indicator %}
                                     {{type}}
@@ -139,6 +140,15 @@
                                     <div class="sign-up-field-error">{{form.beneficiary.errors}}</div>
                                 </div>
                             </div>
+
+                            <div class="field-col">
+                                <div class="select-field">
+                                    <label for="{{form.hrp_beneficiary.id_for_label}}">HRP Beneficiary</label>
+                                    {{ form.hrp_beneficiary}}
+                                    <div class="sign-up-field-error">{{form.hrp_beneficiary.errors}}</div>
+                                </div>
+                            </div>
+
                             <div class="field-col">
                                 <div class="select-field">
                                     <label for="{{form.beneficiary_category.id_for_label}}">Beneficiary Category</label>
@@ -163,7 +173,21 @@
                 </div>
             </div>
             <div class="plan-submit-holder">
-                <a href="#">Delete</a>
+                {% if form.initial %}
+                    <a 
+                        hx-post="{% url 'activity-plans-delete' form.initial.id %}" 
+                        hx-trigger="click" 
+                        hx-indicator=".progress" 
+                        hx-confirm="Do you want to delete `{{form.initial.id}}` and its Target Locations ?"  
+                        data-tippy-content="Delete Activity Plan" 
+                        class="cursor-pointer"
+                    >
+                        <span class="project-detail icon-trashbin"></span>
+                        Delete
+                    </a>
+                {% else %}
+                    <a href="#"></a>
+                {% endif %}
                 <div>
                     <input type="submit" name="_addanother" class="btn btn-gray" value="Save and add another">
                     <input type="submit" name="_continue" class="btn btn-gray" value="Save and continue editing" >
@@ -175,5 +199,4 @@
 {% endblock project_contents %}
 
 {% block project_form_scripts %}
-    {% comment %} <script defer src="{% static 'rh/js/activity_planning.js' %}"></script> {% endcomment %}
 {% endblock project_form_scripts %}

@@ -20,6 +20,8 @@ from django.db.models import Count
 from django.contrib import messages
 from django.utils.safestring import mark_safe
 
+from ..filters import ActivityPlansFilter
+
 
 @login_required
 def update_activity_plan(request, pk):
@@ -135,22 +137,29 @@ def copy_activity_plan(request, project, plan):
 
 @login_required
 def list_activity_plans(request, project):
-    """List Activity Plans for a specific project"""
+    """List Activity Plans for a specific project
+    url: projects/<pk:project>/activity-plans
+    """
     project = get_object_or_404(Project, pk=project)
 
-    activity_plans = ActivityPlan.objects.filter(project=project).annotate(
-        target_location_count=Count("targetlocation")
+    ap_filter = ActivityPlansFilter(
+        request.GET,
+        request=request,
+        queryset=ActivityPlan.objects.filter(project=project)
+        .select_related("activity_domain", "activity_type", "indicator")
+        .order_by("-id")
+        .annotate(target_location_count=Count("targetlocation"))
+        .order_by("-id"),
+        project=project,
     )
 
-    paginator = Paginator(activity_plans, 10)  # Show 10 activity plans per page
+    per_page = request.GET.get("per_page", 10)
+    paginator = Paginator(ap_filter.qs, per_page=per_page)  # Show 10 activity plans per page
     page = request.GET.get("page", 1)
     activity_plans = paginator.get_page(page)
     activity_plans.adjusted_elided_pages = paginator.get_elided_page_range(page)
 
-    context = {
-        "project": project,
-        "activity_plans": activity_plans,
-    }
+    context = {"project": project, "activity_plans": activity_plans, "activity_plans_filter": ap_filter}
 
     return render(request, "rh/activity_plans/activity_plans_list.html", context)
 

@@ -128,11 +128,6 @@ urlpatterns = [
         name="target-locations-delete",
     ),
     path(
-        "projects/<int:project>/project_plan/review/",
-        projects.project_planning_review,
-        name="project_plan_review",
-    ),
-    path(
         "projects/<str:pk>/project_plan/submit/",
         projects.submit_project,
         name="project_submit",

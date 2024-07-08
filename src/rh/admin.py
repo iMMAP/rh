@@ -123,7 +123,10 @@ class DonorAdmin(admin.ModelAdmin):
         "name",
     )
     # list_filter = ('cluster', 'country')
-    filter_horizontal = ("countries","clusters",)
+    filter_horizontal = (
+        "countries",
+        "clusters",
+    )
 
     def countries_count(self, obj):
         return obj.countries.count()

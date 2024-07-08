@@ -110,6 +110,15 @@
   }
 
   tbody {
+    .add-row{
+      background-color: $gray-f3;
+
+      a{
+        background: url("/static/admin/img/icon-addlink.svg") 0 1px no-repeat;
+        padding-left: 16px;
+        font-size:0.75rem;
+      }
+    }
     tr {
       &:last-child {
 
@@ -154,7 +163,6 @@
       color: #be2126;
     }
   }
-
 
   .active-row {
     td {

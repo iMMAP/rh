@@ -62,7 +62,18 @@
             <ul class="project-breadcrumbs">
                 <li> {{project.title}} </li>
             </ul>
-            <a href="{% url 'projects-update' project.pk %}" class="btn btn-red">Edit</a>
+
+            <div>
+                <a href="{% url 'projects-update' project.pk %}" class="btn btn-red">Edit</a>
+                {% if project.state == 'draft' %}
+                <a 
+                    href="{% url 'project_submit' project.pk %}"
+                    class="btn btn-red"
+                >
+                    Submit Project
+                </a>
+                {% endif %}
+            </div>
         </div>
         <div class="bottom-block">
             <div class="actions-panel">
@@ -727,6 +738,15 @@
                     </div>
                 </div>
                 {% endif %}
+                <div class="input-field">
+                    <span class="label">State</span>
+                    <div class="input-holder">
+                        <span class="{{ project.state }}">
+                            {{ project.state}}
+                        </span>
+                    </div>
+                </div>
+                
             </div>
             <div class="col col-lg">
                 <div class="select-field is-required">
@@ -782,17 +802,5 @@
 
 {% block scripts %}
 {{ block.super }}
-
-<script type="module" src="{% static 'src/js/components/initAccordion.js' %}"></script>
 <script type="module" src="{% static 'src/js/utils/exportSW.js' %}"></script>
-
-<script>
-    document.querySelector(".project-planning").addEventListener('click', function(){
-        document.querySelector(".project-chevron").classList.toggle("object-rotation");
-    });
-
-    document.querySelector(".activity-planning").addEventListener('click', function(){
-        document.querySelector(".activity-chevron").classList.toggle("object-rotation");
-    });
-</script>
 {% endblock scripts %}

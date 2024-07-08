@@ -92,9 +92,9 @@ urlpatterns = [
         name="activity-plans-create",
     ),
     path(
-        "projects/<int:project>/activity_plan/<str:plan>/copy/",
+        "activity-plans/<int:pk>/copy",
         activity_plans.copy_activity_plan,
-        name="copy_plan",
+        name="activity-plans-copy",
     ),
     path(
         "projects/<int:project>/target-locations",

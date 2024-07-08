@@ -1,6 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
-from django.http import JsonResponse, HttpResponse
+from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 
@@ -13,8 +13,9 @@ from ..models import (
     ActivityPlan,
     Project,
     Indicator,
+    TargetLocation,
+    DisaggregationLocation,
 )
-from .views import copy_project_target_location, copy_target_location_disaggregation_locations
 from django.core.paginator import Paginator
 from django.db.models import Count
 from django.contrib import messages
@@ -101,38 +102,41 @@ def delete_activity_plan(request, pk):
     return HttpResponse(status=200)
 
 
+@require_POST
 @login_required
-def copy_activity_plan(request, project, plan):
+def copy_activity_plan(request, pk):
     """Copy only the activity plan not whole project"""
-    project = get_object_or_404(Project, pk=project)
-    activity_plan = get_object_or_404(ActivityPlan, pk=plan)
-    new_plan = get_object_or_404(ActivityPlan, pk=activity_plan.pk)
+    new_activity_plan = get_object_or_404(ActivityPlan, pk=pk)
 
-    if new_plan:
-        new_plan.pk = None
-        new_plan.save()
+    target_locations = TargetLocation.objects.filter(activity_plan=new_activity_plan)
 
-        # Iterate through target locations and copy them to the new plan.
-        target_locations = activity_plan.targetlocation_set.all()
-        for location in target_locations:
-            new_location = copy_project_target_location(new_plan, location)
-            disaggregation_locations = location.disaggregationlocation_set.all()
+    new_activity_plan.id = None
+    new_activity_plan.active = False
+    new_activity_plan.state = "draft"
 
-            # Iterate through disaggregation locations and copy them to the new location.
-            for disaggregation_location in disaggregation_locations:
-                copy_target_location_disaggregation_locations(new_location, disaggregation_location)
+    new_activity_plan.save()
 
-        new_plan.project = project
-        new_plan.active = True
-        new_plan.state = "draft"
-        new_plan.indicator = activity_plan.indicator
-        new_plan.save()
+    for location in target_locations:
+        disagg_locations = DisaggregationLocation.objects.filter(
+            target_location=location,
+        )
 
-    url = reverse("create_project_activity_plan", args=[project.pk])
+        location.id = None
+        location.active = False
+        location.state = "draft"
+        location.activity_plan = new_activity_plan
 
-    # Return the URL in a JSON response
-    response_data = {"redirect_url": url}
-    return JsonResponse(response_data)
+        location.save()
+
+        for dl in disagg_locations:
+            dl.id = None
+            dl.target_location = location
+
+            dl.save()
+
+    messages.success(request, "Activity plan and its Target Locations copied")
+
+    return redirect("activity-plans-update", pk=new_activity_plan.id)
 
 
 @login_required

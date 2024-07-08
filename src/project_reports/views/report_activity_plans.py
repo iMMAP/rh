@@ -18,16 +18,28 @@ from ..models import (
     ProjectMonthlyReport,
 )
 
+from ..filters import PlansReportFilter
+
 
 @login_required
 def list_report_activity_plans(request, project, report):
     """Create View"""
     project = get_object_or_404(Project, pk=project)
     monthly_report_instance = get_object_or_404(ProjectMonthlyReport, pk=report)
-    report_plans = ActivityPlanReport.objects.filter(monthly_report=monthly_report_instance.pk).annotate(
-        report_target_location_count=Count("targetlocationreport")
+
+    ap_filter = PlansReportFilter(
+        request.GET,
+        request=request,
+        queryset=ActivityPlanReport.objects.filter(monthly_report=monthly_report_instance)
+        .select_related("activity_plan", "indicator")
+        .order_by("-id")
+        .annotate(report_target_location_count=Count("targetlocationreport"))
+        .order_by("-id"),
+        report=monthly_report_instance,
     )
-    paginator = Paginator(report_plans, 10)  # Show 10 activity plans per page
+
+    per_page = request.GET.get("per_page", 10)
+    paginator = Paginator(ap_filter.qs, per_page=per_page)  # Show 10 activity plans per page
     page = request.GET.get("page", 1)
     report_plans = paginator.get_page(page)
     report_plans.adjusted_elided_pages = paginator.get_elided_page_range(page)
@@ -36,6 +48,7 @@ def list_report_activity_plans(request, project, report):
         "project": project,
         "monthly_report": monthly_report_instance,
         "report_plans": report_plans,
+        "plans_report_filter": ap_filter,
         "report_view": False,
         "report_activities": True,
         "report_locations": False,

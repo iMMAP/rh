@@ -56,9 +56,9 @@
                 </div>
 
                 <div class="target-location-form">
-                    <form action="" method="post" id="location-form">
+                    <form action="" method="post" class="form-container" id="location-form">
                         {% csrf_token %}
-                        <div id="">       
+                        <div id="" class="inner-holder">
                             <!-- ERRORS SECTION STARTS -->
                             {% if location_report_form.errors %}
                                 <div class="message-container">
@@ -140,7 +140,6 @@
                                     </div>
                                 </div>
                             </div>
-                            {% if location_report_form.instance.target_location.facility_monitoring %}
                             <div class="row mtb20" id="facility_details">
                                 <div class="col">
                                     <div class="field-col">
@@ -208,71 +207,6 @@
                                     </div>
                                 </div>
                             </div>
-                            {% endif %}
-
-                            {% comment %}<!--<div
-                                class="disaggregation-block js-inline-admin-formset disaggregation-accordion inline-group" 
-                                id="{{ report_disaggregation_formset.prefix }}-group"
-                                data-inline-type="tabular" 
-                                data-inline-formset='{"name":"#{{report_disaggregation_formset.prefix}}","options":{"prefix":"{{report_disaggregation_formset.prefix}}","addText":"Add another","deleteText":"Delete"}}'
-                            >
-                                <div class="inner-holder tabular inline-related">
-                                    <br/>
-                                    <div class="location-block-holder">
-                                        <div class="block-top-title">
-                                            <div class="title">
-                                                Report Disaggregations
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <br/>
-                                    <br/>
-                                    {{ report_disaggregation_formset.management_form }}
-                                    <fieldset class="module aligned table-wrapper-scrollable">
-                                        <table class="table table-striped ">
-                                            <thead class="content-block">
-                                                <tr >
-                                                    <th>Disaggregation</th>
-                                                    <th>Target Required</th>
-                                                    <th>Target Achieved</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                {% for form in report_disaggregation_formset %}
-                                                    {% if form.non_field_errors %}
-                                                        <tr class="row-form-errors">
-                                                            <td colspan="2">{{ form.non_field_errors }}</td>
-                                                        </tr>
-                                                    {% endif %}
-                                                    {% if form.errors %}
-                                                        <tr class="row-form-errors">
-                                                            <td colspan="2">{{ form.errors }}</td>
-                                                        </tr>
-                                                    {% endif %}
-
-                                                    <tr
-                                                        class="form-row"
-                                                        id="{{ report_disaggregation_formset.prefix }}-{{ forloop.counter0 }}"
-                                                    >
-                                                         {% for field in form %}
-                                                            <td>{{ field }}</td>
-                                                        {% endfor %}
-                                                    </tr>
-                                                {% endfor %}
-                                                <tr 
-                                                    class="form-row empty-form" 
-                                                    id="{{ report_disaggregation_formset.prefix }}-empty"
-                                                >
-                                                    {% for field in report_disaggregation_formset.empty_form.visible_fields %}
-                                                        <td>{{ field }}</td>
-                                                    {% endfor %}
-                                                </tr>
-                                            </tbody>
-                                        </table> 
-
-                                    </fieldset>
-                                </div>
-                            </div>-->{% endcomment %}
 
                             <div
                                 class="disaggregation-block js-inline-admin-formset disaggregation-accordion inline-group"

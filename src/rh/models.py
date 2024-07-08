@@ -338,7 +338,6 @@ class ActivityType(models.Model):
     active = models.BooleanField(default=True)
     code = models.CharField(max_length=DESCRIPTION_MAX_LENGTH, unique=True)
     name = models.CharField(max_length=DESCRIPTION_MAX_LENGTH)
-    countries = models.ManyToManyField(Location)
     clusters = models.ManyToManyField(Cluster)
     # indicators = models.ManyToManyField(Indicator)
     activity_date = models.DateTimeField(auto_now_add=True, blank=True, null=True)

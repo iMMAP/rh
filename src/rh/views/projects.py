@@ -508,28 +508,35 @@ def export_cluster_projects(request, format):
     url: /projects/bulk_export/<format>/cluster
     name: export-clusters-projects
     """
-    selected_projects_id = json.loads(request.body)
+    try:
+        selected_projects_id = json.loads(request.body)
 
-    projects = Project.objects.filter(clusters__in=request.user.profile.clusters.all())
+        projects = Project.objects.filter(
+            Q(state='in-progress') | Q(state='completed'),
+            clusters__in=request.user.profile.clusters.all()
+            )
 
-    if selected_projects_id:
-        projects = projects.filter(id__in=selected_projects_id)
+        if selected_projects_id:
+            projects = projects.filter(id__in=selected_projects_id)
 
-    dataset = ProjectResource().export(projects)
+        dataset = ProjectResource().export(projects)
 
-    if format == "xls":
-        ds = dataset.xls
-    elif format == "csv":
-        ds = dataset.csv
-    else:
-        ds = dataset.json
+        if format == "xls":
+            ds = dataset.xls
+        elif format == "csv":
+            ds = dataset.csv
+        else:
+            ds = dataset.json
 
-    today_date = date.today()
-    file_name = f"projects_{today_date}"
-    response = HttpResponse(ds, content_type=f"{format}")
-    response["Content-Disposition"] = f"attachment; filename={file_name}.{format}"
+        today_date = date.today()
+        file_name = f"projects_{today_date}"
+        response = HttpResponse(ds, content_type=f"{format}")
+        response["Content-Disposition"] = f"attachment; filename={file_name}.{format}"
 
-    return response
+        return response
+    except Exception as e:
+        response = {"error": str(e)}
+        return JsonResponse(response, status=500)
 
 
 @login_required
@@ -540,25 +547,32 @@ def export_org_projects(request, format):
     url: /projects/bulk_export/<format>/org
     name: export-org-projects
     """
-    selected_projects_id = json.loads(request.body)
+    try:
+        selected_projects_id = json.loads(request.body)
 
-    projects = Project.objects.filter(organization=request.user.profile.organization)
+        projects = Project.objects.filter(
+            Q(state='in-progress') | Q(state='completed'),
+            organization=request.user.profile.organization
+            )
 
-    if selected_projects_id:
-        projects = projects.filter(id__in=selected_projects_id)
+        if selected_projects_id:
+            projects = projects.filter(id__in=selected_projects_id)
+        print(projects)
+        dataset = ProjectResource().export(projects)
 
-    dataset = ProjectResource().export(projects)
+        if format == "xls":
+            ds = dataset.xls
+        elif format == "csv":
+            ds = dataset.csv
+        else:
+            ds = dataset.json
 
-    if format == "xls":
-        ds = dataset.xls
-    elif format == "csv":
-        ds = dataset.csv
-    else:
-        ds = dataset.json
+        today_date = date.today()
+        file_name = f"projects_{today_date}"
+        response = HttpResponse(ds, content_type=f"{format}")
+        response["Content-Disposition"] = f"attachment; filename={file_name}.{format}"
 
-    today_date = date.today()
-    file_name = f"projects_{today_date}"
-    response = HttpResponse(ds, content_type=f"{format}")
-    response["Content-Disposition"] = f"attachment; filename={file_name}.{format}"
-
-    return response
+        return response
+    except Exception as e:
+        response = {"error": str(e)}
+        return JsonResponse(response, status=500)

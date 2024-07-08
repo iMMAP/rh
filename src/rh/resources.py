@@ -136,35 +136,57 @@ class ProjectResource(resources.ModelResource):
             "facility_long",
             "description",
         )
-
-    user = fields.Field(column_name="user", attribute="user", widget=ForeignKeyWidget(User, field="username"))
-    budget_currency = fields.Field(
+    try:
+        user = fields.Field(column_name="user", attribute="user", widget=ForeignKeyWidget(User, field="username"))
+    except Exception:
+        user=None
+    try:
+        budget_currency = fields.Field(
         column_name="budget_currency", attribute="budget_currency", widget=ForeignKeyWidget(Currency, field="name")
-    )
-
-    clusters = fields.Field(
+        )
+    except Exception:
+        budget_currency=None
+    
+    try:
+        clusters = fields.Field(
         column_name="clusters", attribute="clusters", widget=ManyToManyWidget(Cluster, field="title", separator=",")
-    )
-    donors = fields.Field(
+        )
+    except Exception:
+        clusters=None
+    try:
+        donors = fields.Field(
         column_name="donors", attribute="donors", widget=ManyToManyWidget(Donor, field="name", separator=",")
-    )
-    implementing_partners = fields.Field(
+        )
+    except Exception:
+        donors=None
+    
+    try:
+        implementing_partners = fields.Field(
         column_name="implementing_partners",
         attribute="implementing_partners",
         widget=ManyToManyWidget(Organization, field="code", separator=","),
-    )
-    programme_partners = fields.Field(
-        column_name="programme_partners",
-        attribute="programme_partners",
-        widget=ManyToManyWidget(Organization, field="code", separator=","),
-    )
+        )
+    except Exception:
+        implementing_partners=None
+    try:    
+        programme_partners = fields.Field(
+            column_name="programme_partners",
+            attribute="programme_partners",
+            widget=ManyToManyWidget(Organization, field="code", separator=","),
+        )
+    except Exception:
+        programme_partners=None
 
     def dehydrate_organization(self, project):
-        return project.user.profile.organization.code
-
+        try:
+            return project.user.profile.organization.code
+        except Exception:
+            return None
     def dehydrate_organization_type(self, project):
-        return project.user.profile.organization.type
-
+        try:
+            return project.user.profile.organization.type
+        except Exception:
+            return None
     # activity planning start
     def dehydrate_activity_domain(self, project):
         activity_pans = list(project.activityplan_set.all())

@@ -11,6 +11,26 @@
 //--------------------------------
 //Random added style start
 //----------------------------------
+.warning-message{
+  color: $red-be;
+  padding: 5px 0px;
+  font-weight: 500;
+  .icon-info{
+    font-size: 12px;
+    margin-right: 5px;
+  }
+}
+.warning-message-bulk{
+  color: $red-be;
+  padding: 0px 5px;
+  font-weight: 300;
+  font-size: small;
+  .icon-info{
+    font-size: 12px;
+    margin-right: 5px;
+  }
+  
+}
 .filter-container{
   display:  flex;
   gap: 3px;

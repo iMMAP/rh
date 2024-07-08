@@ -70,6 +70,12 @@
                                 <div class="label">
                                     <p>download the whole project without applying filter.</p>
                                 </div>
+                                <div class="warning-message">
+                                    {% if project.state == 'draft' %}
+                                    <span class="icon-info"></span>
+                                    <span class="text">Export of the draft project is currently unavailable.</span>
+                                    {% endif%}
+                                </div>
                                 <div>
                                     <button class="export-button btn btn-gray">
                                         <a href="#"
@@ -94,9 +100,6 @@
                             </div>
                             <div >
                                 <span class="label">
-                                    <svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 590 412">
-                                        <path fill="#b56362" d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zm0-384c13.3 0 24 10.7 24 24V264c0 13.3-10.7 24-24 24s-24-10.7-24-24V152c0-13.3 10.7-24 24-24zM224 352a32 32 0 1 1 64 0 32 32 0 1 1 -64 0z"/>
-                                    </svg>
                                     The project fields will be exported 
                                     according to the selectiong order in CSV file.
                                 </span>  

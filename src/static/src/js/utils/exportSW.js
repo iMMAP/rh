@@ -1,12 +1,27 @@
+// count the number of checkbox selected for export
+const checkboxes = document.querySelectorAll("input[type=checkbox");
+if(checkboxes){
+	let selectedCount = 0;
+	let countSpan = document.getElementById("selectedCount");
+	checkboxes.forEach(checkbox => {
+		checkbox.addEventListener('click', function(){
+			if(checkbox.checked == true){
+				selectedCount++;
+			} else if(checkbox.checked == false){
+				selectedCount--;
+			}
+			countSpan.textContent = selectedCount;
+		});
+	});
+	countSpan.textContent = selectedCount;
+}
 // changing the checkbox color when it checked
-
 $("input[type=checkbox]").change(function () {
 	$(this).css("accent-color", "#af4745");
 });
-
 //Reset the checkbox
 $("#resetFilterButton").on("click", () => {
-	selectedCount = 0;
+	
 	const checkbox = $("input[type=checkbox]");
 	if (checkbox.is(":checked")) {
 		checkbox.prop("checked", false);
@@ -16,7 +31,7 @@ $("#resetFilterButton").on("click", () => {
 			$("#not-checked-message").text("");
 		}, 3000);
 	}
-	countSpan.textContent = selectedCount;
+	
 });
 
 $("tr[data-url]").click(function () {
@@ -100,8 +115,10 @@ $("#downloadFilterForm").click(function (e) {
 		userData.push(checkUser.name);
 	}
 	const checkCurrency = document.querySelector(".input-currency");
-	if (checkCurrency.checked === true) {
-		currencyData.push(checkCurrency.name);
+	if(checkCurrency){
+		if (checkCurrency.checked === true) {
+			currencyData.push(checkCurrency.name);
+		}
 	}
 
 	if (userData.length !== 0) {
@@ -454,6 +471,13 @@ if (exportCsvFile) {
 	exportCsvFile.addEventListener("click", function (e) {
 		e.preventDefault();
 		e.stopPropagation();
+		// get today date
+		let today = new Date();
+		let dd = String(today.getDate()).padStart(2, '0');
+		let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+		let yyyy = today.getFullYear();
+
+		today = mm + '/' + dd + '/' + yyyy;
 
 		const export_url = this.getAttribute("data-csvlink");
 		fetch(export_url, {
@@ -465,12 +489,16 @@ if (exportCsvFile) {
 		})
 			.then((response) => response.blob())
 			.then((blob) => {
+				// filename
+				const name = "project_"+today;
+				const filename = name+".csv";
 				// create a download link for downloading the csv file
+				
 				const url = window.URL.createObjectURL(new Blob([blob]));
 				const a = document.createElement("a");
 				a.style.display = "none";
 				a.href = url;
-				a.download = "export.csv";
+				a.download = filename;
 				document.body.appendChild(a);
 				a.click();
 				window.URL.revokeObjectURL(url);
@@ -485,12 +513,11 @@ if (exportCsvFile) {
 // bulk export fetch request
 function exportButton(event) {
 	event.preventDefault();
-	// getting export url
+	// get export url
 	const export_url = event.currentTarget.dataset.exportUrl;
 	const downloadButton = document.querySelector(".export-open");
 	const downloading_spinner = document.querySelector(".downloading");
 	const icon_downloading = document.querySelector(".icon-download");
-
 	downloadButton.setAttribute("disabled", "disabled");
 	downloading_spinner.style.display = "inline-block";
 	icon_downloading.style.display = "none";
@@ -512,10 +539,9 @@ function exportButton(event) {
 		body: JSON.stringify(selected_project_list),
 	})
 		.then(async (response) => {
-			// getting filename
+			//getting filename
 			const contentDisposition = response.headers.get("Content-Disposition");
 			const filename = contentDisposition.split("=")[1].replace(/"/g, "");
-
 			const blob = await response.blob();
 			const url = window.URL.createObjectURL(blob);
 			const a = document.createElement("a");

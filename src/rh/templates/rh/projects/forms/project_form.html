@@ -41,8 +41,7 @@
                 {% csrf_token %}
                 {{ form.active }}
                 <div class="inner-holder">
-                    <div class="row">
-                        <div class="col col">
+                        <div class="col ">
                             <div class="input-field is-required">
                                 <label for="{{ form.title.id_for_label }}">Project Title</label>
                                 <div class="input-holder">{{ form.title }}</div>
@@ -83,7 +82,7 @@
                             </div>
                         </div>
                         
-                        <div class="col col">
+                        <div class="col ">
                             <span class="sign-up-field-error" id="date-validation-error">
                                 <i class='icon-info'></i> Start date cannot be greater then end date.
                             </span>
@@ -155,17 +154,6 @@
                         </div>
 
                         <div class="col col-lg">
-                            <div class="field-col">
-                                <div class="select-field is-required">
-                                    <label for="{{ form.donors.id_for_label }}">Project Donor [ Please contact us if your project donor is not
-                                        in the list]</label>
-                                    <div class="input-holder">{{ form.donors }}</div>
-                                    <span class="sign-up-field-error">{{form.donors.errors}}</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col col-lg">
                             <div class="multiple-fields-row two-items">
                                 <div class="field-col">
                                     <div class="select-field">
@@ -199,10 +187,22 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="select-field">
-                                <label for="{{ form.user.id_for_label }}">Focal Point</label>
-                                {{ form.user }}
-                                <span class="sign-up-field-error">{{field.user.errors}}</span>
+                            <div class="multiple-fields-row two-items">
+                                <div class="field-col">
+                                    <div class="select-field">
+                                        <label for="{{ form.user.id_for_label }}">Focal Point</label>
+                                        {{ form.user }}
+                                        <span class="sign-up-field-error">{{field.user.errors}}</span>
+                                    </div>
+                                </div>
+                                <div class="field-col">
+                                    <div class="select-field is-required">
+                                        <label for="{{ form.donors.id_for_label }}">Project Donor [ Please contact us if your project donor is not
+                                            in the list]</label>
+                                        <div class="input-holder">{{ form.donors }}</div>
+                                        <span class="sign-up-field-error">{{form.donors.errors}}</span>
+                                    </div>
+                                </div>
                             </div>
                             <div class="input-field is-required">
                                 <label for="{{ form.description.id_for_label}}">Project Description &amp; Objectives</label>
@@ -211,9 +211,11 @@
                             </div>
                         </div>
                         <div class="plan-submit-holder">
-                            <button type="submit" class="btn btn-red">Save and Next</button>
+                            <div></div>
+                            <div>
+                                <button type="submit" class="btn btn-red">Save and Next</button>
+                            </div>
                         </div>
-                    </div>
                 </div>
             </form>
         </div>

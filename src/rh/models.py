@@ -546,6 +546,7 @@ class ActivityPlan(models.Model):
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
+        limit_choices_to={"type": "non-hrp"},
     )
     hrp_beneficiary = models.ForeignKey(
         BeneficiaryType,
@@ -553,6 +554,7 @@ class ActivityPlan(models.Model):
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
+        limit_choices_to={"type": "hrp"},
     )
     beneficiary_category = models.CharField(
         max_length=15, choices=CATEGORY_TYPES, default="non-disabled", null=True, blank=True

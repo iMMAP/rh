@@ -35,13 +35,15 @@ class UsersFilter(django_filters.FilterSet):
 @permission_required("users.view_org_users", raise_exception=True)
 def org_users_list(request):
     user_org = request.user.profile.organization
+
     users_filter = UsersFilter(
         request.GET,
         request=request,
         queryset=User.objects.filter(profile__organization=user_org).select_related("profile").order_by("-id"),
     )
 
-    paginator = Paginator(users_filter.qs, RECORDS_PER_PAGE)
+    per_page = request.GET.get("per_page", RECORDS_PER_PAGE)
+    paginator = Paginator(users_filter.qs, per_page=per_page)
     page_number = request.GET.get("page", 1)
     paginated_users = paginator.get_page(page_number)
     paginated_users.adjusted_elided_pages = paginator.get_elided_page_range(page_number)

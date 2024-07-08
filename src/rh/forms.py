@@ -109,13 +109,13 @@ class TargetLocationForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         # accessing user location
-        form_prefix=kwargs.get("prefix")
-        prefix_data_list=form_prefix.split(',')
+        form_prefix = kwargs.get("prefix")
+        prefix_data_list = form_prefix.split(",")
         print(prefix_data_list)
-        user_location=prefix_data_list[0]
-        # update the prefix 
-        kwargs['prefix']=prefix_data_list[1]
-        
+        user_location = prefix_data_list[0]
+        # update the prefix
+        kwargs["prefix"] = prefix_data_list[1]
+
         super().__init__(*args, **kwargs)
         self.fields["save"] = forms.BooleanField(
             required=False,
@@ -139,7 +139,9 @@ class TargetLocationForm(forms.ModelForm):
         else:
             self.fields.pop("nhs_code", None)
 
-        self.fields["province"].queryset = self.fields["province"].queryset.filter(type="Province", parent_id=user_location)
+        self.fields["province"].queryset = self.fields["province"].queryset.filter(
+            type="Province", parent_id=user_location
+        )
         self.fields["district"].queryset = self.fields["district"].queryset.filter(type="District")
 
         # Get only the relevant facility types - related to cluster

@@ -136,57 +136,60 @@ class ProjectResource(resources.ModelResource):
             "facility_long",
             "description",
         )
+
     try:
         user = fields.Field(column_name="user", attribute="user", widget=ForeignKeyWidget(User, field="username"))
     except Exception:
-        user=None
+        user = None
     try:
         budget_currency = fields.Field(
-        column_name="budget_currency", attribute="budget_currency", widget=ForeignKeyWidget(Currency, field="name")
+            column_name="budget_currency", attribute="budget_currency", widget=ForeignKeyWidget(Currency, field="name")
         )
     except Exception:
-        budget_currency=None
-    
+        budget_currency = None
+
     try:
         clusters = fields.Field(
-        column_name="clusters", attribute="clusters", widget=ManyToManyWidget(Cluster, field="title", separator=",")
+            column_name="clusters", attribute="clusters", widget=ManyToManyWidget(Cluster, field="title", separator=",")
         )
     except Exception:
-        clusters=None
+        clusters = None
     try:
         donors = fields.Field(
-        column_name="donors", attribute="donors", widget=ManyToManyWidget(Donor, field="name", separator=",")
+            column_name="donors", attribute="donors", widget=ManyToManyWidget(Donor, field="name", separator=",")
         )
     except Exception:
-        donors=None
-    
+        donors = None
+
     try:
         implementing_partners = fields.Field(
-        column_name="implementing_partners",
-        attribute="implementing_partners",
-        widget=ManyToManyWidget(Organization, field="code", separator=","),
+            column_name="implementing_partners",
+            attribute="implementing_partners",
+            widget=ManyToManyWidget(Organization, field="code", separator=","),
         )
     except Exception:
-        implementing_partners=None
-    try:    
+        implementing_partners = None
+    try:
         programme_partners = fields.Field(
             column_name="programme_partners",
             attribute="programme_partners",
             widget=ManyToManyWidget(Organization, field="code", separator=","),
         )
     except Exception:
-        programme_partners=None
+        programme_partners = None
 
     def dehydrate_organization(self, project):
         try:
             return project.user.profile.organization.code
         except Exception:
             return None
+
     def dehydrate_organization_type(self, project):
         try:
             return project.user.profile.organization.type
         except Exception:
             return None
+
     # activity planning start
     def dehydrate_activity_domain(self, project):
         activity_pans = list(project.activityplan_set.all())

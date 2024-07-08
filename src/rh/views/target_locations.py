@@ -66,7 +66,7 @@ def get_target_location_empty_form(request):
     # Get the prefix index from the request
     prefix_index = request.POST.get("prefix_index")
     # Get the current logged in user location
-    user_locaiton=request.user.profile.country.id
+    user_locaiton = request.user.profile.country.id
     # Create an instance of TargetLocationFormSet with a prefixed name & logged in user location
     target_location_formset = TargetLocationFormSet(
         prefix=f"{user_locaiton},target_locations_{activity_plan_formset.prefix}-{prefix_index}"

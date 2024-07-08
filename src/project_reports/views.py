@@ -879,6 +879,7 @@ def load_target_locations_details(request):
 
     return JsonResponse(response, safe=False)
 
+
 def get_disaggregations_report_empty_forms(request):
     """Get target location empty form"""
 
@@ -900,9 +901,11 @@ def get_disaggregations_report_empty_forms(request):
             for target_location in TargetLocation.objects.filter(activity_plan__indicator=indicator):
                 for disaggregation_location in target_location.disaggregationlocation_set.all():
                     if disaggregation_location.target is not None:
-                        initial_data.append({
-                            "disaggregation": disaggregation_location.disaggregation,
-                        })
+                        initial_data.append(
+                            {
+                                "disaggregation": disaggregation_location.disaggregation,
+                            }
+                        )
 
             # Create DisaggregationReportFormSet for each location prefix
             for location_report_prefix in locations_report_prefix:
@@ -932,6 +935,7 @@ def get_disaggregations_report_empty_forms(request):
 
     # Return JSON response containing generated HTML forms
     return JsonResponse(location_disaggregation_report_dict)
+
 
 def recompute_target_achieved(plan_report):
     """Recompute the target achieved for each activity plan report"""

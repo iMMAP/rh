@@ -512,9 +512,8 @@ def export_cluster_projects(request, format):
         selected_projects_id = json.loads(request.body)
 
         projects = Project.objects.filter(
-            Q(state='in-progress') | Q(state='completed'),
-            clusters__in=request.user.profile.clusters.all()
-            )
+            Q(state="in-progress") | Q(state="completed"), clusters__in=request.user.profile.clusters.all()
+        )
 
         if selected_projects_id:
             projects = projects.filter(id__in=selected_projects_id)
@@ -551,9 +550,8 @@ def export_org_projects(request, format):
         selected_projects_id = json.loads(request.body)
 
         projects = Project.objects.filter(
-            Q(state='in-progress') | Q(state='completed'),
-            organization=request.user.profile.organization
-            )
+            Q(state="in-progress") | Q(state="completed"), organization=request.user.profile.organization
+        )
 
         if selected_projects_id:
             projects = projects.filter(id__in=selected_projects_id)

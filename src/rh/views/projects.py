@@ -21,6 +21,7 @@ from .views import (
 )
 
 from ..utils import has_permission
+from django.utils.safestring import mark_safe
 
 RECORDS_PER_PAGE = 10
 
@@ -264,30 +265,6 @@ def update_project(request, pk):
 
 
 @login_required
-def project_planning_review(request, project: int):
-    """Projects Plans Review"""
-
-    project = get_object_or_404(Project, pk=project)
-
-    if not has_permission(user=request.user, project=project):
-        raise PermissionDenied
-
-    activity_plans = project.activityplan_set.all()
-    target_locations = [activity_plan.targetlocation_set.all() for activity_plan in activity_plans]
-
-    context = {
-        "project": project,
-        "activity_plans": activity_plans,
-        "target_locations": target_locations,
-        "project_review": True,
-        "project_view": True,
-        "financial_view": False,
-        "reports_view": False,
-    }
-    return render(request, "rh/projects/forms/project_review.html", context)
-
-
-@login_required
 @permission_required("rh.submit_project", raise_exception=True)
 def submit_project(request, pk):
     """Project Submission"""
@@ -297,11 +274,32 @@ def submit_project(request, pk):
     if not has_permission(user=request.user, project=project):
         raise PermissionDenied
 
-    if project:
-        project.state = "in-progress"
-        project.save()
-
     activity_plans = project.activityplan_set.all()
+    if not activity_plans.exists():
+        messages.error(
+            request,
+            mark_safe(
+                f"The project must have at least one activity plan. Check project's <a href=`{reverse('activity-plans-list', args=[project.pk])}`>activity plans</a>'."
+            ),
+        )
+        messages.error(request, "The project must have at least one activity plan.")
+        return redirect("projects-detail", pk=project.pk)
+
+    for plan in activity_plans:
+        target_locations = plan.targetlocation_set.all()
+        if not target_locations.exists():
+            messages.error(
+                request,
+                mark_safe(
+                    f"Each activity plan must have at least one target location. Check project's `<a href='{reverse('target-locations-list', args=[project.pk])}'>target locations</a>`."
+                ),
+            )
+            # return redirect("target-locations-create", activity_plan=plan.pk)
+            return redirect("projects-detail", pk=project.pk)
+
+    project.state = "in-progress"
+    project.save()
+
     for plan in activity_plans:
         target_locations = plan.targetlocation_set.all()
         for target in target_locations:
@@ -310,11 +308,8 @@ def submit_project(request, pk):
 
         plan.state = "in-progress"
         plan.save()
-    url = reverse("projects-detail", args=[project.pk])
 
-    # Return the URL in a JSON response
-    response_data = {"redirect_url": url}
-    return JsonResponse(response_data)
+    return redirect("projects-detail", pk=project.pk)
 
 
 @login_required

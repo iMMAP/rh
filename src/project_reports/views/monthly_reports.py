@@ -140,7 +140,6 @@ def update_project_monthly_report_view(request, project, report):
                 project=project,
                 report=report.pk,
             )
-            # return redirect("view_monthly_report", project=project, report=report.pk)
     else:
         form = ProjectMonthlyReportForm(instance=report)
 
@@ -406,8 +405,6 @@ def submit_monthly_report_view(request, report):
     messages.success(request, "Report Submitted and Approved!")
 
     # Return the URL in a JSON response
-    # response_data = {"redirect_url": url}
-    # return JsonResponse(response_data)
     url = reverse_lazy(
         "view_monthly_report", kwargs={"project": monthly_report.project.pk, "report": monthly_report.pk}
     )

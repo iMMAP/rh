@@ -41,10 +41,6 @@ class TargetLocationReportForm(forms.ModelForm):
         fields = "__all__"
         widgets = {
             "nhs_code": forms.widgets.TextInput(),
-            # "district": forms.Select(
-            #     attrs={"target-locations-queries-url": reverse_lazy("ajax-load-target-locations")}
-            # ),
-            # "zone": forms.Select(attrs={"target-locations-queries-url": reverse_lazy("ajax-load-target-locations")}),
             "facility_site_type": forms.Select(attrs={"class": "custom-select"}),
             "target_location": forms.Select(attrs={"class": "custom-select"}),
         }
@@ -91,19 +87,6 @@ TargetLocationReportFormSet = inlineformset_factory(
     extra=0,  # Number of empty forms to display
     can_delete=False,  # Allow deletion of existing forms
 )
-
-
-# DisaggregationReportFormSet = inlineformset_factory(
-#     TargetLocationReport,
-#     DisaggregationLocationReport,
-#     fields=(
-#         "disaggregation",
-#         "target_required",
-#         "target",
-#     ),
-#     extra=0,  # Number of empty forms to display
-#     can_delete=False,  # Allow deletion of existing forms
-# )
 
 
 class BaseDisaggregationLocationReportFormSet(BaseInlineFormSet):

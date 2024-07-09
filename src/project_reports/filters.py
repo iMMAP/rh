@@ -13,7 +13,7 @@ from rh.models import (
 )
 
 
-class ReportFilterForm(django_filters.FilterSet):
+class MonthlyReportsFilter(django_filters.FilterSet):
     """Monthly Report Filter Form"""
 
     # Define the DateFromToRangeFilter with initial value of current month

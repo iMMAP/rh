@@ -44,6 +44,7 @@ class ProjectMonthlyReport(models.Model):
         ("submit", "Submitted"),
         ("reject", "Rejected"),
         ("complete", "Completed"),
+        ("archive", "Archived"),
     ]
     state = models.CharField(max_length=15, choices=REPORT_STATES, default="todo", null=True, blank=True)
     active = models.BooleanField(default=True)

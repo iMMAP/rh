@@ -836,7 +836,7 @@ a.text-decoration-none{
   background: #b4eda0;
 }
 
-.draft {
+.draft, .todo {
   @extend .c-pill;
   border: 1px solid #ffc400;
   background: #ffebb6;
@@ -846,6 +846,12 @@ a.text-decoration-none{
   @extend .c-pill;
   border: 1px solid #ff4436;
   background: #ffd5d1;
+}
+.archive {
+  @extend .c-pill;
+  border: 1px solid black;
+  background: gray;
+  color: white;
 }
 
 .unset-before::before {

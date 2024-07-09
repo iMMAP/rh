@@ -72,7 +72,7 @@ Project Report
                     <a href="{% url 'projects-detail' project.id %}">{{ project.code }}</a>
                 </li>
                 <li>
-                    <a href="{% url 'project_reports_home' project=project.id %}">Progress Reports</a>
+                    <a href="{% url 'project_reports_home' project=project.id %}?state=todo&state=pending&state=submit&state=reject">Progress Reports</a>
                 </li>
                 <li class="current">
                   {% if monthly_report %}

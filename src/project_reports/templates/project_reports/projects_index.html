@@ -16,7 +16,7 @@
                             <a href="{% if project %}{% url 'create_project_budget_progress' project.pk %}{% else %}#{% endif %}">Financial Reports</a>
                         </li>
                         <li class="{% if reports_view %}active{% endif %}">
-                            <a href="{% if project %}{% url 'project_reports_home' project.pk %}{% else %}#{% endif %}">Monthly Progress</a>
+                            <a href="{% if project %}{% url 'project_reports_home' project.pk %}?state=todo&state=pending&state=submit&state=reject{% else %}#{% endif %}">Monthly Progress</a>
                         </li>
                     </ul>
                 </div>

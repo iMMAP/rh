@@ -3,6 +3,8 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.core.paginator import Paginator
 from django.urls import reverse
 from django.db.models import Count
+from django.http import HttpResponseRedirect
+from django.urls import reverse_lazy
 
 from django.contrib import messages
 from django.utils.safestring import mark_safe
@@ -31,6 +33,14 @@ from ..models import (
 )
 
 from ..filters import TargetLocationReportFilter
+
+
+class HTTPResponseHXRedirect(HttpResponseRedirect):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self["HX-Redirect"] = self["Location"]
+
+    status_code = 200
 
 
 @login_required
@@ -130,6 +140,7 @@ def create_report_target_locations(request, project, report, plan):
                     project=monthly_report.project.pk,
                     report=monthly_report.pk,
                     plan=plan_report.pk,
+                    location=location_report.pk,
                 )
             elif "_save" in request.POST:
                 return redirect(
@@ -137,7 +148,7 @@ def create_report_target_locations(request, project, report, plan):
                 )
             elif "_addanother" in request.POST:
                 return redirect(
-                    "create_report_target_locations", project=monthly_report.project.pk, report=monthly_report.pk
+                    "create_report_target_locations", project=monthly_report.project.pk, report=monthly_report.pk, plan=plan_report.pk
                 )
         else:
             messages.error(request, "The form is invalid. Please check the fields and try again.")
@@ -206,7 +217,7 @@ def update_report_target_locations(request, project, report, plan, location):
                     project=monthly_report.project.pk,
                     report=monthly_report.pk,
                     plan=plan_report.pk,
-                    pk=location_report.pk,
+                    location=location_report.pk,
                 )
             elif "_save" in request.POST:
                 return redirect(
@@ -214,7 +225,7 @@ def update_report_target_locations(request, project, report, plan, location):
                 )
             elif "_addanother" in request.POST:
                 return redirect(
-                    "create_report_target_locations", project=monthly_report.project.pk, report=monthly_report.pk
+                    "create_report_target_locations", project=monthly_report.project.pk, report=monthly_report.pk, plan=plan_report.pk
                 )
         else:
             messages.error(request, "The form is invalid. Please check the fields and try again.")
@@ -249,21 +260,11 @@ def delete_location_report_view(request, location_report):
     if location_report:
         location_report.delete()
 
-        # # Recompute the achieved target for the location_report activity.
-        # recompute_target_achieved(plan_report)
-
     # Generate the URL using reverse
-    url = reverse(
-        "view_monthly_report",
-        kwargs={
-            "project": monthly_report.project.pk,
-            "report": monthly_report.pk,
-        },
+    url = reverse_lazy(
+        "list_report_target_locations", kwargs={"project": monthly_report.project.pk, "report": monthly_report.pk}
     )
-
-    # Return the URL in a JSON response
-    response_data = {"redirect_url": url}
-    return JsonResponse(response_data)
+    return HTTPResponseHXRedirect(redirect_to=url)
 
 
 @login_required

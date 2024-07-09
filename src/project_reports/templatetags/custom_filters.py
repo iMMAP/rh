@@ -13,4 +13,6 @@ def custom_class(report):
             state = "green"
         elif report.state != "complete" and report.report_date > report.report_due_date:
             state = "red"
+        elif report.state != "archive" and report.report_date > report.report_due_date:
+            state = "red"
     return state

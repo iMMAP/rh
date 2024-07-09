@@ -8,123 +8,56 @@
 {% endblock page_title %}
 
 {% block content %}
-    <div class="container">
-        <div class="page-top-panel">
-            <div class="tabs-nav-holder">
-                <ul class="tabs-nav">
-                    <li class=" {% if not request.GET.is_active  %}active{% endif %}">
-                        <a href="{% url 'users-organization' %}">All Users
-                            ({{ users_count }})
-                        </a>
-                    </li>
-                    <li class=" {% if request.GET.is_active == 'true' %}active{% endif %}">
-                        <a href="{{request.GET.url}}?is_active=true">Active Users
-                            (
-                            {% if active_users_count %}
-                                {{ active_users_count }}
-                            {% else %}
-                                {{ active_users | length }}
-                            {% endif %}
-                            )
-                        </a>
-                    </li>
-                    <li class=" {% if request.GET.is_active == 'false' %}active{% endif %}">
-                        <a href="{{request.GET.url}}?is_active=false">Deactivated Users
-                            (
-                            {% if deactive_users_count %}
-                                {{ deactive_users_count }}
-                            {% endif %}
-                            )
-                        </a>
-                    </li>
-                </ul>
-            </div>
-            <div class="actions-panel">
-                <div class="export-formats-holder">
-                    <a href="#" class="btn btn-gray export-open">
-                        <span class="btn-text">Export</span>
-                        <!-- spinner start-->
-                        <span class="downloading">
-                            <svg  width="24" height="24" viewBox="0 0 24 24"
-                            stroke="#555555" 
-                            xmlns="http://www.w3.org/2000/svg">
-                                <g class="spinner_V8m1">
-                                    <circle cx="12" cy="12" r="9.5" fill="none" stroke-width="3">
-                                    </circle>
-                                </g>
-                            </svg>
-                        </span>
-                        <!-- spinner end -->
-                        <span class="icon-download"></span>
+<div class="container">
+        <div class="tabs-nav-holder">
+            <ul class="tabs-nav">
+                <li class=" {% if not request.GET.is_active  %}active{% endif %}">
+                    <a href="{% url 'users-organization' %}">All Users
+                        ({{ users_count }})
                     </a>
-                    <div class="export-formats">
-                        <span class="title">File format</span>
-                        <div class="format-list">
-                            <div class="export-link-holder">
-                                <a class="export-link" href="#">
-                                    CSV
-                                </a>
-                            </div>
-                        </div>
+                </li>
+                <li class=" {% if request.GET.is_active == 'true' %}active{% endif %}">
+                    <a href="{{request.GET.url}}?is_active=true">Active Users
+                        (
+                        {% if active_users_count %}
+                            {{ active_users_count }}
+                        {% else %}
+                            {{ active_users | length }}
+                        {% endif %}
+                        )
+                    </a>
+                </li>
+                <li class=" {% if request.GET.is_active == 'false' %}active{% endif %}">
+                    <a href="{{request.GET.url}}?is_active=false">Deactivated Users
+                        (
+                        {% if deactive_users_count %}
+                            {{ deactive_users_count }}
+                        {% endif %}
+                        )
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="two-cols-layout">
+            <aside class="">
+                <form method="get" action="" class="form-container" >
+                    <div class="page-top-panel bottom-border">
+                        <h6 class="title">Filter</h6>
                     </div>
-                </div>
-            </div>
-        </div>
+                    <div style="padding:0.7rem">
+                        {{ users_filter.form.as_p }}
+                    </div>
+                    <div style="padding:0.7rem;">
+                        <a class="btn btn-gray-outline" href="">Reset</a>
+                        <button type="submit" class="btn btn-red">Apply</button>
+                    </div>
+                </form>
+            </aside>
 
-        <div class="content-block top-border bottom-border">
-            <div id="tab-1">
-                <div class="table-wrapper-scrollable">
-                    <table class="table all-projects-table js-collapsible-table">
-                        <thead>
-                            <tr>
-                                <th>
-                                    <strong class="table-title">Name</strong>
-                                </th>
-                                <th class="description-col">
-                                    <strong class="table-title">Email</strong>
-                                </th>
-                                <th>
-                                    <strong class="table-title">Clusters</strong>
-                                </th>
-                                <th>
-                                    <strong class="table-title">Date Joined</strong>
-                                </th>
-                                <th>
-                                    <strong class="table-title">Last Login</strong>
-                                </th>
-                                <th>
-                                    <strong class="table-title">Status</strong>
-                                </th>
-                                <th>
-                                    <strong class="table-title">Action</strong>
-                                </th>
-                            </tr>
-                        </thead>
-                        
-                        <tbody>
-                            <!--Include The Active Projects Details Here -->
-                            {% for user in users %}
-                                {% include 'users/partials/user_tr.html' %}
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+            {% include "users/partials/_users_table.html" %}
         </div>
-
-        {% comment %} Pager {% endcomment %}
-        {% if users %}
-            {% include 'components/_pagination.html' with object_list=users %}
-        {% else %}
-            <div class="view_nocontent">
-                <div class="nocontent_help">
-                    <h4>No users found.</h4>
-                    <p>Ask your organization members to register for a new account in ReportHub.</p>
-                </div>
-            </div>
-        {% endif %}
-        {% comment %} endpager {% endcomment %}
-    </div>
+</div>
 {% endblock content %}
 
 {% block scripts %}

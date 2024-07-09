@@ -20,9 +20,13 @@ RECORDS_PER_PAGE = 10
 
 
 class UsersFilter(django_filters.FilterSet):
+    last_login = django_filters.DateRangeFilter(field_name="last_login")
+    date_joined = django_filters.DateRangeFilter(field_name="date_joined")
+
     class Meta:
         model = User
-        fields = "__all__"
+        # fields = "__all__"
+        fields = ["username", "email", "first_name", "last_name", "is_active"]
 
 
 #############################################

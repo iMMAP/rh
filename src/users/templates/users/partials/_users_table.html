@@ -1,0 +1,95 @@
+{% load compress %}
+{% load static %}
+
+<div class="table-container">
+    {% comment %} Table Actions and filters {% endcomment %}
+    <div class="page-top-panel bottom-border">
+       <div></div> 
+        <div class="actions-panel">
+            <div class="export-formats-holder">
+                <span class="btn btn-gray export-open">
+                    <span class="btn-text">Export</span>
+                    <!-- spinner start-->
+                    <img class='downloading' style="width: 1.2rem;" src="{% static 'src/images/spinner.gif' %}" />
+                    <!-- spinner end -->
+                    <span class="icon-download"></span>
+                </span>
+                <div class="export-formats">
+                    <span class="title">File format</span>
+                    <div class="format-list">
+                        <div class="export-link-holder" 
+                            onclick="exportButton(event)"
+                            data-export-url="{% url 'export-org-projects' 'csv' %}">
+                            <span class="export-link cursor-pointer">
+                                CSV
+                            </span>
+                        </div>
+                        <div class="export-link-holder" 
+                            onclick="exportButton(event)"
+                            data-export-url="{% url 'export-org-projects' 'xls' %}">
+                            <span class="export-link cursor-pointer" >
+                                Excel
+                            </span>
+                        </div>
+                        <div class="export-link-holder" 
+                            onclick="exportButton(event)"
+                            data-export-url="{% url 'export-org-projects' 'json' %}">
+                            <span class="export-link cursor-pointer">
+                                JSON
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% comment %} Table {% endcomment %}
+    {% if users %}
+    <div class="table-wrapper-scrollable">
+        <table class="table all-projects-table">
+            <thead class="content-block ">
+                <tr>
+                    <th>
+                        <strong class="table-title">Name</strong>
+                    </th>
+                    <th class="description-col">
+                        <strong class="table-title">Email</strong>
+                    </th>
+                    <th>
+                        <strong class="table-title">Clusters</strong>
+                    </th>
+                    <th>
+                        <strong class="table-title">Date Joined</strong>
+                    </th>
+                    <th>
+                        <strong class="table-title">Last Login</strong>
+                    </th>
+                    <th>
+                        <strong class="table-title">Status</strong>
+                    </th>
+                    <th>
+                        <strong class="table-title">Action</strong>
+                    </th>
+                </tr>
+            </thead>
+            
+            <tbody>
+                {% for user in users %}
+                    {% include 'users/partials/user_tr.html' %}
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+        <div class="view_nocontent">
+            <div class="nocontent_help">
+                <h4>No users found.</h4>
+                <p>Ask your organization members to register for a new account in ReportHub.</p>
+            </div>
+        </div>
+    {% endif %}
+
+    {% comment %} Pagination {% endcomment %}
+    {% include 'components/_pagination.html' with object_list=users %}
+</div>

@@ -287,7 +287,7 @@ class BudgetProgressForm(forms.ModelForm):
             )
 
 
-class OrganizationRegisterForm(forms.ModelForm):
+class OrganizationForm(forms.ModelForm):
     """Organization Registeration Form"""
 
     class Meta:

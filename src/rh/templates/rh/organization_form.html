@@ -26,7 +26,7 @@
         <form method="POST" class="login-form">
             {% csrf_token %}
             <div class="form-holder">
-                {% for field in org_form %}
+                {% for field in form %}
                     <div class="input-field is-required">
                         {{ field.label_tag }}
                         <div class="input-holder">{{ field }}</div>
@@ -36,7 +36,6 @@
                 <div class="btn-holder">
                     <button type="submit" class="btn btn-red">Save</button>
                 </div>
-                
             </div>
         </form>
     </div>

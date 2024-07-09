@@ -498,7 +498,7 @@ ul{
 .two-cols-layout {
   @include media('>=desktop') {
     display: grid;
-    grid-template-columns: 230px 1fr;
+    grid-template-columns: 250px 1fr;
     grid-gap: 0 24px;
     grid-template-rows: auto auto;
   }

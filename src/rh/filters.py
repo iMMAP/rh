@@ -122,4 +122,6 @@ class TargetLocationFilter(django_filters.FilterSet):
     def __init__(self, data=None, *args, **kwargs):
         project = kwargs.pop("project", None)
         super().__init__(data, *args, **kwargs)
-        self.form.fields["activity_plan"].queryset = project.activityplan_set.all()
+        self.form.fields["activity_plan"].queryset = project.activityplan_set.select_related(
+            "activity_domain", "indicator"
+        )

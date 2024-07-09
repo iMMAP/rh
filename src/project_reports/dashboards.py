@@ -2,7 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from rh.models import Organization, Project
 
-from .filters import ReportFilterForm
+from .filters import MonthlyReportsFilter
 from .models import ProjectMonthlyReport
 
 RECORDS_PER_PAGE = 5
@@ -45,7 +45,7 @@ def reports_dashboard_view(request):
     reports_complete = queryset.filter(state="complete").count()
 
     # Initialize filter form with filter parameters and queryset
-    reports_filter = ReportFilterForm(
+    reports_filter = MonthlyReportsFilter(
         request.GET,
         queryset=queryset.order_by("-id"),
     )

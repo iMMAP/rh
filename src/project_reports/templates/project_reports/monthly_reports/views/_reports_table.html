@@ -257,10 +257,14 @@
 
                                     <li>
                                         <button>
-                                            <a href="{% url 'delete_project_monthly_report' project_report.pk %}"
-                                                data-tippy-content="Delete Report"
-                                                class="">
-                                                <span class="project-detail icon-trashbin"></span></a>
+                                            <a hx-post="{% url 'delete_project_monthly_report' project_report.pk %}"
+                                               hx-trigger="click"
+                                               hx-swap="none"
+                                               hx-confirm="Are you sure you want to delete this report?"
+                                               data-tippy-content="Delete report"
+                                               class="">
+                                                <span class="project-detail icon-trashbin"></span>
+                                            </a>
                                         </button>
                                     </li>
                                 </ul>

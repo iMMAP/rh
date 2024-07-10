@@ -73,23 +73,5 @@
 
 
 {% block scripts %}
-    {{ block.super }}
     <script type="module" src="{% static 'src/js/utils/exportSW.js' %}"></script>
-    <!-- Select2 CDN -->
-    {% comment %} <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js" integrity="sha512-2ImtlRlf2VVmiGZsjm9bEyhjGW4dU7B6TNwh/hx/iSByxNENtj3WVE6o/9Lj4TJeVXPi4bnOIMXFIJJAeufa0A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script> {% endcomment %}
-
-    <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
-    <script>
-        document.querySelectorAll('.custom-select').forEach((select) => {
-            const choice = new Choices(select, {
-                searchEnabled: true,
-                itemSelectText: '',
-                removeItemButton: true,
-                classNames: {
-                    listDropdown: 'choices__list--dropdown',
-                },
-                shouldSort: false,
-            });
-        });
-    </script>
 {% endblock scripts %}

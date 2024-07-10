@@ -231,6 +231,9 @@ def details_monthly_progress_view(request, project, report):
                     indicator_id=plan.indicator.pk,
                 )
 
+        # Re-fetch activity_reports after creating new ActivityPlanReport instances
+        activity_reports = monthly_report.activityplanreport_set.all()
+
     context = {
         "project": project,
         "monthly_report": monthly_report,
@@ -290,17 +293,20 @@ def copy_project_monthly_report_view(request, report):
                 for disaggregation_location_report in disaggregation_location_reports:
                     copy_disaggregation_location_reports(new_location_report, disaggregation_location_report)
         messages.success(request, "Report activities copied successfully.")
+        url = reverse_lazy(
+            "list_report_activity_plans", kwargs={"project": monthly_report.project.pk, "report": monthly_report.pk}
+        )
 
     else:
         messages.error(request, "At least one last month approved report is required.")
+        url = reverse_lazy(
+            "view_monthly_report", kwargs={"project": monthly_report.project.pk, "report": monthly_report.pk}
+        )
 
     # Save the changes made to the new monthly report.
     monthly_report.state = "todo"
     monthly_report.save()
 
-    url = reverse_lazy(
-        "list_report_activity_plans", kwargs={"project": monthly_report.project.pk, "report": monthly_report.pk}
-    )
     return HTTPResponseHXRedirect(redirect_to=url)
 
 

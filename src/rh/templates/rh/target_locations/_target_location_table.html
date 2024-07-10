@@ -61,13 +61,22 @@
                         </td>
                         <td> <span class="{{row.state}}"> {{row.state}} </span> </td>
                         <td>
-                            <a href="{% url 'target-locations-update' row.id %}" class="btn btn-gray">Edit</a> 
-                            <button>
-                                <a hx-delete="{% url 'target-locations-delete' row.id %}" hx-indicator=".progress" hx-trigger="click" hx-confirm="Do you want to delete `{{row}}` and its dependencies ?" hx-target="closest tr" data-tippy-content="Delete Target Location" class="">
-                                    {% comment %} <img class='htmx-indicator' style="width: 1.2rem;" src="{% static 'src/images/spinner.gif' %}" /> {% endcomment %}
-                                    <span class="project-detail icon-trashbin"></span>
-                                </a>
-                            </button>
+                             <div class="table-flex-holder">
+                                <ul class="table-options-buttons ">
+                                    <li><a href="{% url 'target-locations-update' row.id %}" class="btn btn-gray">Edit</a> </li>
+                                    <li> <a 
+                                            hx-delete="{% url 'target-locations-delete' row.id %}" 
+                                            hx-indicator=".progress" 
+                                            hx-trigger="click" 
+                                            hx-confirm="Do you want to delete `{{row}}` and its dependencies ?" 
+                                            hx-target="closest tr" 
+                                            data-tippy-content="Delete Target Location" 
+                                            class=""
+                                        >
+                                        <span class="project-detail icon-trashbin"></span>
+                                    </a> </li>
+                                </ul>
+                            </div>
                         </td>
                     </tr>
                     {% endfor %}

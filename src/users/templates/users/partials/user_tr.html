@@ -36,25 +36,21 @@
             <ul class="table-options-buttons">
                 {% if perms.rh.activate_deactivate_user %}
                 <li>
-                    <form 
-                        method="post"
-                        hx-post="{% url 'toggle-status' user.id %}" 
+                    <button 
+                        id="dectivate-button-{{user.id}}" class="btn btn-gray"
+                        hx-delete="{% url 'toggle-status' user.id %}" 
                         hx-swap="outerHTML" 
                         hx-target="#user-{{user.id}}" 
                         hx-disable-element="#dectivate-button-{{user.id}}"
                         hx-ext="disable-element"
                     >
-                        {% csrf_token %}
-                        <button style="background:unset" type="submit" id="dectivate-button-{{user.id}}">
-                            <img class='htmx-indicator' style="width: 1.2rem;" src="{% static 'src/images/spinner.gif' %}" />
-                            {% if user.is_active %}
-                            <span class="project-detail icon-trashbin"></span>
-                            Deactivate
-                            {% else %}
+                        {% if user.is_active %}
+                            <span class="project-detail icon-trashbin"></span> Deactivate
+                        {% else %}
                             Activate
-                            {% endif %}
-                        </button>
-                    </form>
+                        {% endif %}
+                        <img class="htmx-indicator" id="spinner" style="width: 1.2rem;" src="{% static 'src/images/spinner.gif' %}" />
+                    </button>
                 </li>
                 {% endif %}
             </ul>

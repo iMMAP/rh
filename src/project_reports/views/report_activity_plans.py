@@ -31,7 +31,7 @@ def list_report_activity_plans(request, project, report):
         request.GET,
         request=request,
         queryset=ActivityPlanReport.objects.filter(monthly_report=monthly_report_instance)
-        .select_related("activity_plan", "indicator")
+        .select_related("monthly_report", "activity_plan", "indicator")
         .order_by("-id")
         .annotate(report_target_location_count=Count("targetlocationreport"))
         .order_by("-id"),

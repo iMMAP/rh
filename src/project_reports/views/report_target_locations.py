@@ -98,7 +98,7 @@ def list_report_target_locations(request, project, report, plan=None):
 def create_report_target_locations(request, project, report, plan):
     """Create View"""
     monthly_report = get_object_or_404(ProjectMonthlyReport.objects.select_related("project"), pk=report)
-    plan_report = get_object_or_404(ActivityPlanReport.objects.select_related("monthly_report"), pk=plan)
+    plan_report = get_object_or_404(ActivityPlanReport, pk=plan)
     DisaggregationReportFormSet = inlineformset_factory(
         parent_model=TargetLocationReport,
         model=DisaggregationLocationReport,
@@ -180,7 +180,7 @@ def create_report_target_locations(request, project, report, plan):
 def update_report_target_locations(request, project, report, plan, location):
     """Update View"""
     monthly_report = get_object_or_404(ProjectMonthlyReport.objects.select_related("project"), pk=report)
-    plan_report = get_object_or_404(ActivityPlanReport.objects.select_related("monthly_report"), pk=plan)
+    plan_report = get_object_or_404(ActivityPlanReport, pk=plan)
 
     # Get the existing location report to be updated
     location_report = get_object_or_404(TargetLocationReport, pk=location)
@@ -195,9 +195,15 @@ def update_report_target_locations(request, project, report, plan, location):
     )
     if request.method == "POST":
         location_report_form = TargetLocationReportForm(request.POST or None, instance=location_report)
-        report_disaggregation_formset = DisaggregationReportFormSet(
-            request.POST, instance=location_report, plan_report=plan_report
-        )
+
+        # Optimize the queryset to prefetch related target_location_report
+        disaggregation_reports = DisaggregationLocationReport.objects.select_related('target_location_report', 'disaggregation')
+
+        # When using the formset, pass the optimized queryset
+        report_disaggregation_formset = DisaggregationReportFormSet(request.POST,
+                                                                    queryset=disaggregation_reports,
+                                                                    instance=location_report,
+                                                                    plan_report=plan_report)
         if location_report_form.is_valid() and report_disaggregation_formset.is_valid():
             location_report = location_report_form.save(commit=False)
             location_report.activity_plan_report = plan_report
@@ -231,9 +237,18 @@ def update_report_target_locations(request, project, report, plan, location):
             messages.error(request, "The form is invalid. Please check the fields and try again.")
     else:
         location_report_form = TargetLocationReportForm(request.POST or None, instance=location_report)
-        report_disaggregation_formset = DisaggregationReportFormSet(
-            request.POST or None, instance=location_report, plan_report=plan_report
-        )
+        # Optimize the queryset to prefetch related target_location_report
+        disaggregation_reports = DisaggregationLocationReport.objects.select_related('target_location_report', 'disaggregation')
+
+        # When using the formset, pass the optimized queryset
+        report_disaggregation_formset = DisaggregationReportFormSet(request.POST or None,
+                                                                    instance=location_report,
+                                                                    plan_report=plan_report,
+                                                                    queryset=disaggregation_reports)
+
+        # report_disaggregation_formset = DisaggregationReportFormSet(
+        #     request.POST or None, instance=location_report, plan_report=plan_report
+        # )
 
     return render(
         request,

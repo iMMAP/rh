@@ -1,5 +1,5 @@
 from django.contrib.auth.decorators import login_required
-from django.views.decorators.http import require_POST
+from django.views.decorators.http import require_POST, require_http_methods
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
@@ -22,6 +22,7 @@ from django.contrib import messages
 from django.utils.safestring import mark_safe
 
 from ..filters import ActivityPlansFilter
+from django_htmx.http import HttpResponseClientRedirect
 
 
 @login_required
@@ -90,7 +91,7 @@ def create_activity_plan(request, project):
 
 
 @login_required
-@require_POST
+@require_http_methods(["DELETE"])
 def delete_activity_plan(request, pk):
     """Delete the specific activity plan"""
     activity_plan = get_object_or_404(ActivityPlan, pk=pk)
@@ -99,6 +100,8 @@ def delete_activity_plan(request, pk):
 
     messages.success(request, "Activity plan and its target locations has been delete.")
 
+    if request.headers.get("Hx-Trigger", "") == "delete-btn":
+        return HttpResponseClientRedirect(reverse("activity-plans-list", args=[activity_plan.project.id]))
     return HttpResponse(status=200)
 
 

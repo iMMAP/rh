@@ -1,5 +1,5 @@
 from django.contrib.auth.decorators import login_required
-from django.views.decorators.http import require_POST
+from django.views.decorators.http import require_http_methods
 from django.http import JsonResponse, HttpResponse
 from django.urls import reverse
 from django.shortcuts import get_object_or_404, render, redirect
@@ -17,6 +17,7 @@ from django.forms import inlineformset_factory
 from django.contrib import messages
 from django.utils.safestring import mark_safe
 from ..filters import TargetLocationFilter
+from django_htmx.http import HttpResponseClientRedirect
 
 
 @login_required
@@ -188,13 +189,18 @@ def copy_target_location(request, project, location):
 
 
 @login_required
-@require_POST
+@require_http_methods(["DELETE"])
 def delete_target_location(request, pk):
     """Delete the target location"""
     target_location = get_object_or_404(TargetLocation, pk=pk)
 
     target_location.delete()
 
-    messages.success(request, "Target Location has been delete.")
+    messages.success(request, "Target Location has been deleted.")
+
+    if request.headers.get("Hx-Trigger", "") == "delete-btn":
+        return HttpResponseClientRedirect(
+            reverse("target-locations-list", args=[target_location.activity_plan.project.id])
+        )
 
     return HttpResponse(status=200)

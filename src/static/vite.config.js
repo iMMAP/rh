@@ -11,7 +11,7 @@ export default defineConfig({
         "rh/js/project_planning.js",
 
         // relative to the folder that vite.config is located
-        "../users/static/users/users.js",
+        // "../users/static/users/users.js",
       ],
       root: "..",
     }),

@@ -295,7 +295,22 @@
                         </div>
                     </div>
                     <div class="plan-submit-holder">
-                        <div></div>
+                        {% if target_location_form.initial %}
+                            <a
+                                id="delete-btn" 
+                                hx-post="{% url 'target-locations-delete' target_location_form.initial.id %}" 
+                                hx-trigger="click" 
+                                hx-indicator=".progress" 
+                                hx-confirm="Do you want to delete Target Locations ?"  
+                                data-tippy-content="Delete Target Location" 
+                                class="cursor-pointer"
+                            >
+                                <span class="project-detail icon-trashbin"></span>
+                                Delete
+                            </a>
+                        {% else %}
+                            <a href="#"></a>
+                        {% endif %}
                         <div>
                             <input type="submit" name="_addanother" class="btn btn-gray" value="Save and add another">
                             <input type="submit" name="_continue" class="btn btn-gray" value="Save and continue editing" >

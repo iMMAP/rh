@@ -227,6 +227,7 @@ class ActivityPlanForm(forms.ModelForm):
         # Updating the queryset for validation purposes
         # If the data does not matche the queryset, it throws error
         self.fields["indicator"].queryset = Indicator.objects.none()
+        self.fields["activity_type"].queryset = ActivityType.objects.none()
 
         if self.data:
             try:

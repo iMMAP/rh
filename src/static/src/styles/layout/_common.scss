@@ -907,7 +907,21 @@ a.text-decoration-none{
   background-color: $white;
 }
 
+
 /* htmx progress */
+.htmx-indicator {
+  display: none;
+}
+
+.htmx-request .htmx-indicator {
+  display: inline;
+}
+
+.htmx-request.htmx-indicator {
+  display: inline;
+}
+
+
 .progress {
   // position: fixed;
   position: relative;

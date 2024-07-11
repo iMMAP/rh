@@ -25,6 +25,11 @@ from ..filters import ActivityPlansFilter
 from django_htmx.http import HttpResponseClientRedirect
 
 
+from extra_settings.models import Setting
+
+RECORDS_PER_PAGE = Setting.get("RECORDS_PER_PAGE", default=10)
+
+
 @login_required
 def update_activity_plan(request, pk):
     """Update an existing activity plan"""
@@ -159,7 +164,7 @@ def list_activity_plans(request, project):
         project=project,
     )
 
-    per_page = request.GET.get("per_page", 10)
+    per_page = request.GET.get("per_page", RECORDS_PER_PAGE)
     paginator = Paginator(ap_filter.qs, per_page=per_page)  # Show 10 activity plans per page
     page = request.GET.get("page", 1)
     activity_plans = paginator.get_page(page)

@@ -33,7 +33,7 @@
     {% if object_list %}
         <div class="table-wrapper-scrollable">
             <table class="table all-projects-table">
-                <thead class="content-block ">
+                <thead class="content-block">
                     <tr>
                         <th>
                             <strong class="table-title">
@@ -60,7 +60,7 @@
                 </thead>
                 
                 <tbody>
-                    <!--Include The Projects Details Here -->
+                    <!--Include The Reports Details Here -->
                     {% for report_plan in object_list %}
                     <tr>
                         <td>
@@ -69,9 +69,19 @@
                         <td>{{ report_plan.activity_plan.activity_type }}</td>
                         <td>{{ report_plan.indicator }}</td>
                         <td>{{ report_plan.report_target_location_count }}</td>
-                        <td class="text-right">
-                            <a href="{% url 'update_report_activity_plans' project.id report_plan.monthly_report.id report_plan.id %}" class="btn btn-gray">Edit</a>
-                            <a href="{% url 'create_report_target_locations' project.id monthly_report.id report_plan.id %}" class="btn btn-red">Add Target Location</a>
+                        <td>
+                            <div class="table-flex-holder">
+                                <ul class="table-options-buttons">
+                                    <li>
+                                        <a href="{% url 'update_report_activity_plans' project.id report_plan.monthly_report.id report_plan.id %}" class="btn btn-gray">Edit</a>
+                                    </li>
+                                    <li>
+                                        <a href="{% url 'create_report_target_locations' project.id monthly_report.id report_plan.id %}" class="btn btn-gray">
+                                            <img src="{% static 'admin/img/icon-addlink.svg' %}" alt="add-btn-icon">Location
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
                         </td>
                     </tr>
                     {% endfor %}

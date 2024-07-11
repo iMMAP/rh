@@ -15,8 +15,9 @@ import django_filters
 from django.db.models import Count, Q
 from django.core.exceptions import PermissionDenied
 from ..utils import has_permission
+from extra_settings.models import Setting
 
-RECORDS_PER_PAGE = 10
+RECORDS_PER_PAGE = Setting.get("RECORDS_PER_PAGE", default=10)
 
 
 class UsersFilter(django_filters.FilterSet):

@@ -55,25 +55,20 @@ class HTTPResponseHXRedirect(HttpResponseRedirect):
 def index_project_report_view(request, project):
     """Project Monthly Report View"""
 
-    project = get_object_or_404(Project.objects.filter(pk=project)
-                                .order_by("-id"), pk=project)
+    project = get_object_or_404(Project.objects.filter(pk=project).order_by("-id"), pk=project)
 
     # Setup Filter
     reports_filter = MonthlyReportsFilter(
         request.GET,
         request=request,
-        queryset=ProjectMonthlyReport.objects.filter(
-            project=project
-        )
+        queryset=ProjectMonthlyReport.objects.filter(project=project)
         .order_by("-id")
         .prefetch_related(
             Prefetch(
                 "activityplanreport_set",
-                ActivityPlanReport.objects.select_related("activity_plan")
-                .prefetch_related(
+                ActivityPlanReport.objects.select_related("activity_plan").prefetch_related(
                     Prefetch(
-                        "targetlocationreport_set",
-                        TargetLocationReport.objects.select_related("province", "district")
+                        "targetlocationreport_set", TargetLocationReport.objects.select_related("province", "district")
                     ),
                 ),
             ),
@@ -87,9 +82,7 @@ def index_project_report_view(request, project):
     p_reports = p.get_page(page)
     p_reports.adjusted_elided_pages = p.get_elided_page_range(page)
 
-    reports = ProjectMonthlyReport.objects.filter(
-        project=project
-    ).aggregate(
+    reports = ProjectMonthlyReport.objects.filter(project=project).aggregate(
         project_reports_todo_count=Count("id", filter=Q(state__in=["todo", "pending", "submit", "reject", "archive"])),
         project_report_complete_count=Count("id", filter=Q(state="complete"), active=True),
         project_report_archive_count=Count("id", filter=Q(state="archive", active=False)),
@@ -203,10 +196,12 @@ def details_monthly_progress_view(request, project, report):
         ProjectMonthlyReport.objects.prefetch_related(
             Prefetch(
                 "activityplanreport_set",
-                ActivityPlanReport.objects.select_related("activity_plan__activity_domain", "activity_plan__activity_type", "indicator")
+                ActivityPlanReport.objects.select_related(
+                    "activity_plan__activity_domain", "activity_plan__activity_type", "indicator"
+                ),
             ),
         ),
-        pk=report
+        pk=report,
     )
 
     activity_reports = monthly_report.activityplanreport_set
@@ -386,13 +381,10 @@ def copy_disaggregation_location_reports(location_report, disaggregation_locatio
 def delete_project_monthly_report_view(request, report):
     """Delete View for Project Reports"""
     monthly_report = get_object_or_404(ProjectMonthlyReport, pk=report)
-    project = monthly_report.project
     # TODO: Check access rights before deleting
     if monthly_report:
         monthly_report.delete()
-    url = reverse_lazy(
-        "project_reports_home", kwargs={"project": monthly_report.project.pk}
-    )
+    url = reverse_lazy("project_reports_home", kwargs={"project": monthly_report.project.pk})
     url_with_params = f"{url}?state=todo&state=pending&state=submit&state=reject"
 
     return HTTPResponseHXRedirect(redirect_to=url_with_params)
@@ -403,12 +395,10 @@ def archive_project_monthly_report_view(request, report):
     """Archive View for Project Reports"""
     monthly_report = get_object_or_404(ProjectMonthlyReport, pk=report)
     if monthly_report:
-        monthly_report.state = 'archive'
+        monthly_report.state = "archive"
         monthly_report.active = False
         monthly_report.save()
-    url = reverse_lazy(
-        "project_reports_home", kwargs={"project": monthly_report.project.pk}
-    )
+    url = reverse_lazy("project_reports_home", kwargs={"project": monthly_report.project.pk})
     url_with_params = f"{url}?state=todo&state=pending&state=submit&state=reject"
 
     return HTTPResponseHXRedirect(redirect_to=url_with_params)
@@ -422,9 +412,7 @@ def unarchive_project_monthly_report_view(request, report):
         monthly_report.active = True
         monthly_report.state = "todo"
         monthly_report.save()
-    url = reverse_lazy(
-        "project_reports_home", kwargs={"project": monthly_report.project.pk}
-    )
+    url = reverse_lazy("project_reports_home", kwargs={"project": monthly_report.project.pk})
     url_with_params = f"{url}?state=todo&state=pending&state=submit&state=reject"
 
     return HTTPResponseHXRedirect(redirect_to=url_with_params)

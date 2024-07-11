@@ -148,7 +148,10 @@ def create_report_target_locations(request, project, report, plan):
                 )
             elif "_addanother" in request.POST:
                 return redirect(
-                    "create_report_target_locations", project=monthly_report.project.pk, report=monthly_report.pk, plan=plan_report.pk
+                    "create_report_target_locations",
+                    project=monthly_report.project.pk,
+                    report=monthly_report.pk,
+                    plan=plan_report.pk,
                 )
         else:
             messages.error(request, "The form is invalid. Please check the fields and try again.")
@@ -197,13 +200,14 @@ def update_report_target_locations(request, project, report, plan, location):
         location_report_form = TargetLocationReportForm(request.POST or None, instance=location_report)
 
         # Optimize the queryset to prefetch related target_location_report
-        disaggregation_reports = DisaggregationLocationReport.objects.select_related('target_location_report', 'disaggregation')
+        disaggregation_reports = DisaggregationLocationReport.objects.select_related(
+            "target_location_report", "disaggregation"
+        )
 
         # When using the formset, pass the optimized queryset
-        report_disaggregation_formset = DisaggregationReportFormSet(request.POST,
-                                                                    queryset=disaggregation_reports,
-                                                                    instance=location_report,
-                                                                    plan_report=plan_report)
+        report_disaggregation_formset = DisaggregationReportFormSet(
+            request.POST, queryset=disaggregation_reports, instance=location_report, plan_report=plan_report
+        )
         if location_report_form.is_valid() and report_disaggregation_formset.is_valid():
             location_report = location_report_form.save(commit=False)
             location_report.activity_plan_report = plan_report
@@ -231,20 +235,24 @@ def update_report_target_locations(request, project, report, plan, location):
                 )
             elif "_addanother" in request.POST:
                 return redirect(
-                    "create_report_target_locations", project=monthly_report.project.pk, report=monthly_report.pk, plan=plan_report.pk
+                    "create_report_target_locations",
+                    project=monthly_report.project.pk,
+                    report=monthly_report.pk,
+                    plan=plan_report.pk,
                 )
         else:
             messages.error(request, "The form is invalid. Please check the fields and try again.")
     else:
         location_report_form = TargetLocationReportForm(request.POST or None, instance=location_report)
         # Optimize the queryset to prefetch related target_location_report
-        disaggregation_reports = DisaggregationLocationReport.objects.select_related('target_location_report', 'disaggregation')
+        disaggregation_reports = DisaggregationLocationReport.objects.select_related(
+            "target_location_report", "disaggregation"
+        )
 
         # When using the formset, pass the optimized queryset
-        report_disaggregation_formset = DisaggregationReportFormSet(request.POST or None,
-                                                                    instance=location_report,
-                                                                    plan_report=plan_report,
-                                                                    queryset=disaggregation_reports)
+        report_disaggregation_formset = DisaggregationReportFormSet(
+            request.POST or None, instance=location_report, plan_report=plan_report, queryset=disaggregation_reports
+        )
 
         # report_disaggregation_formset = DisaggregationReportFormSet(
         #     request.POST or None, instance=location_report, plan_report=plan_report

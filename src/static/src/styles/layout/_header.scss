@@ -52,9 +52,9 @@
 
     content: '';
     display: block;
-    height: 2px;
+    height: 1px;
     position: absolute;
-    bottom: 0;
+    // bottom: 0;
     left: 0;
     right: 0;
     background-color: $red;
@@ -178,8 +178,8 @@
 /* stylelint-enable */
 
 .mobile-menu-holder {
-  height: calc(100vh - 76px);
-  height: calc((var(--vh, 1vh) * 100) - 70px);
+  height: calc(100vh);
+  height: calc((var(--vh, 1vh) * 100));
 
   @include media('<desktop') {
     @include transition(opacity visibility transform);
@@ -188,35 +188,35 @@
     top: 100%;
     left: 0;
     right: 0;
-    background-color: $gray-35;
-    box-shadow: 10px 0 18px -10px rgba($gray-35, 0.75);
+    background-color: $white;
+    // box-shadow: 10px 0 18px -10px rgba($gray-35, 0.75);
     max-width: 280px;
     transform: translateX(-110%);
     z-index: -99;
   }
 
-  @include media('>=tablet') {
-    height: calc(100vh - 110px);
-    height: calc((var(--vh, 1vh) * 100) - 110px);
-  }
+  // @include media('>=tablet') {
+  //   height: calc(100vh - 110px);
+  //   height: calc((var(--vh, 1vh) * 100) - 110px);
+  // }
 
   @include media('>=desktop') {
     margin-left: auto;
     height: auto;
   }
 
-  &:before {
-    @include media('<desktop') {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 36px;
-      background: linear-gradient(180deg, rgba($gray-35, 1) 25%, rgba($gray-35, 0) 100%);
-      z-index: 2;
-    }
-  }
+  // &:before {
+  //   @include media('<desktop') {
+  //     content: '';
+  //     position: absolute;
+  //     top: 0;
+  //     left: 0;
+  //     right: 0;
+  //     height: 36px;
+  //     background: linear-gradient(180deg, rgba($gray-35, 1) 25%, rgba($gray-35, 0) 100%);
+  //     z-index: 2;
+  //   }
+  // }
 
   &:after {
     @include media('<desktop') {
@@ -270,7 +270,7 @@
 
   @include media('<desktop') {
     padding: 26px 15px;
-    color: $white;
+    color: #000;
     height: 100%;
     overflow-x: hidden;
     overflow-y: auto;
@@ -338,8 +338,9 @@
   }
 
   .openclose-opener {
-    display: inline-flex;
+    display: flex;
     align-items: center;
+    justify-content: space-between;
 
     &:after {
       @extend %icon;

@@ -348,6 +348,20 @@ files = [
 Django = ">=3.2"
 
 [[package]]
+name = "django-extra-settings"
+version = "0.12.0"
+description = "config and manage typed extra settings using just the django admin."
+optional = false
+python-versions = "*"
+files = [
+    {file = "django-extra-settings-0.12.0.tar.gz", hash = "sha256:8b49c63c033197d26f1f9d1d85d89cbe0f6eaff07bcbdedfa10df0e2598289d1"},
+    {file = "django_extra_settings-0.12.0-py3-none-any.whl", hash = "sha256:a397beb203cec76c74dfa7735254c321a20b158681436f8b93858ab121f071e2"},
+]
+
+[package.dependencies]
+jsonfield = ">=3.0.0"
+
+[[package]]
 name = "django-filter"
 version = "24.2"
 description = "Django-filter is a reusable Django application for allowing users to filter querysets dynamically."
@@ -824,6 +838,20 @@ files = [
     {file = "json5-0.9.25-py3-none-any.whl", hash = "sha256:34ed7d834b1341a86987ed52f3f76cd8ee184394906b6e22a1e0deb9ab294e8f"},
     {file = "json5-0.9.25.tar.gz", hash = "sha256:548e41b9be043f9426776f05df8635a00fe06104ea51ed24b67f908856e151ae"},
 ]
+
+[[package]]
+name = "jsonfield"
+version = "3.1.0"
+description = "A reusable Django field that allows you to store validated JSON in your model."
+optional = false
+python-versions = ">=3.6"
+files = [
+    {file = "jsonfield-3.1.0-py3-none-any.whl", hash = "sha256:df857811587f252b97bafba42e02805e70a398a7a47870bc6358a0308dd689ed"},
+    {file = "jsonfield-3.1.0.tar.gz", hash = "sha256:7e4e84597de21eeaeeaaa7cc5da08c61c48a9b64d0c446b2d71255d01812887a"},
+]
+
+[package.dependencies]
+Django = ">=2.2"
 
 [[package]]
 name = "jsonschema"
@@ -2263,4 +2291,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "b7c7de5614dea963586d1f5a6c96120372f5f387901d1e3304716c940ed87ecd"
+content-hash = "09ac2b931d01fe7e44126059ae70d15f7443bfe57baed9665b8fa9cca777a7e0"

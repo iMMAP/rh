@@ -185,11 +185,15 @@
                                 <ul class="table-options-buttons ">
                                     {% if perms.rh.change_project %}
                                     <li>
-                                        <a href="{% url 'projects-update' project.pk %}" data-tippy-content="Edit project and its activity plan">
+                                        <a href="{% url 'projects-update' project.pk %}" class="btn btn-gray" data-tippy-content="Edit project and its activity plan">
                                             Edit
                                         </a>
                                     </li>
                                     {% endif %}
+
+                                    <li>
+                                        <a href="{% if project %}{% url 'project_reports_home' project.pk %}{% else %}#{% endif %}" class="btn btn-gray">Report</a>
+                                    </li>
 
                                     <li>
                                         <button class="export-button">
@@ -255,17 +259,6 @@
                                                     </svg>
                                                 </a>
                                             {% endif %}
-                                        </button>
-                                    </li>
-                                    {% endif %}
-
-                                    {% if perms.rh.delete_project %}
-                                    <li>
-                                        <button>
-                                            <a href="{% url 'projects-delete' project.pk %}"
-                                                data-tippy-content="Delete Project" 
-                                                class="">
-                                                <span class="project-detail icon-trashbin"></span></a>
                                         </button>
                                     </li>
                                     {% endif %}

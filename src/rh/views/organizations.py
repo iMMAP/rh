@@ -27,6 +27,6 @@ def organization_register(request):
     else:
         org_form = OrganizationForm(user=request.user)
 
-    context = {"org_form": org_form}
+    context = {"form": org_form}
 
     return render(request, "rh/organization_form.html", context)

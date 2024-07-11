@@ -22,8 +22,9 @@ from .views import (
 
 from ..utils import has_permission
 from django.utils.safestring import mark_safe
+from extra_settings.models import Setting
 
-RECORDS_PER_PAGE = 10
+RECORDS_PER_PAGE = Setting.get("RECORDS_PER_PAGE", default=10)
 
 
 @login_required

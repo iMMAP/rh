@@ -1,23 +1,166 @@
-from django import forms
 from django.contrib.auth.decorators import login_required
-from django.http import JsonResponse
-from django.shortcuts import get_object_or_404
-from django.template.loader import render_to_string
+from django.views.decorators.http import require_http_methods
+from django.http import JsonResponse, HttpResponse
 from django.urls import reverse
+from django.shortcuts import get_object_or_404, render, redirect
 
 from ..forms import (
-    ActivityPlanFormSet,
-    DisaggregationFormSet,
-    TargetLocationFormSet,
+    TargetLocationForm,
+    DisaggregationLocationForm,
+    BaseDisaggregationLocationFormSet,
 )
-from ..models import (
-    ActivityDomain,
-    FacilitySiteType,
-    Project,
-    TargetLocation,
-)
+from ..models import Project, TargetLocation, ActivityPlan, DisaggregationLocation
 
 from .views import copy_target_location_disaggregation_locations
+from django.core.paginator import Paginator
+from django.forms import inlineformset_factory
+from django.contrib import messages
+from django.utils.safestring import mark_safe
+from ..filters import TargetLocationFilter
+from django_htmx.http import HttpResponseClientRedirect
+from extra_settings.models import Setting
+
+
+@login_required
+def update_target_location(request, pk):
+    target_location = get_object_or_404(TargetLocation, pk=pk)
+
+    DisaggregationFormSet = inlineformset_factory(
+        parent_model=TargetLocation,
+        model=DisaggregationLocation,
+        form=DisaggregationLocationForm,
+        formset=BaseDisaggregationLocationFormSet,
+        extra=1,
+        can_delete=True,
+        # max_num=2
+    )
+
+    if request.method == "POST":
+        target_location_form = TargetLocationForm(request.POST, instance=target_location, user=request.user)
+        disaggregation_formset = DisaggregationFormSet(
+            request.POST, instance=target_location, activity_plan=target_location.activity_plan
+        )
+
+        if target_location_form.is_valid() and disaggregation_formset.is_valid():
+            new_target_location = target_location_form.save(commit=False)
+            new_target_location.activity_plan = target_location.activity_plan
+            new_target_location.save()
+            disaggregation_formset.save()
+
+            messages.success(
+                request,
+                mark_safe(
+                    f'The Target Location "<a href="{reverse("target-locations-update", args=[target_location.pk])}">{target_location}</a>" was changed successfully.'
+                ),
+            )
+            if "_continue" in request.POST:
+                return redirect("target-locations-update", pk=target_location.pk)
+            elif "_save" in request.POST:
+                return redirect("target-locations-list", project=target_location.activity_plan.project.pk)
+            elif "_addanother" in request.POST:
+                return redirect("target-locations-create", activity_plan=target_location.activity_plan.pk)
+        else:
+            messages.error(request, "The form is invalid. Please check the fields and try again.")
+
+    else:
+        target_location_form = TargetLocationForm(instance=target_location, user=request.user)
+        disaggregation_formset = DisaggregationFormSet(
+            instance=target_location, activity_plan=target_location.activity_plan
+        )
+
+    return render(
+        request,
+        "rh/target_locations/target_location_form.html",
+        {
+            "target_location_form": target_location_form,
+            "disaggregation_formset": disaggregation_formset,
+            "activity_plan": target_location.activity_plan,
+            "project": target_location.activity_plan.project,
+        },
+    )
+
+
+def create_target_location(request, activity_plan):
+    activity_plan = get_object_or_404(ActivityPlan.objects.select_related("project"), pk=activity_plan)
+
+    DisaggregationFormSet = inlineformset_factory(
+        parent_model=TargetLocation,
+        model=DisaggregationLocation,
+        form=DisaggregationLocationForm,
+        formset=BaseDisaggregationLocationFormSet,
+        extra=1,
+        can_delete=True,
+        # max_num=2
+    )
+
+    if request.method == "POST":
+        target_location_form = TargetLocationForm(request.POST, user=request.user)
+        disaggregation_formset = DisaggregationFormSet(
+            request.POST, instance=target_location_form.instance, activity_plan=activity_plan
+        )
+
+        if target_location_form.is_valid() and disaggregation_formset.is_valid():
+            target_location = target_location_form.save(commit=False)
+            target_location.activity_plan = activity_plan
+            target_location.project = activity_plan.project
+            target_location.save()
+
+            disaggregation_formset.save()
+
+            messages.success(
+                request,
+                mark_safe(
+                    f'The Target Location "<a href="{reverse("target-locations-update", args=[target_location.pk])}">{target_location}</a>" was added successfully.'
+                ),
+            )
+            if "_continue" in request.POST:
+                return redirect("target-locations-update", pk=target_location.pk)
+            elif "_save" in request.POST:
+                return redirect("activity-plans-list", project=activity_plan.project.pk)
+            elif "_addanother" in request.POST:
+                return redirect("target-locations-create", activity_plan=activity_plan.pk)
+        else:
+            messages.error(request, "The form is invalid. Please check the fields and try again.")
+    else:
+        target_location_form = TargetLocationForm(user=request.user)
+        disaggregation_formset = DisaggregationFormSet(activity_plan=activity_plan)
+
+    return render(
+        request,
+        "rh/target_locations/target_location_form.html",
+        {
+            "target_location_form": target_location_form,
+            "disaggregation_formset": disaggregation_formset,
+            "activity_plan": activity_plan,
+            "project": activity_plan.project,
+        },
+    )
+
+
+@login_required
+def list_target_locations(request, project):
+    """List Activity Plans for a specific project"""
+    project = get_object_or_404(Project, pk=project)
+
+    tl_filter = TargetLocationFilter(
+        request.GET,
+        request=request,
+        queryset=TargetLocation.objects.filter(activity_plan__project=project)
+        .select_related("activity_plan", "country", "province", "district")
+        .order_by("-id"),
+        project=project,
+    )
+
+    RECORDS_PER_PAGE = Setting.get("RECORDS_PER_PAGE", default=10)
+    per_page = request.GET.get("per_page", RECORDS_PER_PAGE)
+    paginator = Paginator(tl_filter.qs, per_page=per_page)
+    page = request.GET.get("page", 1)
+    target_locations = paginator.get_page(page)
+    target_locations.adjusted_elided_pages = paginator.get_elided_page_range(page)
+
+    context = {"project": project, "target_locations": target_locations, "target_locations_filter": tl_filter}
+
+    return render(request, "rh/target_locations/target_locations_list.html", context)
 
 
 @login_required
@@ -48,83 +191,18 @@ def copy_target_location(request, project, location):
 
 
 @login_required
-def get_target_location_empty_form(request):
-    """Get an empty target location form for a project"""
-    # Get the project object based on the provided project ID
-    project = get_object_or_404(Project, pk=request.POST.get("project"))
-    activity_domain_id = request.POST.get("activity_domain", None)
-    activity_domain = None
-    if activity_domain_id:
-        activity_domain = get_object_or_404(ActivityDomain, pk=activity_domain_id)
-
-    # Prepare form_kwargs to pass to ActivityPlanFormSet
-    form_kwargs = {"project": project}
-
-    # Create an instance of ActivityPlanFormSet using the project instance and form_kwargs
-    activity_plan_formset = ActivityPlanFormSet(form_kwargs=form_kwargs, instance=project)
-
-    # Get the prefix index from the request
-    prefix_index = request.POST.get("prefix_index")
-    # Get the current logged in user location
-    user_locaiton=request.user.profile.country.id
-    # Create an instance of TargetLocationFormSet with a prefixed name & logged in user location
-    target_location_formset = TargetLocationFormSet(
-        prefix=f"{user_locaiton},target_locations_{activity_plan_formset.prefix}-{prefix_index}"
-    )
-
-    # for target_location_form in target_location_formset.forms:
-    # Create a disaggregation formset for each target location form
-    target_location_form = target_location_formset.empty_form
-
-    # Check if the activity plan is selected
-    if activity_domain:
-        # Get clusters associated with the activity plan's domain
-        clusters = activity_domain.clusters.all()
-
-        # Get only the relevant facility types - related to cluster
-        target_location_form.fields["facility_site_type"].queryset = FacilitySiteType.objects.filter(
-            cluster__in=clusters
-        )
-
-        cluster_has_nhs_code = any(cluster.has_nhs_code for cluster in clusters)
-        # If at least one cluster has NHS code, add the NHS code field to the form
-        if cluster_has_nhs_code:
-            target_location_form.fields["nhs_code"] = forms.CharField(max_length=200, required=True)
-        else:
-            target_location_form.fields.pop("nhs_code", None)
-    else:
-        target_location_form.fields["facility_site_type"].queryset = FacilitySiteType.objects.all()
-
-    disaggregation_formset = DisaggregationFormSet(
-        request.POST or None,
-        instance=target_location_form.instance,
-        prefix=f"disaggregation_{target_location_form.prefix}",
-    )
-
-    target_location_form.disaggregation_formset = disaggregation_formset
-
-    # Prepare context for rendering the target location form template
-    context = {
-        "target_location_form": target_location_form,
-        "project": project,
-    }
-
-    # Render the target location form template and generate HTML
-    html = render_to_string("rh/projects/forms/target_location_empty_form.html", context)
-
-    # Return JSON response containing the generated HTML
-    return JsonResponse({"html": html})
-
-
-@login_required
+@require_http_methods(["DELETE"])
 def delete_target_location(request, pk):
     """Delete the target location"""
     target_location = get_object_or_404(TargetLocation, pk=pk)
-    if target_location:
-        target_location.delete()
 
-    url = reverse("create_project_activity_plan", args=[target_location.project.pk])
+    target_location.delete()
 
-    # Return the URL in a JSON response
-    response_data = {"redirect_url": url}
-    return JsonResponse(response_data)
+    messages.success(request, "Target Location has been deleted.")
+
+    if request.headers.get("Hx-Trigger", "") == "delete-btn":
+        return HttpResponseClientRedirect(
+            reverse("target-locations-list", args=[target_location.activity_plan.project.id])
+        )
+
+    return HttpResponse(status=200)

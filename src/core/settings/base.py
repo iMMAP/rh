@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     "compressor",
     "guardian",
     "dbbackup",
+    "extra_settings",
     # RH apps
     "rh.apps.RhConfig",
     "users.apps.UsersConfig",
@@ -162,20 +163,6 @@ EMAIL_USE_TLS = env("EMAIL_USE_TLS", default=True)
 
 
 ####################
-# Maintence mode Settings
-####################
-MAINTENANCE_MODE_ENABLED = env("MAINTENANCE_MODE_ENABLED", default=False)
-# if True the superuser will not see the maintenance-mode page
-MAINTENANCE_MODE_IGNORE_SUPERUSER = env("MAINTENANCE_MODE_IGNORE_SUPERUSER", default=True)
-# if True the staff will not see the maintenance-mode page
-MAINTENANCE_MODE_IGNORE_STAFF = env("MAINTENANCE_MODE_IGNORE_STAFF", default=True)
-# the absolute url where users will be redirected to during maintenance-mode
-MAINTENANCE_MODE_REDIRECT_ROUTE = env("MAINTENANCE_MODE_REDIRECT_ROUTE", default="maintenance")
-# secret code to bypass maintenance mode for the user
-# /reporthub.immap.org/?MAINTENANCE_BYPASS_QUERY
-MAINTENANCE_BYPASS_QUERY = env("MAINTENANCE_BYPASS_QUERY", default="")
-
-####################
 # DB Backup Settings
 ####################
 
@@ -194,3 +181,42 @@ DBBACKUP_STORAGE_OPTIONS = {
 }
 
 TESTING = "test" in sys.argv
+
+
+EXTRA_SETTINGS_DEFAULTS = [
+    {
+        "name": "MAINTENANCE_MODE_ENABLED",
+        "type": "bool",
+        "value": False,
+    },
+    {
+        "name": "MAINTENANCE_MODE_IGNORE_SUPERUSER",
+        "type": "bool",
+        "value": True,
+        "description": "if True the superuser will not see the maintenance-mode page",
+    },
+    {
+        "name": "MAINTENANCE_MODE_IGNORE_STAFF",
+        "type": "bool",
+        "value": True,
+        "description": "if True the staff will not see the maintenance-mode page",
+    },
+    {
+        "name": "MAINTENANCE_MODE_REDIRECT_ROUTE",
+        "type": "string",
+        "value": "maintenance",
+        "description": "if True the staff will not see the maintenance-mode page",
+    },
+    {
+        "name": "MAINTENANCE_BYPASS_QUERY",
+        "type": "string",
+        "value": "godmode",
+        "description": "secret code to bypass maintenance mode for the user, ex: reporthub.immap.org/?godmode",
+    },
+    {
+        "name": "RECORDS_PER_PAGE",
+        "type": "int",
+        "value": 10,
+        "description": "No of items in a paginated results.",
+    },
+]

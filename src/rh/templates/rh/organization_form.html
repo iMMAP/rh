@@ -1,0 +1,61 @@
+{% extends "_base.html" %}
+
+{% load static %}
+{% load vite %}
+
+{% block page_title %} 
+    Create Organization
+{% endblock page_title %}
+
+{% block content %}
+<div class="login-section sign-up base-section">
+    <div class="container">
+        <div class="section-heading">
+            <h1 class="title">Add Organization</h1>
+            <small id="test"></small>
+            <div class="description">
+                <div class="text">
+                    <p>
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut non magna vel quam aliquet luctus.
+                        Duis imperdiet vel urna eu hendrerit. Suspendisse tristique
+                        odio ac quam porta, at pulvinar enim varius.
+                    </p>
+                </div>
+            </div>
+        </div>
+        <form method="POST" class="login-form">
+            {% csrf_token %}
+            <div class="form-holder">
+                {% for field in form %}
+                    <div class="input-field is-required">
+                        {{ field.label_tag }}
+                        <div class="input-holder">{{ field }}</div>
+                        <div class="sign-up-field-error">{{field.errors}}</div>
+                    </div>
+                {% endfor %}
+                <div class="btn-holder">
+                    <button type="submit" class="btn btn-red">Save</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock content %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+<script>
+    document.querySelectorAll('.custom-select').forEach((select) => {
+        const choice = new Choices(select, {
+            searchEnabled: true,
+            itemSelectText: '',
+            removeItemButton: true,
+            classNames: {
+                listDropdown: 'choices__list--dropdown',
+            },
+            shouldSort: false,
+        });
+    })
+    
+</script>
+{% endblock scripts %}

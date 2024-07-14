@@ -69,6 +69,7 @@ class DisseggregationModelAdminForm(forms.ModelForm):
 class ClusterAdmin(admin.ModelAdmin):
     list_display = ("name", "code", "title", "countries_count", "donors_count")
     search_fields = ("code", "name")
+    filter_horizontal = ("countries",)
 
     # get the count of a many to many relationship with Donor model
     def get_queryset(self, request):
@@ -122,6 +123,10 @@ class DonorAdmin(admin.ModelAdmin):
         "name",
     )
     # list_filter = ('cluster', 'country')
+    filter_horizontal = (
+        "countries",
+        "clusters",
+    )
 
     def countries_count(self, obj):
         return obj.countries.count()
@@ -137,6 +142,7 @@ class BeneficiaryTypeAdmin(admin.ModelAdmin):
     list_display = ("name", "country", "Clusters")
     search_fields = ("code", "name")
     list_filter = ("clusters",)
+    filter_horizontal = ("clusters",)
 
     def Clusters(self, obj):
         clusters = obj.clusters.all()
@@ -154,6 +160,7 @@ class DisaggregationAdmin(ImportExportActionModelAdmin, admin.ModelAdmin):
     )
     form = DisseggregationModelAdminForm
     # list_filter = ('cluster', 'country')
+    filter_horizontal = ("clusters",)
 
     def indicators_count(self, obj):
         return obj.indicators.count()
@@ -207,7 +214,7 @@ class ActivityTypeAdmin(admin.ModelAdmin):
         "code",
         "countries__name",
     )
-    list_filter = ("activity_domain", "clusters", "countries")
+    list_filter = ("activity_domain", "clusters")
 
     filter_horizontal = ("clusters",)
 

@@ -3,8 +3,8 @@
   justify-content: space-between;
   flex-wrap: wrap;
   align-items: center;
-  padding: 22px 0 0;
-  margin: 1rem 0px;
+  padding: 1rem ;
+  border-top:1px solid $gray-bc;
 
   .view-options {
     display: flex;
@@ -62,14 +62,12 @@
 
     &.current-page {
       pointer-events: none;
+      background-color: $red;
+      border-radius: 50%;
+      padding: 6px 10px;
 
       .page-link {
         color: $white;
-
-        &:before {
-          opacity: 1;
-          visibility: visible;
-        }
       }
     }
 
@@ -142,24 +140,6 @@
     justify-content: center;
     position: relative;
     text-decoration: none;
-
-    &:before {
-      @include transition(opacity visibility);
-
-      content: '';
-      display: block;
-      width: 30px;
-      height: 30px;
-      background-color: $red-b5;
-      opacity: 0;
-      visibility: hidden;
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      border-radius: 50%;
-      z-index: -1;
-    }
   }
 
   .sep {

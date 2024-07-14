@@ -1,9 +1,9 @@
 from django import forms
 from django.forms.models import inlineformset_factory
 from django.shortcuts import get_object_or_404
-from django.urls import reverse_lazy
+from django.forms import BaseInlineFormSet
 
-from rh.models import FacilitySiteType, Indicator, Organization, TargetLocation
+from rh.models import FacilitySiteType, Indicator, Organization, TargetLocation, Disaggregation
 
 from .models import (
     ActivityPlanReport,
@@ -41,23 +41,23 @@ class TargetLocationReportForm(forms.ModelForm):
         fields = "__all__"
         widgets = {
             "nhs_code": forms.widgets.TextInput(),
-            "district": forms.Select(
-                attrs={"target-locations-queries-url": reverse_lazy("ajax-load-target-locations")}
-            ),
-            "zone": forms.Select(attrs={"target-locations-queries-url": reverse_lazy("ajax-load-target-locations")}),
+            "facility_site_type": forms.Select(attrs={"class": "custom-select"}),
+            "target_location": forms.Select(attrs={"class": "custom-select"}),
         }
 
     def __init__(self, *args, **kwargs):
+        cluster_has_nhs_code = False
+        plan_report = kwargs.pop("report_plan", None)
         super().__init__(*args, **kwargs)
 
-        cluster_has_nhs_code = False
-        plan_report = False
         if "instance" in kwargs and kwargs["instance"]:
-            plan_report = kwargs["instance"].activity_plan_report
-            if plan_report:
-                cluster_has_nhs_code = any(
-                    cluster.has_nhs_code for cluster in plan_report.activity_plan.activity_domain.clusters.all()
-                )
+            location_report = kwargs["instance"]
+            plan_report = location_report.activity_plan_report
+
+        if plan_report:
+            cluster_has_nhs_code = any(
+                cluster.has_nhs_code for cluster in plan_report.activity_plan.activity_domain.clusters.all()
+            )
         nhs_code = f"{kwargs.get('prefix')}-nhs_code"
         has_nhs_code = nhs_code in kwargs.get("data", {})
 
@@ -85,15 +85,48 @@ TargetLocationReportFormSet = inlineformset_factory(
     TargetLocationReport,
     form=TargetLocationReportForm,
     extra=0,  # Number of empty forms to display
-    can_delete=True,  # Allow deletion of existing forms
+    can_delete=False,  # Allow deletion of existing forms
 )
 
-DisaggregationReportFormSet = inlineformset_factory(
-    TargetLocationReport,
-    DisaggregationLocationReport,
-    fields="__all__",
-    extra=0,  # Number of empty forms to display
-)
+
+class BaseDisaggregationLocationReportFormSet(BaseInlineFormSet):
+    def __init__(self, *args, **kwargs):
+        self.plan_report = kwargs.pop("plan_report", None)
+        super().__init__(*args, **kwargs)
+
+    def _construct_form(self, i, **kwargs):
+        kwargs["plan_report"] = self.plan_report
+        return super()._construct_form(i, **kwargs)
+
+
+class DisaggregationLocationReportForm(forms.ModelForm):
+    class Meta:
+        model = DisaggregationLocationReport
+        fields = (
+            "disaggregation",
+            "target_required",
+            "target",
+        )
+
+    def __init__(self, *args, **kwargs):
+        plan_report = kwargs.pop("plan_report", None)
+        super().__init__(*args, **kwargs)
+
+        self.fields["disaggregation"].required = True
+        self.fields["disaggregation"].empty_value = "hell"
+        self.fields["target"].required = True
+
+        if plan_report:
+            self.fields["disaggregation"].queryset = self.fields["disaggregation"].queryset.filter(
+                indicators=plan_report.indicator
+            )
+            # keep only the initial
+
+        if self.instance.pk:
+            self.fields["disaggregation"].queryset = Disaggregation.objects.filter(
+                disaggregationlocationreport__target_location_report=self.instance.target_location_report,
+                disaggregationlocationreport__disaggregation=self.instance.disaggregation,
+            )
 
 
 class ActivityPlanReportForm(forms.ModelForm):
@@ -103,8 +136,16 @@ class ActivityPlanReportForm(forms.ModelForm):
 
         widgets = {
             "activity_plan": forms.widgets.HiddenInput(),
-            "report_types": forms.SelectMultiple(attrs={"class": "js_multiselect"}),
-            "implementing_partners": forms.SelectMultiple(attrs={"class": "js_multiselect"}),
+            "report_types": forms.SelectMultiple(attrs={"class": "custom-select"}),
+            "implementing_partners": forms.SelectMultiple(attrs={"class": "custom-select"}),
+            "beneficiary_status": forms.Select(attrs={"class": "custom-select"}),
+            "package_type": forms.Select(attrs={"class": "custom-select"}),
+            "unit_type": forms.Select(attrs={"class": "custom-select"}),
+            "grant_type": forms.Select(attrs={"class": "custom-select"}),
+            "transfer_category": forms.Select(attrs={"class": "custom-select"}),
+            "currency": forms.Select(attrs={"class": "custom-select"}),
+            "transfer_mechanism_type": forms.Select(attrs={"class": "custom-select"}),
+            "implement_modility_type": forms.Select(attrs={"class": "custom-select"}),
         }
 
     def __init__(self, *args, **kwargs):
@@ -124,6 +165,8 @@ class ActivityPlanReportForm(forms.ModelForm):
             organizations = Organization.objects.all().order_by("name")
 
         self.fields["indicator"].widget.attrs.update({"hidden": ""})
+        self.fields["monthly_report"].widget.attrs.update({"hidden": ""})
+        self.fields["activity_plan"].widget.attrs.update({"hidden": ""})
         self.fields["implementing_partners"].queryset = organizations
         self.fields["seasonal_retargeting"].widget = forms.CheckboxInput()
         self.fields["modality_retargeting"].widget = forms.CheckboxInput()

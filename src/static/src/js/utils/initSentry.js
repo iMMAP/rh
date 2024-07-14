@@ -4,9 +4,10 @@ Sentry.init({
     dsn: "https://c2be26cb81341d42992ae0ad9b338f9b@o4506381004701696.ingest.sentry.io/4506381006667776",
   
     integrations: [
-        new Sentry.BrowserTracing(),
-        new Sentry.Replay(),
-        new Sentry.Feedback({
+        // new Sentry.BrowserTracing(),
+        Sentry.browserTracingIntegration(),
+        Sentry.replayIntegration(),
+        Sentry.feedbackIntegration({
             colorScheme: "light",
         }),
     ],

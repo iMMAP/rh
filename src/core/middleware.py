@@ -1,10 +1,10 @@
 from django.shortcuts import redirect
-from django.conf import settings
 from django.urls import reverse
 
 from django.contrib.messages import get_messages
 from django.template.loader import render_to_string
 from django.utils.deprecation import MiddlewareMixin
+from extra_settings.models import Setting
 
 
 class HtmxMessageMiddleware(MiddlewareMixin):
@@ -30,7 +30,7 @@ class MaintenanceModeMiddleware:
     def __call__(self, request):
         path = request.META.get("PATH_INFO", "")
 
-        if not settings.MAINTENANCE_MODE_ENABLED:
+        if not Setting.get("MAINTENANCE_MODE_ENABLED", default=False):
             if path == reverse("maintenance"):
                 # Do not load maintenance page if maintenance mode is not enabled
                 return redirect("/")
@@ -41,19 +41,19 @@ class MaintenanceModeMiddleware:
         if path == reverse("maintenance"):
             return self.get_response(request)
 
-        if settings.MAINTENANCE_MODE_IGNORE_SUPERUSER and request.user.is_superuser:
+        if Setting.get("MAINTENANCE_MODE_IGNORE_SUPERUSER", default=True) and request.user.is_superuser:
             return self.get_response(request)
 
-        if settings.MAINTENANCE_MODE_IGNORE_STAFF and request.user.is_staff:
+        if Setting.get("MAINTENANCE_MODE_IGNORE_STAFF", default=True) and request.user.is_staff:
             return self.get_response(request)
 
         query = request.META.get("QUERY_STRING", "")
-        if settings.MAINTENANCE_BYPASS_QUERY in query:
+        if Setting.get("MAINTENANCE_BYPASS_QUERY", default="godmode") in query:
             request.session["bypass_maintenance"] = True
 
         if request.session.get("bypass_maintenance", False):
             # Bypass the maintenance mode: continue normally bypass is correct
             return self.get_response(request)
 
-        redirect_to_url = settings.MAINTENANCE_MODE_REDIRECT_ROUTE
+        redirect_to_url = Setting.get("MAINTENANCE_MODE_REDIRECT_ROUTE", default="maintenance")
         return redirect(reverse(redirect_to_url))

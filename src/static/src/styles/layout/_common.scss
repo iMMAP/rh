@@ -20,12 +20,12 @@
 
 .filter-item {
   padding: 2px 3px;
-  background-color: $red-be;
+  background-color: $gray-7d;
   color: white;
   border-radius: 3px;
   font-weight: 600;
   font-size: 12px;
-  border: 1px solid $red;
+  // border: 1px solid $red;
   box-shadow: 0 0 16px rgba($gray-d1, 0.3);
 }
 
@@ -391,13 +391,13 @@ ul{
   display: flex;
   flex-direction: column-reverse;
   gap: 0.2rem;
+  padding: 1rem;
 
   @include media('>=tablet') {
     display: flex;
     flex-direction: row;
     align-items: start;
     justify-content: space-between;
-    padding-bottom: 0;
   }
 
   &.page-top-panel-large {
@@ -409,7 +409,7 @@ ul{
     // margin-bottom: 8px;
 
     @include media('>=tablet') {
-      margin-bottom: 0;
+      // margin-bottom: 0;
     }
 
     &:only-child {
@@ -443,7 +443,7 @@ ul{
     margin-bottom: 8px;
 
     @include media('>=tablet') {
-      margin-bottom: 0;
+      // margin-bottom: 0;
     }
 
     &:only-child {
@@ -498,13 +498,13 @@ ul{
 .two-cols-layout {
   @include media('>=desktop') {
     display: grid;
-    grid-template-columns: 230px 1fr;
+    grid-template-columns: 250px 1fr;
     grid-gap: 0 24px;
     grid-template-rows: auto auto;
   }
 
   @include media('>=widescreen') {
-    grid-gap: 0 48px;
+    // grid-gap: 0 48px;
   }
 
   .breadcrumbs-nav-panel {
@@ -836,7 +836,7 @@ a.text-decoration-none{
   background: #b4eda0;
 }
 
-.draft {
+.draft, .todo {
   @extend .c-pill;
   border: 1px solid #ffc400;
   background: #ffebb6;
@@ -846,6 +846,12 @@ a.text-decoration-none{
   @extend .c-pill;
   border: 1px solid #ff4436;
   background: #ffd5d1;
+}
+.archive {
+  @extend .c-pill;
+  border: 1px solid black;
+  background: gray;
+  color: white;
 }
 
 .unset-before::before {
@@ -867,3 +873,174 @@ a.text-decoration-none{
   --tw-shadow-colored: 0 1px 3px 0 var(--tw-shadow-color), 0 1px 2px -1px var(--tw-shadow-color);
   box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
 }
+
+.bottom-border {
+  border-bottom: 2px solid $red-be;
+}
+
+.empty-form{
+  display: none;
+}
+
+
+.inline-deletelink {
+  float: right;
+  text-indent: -9999px;
+  background: url("/static/src/images/inline-delete.svg") 0 0 no-repeat;
+  width: 16px;
+  height: 16px;
+  border: 0px none;
+}
+
+.inline-deletelink:focus,
+.inline-deletelink:hover {
+  cursor: pointer;
+}
+
+
+
+.bg-red {
+  background-color: $red;
+}
+
+.bg-white{
+  background-color: $white;
+}
+
+
+/* htmx progress */
+.htmx-indicator {
+  display: none;
+}
+
+.htmx-request .htmx-indicator {
+  display: inline;
+}
+
+.htmx-request.htmx-indicator {
+  display: inline;
+}
+
+
+.progress {
+  // position: fixed;
+  position: relative;
+  top: 0;
+  z-index: 1000;
+  height: 3px;
+  width: 100%;
+
+  border-top-left-radius: 0.4rem;
+  border-top-right-radius: 0.4rem;
+
+  background-clip: padding-box;
+  overflow: hidden;
+}
+
+.progress .indeterminate:before {
+  content: "";
+  position: absolute;
+  background-color: inherit;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  will-change: left, right;
+  -webkit-animation: indeterminate 2.1s cubic-bezier(0.65, 0.815, 0.735, 0.395) infinite;
+  animation: indeterminate 2.1s cubic-bezier(0.65, 0.815, 0.735, 0.395) infinite;
+}
+
+.progress .indeterminate:after {
+  content: "";
+  position: absolute;
+  background-color: inherit;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  will-change: left, right;
+  -webkit-animation: indeterminate-short 2.1s cubic-bezier(0.165, 0.84, 0.44, 1) infinite;
+  animation: indeterminate-short 2.1s cubic-bezier(0.165, 0.84, 0.44, 1) infinite;
+  -webkit-animation-delay: 1.15s;
+  animation-delay: 1.15s;
+}
+
+.progress {
+  display: none;
+}
+
+.htmx-request .progress {
+  display: block;
+}
+
+.htmx-request.progress {
+  display: block;
+}
+
+@-webkit-keyframes indeterminate {
+  0% {
+    left: -35%;
+    right: 100%;
+  }
+
+  60% {
+    left: 100%;
+    right: -90%;
+  }
+
+  100% {
+    left: 100%;
+    right: -90%;
+  }
+}
+
+@keyframes indeterminate {
+  0% {
+    left: -35%;
+    right: 100%;
+  }
+
+  60% {
+    left: 100%;
+    right: -90%;
+  }
+
+  100% {
+    left: 100%;
+    right: -90%;
+  }
+}
+
+@-webkit-keyframes indeterminate-short {
+  0% {
+    left: -200%;
+    right: 100%;
+  }
+
+  60% {
+    left: 107%;
+    right: -8%;
+  }
+
+  100% {
+    left: 107%;
+    right: -8%;
+  }
+}
+
+@keyframes indeterminate-short {
+  0% {
+    left: -200%;
+    right: 100%;
+  }
+
+  60% {
+    left: 107%;
+    right: -8%;
+  }
+
+  100% {
+    left: 107%;
+    right: -8%;
+  }
+}
+
+/* End of htmx progress */

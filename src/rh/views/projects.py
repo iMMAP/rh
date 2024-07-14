@@ -21,8 +21,8 @@ from .views import (
 )
 
 from ..utils import has_permission
-
-RECORDS_PER_PAGE = 10
+from django.utils.safestring import mark_safe
+from extra_settings.models import Setting
 
 
 @login_required
@@ -37,11 +37,12 @@ def projects_detail(request, pk):
             "donors",
             "programme_partners",
             "implementing_partners",
+            "user",
             Prefetch(
                 "activityplan_set",
-                ActivityPlan.objects.select_related("activity_domain", "beneficiary", "indicator").prefetch_related(
-                    "targetlocation_set", "activity_type", "activity_detail"
-                ),
+                ActivityPlan.objects.select_related("activity_domain", "indicator")
+                .prefetch_related("activity_type", "activity_detail")
+                .annotate(target_location_count=Count("targetlocation")),
             ),
         ),
         pk=pk,
@@ -50,15 +51,8 @@ def projects_detail(request, pk):
     if not has_permission(request.user, project):
         raise PermissionDenied
 
-    activity_plans = project.activityplan_set.all()
-
     context = {
         "project": project,
-        "project_view": True,
-        "financial_view": False,
-        "reports_view": False,
-        "project_filter": project,
-        "activity_plans": activity_plans,
     }
     return render(request, "rh/projects/views/project_view.html", context)
 
@@ -89,7 +83,9 @@ def cluster_projects_list(request, cluster: str):
     )
 
     # Setup Pagination
-    p = Paginator(project_filter.qs, RECORDS_PER_PAGE)
+    RECORDS_PER_PAGE = Setting.get("RECORDS_PER_PAGE", default=10)
+    per_page = request.GET.get("per_page", RECORDS_PER_PAGE)
+    p = Paginator(project_filter.qs, per_page=per_page)
     page = request.GET.get("page", 1)
     p_projects = p.get_page(page)
     p_projects.adjusted_elided_pages = p.get_elided_page_range(page)
@@ -138,7 +134,9 @@ def users_clusters_projects_list(request):
     )
 
     # Setup Pagination
-    p = Paginator(project_filter.qs, RECORDS_PER_PAGE)
+    RECORDS_PER_PAGE = Setting.get("RECORDS_PER_PAGE", default=10)
+    per_page = request.GET.get("per_page", RECORDS_PER_PAGE)
+    p = Paginator(project_filter.qs, per_page=per_page)
     page = request.GET.get("page", 1)
     p_projects = p.get_page(page)
     p_projects.adjusted_elided_pages = p.get_elided_page_range(page)
@@ -184,7 +182,9 @@ def org_projects_list(request):
     )
 
     # Setup Pagination
-    p = Paginator(project_filter.qs, RECORDS_PER_PAGE)
+    RECORDS_PER_PAGE = Setting.get("RECORDS_PER_PAGE", default=10)
+    per_page = request.GET.get("per_page", RECORDS_PER_PAGE)
+    p = Paginator(project_filter.qs, per_page=per_page)
     page = request.GET.get("page", 1)
     p_projects = p.get_page(page)
     p_projects.adjusted_elided_pages = p.get_elided_page_range(page)
@@ -220,7 +220,7 @@ def create_project(request):
             project.organization = request.user.profile.organization
             project.save()
             form.save_m2m()
-            return redirect("create_project_activity_plan", project=project.pk)
+            return redirect("activity-plans-create", project=project.pk)
         # Form is not valid
         messages.error(request, "Something went wrong. Please fix the errors below.")
     else:
@@ -250,7 +250,9 @@ def update_project(request, pk):
         form = ProjectForm(request.POST, instance=project, user=request.user)
         if form.is_valid():
             project = form.save()
-            return redirect("create_project_activity_plan", project=project.pk)
+            return redirect("activity-plans-create", project=project.pk)
+        else:
+            messages.error(request, "The form is invalid. Please check the fields and try again.")
     else:
         form = ProjectForm(instance=project, user=request.user)
 
@@ -266,30 +268,6 @@ def update_project(request, pk):
 
 
 @login_required
-def project_planning_review(request, project: int):
-    """Projects Plans Review"""
-
-    project = get_object_or_404(Project, pk=project)
-
-    if not has_permission(user=request.user, project=project):
-        raise PermissionDenied
-
-    activity_plans = project.activityplan_set.all()
-    target_locations = [activity_plan.targetlocation_set.all() for activity_plan in activity_plans]
-
-    context = {
-        "project": project,
-        "activity_plans": activity_plans,
-        "target_locations": target_locations,
-        "project_review": True,
-        "project_view": True,
-        "financial_view": False,
-        "reports_view": False,
-    }
-    return render(request, "rh/projects/forms/project_review.html", context)
-
-
-@login_required
 @permission_required("rh.submit_project", raise_exception=True)
 def submit_project(request, pk):
     """Project Submission"""
@@ -299,11 +277,32 @@ def submit_project(request, pk):
     if not has_permission(user=request.user, project=project):
         raise PermissionDenied
 
-    if project:
-        project.state = "in-progress"
-        project.save()
-
     activity_plans = project.activityplan_set.all()
+    if not activity_plans.exists():
+        messages.error(
+            request,
+            mark_safe(
+                f"The project must have at least one activity plan. Check project's <a href=`{reverse('activity-plans-list', args=[project.pk])}`>activity plans</a>'."
+            ),
+        )
+        messages.error(request, "The project must have at least one activity plan.")
+        return redirect("projects-detail", pk=project.pk)
+
+    for plan in activity_plans:
+        target_locations = plan.targetlocation_set.all()
+        if not target_locations.exists():
+            messages.error(
+                request,
+                mark_safe(
+                    f"Each activity plan must have at least one target location. Check project's `<a href='{reverse('target-locations-list', args=[project.pk])}'>target locations</a>`."
+                ),
+            )
+            # return redirect("target-locations-create", activity_plan=plan.pk)
+            return redirect("projects-detail", pk=project.pk)
+
+    project.state = "in-progress"
+    project.save()
+
     for plan in activity_plans:
         target_locations = plan.targetlocation_set.all()
         for target in target_locations:
@@ -312,11 +311,8 @@ def submit_project(request, pk):
 
         plan.state = "in-progress"
         plan.save()
-    url = reverse("projects-detail", args=[project.pk])
 
-    # Return the URL in a JSON response
-    response_data = {"redirect_url": url}
-    return JsonResponse(response_data)
+    return redirect("projects-detail", pk=project.pk)
 
 
 @login_required

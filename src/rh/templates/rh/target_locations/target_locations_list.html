@@ -1,0 +1,48 @@
+{% extends "rh/projects/forms/project_form_base.html" %}
+{% load static %}
+
+{% block page_title %} 
+    Target Locations 
+{% endblock page_title %}
+
+
+{% block project_contents %}
+     <div class="" style="display: flex;flex-direction:column;gap:0.7rem;padding:10px 0px">
+        <div class="">
+            <span class="">Project</span>
+            <div class="input-holder">
+                <span class="text-read-only">{{project.code}} - {{project.title}}</span>
+            </div>
+        </div>
+        <div class="">
+            <span class="">Duration</span>
+            <div class="input-holder">
+                <span class="text-read-only">From {{project.start_date}} to {{project.end_date}}</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="activity-planning create-activity">
+            <div id="activity-formset-form">
+                <div class="activity-planning read-only">
+                    <div class="top-activity-block">
+                        <span class="activity-title">
+                            <span>
+                                Project Target Locations
+                            </span>
+                            <span class="btn btn-gray" style="float:right"> {{ target_locations | length }}</span>
+                        </span>
+                        <br>
+                        <span class="">List all target locations of your project.</span>
+                    </div>
+                </div>
+
+                {% include "rh/target_locations/_target_location_table.html"  with object_list=target_locations%}
+            </div>
+        </div>
+    </div>
+{% endblock project_contents %}
+
+{% block project_form_scripts %}
+{% endblock project_form_scripts %}

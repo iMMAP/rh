@@ -20,8 +20,6 @@ from ..filters import TargetLocationFilter
 from django_htmx.http import HttpResponseClientRedirect
 from extra_settings.models import Setting
 
-RECORDS_PER_PAGE = Setting.get("RECORDS_PER_PAGE", default=10)
-
 
 @login_required
 def update_target_location(request, pk):
@@ -153,6 +151,7 @@ def list_target_locations(request, project):
         project=project,
     )
 
+    RECORDS_PER_PAGE = Setting.get("RECORDS_PER_PAGE", default=10)
     per_page = request.GET.get("per_page", RECORDS_PER_PAGE)
     paginator = Paginator(tl_filter.qs, per_page=per_page)
     page = request.GET.get("page", 1)

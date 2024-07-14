@@ -24,8 +24,6 @@ from ..utils import has_permission
 from django.utils.safestring import mark_safe
 from extra_settings.models import Setting
 
-RECORDS_PER_PAGE = Setting.get("RECORDS_PER_PAGE", default=10)
-
 
 @login_required
 @permission_required("rh.view_project", raise_exception=True)
@@ -85,6 +83,7 @@ def cluster_projects_list(request, cluster: str):
     )
 
     # Setup Pagination
+    RECORDS_PER_PAGE = Setting.get("RECORDS_PER_PAGE", default=10)
     per_page = request.GET.get("per_page", RECORDS_PER_PAGE)
     p = Paginator(project_filter.qs, per_page=per_page)
     page = request.GET.get("page", 1)
@@ -135,6 +134,7 @@ def users_clusters_projects_list(request):
     )
 
     # Setup Pagination
+    RECORDS_PER_PAGE = Setting.get("RECORDS_PER_PAGE", default=10)
     per_page = request.GET.get("per_page", RECORDS_PER_PAGE)
     p = Paginator(project_filter.qs, per_page=per_page)
     page = request.GET.get("page", 1)
@@ -182,6 +182,7 @@ def org_projects_list(request):
     )
 
     # Setup Pagination
+    RECORDS_PER_PAGE = Setting.get("RECORDS_PER_PAGE", default=10)
     per_page = request.GET.get("per_page", RECORDS_PER_PAGE)
     p = Paginator(project_filter.qs, per_page=per_page)
     page = request.GET.get("page", 1)

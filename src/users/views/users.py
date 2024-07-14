@@ -17,8 +17,6 @@ from django.core.exceptions import PermissionDenied
 from ..utils import has_permission
 from extra_settings.models import Setting
 
-RECORDS_PER_PAGE = Setting.get("RECORDS_PER_PAGE", default=10)
-
 
 class UsersFilter(django_filters.FilterSet):
     last_login = django_filters.DateRangeFilter(field_name="last_login")
@@ -47,6 +45,7 @@ def org_users_list(request):
         queryset=User.objects.filter(profile__organization=user_org).select_related("profile").order_by("-id"),
     )
 
+    RECORDS_PER_PAGE = Setting.get("RECORDS_PER_PAGE", default=10)
     per_page = request.GET.get("per_page", RECORDS_PER_PAGE)
     paginator = Paginator(users_filter.qs, per_page=per_page)
     page_number = request.GET.get("page", 1)

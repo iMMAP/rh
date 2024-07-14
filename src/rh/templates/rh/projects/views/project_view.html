@@ -10,25 +10,6 @@
 
 {% block content %}
 <div class="container">
-    <div class="page-navigation-panel">
-        <div class="holder">
-            <div class="tabs-nav-holder">
-                <ul class="tabs-nav">
-                    <li class="{% if project_view %}active{% endif %}">
-                        <a href="{% if project %}{% url 'projects-detail' project.pk %}{% else %}{% url 'projects-create' %}{% endif %}">Project
-                        planning</a>
-                    </li>
-                    <li class="{% if financial_view %}active{% endif %}">
-                        <a href="{% if project %}{% url 'create_project_budget_progress' project.pk %}{% else %}#{% endif %}">Financial Reports</a>
-                    </li>
-                    <li class="{% if reports_view %}active{% endif %}">
-                        <a href="{% if project %}{% url 'project_reports_home' project.pk %}{% else %}#{% endif %}">Monthly Progress</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </div>
-
     <div class="breadcrumbs-nav-panel">
         <div class="holder"> 
             <ul class="breadcrumbs">
@@ -37,7 +18,7 @@
                 </li>
                 {% if project %}
                     <li>
-                        <a id="return-url" href="{{request.GET.url}}?state={{project.state}}">
+                        <a id="return-url" href="{% url 'projects-list' %}?state={{project.state}}">
                             {% if project.state == 'in-progress' %}
                                 Active Projects
                             {% elif project.state == 'draft' %}
@@ -57,12 +38,30 @@
         </div>
     </div>
 
+    <div class="page-navigation-panel">
+        <div class="holder">
+            <div class="tabs-nav-holder">
+                <ul class="tabs-nav">
+                    <li class="{% if project_view %}active{% endif %}">
+                        <a href="{% if project %}{% url 'projects-detail' project.pk %}{% else %}{% url 'projects-create' %}{% endif %}">Project
+                        planning</a>
+                    </li>
+                    <li class="{% if financial_view %}active{% endif %}">
+                        <a href="{% if project %}{% url 'create_project_budget_progress' project.pk %}{% else %}#{% endif %}">Financial Reports</a>
+                    </li>
+                    <li class="{% if reports_view %}active{% endif %}">
+                        <a href="{% if project %}{% url 'project_reports_home' project.pk %}{% else %}#{% endif %}">Monthly Progress</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
     <div class="project-options-panel">
         <div class="top-block">
             <ul class="project-breadcrumbs">
                 <li> {{project.title}} </li>
             </ul>
-
             <div>
                 <a href="{% url 'projects-update' project.pk %}" class="btn btn-red">Edit</a>
                 {% if project.state == 'draft' %}

@@ -13,28 +13,36 @@
 {% endblock page_title %}
 
 {% block project_contents %}
-    {% if project %}
-        <div class="project-title-holder" style="display: flex;">
-            <h2 class="plan-title"> <em>Project: </em> {{ project.title }}</h2>
-        </div>
-    {% endif %}
-
     <div class="main-content">
         <div class="project-plan create-plan">
-            <div class="activity-planning read-only">
-                <div class="activity-block-holder">
-                    <div class="top-activity-block">
-                        <span class="activity-title">
-                            <span>
-                                {% if project %}
-                                    Update Project Plan
-                                {% else %}
-                                    Create Project Plan
-                                {% endif %}
-                            </span>
-                        </span>
+            {% if project %}
+            <div class="" style="display: flex;flex-direction:column;gap:0.7rem;padding:10px 0px">
+                <div class="">
+                    <span class="">Project</span>
+                    <div class="input-holder">
+                        <span class="text-read-only">{{project.code}} - {{project.title}}</span>
                     </div>
                 </div>
+                <div class="">
+                    <span class="">Duration</span>
+                    <div class="input-holder">
+                        <span class="text-read-only">From {{project.start_date}} to {{project.end_date}}</span>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            <div class="activity-planning read-only">
+                <div class="top-activity-block">
+                    <span class="activity-title">
+                        <span>
+                            {% if project %}
+                                Update Project Plan
+                            {% else %}
+                                Create Project Plan
+                            {% endif %}
+                        </span>
+                    </span>
+                </div> 
             </div>
          
             <form method="post" class="form-container">

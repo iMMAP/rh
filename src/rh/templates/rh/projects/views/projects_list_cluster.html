@@ -9,9 +9,9 @@
 
 {% block content %}
     <div class="container">
-      <div class="projects-options-panel">
+        <div class="projects-options-panel">
             <div class="holder">
-                <h2>Cluster Projects</h2>
+                <h2>{{ request.resolver_match.kwargs.cluster|upper }} Cluster projects</h2>
                 <ul class="buttons-list-inline">
                     <li>
                         <a href="{% url 'projects-create' %}" class="btn btn-red add-btn">New Project</a>
@@ -76,14 +76,4 @@
 
 {% block scripts %}    
     <script src="{% static 'src/js/utils/exportSW.js' %}"></script>
-    <script>
-        let element = document.querySelector(".filter-items");
-        if(element.textContent.trim() !== ""){
-            document.querySelector(".filter-applied").classList.remove("deactivated");
-            document.querySelector(".filter-applied").classList.add("active");
-        } else {
-            document.querySelector(".filter-applied").classList.remove("active");
-            document.querySelector(".filter-applied").classList.add("deactivated");
-        }
-    </script>
 {% endblock scripts %}

@@ -1,11 +1,14 @@
-{% extends "../projects_index.html" %}
+{% extends "_base.html" %}
+
+{% load static %}
 
 {% block head %}
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" integrity="sha512-nMNlpuaDPrqlEls3IX/Q56H36qvBASwb3ipuo3MxeWbsQB1881ox0cRv7UPTgBlriqoynt35KjEwgGUeUXIPnw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+{% comment %} <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" integrity="sha512-nMNlpuaDPrqlEls3IX/Q56H36qvBASwb3ipuo3MxeWbsQB1881ox0cRv7UPTgBlriqoynt35KjEwgGUeUXIPnw==" crossorigin="anonymous" referrerpolicy="no-referrer" /> {% endcomment %}
 {% endblock head %}
 
-{% block project_body %}
-    <div class="two-cols-layout">
+
+{% block content %}
+    <div class="container">
         <div class="breadcrumbs-nav-panel">
             <div class="holder">
                 <ul class="breadcrumbs">
@@ -26,46 +29,50 @@
                                 {% endif %}
                             </a>
                         </li>
-                        <li class="current">{{ project.code }}</li>
+                        <li class="current">
+                            <a href="{% url 'projects-detail' project.id %}">
+                                {{ project.code }}
+                            </a>
+                        </li>
                     {% else %}
+                        <li><a href="{% url 'projects-list' %}">Projects</a></li>
                         <li class="current">New Project</li>
                     {% endif %}
                 </ul>
             </div>
+        </div> 
+
+        <div class="page-navigation-panel">
+            <div class="holder">
+                <div class="tabs-nav-holder">
+                    <ul class="tabs-nav">
+                        <li class="{% if request.resolver_match.url_name == 'projects-update' %}active{% endif %}">
+                            <a href="{% if project %}{% url 'projects-update' project.pk %}{% else %}{% url 'projects-create' %}{% endif %}">
+                                Project planning
+                            </a>
+                        </li>
+                        <li class="{% if request.resolver_match.url_name == 'activity-plans-list' or  request.resolver_match.url_name == 'activity-plans-create' or request.resolver_match.url_name == 'activity-plans-update' %}active{% endif %}">
+                            <a href="{% if project %}{% url 'activity-plans-list' project.pk %}{% else %}#{% endif %}">Activity Plans</a>
+                        </li>
+                        <li class="{% if request.resolver_match.url_name == 'target-locations-list' or  request.resolver_match.url_name == 'target-locations-create' or  request.resolver_match.url_name == 'target-locations-update' %}active{% endif %}">
+                            <a href="{% if project %}{% url 'target-locations-list' project.pk %}{% else %}#{% endif %}">Target Locations</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
         </div>
         
-        <aside class="sidebar">
-            <div class="sidebar-nav-holder">
-                <ul class="sidebar-nav">
-                    <li class="{% if project_planning %}current{% endif %}">
-                        <a href="{% if project %}{% url 'projects-update' project.pk %}{% else %}{% url 'projects-create' %}{% endif %}">
-                            Project Planning
-                        </a>
-                    </li>
-                    <li class="{% if activity_planning %}current{% endif %}">
-                        <a class="{% if not project %}disabled-link{% endif %}"
-                            href="{% if project %}{% url 'create_project_activity_plan' project.pk %}{% else %}#{% endif %}">Activities
-                        Planning</a>
-                    </li>
-                    <li class="{% if project_review %}current{% endif %}">
-                        
-                        <a class="disabled-link"
-                            href="{% if project %} {% url 'project_plan_review' project.pk %} {% else %}#{% endif %}">Review</a>
-                    </li>
-                </ul>
-            </div>
-        </aside>
-        
-        {% block project_contents %}
-        {% endblock project_contents %}
-        
-        {% block project_form_scripts %}
-        {% endblock project_form_scripts %}
+        <div class="main-content">        
+            {% block project_contents %}
+            {% endblock project_contents %}
+            
+            {% block project_form_scripts %}
+            {% endblock project_form_scripts %}
+        </div>
     </div>
-{% endblock project_body %}
+{% endblock content %}
+
 
 {% block scripts %}
-{{ block.super }}
-<!-- Select2 CDN -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js" integrity="sha512-2ImtlRlf2VVmiGZsjm9bEyhjGW4dU7B6TNwh/hx/iSByxNENtj3WVE6o/9Lj4TJeVXPi4bnOIMXFIJJAeufa0A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script type="module" src="{% static 'src/js/utils/exportSW.js' %}"></script>
 {% endblock scripts %}

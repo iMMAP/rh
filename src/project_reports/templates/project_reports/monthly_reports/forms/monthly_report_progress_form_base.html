@@ -1,0 +1,96 @@
+{% extends "_base.html" %}
+{% load static %}
+{% load compress %}
+
+{% block page_title %}
+Project Report
+{% endblock page_title %}
+
+{% block content %}
+<div class="container">
+    <div class="page-navigation-panel">
+        <div class="holder">
+            <div class="tabs-nav-holder">
+                <ul class="tabs-nav">
+                    <li class="{% if report_view %}active{% endif %}">
+                        {% if monthly_report %}
+                        <a href="{% url 'view_monthly_report' project.pk monthly_report.pk %}">
+                            Monthly Report
+                        </a>
+                        {% else %}
+                        <a href="#">
+                            Monthly Report
+                        </a>
+                        {% endif %}
+                    </li>
+                    <li class="{% if report_activities %}active{% endif %}">
+                        {% if monthly_report %}
+                        <a href="{% url 'list_report_activity_plans' project.pk monthly_report.pk %}">
+                            Report Activities
+                        </a>
+                        {% else %}
+                        <a href="#">
+                            Report Activities
+                        </a>
+                        {% endif %}
+                    </li>
+                    <li class="{% if report_locations %}active{% endif %}">
+                        {% if monthly_report %}
+                        <a href="{% url 'list_report_target_locations' project.pk monthly_report.pk %}">
+                            Report Locations
+                        </a>
+                        {% else %}
+                        <a href="#">
+                            Report Locations
+                        </a>
+                        {% endif %}
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="breadcrumbs-nav-panel">
+        <div class="holder">
+            <ul class="breadcrumbs">
+                <li>
+                    <a href="{% url 'landing' %}">Home</a>
+                </li>
+                <li>
+                    <a id="return-url" href="{% url 'projects-list' %}?state={{project.state}}">
+                        {% if project.state == 'in-progress' %}
+                            Active Projects
+                        {% elif project.state == 'draft' %}
+                            Draft Projects
+                        {% elif project.state == 'archive' %}
+                            Archived Projects
+                        {% elif project.state == 'done' %}
+                            Completed Projects
+                        {% endif %}
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'projects-detail' project.id %}">{{ project.code }}</a>
+                </li>
+                <li>
+                    <a href="{% url 'project_reports_home' project=project.id %}?state=todo&state=pending&state=submit&state=reject">Progress Reports</a>
+                </li>
+                <li class="current">
+                  {% if monthly_report %}
+                      {{monthly_report.report_date | date:"F Y"}}
+                  {% else %}
+                      New Progress Report
+                  {% endif %}
+                </li>
+            </ul>
+        </div>
+    </div>
+    {% block project_body %}
+    {% endblock project_body %}
+</div>
+{% endblock content %}
+
+{% block scripts %}
+    <script type="module" src="{% static 'src/js/components/initAccordion.js' %}"></script>
+    <script type="module" src="{% static 'src/js/utils/exportSW.js' %}"></script>
+{% endblock scripts %}
+

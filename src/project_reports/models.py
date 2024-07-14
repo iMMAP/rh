@@ -44,6 +44,7 @@ class ProjectMonthlyReport(models.Model):
         ("submit", "Submitted"),
         ("reject", "Rejected"),
         ("complete", "Completed"),
+        ("archive", "Archived"),
     ]
     state = models.CharField(max_length=15, choices=REPORT_STATES, default="todo", null=True, blank=True)
     active = models.BooleanField(default=True)
@@ -112,6 +113,21 @@ class ActivityPlanReport(models.Model):
         blank=True,
     )
 
+    @property
+    def activity_domain(self):
+        return self.activity_plan.activity_domain if self.activity_plan else None
+
+    @property
+    def activity_type(self):
+        return self.activity_plan.activity_type if self.activity_plan else None
+
+    @property
+    def activity_detail(self):
+        return self.activity_plan.activity_detail if self.activity_plan else None
+
+    def __str__(self):
+        return f"Activity Plan: {self.activity_plan.activity_domain} - {self.indicator}"
+
     class Meta:
         verbose_name = "Activity Plan Report"
         verbose_name_plural = "Activity Plan Reports"
@@ -179,7 +195,7 @@ class TargetLocationReport(models.Model):
     updated_at = models.DateTimeField(auto_now=True, null=True)
 
     def __str__(self):
-        return f"{self.activity_plan_report}, {self.province}, {self.district}"
+        return f"Location Report: {self.province}, {self.district}"
 
     class Meta:
         verbose_name = "Target Location Report"
@@ -191,6 +207,7 @@ class DisaggregationLocationReport(models.Model):
     target_location_report = models.ForeignKey(TargetLocationReport, on_delete=models.CASCADE, null=True, blank=True)
     disaggregation = models.ForeignKey(Disaggregation, on_delete=models.CASCADE, null=True, blank=True)
 
+    target_required = models.IntegerField(default=0, null=True, blank=True, verbose_name="Required Target")
     target = models.IntegerField(default=0, null=True, blank=True)
 
     created_at = models.DateTimeField(auto_now_add=True, null=True)

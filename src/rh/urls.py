@@ -2,15 +2,21 @@ from django.urls import path
 
 from .views import exports as export_views
 
-from .views.views import landing_page, download_user_guide, load_facility_sites, load_activity_domains
+from .views.views import (
+    landing_page,
+    download_user_guide,
+    load_facility_sites,
+    load_activity_domains,
+    get_activity_domain_types,
+    get_activity_type_indicators,
+    get_locations_details,
+)
 from .views import (
     projects as projects,
     activity_plans as activity_plans,
     organizations as organizations,
     budget_progress as budget_progress,
-    disaggregations as disaggregations,
     target_locations as target_locations,
-    locations as locations,
 )
 
 
@@ -53,37 +59,73 @@ urlpatterns = [
         projects.copy_project,
         name="copy_project",
     ),
+    # load
+    path(
+        "activity-domains/activity-types",
+        get_activity_domain_types,
+        name="activity-domains-types",
+    ),
+    path(
+        "activity-types/indicators",
+        get_activity_type_indicators,
+        name="activity-types-indicators",
+    ),
+    path(
+        "indicator/types",
+        activity_plans.update_indicator_type,
+        name="update-indicator-type",
+    ),
     # Projects Activity Plannings CRUD
     path(
-        "projects/<int:project>/activity_plan/<str:plan>/copy/",
-        activity_plans.copy_activity_plan,
-        name="copy_plan",
+        "activity-plans/<int:pk>/update",
+        activity_plans.update_activity_plan,
+        name="activity-plans-update",
     ),
     path(
-        "project/activity_plan/<str:pk>/delete/",
+        "activity-plans/<int:pk>/delete/",
         activity_plans.delete_activity_plan,
-        name="delete_plan",
+        name="activity-plans-delete",
     ),
     path(
-        "projects/<int:project>/activity_plan/create",
-        activity_plans.create_project_activity_plan,
-        name="create_project_activity_plan",
+        "activity-plans/project/<int:project>/create",
+        activity_plans.create_activity_plan,
+        name="activity-plans-create",
+    ),
+    path(
+        "activity-plans/<int:pk>/copy",
+        activity_plans.copy_activity_plan,
+        name="activity-plans-copy",
+    ),
+    path(
+        "projects/<int:project>/target-locations",
+        target_locations.list_target_locations,
+        name="target-locations-list",
+    ),
+    path(
+        "projects/<int:project>/activity-plans",
+        activity_plans.list_activity_plans,
+        name="activity-plans-list",
     ),
     # Projects Target Locations CRUD
+    path(
+        "target-locations/<int:pk>/update",
+        target_locations.update_target_location,
+        name="target-locations-update",
+    ),
+    path(
+        "target-locations/activity-plan/<int:activity_plan>/create",
+        target_locations.create_target_location,
+        name="target-locations-create",
+    ),
     path(
         "projects/<int:project>/target_location/<str:location>/copy/",
         target_locations.copy_target_location,
         name="copy_location",
     ),
     path(
-        "projects/target_location/<str:pk>/delete",
+        "target-locations/<int:pk>/delete",
         target_locations.delete_target_location,
-        name="delete_location",
-    ),
-    path(
-        "projects/<int:project>/project_plan/review/",
-        projects.project_planning_review,
-        name="project_plan_review",
+        name="target-locations-delete",
     ),
     path(
         "projects/<str:pk>/project_plan/submit/",
@@ -114,28 +156,13 @@ urlpatterns = [
     ),
     path(
         "ajax/load-locations-details/",
-        locations.load_locations_details,
-        name="ajax-load-locations",
+        get_locations_details,
+        name="get-locations-details",
     ),
     path(
         "ajax/load-facility_sites/",
         load_facility_sites,
         name="ajax-load-facility_sites",
-    ),
-    path(
-        "ajax/get_target_location_empty_form/",
-        target_locations.get_target_location_empty_form,
-        name="get_target_location_empty_form",
-    ),
-    path(
-        "ajax/get_activity_empty_form/",
-        activity_plans.get_activity_empty_form,
-        name="get_activity_empty_form",
-    ),
-    path(
-        "ajax/get_disaggregations_forms/",
-        disaggregations.get_disaggregations_forms,
-        name="get_disaggregations_forms",
     ),
     # Exports
     path(
@@ -165,11 +192,6 @@ urlpatterns = [
         "project/export/CSV/<int:project_id>",
         export_views.ProjectExportCSV.as_view(),
         name="export_porjcet_CSV",
-    ),
-    path(
-        "project/activityplan/indicator-type",
-        activity_plans.update_indicator_type,
-        name="update_indicator_type",
     ),
     # User Guide Download Link
     path("rh/user_guide/download/", download_user_guide, name="download_user_guide"),

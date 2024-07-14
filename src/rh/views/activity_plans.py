@@ -1,263 +1,209 @@
 from django.contrib.auth.decorators import login_required
-from django.http import JsonResponse
+from django.views.decorators.http import require_POST, require_http_methods
+from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
-from django.template.loader import render_to_string
 from django.urls import reverse
 
-from ..forms import ActivityPlanFormSet, DisaggregationFormSet, TargetLocationFormSet, ProjectIndicatorTypeForm
+from ..forms import (
+    ProjectIndicatorTypeForm,
+    ActivityPlanForm,
+)
 
 from ..models import (
     ActivityPlan,
     Project,
     Indicator,
+    TargetLocation,
+    DisaggregationLocation,
 )
-from .views import copy_project_target_location, copy_target_location_disaggregation_locations
+from django.core.paginator import Paginator
+from django.db.models import Count
+from django.contrib import messages
+from django.utils.safestring import mark_safe
+
+from ..filters import ActivityPlansFilter
+from django_htmx.http import HttpResponseClientRedirect
+
+
+from extra_settings.models import Setting
 
 
 @login_required
+def update_activity_plan(request, pk):
+    """Update an existing activity plan"""
+    activity_plan = get_object_or_404(ActivityPlan.objects.select_related("project"), pk=pk)
+
+    if request.method == "POST":
+        form = ActivityPlanForm(request.POST, instance=activity_plan)
+        if form.is_valid():
+            form.save()
+            messages.success(
+                request,
+                mark_safe(
+                    f'The Activity Plan "<a href="{reverse("activity-plans-update", args=[activity_plan.pk])}">{activity_plan}</a>" was changed successfully.'
+                ),
+            )
+            if "_continue" in request.POST:
+                return redirect("activity-plans-update", pk=activity_plan.pk)
+            elif "_save" in request.POST:
+                return redirect("activity-plans-list", project=activity_plan.project.pk)
+            elif "_addanother" in request.POST:
+                return redirect("activity-plans-create", project=activity_plan.project.pk)
+        else:
+            messages.error(request, "The form is invalid. Please check the fields and try again.")
+    else:
+        form = ActivityPlanForm(instance=activity_plan)
+
+    return render(
+        request,
+        "rh/activity_plans/activity_plan_form.html",
+        {"form": form, "project": activity_plan.project},
+    )
+
+
+@login_required
+def create_activity_plan(request, project):
+    """Create a new activity plan for a specific project"""
+    project = get_object_or_404(Project, pk=project)
+
+    if request.method == "POST":
+        form = ActivityPlanForm(request.POST, project=project)
+        if form.is_valid():
+            activity_plan = form.save(commit=False)
+            activity_plan.project = project
+            activity_plan.save()
+
+            messages.success(
+                request,
+                mark_safe(
+                    f'The Activity Plan "<a href="{reverse("activity-plans-update", args=[activity_plan.pk])}">{activity_plan}</a>" was added successfully.',
+                ),
+            )
+            if "_continue" in request.POST:
+                return redirect("activity-plans-update", pk=activity_plan.pk)
+            elif "_save" in request.POST:
+                return redirect("activity-plans-list", project=project.pk)
+            elif "_addanother" in request.POST:
+                return redirect("activity-plans-create", project=project.pk)
+        else:
+            messages.error(request, "The form is invalid. Please check the fields and try again.")
+    else:
+        form = ActivityPlanForm(project=project)
+
+    return render(request, "rh/activity_plans/activity_plan_form.html", {"form": form, "project": project})
+
+
+@login_required
+@require_http_methods(["DELETE"])
 def delete_activity_plan(request, pk):
     """Delete the specific activity plan"""
     activity_plan = get_object_or_404(ActivityPlan, pk=pk)
-    if activity_plan:
-        activity_plan.delete()
 
-    url = reverse("create_project_activity_plan", args=[activity_plan.project.pk])
+    activity_plan.delete()
 
-    # Return the URL in a JSON response
-    response_data = {"redirect_url": url}
-    return JsonResponse(response_data)
+    messages.success(request, "Activity plan and its target locations has been delete.")
+
+    if request.headers.get("Hx-Trigger", "") == "delete-btn":
+        return HttpResponseClientRedirect(reverse("activity-plans-list", args=[activity_plan.project.id]))
+    return HttpResponse(status=200)
 
 
+@require_POST
 @login_required
-def copy_activity_plan(request, project, plan):
+def copy_activity_plan(request, pk):
     """Copy only the activity plan not whole project"""
-    project = get_object_or_404(Project, pk=project)
-    activity_plan = get_object_or_404(ActivityPlan, pk=plan)
-    new_plan = get_object_or_404(ActivityPlan, pk=activity_plan.pk)
+    new_activity_plan = get_object_or_404(ActivityPlan, pk=pk)
 
-    if new_plan:
-        new_plan.pk = None
-        new_plan.save()
+    target_locations = TargetLocation.objects.filter(activity_plan=new_activity_plan)
 
-        # Iterate through target locations and copy them to the new plan.
-        target_locations = activity_plan.targetlocation_set.all()
-        for location in target_locations:
-            new_location = copy_project_target_location(new_plan, location)
-            disaggregation_locations = location.disaggregationlocation_set.all()
+    new_activity_plan.id = None
+    new_activity_plan.active = False
+    new_activity_plan.state = "draft"
 
-            # Iterate through disaggregation locations and copy them to the new location.
-            for disaggregation_location in disaggregation_locations:
-                copy_target_location_disaggregation_locations(new_location, disaggregation_location)
+    new_activity_plan.save()
 
-        new_plan.project = project
-        new_plan.active = True
-        new_plan.state = "draft"
-        new_plan.indicator = activity_plan.indicator
-        new_plan.save()
-
-    url = reverse("create_project_activity_plan", args=[project.pk])
-
-    # Return the URL in a JSON response
-    response_data = {"redirect_url": url}
-    return JsonResponse(response_data)
-
-
-@login_required
-def create_project_activity_plan(request, project):
-    project = get_object_or_404(Project, pk=project)
-
-    # Get all existing activity plans for the project
-    # Create the activity plan formset with initial data from the project
-    activity_plan_formset = ActivityPlanFormSet(
-        request.POST or None, instance=project, form_kwargs={"project": project}
-    )
-
-    target_location_formsets = []
-    user_locaiton=request.user.profile.country.id
-    # Iterate over activity plan forms in the formset
-    for activity_plan_form in activity_plan_formset.forms:
-        # Create a target location formset for each activity plan form
-        target_location_formset = TargetLocationFormSet(
-            request.POST or None,
-            instance=activity_plan_form.instance,
-            prefix=f"{user_locaiton},target_locations_{activity_plan_form.prefix}",
+    for location in target_locations:
+        disagg_locations = DisaggregationLocation.objects.filter(
+            target_location=location,
         )
-        for target_location_form in target_location_formset.forms:
-            # Create a disaggregation formset for each target location form
-            # HERE
 
-            initial_data = []
+        location.id = None
+        location.active = False
+        location.state = "draft"
+        location.activity_plan = new_activity_plan
 
-            disaggregation_formset = DisaggregationFormSet(
-                request.POST or None,
-                instance=target_location_form.instance,
-                prefix=f"disaggregation_{target_location_form.prefix}",
-                initial=initial_data,
-            )
-            target_location_form.disaggregation_formset = disaggregation_formset
+        location.save()
 
-        target_location_formsets.append(target_location_formset)
+        for dl in disagg_locations:
+            dl.id = None
+            dl.target_location = location
 
-    if request.method == "POST":
-        # Check if the form was submitted for "Next Step" or "Save & Continue"
-        submit_type = request.POST.get("submit_type")
+            dl.save()
 
-        acitivities_target = {}
-        if activity_plan_formset.is_valid():
-            # Save valid activity plan forms
-            for activity_plan_form in activity_plan_formset:
-                if activity_plan_form.cleaned_data.get("activity_domain") and activity_plan_form.cleaned_data.get(
-                    "activity_type"
-                ):
-                    activity_plan = activity_plan_form.save()
-                    acitivities_target.update({activity_plan.pk: 0})
+    messages.success(request, "Activity plan and its Target Locations copied")
 
-            for post_target_location_formset in target_location_formsets:
-                if post_target_location_formset.is_valid():
-                    for post_target_location_form in post_target_location_formset:
-                        if post_target_location_form.cleaned_data != {}:
-                            if post_target_location_form.cleaned_data.get(
-                                "province"
-                            ) and post_target_location_form.cleaned_data.get("district"):
-                                target_location_instance = post_target_location_form.save()
-                                target_location_instance.project = project
-                                target_location_instance.country = request.user.profile.country
-                                target_location_instance.save()
-
-                        if hasattr(post_target_location_form, "disaggregation_formset"):
-                            post_disaggregation_formset = post_target_location_form.disaggregation_formset.forms
-
-                            # Delete the exisiting instances of the disaggregation location and create new
-                            # based on the indicator disaggregations
-                            #
-                            new_disaggregations = []
-                            for disaggregation_form in post_disaggregation_formset:
-                                if disaggregation_form.is_valid():
-                                    if (
-                                        disaggregation_form.cleaned_data != {}
-                                        and disaggregation_form.cleaned_data.get("target") > 0
-                                    ):
-                                        disaggregation_instance = disaggregation_form.save(commit=False)
-                                        disaggregation_instance.target_location = target_location_instance
-                                        disaggregation_instance.save()
-                                        acitivities_target[
-                                            target_location_instance.activity_plan_id
-                                        ] += disaggregation_instance.target
-                                        new_disaggregations.append(disaggregation_instance.id)
-
-                            all_disaggregations = post_target_location_form.instance.disaggregationlocation_set.all()
-                            for dis in all_disaggregations:
-                                if dis.id not in new_disaggregations:
-                                    dis.delete()
-
-            for activity_plan_form in activity_plan_formset:
-                activity_plan = activity_plan_form.save()
-                activity_plan.total_target = acitivities_target[activity_plan.pk]
-
-            activity_plan_formset.save()
-
-            if submit_type == "next_step":
-                # Redirect to the project review page if "Next Step" is clicked
-                return redirect("project_plan_review", project=project.pk)
-            else:
-                # Redirect back to this view if "Save & Continue" is clicked
-                return redirect("create_project_activity_plan", project=project.pk)
-        else:
-            # TODO:
-            # Handle invalid activity_plan_formset
-            # Add error handling code here
-            pass
-
-    # Prepare data for rendering the template
-    target_location_formset = TargetLocationFormSet(
-        request.POST or None,
-    )
-
-    cluster_ids = list(project.clusters.values_list("id", flat=True))
-
-    combined_formset = zip(activity_plan_formset.forms, target_location_formsets)
-
-    context = {
-        "project": project,
-        "activity_plan_formset": activity_plan_formset,
-        "target_location_formset": target_location_formset,
-        "combined_formset": combined_formset,
-        "clusters": cluster_ids,
-        "activity_planning": True,
-        "project_view": True,
-        "financial_view": False,
-        "reports_view": False,
-    }
-    # Render the template with the context data
-    return render(request, "rh/projects/forms/project_activity_plan_form.html", context)
+    return redirect("activity-plans-update", pk=new_activity_plan.id)
 
 
 @login_required
-def get_activity_empty_form(request):
-    """Get an empty activity form"""
-    # Get the project object based on the provided project ID
-    project = get_object_or_404(Project, pk=request.POST.get("project"))
+def list_activity_plans(request, project):
+    """List Activity Plans for a specific project
+    url: projects/<pk:project>/activity-plans
+    """
+    project = get_object_or_404(Project, pk=project)
 
-    # Prepare form_kwargs to pass to ActivityPlanFormSet
-    form_kwargs = {"project": project}
-
-    # Create an instance of ActivityPlanFormSet using the project instance and form_kwargs
-    activity_plan_formset = ActivityPlanFormSet(form_kwargs=form_kwargs, instance=project)
-
-    # Get the prefix index from the request
-    prefix_index = request.POST.get("prefix_index")
-    user_locaiton=request.user.profile.country.id
-    # Create an instance of TargetLocationFormSet with a prefixed name
-    target_location_formset = TargetLocationFormSet(
-        prefix=f"{user_locaiton},target_locations_{activity_plan_formset.prefix}-{prefix_index}"
+    ap_filter = ActivityPlansFilter(
+        request.GET,
+        request=request,
+        queryset=ActivityPlan.objects.filter(project=project)
+        .select_related("activity_domain", "activity_type", "indicator")
+        .annotate(target_location_count=Count("targetlocation"))
+        .order_by("-id"),
+        project=project,
     )
 
-    # Prepare context for rendering the activity empty form template
-    context = {
-        "form": activity_plan_formset.empty_form,
-        "target_location_formset": target_location_formset,
-        "project": project,
-    }
+    RECORDS_PER_PAGE = Setting.get("RECORDS_PER_PAGE", default=10)
 
-    # Render the activity empty form template and generate HTML
-    html = render_to_string("rh/projects/forms/activity_empty_form.html", context)
+    per_page = request.GET.get("per_page", RECORDS_PER_PAGE)
+    paginator = Paginator(ap_filter.qs, per_page=per_page)  # Show 10 activity plans per page
+    page = request.GET.get("page", 1)
+    activity_plans = paginator.get_page(page)
+    activity_plans.adjusted_elided_pages = paginator.get_elided_page_range(page)
 
-    # Return JSON response containing the generated HTML
-    return JsonResponse({"html": html})
+    context = {"project": project, "activity_plans": activity_plans, "activity_plans_filter": ap_filter}
+
+    return render(request, "rh/activity_plans/activity_plans_list.html", context)
 
 
 @login_required
 def update_indicator_type(request):
     """Indicator related types fields"""
-    if request.method == "POST":
-        activity_plan_id = request.POST.get("activity_plan", "")
-        indicator_id = request.POST.get("id")
-        prefix = request.POST.get("prefix")
-        indicator_type_fields = [
-            "package_type",
-            "unit_type",
-            "grant_type",
-            "transfer_category",
-            "currency",
-            "transfer_mechanism_type",
-            "implement_modility_type",
-        ]
-        initial_data = {}
-        if activity_plan_id:
-            activity_plan = get_object_or_404(ActivityPlan, pk=activity_plan_id)
-            if (activity_plan.indicator) and (str(activity_plan.indicator.pk) != indicator_id):
-                fields_to_update = {field: None for field in indicator_type_fields}
+    activity_plan_id = request.GET.get("activity_plan", "")
+    indicator_id = request.GET.get("indicator")
 
-                # Update the fields in one query
-                ActivityPlan.objects.filter(pk=activity_plan.pk).update(**fields_to_update)
+    indicator_type_fields = [
+        "package_type",
+        "unit_type",
+        "grant_type",
+        "transfer_category",
+        "currency",
+        "transfer_mechanism_type",
+        "implement_modility_type",
+    ]
 
-            initial_data = {field: getattr(activity_plan, field, None) for field in indicator_type_fields}
+    initial_data = {}
+    if activity_plan_id:
+        activity_plan = get_object_or_404(ActivityPlan, pk=activity_plan_id)
+        if (activity_plan.indicator) and (str(activity_plan.indicator.pk) != indicator_id):
+            fields_to_update = {field: None for field in indicator_type_fields}
 
-        indicator = Indicator.objects.get(id=indicator_id)
-        indicator_form = ProjectIndicatorTypeForm(prefix=prefix, initial=initial_data)
-        context = {"indicator": indicator, "indicator_form": indicator_form}
+            # Update the fields in one query
+            ActivityPlan.objects.filter(pk=activity_plan.pk).update(**fields_to_update)
 
-        html = render_to_string("rh/projects/views/_indicator_types.html", context)
+        initial_data = {field: getattr(activity_plan, field, None) for field in indicator_type_fields}
 
-        # Return JSON response containing the generated HTML
-        return JsonResponse({"html": html})
+    indicator = Indicator.objects.get(id=indicator_id)
+    indicator_form = ProjectIndicatorTypeForm(initial=initial_data)
+    context = {"indicator": indicator, "indicator_form": indicator_form}
+
+    return render(request, "rh/projects/views/_indicator_types.html", context)

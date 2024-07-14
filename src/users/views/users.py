@@ -15,14 +15,17 @@ import django_filters
 from django.db.models import Count, Q
 from django.core.exceptions import PermissionDenied
 from ..utils import has_permission
-
-RECORDS_PER_PAGE = 10
+from extra_settings.models import Setting
 
 
 class UsersFilter(django_filters.FilterSet):
+    last_login = django_filters.DateRangeFilter(field_name="last_login")
+    date_joined = django_filters.DateRangeFilter(field_name="date_joined")
+
     class Meta:
         model = User
-        fields = "__all__"
+        # fields = "__all__"
+        fields = ["username", "email", "first_name", "last_name", "is_active"]
 
 
 #############################################
@@ -35,13 +38,16 @@ class UsersFilter(django_filters.FilterSet):
 @permission_required("users.view_org_users", raise_exception=True)
 def org_users_list(request):
     user_org = request.user.profile.organization
+
     users_filter = UsersFilter(
         request.GET,
         request=request,
         queryset=User.objects.filter(profile__organization=user_org).select_related("profile").order_by("-id"),
     )
 
-    paginator = Paginator(users_filter.qs, RECORDS_PER_PAGE)
+    RECORDS_PER_PAGE = Setting.get("RECORDS_PER_PAGE", default=10)
+    per_page = request.GET.get("per_page", RECORDS_PER_PAGE)
+    paginator = Paginator(users_filter.qs, per_page=per_page)
     page_number = request.GET.get("page", 1)
     paginated_users = paginator.get_page(page_number)
     paginated_users.adjusted_elided_pages = paginator.get_elided_page_range(page_number)
@@ -64,7 +70,7 @@ def org_users_list(request):
 
 
 @login_required
-@require_http_methods(["POST"])
+@require_http_methods(["DELETE"])
 @permission_required("rh.activate_deactivate_user", raise_exception=True)
 def toggle_status(request, user_id):
     user = get_object_or_404(User, pk=user_id)

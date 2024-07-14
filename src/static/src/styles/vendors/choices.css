@@ -26,7 +26,7 @@
 }
 .choices.is-disabled .choices__inner,
 .choices.is-disabled .choices__input {
-  background-color: #eaeaea;
+  background-color: #fff;
   cursor: not-allowed;
   -webkit-user-select: none;
   user-select: none;
@@ -136,10 +136,10 @@
   display: inline-block;
   vertical-align: top;
   width: 100%;
-  background-color: #f9f9f9;
+  background-color: #fff;
   padding: 7.5px 7.5px 3.75px;
   border: 1px solid #ddd;
-  border-radius: 2.5px;
+  border-radius: 8px;
   font-size: 14px;
   min-height: 44px;
   overflow: hidden;
@@ -333,7 +333,7 @@
 .choices__input {
   display: inline-block;
   vertical-align: baseline;
-  background-color: #f9f9f9;
+  background-color: #fff;
   font-size: 14px;
   margin-bottom: 5px;
   border: 0;

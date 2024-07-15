@@ -97,9 +97,9 @@
     flex-direction: row;
   }
 
-  @include media('>=desktop') {
-    padding:1rem; 
-  }
+  // @include media('>=desktop') {
+    padding:1rem 0rem; 
+  // }
 
   .btn {
     width: 100%;
@@ -111,9 +111,9 @@
       margin: 0 16px 0 0;
     }
 
-    &:last-child {
-      margin: 0;
-    }
+    // &:last-child {
+    //   margin: 0;
+    // }
   }
 }
 

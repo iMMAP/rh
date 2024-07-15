@@ -6,56 +6,47 @@
     <div class="page-top-panel bottom-border">
         <!-- filter applied  -->
         <div class="filter-container" id="filter-container">
-            {% for field in project_filter.form%}
-                {% if forloop.first %}
-                    <span>Applied Filters:</span>
-                {% endif %}
+            {% for field in project_filter.form %}
+                {% if forloop.first %}<span>Applied Filters:</span>{% endif %}
                 {% if field.value and field.name != 'state' %}
-                    
-                    <span class="filter-item title" id="title">
-                        {{field.name}}
-                    </span>
-                {% if forloop.last %}
-                    <span class="close-alert-message">&#x2715;</span>
+ 
+                    <span class="filter-item title" id="title">{{ field.name }}</span>
+                    {% if forloop.last %}<span class="close-alert-message">x</span>{% endif %}
                 {% endif %}
-                {% endif %} 
+ 
             {% endfor %}
         </div>
         <!-- filter applied end -->
-        
+ 
         <div class="actions-panel">
-            {% include "components/_filter_drawer.html" with filter=project_filter%}
+            {% include "components/_filter_drawer.html" with filter=project_filter %}
             <div class="export-formats-holder">
                 <span class="btn btn-gray export-open">
                     <span class="btn-text">Export</span>
                     <!-- spinner start-->
-                    <img class='downloading' style="width: 1.2rem;" src="{% static 'src/images/spinner.gif' %}" />
+                    <img class="downloading"
+                         style="width: 1.2rem"
+                         src="{% static 'src/images/spinner.gif' %}" />
                     <!-- spinner end -->
                     <span class="icon-download"></span>
                 </span>
                 <div class="export-formats">
                     <span class="title">File format</span>
                     <div class="format-list">
-                        <div class="export-link-holder" 
-                            onclick="exportButton(event)"
-                            data-export-url="{% url 'export-org-projects' 'csv' %}">
-                            <span class="export-link cursor-pointer">
-                                CSV
-                            </span>
+                        <div class="export-link-holder"
+                             onclick="exportButton(event)"
+                             data-export-url="{% url 'export-org-projects' 'csv' %}">
+                            <span class="export-link cursor-pointer">CSV</span>
                         </div>
-                        <div class="export-link-holder" 
-                            onclick="exportButton(event)"
-                            data-export-url="{% url 'export-org-projects' 'xls' %}">
-                            <span class="export-link cursor-pointer" >
-                                Excel
-                            </span>
+                        <div class="export-link-holder"
+                             onclick="exportButton(event)"
+                             data-export-url="{% url 'export-org-projects' 'xls' %}">
+                            <span class="export-link cursor-pointer">Excel</span>
                         </div>
-                        <div class="export-link-holder" 
-                            onclick="exportButton(event)"
-                            data-export-url="{% url 'export-org-projects' 'json' %}">
-                            <span class="export-link cursor-pointer">
-                                JSON
-                            </span>
+                        <div class="export-link-holder"
+                             onclick="exportButton(event)"
+                             data-export-url="{% url 'export-org-projects' 'json' %}">
+                            <span class="export-link cursor-pointer">JSON</span>
                         </div>
                     </div>
                 </div>
@@ -65,224 +56,226 @@
 
     {% comment %} Table {% endcomment %}
     {% if projects %}
-    <div class="table-wrapper-scrollable">
-        <table class="table all-projects-table">
-            <thead class="content-block ">
-                <tr>
-                    <th class="">
-                        <div class="table-flex-holder">
-                            <div class="input-check-holder">
-                                <input type="checkbox"
-                                        id="table-head-check-01"
-                                        data-check-pattern="[name^='table-check']" />
-                                <label for="table-head-check-01">
-                                    <span class="input"></span>
-                                </label>
-                            </div>
-                            <strong class="table-title">Project title</strong>
-                            <div class="table-sort-buttons">
-                                <button type="button">
-                                    <span class="icon-chevron-up"></span>
-                                </button>
-                                <button type="button">
-                                    <span class="icon-chevron-down"></span>
-                                </button>
-                            </div>
-                        </div>
-                    </th>
-                    <th class="">
-                        <div class="table-flex-holder">
-                            <strong class="table-title">Cluster/Sector</strong>
-                            <div class="table-sort-buttons">
-                                <button type="button">
-                                    <span class="icon-chevron-up"></span>
-                                </button>
-                                <button type="button">
-                                    <span class="icon-chevron-down"></span>
-                                </button>
-                            </div>
-                        </div>
-                    </th>
-                    <th class="">
-                        <div class="table-flex-holder">
-                            <strong class="table-title">Implementing Partners</strong>
-                            <div class="table-sort-buttons">
-                                <button type="button">
-                                    <span class="icon-chevron-up"></span>
-                                </button>
-                                <button type="button">
-                                    <span class="icon-chevron-down"></span>
-                                </button>
-                            </div>
-                        </div>
-                    </th>
-                    <th class="">
-                        <div class="table-flex-holder">
-                            <strong class="table-title">Programme Partners</strong>
-                        </div>
-                    </th>
-                    <th class="">
-                        <div class="table-flex-holder">
-                            <strong class="table-title">Organization</strong>
-                        </div>
-                    </th>
-                    <th class="">
-                        <div class="table-flex-holder">
-                            <strong class="table-title">Status</strong>
-                        </div>
-                    </th>
-                    <th class="">
-                        <div class="table-flex-holder">
-                            <strong class="table-title">Action</strong>
-                        </div>
-                    </th>
-                </tr>
-            </thead>
-            
-            <tbody>
-                <!--Include The Projects Details Here -->
-                {% for project in projects %}
+        <div class="table-wrapper-scrollable">
+            <table class="table all-projects-table">
+                <thead class="content-block ">
                     <tr>
-                        <td class="">
-                            <a class="table-flex-holder" href="{% url 'projects-detail' project.id %}">
+                        <th >
+                            <div class="table-flex-holder">
                                 <div class="input-check-holder">
-                                    <input type="checkbox" id="table-check-{{project.pk}}" class="project-checkbox" value="{{project.pk}}" name="table-check{{project.pk}}" />
-                                    <label for="table-check-{{project.pk}}">
+                                    <input type="checkbox"
+                                           id="table-head-check-01"
+                                           data-check-pattern="[name^='table-check']" />
+                                    <label for="table-head-check-01">
                                         <span class="input"></span>
                                     </label>
                                 </div>
-                                {{ project.title|truncatechars:100 }}
-                            </a>
-                        </td>
-                        <td class="">
-                            {% for cluster in project.clusters.all %}
-                                {{ cluster.title }}
-                                {% if not forloop.last %},{% endif %}
-                            {% endfor %}
-                        </td>
-                        <td class="">
-                            {% for partner in project.implementing_partners.all %}
-                                {{ partner.code }}
-                                {% if not forloop.last %},{% endif %}
-                            {% endfor %}
-                        </td>
-                        <td class="">
-                            {% for p_partner in project.programme_partners.all %}
-                                {{ p_partner.code }}
-                                {% if not forloop.last %},{% endif %}
-                            {% endfor %}
-                        </td>
-                        <td class="">
-                            {{ project.organization }}
-                        </td>
-                        <td class="">
-                            <span class="{{ project.state }}">
-                                {{ project.get_state_display }}
-                            </span>
-                        </td>
-                        <td class="">
-                            <div class="table-flex-holder">
-                                <ul class="table-options-buttons ">
-                                    {% if perms.rh.change_project %}
-                                    <li>
-                                        <a href="{% url 'projects-update' project.pk %}" class="btn btn-gray" data-tippy-content="Edit project and its activity plan">
-                                            Edit
-                                        </a>
-                                    </li>
-                                    {% endif %}
-
-                                    <li>
-                                        <a href="{% if project %}{% url 'project_reports_home' project.pk %}{% else %}#{% endif %}" class="btn btn-gray">Report</a>
-                                    </li>
-
-                                    <li>
-                                        <button class="export-button">
-                                            <a href="#"
-                                            data-url="{% url 'export_project_excel' project.pk %}"
-                                            class="text-decoration-none"
-                                            title="Export Excel"
-                                            data-tippy-content="Export Excel"
-                                            >
-                                                <span class="project-detail icon-download"></span>
-                                            </a>
-                                        </button>
-                                    </li>
-
-                                    {% if perms.rh.copy_project %}
-                                    <li>
-                                        <button>
-                                            <a href="#"
-                                                data-url="{% url 'copy_project' project.pk %}"
-                                                data-type="copy" 
-                                                data-name="project" 
-                                                data-tippy-content="Copy Project"
-                                                class="show-sw-action-popup">
-                                                <span class="project-detail icon-copy"></span>
-                                            </a>
-                                        </button>
-                                    </li>
-                                    {% endif %}
-
-                                    {% if perms.rh.archive_unarchive_project %}
-                                    <li>
-                                        <button class="button-archive-unarchive">
-                                            {% if project.active %}
-                                                <a href="#"
-                                                data-url="{% url 'archive_project' project.pk %}"
-                                                data-type="archive" 
-                                                data-name="project"
-                                                data-tippy-content="Archive Project" 
-                                                class="show-sw-action-popup">
-                                                    <svg xmlns="http://www.w3.org/2000/svg"
-                                                        class="archive-icon"
-                                                        width="16"
-                                                        height="16"
-                                                        viewBox="0 0 24 24">
-                                                        <path fill="currentColor" d="M3 3h18v4H3V3m1 18V8h16v13H4m10-7v-3h-4v3H7l5 5l5-5h-3Z" />
-                                                    </svg>
-                                                </a>
-                                            {% else %}
-                                                <a href="#"
-                                                    data-url="{% url 'unarchive_project' project.pk %}"
-                                                    data-type="unarchive" 
-                                                    data-name="project" 
-                                                    class="show-sw-action-popup">
-                                                    <svg xmlns="http://www.w3.org/2000/svg"
-                                                        width="16"
-                                                        height="16"
-                                                        viewBox="0 0 36 36">
-                                                        <path fill="currentColor" d="M18 21a3 3 0 0 1-2.22-1H5v12a2 2 0 0 0 2 2h22a2 2 0 0 0 2-2V20H20.21A3 3 0 0 1 18 21Zm4 3a1 1 0 0 1-1 1h-6a1 1 0 0 1 0-2h6a1 1 0 0 1 1 1Z" class="clr-i-solid clr-i-solid-path-1" />
-                                                        <path fill="currentColor" d="M15 12H5.5A1.5 1.5 0 0 0 4 13.5V18h11Z" class="clr-i-solid clr-i-solid-path-2" />
-                                                        <path fill="currentColor" d="M30.5 12H21v6h11v-4.5a1.5 1.5 0 0 0-1.5-1.5Z" class="clr-i-solid clr-i-solid-path-3" />
-                                                        <path fill="currentColor" d="m13 9.55l4-3.95V18a1 1 0 1 0 2 0V5.6l4 3.95a1 1 0 1 0 1.41-1.42L18 1.78l-6.39 6.35A1 1 0 0 0 13 9.55Z" class="clr-i-solid clr-i-solid-path-4" />
-                                                        <path fill="none" d="M0 0h36v36H0z" />
-                                                    </svg>
-                                                </a>
-                                            {% endif %}
-                                        </button>
-                                    </li>
-                                    {% endif %}
-                                </ul>
+                                <strong class="table-title">Project title</strong>
+                                <div class="table-sort-buttons">
+                                    <button type="button">
+                                        <span class="icon-chevron-up"></span>
+                                    </button>
+                                    <button type="button">
+                                        <span class="icon-chevron-down"></span>
+                                    </button>
+                                </div>
                             </div>
-                        </td>
+                        </th>
+                        <th >
+                            <div class="table-flex-holder">
+                                <strong class="table-title">Cluster/Sector</strong>
+                                <div class="table-sort-buttons">
+                                    <button type="button">
+                                        <span class="icon-chevron-up"></span>
+                                    </button>
+                                    <button type="button">
+                                        <span class="icon-chevron-down"></span>
+                                    </button>
+                                </div>
+                            </div>
+                        </th>
+                        <th >
+                            <div class="table-flex-holder">
+                                <strong class="table-title">Implementing Partners</strong>
+                                <div class="table-sort-buttons">
+                                    <button type="button">
+                                        <span class="icon-chevron-up"></span>
+                                    </button>
+                                    <button type="button">
+                                        <span class="icon-chevron-down"></span>
+                                    </button>
+                                </div>
+                            </div>
+                        </th>
+                        <th >
+                            <div class="table-flex-holder">
+                                <strong class="table-title">Programme Partners</strong>
+                            </div>
+                        </th>
+                        <th >
+                            <div class="table-flex-holder">
+                                <strong class="table-title">Organization</strong>
+                            </div>
+                        </th>
+                        <th >
+                            <div class="table-flex-holder">
+                                <strong class="table-title">Status</strong>
+                            </div>
+                        </th>
+                        <th >
+                            <div class="table-flex-holder">
+                                <strong class="table-title">Action</strong>
+                            </div>
+                        </th>
                     </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
+                </thead>
+ 
+                <tbody>
+                    <!--Include The Projects Details Here -->
+                    {% for project in projects %}
+                        <tr>
+                            <td >
+                                <a class="table-flex-holder"
+                                   href="{% url 'projects-detail' project.id %}">
+                                    <div class="input-check-holder">
+                                        <input type="checkbox"
+                                               id="table-check-{{ project.pk }}"
+                                               class="project-checkbox"
+                                               value="{{ project.pk }}"
+                                               name="table-check{{ project.pk }}" />
+                                        <label for="table-check-{{ project.pk }}">
+                                            <span class="input"></span>
+                                        </label>
+                                    </div>
+                                    {{ project.title|truncatechars:100 }}
+                                </a>
+                            </td>
+                            <td >
+                                {% for cluster in project.clusters.all %}
+                                    {{ cluster.title }}
+                                    {% if not forloop.last %},{% endif %}
+                                {% endfor %}
+                            </td>
+                            <td >
+                                {% for partner in project.implementing_partners.all %}
+                                    {{ partner.code }}
+                                    {% if not forloop.last %},{% endif %}
+                                {% endfor %}
+                            </td>
+                            <td >
+                                {% for p_partner in project.programme_partners.all %}
+                                    {{ p_partner.code }}
+                                    {% if not forloop.last %},{% endif %}
+                                {% endfor %}
+                            </td>
+                            <td >{{ project.organization }}</td>
+                            <td >
+                                <span class="{{ project.state }}">{{ project.get_state_display }}</span>
+                            </td>
+                            <td >
+                                <div class="table-flex-holder">
+                                    <ul class="table-options-buttons ">
+                                        {% if perms.rh.change_project %}
+                                            <li>
+                                                <a href="{% url 'projects-update' project.pk %}"
+                                                   class="btn btn-gray"
+                                                   data-tippy-content="Edit project and its activity plan">Edit</a>
+                                            </li>
+                                        {% endif %}
+
+                                        <li>
+                                            <a href="{% if project %}{% url 'project_reports_home' project.pk %}{% else %}#{% endif %}"
+                                               class="btn btn-gray">Report</a>
+                                        </li>
+
+                                        <li>
+                                            <button class="export-button">
+                                                <a href="#"
+                                                   data-url="{% url 'export_project_excel' project.pk %}"
+                                                   class="text-decoration-none"
+                                                   title="Export Excel"
+                                                   data-tippy-content="Export Excel">
+                                                    <span class="project-detail icon-download"></span>
+                                                </a>
+                                            </button>
+                                        </li>
+
+                                        {% if perms.rh.copy_project %}
+                                            <li>
+                                                <button>
+                                                    <a href="#"
+                                                       data-url="{% url 'copy_project' project.pk %}"
+                                                       data-type="copy"
+                                                       data-name="project"
+                                                       data-tippy-content="Copy Project"
+                                                       class="show-sw-action-popup">
+                                                        <span class="project-detail icon-copy"></span>
+                                                    </a>
+                                                </button>
+                                            </li>
+                                        {% endif %}
+
+                                        {% if perms.rh.archive_unarchive_project %}
+                                            <li>
+                                                <button class="button-archive-unarchive">
+                                                    {% if project.active %}
+                                                        <a href="#"
+                                                           data-url="{% url 'archive_project' project.pk %}"
+                                                           data-type="archive"
+                                                           data-name="project"
+                                                           data-tippy-content="Archive Project"
+                                                           class="show-sw-action-popup">
+                                                            <svg xmlns="http://www.w3.org/2000/svg"
+                                                                 class="archive-icon"
+                                                                 width="16"
+                                                                 height="16"
+                                                                 viewBox="0 0 24 24">
+                                                                <path fill="currentColor" d="M3 3h18v4H3V3m1 18V8h16v13H4m10-7v-3h-4v3H7l5 5l5-5h-3Z" />
+                                                            </svg>
+                                                        </a>
+                                                    {% else %}
+                                                        <a href="#"
+                                                           data-url="{% url 'unarchive_project' project.pk %}"
+                                                           data-type="unarchive"
+                                                           data-name="project"
+                                                           class="show-sw-action-popup">
+                                                            <svg xmlns="http://www.w3.org/2000/svg"
+                                                                 width="16"
+                                                                 height="16"
+                                                                 viewBox="0 0 36 36">
+                                                                <path fill="currentColor" d="M18 21a3 3 0 0 1-2.22-1H5v12a2 2 0 0 0 2 2h22a2 2 0 0 0 2-2V20H20.21A3 3 0 0 1 18 21Zm4 3a1 1 0 0 1-1 1h-6a1 1 0 0 1 0-2h6a1 1 0 0 1 1 1Z" class="clr-i-solid clr-i-solid-path-1" />
+                                                                <path fill="currentColor" d="M15 12H5.5A1.5 1.5 0 0 0 4 13.5V18h11Z" class="clr-i-solid clr-i-solid-path-2" />
+                                                                <path fill="currentColor" d="M30.5 12H21v6h11v-4.5a1.5 1.5 0 0 0-1.5-1.5Z" class="clr-i-solid clr-i-solid-path-3" />
+                                                                <path fill="currentColor" d="m13 9.55l4-3.95V18a1 1 0 1 0 2 0V5.6l4 3.95a1 1 0 1 0 1.41-1.42L18 1.78l-6.39 6.35A1 1 0 0 0 13 9.55Z" class="clr-i-solid clr-i-solid-path-4" />
+                                                                <path fill="none" d="M0 0h36v36H0z" />
+                                                            </svg>
+                                                        </a>
+                                                    {% endif %}
+                                                </button>
+                                            </li>
+                                        {% endif %}
+                                    </ul>
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     {% else %}
         <div class="view_nocontent">
             <div class="nocontent_help">
                 <h4>No projects found. Let's create one!</h4>
-                <p>Click on <a class="btn-red" href="{% url 'projects-create' %}">Add New Project</a> and start planning your new project.</p>
+                <p>
+                    Click on <a class="btn-red" href="{% url 'projects-create' %}">Add New Project</a> and start planning your new project.
+                </p>
             </div>
         </div>
     {% endif %}
 
     {% comment %} Pagination {% endcomment %}
-    {% include 'components/_pagination.html' with object_list=projects %}
+    {% include "components/_pagination.html" with object_list=projects %}
 </div>
-
 
 {% compress js inline %}
     <script src="{% static 'src/js/components/initCheckAllCheckboxes.js' %}"></script>

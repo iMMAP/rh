@@ -1,12 +1,12 @@
 {% load static %}
-{% load  user_lead_clusters %}
+{% load user_lead_clusters %}
 
 <header class="header logged-in" id="header">
     <div class="container">
         <div class="logo-holder">
             <strong class="logo">
                 <a href="{% url 'landing' %}">
-                    <img src="{% static 'src/images/immap-logo.svg' %}" alt="IMMAP" />
+                    <img src="{% static 'src/images/immap-logo.svg' %}" alt="IMMAP"  width="100%" height="100%" />
                 </a>
             </strong>
             <strong class="logo-text">ReportHub</strong>
@@ -23,54 +23,55 @@
 
                     {% user_lead_clusters request.user as clusters %}
                     {% if 'rh.view_cluster_projects' in perms or 'rh.add_organization' in prems or clusters %}
-                    <li class="main-nav-item has-drop-down js-main-nav-openclose">
-                        <a class="main-nav-link openclose-opener" href="#">Cluster</a>
+                        <li class="main-nav-item has-drop-down js-main-nav-openclose">
+                            <a class="main-nav-link openclose-opener" href="#">Cluster</a>
                             <div class="inner-drop">
-                            <ul class="inner-nav">
-                                {% if perms.rh.view_cluster_projects %}
-                                <li class="inner-nav-item">
-                                    <a class="inner-nav-link" href="{% url 'user-clusters-projects-list' %}">Your Clusters Projects</a>
-                                </li>
-                                <hr>
-                                {% endif %}
+                                <ul class="inner-nav">
+                                    {% if perms.rh.view_cluster_projects %}
+                                        <li class="inner-nav-item">
+                                            <a class="inner-nav-link" href="{% url 'user-clusters-projects-list' %}">Your Clusters Projects</a>
+                                        </li>
+                                        <hr>
+                                    {% endif %}
 
-                                {% for cluster in clusters %}
-                                    <li class="inner-nav-item">
-                                    <a class="inner-nav-link" href="{% url 'cluster-projects-list' cluster.code %}">{{cluster.code|upper}}'s Projects</a>
-                                </li>
-                                {% endfor %}
+                                    {% for cluster in clusters %}
+                                        <li class="inner-nav-item">
+                                            <a class="inner-nav-link"
+                                               href="{% url 'cluster-projects-list' cluster.code %}">{{ cluster.code|upper }}'s Projects</a>
+                                        </li>
+                                    {% endfor %}
 
-                                {% if perms.rh.add_organization %}
-                                <li class="inner-nav-item">
-                                    <a class="inner-nav-link" href="{% url 'organizations-create' %}">Add Organization</a>
-                                </li>
-                                {% endif %}
-                            </ul>
-                        </div>
-                    </li>
+                                    {% if perms.rh.add_organization %}
+                                        <li class="inner-nav-item">
+                                            <a class="inner-nav-link" href="{% url 'organizations-create' %}">Add Organization</a>
+                                        </li>
+                                    {% endif %}
+                                </ul>
+                            </div>
+                        </li>
                     {% endif %}
 
                     <li class="main-nav-item has-drop-down js-main-nav-openclose">
                         <a class="main-nav-link openclose-opener" href="#">Organization</a>
-                            <div class="inner-drop">
+                        <div class="inner-drop">
                             <ul class="inner-nav">
                                 {% if perms.rh.view_org_projects %}
-                                <li class="inner-nav-item">
-                                    <a class="inner-nav-link" href="{% url 'projects-list' %}">Projects</a>
-                                </li>
+                                    <li class="inner-nav-item">
+                                        <a class="inner-nav-link" href="{% url 'projects-list' %}">Projects</a>
+                                    </li>
                                 {% endif %}
-                                
+ 
                                 {% if perms.rh.add_project %}
-                                <li class="inner-nav-item">
-                                    <a class="inner-nav-link" href="{% url 'projects-create' %}">Create Project</a>
-                                </li>
-                                 {% endif %}
+                                    <li class="inner-nav-item">
+                                        <a class="inner-nav-link" href="{% url 'projects-create' %}">Create Project</a>
+                                    </li>
+                                {% endif %}
 
                                 {% if perms.users.view_org_users %}
-                                <hr>
-                                <li class="inner-nav-item">
-                                    <a class="inner-nav-link" href="{% url 'users-organization' %}">Members</a>
-                                </li>
+                                    <hr>
+                                    <li class="inner-nav-item">
+                                        <a class="inner-nav-link" href="{% url 'users-organization' %}">Members</a>
+                                    </li>
                                 {% endif %}
                             </ul>
                         </div>
@@ -79,15 +80,19 @@
                     <li class="main-nav-item has-drop-down js-main-nav-openclose">
                         <a class="main-nav-link" href="{% url 'stocks' %}">Stocks</a>
                     </li>
-                
+ 
                     <li class="main-nav-item has-drop-down js-main-nav-openclose">
-                           
+ 
                         <a class="main-nav-link openclose-opener" href="#">
-                            <span style="display: flex;align-items:center">
-                            <svg style="width: 1.7rem;margin:2px 7px 0 0px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
-                                <path fill-rule="evenodd" d="M18.685 19.097A9.723 9.723 0 0 0 21.75 12c0-5.385-4.365-9.75-9.75-9.75S2.25 6.615 2.25 12a9.723 9.723 0 0 0 3.065 7.097A9.716 9.716 0 0 0 12 21.75a9.716 9.716 0 0 0 6.685-2.653Zm-12.54-1.285A7.486 7.486 0 0 1 12 15a7.486 7.486 0 0 1 5.855 2.812A8.224 8.224 0 0 1 12 20.25a8.224 8.224 0 0 1-5.855-2.438ZM15.75 9a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z" clip-rule="evenodd" />
-                            </svg>
-                            <span> {{user.username}} </span>
+                            <span class="flex items-center">
+                                <svg  class="w-7 mt-2 mr-4"
+                                     xmlns="http://www.w3.org/2000/svg"
+                                     viewBox="0 0 24 24"
+                                     fill="currentColor"
+                                     >
+                                    <path fill-rule="evenodd" d="M18.685 19.097A9.723 9.723 0 0 0 21.75 12c0-5.385-4.365-9.75-9.75-9.75S2.25 6.615 2.25 12a9.723 9.723 0 0 0 3.065 7.097A9.716 9.716 0 0 0 12 21.75a9.716 9.716 0 0 0 6.685-2.653Zm-12.54-1.285A7.486 7.486 0 0 1 12 15a7.486 7.486 0 0 1 5.855 2.812A8.224 8.224 0 0 1 12 20.25a8.224 8.224 0 0 1-5.855-2.438ZM15.75 9a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z" clip-rule="evenodd" />
+                                </svg>
+                                <span>{{ user.username }}</span>
                             </span>
                         </a>
 
@@ -95,7 +100,7 @@
                             <ul class="inner-nav">
                                 {% if user.is_superuser %}
                                     <li class="inner-nav-item">
-                                        <a class="inner-nav-link" target="_blank" href="/admin">Admin Panel</a>
+                                        <a class="inner-nav-link" target="_blank" href="{% url 'admin:index' %}">Admin Panel</a>
                                     </li>
                                 {% endif %}
                                 <li class="inner-nav-item">
@@ -104,7 +109,7 @@
                                 <li class="inner-nav-item">
                                     <a class="inner-nav-link" href="{% url 'view_my_dashboard' %}">My Cluster/Org</a>
                                 </li>
-                                
+ 
                                 <li class="inner-nav-item">
                                     <a href="{% url 'logout' %}" class="inner-nav-link logout-link">Logout</a>
                                 </li>

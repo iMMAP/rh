@@ -2,35 +2,29 @@
     <div class="multiple-fields-row four-items">
         <div class="field-col">
             <div class="select-field is-required">
-                <label for="{{location_report_form.country.id_for_label}}" >Country</label>
-                {{ location_report_form.country}}
+                <label for="{{ location_report_form.country.id_for_label }}">Country</label>
+                {{ location_report_form.country }}
             </div>
         </div>
         <div class="field-col">
             <div class="select-field is-required">
-                <label for="{{location_report_form.province.id_for_label}}" >Province / State</label>
-                <span >
-                    {{ location_report_form.province }}
-                </span>
+                <label for="{{ location_report_form.province.id_for_label }}">Province / State</label>
+                <span>{{ location_report_form.province }}</span>
             </div>
         </div>
         <div class="field-col">
             <div class="input-field is-required">
-                <label for="{{location_report_form.district.id_for_label}}">District</label>
-                <span >
-                    {{ location_report_form.district }}
-                </span>
+                <label for="{{ location_report_form.district.id_for_label }}">District</label>
+                <span>{{ location_report_form.district }}</span>
             </div>
         </div>
         {% if location_report_form.zone.choices %}
-        <div class="field-col">
-            <div class="input-field">
-                <label for="{{location_report_form.zone.id_for_label}}">Ward / Zone</label>
-                <span >
-                    {{ location_report_form.zone }}
-                </span>
+            <div class="field-col">
+                <div class="input-field">
+                    <label for="{{ location_report_form.zone.id_for_label }}">Ward / Zone</label>
+                    <span>{{ location_report_form.zone }}</span>
+                </div>
             </div>
-        </div>
         {% endif %}
     </div>
 </div>
@@ -38,7 +32,10 @@
 <div class="col">
     <div class="field-col">
         <div class="input-check-holder">
-            <input type="checkbox"  id="{{ location_report_form.facility_monitoring.id_for_label }}" name="{{ location_report_form.facility_monitoring.html_name }}" {% if location_report_form.facility_monitoring.value %}checked{% endif %}>
+            <input type="checkbox"
+                   id="{{ location_report_form.facility_monitoring.id_for_label }}"
+                   name="{{ location_report_form.facility_monitoring.html_name }}"
+                   {% if location_report_form.facility_monitoring.value %}checked{% endif %}>
             <label for="{{ location_report_form.facility_monitoring.id_for_label }}">
                 <span class="input"></span>
                 <span class="text">Facility Monitoring</span>
@@ -50,54 +47,37 @@
     <div class="multiple-fields-row two-items mtb20">
         <div class="field-col">
             <div class="input-field">
-                <label for="{{ location_report_form.facility_name.id_for_label }}">
-                    Facility / Site Name
-                </label>
+                <label for="{{ location_report_form.facility_name.id_for_label }}">Facility / Site Name</label>
                 <div class="input-holder">
-                    <span >
-                        {{ location_report_form.facility_name }}
-                    </span>
+                    <span>{{ location_report_form.facility_name }}</span>
                 </div>
             </div>
         </div>
-         <div class="field-col">
-             <div class="input-field">
-                 <label for="{{ location_report_form.facility_id.id_for_label }}">
-                     Facility / Site ID
-                 </label>
-                 <div class="input-holder">
-                    <span >
-                        {{ location_report_form.facility_id }}
-                    </span>
+        <div class="field-col">
+            <div class="input-field">
+                <label for="{{ location_report_form.facility_id.id_for_label }}">Facility / Site ID</label>
+                <div class="input-holder">
+                    <span>{{ location_report_form.facility_id }}</span>
                 </div>
-             </div>
-         </div>
+            </div>
+        </div>
     </div>
     <div class="multiple-fields-row two-items">
         <div class="field-col">
             <div class="input-field">
-                <label for="{{ location_report_form.facility_lat.id_for_label }}">
-                    Facility / Site Latitude
-                </label>
+                <label for="{{ location_report_form.facility_lat.id_for_label }}">Facility / Site Latitude</label>
                 <div class="input-holder">
-                    <span >
-                        {{ location_report_form.facility_lat }}
-                    </span>
+                    <span>{{ location_report_form.facility_lat }}</span>
                 </div>
             </div>
         </div>
         <div class="field-col">
             <div class="input-field">
-                <label for="{{ location_report_form.facility_long.id_for_label }}">
-                    Facility / Site Longitude
-                </label>
+                <label for="{{ location_report_form.facility_long.id_for_label }}">Facility / Site Longitude</label>
                 <div class="input-holder">
-                    <span >
-                        {{ location_report_form.facility_long }}
-                    </span>
+                    <span>{{ location_report_form.facility_long }}</span>
                 </div>
             </div>
         </div>
     </div>
 </div>
-

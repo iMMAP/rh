@@ -4,24 +4,18 @@
 <div class="content-block bottom-border table-container">
     {% comment %} Table Actions and filters {% endcomment %}
     <div class="page-top-panel bottom-border">
-       <div class="actions-panel">
+        <div class="actions-panel">
             <!-- filter applied  -->
             <div class="filter-container" id="filter-container">
-                {% for field in plans_report_filter.form%}
-                    {% if forloop.first %}
-                        <span>Applied Filters:</span>
-                    {% endif %}
+                {% for field in plans_report_filter.form %}
+                    {% if forloop.first %}<span>Applied Filters:</span>{% endif %}
                     {% if field.value %}
-                        <span class="filter-item title" id="title">
-                            {{field.label}}
-                        </span>
-                    {% if forloop.last %}
-                        <span class="close-alert-message">&#x2715;</span>
-                    {% endif %}
+                        <span class="filter-item title" id="title">{{ field.label }}</span>
+                        {% if forloop.last %}<span class="close-alert-message">x</span>{% endif %}
                     {% endif %}
                 {% endfor %}
             </div>
-       </div>
+        </div>
 
         <div class="actions-panel">
             {% if plans_report_filter %}
@@ -36,19 +30,13 @@
                 <thead class="content-block">
                     <tr>
                         <th>
-                            <strong class="table-title">
-                                Activity Domain
-                            </strong>
+                            <strong class="table-title">Activity Domain</strong>
                         </th>
                         <th>
-                            <strong class="table-title">
-                                Activity Type
-                            </strong>
+                            <strong class="table-title">Activity Type</strong>
                         </th>
                         <th>
-                            <strong class="table-title">
-                            Indicator
-                            </strong>
+                            <strong class="table-title">Indicator</strong>
                         </th>
                         <th>
                             <strong>Target Locations</strong>
@@ -58,32 +46,33 @@
                         </th>
                     </tr>
                 </thead>
-                
+ 
                 <tbody>
                     <!--Include The Reports Details Here -->
                     {% for report_plan in object_list %}
-                    <tr>
-                        <td>
-                            {{ report_plan.activity_plan.activity_domain }}
-                        </td>
-                        <td>{{ report_plan.activity_plan.activity_type }}</td>
-                        <td>{{ report_plan.indicator }}</td>
-                        <td>{{ report_plan.report_target_location_count }}</td>
-                        <td>
-                            <div class="table-flex-holder">
-                                <ul class="table-options-buttons">
-                                    <li>
-                                        <a href="{% url 'update_report_activity_plans' project.id report_plan.monthly_report.id report_plan.id %}" class="btn btn-gray">Edit</a>
-                                    </li>
-                                    <li>
-                                        <a href="{% url 'create_report_target_locations' project.id monthly_report.id report_plan.id %}" class="btn btn-gray">
-                                            <img src="{% static 'admin/img/icon-addlink.svg' %}" alt="add-btn-icon">Location
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </td>
-                    </tr>
+                        <tr>
+                            <td>{{ report_plan.activity_plan.activity_domain }}</td>
+                            <td>{{ report_plan.activity_plan.activity_type }}</td>
+                            <td>{{ report_plan.indicator }}</td>
+                            <td>{{ report_plan.report_target_location_count }}</td>
+                            <td>
+                                <div class="table-flex-holder">
+                                    <ul class="table-options-buttons">
+                                        <li>
+                                            <a href="{% url 'update_report_activity_plans' project.id report_plan.monthly_report.id report_plan.id %}"
+                                               class="btn btn-gray">Edit</a>
+                                        </li>
+                                        <li>
+                                            <a href="{% url 'create_report_target_locations' project.id monthly_report.id report_plan.id %}"
+                                               class="btn btn-gray">
+                                                <img src="{% static 'admin/img/icon-addlink.svg' %}" alt="add-btn-icon">
+                                                Location
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </td>
+                        </tr>
                     {% endfor %}
                 </tbody>
             </table>

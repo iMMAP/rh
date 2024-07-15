@@ -1,9 +1,9 @@
 {% extends "project_reports/monthly_reports/forms/monthly_report_progress_form_base.html" %}
 {% load static %}
 
-{% block page_title %} 
+{% block title %} 
     Monthly Report Activities
-{% endblock page_title %}
+{% endblock title %}
 
 
 {% block project_body %}
@@ -21,7 +21,7 @@
                                 <span class="btn btn-gray" style="float:right"> {{ monthly_report.activityplanreport_set.all | length }}</span>
                             </span>
                             <br>
-                            <span class="">
+                            <span >
                                 Your monthly report activities table. You can add report target location, edit or search activities.
                             </span>
                         </div>

@@ -1,9 +1,9 @@
 {% extends "project_reports/monthly_reports/forms/monthly_report_progress_form_base.html" %}
 {% load static %}
 
-{% block page_title %}
+{% block title %}
     Update Report Activities
-{% endblock page_title %}
+{% endblock title %}
 
 
 {% block project_body %}
@@ -23,7 +23,7 @@
                                 <a href="{% url 'list_report_target_locations_with_plan' project.id monthly_report.pk report_activity_plan.pk %}" class="btn btn-red" style="float:right">Activity Target Locations</a>
                             </span>
                             <br>
-                            <span class="">
+                            <span >
                                 Use this form to provide detailed information about the report activity for the above the monthly report.
                                 Some fields are auto-populated from the project activity plans.
                             </span>

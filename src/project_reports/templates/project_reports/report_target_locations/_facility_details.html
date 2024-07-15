@@ -9,7 +9,7 @@
         <div class="field-col">
             <div class="select-field is-required">
                 <label for="{{location_report_form.province.id_for_label}}" >Province / State</label>
-                <span class="">
+                <span >
                     {{ location_report_form.province }}
                 </span>
             </div>
@@ -17,7 +17,7 @@
         <div class="field-col">
             <div class="input-field is-required">
                 <label for="{{location_report_form.district.id_for_label}}">District</label>
-                <span class="">
+                <span >
                     {{ location_report_form.district }}
                 </span>
             </div>
@@ -26,7 +26,7 @@
         <div class="field-col">
             <div class="input-field">
                 <label for="{{location_report_form.zone.id_for_label}}">Ward / Zone</label>
-                <span class="">
+                <span >
                     {{ location_report_form.zone }}
                 </span>
             </div>
@@ -38,7 +38,7 @@
 <div class="col">
     <div class="field-col">
         <div class="input-check-holder">
-            <input type="checkbox" class="" id="{{ location_report_form.facility_monitoring.id_for_label }}" name="{{ location_report_form.facility_monitoring.html_name }}" {% if location_report_form.facility_monitoring.value %}checked{% endif %}>
+            <input type="checkbox"  id="{{ location_report_form.facility_monitoring.id_for_label }}" name="{{ location_report_form.facility_monitoring.html_name }}" {% if location_report_form.facility_monitoring.value %}checked{% endif %}>
             <label for="{{ location_report_form.facility_monitoring.id_for_label }}">
                 <span class="input"></span>
                 <span class="text">Facility Monitoring</span>
@@ -54,7 +54,7 @@
                     Facility / Site Name
                 </label>
                 <div class="input-holder">
-                    <span class="">
+                    <span >
                         {{ location_report_form.facility_name }}
                     </span>
                 </div>
@@ -66,7 +66,7 @@
                      Facility / Site ID
                  </label>
                  <div class="input-holder">
-                    <span class="">
+                    <span >
                         {{ location_report_form.facility_id }}
                     </span>
                 </div>
@@ -80,7 +80,7 @@
                     Facility / Site Latitude
                 </label>
                 <div class="input-holder">
-                    <span class="">
+                    <span >
                         {{ location_report_form.facility_lat }}
                     </span>
                 </div>
@@ -92,7 +92,7 @@
                     Facility / Site Longitude
                 </label>
                 <div class="input-holder">
-                    <span class="">
+                    <span >
                         {{ location_report_form.facility_long }}
                     </span>
                 </div>

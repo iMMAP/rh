@@ -1,9 +1,9 @@
 {% extends "project_reports/monthly_reports/forms/monthly_report_progress_form_base.html" %}
 {% load static %}
 
-{% block page_title %} 
+{% block title %} 
     Report Target Locations
-{% endblock page_title %}
+{% endblock title %}
 
 
 {% block project_body %}
@@ -26,7 +26,7 @@
                             </span>
                             <br>
 
-                            <span class="">
+                            <span >
                                 {% if report_plan %}
                                 Your monthly report target locations table for this
                                 <b><a href="{% url 'update_report_activity_plans' project.id report_plan.monthly_report.id report_plan.id %}">Activity</a>.</b>

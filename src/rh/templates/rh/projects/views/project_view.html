@@ -3,520 +3,546 @@
 {% load static %}
 {% load humanize %}
 
-{% block page_title %}
-    Project: {{project.title}}
-{% endblock page_title %}
-
+{% block title %}
+    Project: {{ project.title }}
+{% endblock title %}
 
 {% block content %}
-<div class="container">
-    <div class="breadcrumbs-nav-panel">
-        <div class="holder"> 
-            <ul class="breadcrumbs">
-                <li>
-                    <a href="{% url 'landing' %}">Home</a>
-                </li>
-                {% if project %}
+    <div class="container">
+        <div class="breadcrumbs-nav-panel">
+            <div class="holder">
+                <ul class="breadcrumbs">
                     <li>
-                        <a id="return-url" href="{% url 'projects-list' %}?state={{project.state}}">
-                            {% if project.state == 'in-progress' %}
-                                Active Projects
-                            {% elif project.state == 'draft' %}
-                                Draft Projects
-                            {% elif project.state == 'archive' %}
-                                Archived Projects
-                            {% elif project.state == 'done' %}
-                                Completed Projects
-                            {% endif %}
-                        </a>
-                    </li>   
-                    <li class="current">{{ project.code }}</li>
-                {% else %}
-                    <li class="current">New Project</li>
-                {% endif %}
-            </ul>
-        </div>
-    </div>
-
-    <div class="page-navigation-panel">
-        <div class="holder">
-            <div class="tabs-nav-holder">
-                <ul class="tabs-nav">
-                    <li class="{% if project_view %}active{% endif %}">
-                        <a href="{% if project %}{% url 'projects-detail' project.pk %}{% else %}{% url 'projects-create' %}{% endif %}">Project
-                        planning</a>
+                        <a href="{% url 'landing' %}">Home</a>
                     </li>
-                    <li class="{% if financial_view %}active{% endif %}">
-                        <a href="{% if project %}{% url 'create_project_budget_progress' project.pk %}{% else %}#{% endif %}">Financial Reports</a>
-                    </li>
-                    <li class="{% if reports_view %}active{% endif %}">
-                        <a href="{% if project %}{% url 'project_reports_home' project.pk %}{% else %}#{% endif %}">Monthly Progress</a>
-                    </li>
+                    {% if project %}
+                        <li>
+                            <a id="return-url"
+                               href="{% url 'projects-list' %}?state={{ project.state }}">
+                                {% if project.state == 'in-progress' %}
+                                    Active Projects
+                                {% elif project.state == 'draft' %}
+                                    Draft Projects
+                                {% elif project.state == 'archive' %}
+                                    Archived Projects
+                                {% elif project.state == 'done' %}
+                                    Completed Projects
+                                {% endif %}
+                            </a>
+                        </li>
+                        <li class="current">{{ project.code }}</li>
+                    {% else %}
+                        <li class="current">New Project</li>
+                    {% endif %}
                 </ul>
             </div>
         </div>
-    </div>
 
-    <div class="project-options-panel">
-        <div class="top-block">
-            <ul class="project-breadcrumbs">
-                <li> {{project.title}} </li>
-            </ul>
-            <div>
-                <a href="{% url 'projects-update' project.pk %}" class="btn btn-red">Edit</a>
-                {% if project.state == 'draft' %}
-                <a 
-                    href="{% url 'project_submit' project.pk %}"
-                    class="btn btn-red"
-                >
-                    Submit Project
-                </a>
-                {% endif %}
+        <div class="page-navigation-panel">
+            <div class="holder">
+                <div class="tabs-nav-holder">
+                    <ul class="tabs-nav">
+                        <li class="{% if project_view %}active{% endif %}">
+                            <a href="{% if project %}{% url 'projects-detail' project.pk %}{% else %}{% url 'projects-create' %}{% endif %}">Project
+                            planning</a>
+                        </li>
+                        <li class="{% if financial_view %}active{% endif %}">
+                            <a href="{% if project %}{% url 'create_project_budget_progress' project.pk %}{% else %}#{% endif %}">Financial Reports</a>
+                        </li>
+                        <li class="{% if reports_view %}active{% endif %}">
+                            <a href="{% if project %}{% url 'project_reports_home' project.pk %}{% else %}#{% endif %}">Monthly Progress</a>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
-        <div class="bottom-block">
-            <div class="actions-panel">
-                <div class="filter-holder">
-                    <a href="#" class="btn btn-gray filter-open"> <span class="btn-text">Export</span> <span class="icon-download"></span> </a>
-                    <div class="filter-options" style="padding-right: 10px;">
-                        <div class="block-top">
-                            <span class="title">Export</span>
-                            <a class="filter-close" href="#"></a>
-                        </div>
-                        
-                        <div class="export-format">
-                            <div style="font-size: 16px; color: #000; font-weight: 600;">File Format</div>
-                            <div class="label">
-                                <p>download the whole project without applying filter.</p>
+
+        <div class="project-options-panel">
+            <div class="top-block">
+                <ul class="project-breadcrumbs">
+                    <li>{{ project.title }}</li>
+                </ul>
+                <div>
+                    <a href="{% url 'projects-update' project.pk %}" class="btn btn-red">Edit</a>
+                    {% if project.state == 'draft' %}
+                        <a href="{% url 'project_submit' project.pk %}" class="btn btn-red">Submit Project</a>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="bottom-block">
+                <div class="actions-panel">
+                    <div class="filter-holder">
+                        <a href="#" class="btn btn-gray filter-open"> <span class="btn-text">Export</span> <span class="icon-download"></span> </a>
+                        <div class="filter-options pr-4"> 
+                            <div class="block-top">
+                                <span class="title">Export</span>
+                                <a class="filter-close" href="#"></a>
+                            </div>
+ 
+                            <div class="export-format">
+                                <div class="font-bold text-black">File Format</div>
+                                <div class="label">
+                                    <p>download the whole project without applying filter.</p>
+                                </div>
+                                <div>
+                                    <button class="export-button btn btn-gray">
+                                        <a href="#"
+                                           data-url="{% url 'export_project_excel' project.pk %}"
+                                           class="text-decoration-none btn-text"
+                                           title="Export Excel">
+                                            <span class="text">Excel
+                                                <span class="icon-download"></span>
+                                            </span>
+                                        </a>
+                                    </button>
+                                    <button class="export-button-csv btn btn-gray"
+                                            data-csvlink="{% url 'export_porjcet_CSV' project.pk %}">
+                                        <a href="#" class="text-decoration-none btn-text" title="Export Excel">
+                                            <span class="text">CSV
+                                                <span class="icon-download"></span>
+                                            </span>
+                                        </a>
+                                    </button>
+                                </div>
                             </div>
                             <div>
-                                <button class="export-button btn btn-gray">
-                                    <a href="#"
-                                        data-url="{% url 'export_project_excel' project.pk %}"
-                                        class="text-decoration-none btn-text"
-                                        title="Export Excel">
-                                        <span class="text">Excel
-                                            <span class="icon-download"></span>
-                                        </span>
-                                    </a>
-                                </button>
-                                <button class="export-button-csv btn btn-gray" data-csvlink="{% url 'export_porjcet_CSV' project.pk %}">
-                                    <a href="#"
-                                        class="text-decoration-none btn-text"
-                                        title="Export Excel">
-                                        <span class="text">CSV
-                                            <span class="icon-download"></span>
-                                        </span>
-                                    </a>
-                                </button>
+                                <span class="label">
+                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                         height="16"
+                                         width="16"
+                                         viewBox="0 0 590 412">
+                                        <path fill="#b56362" d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zm0-384c13.3 0 24 10.7 24 24V264c0 13.3-10.7 24-24 24s-24-10.7-24-24V152c0-13.3 10.7-24 24-24zM224 352a32 32 0 1 1 64 0 32 32 0 1 1 -64 0z" />
+                                    </svg>
+                                    The project fields will be exported
+                                    according to the selectiong order in CSV file.
+                                </span>
                             </div>
-                        </div>
-                        <div >
-                            <span class="label">
-                                <svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 590 412">
-                                    <path fill="#b56362" d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zm0-384c13.3 0 24 10.7 24 24V264c0 13.3-10.7 24-24 24s-24-10.7-24-24V152c0-13.3 10.7-24 24-24zM224 352a32 32 0 1 1 64 0 32 32 0 1 1 -64 0z"/>
-                                </svg>
-                                The project fields will be exported 
-                                according to the selectiong order in CSV file.
-                            </span>  
-                        </div>
-                        <div class="project-title text-color-red">
-                            
-                            <span id="selectedCount"></span>
-                            <span>&nbsp;fields selected</span>
-                        </div>
+                            <div class="project-title text-color-red">
+ 
+                                <span id="selectedCount"></span>
+                                <span>&nbsp;fields selected</span>
+                            </div>
                             <details class="details">
                                 <summary class="summary project-planning">
                                     Project Planing
                                     <span class="project-chevron icon-chevron-down"></span>
                                 </summary>
                                 <div class="block-body">
-                                    <small class="label">Available fields: </small>
+                                    <small class="label">Available fields:</small>
                                     <div class="multiple-fields-row two-items">
                                         {% if project.title %}
-                                        <div class="field-col">
-                                            <div class="input-holder">
-                                                <input type="checkbox" id="title" class="input-check" name="title" value="{{project.id}}" >
-                                                <label for="title">Title</label>
+                                            <div class="field-col">
+                                                <div class="input-holder">
+                                                    <input type="checkbox"
+                                                           id="title"
+                                                           class="input-check"
+                                                           name="title"
+                                                           value="{{ project.id }}">
+                                                    <label for="title">Title</label>
+                                                </div>
                                             </div>
-                                        </div>
                                         {% endif %}
                                         {% if project.code %}
-                                        <div class="field-col">
-                                            <div class="input-holder">
-                                                <input type="checkbox" id="code" class="input-check" name="code" value="{{project.id}}">
-                                                <label for="code">Code</label>
+                                            <div class="field-col">
+                                                <div class="input-holder">
+                                                    <input type="checkbox"
+                                                           id="code"
+                                                           class="input-check"
+                                                           name="code"
+                                                           value="{{ project.id }}">
+                                                    <label for="code">Code</label>
+                                                </div>
                                             </div>
-                                        </div>
                                         {% endif %}
                                         {% if project.budget %}
-                                        <div class="field-col">
-                                            <div class="input-holder">
-                                                <input type="checkbox" id="budget" class="input-check" name="budget" value="{{project.id}}">
-                                                <label for="budget">Budget</label>
+                                            <div class="field-col">
+                                                <div class="input-holder">
+                                                    <input type="checkbox"
+                                                           id="budget"
+                                                           class="input-check"
+                                                           name="budget"
+                                                           value="{{ project.id }}">
+                                                    <label for="budget">Budget</label>
+                                                </div>
                                             </div>
-                                        </div>
                                         {% endif %}
                                         {% if project.budget_received %}
-                                        <div class="field-col">
-                                            <div class="input-holder">
-                                                <input type="checkbox" id="budgetReceived" class="input-check" name="budget_received" value="{{project.id}}">
-                                                <label for="budgetReceived">Received Budget</label>
+                                            <div class="field-col">
+                                                <div class="input-holder">
+                                                    <input type="checkbox"
+                                                           id="budgetReceived"
+                                                           class="input-check"
+                                                           name="budget_received"
+                                                           value="{{ project.id }}">
+                                                    <label for="budgetReceived">Received Budget</label>
+                                                </div>
                                             </div>
-                                        </div>
                                         {% endif %}
                                         {% if project.user %}
-                                        <div class="field-col">
-                                            <div class="input-holder">
-                                                <input type="checkbox" id="user" class="input-user" name="{{project_filter.user.id}}">
-                                                <label for="user">Focal Point</label>
+                                            <div class="field-col">
+                                                <div class="input-holder">
+                                                    <input type="checkbox"
+                                                           id="user"
+                                                           class="input-user"
+                                                           name="{{ project_filter.user.id }}">
+                                                    <label for="user">Focal Point</label>
+                                                </div>
                                             </div>
-                                        </div>
                                         {% endif %}
                                         {% if project.start_date %}
-                                        <div class="field-col">
-                                            <div class="input-holder">
-                                                <input type="checkbox" id="startDate" class="input-check" name="start_date" value="{{project.id}}">
-                                                <label for="startDate">Start Date</label>
+                                            <div class="field-col">
+                                                <div class="input-holder">
+                                                    <input type="checkbox"
+                                                           id="startDate"
+                                                           class="input-check"
+                                                           name="start_date"
+                                                           value="{{ project.id }}">
+                                                    <label for="startDate">Start Date</label>
+                                                </div>
                                             </div>
-                                        </div>
                                         {% endif %}
                                         {% if project.state %}
-                                        <div class="field-col">
-                                            <div class="input-holder">
-                                                <input type="checkbox" id="state" 
-                                                class="input-check" name="state" value="{{project.id}}">
-                                                <label for="state">State</label>
+                                            <div class="field-col">
+                                                <div class="input-holder">
+                                                    <input type="checkbox"
+                                                           id="state"
+                                                           class="input-check"
+                                                           name="state"
+                                                           value="{{ project.id }}">
+                                                    <label for="state">State</label>
+                                                </div>
                                             </div>
-                                        </div>
                                         {% endif %}
                                         {% if project.budget_gap %}
-                                        <div class="field-col">
-                                            <div class="input-holder">
-                                                <input type="checkbox" id="budgetGap" 
-                                                class="input-check" name="budget_gap" value="{{project.id}}">
-                                                <label for="budgetGap">Budget Gap</label>
+                                            <div class="field-col">
+                                                <div class="input-holder">
+                                                    <input type="checkbox"
+                                                           id="budgetGap"
+                                                           class="input-check"
+                                                           name="budget_gap"
+                                                           value="{{ project.id }}">
+                                                    <label for="budgetGap">Budget Gap</label>
+                                                </div>
                                             </div>
-                                        </div>
                                         {% endif %}
                                         {% if project.is_hrp_project %}
-                                        <div class="field-col">
-                                            <div class="input-holder">
-                                                <input type="checkbox" id="isHRPProject" 
-                                                class="input-check" name="is_hrp_project" value="{{project.id}}">
-                                                <label for="isHRPProject">Is HRP Project</label>
+                                            <div class="field-col">
+                                                <div class="input-holder">
+                                                    <input type="checkbox"
+                                                           id="isHRPProject"
+                                                           class="input-check"
+                                                           name="is_hrp_project"
+                                                           value="{{ project.id }}">
+                                                    <label for="isHRPProject">Is HRP Project</label>
+                                                </div>
                                             </div>
-                                        </div>
                                         {% endif %}
                                         {% if project.has_hrp_code %}
-                                        <div class="field-col">
-                                            <div class="input-holder">
-                                                <input type="checkbox" id="hrpCode" 
-                                                class="input-check" name="hrp_code" value="{{project.id}}">
-                                                <label for="hrpCode">HRP Code</label>
+                                            <div class="field-col">
+                                                <div class="input-holder">
+                                                    <input type="checkbox"
+                                                           id="hrpCode"
+                                                           class="input-check"
+                                                           name="hrp_code"
+                                                           value="{{ project.id }}">
+                                                    <label for="hrpCode">HRP Code</label>
+                                                </div>
                                             </div>
-                                        </div>
                                         {% endif %}
                                         {% if project.budget_currency %}
-                                        <div class="field-col">
-                                            <div class="input-holder">
-                                                <input type="checkbox" id="budgetCurrency" 
-                                                class="input-currency" name="{{project_filter.budget_currency.id}}">
-                                                <label for="budgetCurrency">Budget Currency </label>
+                                            <div class="field-col">
+                                                <div class="input-holder">
+                                                    <input type="checkbox"
+                                                           id="budgetCurrency"
+                                                           class="input-currency"
+                                                           name="{{ project_filter.budget_currency.id }}">
+                                                    <label for="budgetCurrency">Budget Currency</label>
+                                                </div>
                                             </div>
-                                        </div>
                                         {% endif %}
                                         {% if project.end_date %}
-                                        <div class="field-col">
-                                            <div class="input-holder">
-                                                <input type="checkbox" id="endDate" 
-                                                class="input-check" name="end_date" value="{{project.id}}">
-                                                <label for="endDate">End Date</label>
+                                            <div class="field-col">
+                                                <div class="input-holder">
+                                                    <input type="checkbox"
+                                                           id="endDate"
+                                                           class="input-check"
+                                                           name="end_date"
+                                                           value="{{ project.id }}">
+                                                    <label for="endDate">End Date</label>
+                                                </div>
                                             </div>
-                                        </div>
                                         {% endif %}
                                         {% if project.description %}
-                                        <div class="field-col">
-                                            <div class="input-holder">
-                                                <input type="checkbox" id="description" class="input-check" name="description" value="{{project.id}}">
-                                                <label for="description">Description</label>
+                                            <div class="field-col">
+                                                <div class="input-holder">
+                                                    <input type="checkbox"
+                                                           id="description"
+                                                           class="input-check"
+                                                           name="description"
+                                                           value="{{ project.id }}">
+                                                    <label for="description">Description</label>
+                                                </div>
                                             </div>
-                                        </div>
                                         {% endif %}
                                     </div>
                                 </div>
                             </details>
-                        <div class="block-footer">
-                            <p id="not-checked-message" style="color:#a52824"></p>
-                            <div class="btn-wrapper">
+                            <div class="block-footer">
+                                <div class="btn-wrapper">
                                     <div class="field-col">
-                                        <button class="btn btn-red" id="resetFilterButton">
-                                            Reset
-                                        </button>
+                                        <button class="btn btn-red" id="resetFilterButton">Reset</button>
                                     </div>
-                                    
+ 
                                     <div class="field-col">
                                         <button id="downloadFilterForm">
-                                            <a href="#" class="btn btn-red" data-url="{% url 'export_project_filter' project.id %}">Download</a>
+                                            <a href="#"
+                                               class="btn btn-red"
+                                               data-url="{% url 'export_project_filter' project.id %}">Download</a>
                                         </button>
                                     </div>
+                                </div>
                             </div>
                         </div>
+                        <!-- </form> -->
                     </div>
-                    <!-- </form> -->
-                </div>
-                
-                <a href="#"
-                    data-url="{% url 'copy_project' project.pk %}"
-                    data-type="copy" 
-                    data-name="project" 
-                    class="btn btn-gray show-sw-action-popup">
-                    <span class="btn-text">Duplicate</span>
-                    <span class="icon-copy-outline"></span>
-                </a>
-                {% if project.active %}
+ 
                     <a href="#"
-                        data-url="{% url 'archive_project' project.pk %}"
-                        data-type="archive" 
-                        data-name="project" 
-                        class="btn btn-gray show-sw-action-popup">
-                        <span class="btn-text">Archive</span>
-                        <svg xmlns="http://www.w3.org/2000/svg"
-                                class="project-view archive-icon"
-                                width="15"
-                                height="15"
-                                viewBox="0 0 24 24">
-                            <path fill="currentColor" d="M20 21H4V10h2v9h12v-9h2v11M3 3h18v6H3V3m2 2v2h14V5m-8.5 6v3H8l4 4l4-4h-2.5v-3" />
-                        </svg>
+                       data-url="{% url 'copy_project' project.pk %}"
+                       data-type="copy"
+                       data-name="project"
+                       class="btn btn-gray show-sw-action-popup">
+                        <span class="btn-text">Duplicate</span>
+                        <span class="icon-copy-outline"></span>
                     </a>
-                {% else %}
-                    <a href="#"
-                        data-url="{% url 'unarchive_project' project.pk %}"
-                        data-type="unarchive" 
-                        data-name="project" 
-                        class="btn btn-gray show-sw-action-popup">
-                        <span class="btn-text">Unarchive</span>
-                        <svg xmlns="http://www.w3.org/2000/svg"
-                                class="project-view-icon"
-                                width="15"
-                                height="15"
-                                viewBox="0 0 36 36">
-                            <path fill="currentColor" d="M29 32H7V22H5v10a2 2 0 0 0 2 2h22a2 2 0 0 0 2-2V22h-2Z" class="clr-i-outline clr-i-outline-path-1" />
-                            <path fill="currentColor" d="M14 24a1 1 0 0 0 1 1h6a1 1 0 0 0 0-2h-6a1 1 0 0 0-1 1Z" class="clr-i-outline clr-i-outline-path-2" />
-                            <path fill="currentColor" d="M15 18H6v-4h9v-2H5.5A1.5 1.5 0 0 0 4 13.5V20h11.78a3 3 0 0 1-.78-2Z" class="clr-i-outline clr-i-outline-path-3" />
-                            <path fill="currentColor" d="M30.5 12H21v2h9v4h-9a3 3 0 0 1-.78 2H32v-6.5a1.5 1.5 0 0 0-1.5-1.5Z" class="clr-i-outline clr-i-outline-path-4" />
-                            <path fill="currentColor" d="m13 9.55l4-3.95V18a1 1 0 1 0 2 0V5.6l4 3.95a1 1 0 1 0 1.41-1.42L18 1.78l-6.39 6.35A1 1 0 0 0 13 9.55Z" class="clr-i-outline clr-i-outline-path-5" />
-                            <path fill="none" d="M0 0h36v36H0z" />
-                        </svg>
-                    </a>
-                {% endif %}
-                <a 
-                    href="{% url 'projects-delete' project.pk %}"
-                    class="btn btn-gray">
-                    <span class="btn-text">Delete</span>
-                    <span class="icon-trashbin-outline"></span>
-                </a>
-            </div>
-        </div>
-    </div>
-
-    <div class="project-plan read-only">
-        <div class="row">
-            <div class="col"> 
-                <div class="input-field">
-                    <span class="label">Project code</span>
-                    <div class="input-holder">
-                        <span class="text-read-only">{{ project.code }}</span>
-                    </div>
-                </div>
-                <div class="select-field is-required">
-                    <span class="label">Organization</span>
-                    <span class="text-read-only m2m-badges">
-                        <span class="btn btn-gray"> {{ project.organization}}</span>
-                    </span>
-                </div>
-                <div class="select-field is-required">
-                    <span class="label">Clusters</span>
-                    <span class="text-read-only m2m-badges">
-                        {% for cluster in project.clusters.all %}
-                        <span class="btn btn-gray-outline"> {{ cluster.title }}</span>
-                        {% endfor %}
-                    </span>
-                </div>
-                
-                <div class="select-field is-required">
-                    <span class="label">Project donor</span>
-                    <span class="text-read-only m2m-badges">
-                        {% for donor in project.donors.all %}
-                        <span class="btn btn-gray-outline"> {{ donor.name }}</span>
-                        {% endfor %}
-                    </span>
-                </div>
-                <div class="select-field is-required">
-                    <span class="label">Implementing Partners</span>
-                    <span class="text-read-only m2m-badges">
-                        {% for implementing_partner in project.implementing_partners.all %}
-                        <span class="btn btn-gray-outline"> {{ implementing_partner.code }}</span>
-                        {% endfor %}
-                    </span>
-                </div>
-                <div class="select-field is-required">
-                    <span class="label">Programme Partners</span>
-                    <span class="text-read-only m2m-badges">
-                        {% for programme_partner in project.programme_partners.all %}
-                        <span class="btn btn-gray-outline"> {{ programme_partner.code }}</span>
-                        {% endfor %}
-                    </span>
-                </div>
-            </div>
-            <div class="col col-sm">
-                <div class="date-picker-field">
-                    <div class="date start">
-                        <span class="label">Start Date</span>
-                        <span class="text-read-only">{{ project.start_date | date:'d M, Y' }}</span>
-                    </div>
-                    <div class="date end">
-                        <span class="label">End Date</span>
-                        <span class="text-read-only">{{ project.end_date | date:'d M, Y' }}</span>
-                    </div>
-                </div>
-                <div class="multiple-fields-row">
-                    <div class="field-col">
-                        <div class="input-field">
-                            <span class="label">Project budget </span>
-                            <div class="input-holder">
-                                <span class="text-read-only">{{ project.budget|intcomma }}</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="field-col">
-                        <span class="label">Currency</span>
-                        <div class="select-field is-required">
-                            <span class="text-read-only">{{ project.budget_currency }}</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="multiple-fields-row">
-                    <div class="field-col">
-                        <div class="input-field">
-                            <span class="label">Budget Received</span>
-                            <div class="input-holder">
-                                <span class="text-read-only">{{ project.budget_received|intcomma }}</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="field-col">
-                        <div class="input-field">
-                            <span class="label">Budget Gap</span>
-                            <div class="input-holder">
-                                <span class="text-read-only">{{ project.budget_gap|intcomma }}</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="multiple-fields-row">
-                    <div class="field-col">
-                        <div class="input-field">
-                            <span class="label">Is HRP Project?</span>
-                            <div class="input-holder">
-                                <span class="text-read-only">
-                                    {% if project.is_hrp_project %}
-                                    Yes
-                                    {% else %}
-                                    No
-                                    {% endif %}
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                    {% if project.is_hrp_project %}
-                    <div class="field-col">
-                        <div class="input-field">
-                            <span class="label">Has HRP Code?</span>
-                            <div class="input-holder">
-                                <span class="text-read-only">
-                                    {% if project.has_hrp_code %}
-                                    Yes
-                                    {% else %}
-                                    No
-                                    {% endif %}
-                                </span>
-                            </div>
-                        </div>
-                    </div>
+                    {% if project.active %}
+                        <a href="#"
+                           data-url="{% url 'archive_project' project.pk %}"
+                           data-type="archive"
+                           data-name="project"
+                           class="btn btn-gray show-sw-action-popup">
+                            <span class="btn-text">Archive</span>
+                            <svg xmlns="http://www.w3.org/2000/svg"
+                                 class="project-view archive-icon"
+                                 width="15"
+                                 height="15"
+                                 viewBox="0 0 24 24">
+                                <path fill="currentColor" d="M20 21H4V10h2v9h12v-9h2v11M3 3h18v6H3V3m2 2v2h14V5m-8.5 6v3H8l4 4l4-4h-2.5v-3" />
+                            </svg>
+                        </a>
+                    {% else %}
+                        <a href="#"
+                           data-url="{% url 'unarchive_project' project.pk %}"
+                           data-type="unarchive"
+                           data-name="project"
+                           class="btn btn-gray show-sw-action-popup">
+                            <span class="btn-text">Unarchive</span>
+                            <svg xmlns="http://www.w3.org/2000/svg"
+                                 class="project-view-icon"
+                                 width="15"
+                                 height="15"
+                                 viewBox="0 0 36 36">
+                                <path fill="currentColor" d="M29 32H7V22H5v10a2 2 0 0 0 2 2h22a2 2 0 0 0 2-2V22h-2Z" class="clr-i-outline clr-i-outline-path-1" />
+                                <path fill="currentColor" d="M14 24a1 1 0 0 0 1 1h6a1 1 0 0 0 0-2h-6a1 1 0 0 0-1 1Z" class="clr-i-outline clr-i-outline-path-2" />
+                                <path fill="currentColor" d="M15 18H6v-4h9v-2H5.5A1.5 1.5 0 0 0 4 13.5V20h11.78a3 3 0 0 1-.78-2Z" class="clr-i-outline clr-i-outline-path-3" />
+                                <path fill="currentColor" d="M30.5 12H21v2h9v4h-9a3 3 0 0 1-.78 2H32v-6.5a1.5 1.5 0 0 0-1.5-1.5Z" class="clr-i-outline clr-i-outline-path-4" />
+                                <path fill="currentColor" d="m13 9.55l4-3.95V18a1 1 0 1 0 2 0V5.6l4 3.95a1 1 0 1 0 1.41-1.42L18 1.78l-6.39 6.35A1 1 0 0 0 13 9.55Z" class="clr-i-outline clr-i-outline-path-5" />
+                                <path fill="none" d="M0 0h36v36H0z" />
+                            </svg>
+                        </a>
                     {% endif %}
+                    <a href="{% url 'projects-delete' project.pk %}" class="btn btn-gray">
+                        <span class="btn-text">Delete</span>
+                        <span class="icon-trashbin-outline"></span>
+                    </a>
                 </div>
-                {% if project.has_hrp_code %}
-                <div class="input-field">
-                    <span class="label">HRP project code</span>
-                    <div class="input-holder">
-                        <span class="text-read-only">{{ project.hrp_code }}</span>
+            </div>
+        </div>
+
+        <div class="project-plan read-only">
+            <div class="row">
+                <div class="col">
+                    <div class="input-field">
+                        <span class="label">Project code</span>
+                        <div class="input-holder">
+                            <span class="text-read-only">{{ project.code }}</span>
+                        </div>
                     </div>
-                </div>
-                {% endif %}
-                <div class="input-field">
-                    <span class="label">State</span>
-                    <div class="input-holder">
-                        <span class="{{ project.state }}">
-                            {{ project.state}}
+                    <div class="select-field is-required">
+                        <span class="label">Organization</span>
+                        <span class="text-read-only m2m-badges">
+                            <span class="btn btn-gray">{{ project.organization }}</span>
+                        </span>
+                    </div>
+                    <div class="select-field is-required">
+                        <span class="label">Clusters</span>
+                        <span class="text-read-only m2m-badges">
+                            {% for cluster in project.clusters.all %}<span class="btn btn-gray-outline">{{ cluster.title }}</span>{% endfor %}
+                        </span>
+                    </div>
+ 
+                    <div class="select-field is-required">
+                        <span class="label">Project donor</span>
+                        <span class="text-read-only m2m-badges">
+                            {% for donor in project.donors.all %}<span class="btn btn-gray-outline">{{ donor.name }}</span>{% endfor %}
+                        </span>
+                    </div>
+                    <div class="select-field is-required">
+                        <span class="label">Implementing Partners</span>
+                        <span class="text-read-only m2m-badges">
+                            {% for implementing_partner in project.implementing_partners.all %}
+                                <span class="btn btn-gray-outline">{{ implementing_partner.code }}</span>
+                            {% endfor %}
+                        </span>
+                    </div>
+                    <div class="select-field is-required">
+                        <span class="label">Programme Partners</span>
+                        <span class="text-read-only m2m-badges">
+                            {% for programme_partner in project.programme_partners.all %}
+                                <span class="btn btn-gray-outline">{{ programme_partner.code }}</span>
+                            {% endfor %}
                         </span>
                     </div>
                 </div>
-                
-            </div>
-            <div class="col col-lg">
-                <div class="select-field is-required">
-                    <span class="label">Activity Domains</span>
-                    <span class="text-read-only m2m-badges">
-                        {% for activity_domain in project.activity_domains.all %}
-                        <span class="btn btn-gray-outline"> {{ activity_domain.name }}</span>
-                        {% endfor %}
-                    </span>
+                <div class="col col-sm">
+                    <div class="date-picker-field">
+                        <div class="date start">
+                            <span class="label">Start Date</span>
+                            <span class="text-read-only">{{ project.start_date | date:'d M, Y' }}</span>
+                        </div>
+                        <div class="date end">
+                            <span class="label">End Date</span>
+                            <span class="text-read-only">{{ project.end_date | date:'d M, Y' }}</span>
+                        </div>
+                    </div>
+                    <div class="multiple-fields-row">
+                        <div class="field-col">
+                            <div class="input-field">
+                                <span class="label">Project budget</span>
+                                <div class="input-holder">
+                                    <span class="text-read-only">{{ project.budget|intcomma }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="field-col">
+                            <span class="label">Currency</span>
+                            <div class="select-field is-required">
+                                <span class="text-read-only">{{ project.budget_currency }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="multiple-fields-row">
+                        <div class="field-col">
+                            <div class="input-field">
+                                <span class="label">Budget Received</span>
+                                <div class="input-holder">
+                                    <span class="text-read-only">{{ project.budget_received|intcomma }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="field-col">
+                            <div class="input-field">
+                                <span class="label">Budget Gap</span>
+                                <div class="input-holder">
+                                    <span class="text-read-only">{{ project.budget_gap|intcomma }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="multiple-fields-row">
+                        <div class="field-col">
+                            <div class="input-field">
+                                <span class="label">Is HRP Project?</span>
+                                <div class="input-holder">
+                                    <span class="text-read-only">
+                                        {% if project.is_hrp_project %}
+                                            Yes
+                                        {% else %}
+                                            No
+                                        {% endif %}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        {% if project.is_hrp_project %}
+                            <div class="field-col">
+                                <div class="input-field">
+                                    <span class="label">Has HRP Code?</span>
+                                    <div class="input-holder">
+                                        <span class="text-read-only">
+                                            {% if project.has_hrp_code %}
+                                                Yes
+                                            {% else %}
+                                                No
+                                            {% endif %}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                    {% if project.has_hrp_code %}
+                        <div class="input-field">
+                            <span class="label">HRP project code</span>
+                            <div class="input-holder">
+                                <span class="text-read-only">{{ project.hrp_code }}</span>
+                            </div>
+                        </div>
+                    {% endif %}
+                    <div class="input-field">
+                        <span class="label">State</span>
+                        <div class="input-holder">
+                            <span class="{{ project.state }}">{{ project.state }}</span>
+                        </div>
+                    </div>
+ 
                 </div>
-                <div class="select-field">
-                    <span class="label">Focal point</span>
-                    <div class="input-holder">
-                        <span class="text-read-only">
-                            {% if project.user.first_name %} {{ project.user.first_name }} {% endif %}
-                            {% if project.user.last_name %} {{ project.user.last_name }} {% endif %}
-                            {% if project.user.username %} | {{ project.user.username }} {% endif %}
-                            {% if project.user.profile.position %} | {{ project.user.profile.position }} {% endif %}
-                            {% if project.user.profile.phone %} | {{ project.user.profile.phone }} {% endif %}
-                            {% if project.user.email %} | {{ project.user.email }} {% endif %}
+                <div class="col col-lg">
+                    <div class="select-field is-required">
+                        <span class="label">Activity Domains</span>
+                        <span class="text-read-only m2m-badges">
+                            {% for activity_domain in project.activity_domains.all %}
+                                <span class="btn btn-gray-outline">{{ activity_domain.name }}</span>
+                            {% endfor %}
                         </span>
                     </div>
+                    <div class="select-field">
+                        <span class="label">Focal point</span>
+                        <div class="input-holder">
+                            <span class="text-read-only">
+                                {% if project.user.first_name %}{{ project.user.first_name }}{% endif %}
+                                {% if project.user.last_name %}{{ project.user.last_name }}{% endif %}
+                                {% if project.user.username %}| {{ project.user.username }}{% endif %}
+                                {% if project.user.profile.position %}| {{ project.user.profile.position }}{% endif %}
+                                {% if project.user.profile.phone %}| {{ project.user.profile.phone }}{% endif %}
+                                {% if project.user.email %}| {{ project.user.email }}{% endif %}
+                            </span>
+                        </div>
+                    </div>
+ 
                 </div>
-                
             </div>
         </div>
-    </div>
 
-    <div class="input-field is-required">
-        <span class="label">Project description &amp; objectives</span>
-        <div class="input-holder">{{ project.description | linebreaksbr }}
+        <div class="input-field is-required">
+            <span class="label">Project description &amp; objectives</span>
+            <div class="input-holder">{{ project.description | linebreaksbr }}</div>
         </div>
-    </div>
 
-    <div class="activity-planning read-only">
-        <div class="activity-block-holder">
-            <div class="top-activity-block">
-                <span class="activity-title">
-                    <span>
-                    Activities Planning
+        <div class="activity-planning read-only">
+            <div class="activity-block-holder">
+                <div class="top-activity-block">
+                    <span class="activity-title">
+                        <span>Activities Planning</span>
                     </span>
-                    <span class="btn btn-gray" style="float:right"> {{ activity_plans | length }}</span>
-                </span>
-                
+                </div>
             </div>
         </div>
-    </div>
 
-    {% include "rh/activity_plans/_activity_plan_table.html"  with object_list=project.activityplan_set.all %}
-</div>
+        {% include "rh/activity_plans/_activity_plan_table.html" with object_list=project.activityplan_set.all %}
+    </div>
 {% endblock content %}
 
-
 {% block scripts %}
-{{ block.super }}
-<script type="module" src="{% static 'src/js/utils/exportSW.js' %}"></script>
+    {{ block.super }}
+    <script type="module" src="{% static 'src/js/utils/exportSW.js' %}"></script>
 {% endblock scripts %}

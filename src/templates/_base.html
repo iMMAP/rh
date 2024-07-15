@@ -10,16 +10,15 @@
             {% block page_title %}
             {% endblock page_title %}
         </title>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <meta name="description" content=" " />
-        <meta name="keywords" content=" " />
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="RH is a reporting plaform." />
+        <meta name="keywords" content=" " />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
         <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Open+Sans&display=optional"
               rel="stylesheet" />
         {% vite 'static/src/styles/style.scss' %}
-        
+ 
         <link rel="apple-touch-icon"
               sizes="180x180"
               href="{% static 'src/images/favicon/apple-touch-icon.png' %}" />
@@ -41,29 +40,49 @@
         <!-- Analytics -->
         {% if APP_ENV == 'production' %}
             <script>
-                !function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.async=!0,p.src=s.api_host+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags getFeatureFlag getFeatureFlagPayload reloadFeatureFlags group updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures getActiveMatchingSurveys getSurveys onSessionId".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
-                posthog.init('phc_QFRKkL8FjDwTZHkgYMSsA2umnSQ41iuoBDcfIG2GlZL',{api_host:'https://app.posthog.com'})
+                ! function(t, e) {
+                    var o, n, p, r;
+                    e.__SV || (window.posthog = e, e._i = [], e.init = function(i, s, a) {
+                        function g(t, e) {
+                            var o = e.split(".");
+                            2 == o.length && (t = t[o[0]], e = o[1]), t[e] = function() {
+                                t.push([e].concat(Array.prototype.slice.call(arguments, 0)))
+                            }
+                        }(p = t.createElement("script")).type = "text/javascript", p.async = !0, p.src = s.api_host + "/static/array.js", (r = t.getElementsByTagName("script")[0]).parentNode.insertBefore(p, r);
+                        var u = e;
+                        for (void 0 !== a ? u = e[a] = [] : a = "posthog", u.people = u.people || [], u.toString = function(t) {
+                                var e = "posthog";
+                                return "posthog" !== a && (e += "." + a), t || (e += " (stub)"), e
+                            }, u.people.toString = function() {
+                                return u.toString(1) + ".people (stub)"
+                            }, o = "capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags getFeatureFlag getFeatureFlagPayload reloadFeatureFlags group updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures getActiveMatchingSurveys getSurveys onSessionId".split(" "), n = 0; n < o.length; n++) g(u, o[n]);
+                        e._i.push([i, s, a])
+                    }, e.__SV = 1)
+                }(document, window.posthog || []);
+                posthog.init('phc_QFRKkL8FjDwTZHkgYMSsA2umnSQ41iuoBDcfIG2GlZL', {
+                    api_host: 'https://app.posthog.com'
+                })
             </script>
         {% endif %}
         <!-- End Analytics -->
 
         <noscript>
             <style>
-            /**  * Reinstate scrolling for non-JS clients  */
-            .simplebar-content-wrapper {
-                scrollbar-width: auto;
-                -ms-overflow-style: auto;
-            }
+                /**  * Reinstate scrolling for non-JS clients  */
+                .simplebar-content-wrapper {
+                    scrollbar-width: auto;
+                    -ms-overflow-style: auto;
+                }
 
-            .simplebar-content-wrapper::-webkit-scrollbar,
-            .simplebar-hide-scrollbar::-webkit-scrollbar {
-                display: initial;
-                width: initial;
-                height: initial;
-            }
+                .simplebar-content-wrapper::-webkit-scrollbar,
+                .simplebar-hide-scrollbar::-webkit-scrollbar {
+                    display: initial;
+                    width: initial;
+                    height: initial;
+                }
             </style>
         </noscript>
-        
+ 
         {% block head %}
         {% endblock head %}
     </head>
@@ -72,7 +91,7 @@
             <div class="wrapper-inner">
                 {% include "components/header.html" %}
 
-                <main id="main" class="main" style="position: relative;">
+                <main id="main" class="main relative">
                     {% include "components/messages.html" %}
 
                     <div class="base-section">
@@ -87,7 +106,8 @@
                             <div class="logo-holder">
                                 <strong class="logo">
                                     <a href="#">
-                                        <img src="{% static 'src/images/immap-logo.svg' %}" alt="image description" />
+                                        <img src="{% static 'src/images/immap-logo.svg' %}"
+                                             alt="image description" width="100%" height="100%"/>
                                     </a>
                                 </strong>
                                 <strong class="logo-text">ReportHub</strong>
@@ -136,7 +156,7 @@
                                                 <ul class="logos-list">
                                                     <li>
                                                         <a href="#">
-                                                            <img src="{% static 'src/images/usaid.svg' %}" alt="image description" />
+                                                            <img src="{% static 'src/images/usaid.svg' %}" alt="image description" width="100%" height="100%"/>
                                                         </a>
                                                     </li>
                                                 </ul>
@@ -182,15 +202,13 @@
         {% endif %}
 
         <!-- jQuery CDN -->
-        <script 
-            src="https://code.jquery.com/jquery-3.6.1.min.js"
-            integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ="
-            crossorigin="anonymous"
-        >
+        <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous">
         </script>
 
         {% comment %} HTMX {% endcomment %}
-        <script src="https://unpkg.com/htmx.org@2.0.0" integrity="sha384-wS5l5IKJBvK6sPTKa2WZ1js3d947pvWXbPJ1OmWfEuxLgeHcEbjUUA5i9V5ZkpCw" crossorigin="anonymous"></script>
+        <script src="https://unpkg.com/htmx.org@2.0.0"
+                integrity="sha384-wS5l5IKJBvK6sPTKa2WZ1js3d947pvWXbPJ1OmWfEuxLgeHcEbjUUA5i9V5ZkpCw"
+                crossorigin="anonymous"></script>
         <script>
             const csrftoken = '{{ csrf_token }}';
             htmx.config.useTemplateFragments = true;
@@ -201,6 +219,5 @@
 
         {% block scripts %}
         {% endblock scripts %}
-    </script>
     </body>
 </html>

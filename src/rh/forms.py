@@ -127,6 +127,7 @@ class TargetLocationForm(forms.ModelForm):
         self.fields["implementing_partner"].queryset = self.fields["implementing_partner"].queryset.filter(
             countries=user.profile.country
         )
+        self.fields["implementing_partner"].widget.attrs.update({"class": "custom-select"})
 
         if self.data:
             # Creating

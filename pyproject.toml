@@ -112,6 +112,8 @@ exclude = [
 ]
 
 
+[tool.djlint]
+profile="django"
 
 [build-system]
 requires = ["poetry-core"]

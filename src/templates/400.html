@@ -1,14 +1,14 @@
 {% extends "_base.html" %}
 {% load static %}
-{% block page_title %}
+{% block title %}
     400: Bad Request
-{% endblock page_title %}
+{% endblock title %}
 {% block content %}
     <div class="container">
         <div class="flex items-center justify-center w-full min-h-[400px] flex-col gap-2 p-4 text-center">
             <h1 class="text-4xl font-bold tracking-tighter text-gray-900 dark:text-gray-50">400: Bad Request</h1>
             <p class="text-gray-500 dark:text-gray-400">Something went wrong on your side.</p>
-            <a href="/" style="font-weight:bold">Go Home</a>
+            <a href="{% url 'home' %}" class="font-bold">Go Home</a>
         </div>
     </div>
 {% endblock content %}

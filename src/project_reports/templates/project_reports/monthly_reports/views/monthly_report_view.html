@@ -8,42 +8,44 @@
             <div class="holder">
                 <strong class="h5">{{ monthly_report.report_date | date:"F Y" }}</strong>
                 <ul class="buttons-list-inline">
-                    {% if monthly_report.pk  %}
-                    <li>
-                        <a hx-post="{% url 'copy_project_monthly_report' monthly_report.pk %}"
-                           hx-trigger="click"
-                           hx-swap="none"
-                           hx-confirm="Are you sure you want to duplicate last month activities?"
-                           data-tippy-content="Copy last month approved report"
-                           class="btn btn-gray">
-                            <img class='htmx-indicator' style="width: 1rem;" src="{% static 'src/images/spinner.gif' %}" />
-                            <span class="icon-copy-outline"></span>
-                            Copy last month activities
-                        </a>
-                    </li>
+                    {% if monthly_report.pk %}
+                        <li>
+                            <a hx-post="{% url 'copy_project_monthly_report' monthly_report.pk %}"
+                               hx-trigger="click"
+                               hx-swap="none"
+                               hx-confirm="Are you sure you want to duplicate last month activities?"
+                               data-tippy-content="Copy last month approved report"
+                               class="btn btn-gray">
+                                <img class='htmx-indicator'
+                                     style="width: 1rem"
+                                     src="{% static 'src/images/spinner.gif' %}" />
+                                <span class="icon-copy-outline"></span>
+                                Copy last month activities
+                            </a>
+                        </li>
                     {% endif %}
                     {% if monthly_report %}
-                    <li>
-                        <button class="export-button">
+                        <li>
+                            <button class="export-button">
+                                <a href="#"
+                                   data-url="{% url 'export_monthly_report_template' monthly_report.pk %}"
+                                   class="btn btn-gray project-detail"
+                                   title="Export Template">
+                                    <span class="btn-text">Export Template</span>
+                                    <span class="icon-download"></span>
+                                    <!-- <span class="project-detail icon-download"></span> -->
+                                </a>
+                            </button>
+                        </li>
+                        <li>
                             <a href="#"
-                                data-url="{% url 'export_monthly_report_template' monthly_report.pk %}"
-                                class="btn btn-gray project-detail"
-                                title="Export Template">
-                                <span class="btn-text">Export Template</span>
-                                <span class="icon-download"></span>
-                                <!-- <span class="project-detail icon-download"></span> -->
+                               data-url="{% url 'import_monthly_reports' monthly_report.pk %}"
+                               class="btn btn-gray show-sw-import-popup">
+                                <span class="btn-text">Import Activities</span>
+                                {% csrf_token %}
+                                <span class="icon-upload"></span>
                             </a>
-                        </button>
-                    </li>
-                    <li>
-                        <a href="#"
-                           data-url="{% url 'import_monthly_reports' monthly_report.pk %}"
-                           class="btn btn-gray show-sw-import-popup">
-                            <span class="btn-text">Import Activities</span>
-                            {% csrf_token %}
-                            <span class="icon-upload"></span>
-                        </a>
-                    </li>
+                        </li>
                     {% endif %}
                     <li>
                         <a hx-post="{% url 'delete_project_monthly_report' monthly_report.pk %}"
@@ -58,140 +60,125 @@
                     </li>
 
                     {% if monthly_report.active %}
-                    <li>
-                        <a hx-post="{% url 'archive_project_monthly_report' monthly_report.pk %}"
-                           hx-trigger="click"
-                           hx-swap="none"
-                           hx-confirm="Are you sure you want to archive this report?"
-                           data-tippy-content="Archive report"
-                           class="btn btn-gray">
-                            <span class="btn-text">Archive</span>
-                            <svg xmlns="http://www.w3.org/2000/svg"
-                                class="archive-icon"
-                                width="16"
-                                height="16"
-                                viewBox="0 0 24 24">
-                                <path fill="currentColor" d="M3 3h18v4H3V3m1 18V8h16v13H4m10-7v-3h-4v3H7l5 5l5-5h-3Z" />
-                            </svg>
-                        </a>
-                    </li>
+                        <li>
+                            <a hx-post="{% url 'archive_project_monthly_report' monthly_report.pk %}"
+                               hx-trigger="click"
+                               hx-swap="none"
+                               hx-confirm="Are you sure you want to archive this report?"
+                               data-tippy-content="Archive report"
+                               class="btn btn-gray">
+                                <span class="btn-text">Archive</span>
+                                <svg xmlns="http://www.w3.org/2000/svg"
+                                     class="archive-icon"
+                                     width="16"
+                                     height="16"
+                                     viewBox="0 0 24 24">
+                                    <path fill="currentColor" d="M3 3h18v4H3V3m1 18V8h16v13H4m10-7v-3h-4v3H7l5 5l5-5h-3Z" />
+                                </svg>
+                            </a>
+                        </li>
                     {% else %}
-                    <li>
-                        <a hx-post="{% url 'unarchive_project_monthly_report' monthly_report.pk %}"
-                           hx-trigger="click"
-                           hx-swap="none"
-                           hx-confirm="Are you sure you want to unarchive this report?"
-                           data-tippy-content="Unarchive report"
-                           class="btn btn-gray">
-                            <span class="btn-text">Unarchive</span>
-                            <svg xmlns="http://www.w3.org/2000/svg"
-                                width="16"
-                                height="16"
-                                viewBox="0 0 36 36">
-                                <path fill="currentColor" d="M18 21a3 3 0 0 1-2.22-1H5v12a2 2 0 0 0 2 2h22a2 2 0 0 0 2-2V20H20.21A3 3 0 0 1 18 21Zm4 3a1 1 0 0 1-1 1h-6a1 1 0 0 1 0-2h6a1 1 0 0 1 1 1Z" class="clr-i-solid clr-i-solid-path-1" />
-                                <path fill="currentColor" d="M15 12H5.5A1.5 1.5 0 0 0 4 13.5V18h11Z" class="clr-i-solid clr-i-solid-path-2" />
-                                <path fill="currentColor" d="M30.5 12H21v6h11v-4.5a1.5 1.5 0 0 0-1.5-1.5Z" class="clr-i-solid clr-i-solid-path-3" />
-                                <path fill="currentColor" d="m13 9.55l4-3.95V18a1 1 0 1 0 2 0V5.6l4 3.95a1 1 0 1 0 1.41-1.42L18 1.78l-6.39 6.35A1 1 0 0 0 13 9.55Z" class="clr-i-solid clr-i-solid-path-4" />
-                                <path fill="none" d="M0 0h36v36H0z" />
-                            </svg>
-                        </a>
-                    </li>
+                        <li>
+                            <a hx-post="{% url 'unarchive_project_monthly_report' monthly_report.pk %}"
+                               hx-trigger="click"
+                               hx-swap="none"
+                               hx-confirm="Are you sure you want to unarchive this report?"
+                               data-tippy-content="Unarchive report"
+                               class="btn btn-gray">
+                                <span class="btn-text">Unarchive</span>
+                                <svg xmlns="http://www.w3.org/2000/svg"
+                                     width="16"
+                                     height="16"
+                                     viewBox="0 0 36 36">
+                                    <path fill="currentColor" d="M18 21a3 3 0 0 1-2.22-1H5v12a2 2 0 0 0 2 2h22a2 2 0 0 0 2-2V20H20.21A3 3 0 0 1 18 21Zm4 3a1 1 0 0 1-1 1h-6a1 1 0 0 1 0-2h6a1 1 0 0 1 1 1Z" class="clr-i-solid clr-i-solid-path-1" />
+                                    <path fill="currentColor" d="M15 12H5.5A1.5 1.5 0 0 0 4 13.5V18h11Z" class="clr-i-solid clr-i-solid-path-2" />
+                                    <path fill="currentColor" d="M30.5 12H21v6h11v-4.5a1.5 1.5 0 0 0-1.5-1.5Z" class="clr-i-solid clr-i-solid-path-3" />
+                                    <path fill="currentColor" d="m13 9.55l4-3.95V18a1 1 0 1 0 2 0V5.6l4 3.95a1 1 0 1 0 1.41-1.42L18 1.78l-6.39 6.35A1 1 0 0 0 13 9.55Z" class="clr-i-solid clr-i-solid-path-4" />
+                                    <path fill="none" d="M0 0h36v36H0z" />
+                                </svg>
+                            </a>
+                        </li>
                     {% endif %}
                     <li>
-                        <a href="{% url 'update_project_monthly_report' project=project.id report=monthly_report.pk %}" class="btn btn-red">
-                            Edit
-                        </a>
+                        <a href="{% url 'update_project_monthly_report' project=project.id report=monthly_report.pk %}"
+                           class="btn btn-red">Edit</a>
                     </li>
                 </ul>
             </div>
         </div>
-        <br/>
+        <br />
         <div class="project-monthly_report read-only">
-                <div class="row">
-                    <div class="col">
-                        <div class="multiple-fields-row two-items">
-                            <div class="field-col">
-                                <div class="input-field">
+            <div class="row">
+                <div class="col">
+                    <div class="multiple-fields-row two-items">
+                        <div class="field-col">
+                            <div class="input-field">
                                 <label>Report Date</label>
                                 <span class="text-read-only">{{ monthly_report.report_date | date:"F Y" }}</span>
-                                </div>
-                            </div>
-                            <div class="field-col">
-                                <div class="input-field">
-                                    <label>Report Due Date</label>
-                                    <span class="text-read-only">{{ monthly_report.report_due_date }}</span>
-                                </div>
                             </div>
                         </div>
-                        <div class="multiple-fields-row two-items">
-                            {% if monthly_report.submitted_on %}
-                                <div class="field-col">
-                                    <div class="input-field">
+                        <div class="field-col">
+                            <div class="input-field">
+                                <label>Report Due Date</label>
+                                <span class="text-read-only">{{ monthly_report.report_due_date }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="multiple-fields-row two-items">
+                        {% if monthly_report.submitted_on %}
+                            <div class="field-col">
+                                <div class="input-field">
                                     <label>Submitted On</label>
-                                    <span class="text-read-only">
-                                        {{ monthly_report.submitted_on }}
-                                    </span>
-                                    </div>
+                                    <span class="text-read-only">{{ monthly_report.submitted_on }}</span>
                                 </div>
-                            {% endif %}
-                            {% if monthly_report.approved_on and monthly_report.state == 'complete' %}
-                                <div class="field-col">
-                                    <div class="input-field">
-                                    <label>
-                                        Approved On
-                                    </label>
-                                    <span class="text-read-only">
-                                        {{ monthly_report.approved_on }}
-                                    </span>
-                                    </div>
-                                </div>
-                            {% endif %}
-                            {% if monthly_report.rejected_on and monthly_report.state == 'reject' %}
-                                <div class="field-col">
-                                    <div class="input-field">
-                                    <label>
-                                        Rejected On
-                                    </label>
-                                    <span class="text-read-only">
-                                        {{ monthly_report.rejected_on }}
-                                    </span>
-                                    </div>
-                                </div>
-                            {% endif %}
-
-                        </div>
-                        <div class="multiple-fields-row two-items">
+                            </div>
+                        {% endif %}
+                        {% if monthly_report.approved_on and monthly_report.state == 'complete' %}
                             <div class="field-col">
                                 <div class="input-field">
-                                    <label>Report Status</label>
-                                    <span class="text-read-only">
-                                        <span class="{{monthly_report.state}}">
-                                            {{ monthly_report.get_state_display }}
-                                        </span>
-                                    </span>
+                                    <label>Approved On</label>
+                                    <span class="text-read-only">{{ monthly_report.approved_on }}</span>
                                 </div>
+                            </div>
+                        {% endif %}
+                        {% if monthly_report.rejected_on and monthly_report.state == 'reject' %}
+                            <div class="field-col">
+                                <div class="input-field">
+                                    <label>Rejected On</label>
+                                    <span class="text-read-only">{{ monthly_report.rejected_on }}</span>
+                                </div>
+                            </div>
+                        {% endif %}
+
+                    </div>
+                    <div class="multiple-fields-row two-items">
+                        <div class="field-col">
+                            <div class="input-field">
+                                <label>Report Status</label>
+                                <span class="text-read-only">
+                                    <span class="{{ monthly_report.state }}">{{ monthly_report.get_state_display }}</span>
+                                </span>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
 
         <div class="activity-planning read-only">
             <div class="activity-block-holder">
                 <div class="top-activity-block">
                     <span class="activity-title">
-                        <span>
-                        Report Activity Plans
-                        </span>
-                        <span class="btn btn-gray" style="float:right"> {{ activity_reports | length }}</span>
+                        <span>Report Activity Plans</span>
+                        <span class="btn btn-gray" style="float:right">{{ activity_reports | length }}</span>
                     </span>
 
                 </div>
             </div>
         </div>
 
-        {% include "project_reports/report_activity_plans/_activity_plan_table.html"  with object_list=activity_reports.all %}
-        <br/>
+        {% include "project_reports/report_activity_plans/_activity_plan_table.html" with object_list=activity_reports.all %}
+        <br />
         <div class="monthly-reporting">
             <div class="row">
                 <div class="col">
@@ -204,16 +191,16 @@
         </div>
 
         {% if monthly_report.comments and monthly_report.state == 'reject' %}
-        <div class="monthly-reporting">
-            <div class="row">
-                <div class="col">
-                    <div class="input-field">
-                        <label>Rejection Reasone and Comments</label>
-                        <span class="text-read-only">{{ monthly_report.comments }}</span>
+            <div class="monthly-reporting">
+                <div class="row">
+                    <div class="col">
+                        <div class="input-field">
+                            <label>Rejection Reasone and Comments</label>
+                            <span class="text-read-only">{{ monthly_report.comments }}</span>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
         {% endif %}
 
         <div class="monthly-progress-submit-holder text-center">
@@ -224,20 +211,20 @@
                    hx-confirm="Are you sure you want to submit report?"
                    data-tippy-content="Submit report"
                    class="btn btn-red">
-                    <img class='htmx-indicator' style="width: 1rem;" src="{% static 'src/images/spinner.gif' %}" />
+                    <img class='htmx-indicator'
+                         style="width: 1rem"
+                         src="{% static 'src/images/spinner.gif' %}" />
                     Submit Monthly Report
                 </a>
             {% elif monthly_report.state == "submit" %}
                 <a data-url="{% url 'approve_monthly_report' monthly_report.pk %}"
-                    data-button="Approve Report"
-                    class="btn btn-red show-sw-confirm-button"
-                >
+                   data-button="Approve Report"
+                   class="btn btn-red show-sw-confirm-button">
                     <span class="btn-text">Approve Monthly Report</span>
                 </a>
                 <a data-url="{% url 'reject_monthly_report' monthly_report.pk %}"
-                    data-button="Reject Report"
-                    class="btn btn-gray show-sw-confirm-button"
-                >
+                   data-button="Reject Report"
+                   class="btn btn-gray show-sw-confirm-button">
                     <span class="btn-text">Reject Monthly Report</span>
                 </a>
             {% endif %}
@@ -245,5 +232,3 @@
 
     </div>
 {% endblock project_body %}
-
-        

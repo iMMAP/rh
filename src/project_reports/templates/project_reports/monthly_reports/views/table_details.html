@@ -2,10 +2,9 @@
 
 <tr>
     <td class="month-col" data-title="Month">
-        <a class="table-flex-holder" href="{% url 'view_monthly_report' project=project.id report=report.id %}">
-            {% with report_state=report.state %}
-                <span class="indicator indicator-{{ report|custom_class }}"></span>
-            {% endwith %}
+        <a class="table-flex-holder"
+           href="{% url 'view_monthly_report' project=project.id report=report.id %}">
+            {% with report_state=report.state %}<span class="indicator indicator-{{ report|custom_class }}"></span>{% endwith %}
             {{ report.report_date | date:"F Y" }}
         </a>
     </td>
@@ -23,18 +22,16 @@
 
     <td class="id-col" data-title="Locations">
         {% for plan_report in report.activityplanreport_set.all %}
-            {% for location_report in plan_report.targetlocationreport_set.all  %}
+            {% for location_report in plan_report.targetlocationreport_set.all %}
                 {{ location_report.province.name }}, {{ location_report.district.name }}
             {% endfor %}
             {% if not forloop.last %}<b>|</b>{% endif %}
         {% endfor %}
     </td>
 
-    <td class="notes-col" data-title="Notes">{{report.description}}</td>
+    <td class="notes-col" data-title="Notes">{{ report.description }}</td>
 
     <td class="date-col" data-title="Due date">
-        <span class="{{ report.state }}">
-            {{ report.get_state_display }}
-        </span>
+        <span class="{{ report.state }}">{{ report.get_state_display }}</span>
     </td>
 </tr>

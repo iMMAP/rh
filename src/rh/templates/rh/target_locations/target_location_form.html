@@ -13,20 +13,11 @@
 
 
 {% block project_contents %}
-    {% comment %} <div class="project-title-holder" style="display: flex;">
-        <h2 class="plan-title"> Activity Plan: {{activity_plan}}</h2>
-    </div> {% endcomment %}
-    <div class="multiple-fields-row" style="justify-content: space-between;margin:0px;padding:10px 0px">
+    <div class="" style="display: flex;flex-direction:column;gap:0.7rem;padding:10px 0px">
         <div class="">
-            <span class="label">Activity Plan Domain</span>
+            <span class="label">Activity Plan Domain | Type </span>
             <div class="input-holder">
-                <span class="text-read-only">{{activity_plan.activity_domain}}</span>
-            </div>
-        </div>
-        <div class="">
-            <span class="label">Activity Plan Type</span>
-            <div class="input-holder">
-                <span class="text-read-only">{{activity_plan.activity_type}}</span>
+                <span class="text-read-only">{{activity_plan.activity_type}} | {{activity_plan.activity_domain}}</span>
             </div>
         </div>
         <div class="">
@@ -38,288 +29,286 @@
     </div>
 
     <div class="main-content">
-        <div class="activity-planning">
-            <div class="activity-planning read-only">
-                <div class="activity-block-holder">
-                    <div class="top-activity-block">
-                        <span class="activity-title">
-                            <span>
-                                  {% if target_location_form.initial %}
-                                        Update Target Location
-                                    {% else %}
-                                        New Target Location
-                                    {% endif %}
-                            </span>
+        <div class="activity-planning read-only">
+            <div class="activity-block-holder">
+                <div class="top-activity-block">
+                    <span class="activity-title">
+                        <span>
+                                {% if target_location_form.initial %}
+                                    Update Target Location
+                                {% else %}
+                                    New Target Location
+                                {% endif %}
                         </span>
-                        <br>
-                        <span class="">
-                            Use this form to provide detailed information about the target location for the above activity plan, including the country, province or state, and other relevant details.
-                            Also specify the number of people you aim to reach with your activity in the selected location from the Disaggregation section.
-                        </span>
-                    </div>
+                    </span>
+                    <br>
+                    <span class="">
+                        Use this form to provide detailed information about the target location for the above activity plan, including the country, province or state, and other relevant details.
+                        Also specify the number of people you aim to reach with your activity in the selected location from the Disaggregation section.
+                    </span>
                 </div>
             </div>
+        </div>
 
-            <form action="" method="post" class="form-container">
-                <div class="progress bg-red" style="height:2px">
-                    <div class="indeterminate bg-white"></div>
-                </div>
-                {% csrf_token %}
-                <div class="inner-holder">
-                    <div class="row">
-                        <div class="col">
-                            <div class="multiple-fields-row four-items">
-                                <div class="field-col">
-                                    <div class="select-field is-required">
-                                        <label for="{{target_location_form.country.id_for_label}}" >Country</label>
-                                        {{ target_location_form.country}}
-                                        <div class="sign-up-field-error">{{ target_location_form.country.errors}}</div>
-                                    </div>
+        <form action="" method="post" class="form-container">
+            <div class="progress bg-red" style="height:2px">
+                <div class="indeterminate bg-white"></div>
+            </div>
+            {% csrf_token %}
+            <div class="inner-holder">
+                <div class="row">
+                    <div class="col">
+                        <div class="multiple-fields-row four-items">
+                            <div class="field-col">
+                                <div class="select-field is-required">
+                                    <label for="{{target_location_form.country.id_for_label}}" >Country</label>
+                                    {{ target_location_form.country}}
+                                    <div class="sign-up-field-error">{{ target_location_form.country.errors}}</div>
                                 </div>
-                                <div class="field-col">
-                                    <div class="select-field is-required">
-                                        <label for="{{target_location_form.province.id_for_label}}" >Province / State</label>
-                                        <select 
-                                            name="{{ target_location_form.province.name }}" 
-                                            id="{{target_location_form.province.id_for_label}}" 
-                                            hx-get="{% url 'get-locations-details' %}" 
-                                            hx-target="#{{target_location_form.district.id_for_label}}" 
+                            </div>
+                            <div class="field-col">
+                                <div class="select-field is-required">
+                                    <label for="{{target_location_form.province.id_for_label}}" >Province / State</label>
+                                    <select 
+                                        name="{{ target_location_form.province.name }}" 
+                                        id="{{target_location_form.province.id_for_label}}" 
+                                        hx-get="{% url 'get-locations-details' %}" 
+                                        hx-target="#{{target_location_form.district.id_for_label}}" 
+                                        hx-swap="innerHTML"
+                                        hx-trigger="change"
+                                        hx-indicator=".progress"
+                                        required
+                                    >
+                                        {% for province in target_location_form.province %}
+                                            {{province}}
+                                        {% endfor %}
+                                    </select>
+                                    <div class="sign-up-field-error">{{ target_location_form.province.errors}}</div>
+                                </div>
+                            </div>
+                            <div class="field-col">
+                                <div class="input-field is-required">
+                                    <label for="{{target_location_form.district.id_for_label}}">District</label>
+                                    <select 
+                                        name="{{ target_location_form.district.name}}" 
+                                        id="{{target_location_form.district.id_for_label}}" 
+                                        required
+                                        {% if target_location_form.zone.choices %}
+                                            hx-get="{% url 'ajax-load-locations' %}" 
+                                            hx-target="#{{target_location_form.zone.id_for_label}}" 
                                             hx-swap="innerHTML"
                                             hx-trigger="change"
                                             hx-indicator=".progress"
-                                            required
-                                        >
-                                            {% for province in target_location_form.province %}
-                                                {{province}}
-                                            {% endfor %}
-                                        </select>
-                                        <div class="sign-up-field-error">{{ target_location_form.province.errors}}</div>
-                                    </div>
-                                </div>
-                                <div class="field-col">
-                                    <div class="input-field is-required">
-                                        <label for="{{target_location_form.district.id_for_label}}">District</label>
-                                        <select 
-                                            name="{{ target_location_form.district.name}}" 
-                                            id="{{target_location_form.district.id_for_label}}" 
-                                            required
-                                            {% if target_location_form.zone.choices %}
-                                                hx-get="{% url 'ajax-load-locations' %}" 
-                                                hx-target="#{{target_location_form.zone.id_for_label}}" 
-                                                hx-swap="innerHTML"
-                                                hx-trigger="change"
-                                                hx-indicator=".progress"
-                                            {% endif %}
-                                        >
-                                            {% for district in target_location_form.district %}
-                                                {{district}}
-                                            {% endfor %}
-                                        </select>
-                                        <div class="sign-up-field-error">{{ target_location_form.district.errors}}</div>
-                                    </div>
-                                </div>
-                                {% if target_location_form.zone.choices %}
-                                <div class="field-col">
-                                    <div class="input-field">
-                                        <label for="{{target_location_form.zone.id_for_label}}">Ward / Zone</label>
-                                        {{ target_location_form.zone }}
-                                        <div class="sign-up-field-error">{{ target_location_form.zone.errors}}</div>
-                                    </div>
-                                </div>
-                                {% endif %}
-
-                                <div class="field-col">
-                                    <div class="input-field">
-                                        <label for="{{target_location_form.implementing_partner.id_for_label}}">Implementing Partner</label>
-                                        {{ target_location_form.implementing_partner}}
-                                        <div class="sign-up-field-error">{{ target_location_form.implementing_partner.errors}}</div>
-                                    </div>
-                                </div>
-
-                                {% if  target_location_form.facility_site_type.value %}
-                                <div class="field-col">
-                                    <div class="select-field">
-                                        <label for="{{target_location_form.facility_site_type.id_for_label}}">Facility Site Type</label>
-                                        {{ target_location_form.facility_site_type }}
-                                            <div class="sign-up-field-error">{{ target_location_form.facility_site_type.errors}}</div>
-                                    </div>
-                                </div>
-                                {% endif %}
-
-                                {% if target_location_form.nhs_code %}
-                                <div class="field-col">
-                                    <div class="input-field is is-required">
-                                        <label for="{{target_location_form.nhs_code.id_for_label}}">NHS Code</label>
-                                        {{ target_location_form.nhs_code }}
-                                        <div class="sign-up-field-error">{{ target_location_form.nhs_code.errors}}</div>
-                                    </div>
-                                </div>
-                                {% endif %}
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row ">
-                        <div class="col">
-                            <div class="field-col">
-                                <div class="input-check-holder">
-                                    {{ target_location_form.facility_monitoring }}
-                                    <label for="{{ target_location_form.facility_monitoring.id_for_label }}">
-                                        <span class="input"></span>
-                                        <span class="text">Facility Monitoring</span>
-                                    </label>
-                                    <div class="sign-up-field-error">{{ target_location_form.facility_monitoring.errors}}</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row" id="facility_details">
-                        <div class="col col-lg">
-                            <div class="multiple-fields-row two-items">
-                                <div class="field-col">
-                                    <div class="input-field is-required">
-                                        <label for="{{ target_location_form.facility_name.id_for_label }}">
-                                            Facility / Site Name
-                                        </label>
-                                        <div class="input-holder">{{ target_location_form.facility_name }}</div>
-                                        <div class="sign-up-field-error">{{ target_location_form.facility_facility_name.errors}}</div>
-                                    </div>
-                                </div>
-                                <div class="field-col">
-                                    <div class="input-field is-required">
-                                        <label for="{{ target_location_form.facility_id.id_for_label }}">
-                                            Facility / Site ID [HMIS code]
-                                        </label>
-                                        <div class="input-holder">{{ target_location_form.facility_id }}</div>
-                                        <div class="sign-up-field-error">{{ target_location_form.facility_id.errors}}</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="multiple-fields-row two-items">
-                                <div class="field-col">
-                                    <div class="input-field">
-                                        <label for="{{ target_location_form.facility_lat.id_for_label }}">
-                                            Facility / Site Latitude [Please enter decimal only]
-                                        </label>
-                                        <div class="input-holder">{{ target_location_form.facility_lat }}</div>
-                                        <div class="sign-up-field-error">{{ target_location_form.facility_lat.errors}}</div>
-                                    </div>
-                                </div>
-                                <div class="field-col">
-                                    <div class="input-field">
-                                        <label for="{{ target_location_form.facility_long.id_for_label }}">
-                                            Facility / Site Longitude [Please enter decimal only]
-                                        </label>
-                                        <div class="input-holder">{{ target_location_form.facility_long }}</div>
-                                        <div class="sign-up-field-error">{{ target_location_form.facility_long.errors}}</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div 
-                        class="disaggregation-block js-inline-admin-formset disaggregation-accordion inline-group" 
-                        id="{{ disaggregation_formset.prefix }}-group" 
-                        data-inline-type="tabular" 
-                        data-inline-formset='{"name":"#{{disaggregation_formset.prefix}}","options":{"prefix":"{{disaggregation_formset.prefix}}","addText":"Add Disaggregation","deleteText":"Delete"}}'
-                    >
-                        <div class="tabular inline-related">
-                            <div class="block-top" style="margin:unset">
-                                <div class="">
-                                    <h2 class="title">
-                                        Disaggregations
-                                    </h2>
-                                    <p style="padding:10px 0px">
-                                        The Disaggregation list is selected from the Indicator of your Activity plan. If there is someting missing, please contact your cluster.
-                                    </p>
-                                </div>
-                            </div>
-                            {{ disaggregation_formset.management_form }}
-                            <fieldset class="table-wrapper-scrollable">
-                                <table class="table ">
-                                    <thead class="content-block">
-                                        <tr>
-                                            {% for field in disaggregation_formset.form.fields %}
-                                                <th class="column-{{ field.name }}{% if field.required %} required{% endif %}{% if field.widget.is_hidden %} hidden{% endif %}">
-                                                    {{ field|capfirst }}
-                                                </th>
-                                            {% endfor %}
-                                            {% if disaggregation_formset.can_delete%}
-                                                <th>Delete?</th>
-                                            {% endif %}
-                                        </tr>
-                                    </thead>
-                                    
-                                    <tbody>
-                                        {% for form in disaggregation_formset %}
-                                           {% if form.non_field_errors %}
-                                                {% for error in form.non_field_errors %}
-                                                    <tr class="row-form-errors">
-                                                        <td>{{ error }}</td>
-                                                    </tr>
-                                                {% endfor %}
-                                            {% endif %}
-                                            {% comment %} {% if form.errors %}
-                                                <tr class="row-form-errors">
-                                                    <td colspan="2">{{ form.errors }}</td>
-                                                </tr>
-                                            {% endif %} {% endcomment %}
-                                            <tr
-                                                class="form-row {% if forloop.last %} empty-form{% endif %} {% if form.instance.pk %}has_original{% endif %} "
-                                                id="{{ disaggregation_formset.prefix }}-{% if forloop.last %}empty{% else %}{{ forloop.counter0 }}{% endif %}"
-                                            >
-
-                                                {% for field in form %}
-                                                    {% if field.name != "DELETE" %}
-                                                    <td 
-                                                        class="{% if field.name %}field-{{ field.name }}{% endif %}{% if field.is_hidden %} hidden{% endif %} "
-                                                    >
-                                                        {{ field.errors.as_ul }}
-                                                        {{ field}}
-                                                    </td>
-                                                    {% endif %}
-                                                {% endfor %}
-                                                <td class="delete" style="">
-                                                    {% if form.instance.pk %}
-                                                        {{ form.DELETE}}
-                                                    {% endif %}
-                                                </td>
-                                            </tr>
+                                        {% endif %}
+                                    >
+                                        {% for district in target_location_form.district %}
+                                            {{district}}
                                         {% endfor %}
-                                    </tbody>
-                                </table> 
+                                    </select>
+                                    <div class="sign-up-field-error">{{ target_location_form.district.errors}}</div>
+                                </div>
+                            </div>
+                            {% if target_location_form.zone.choices %}
+                            <div class="field-col">
+                                <div class="input-field">
+                                    <label for="{{target_location_form.zone.id_for_label}}">Ward / Zone</label>
+                                    {{ target_location_form.zone }}
+                                    <div class="sign-up-field-error">{{ target_location_form.zone.errors}}</div>
+                                </div>
+                            </div>
+                            {% endif %}
 
-                            </fieldset>
-                        </div>
-                    </div>
-                    <div class="plan-submit-holder">
-                        {% if target_location_form.initial %}
-                            <a
-                                id="delete-btn" 
-                                hx-post="{% url 'target-locations-delete' target_location_form.initial.id %}" 
-                                hx-trigger="click" 
-                                hx-indicator=".progress" 
-                                hx-confirm="Do you want to delete Target Locations ?"  
-                                data-tippy-content="Delete Target Location" 
-                                class="cursor-pointer"
-                            >
-                                <span class="project-detail icon-trashbin"></span>
-                                Delete
-                            </a>
-                        {% else %}
-                            <a href="#"></a>
-                        {% endif %}
-                        <div>
-                            <input type="submit" name="_addanother" class="btn btn-gray" value="Save and add another">
-                            <input type="submit" name="_continue" class="btn btn-gray" value="Save and continue editing" >
-                            <input type="submit" name="_save" class="btn btn-red" value="Save" >
+                            <div class="field-col">
+                                <div class="input-field">
+                                    <label for="{{target_location_form.implementing_partner.id_for_label}}">Implementing Partner</label>
+                                    {{ target_location_form.implementing_partner}}
+                                    <div class="sign-up-field-error">{{ target_location_form.implementing_partner.errors}}</div>
+                                </div>
+                            </div>
+
+                            {% if  target_location_form.facility_site_type.value %}
+                            <div class="field-col">
+                                <div class="select-field">
+                                    <label for="{{target_location_form.facility_site_type.id_for_label}}">Facility Site Type</label>
+                                    {{ target_location_form.facility_site_type }}
+                                        <div class="sign-up-field-error">{{ target_location_form.facility_site_type.errors}}</div>
+                                </div>
+                            </div>
+                            {% endif %}
+
+                            {% if target_location_form.nhs_code %}
+                            <div class="field-col">
+                                <div class="input-field is is-required">
+                                    <label for="{{target_location_form.nhs_code.id_for_label}}">NHS Code</label>
+                                    {{ target_location_form.nhs_code }}
+                                    <div class="sign-up-field-error">{{ target_location_form.nhs_code.errors}}</div>
+                                </div>
+                            </div>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
-            </form>
-        </div>
+
+                <div class="row ">
+                    <div class="col">
+                        <div class="field-col">
+                            <div class="input-check-holder">
+                                {{ target_location_form.facility_monitoring }}
+                                <label for="{{ target_location_form.facility_monitoring.id_for_label }}">
+                                    <span class="input"></span>
+                                    <span class="text">Facility Monitoring</span>
+                                </label>
+                                <div class="sign-up-field-error">{{ target_location_form.facility_monitoring.errors}}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row" id="facility_details">
+                    <div class="col col-lg">
+                        <div class="multiple-fields-row two-items">
+                            <div class="field-col">
+                                <div class="input-field is-required">
+                                    <label for="{{ target_location_form.facility_name.id_for_label }}">
+                                        Facility / Site Name
+                                    </label>
+                                    <div class="input-holder">{{ target_location_form.facility_name }}</div>
+                                    <div class="sign-up-field-error">{{ target_location_form.facility_facility_name.errors}}</div>
+                                </div>
+                            </div>
+                            <div class="field-col">
+                                <div class="input-field is-required">
+                                    <label for="{{ target_location_form.facility_id.id_for_label }}">
+                                        Facility / Site ID [HMIS code]
+                                    </label>
+                                    <div class="input-holder">{{ target_location_form.facility_id }}</div>
+                                    <div class="sign-up-field-error">{{ target_location_form.facility_id.errors}}</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="multiple-fields-row two-items">
+                            <div class="field-col">
+                                <div class="input-field">
+                                    <label for="{{ target_location_form.facility_lat.id_for_label }}">
+                                        Facility / Site Latitude [Please enter decimal only]
+                                    </label>
+                                    <div class="input-holder">{{ target_location_form.facility_lat }}</div>
+                                    <div class="sign-up-field-error">{{ target_location_form.facility_lat.errors}}</div>
+                                </div>
+                            </div>
+                            <div class="field-col">
+                                <div class="input-field">
+                                    <label for="{{ target_location_form.facility_long.id_for_label }}">
+                                        Facility / Site Longitude [Please enter decimal only]
+                                    </label>
+                                    <div class="input-holder">{{ target_location_form.facility_long }}</div>
+                                    <div class="sign-up-field-error">{{ target_location_form.facility_long.errors}}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div 
+                    class="disaggregation-block js-inline-admin-formset disaggregation-accordion inline-group" 
+                    id="{{ disaggregation_formset.prefix }}-group" 
+                    data-inline-type="tabular" 
+                    data-inline-formset='{"name":"#{{disaggregation_formset.prefix}}","options":{"prefix":"{{disaggregation_formset.prefix}}","addText":"Add Disaggregation","deleteText":"Delete"}}'
+                >
+                    <div class="tabular inline-related">
+                        <div class="block-top" style="margin:unset">
+                            <div class="">
+                                <h2 class="title">
+                                    Disaggregations
+                                </h2>
+                                <p style="padding:10px 0px">
+                                    The Disaggregation list is selected from the Indicator of your Activity plan. If there is someting missing, please contact your cluster.
+                                </p>
+                            </div>
+                        </div>
+                        {{ disaggregation_formset.management_form }}
+                        <fieldset class="table-wrapper-scrollable">
+                            <table class="table ">
+                                <thead class="content-block">
+                                    <tr>
+                                        {% for field in disaggregation_formset.form.fields %}
+                                            <th class="column-{{ field.name }}{% if field.required %} required{% endif %}{% if field.widget.is_hidden %} hidden{% endif %}">
+                                                {{ field|capfirst }}
+                                            </th>
+                                        {% endfor %}
+                                        {% if disaggregation_formset.can_delete%}
+                                            <th>Delete?</th>
+                                        {% endif %}
+                                    </tr>
+                                </thead>
+                                
+                                <tbody>
+                                    {% for form in disaggregation_formset %}
+                                        {% if form.non_field_errors %}
+                                            {% for error in form.non_field_errors %}
+                                                <tr class="row-form-errors">
+                                                    <td>{{ error }}</td>
+                                                </tr>
+                                            {% endfor %}
+                                        {% endif %}
+                                        {% comment %} {% if form.errors %}
+                                            <tr class="row-form-errors">
+                                                <td colspan="2">{{ form.errors }}</td>
+                                            </tr>
+                                        {% endif %} {% endcomment %}
+                                        <tr
+                                            class="form-row {% if forloop.last %} empty-form{% endif %} {% if form.instance.pk %}has_original{% endif %} "
+                                            id="{{ disaggregation_formset.prefix }}-{% if forloop.last %}empty{% else %}{{ forloop.counter0 }}{% endif %}"
+                                        >
+
+                                            {% for field in form %}
+                                                {% if field.name != "DELETE" %}
+                                                <td 
+                                                    class="{% if field.name %}field-{{ field.name }}{% endif %}{% if field.is_hidden %} hidden{% endif %} "
+                                                >
+                                                    {{ field.errors.as_ul }}
+                                                    {{ field}}
+                                                </td>
+                                                {% endif %}
+                                            {% endfor %}
+                                            <td class="delete" style="">
+                                                {% if form.instance.pk %}
+                                                    {{ form.DELETE}}
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table> 
+
+                        </fieldset>
+                    </div>
+                </div>
+                <div class="plan-submit-holder">
+                    {% if target_location_form.initial %}
+                        <a
+                            id="delete-btn" 
+                            hx-post="{% url 'target-locations-delete' target_location_form.initial.id %}" 
+                            hx-trigger="click" 
+                            hx-indicator=".progress" 
+                            hx-confirm="Do you want to delete Target Locations ?"  
+                            data-tippy-content="Delete Target Location" 
+                            class="cursor-pointer"
+                        >
+                            <span class="project-detail icon-trashbin"></span>
+                            Delete
+                        </a>
+                    {% else %}
+                        <a href="#"></a>
+                    {% endif %}
+                    <div>
+                        <input type="submit" name="_addanother" class="btn btn-gray" value="Save and add another">
+                        <input type="submit" name="_continue" class="btn btn-gray" value="Save and continue editing" >
+                        <input type="submit" name="_save" class="btn btn-red" value="Save" >
+                    </div>
+                </div>
+            </div>
+        </form>
     </div>
 {% endblock project_contents %}
 

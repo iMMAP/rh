@@ -218,28 +218,22 @@
                                 <tbody>
                                     {% for form in disaggregation_formset %}
                                         {% if form.non_field_errors %}
-                                            {% for error in form.non_field_errors %}
-                                                <tr class="row-form-errors">
-                                                    <td>{{ error }}</td>
-                                                </tr>
-                                            {% endfor %}
-                                        {% endif %}
-                                        {% comment %} {% if form.errors %}
                                             <tr class="row-form-errors">
-                                                <td colspan="2">{{ form.errors }}</td>
+                                                <td colspan="4">{{ form.non_field_errors }}</td>
                                             </tr>
-                                        {% endif %} {% endcomment %}
+                                        {% endif %} 
                                         <tr class="form-row {% if forloop.last %}empty-form{% endif %} {% if form.instance.pk %}has_original{% endif %} "
                                             id="{{ disaggregation_formset.prefix }}-{% if forloop.last %}empty{% else %}{{ forloop.counter0 }}{% endif %}">
 
                                             {% for field in form %}
                                                 {% if field.name != "DELETE" %}
                                                     <td class="{% if field.name %}field-{{ field.name }}{% endif %}{% if field.is_hidden %} hidden{% endif %} ">
-                                                        {{ field.errors.as_ul }}
                                                         {{ field }}
+                                                        {{ field.errors }}
                                                     </td>
                                                 {% endif %}
                                             {% endfor %}
+
                                             <td class="delete">
                                                 {% if form.instance.pk %}{{ form.DELETE }}{% endif %}
                                             </td>

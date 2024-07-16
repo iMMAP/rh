@@ -9,6 +9,10 @@
     {% endif %}
 {% endblock title %}
 
+{% block breadcrumb_li %}
+<li class="current">Activity Plan</li>
+{% endblock breadcrumb_li %}
+
 {% block project_contents %}
     <div class="flex flex-col gap-2 pt-2 pb-2">
         <div >
@@ -37,7 +41,14 @@
                                 New Activity Plan
                             {% endif %}
                         </span>
-                        {% comment %} <span class="btn btn-gray" style="float:right">Target Locations</span> {% endcomment %}
+                        {% if form.initial %}
+                        <span class="btn btn-gray" style="float:right">
+                            <a href="{% url 'target-locations-create' form.initial.id %}" class="btn btn-gray">
+                                <img src="{% static 'admin/img/icon-addlink.svg' %}" alt="add-btn-icon">
+                                Add Target Location
+                            </a>
+                        </span>
+                        {% endif %}
                     </span>
                     <br>
                     <span >
@@ -155,8 +166,8 @@
  
                 <!-- Indicator types start to diaplay -->
                 <div class="row" id="indicator-types"></div>
-            </div>
-            <div class="plan-submit-holder">
+
+                <div class="plan-submit-holder">
                 {% if form.initial %}
                     <a id="delete-btn"
                        hx-delete="{% url 'activity-plans-delete' form.initial.id %}"
@@ -183,6 +194,8 @@
                     <input type="submit" name="_save" class="btn btn-red" value="Save">
                 </div>
             </div>
+            </div>
+            
         </form>
     </div>
 {% endblock project_contents %}

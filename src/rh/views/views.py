@@ -9,6 +9,7 @@ from project_reports.models import ProjectMonthlyReport as Report
 from django.shortcuts import get_object_or_404, render
 
 from ..models import ActivityDomain, Cluster, DisaggregationLocation, Location, TargetLocation, ActivityType, Indicator
+import json
 
 RECORDS_PER_PAGE = 10
 
@@ -108,7 +109,10 @@ def load_activity_domains(request):
     """
     Used in project form
     """
-    cluster_ids = [int(i) for i in request.POST.getlist("clusters[]") if i]
+    data = json.loads(request.body)
+    cluster_ids = data.get("clusters", [])
+    # listed_domains = data.get("listed_domains", [])
+
     user_location = request.user.profile.country
     # Define a Prefetch object to optimize the related activitydomain_set
     prefetch_activitydomain = Prefetch(

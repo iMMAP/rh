@@ -15,11 +15,7 @@
     <div class="main-content">
         <div class="project-plan create-plan">
             {% if project %}
-                <div 
-                     style="display: flex;
-                            flex-direction:column;
-                            gap:0.7rem;
-                            padding:10px 0px">
+                <div class="flex flex-col gap-2 pt-2 pb-2">
                     <div >
                         <span >Project</span>
                         <div class="input-holder">
@@ -207,7 +203,7 @@
                                 </div>
                             </div>
                             <div class="field-col">
-                                <div class="select-field is-required">
+                                <div class="select-field">
                                     <label for="{{ form.donors.id_for_label }}">
                                         Project Donor [ Please contact us if your project donor is not
                                         in the list]
@@ -226,7 +222,13 @@
                     <div class="plan-submit-holder">
                         <div></div>
                         <div>
-                            <button type="submit" class="btn btn-red">Save and Next</button>
+                            <button type="submit" class="btn btn-red">
+                                {% if project %}
+                                    Update and Next
+                                {% else %}
+                                    Save and Next
+                                {% endif %}
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -236,7 +238,7 @@
 {% endblock project_contents %}
 
 {% block project_form_scripts %}
-    {% vite 'static/rh/js/project_planning.js' %}
+    {% vite 'rh/static/rh/project_planning.js' %}
 {% endblock project_form_scripts %}
 
 {% block scripts %}

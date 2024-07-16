@@ -34,7 +34,7 @@ class Location(models.Model):
         blank=True,
         null=True,
     )
-    code = models.CharField(max_length=200, unique=True)
+    code = models.SlugField(max_length=200, unique=True)
     name = models.CharField(max_length=200)
     level = models.IntegerField(default=0)
     original_name = models.CharField(max_length=200, blank=True, null=True)
@@ -57,7 +57,7 @@ class Cluster(models.Model):
     countries = models.ManyToManyField(Location, blank=True, limit_choices_to={"level": 0})
 
     name = models.CharField(max_length=NAME_MAX_LENGTH, unique=True)
-    code = models.CharField(max_length=NAME_MAX_LENGTH, unique=True)
+    code = models.SlugField(max_length=NAME_MAX_LENGTH, unique=True)
     title = models.CharField(max_length=NAME_MAX_LENGTH)
     ocha_code = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
     has_nhs_code = models.BooleanField(default=False, null=True)
@@ -90,8 +90,8 @@ class BeneficiaryType(models.Model):
 
     clusters = models.ManyToManyField(Cluster)
 
-    name = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
-    code = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
+    name = models.CharField(max_length=NAME_MAX_LENGTH)
+    code = models.SlugField(max_length=NAME_MAX_LENGTH)
 
     description = models.CharField(max_length=DESCRIPTION_MAX_LENGTH, blank=True, null=True)
     is_active = models.BooleanField(default=False)
@@ -129,10 +129,11 @@ class Organization(models.Model):
     clusters = models.ManyToManyField(Cluster, blank=True)
 
     name = models.CharField(max_length=NAME_MAX_LENGTH, unique=True)
-    code = models.CharField(max_length=NAME_MAX_LENGTH, unique=True)
+    code = models.SlugField(max_length=NAME_MAX_LENGTH, unique=True)
     type = models.CharField(max_length=NAME_MAX_LENGTH, choices=TYPE_CHOICES, blank=True, null=True)
 
     old_id = models.CharField("Old ID", max_length=NAME_MAX_LENGTH, blank=True, null=True)
+
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, null=True)
 
@@ -141,10 +142,10 @@ class Organization(models.Model):
 
 
 class Donor(models.Model):
-    code = models.CharField(max_length=NAME_MAX_LENGTH, unique=True)
+    code = models.SlugField(max_length=NAME_MAX_LENGTH, unique=True)
     name = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
 
-    countries = models.ManyToManyField(Location, blank=True, limit_choices_to={"level": 0})
+    countries = models.ManyToManyField(Location, limit_choices_to={"level": 0})
 
     clusters = models.ManyToManyField(Cluster, blank=True)
 
@@ -301,7 +302,7 @@ class GrantType(models.Model):
 
 
 class UnitType(models.Model):
-    code = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
+    code = models.SlugField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
     name = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
 
     created_at = models.DateTimeField(auto_now_add=True, null=True)
@@ -317,7 +318,7 @@ class UnitType(models.Model):
 
 class ActivityDomain(models.Model):
     is_active = models.BooleanField(default=True)
-    code = models.CharField(max_length=NAME_MAX_LENGTH, unique=True)
+    code = models.SlugField(max_length=NAME_MAX_LENGTH, unique=True)
     name = models.CharField(max_length=NAME_MAX_LENGTH)
     countries = models.ManyToManyField(Location)
     clusters = models.ManyToManyField(Cluster)
@@ -336,7 +337,7 @@ class ActivityDomain(models.Model):
 class ActivityType(models.Model):
     activity_domain = models.ForeignKey(ActivityDomain, on_delete=models.SET_NULL, blank=True, null=True)
     active = models.BooleanField(default=True)
-    code = models.CharField(max_length=DESCRIPTION_MAX_LENGTH, unique=True)
+    code = models.SlugField(max_length=DESCRIPTION_MAX_LENGTH, unique=True)
     name = models.CharField(max_length=DESCRIPTION_MAX_LENGTH)
     clusters = models.ManyToManyField(Cluster)
     # indicators = models.ManyToManyField(Indicator)
@@ -366,7 +367,7 @@ class ActivityType(models.Model):
 class ActivityDetail(models.Model):
     activity_type = models.ForeignKey(ActivityType, on_delete=models.SET_NULL, blank=True, null=True)
 
-    code = models.CharField(max_length=DESCRIPTION_MAX_LENGTH)
+    code = models.SlugField(max_length=DESCRIPTION_MAX_LENGTH)
     name = models.CharField(max_length=DESCRIPTION_MAX_LENGTH)
 
     created_at = models.DateTimeField(auto_now_add=True, null=True)
@@ -432,12 +433,12 @@ class Project(models.Model):
         ("archive", "Archived"),
     ]
 
-    organization = models.ForeignKey(Organization, on_delete=models.SET_NULL, null=True, blank=True)
+    organization = models.ForeignKey(Organization, on_delete=models.SET_NULL, null=True)
 
     clusters = models.ManyToManyField(Cluster)
     activity_domains = models.ManyToManyField(ActivityDomain, related_name="activity_domains")
 
-    donors = models.ManyToManyField(Donor)
+    donors = models.ManyToManyField(Donor, blank=True)
     implementing_partners = models.ManyToManyField(Organization, related_name="implementing_partners", blank=True)
     programme_partners = models.ManyToManyField(Organization, related_name="programme_partners", blank=True)
 
@@ -445,7 +446,7 @@ class Project(models.Model):
     active = models.BooleanField(default=True)
 
     title = models.CharField(max_length=DESCRIPTION_MAX_LENGTH)
-    code = models.CharField(max_length=NAME_MAX_LENGTH, unique=True)
+    code = models.SlugField(max_length=NAME_MAX_LENGTH, unique=True)
 
     is_hrp_project = models.BooleanField(default=False)
     has_hrp_code = models.BooleanField(default=False)
@@ -456,7 +457,7 @@ class Project(models.Model):
     budget_received = models.IntegerField(null=True, blank=True)
     budget_gap = models.IntegerField(null=True, blank=True)
 
-    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     description = models.TextField(blank=True, null=True)
     old_id = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
 
@@ -496,18 +497,12 @@ class ActivityPlan(models.Model):
         ("archive", "Archived"),
     ]
 
-    project = models.ForeignKey(Project, on_delete=models.CASCADE, null=True, blank=True)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE)
     active = models.BooleanField(default=True)
-    state = models.CharField(
-        max_length=15,
-        choices=ACTIVITY_PLAN_STATES,
-        null=True,
-        blank=True,
-        default="draft",
-    )
+    state = models.CharField(max_length=15, choices=ACTIVITY_PLAN_STATES, null=True, default="draft")
     # title = models.CharField(max_length=800, null=True, blank=True)
 
-    activity_domain = models.ForeignKey(ActivityDomain, on_delete=models.SET_NULL, null=True, blank=True)
+    activity_domain = models.ForeignKey(ActivityDomain, on_delete=models.SET_NULL, null=True)
     activity_type = ChainedForeignKey(
         ActivityType,
         chained_field="activity_domain",
@@ -515,7 +510,6 @@ class ActivityPlan(models.Model):
         show_all=False,
         auto_choose=True,
         null=True,
-        blank=True,
         sort=True,
     )
     activity_detail = ChainedForeignKey(
@@ -524,8 +518,8 @@ class ActivityPlan(models.Model):
         chained_model_field="activity_type",
         show_all=False,
         auto_choose=True,
-        null=True,
         blank=True,
+        null=True,
         sort=True,
     )
     indicator = ChainedForeignKey(
@@ -534,8 +528,6 @@ class ActivityPlan(models.Model):
         chained_model_field="activity_types",
         show_all=False,
         auto_choose=True,
-        null=True,
-        blank=True,
         sort=True,
     )
 
@@ -603,46 +595,19 @@ class TargetLocation(models.Model):
         ("rural", "Rural"),
     ]
     project = models.ForeignKey(Project, on_delete=models.CASCADE, null=True, blank=True)
-    activity_plan = models.ForeignKey(ActivityPlan, on_delete=models.CASCADE, null=True, blank=True)
+    activity_plan = models.ForeignKey(ActivityPlan, on_delete=models.CASCADE)
 
     active = models.BooleanField(default=True)
-    state = models.CharField(
-        max_length=15,
-        choices=TARGET_LOCATIONS_STATES,
-        default="draft",
-        null=True,
-        blank=True,
-    )
+    state = models.CharField(max_length=15, choices=TARGET_LOCATIONS_STATES, default="draft", null=True)
 
     country = models.ForeignKey(
-        Location,
-        related_name="target_country",
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
-        limit_choices_to={"level": 0},
+        Location, related_name="target_country", on_delete=models.SET_NULL, null=True, limit_choices_to={"level": 0}
     )
-    province = models.ForeignKey(
-        Location,
-        related_name="target_province",
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
-    )
+    province = models.ForeignKey(Location, related_name="target_province", on_delete=models.SET_NULL, null=True)
     district = models.ForeignKey(
-        Location,
-        related_name="target_district",
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
+        Location, related_name="target_district", on_delete=models.SET_NULL, null=True, blank=True
     )
-    zone = models.ForeignKey(
-        Location,
-        related_name="target_zones",
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
-    )
+    zone = models.ForeignKey(Location, related_name="target_zones", on_delete=models.SET_NULL, null=True, blank=True)
     location_type = models.ForeignKey(LocationType, on_delete=models.SET_NULL, null=True, blank=True)
 
     implementing_partner = models.ForeignKey(Organization, on_delete=models.SET_NULL, null=True, blank=True)
@@ -657,16 +622,8 @@ class TargetLocation(models.Model):
 
     # Facility Monitoring
     facility_monitoring = models.BooleanField(default=False)
-    facility_name = models.CharField(
-        max_length=NAME_MAX_LENGTH,
-        blank=True,
-        null=True,
-    )
-    facility_id = models.CharField(
-        max_length=NAME_MAX_LENGTH,
-        blank=True,
-        null=True,
-    )
+    facility_name = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
+    facility_id = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
     facility_lat = models.FloatField(null=True, blank=True)
     facility_long = models.FloatField(null=True, blank=True)
 
@@ -677,11 +634,7 @@ class TargetLocation(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, null=True)
 
-    nhs_code = models.CharField(
-        max_length=NAME_MAX_LENGTH,
-        blank=True,
-        null=True,
-    )
+    nhs_code = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
 
     def __str__(self):
         return f"Target Location: {self.province}, {self.district}"
@@ -713,8 +666,7 @@ class DisaggregationLocation(models.Model):
     target_location = models.ForeignKey(TargetLocation, on_delete=models.CASCADE)
     disaggregation = models.ForeignKey(Disaggregation, on_delete=models.CASCADE)
 
-    target = models.IntegerField(default=0)
-    active = models.BooleanField(default=True)
+    target = models.IntegerField()
 
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, null=True)

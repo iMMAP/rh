@@ -61,39 +61,42 @@ class ProjectForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         user = kwargs.pop("user", None)
-
         super().__init__(*args, **kwargs)
 
         if self.instance.pk:
+            user = self.instance.user
+
+        self.fields["budget_currency"].queryset = Currency.objects.order_by("name")
+        self.fields["donors"].queryset = Donor.objects.filter(countries=user.profile.country).order_by("name")
+
+        orgs = Organization.objects.filter(countries=user.profile.country).order_by("name")
+        self.fields["implementing_partners"].queryset = orgs
+        self.fields["programme_partners"].queryset = orgs
+
+        # Show only the project's organization members
+        self.fields["donors"].queryset = Donor.objects.filter(countries=user.profile.country).order_by("name")
+        self.fields["clusters"].queryset = user.profile.clusters.all()
+
+        # Show only the user's organization members
+        self.fields["user"].queryset = User.objects.filter(profile__organization=user.profile.organization)
+        self.fields["user"].initial = user
+        self.fields["user"].required = True
+
+        if self.instance.pk:
             # Update mode
-            self.fields["activity_domains"].choices = (
-                self.instance.activity_domains.all().order_by("name").values_list("pk", "name")
-            )
+            self.fields["activity_domains"].queryset = self.instance.activity_domains.all().order_by("name")
+            self.fields["user"].queryset = User.objects.filter(profile__organization=self.instance.organization)
 
             if self.instance.user:
                 # join the project selected clusters with the user's current clusters
-                user_clusters = self.instance.user.profile.clusters.all()
+                user_clusters = user.profile.clusters.all()
                 project_clusters = self.instance.clusters.all()
                 self.fields["clusters"].queryset = Cluster.objects.filter(
                     pk__in=user_clusters.union(project_clusters).values("pk")
                 )
-
-            # Show only the project's organization members
-            self.fields["user"].queryset = User.objects.filter(profile__organization=self.instance.organization)
         else:
             # Create mode
             self.fields["activity_domains"].choices = []
-            self.fields["clusters"].queryset = user.profile.clusters.all()
-            # Show only the user's organization members
-            self.fields["user"].queryset = User.objects.filter(profile__organization=user.profile.organization)
-            self.fields["user"].initial = user
-
-        self.fields["donors"].queryset = Donor.objects.order_by("name")
-        self.fields["budget_currency"].queryset = Currency.objects.order_by("name")
-
-        orgs = Organization.objects.order_by("name").values_list("pk", "code")
-        self.fields["implementing_partners"].choices = orgs
-        self.fields["programme_partners"].choices = orgs
 
 
 class TargetLocationForm(forms.ModelForm):
@@ -166,14 +169,13 @@ class DisaggregationLocationForm(forms.ModelForm):
             "disaggregation",
             "target",
         )
+        # widgets = {"target": forms.IntegerField(min_value=1, required=True, validators=[MinValueValidator(1)])}
 
     def __init__(self, *args, **kwargs):
         activity_plan = kwargs.pop("activity_plan", None)
         super().__init__(*args, **kwargs)
 
         self.fields["disaggregation"].required = True
-        self.fields["disaggregation"].empty_value = "hell"
-        self.fields["target"].required = True
 
         if activity_plan:
             self.fields["disaggregation"].queryset = self.fields["disaggregation"].queryset.filter(
@@ -241,7 +243,7 @@ class ActivityPlanForm(forms.ModelForm):
                 activity_type_id = int(self.data.get("activity_type"))
                 self.fields["indicator"].queryset = Indicator.objects.filter(activity_types=activity_type_id)
             except Exception:
-                raise forms.ValidationError("Do not mess with the form!")
+                self.add_error(None, "Do not mess with the form!")
         elif self.instance.pk:
             # Updating
             self.fields["activity_type"].queryset = self.instance.activity_domain.activitytype_set.all()

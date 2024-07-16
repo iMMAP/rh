@@ -61,7 +61,6 @@ class Command(BaseCommand):
 
             activity_plan, created = ActivityPlan.objects.get_or_create(
                 project_id=project.id,
-                active=True,
                 state="in-progress",
                 activity_domain_id=activity_domain.id,
                 activity_type_id=activity_type.id,
@@ -103,7 +102,6 @@ class Command(BaseCommand):
                 start_date=aware_start_date,
                 end_date=aware_end_date,
                 state="in-progress",
-                active=True,
                 is_hrp_project=True if project_vals.get("project_hrp_project", False) == 1 else False,
                 has_hrp_code=True if project_vals.get("project_hrp_project", False) == 1 else False,
                 hrp_code=project_vals.get("project_hrp_code", "test"),

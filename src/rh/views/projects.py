@@ -98,8 +98,8 @@ def cluster_projects_list(request, cluster: str):
         projects_count=Count("id"),
         draft_projects_count=Count("id", filter=Q(state="draft")),
         active_projects_count=Count("id", filter=Q(state="in-progress")),
-        completed_projects_count=Count("id", filter=Q(state="done")),
-        archived_projects_count=Count("id", filter=Q(state="archive")),
+        completed_projects_count=Count("id", filter=Q(state="completed")),
+        archived_projects_count=Count("id", filter=Q(state="archived")),
     )
 
     context = {
@@ -145,8 +145,8 @@ def users_clusters_projects_list(request):
         projects_count=Count("id"),
         draft_projects_count=Count("id", filter=Q(state="draft")),
         active_projects_count=Count("id", filter=Q(state="in-progress")),
-        completed_projects_count=Count("id", filter=Q(state="done")),
-        archived_projects_count=Count("id", filter=Q(state="archive")),
+        completed_projects_count=Count("id", filter=Q(state="completed")),
+        archived_projects_count=Count("id", filter=Q(state="archived")),
     )
 
     context = {
@@ -193,8 +193,8 @@ def org_projects_list(request):
         projects_count=Count("id"),
         draft_projects_count=Count("id", filter=Q(state="draft")),
         active_projects_count=Count("id", filter=Q(state="in-progress")),
-        completed_projects_count=Count("id", filter=Q(state="done")),
-        archived_projects_count=Count("id", filter=Q(state="archive")),
+        completed_projects_count=Count("id", filter=Q(state="completed")),
+        archived_projects_count=Count("id", filter=Q(state="archived")),
     )
 
     context = {
@@ -333,19 +333,15 @@ def archive_project(request, pk):
 
                 # Iterate through disaggregation locations and archive.
                 for disaggregation_location in disaggregation_locations:
-                    disaggregation_location.active = False
                     disaggregation_location.save()
 
-                location.state = "archive"
-                location.active = False
+                location.state = "archived"
                 location.save()
 
-            plan.state = "archive"
-            plan.active = False
+            plan.state = "archived"
             plan.save()
 
-        project.state = "archive"
-        project.active = False
+        project.state = "archived"
         project.save()
 
     url = reverse(
@@ -377,19 +373,15 @@ def unarchive_project(request, pk):
 
                 # Iterate through disaggregation locations and archive.
                 for disaggregation_location in disaggregation_locations:
-                    disaggregation_location.active = True
                     disaggregation_location.save()
 
                 location.state = "draft"
-                location.active = True
                 location.save()
 
             plan.state = "draft"
-            plan.active = True
             plan.save()
 
         project.state = "draft"
-        project.active = True
         project.save()
 
     url = reverse(
@@ -408,7 +400,7 @@ def delete_project(request, pk):
     if request.method == "GET":
         return render(request, "rh/projects/views/delete_confirmation.html", {"project": project})
     elif request.method == "POST":
-        if project.state != "archive":
+        if project.state != "archived":
             project.delete()
             messages.success(request, "Project deleted successfully")
             return redirect("projects-list")
@@ -426,7 +418,6 @@ def copy_project_activity_plan(project, plan):
         new_plan.project = project
 
         # Set the plan as active and in a draft state to indicate it's a copy.
-        new_plan.active = True
         new_plan.state = "draft"
 
         # Copy indicators from the original plan to the duplicated plan.

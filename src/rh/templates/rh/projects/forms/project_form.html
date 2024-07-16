@@ -5,7 +5,7 @@
 
 {% block title %}
     {% if project %}
-        Update Project
+        Update Project | {{project}}
     {% else %}
         Create Project
     {% endif %}
@@ -46,7 +46,6 @@
  
             <form method="post" class="form-container">
                 {% csrf_token %}
-                {{ form.active }}
                 <div class="inner-holder">
                     <div class="col ">
                         <div class="input-field is-required">
@@ -68,15 +67,6 @@
                                     <label for="{{ form.is_hrp_project.id_for_label }}">
                                         <span class="input"></span>
                                         <span class="text">HRP Project</span>
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="field-col">
-                                <div class="input-check-holder" id="prHasHRPCodeEl">
-                                    {{ form.has_hrp_code }}
-                                    <label for="{{ form.has_hrp_code.id_for_label }}">
-                                        <span class="input"></span>
-                                        <span class="text">HRP Code</span>
                                     </label>
                                 </div>
                             </div>

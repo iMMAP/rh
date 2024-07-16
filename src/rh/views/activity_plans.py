@@ -117,7 +117,6 @@ def copy_activity_plan(request, pk):
     target_locations = TargetLocation.objects.filter(activity_plan=new_activity_plan)
 
     new_activity_plan.id = None
-    new_activity_plan.active = False
     new_activity_plan.state = "draft"
 
     new_activity_plan.save()
@@ -128,7 +127,6 @@ def copy_activity_plan(request, pk):
         )
 
         location.id = None
-        location.active = False
         location.state = "draft"
         location.activity_plan = new_activity_plan
 

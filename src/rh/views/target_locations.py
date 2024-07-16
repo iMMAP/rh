@@ -179,7 +179,6 @@ def copy_target_location(request, project, location):
             copy_target_location_disaggregation_locations(new_location, disaggregation_location)
 
         new_location.project = project
-        new_location.active = True
         new_location.state = "draft"
         new_location.save()
 

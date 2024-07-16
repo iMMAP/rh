@@ -147,7 +147,6 @@ def copy_project_target_location(plan, location):
         new_location.project = plan.project
 
         # Set the location as active and in a draft state to indicate it's a copy.
-        new_location.active = True
         new_location.state = "draft"
 
         # Save the changes made to the duplicated location.

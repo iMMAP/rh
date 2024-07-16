@@ -58,7 +58,6 @@ class ProjectResource(resources.ModelResource):
         fields = (
             "title",
             "state",
-            "active",
             "code",
             "is_hrp_project",
             "has_hrp_code",
@@ -99,7 +98,6 @@ class ProjectResource(resources.ModelResource):
             "user",
             "title",
             "state",
-            "active",
             "code",
             "is_hrp_project",
             "has_hrp_code",
@@ -493,15 +491,8 @@ class ProjectResource(resources.ModelResource):
             return "yes"
         else:
             return "no"
-
     def dehydrate_state(self, obj):
         if obj.state:
             return "active"
         else:
             return "not active"
-
-    def dehydrate_active(self, obj):
-        if obj.active:
-            return "yes"
-        else:
-            return "no"

@@ -19,15 +19,7 @@
                         <li>
                             <a id="return-url"
                                href="{% url 'projects-list' %}?state={{ project.state }}">
-                                {% if project.state == 'in-progress' %}
-                                    Active Projects
-                                {% elif project.state == 'draft' %}
-                                    Draft Projects
-                                {% elif project.state == 'archive' %}
-                                    Archived Projects
-                                {% elif project.state == 'done' %}
-                                    Completed Projects
-                                {% endif %}
+                                {{ project.get_state_display }} Projects
                             </a>
                         </li>
                         <li class="current">{{ project.code }}</li>
@@ -314,7 +306,7 @@
                         <span class="btn-text">Duplicate</span>
                         <span class="icon-copy-outline"></span>
                     </a>
-                    {% if project.active %}
+                    {% if project.state != 'in-progress' %}
                         <a href="#"
                            data-url="{% url 'archive_project' project.pk %}"
                            data-type="archive"

@@ -56,7 +56,6 @@ class ProjectForm(forms.ModelForm):
                     "class": "end-date",
                 }
             ),
-            "active": forms.widgets.HiddenInput(),
         }
 
     def __init__(self, *args, **kwargs):
@@ -106,7 +105,6 @@ class TargetLocationForm(forms.ModelForm):
         exclude = (
             "disaggregations",
             "project",
-            "active",
             "state",
             "activity_plan",
         )
@@ -204,7 +202,7 @@ class ActivityPlanForm(forms.ModelForm):
     class Meta:
         model = ActivityPlan
         fields = "__all__"
-        exclude = ["state", "active", "project"]
+        exclude = ["state", "project"]
 
     def __init__(self, *args, **kwargs):
         project = kwargs.pop("project", None)

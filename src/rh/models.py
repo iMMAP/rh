@@ -336,7 +336,7 @@ class ActivityDomain(models.Model):
 
 class ActivityType(models.Model):
     activity_domain = models.ForeignKey(ActivityDomain, on_delete=models.SET_NULL, blank=True, null=True)
-    active = models.BooleanField(default=True)
+    is_active = models.BooleanField(default=True)
     code = models.SlugField(max_length=DESCRIPTION_MAX_LENGTH, unique=True)
     name = models.CharField(max_length=DESCRIPTION_MAX_LENGTH)
     clusters = models.ManyToManyField(Cluster)
@@ -424,15 +424,15 @@ class Indicator(models.Model):
 # ############## Project Planning ##############
 # ##############################################
 
+STATES = [
+    ("draft", "Draft"),
+    ("in-progress", "In-progress"),
+    ("completed", "Completed"),
+    ("archived", "Archived"),
+]
+
 
 class Project(models.Model):
-    PROJECT_STATES = [
-        ("draft", "Draft"),
-        ("in-progress", "In Progress"),
-        ("done", "Completed"),
-        ("archive", "Archived"),
-    ]
-
     organization = models.ForeignKey(Organization, on_delete=models.SET_NULL, null=True)
 
     clusters = models.ManyToManyField(Cluster)
@@ -442,14 +442,12 @@ class Project(models.Model):
     implementing_partners = models.ManyToManyField(Organization, related_name="implementing_partners", blank=True)
     programme_partners = models.ManyToManyField(Organization, related_name="programme_partners", blank=True)
 
-    state = models.CharField(max_length=15, choices=PROJECT_STATES, default="draft", null=True, blank=True)
-    active = models.BooleanField(default=True)
+    state = models.CharField(max_length=15, choices=STATES, default="draft", null=True, blank=True)
 
     title = models.CharField(max_length=DESCRIPTION_MAX_LENGTH)
     code = models.SlugField(max_length=NAME_MAX_LENGTH, unique=True)
 
     is_hrp_project = models.BooleanField(default=False)
-    has_hrp_code = models.BooleanField(default=False)
     hrp_code = models.CharField(max_length=NAME_MAX_LENGTH, null=True, blank=True, unique=True)
 
     budget_currency = models.ForeignKey(Currency, on_delete=models.SET_NULL, null=True, blank=True)
@@ -490,17 +488,9 @@ class ActivityPlan(models.Model):
         ("disabled", "Persons with Disabilities"),
         ("non-disabled", "Non-Disabled"),
     ]
-    ACTIVITY_PLAN_STATES = [
-        ("draft", "Draft"),
-        ("in-progress", "In Progress"),
-        ("done", "Completed"),
-        ("archive", "Archived"),
-    ]
 
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
-    active = models.BooleanField(default=True)
-    state = models.CharField(max_length=15, choices=ACTIVITY_PLAN_STATES, null=True, default="draft")
-    # title = models.CharField(max_length=800, null=True, blank=True)
+    state = models.CharField(max_length=15, choices=STATES, null=True, default="draft")
 
     activity_domain = models.ForeignKey(ActivityDomain, on_delete=models.SET_NULL, null=True)
     activity_type = ChainedForeignKey(
@@ -580,12 +570,6 @@ class ActivityPlan(models.Model):
 class TargetLocation(models.Model):
     """Target Locations model"""
 
-    TARGET_LOCATIONS_STATES = [
-        ("draft", "Draft"),
-        ("in-progress", "In Progress"),
-        ("done", "Completed"),
-        ("archive", "Archived"),
-    ]
     LOCATIONS_GROUP = [
         ("province", "Province/State"),
         ("district", "District"),
@@ -597,8 +581,7 @@ class TargetLocation(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE, null=True, blank=True)
     activity_plan = models.ForeignKey(ActivityPlan, on_delete=models.CASCADE)
 
-    active = models.BooleanField(default=True)
-    state = models.CharField(max_length=15, choices=TARGET_LOCATIONS_STATES, default="draft", null=True)
+    state = models.CharField(max_length=15, choices=STATES, default="draft", null=True)
 
     country = models.ForeignKey(
         Location, related_name="target_country", on_delete=models.SET_NULL, null=True, limit_choices_to={"level": 0}

@@ -46,8 +46,8 @@
                     </a>
                 </li>
                 {% if completed_projects_count or completed_projects %}
-                    <li class=" {% if request.GET.state == 'done' %}active{% endif %}">
-                        <a href="{{ request.GET.url }}?state=done">Done
+                    <li class=" {% if request.GET.state == 'completed' %}active{% endif %}">
+                        <a href="{{ request.GET.url }}?state=completed">Completed
                             (
                             {% if completed_projects_count %}{{ completed_projects_count }}{% endif %}
                             )
@@ -55,8 +55,8 @@
                     </li>
                 {% endif %}
                 {% if archived_projects_count or archived_projects %}
-                    <li class=" {% if request.GET.state == 'archive' %}active{% endif %}">
-                        <a href="{{ request.GET.url }}?state=archive">Archived
+                    <li class=" {% if request.GET.state == 'archived' %}active{% endif %}">
+                        <a href="{{ request.GET.url }}?state=archived">Archived
                             (
                             {% if archived_projects_count %}{{ archived_projects_count }}{% endif %}
                             )

@@ -11,6 +11,13 @@
     {% endif %}
 {% endblock title %}
 
+{% block breadcrumb_li %}
+<li>
+    <a href="{% url 'activity-plans-update' activity_plan.id %}">{{activity_plan}}</a>
+</li>
+<li class="current">Target Location</li>
+{% endblock breadcrumb_li %}
+
 {% block project_contents %}
     <div class="flex flex-col gap-2 pt-2 pb-2">
         <div>
@@ -205,7 +212,7 @@
                         <fieldset class="table-wrapper-scrollable">
                             <table class="table border border-solid border-gray rounded">
                                 <thead class="content-block bg-gray-f3">
-                                    <tr>
+                                    <tr class="divide-x">
                                         {% for field in disaggregation_formset.form.fields %}
                                             <th class="border-r border-gray column-{{ field.title }}{% if field.required %} required{% endif %}{% if field.widget.is_hidden %} hidden{% endif %}">
                                                 {{ field|capfirst }}

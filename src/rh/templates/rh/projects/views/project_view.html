@@ -120,295 +120,303 @@
                                 according to the selectiong order in CSV file.
                             </span>  
                         </div>
-                        <div class=" text-color-red">
-                            <span id="selectedCount"></span>
+                        <div class="text-color-red">
+                            <span id="selectedCount"></span> / <span id="totalCount"></span>
                             <span>&nbsp;fields selected</span>
                         </div>
-                            <details class="details">
-                                <summary class="summary project-planning">
-                                    Project Planning
-                                    <span class="project-chevron icon-chevron-down"></span>
-                                </summary>
-                                <div class="block-body">
-                                    <small class="label">Available fields: </small>
-                                    <div class="multiple-fields-row two-items">
-                                        {% if project.title %}
-                                        <div class="field-col">
-                                            <div class="input-holder">
-                                                <input type="checkbox" id="title" class="input-check" name="title" value="{{project.id}}" >
-                                                <label for="title">Title</label>
-                                            </div>
+                        <div class="summary project-planning">
+                            Project Planning
+                            <span class="project-chevron icon-chevron-down"></span>
+                        </div>
+                        <div class="details-container">
+                            <div class="block-body">
+                                <small class="label">Available fields: </small>
+                                <div class="vertical-scroll">
+                                    {% if project.title %}
+                                    <div class="field-col">
+                                        <div class="input-holder">
+                                            <input type="checkbox" id="title" class="input-check" name="title" value="{{project.id}}" >
+                                            <label for="title">Title</label>
                                         </div>
-                                        {% endif %}
-                                        {% if project.code %}
-                                        <div class="field-col">
-                                            <div class="input-holder">
-                                                <input type="checkbox" id="code" class="input-check" name="code" value="{{project.id}}">
-                                                <label for="code">Code</label>
-                                            </div>
-                                        </div>
-                                        {% endif %}
-                                        {% if project.budget %}
-                                        <div class="field-col">
-                                            <div class="input-holder">
-                                                <input type="checkbox" id="budget" class="input-check" name="budget" value="{{project.id}}">
-                                                <label for="budget">Budget</label>
-                                            </div>
-                                        </div>
-                                        {% endif %}
-                                        {% if project.budget_received %}
-                                        <div class="field-col">
-                                            <div class="input-holder">
-                                                <input type="checkbox" id="budgetReceived" class="input-check" name="budget_received" value="{{project.id}}">
-                                                <label for="budgetReceived">Received Budget</label>
-                                            </div>
-                                        </div>
-                                        {% endif %}
-                                        {% if project.user %}
-                                        <div class="field-col">
-                                            <div class="input-holder">
-                                                <input type="checkbox" id="user" class="input-user" name="{{project_filter.user.id}}">
-                                                <label for="user">Focal Point</label>
-                                            </div>
-                                        </div>
-                                        {% endif %}
-                                        {% if project.start_date %}
-                                        <div class="field-col">
-                                            <div class="input-holder">
-                                                <input type="checkbox" id="startDate" class="input-check" name="start_date" value="{{project.id}}">
-                                                <label for="startDate">Start Date</label>
-                                            </div>
-                                        </div>
-                                        {% endif %}
-                                        {% if project.state %}
-                                        <div class="field-col">
-                                            <div class="input-holder">
-                                                <input type="checkbox" id="state" 
-                                                class="input-check" name="state" value="{{project.id}}">
-                                                <label for="state">State</label>
-                                            </div>
-                                        </div>
-                                        {% endif %}
-                                        {% if project.budget_gap %}
-                                        <div class="field-col">
-                                            <div class="input-holder">
-                                                <input type="checkbox" id="budgetGap" 
-                                                class="input-check" name="budget_gap" value="{{project.id}}">
-                                                <label for="budgetGap">Budget Gap</label>
-                                            </div>
-                                        </div>
-                                        {% endif %}
-                                        {% if project.is_hrp_project %}
-                                        <div class="field-col">
-                                            <div class="input-holder">
-                                                <input type="checkbox" id="isHRPProject" 
-                                                class="input-check" name="is_hrp_project" value="{{project.id}}">
-                                                <label for="isHRPProject">Is HRP Project</label>
-                                            </div>
-                                        </div>
-                                        {% endif %}
-                                        {% if project.has_hrp_code %}
-                                        <div class="field-col">
-                                            <div class="input-holder">
-                                                <input type="checkbox" id="hrpCode" 
-                                                class="input-check" name="hrp_code" value="{{project.id}}">
-                                                <label for="hrpCode">HRP Code</label>
-                                            </div>
-                                        </div>
-                                        {% endif %}
-                                        {% if project.budget_currency %}
-                                        <div class="field-col">
-                                            <div class="input-holder">
-                                                <input type="checkbox" id="budgetCurrency" 
-                                                class="input-currency" name="{{project_filter.budget_currency.id}}">
-                                                <label for="budgetCurrency">Budget Currency </label>
-                                            </div>
-                                        </div>
-                                        {% endif %}
-                                        {% if project.end_date %}
-                                        <div class="field-col">
-                                            <div class="input-holder">
-                                                <input type="checkbox" id="endDate" 
-                                                class="input-check" name="end_date" value="{{project.id}}">
-                                                <label for="endDate">End Date</label>
-                                            </div>
-                                        </div>
-                                        {% endif %}
-                                        {% if project.description %}
-                                        <div class="field-col">
-                                            <div class="input-holder">
-                                                <input type="checkbox" id="description" class="input-check" name="description" value="{{project.id}}">
-                                                <label for="description">Description</label>
-                                            </div>
-                                        </div>
-                                        {% endif %}
-                                        {% if project.donors %}
-                                        <div class="field-col">
-                                            <div class="input-holder">
-                                                <input type="checkbox" id="description" class="input-check" name="donors" value="{{project.id}}">
-                                                <label for="description">Project Donors</label>
-                                            </div>
-                                        </div>
-                                        {% endif %}
-                                        {% if project.implementing_partners %}
-                                        <div class="field-col">
-                                            <div class="input-holder">
-                                                <input type="checkbox" id="description" class="input-check" name="implementing_partners" value="{{project.id}}">
-                                                <label for="description">Project Implementing Partners</label>
-                                            </div>
-                                        </div>
-                                        {% endif %}
-                                        {% if project.programme_partners %}
-                                        <div class="field-col">
-                                            <div class="input-holder">
-                                                <input type="checkbox" id="description" class="input-check" name="programme_partners" value="{{project.id}}">
-                                                <label for="description">Project Programme Partners</label>
-                                            </div>
-                                        </div>
-                                        {% endif %}
-                                        <div class="field-col">
-                                            <div class="input-holder">
-                                                <p class="input-paragraph-content">Project Activity Planning</p>
-                                            </div>
-                                        </div>
-                                        {% if project.activityplan_set.all %}
-                                        <div class="field-col">
-                                            <div class="input-holder">
-                                                <input type="checkbox" id="activityDomain" class="input-check" name="activity_domain" value="{{project.id}}">
-                                                <label for="activityDomain">Activity Domain</label>
-                                            </div>
-                                        </div>
-                                        <div class="field-col">
-                                            <div class="input-holder">
-                                                <input type="checkbox" id="activityType" class="input-check" name="activity_type" value="{{project.id}}">
-                                                <label for="activityType">Activity Type</label>
-                                            </div>
-                                        </div>
-                                        <div class="field-col">
-                                            <div class="input-holder">
-                                                <input type="checkbox" id="activityDetail" class="input-check" name="activity_detail" value="{{project.id}}">
-                                                <label for="activityDetail">Activity Detail</label>
-                                            </div>
-                                        </div>
-                                        <div class="field-col">
-                                            <div class="input-holder">
-                                                <input type="checkbox" id="indicator" class="input-check" name="indicator" value="{{project.id}}">
-                                                <label for="indicator">Indicators</label>
-                                            </div>
-                                        </div>
-                                        <div class="field-col">
-                                            <div class="input-holder">
-                                                <input type="checkbox" id="beneficiary" class="input-check" name="beneficiary" value="{{project.id}}">
-                                                <label for="beneficiary">Beneficiary</label>
-                                            </div>
-                                        </div>
-                                        <div class="field-col">
-                                            <div class="input-holder">
-                                                <input type="checkbox" id="beneficiaryCategory" class="input-check" name="beneficiary_category" value="{{project.id}}">
-                                                <label for="beneficiaryCategory">Beneficiary Category</label>
-                                            </div>
-                                        </div>
-                                        <div class="field-col">
-                                            <div class="input-holder">
-                                                <input type="checkbox" id="ActivityDescription" class="input-check" name="description" value="{{project.id}}">
-                                                <label for="ActivityDescription">Activity Description</label>
-                                            </div>
-                                        </div>
-                                        {% else %}
-                                        <div class="field-col">
-                                            <div class="input-holder">
-                                                <p class="label">Not Found...!</p>
-                                            </div>
-                                        </div>
-                                        {% endif %}
-                                        <div class="field-col">
-                                            <div class="input-holder">
-                                                <p class="input-paragraph-content">Project Target Location</p>
-                                            </div>
-                                        </div>
-                                        {% if project.targetlocation_set.all %}
-                                        <div class="field-col">
-                                            <div class="input-holder">
-                                                <input type="checkbox" id="admin0code" class="input-check" name="admin0code" value="{{project.id}}">
-                                                <label for="admin0code">Admin0code</label>
-                                            </div>
-                                        </div>
-                                        <div class="field-col">
-                                            <div class="input-holder">
-                                                <input type="checkbox" id="admin0name" class="input-check" name="admin0name" value="{{project.id}}">
-                                                <label for="admin0name">Admin0name</label>
-                                            </div>
-                                        </div>
-                                        <div class="field-col">
-                                            <div class="input-holder">
-                                                <input type="checkbox" id="admin1code" class="input-check" name="admin1code" value="{{project.id}}">
-                                                <label for="admin1code">Admin1code</label>
-                                            </div>
-                                        </div>
-                                        <div class="field-col">
-                                            <div class="input-holder">
-                                                <input type="checkbox" id="admin1name" class="input-check" name="admin1name" value="{{project.id}}">
-                                                <label for="admin1name">Admin1name</label>
-                                            </div>
-                                        </div>
-                                        <div class="field-col">
-                                            <div class="input-holder">
-                                                <input type="checkbox" id="admin2code" class="input-check" name="admin2code" value="{{project.id}}">
-                                                <label for="admin2code">Admin2code</label>
-                                            </div>
-                                        </div>
-                                        <div class="field-col">
-                                            <div class="input-holder">
-                                                <input type="checkbox" id="admin2name" class="input-check" name="admin2name" value="{{project.id}}">
-                                                <label for="admin2name">Admin2name</label>
-                                            </div>
-                                        </div>
-                                        <div class="field-col">
-                                            <div class="input-holder">
-                                                <input type="checkbox" id="facility_site_type" class="input-check" name="facility_site_type" value="{{project.id}}">
-                                                <label for="facility_site_type">Facility Site Type</label>
-                                            </div>
-                                        </div>
-                                        <div class="field-col">
-                                            <div class="input-holder">
-                                                <input type="checkbox" id="facility_monitoring" class="input-check" name="facility_monitoring" value="{{project.id}}">
-                                                <label for="facility_monitoring">Facility Monitoring</label>
-                                            </div>
-                                        </div>
-                                        <div class="field-col">
-                                            <div class="input-holder">
-                                                <input type="checkbox" id="facility_site_id" class="input-check" name="facility_site_id" value="{{project.id}}">
-                                                <label for="facility_site_id">Facility Site Id</label>
-                                            </div>
-                                        </div>
-                                        <div class="field-col">
-                                            <div class="input-holder">
-                                                <input type="checkbox" id="facility_site_name" class="input-check" name="facility_site_name" value="{{project.id}}">
-                                                <label for="facility_site_name">Facility Site Name</label>
-                                            </div>
-                                        </div>
-                                        <div class="field-col">
-                                            <div class="input-holder">
-                                                <input type="checkbox" id="facility_site_lat" class="input-check" name="facility_site_lat" value="{{project.id}}">
-                                                <label for="facility_site_lat">Facility Site Latitude</label>
-                                            </div>
-                                        </div>
-                                        <div class="field-col">
-                                            <div class="input-holder">
-                                                <input type="checkbox" id="facility_site_long" class="input-check" name="facility_site_long" value="{{project.id}}">
-                                                <label for="facility_site_long">Facility Site Longitude</label>
-                                            </div>
-                                        </div>
-                                        {% else %}
-                                        <div class="field-col">
-                                            <div class="input-holder">
-                                                <p class="label">Not Found...!</p>
-                                            </div>
-                                        </div>
-                                        {% endif %}
                                     </div>
+                                    {% endif %}
+                                    {% if project.code %}
+                                    <div class="field-col">
+                                        <div class="input-holder">
+                                            <input type="checkbox" id="code" class="input-check" name="code" value="{{project.id}}">
+                                            <label for="code">Code</label>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                    {% if project.budget %}
+                                    <div class="field-col">
+                                        <div class="input-holder">
+                                            <input type="checkbox" id="budget" class="input-check" name="budget" value="{{project.id}}">
+                                            <label for="budget">Budget</label>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                    {% if project.budget_received %}
+                                    <div class="field-col">
+                                        <div class="input-holder">
+                                            <input type="checkbox" id="budgetReceived" class="input-check" name="budget_received" value="{{project.id}}">
+                                            <label for="budgetReceived">Received Budget</label>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                    {% if project.user %}
+                                    <div class="field-col">
+                                        <div class="input-holder">
+                                            <input type="checkbox" id="user" class="input-check" name="user" value="{{project.id}}">
+                                            <label for="user">Focal Point</label>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                    {% if project.start_date %}
+                                    <div class="field-col">
+                                        <div class="input-holder">
+                                            <input type="checkbox" id="startDate" class="input-check" name="start_date" value="{{project.id}}">
+                                            <label for="startDate">Start Date</label>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                    {% if project.state %}
+                                    <div class="field-col">
+                                        <div class="input-holder">
+                                            <input type="checkbox" id="state" 
+                                            class="input-check" name="state" value="{{project.id}}">
+                                            <label for="state">State</label>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                    {% if project.budget_gap %}
+                                    <div class="field-col">
+                                        <div class="input-holder">
+                                            <input type="checkbox" id="budgetGap" 
+                                            class="input-check" name="budget_gap" value="{{project.id}}">
+                                            <label for="budgetGap">Budget Gap</label>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                    {% if project.is_hrp_project %}
+                                    <div class="field-col">
+                                        <div class="input-holder">
+                                            <input type="checkbox" id="isHRPProject" 
+                                            class="input-check" name="is_hrp_project" value="{{project.id}}">
+                                            <label for="isHRPProject">Is HRP Project</label>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                    {% if project.has_hrp_code %}
+                                    <div class="field-col">
+                                        <div class="input-holder">
+                                            <input type="checkbox" id="hrpCode" 
+                                            class="input-check" name="hrp_code" value="{{project.id}}">
+                                            <label for="hrpCode">HRP Code</label>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                    {% if project.budget_currency %}
+                                    <div class="field-col">
+                                        <div class="input-holder">
+                                            <input type="checkbox" id="budgetCurrency" 
+                                            class="input-check" name="budget_currency" value="{{project.id}}">
+                                            <label for="budgetCurrency">Budget Currency </label>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                    {% if project.end_date %}
+                                    <div class="field-col">
+                                        <div class="input-holder">
+                                            <input type="checkbox" id="endDate" 
+                                            class="input-check" name="end_date" value="{{project.id}}">
+                                            <label for="endDate">End Date</label>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                    {% if project.description %}
+                                    <div class="field-col">
+                                        <div class="input-holder">
+                                            <input type="checkbox" id="description" class="input-check" name="description" value="{{project.id}}">
+                                            <label for="description">Description</label>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                    {% if project.donors %}
+                                    <div class="field-col">
+                                        <div class="input-holder">
+                                            <input type="checkbox" id="donors" class="input-check" name="donors" value="{{project.id}}">
+                                            <label for="donors">Project Donors</label>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                    {% if project.implementing_partners %}
+                                    <div class="field-col">
+                                        <div class="input-holder">
+                                            <input type="checkbox" id="implementing_partners" class="input-check" name="implementing_partners" value="{{project.id}}">
+                                            <label for="implementing_partners">Project Implementing Partners</label>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                    {% if project.programme_partners %}
+                                    <div class="field-col">
+                                        <div class="input-holder">
+                                            <input type="checkbox" id="programme_partners" class="input-check" name="programme_partners" value="{{project.id}}">
+                                            <label for="programme_partners">Project Programme Partners</label>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                    <div class="field-col">
+                                        <div class="input-holder">
+                                            <p class="input-paragraph-content">Project Activity Planning</p>
+                                        </div>
+                                    </div>
+                                    {% if project.activityplan_set.all %}
+                                    <div class="field-col">
+                                        <div class="input-holder">
+                                            <input type="checkbox" id="activityDomain" class="input-check" name="activity_domain" value="{{project.id}}">
+                                            <label for="activityDomain">Activity Domain</label>
+                                        </div>
+                                    </div>
+                                    <div class="field-col">
+                                        <div class="input-holder">
+                                            <input type="checkbox" id="activityType" class="input-check" name="activity_type" value="{{project.id}}">
+                                            <label for="activityType">Activity Type</label>
+                                        </div>
+                                    </div>
+                                    <div class="field-col">
+                                        <div class="input-holder">
+                                            <input type="checkbox" id="activityDetail" class="input-check" name="activity_detail" value="{{project.id}}">
+                                            <label for="activityDetail">Activity Detail</label>
+                                        </div>
+                                    </div>
+                                    <div class="field-col">
+                                        <div class="input-holder">
+                                            <input type="checkbox" id="indicator" class="input-check" name="indicator" value="{{project.id}}">
+                                            <label for="indicator">Indicators</label>
+                                        </div>
+                                    </div>
+                                    <div class="field-col">
+                                        <div class="input-holder">
+                                            <input type="checkbox" id="beneficiary" class="input-check" name="hrp_beneficiary" value="{{project.id}}">
+                                            <label for="beneficiary">Beneficiary</label>
+                                        </div>
+                                    </div>
+                                    <div class="field-col">
+                                        <div class="input-holder">
+                                            <input type="checkbox" id="beneficiaryCategory" class="input-check" name="beneficiary_category" value="{{project.id}}">
+                                            <label for="beneficiaryCategory">Beneficiary Category</label>
+                                        </div>
+                                    </div>
+                                    <div class="field-col">
+                                        <div class="input-holder">
+                                            <input type="checkbox" id="ActivityDescription" class="input-check" name="description" value="{{project.id}}">
+                                            <label for="ActivityDescription">Activity Description</label>
+                                        </div>
+                                    </div>
+                                    {% else %}
+                                    <div class="field-col">
+                                        <div class="input-holder">
+                                            <p class="label">Not Found...!</p>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                    <div class="field-col">
+                                        <div class="input-holder">
+                                            <p class="input-paragraph-content">Project Target Location</p>
+                                        </div>
+                                    </div>
+                                    {% if project.targetlocation_set.all %}
+                                    <div class="field-col">
+                                        <div class="input-holder">
+                                            <input type="checkbox" id="admin0code" class="input-check" name="admin0code" value="{{project.id}}">
+                                            <label for="admin0code">Admin0code</label>
+                                        </div>
+                                    </div>
+                                    <div class="field-col">
+                                        <div class="input-holder">
+                                            <input type="checkbox" id="admin0name" class="input-check" name="admin0name" value="{{project.id}}">
+                                            <label for="admin0name">Admin0name</label>
+                                        </div>
+                                    </div>
+                                    <div class="field-col">
+                                        <div class="input-holder">
+                                            <input type="checkbox" id="admin1code" class="input-check" name="admin1code" value="{{project.id}}">
+                                            <label for="admin1code">Admin1code</label>
+                                        </div>
+                                    </div>
+                                    <div class="field-col">
+                                        <div class="input-holder">
+                                            <input type="checkbox" id="admin1name" class="input-check" name="admin1name" value="{{project.id}}">
+                                            <label for="admin1name">Admin1name</label>
+                                        </div>
+                                    </div>
+                                    <div class="field-col">
+                                        <div class="input-holder">
+                                            <input type="checkbox" id="admin2code" class="input-check" name="admin2code" value="{{project.id}}">
+                                            <label for="admin2code">Admin2code</label>
+                                        </div>
+                                    </div>
+                                    <div class="field-col">
+                                        <div class="input-holder">
+                                            <input type="checkbox" id="admin2name" class="input-check" name="admin2name" value="{{project.id}}">
+                                            <label for="admin2name">Admin2name</label>
+                                        </div>
+                                    </div>
+                                    <div class="field-col">
+                                        <div class="input-holder">
+                                            <input type="checkbox" id="facility_site_type" class="input-check" name="facility_site_type" value="{{project.id}}">
+                                            <label for="facility_site_type">Facility Site Type</label>
+                                        </div>
+                                    </div>
+                                    
+                                    
+                                    <div class="field-col">
+                                        <div class="input-holder">
+                                            <input type="checkbox" id="facility_monitoring" class="input-check" name="facility_monitoring" value="{{project.id}}">
+                                            <label for="facility_monitoring">Facility Monitoring</label>
+                                        </div>
+                                    </div>
+                                    <div class="field-col">
+                                        <div class="input-holder">
+                                            <input type="checkbox" id="facility_site_id" class="input-check" name="facility_site_id" value="{{project.id}}">
+                                            <label for="facility_site_id">Facility Site Id</label>
+                                        </div>
+                                    </div>
+                                    <div class="field-col">
+                                        <div class="input-holder">
+                                            <input type="checkbox" id="facility_site_name" class="input-check" name="facility_site_name" value="{{project.id}}">
+                                            <label for="facility_site_name">Facility Site Name</label>
+                                        </div>
+                                    </div>
+                                    <div class="field-col">
+                                        <div class="input-holder">
+                                            <input type="checkbox" id="facility_site_lat" class="input-check" name="facility_site_lat" value="{{project.id}}">
+                                            <label for="facility_site_lat">Facility Site Latitude</label>
+                                        </div>
+                                    </div>
+                                    <div class="field-col">
+                                        <div class="input-holder">
+                                            <input type="checkbox" id="facility_site_long" class="input-check" name="facility_site_long" value="{{project.id}}">
+                                            <label for="facility_site_long">Facility Site Longitude</label>
+                                        </div>
+                                    </div>
+                                    <div class="field-col">
+                                        <div class="input-holder">
+                                            <input type="checkbox" id="disaggregation" class="input-check" name="disaggregation" value="{{project.id}}">
+                                            <label for="disaggregation">Disaggregation</label>
+                                        </div>
+                                    </div>
+                                    {% else %}
+                                    <div class="field-col">
+                                        <div class="input-holder">
+                                            <p class="label">Not Found...!</p>
+                                        </div>
+                                    </div>
+                                    {% endif %}
                                 </div>
-                            </details>
+                            </div>
+                        </div>
                         <div class="block-footer">
                             <p id="not-checked-message" style="color:#a52824"></p>
                             <div class="btn-wrapper">

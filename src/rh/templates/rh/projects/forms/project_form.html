@@ -5,7 +5,7 @@
 
 {% block title %}
     {% if project %}
-        Update Project
+        Update Project | {{project}}
     {% else %}
         Create Project
     {% endif %}
@@ -15,11 +15,7 @@
     <div class="main-content">
         <div class="project-plan create-plan">
             {% if project %}
-                <div 
-                     style="display: flex;
-                            flex-direction:column;
-                            gap:0.7rem;
-                            padding:10px 0px">
+                <div class="flex flex-col gap-2 pt-2 pb-2">
                     <div >
                         <span >Project</span>
                         <div class="input-holder">
@@ -50,7 +46,6 @@
  
             <form method="post" class="form-container">
                 {% csrf_token %}
-                {{ form.active }}
                 <div class="inner-holder">
                     <div class="col ">
                         <div class="input-field is-required">
@@ -72,15 +67,6 @@
                                     <label for="{{ form.is_hrp_project.id_for_label }}">
                                         <span class="input"></span>
                                         <span class="text">HRP Project</span>
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="field-col">
-                                <div class="input-check-holder" id="prHasHRPCodeEl">
-                                    {{ form.has_hrp_code }}
-                                    <label for="{{ form.has_hrp_code.id_for_label }}">
-                                        <span class="input"></span>
-                                        <span class="text">HRP Code</span>
                                     </label>
                                 </div>
                             </div>
@@ -207,7 +193,7 @@
                                 </div>
                             </div>
                             <div class="field-col">
-                                <div class="select-field is-required">
+                                <div class="select-field">
                                     <label for="{{ form.donors.id_for_label }}">
                                         Project Donor [ Please contact us if your project donor is not
                                         in the list]
@@ -226,7 +212,13 @@
                     <div class="plan-submit-holder">
                         <div></div>
                         <div>
-                            <button type="submit" class="btn btn-red">Save and Next</button>
+                            <button type="submit" class="btn btn-red">
+                                {% if project %}
+                                    Update and Next
+                                {% else %}
+                                    Save and Next
+                                {% endif %}
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -236,7 +228,7 @@
 {% endblock project_contents %}
 
 {% block project_form_scripts %}
-    {% vite 'static/rh/js/project_planning.js' %}
+    {% vite 'rh/static/rh/project_planning.js' %}
 {% endblock project_form_scripts %}
 
 {% block scripts %}

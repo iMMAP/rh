@@ -60,7 +60,7 @@
             <table class="table all-projects-table">
                 <thead class="content-block ">
                     <tr>
-                        <th >
+                        <th>
                             <div class="table-flex-holder">
                                 <div class="input-check-holder">
                                     <input type="checkbox"
@@ -71,40 +71,16 @@
                                     </label>
                                 </div>
                                 <strong class="table-title">Project title</strong>
-                                <div class="table-sort-buttons">
-                                    <button type="button">
-                                        <span class="icon-chevron-up"></span>
-                                    </button>
-                                    <button type="button">
-                                        <span class="icon-chevron-down"></span>
-                                    </button>
-                                </div>
                             </div>
                         </th>
                         <th >
                             <div class="table-flex-holder">
                                 <strong class="table-title">Cluster/Sector</strong>
-                                <div class="table-sort-buttons">
-                                    <button type="button">
-                                        <span class="icon-chevron-up"></span>
-                                    </button>
-                                    <button type="button">
-                                        <span class="icon-chevron-down"></span>
-                                    </button>
-                                </div>
                             </div>
                         </th>
                         <th >
                             <div class="table-flex-holder">
                                 <strong class="table-title">Implementing Partners</strong>
-                                <div class="table-sort-buttons">
-                                    <button type="button">
-                                        <span class="icon-chevron-up"></span>
-                                    </button>
-                                    <button type="button">
-                                        <span class="icon-chevron-down"></span>
-                                    </button>
-                                </div>
                             </div>
                         </th>
                         <th >
@@ -135,7 +111,7 @@
                     {% for project in projects %}
                         <tr>
                             <td >
-                                <a class="table-flex-holder"
+                                <a class="table-flex-holder" style="text-decoration:none;"
                                    href="{% url 'projects-detail' project.id %}">
                                     <div class="input-check-holder">
                                         <input type="checkbox"
@@ -147,7 +123,7 @@
                                             <span class="input"></span>
                                         </label>
                                     </div>
-                                    {{ project.title|truncatechars:100 }}
+                                    ({{project.code}}) - {{ project.title|truncatechars:100 }}
                                 </a>
                             </td>
                             <td >
@@ -218,7 +194,7 @@
                                         {% if perms.rh.archive_unarchive_project %}
                                             <li>
                                                 <button class="button-archive-unarchive">
-                                                    {% if project.active %}
+                                                    {% if project.state != 'in-progress' %}
                                                         <a href="#"
                                                            data-url="{% url 'archive_project' project.pk %}"
                                                            data-type="archive"

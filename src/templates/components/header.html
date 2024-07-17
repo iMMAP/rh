@@ -29,12 +29,11 @@
                         <li class="main-nav-item has-drop-down js-main-nav-openclose">
                             <a class="main-nav-link openclose-opener" href="#">Cluster</a>
                             <div class="inner-drop">
-                                <ul class="inner-nav">
+                                <ul class="inner-nav divide-y">
                                     {% if perms.rh.view_cluster_projects %}
                                         <li class="inner-nav-item">
                                             <a class="inner-nav-link" href="{% url 'user-clusters-projects-list' %}">Your Clusters Projects</a>
                                         </li>
-                                        <hr>
                                     {% endif %}
 
                                     {% for cluster in clusters %}
@@ -57,7 +56,7 @@
                     <li class="main-nav-item has-drop-down js-main-nav-openclose">
                         <a class="main-nav-link openclose-opener" href="#">Organization</a>
                         <div class="inner-drop">
-                            <ul class="inner-nav">
+                            <ul class="inner-nav divide-y">
                                 {% if perms.rh.view_org_projects %}
                                     <li class="inner-nav-item">
                                         <a class="inner-nav-link" href="{% url 'projects-list' %}">Projects</a>
@@ -71,7 +70,6 @@
                                 {% endif %}
 
                                 {% if perms.users.view_org_users %}
-                                    <hr>
                                     <li class="inner-nav-item">
                                         <a class="inner-nav-link" href="{% url 'users-organization' %}">Members</a>
                                     </li>
@@ -99,7 +97,7 @@
                         </a>
 
                         <div class="inner-drop">
-                            <ul class="inner-nav">
+                            <ul class="inner-nav divide-y">
                                 {% if user.is_superuser %}
                                     <li class="inner-nav-item">
                                         <a class="inner-nav-link" target="_blank" href="{% url 'admin:index' %}">Admin Panel</a>

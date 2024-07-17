@@ -2,185 +2,176 @@
 
 {% load static %}
 
-{% block page_title %} 
-    Financial Report 
-{% endblock page_title %}
-
+{% block title %}
+    Financial Report
+{% endblock title %}
 
 {% block content %}
-<div class="container">
-    <div class="breadcrumbs-nav-panel">
-        <div class="holder">
-            <ul class="breadcrumbs">
-                <li>
-                    <a href="{% url 'landing' %}">Home</a>
-                </li>
-                <li>
-                    <a id="return-url" href="{% url 'projects-list' %}?state={{project.state}}">
-                        {% if project.state == 'in-progress' %}
-                            Active Projects
-                        {% elif project.state == 'draft' %}
-                            Draft Projects
-                        {% elif project.state == 'archive' %}
-                            Archived Projects
-                        {% elif project.state == 'done' %}
-                            Completed Projects
-                        {% endif %}
-                    </a>
-                </li>
-                {% if project %}
+    <div class="container">
+        <div class="breadcrumbs-nav-panel">
+            <div class="holder">
+                <ul class="breadcrumbs">
                     <li>
-                        <a href="{% if project %}{% url 'projects-detail' project.pk %}{% else %}{% url 'projects-create' %}{% endif %}">
-                            {{ project.code }}
+                        <a href="{% url 'landing' %}">Home</a>
+                    </li>
+                    <li>
+                        <a id="return-url"
+                           href="{% url 'projects-list' %}?state={{ project.state }}">
+                            {{ project.get_state_display }} Projects
                         </a>
                     </li>
-                    <li class="current">Financial Reports</li>
-                {% endif %}
-            </ul>
-        </div>
-        <div class="page-navigation-panel">
-            <div class="holder">
-                <div class="tabs-nav-holder">
-                    <ul class="tabs-nav">
-                        <li class="{% if project_view %}active{% endif %}">
-                            <a href="{% if project %}{% url 'projects-detail' project.pk %}{% else %}{% url 'projects-create' %}{% endif %}">Project
-                            planning</a>
+                    {% if project %}
+                        <li>
+                            <a href="{% if project %}{% url 'projects-detail' project.pk %}{% else %}{% url 'projects-create' %}{% endif %}">
+                                {{ project.code }}
+                            </a>
                         </li>
-                        <li class="{% if financial_view %}active{% endif %}">
-                            <a href="{% if project %}{% url 'create_project_budget_progress' project.pk %}{% else %}#{% endif %}">Financial Reports</a>
-                        </li>
-                        <li class="{% if reports_view %}active{% endif %}">
-                            <a href="{% if project %}{% url 'project_reports_home' project.pk %}{% else %}#{% endif %}">Monthly Progress</a>
-                        </li>
-                    </ul>
+                        <li class="current">Financial Reports</li>
+                    {% endif %}
+                </ul>
+            </div>
+            <div class="page-navigation-panel">
+                <div class="holder">
+                    <div class="tabs-nav-holder">
+                        <ul class="tabs-nav">
+                            <li class="{% if project_view %}active{% endif %}">
+                                <a href="{% if project %}{% url 'projects-detail' project.pk %}{% else %}{% url 'projects-create' %}{% endif %}">Project
+                                planning</a>
+                            </li>
+                            <li class="{% if financial_view %}active{% endif %}">
+                                <a href="{% if project %}{% url 'create_project_budget_progress' project.pk %}{% else %}#{% endif %}">Financial Reports</a>
+                            </li>
+                            <li class="{% if reports_view %}active{% endif %}">
+                                <a href="{% if project %}{% url 'project_reports_home' project.pk %}{% else %}#{% endif %}">Monthly Progress</a>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-    <div class="main-content">
-        <div class="budget-progress">
-            <div class="main-heading"></div>
-            <div class="bottom-block">
-                <div class="title">
+        <div class="main-content">
+            <div class="budget-progress">
+                <div class="main-heading"></div>
+                <div class="bottom-block">
+                    <div class="title"></div>
+ 
                 </div>
-                
             </div>
-        </div>
-        <div class="target-location">
-            <form method="post" enctype="multipart/form-data">
-                {{ formset.management_form }}
-                {% csrf_token %}
-                {% for form in formset reversed %}
-                    {{ form.id }}
-                    {{ form.active }}
-                    {{ form.save }}
-                    <input type="hidden"
-                            name="country"
-                            id="country_id"
-                            value="{{ user.profile.country.pk }}">
-                    <input type="hidden" name="project" id="project_id" value="{{ project.pk }}">
-                    <div class="project-activity-block project-activity-accordion"
-                            data-form-id="{{ form.prefix }}">
-                        <div class="inner-holder location-inner-holder unset-before cursor-pointer">
-                            <div class="block-top project-activity-accordion-opener">
-                                <span class="title">
-                                    {% if not form.id.value %}
-                                        <span>Add Budget Progress</span>
-                                        <br>
-                                    {% else %}
-                                        {{ form.instance.title }}
-                                    {% endif %}
-                                </span>
-                            </div>
-                            <div class="block-location-activity">
-                                <div id="{{ form.prefix }}-actions">
-                                    <button href="#"
-                                            data-url="{% url 'copy_budget' project=project.pk budget=form.instance.pk %}"
-                                            data-return-url="{% url 'create_project_budget_progress' project=project.pk %}"
-                                            data-type="copy"
-                                            data-project=""
-                                            class="btn btn-gray-outline show_confirm">
-                                        <span class="icon-copy"></span>
-                                        <span class="btn-text">Duplicate</span>
-                                    </button>
-                                    <button href="#"
-                                            data-url="{% url 'delete_budget' form.instance.pk %}"
-                                            data-return-url="{% url 'create_project_budget_progress' project=project.pk %}"
-                                            data-type="delete"
-                                            data-project=""
-                                            class="btn btn-gray-outline show_confirm">
-                                        <span class="icon-trashbin"></span>
-                                        <span class="btn-text">Delete</span>
-                                    </button>
-                                    <button type="submit"
-                                            class="btn btn-red save"
-                                            value="true"
-                                            name="{{ form.prefix }}-save">Save</button>
+            <div class="target-location">
+                <form method="post" enctype="multipart/form-data">
+                    {{ formset.management_form }}
+                    {% csrf_token %}
+                    {% for form in formset reversed %}
+                        {{ form.id }}
+                        {{ form.save }}
+                        <input type="hidden"
+                               name="country"
+                               id="country_id"
+                               value="{{ user.profile.country.pk }}">
+                        <input type="hidden" name="project" id="project_id" value="{{ project.pk }}">
+                        <div class="project-activity-block project-activity-accordion"
+                             data-form-id="{{ form.prefix }}">
+                            <div class="inner-holder location-inner-holder unset-before cursor-pointer">
+                                <div class="block-top project-activity-accordion-opener">
+                                    <span class="title">
+                                        {% if not form.id.value %}
+                                            <span>Add Budget Progress</span>
+                                            <br>
+                                        {% else %}
+                                            {{ form.instance.title }}
+                                        {% endif %}
+                                    </span>
                                 </div>
-                            </div>
-                            <div class="project-activity-accordion-slide" id="{{ form.prefix }}-details">
-                                <div class="row">
-                                    <div class="col">
-                                        <div class="multiple-fields-row three-items">
-                                            <div class="field-col">
-                                                <div class="select-field">
-                                                    <label>Donor</label>
-                                                    {{ form.donor }}
-                                                </div>
-                                            </div>
-                                            <div class="field-col">
-                                                <div class="input-field">
-                                                    <label>Activity Domain</label>
-                                                    {{ form.activity_domain }}
-                                                </div>
-                                            </div>
-                                            <div class="field-col">
-                                                <div class="input-field">
-                                                    <label>Grant ID</label>
-                                                    {{ form.grant }}
-                                                </div>
-                                            </div>
-                                        </div>
+                                <div class="block-location-activity">
+                                    <div id="{{ form.prefix }}-actions">
+                                        <button href="#"
+                                                data-url="{% url 'copy_budget' project=project.pk budget=form.instance.pk %}"
+                                                data-return-url="{% url 'create_project_budget_progress' project=project.pk %}"
+                                                data-type="copy"
+                                                data-project=""
+                                                class="btn btn-gray-outline show_confirm">
+                                            <span class="icon-copy"></span>
+                                            <span class="btn-text">Duplicate</span>
+                                        </button>
+                                        <button href="#"
+                                                data-url="{% url 'delete_budget' form.instance.pk %}"
+                                                data-return-url="{% url 'create_project_budget_progress' project=project.pk %}"
+                                                data-type="delete"
+                                                data-project=""
+                                                class="btn btn-gray-outline show_confirm">
+                                            <span class="icon-trashbin"></span>
+                                            <span class="btn-text">Delete</span>
+                                        </button>
+                                        <button type="submit"
+                                                class="btn btn-red save"
+                                                value="true"
+                                                name="{{ form.prefix }}-save">Save</button>
                                     </div>
-                                    <div class="col">
-                                        <div class="multiple-fields-row three-items">
-                                            <div class="field-col">
-                                                <div class="select-field">
-                                                    <label>Amount</label>
-                                                    {{ form.amount_recieved }}
+                                </div>
+                                <div class="project-activity-accordion-slide"
+                                     id="{{ form.prefix }}-details">
+                                    <div class="row">
+                                        <div class="col">
+                                            <div class="multiple-fields-row three-items">
+                                                <div class="field-col">
+                                                    <div class="select-field">
+                                                        <label>Donor</label>
+                                                        {{ form.donor }}
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div class="field-col">
-                                                <div class="input-field">
-                                                    <label>Currency</label>
-                                                    {{ form.budget_currency }}
+                                                <div class="field-col">
+                                                    <div class="input-field">
+                                                        <label>Activity Domain</label>
+                                                        {{ form.activity_domain }}
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div class="field-col">
-                                                <div class="report-date-picker-field">
-                                                    <div class="date start">
-                                                        <label for="{{ form.received_date.id_for_label }}">Received Date</label>
-                                                        {{ form.received_date }}
+                                                <div class="field-col">
+                                                    <div class="input-field">
+                                                        <label>Grant ID</label>
+                                                        {{ form.grant }}
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="col">
-                                        <div class="input-field is-required">
-                                            <label for="prDecs">Notes</label>
-                                            <div class="input-holder">{{ form.description }}</div>
+                                        <div class="col">
+                                            <div class="multiple-fields-row three-items">
+                                                <div class="field-col">
+                                                    <div class="select-field">
+                                                        <label>Amount</label>
+                                                        {{ form.amount_recieved }}
+                                                    </div>
+                                                </div>
+                                                <div class="field-col">
+                                                    <div class="input-field">
+                                                        <label>Currency</label>
+                                                        {{ form.budget_currency }}
+                                                    </div>
+                                                </div>
+                                                <div class="field-col">
+                                                    <div class="report-date-picker-field">
+                                                        <div class="date start">
+                                                            <label for="{{ form.received_date.id_for_label }}">Received Date</label>
+                                                            {{ form.received_date }}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col">
+                                            <div class="input-field is-required">
+                                                <label for="prDecs">Notes</label>
+                                                <div class="input-holder">{{ form.description }}</div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                {% endfor %}
-            </form>
+                    {% endfor %}
+                </form>
+            </div>
         </div>
     </div>
-</div>
 {% endblock content %}
 
 {% block scripts %}

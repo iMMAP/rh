@@ -5,80 +5,97 @@
         <div class="indeterminate bg-white"></div>
     </div>
     {% comment %} Table Actions and filters {% endcomment %}
-    <div class="page-top-panel bottom-border"> 
+    <div class="page-top-panel bottom-border">
         <div class="actions-panel">
-        <!-- filter applied  -->
+            <!-- filter applied  -->
             <div class="filter-container" id="filter-container">
-                {% for field in target_locations_filter.form%}
-                    {% if forloop.first %}
-                        <span>Applied Filters:</span>
-                    {% endif %}
+                {% for field in target_locations_filter.form %}
+                    {% if forloop.first %}<span>Applied Filters:</span>{% endif %}
                     {% if field.value %}
-                        <span class="filter-item title" id="title">
-                            {{field.label}}
-                        </span>
-                    {% if forloop.last %}
-                        <span class="close-alert-message">&#x2715;</span>
+                        <span class="filter-item title" id="title">{{ field.label }}</span>
+                        {% if forloop.last %}<span class="close-alert-message">x</span>{% endif %}
                     {% endif %}
-                    {% endif %} 
+ 
                 {% endfor %}
             </div>
-        <!-- filter applied end -->
+            <!-- filter applied end -->
         </div>
-        <div class="actions-panel">
-            {% include "components/_filter_drawer.html" with filter=target_locations_filter %}
-        </div>
+        <div class="actions-panel">{% include "components/_filter_drawer.html" with filter=target_locations_filter %}</div>
     </div>
 
     {% comment %} Table {% endcomment %}
     {% if object_list %}
         <div class="table-wrapper-scrollable">
-           
+ 
             <table class="table all-projects-table">
                 <thead class="content-block ">
-                    <tr> 
-                        <th> <strong class="table-title"> Activity Plan</strong> </th>
-                            <th> <strong class="table-title"> Location </strong> </th>
-                            <th> <strong class="table-title"> State </strong> </th>
+                    <tr>
+                        <th>
+                            <strong class="table-title">Activity Plan</strong>
+                        </th>
+                        <th>
+                            <strong class="table-title">Location</strong>
+                        </th>
+                        <th>
+                            <strong class="table-title">State</strong>
+                        </th>
                         <th>Actions</th>
                     </tr>
                 </thead>
-                
+ 
                 <tbody>
                     <!--Include The Projects Details Here -->
                     {% for row in object_list %}
-                    <tr>
-                        <td>
-                            <a href="{% url 'activity-plans-update' row.activity_plan.pk %}" class="" style="text-decoration:none">
-                                <svg data-slot="icon" width="18px" data-darkreader-inline-stroke="" fill="none" stroke-width="1.5" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M13.19 8.688a4.5 4.5 0 0 1 1.242 7.244l-4.5 4.5a4.5 4.5 0 0 1-6.364-6.364l1.757-1.757m13.35-.622 1.757-1.757a4.5 4.5 0 0 0-6.364-6.364l-4.5 4.5a4.5 4.5 0 0 0 1.242 7.244"></path>
-                                </svg>
-                            </a>
-                            {{row.activity_plan}}
-                        </td>
-                        <td> 
-                            {% if row.zone %}{{row.zone}}, {% endif %}{% if row.district %}{{row.district}}, {% endif %}{% if row.province %}{{row.province}}, {% endif %}{% if row.country %}{{row.country}}{% endif %} 
-                        </td>
-                        <td> <span class="{{row.state}}"> {{row.state}} </span> </td>
-                        <td>
-                             <div class="table-flex-holder">
-                                <ul class="table-options-buttons ">
-                                    <li><a href="{% url 'target-locations-update' row.id %}" class="btn btn-gray">Edit</a> </li>
-                                    <li> <a 
-                                            hx-delete="{% url 'target-locations-delete' row.id %}" 
-                                            hx-indicator=".progress" 
-                                            hx-trigger="click" 
-                                            hx-confirm="Do you want to delete `{{row}}` and its dependencies ?" 
-                                            hx-target="closest tr" 
-                                            data-tippy-content="Delete Target Location" 
-                                            class=""
-                                        >
-                                        <span class="project-detail icon-trashbin"></span>
-                                    </a> </li>
-                                </ul>
-                            </div>
-                        </td>
-                    </tr>
+                        <tr>
+                            <td>
+                                <a href="{% url 'activity-plans-update' row.activity_plan.pk %}">
+                                    <svg data-slot="icon"
+                                         width="18px"
+                                         data-darkreader-inline-stroke=""
+                                         fill="none"
+                                         stroke-width="1.5"
+                                         stroke="currentColor"
+                                         viewBox="0 0 24 24"
+                                         xmlns="http://www.w3.org/2000/svg"
+                                         aria-hidden="true">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M13.19 8.688a4.5 4.5 0 0 1 1.242 7.244l-4.5 4.5a4.5 4.5 0 0 1-6.364-6.364l1.757-1.757m13.35-.622 1.757-1.757a4.5 4.5 0 0 0-6.364-6.364l-4.5 4.5a4.5 4.5 0 0 0 1.242 7.244">
+                                        </path>
+                                    </svg>
+                                </a>
+                                {{ row.activity_plan }}
+                            </td>
+                            <td>
+                                {% if row.zone %}{{ row.zone }},{% endif %}
+                                {% if row.district %}{{ row.district }},{% endif %}
+                                {% if row.province %}{{ row.province }},{% endif %}
+                                {% if row.country %}{{ row.country }}{% endif %}
+ 
+                            </td>
+                            <td>
+                                <span class="{{ row.state }}">{{ row.state }}</span>
+                            </td>
+                            <td>
+                                <div class="table-flex-holder">
+                                    <ul class="table-options-buttons ">
+                                        <li>
+                                            <a href="{% url 'target-locations-update' row.id %}"
+                                               class="btn btn-gray">Edit</a>
+                                        </li>
+                                        <li>
+                                            <a hx-delete="{% url 'target-locations-delete' row.id %}"
+                                               hx-indicator=".progress"
+                                               hx-trigger="click"
+                                               hx-confirm="Do you want to delete `{{ row }}` and its dependencies ?"
+                                               hx-target="closest tr"
+                                               data-tippy-content="Delete Target Location"
+                                               >
+                                                <span class="project-detail icon-trashbin"></span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </td>
+                        </tr>
                     {% endfor %}
                 </tbody>
             </table>
@@ -92,5 +109,5 @@
     {% endif %}
 
     {% comment %} Pagination {% endcomment %}
-    {% include 'components/_pagination.html' with object_list=object_list %}
+    {% include "components/_pagination.html" with object_list=object_list %}
 </div>

@@ -3,9 +3,8 @@
 {% load static %}
 
 {% block head %}
-{% comment %} <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" integrity="sha512-nMNlpuaDPrqlEls3IX/Q56H36qvBASwb3ipuo3MxeWbsQB1881ox0cRv7UPTgBlriqoynt35KjEwgGUeUXIPnw==" crossorigin="anonymous" referrerpolicy="no-referrer" /> {% endcomment %}
+    {% comment %} <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" integrity="sha512-nMNlpuaDPrqlEls3IX/Q56H36qvBASwb3ipuo3MxeWbsQB1881ox0cRv7UPTgBlriqoynt35KjEwgGUeUXIPnw==" crossorigin="anonymous" referrerpolicy="no-referrer" /> {% endcomment %}
 {% endblock head %}
-
 
 {% block content %}
     <div class="container">
@@ -17,61 +16,54 @@
                     </li>
                     {% if project %}
                         <li>
-                            <a id="return-url" href="{% url 'projects-list' %}?state={{project.state}}">
-                                {% if project.state == 'in-progress' %}
-                                    Active Projects
-                                {% elif project.state == 'draft' %}
-                                    Draft Projects
-                                {% elif project.state == 'archive' %}
-                                    Archived Projects
-                                {% elif project.state == 'done' %}
-                                    Completed Projects
-                                {% endif %}
+                            <a id="return-url"
+                               href="{% url 'projects-list' %}?state={{ project.state }}">
+                               {{ project.get_state_display }} Projects
                             </a>
                         </li>
-                        <li class="current">
-                            <a href="{% url 'projects-detail' project.id %}">
-                                {{ project.code }}
-                            </a>
+                        <li>
+                            <a href="{% url 'projects-detail' project.id %}">{{ project.code }}</a>
                         </li>
                     {% else %}
-                        <li><a href="{% url 'projects-list' %}">Projects</a></li>
+                        <li>
+                            <a href="{% url 'projects-list' %}">Projects</a>
+                        </li>
                         <li class="current">New Project</li>
                     {% endif %}
+                    {% block breadcrumb_li %}{% endblock breadcrumb_li %}
                 </ul>
             </div>
-        </div> 
+        </div>
 
         <div class="page-navigation-panel">
             <div class="holder">
                 <div class="tabs-nav-holder">
-                    <ul class="tabs-nav">
+                    <ul class="tabs-nav divide-x">
                         <li class="{% if request.resolver_match.url_name == 'projects-update' %}active{% endif %}">
                             <a href="{% if project %}{% url 'projects-update' project.pk %}{% else %}{% url 'projects-create' %}{% endif %}">
                                 Project planning
                             </a>
                         </li>
-                        <li class="{% if request.resolver_match.url_name == 'activity-plans-list' or  request.resolver_match.url_name == 'activity-plans-create' or request.resolver_match.url_name == 'activity-plans-update' %}active{% endif %}">
+                        <li class="{% if request.resolver_match.url_name == 'activity-plans-list' or request.resolver_match.url_name == 'activity-plans-create' or request.resolver_match.url_name == 'activity-plans-update' %}active{% endif %}">
                             <a href="{% if project %}{% url 'activity-plans-list' project.pk %}{% else %}#{% endif %}">Activity Plans</a>
                         </li>
-                        <li class="{% if request.resolver_match.url_name == 'target-locations-list' or  request.resolver_match.url_name == 'target-locations-create' or  request.resolver_match.url_name == 'target-locations-update' %}active{% endif %}">
+                        <li class="{% if request.resolver_match.url_name == 'target-locations-list' or request.resolver_match.url_name == 'target-locations-create' or request.resolver_match.url_name == 'target-locations-update' %}active{% endif %}">
                             <a href="{% if project %}{% url 'target-locations-list' project.pk %}{% else %}#{% endif %}">Target Locations</a>
                         </li>
                     </ul>
                 </div>
             </div>
         </div>
-        
-        <div class="main-content">        
+ 
+        <div class="main-content">
             {% block project_contents %}
             {% endblock project_contents %}
-            
+ 
             {% block project_form_scripts %}
             {% endblock project_form_scripts %}
         </div>
     </div>
 {% endblock content %}
-
 
 {% block scripts %}
     <script type="module" src="{% static 'src/js/utils/exportSW.js' %}"></script>

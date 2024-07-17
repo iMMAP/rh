@@ -1,22 +1,29 @@
 {% extends "_base.html" %}
 {% load static %}
 
-{% block page_title %}
+{% block title %}
     ReportHub - Projects Dashboard
-{% endblock page_title %}
+{% endblock title %}
 
 {% block content %}
 
-<div class="container">
+    <div class="container">
         <section class="info-section">
             <div class="container">
                 <div class="dahsboard-section-heading section-heading-wide">
                     <div class="title">
-                        <div><h2>Sector Dashboard</h2></div>
+                        <div>
+                            <h2>Sector Dashboard</h2>
+                        </div>
                         <div class="actions-panel">
                             <div class="filter-holder">
                                 <a href="#" class="btn btn-red filter-open">Filter
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 23 23" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                         fill="none"
+                                         viewBox="0 0 23 23"
+                                         stroke-width="1.5"
+                                         stroke="currentColor"
+                                         class="w-6 h-6">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 1 1-3 0m3 0a1.5 1.5 0 1 0-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-9.75 0h9.75" />
                                     </svg>
                                 </a>
@@ -31,7 +38,7 @@
                                                 <span class="info-sign"></span>
                                                 Get your reports data sorted.
                                             </span>
-                                            
+ 
                                         </div>
                                         <br>
                                         <div class="block-body">
@@ -44,15 +51,13 @@
                                                 {{ reports_filter.form.project__implementing_partners }}
                                             </div>
                                             <label>Date Range</label>
-                                            <div class="date-picker-field">
-                                                {{ reports_filter.form.report_date }}
-                                            </div>
-                                        
+                                            <div class="date-picker-field">{{ reports_filter.form.report_date }}</div>
+ 
                                         </div>
                                         <div class="block-footer">
                                             <div class="btn-wrapper">
                                                 <a class="btn btn-gray-outline"
-                                                    href="{% url 'projects-list' %}?state={{request.GET.state}}">Reset</a>
+                                                   href="{% url 'projects-list' %}?state={{ request.GET.state }}">Reset</a>
                                                 <button type="submit" class="btn btn-red">Apply</button>
                                             </div>
                                         </div>
@@ -62,17 +67,17 @@
                             <div class="export-formats-holder">
                                 <button class="export-button">
                                     <a href="#"
-                                        data-url="{% url 'export_all_reports' %}"
-                                        class="btn btn-red project-detail"
-                                        title="Export Reports">
+                                       data-url="{% url 'export_all_reports' %}"
+                                       class="btn btn-red project-detail"
+                                       title="Export Reports">
                                         <span class="btn-text">Export Reports</span>
                                         <span class="icon-download"></span>
                                     </a>
-                                  </button>
+                                </button>
                             </div>
                         </div>
                     </div>
-                    
+ 
                 </div>
                 <div class="section-row">
                     <div class="section-col">
@@ -116,7 +121,7 @@
                 </div>
             </div>
         </section>
-        
+ 
         {% comment %}<div class="content-block top-border bottom-border dashboard-page">
             <div class="dashboard-page-top-panel">
                 <div class="tabs-nav-holder">
@@ -131,9 +136,7 @@
                             <th class="update-date-col">
                                 <div class="table-flex-holder">
                                     <div class="input-check-holder">
-                                        <input type="checkbox"
-                                                id="table-head-check-01"
-                                                data-check-pattern="[name^='table-check']" />
+                                        <input type="checkbox" id="table-head-check-01" data-check-pattern="[name^='table-check']" />
                                         <label for="table-head-check-01">
                                             <span class="input"></span>
                                         </label>
@@ -208,23 +211,16 @@
                         {% for report in project_reports %}
                             <tr>
                                 <td class="update-date-col" data-title="Month">
-                                    <a class="table-flex-holder" 
-                                    href="{% url 'view_monthly_report' project=report.project.id report=report.id %}" target="_blank">
+                                    <a class="table-flex-holder" href="{% url 'view_monthly_report' project=report.project.id report=report.id %}" target="_blank">
                                         <div class="input-check-holder">
-                                            <input type="checkbox" id="table-check-{{report.pk}}" 
-                                            class="project-checkbox" value="{{report.pk}}" name="table-check{{report.pk}}" />
+                                            <input type="checkbox" id="table-check-{{report.pk}}" class="project-checkbox" value="{{report.pk}}" name="table-check{{report.pk}}" />
                                             <label for="table-check-{{report.pk}}">
                                                 <span class="input"></span>
                                             </label>
                                         </div>
                                         {{ report}}
                                         <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="20" height="20" viewBox="0,0,256,256">
-                                            <g fill="#6d6e71" fill-rule="nonzero" stroke="none" stroke-width="1" 
-                                            stroke-linecap="butt" stroke-linejoin="miter" 
-                                            stroke-miterlimit="10" stroke-dasharray="" 
-                                            stroke-dashoffset="0" font-family="none" 
-                                            font-weight="none" font-size="none" 
-                                            text-anchor="none" style="mix-blend-mode: normal">
+                                            <g fill="#6d6e71" fill-rule="nonzero" stroke="none" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" font-family="none" font-weight="none" font-size="none" text-anchor="none" style="mix-blend-mode: normal">
                                                     <g transform="scale(8,8)">
                                                         <path d="M18,5v2h5.5625l-12.28125,12.28125l1.4375,1.4375l12.28125,-12.28125v5.5625h2v-9zM5,9v18h18v-13l-2,2v9h-14v-14h9l2,-2z">
                                                     </path>
@@ -238,15 +234,9 @@
                                     <a class="table-flex-holder" href="{% url 'projects-detail' report.project.id %}" target="_blank">
                                         {{ report.project.title }}
                                         <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="20" height="20" viewBox="0,0,256,256">
-                                            <g fill="#6d6e71" fill-rule="nonzero" 
-                                            stroke="none" stroke-width="1" 
-                                            stroke-linecap="butt" stroke-linejoin="miter" 
-                                            stroke-miterlimit="10" stroke-dasharray="" 
-                                            stroke-dashoffset="0" font-family="none" font-weight="none" 
-                                            font-size="none" text-anchor="none" style="mix-blend-mode: normal">
+                                            <g fill="#6d6e71" fill-rule="nonzero" stroke="none" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" font-family="none" font-weight="none" font-size="none" text-anchor="none" style="mix-blend-mode: normal">
                                                 <g transform="scale(8,8)">
-                                                    <path 
-                                                        d="M18,5v2h5.5625l-12.28125,12.28125l1.4375,1.4375l12.28125,-12.28125v5.5625h2v-9zM5,9v18h18v-13l-2,2v9h-14v-14h9l2,-2z">
+                                                    <path d="M18,5v2h5.5625l-12.28125,12.28125l1.4375,1.4375l12.28125,-12.28125v5.5625h2v-9zM5,9v18h18v-13l-2,2v9h-14v-14h9l2,-2z">
                                                     </path>
                                                 </g>
                                             </g>
@@ -329,19 +319,19 @@
 {% endblock content %}
 
 {% block scripts %}
-<script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
-<script>
-    document.querySelectorAll('.custom-select').forEach((select) => {
-        const choice = new Choices(select, {
-            searchEnabled: true,
-            itemSelectText: '',
-            removeItemButton: true,
-            classNames: {
-                listDropdown: 'choices__list--dropdown',
-            },
-            shouldSort: false,
-        });
-    })
-</script>
-<script type="module" src="{% static 'src/js/utils/exportSW.js' %}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+    <script>
+        document.querySelectorAll('.custom-select').forEach((select) => {
+            const choice = new Choices(select, {
+                searchEnabled: true,
+                itemSelectText: '',
+                removeItemButton: true,
+                classNames: {
+                    listDropdown: 'choices__list--dropdown',
+                },
+                shouldSort: false,
+            });
+        })
+    </script>
+    <script type="module" src="{% static 'src/js/utils/exportSW.js' %}"></script>
 {% endblock scripts %}

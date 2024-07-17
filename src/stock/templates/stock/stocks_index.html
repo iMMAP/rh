@@ -2,242 +2,248 @@
 
 {% load static %}
 
-{% block page_title %} 
+{% block title %}
     Stocks
-{% endblock page_title %}
+{% endblock title %}
 
 
 {% block content %}
-<div class="base-section">
-    <div class="container">
-        <div class="page-navigation-panel">
-            <div class="holder">
-                <div class="tabs-nav-holder">
-                    <ul class="tabs-nav">
-                        <li class="active">
-                            <a href="{% url 'stocks' %}">warehouse locations</a>
-                        </li>
+    <div class="base-section">
+        <div class="container">
+            <div class="page-navigation-panel">
+                <div class="holder">
+                    <div class="tabs-nav-holder">
+                        <ul class="tabs-nav">
+                            <li class="active">
+                                <a href="{% url 'stocks' %}">warehouse locations</a>
+                            </li>
 
-                        <li>
-                            <a href="{% url 'all_stock_report' 'todo' %}">Stock report</a>
-                        </li>
-                    </ul>
+                            <li>
+                                <a href="{% url 'all_stock_report' 'todo' %}">Stock report</a>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <div class="projects-options-panel projects-options-panel-small with-border">
-            <div class="holder">
-                <div class="actions-panel">
-                    <div class="filter-holder">
-                        <a href="#" class="btn btn-red filter-open">Filter</a>
-                        <form action="#" class="filter-form">
-                            <div class="filter-options">
-                                <div class="block-top">
-                                    <span class="title">Filter</span>
-                                    <a class="filter-close" href="#"></a>
-                                </div>
-                                <div class="block-body">
-                                    <div class="select-field">
-                                        <label>Region</label>
-                                        <select name="region" id="region" class="custom-select">
-                                            <option value="placeholder" disabled selected>Region</option>
-                                            <option value="option1">Option 1</option>
-                                            <option value="option2">Option 2</option>
-                                        </select>
+            <div class="projects-options-panel projects-options-panel-small with-border">
+                <div class="holder">
+                    <div class="actions-panel">
+                        <div class="filter-holder">
+                            <a href="#" class="btn btn-red filter-open">Filter</a>
+                            <form action="#" class="filter-form">
+                                <div class="filter-options">
+                                    <div class="block-top">
+                                        <span class="title">Filter</span>
+                                        <a class="filter-close" href="#"></a>
                                     </div>
-                                    <div class="select-field">
-                                        <label>Country</label>
-                                        <select name="country" id="country" class="custom-select">
-                                            <option value="placeholder" disabled selected>Country</option>
-                                            <option value="option1">Option 1</option>
-                                            <option value="option2">Option 2</option>
-                                        </select>
-                                    </div>
-                                    <div class="select-field">
-                                        <label>Province/ State</label>
-                                        <select name="state" id="state" class="custom-select">
-                                            <option value="placeholder" disabled selected>Province/ State
-                                            </option>
-                                            <option value="option1">Option 1</option>
-                                            <option value="option2">Option 2</option>
-                                        </select>
-                                    </div>
-                                    <div class="select-field">
-                                        <label>District</label>
-                                        <select name="district" id="district" class="custom-select">
-                                            <option value="placeholder" disabled selected>District</option>
-                                            <option value="option1">Option 1</option>
-                                            <option value="option2">Option 2</option>
-                                        </select>
-                                    </div>
-                                    <div class="date-picker-field">
-                                        <div class="date start">
-                                            <input type="text" id="dateStart" name="Start date" placeholder="Start date"
-                                                onfocus="(this.type='date')" onblur="(this.type='text')" />
+                                    <div class="block-body">
+                                        <div class="select-field">
+                                            <label>Region</label>
+                                            <select name="region" id="region" class="custom-select">
+                                                <option value="placeholder" disabled selected>Region</option>
+                                                <option value="option1">Option 1</option>
+                                                <option value="option2">Option 2</option>
+                                            </select>
                                         </div>
-                                        <div class="date end">
-                                            <input type="text" id="dateEnd" name="End date" placeholder="End date"
-                                                onfocus="(this.type='date')" onblur="(this.type='text')" />
+                                        <div class="select-field">
+                                            <label>Country</label>
+                                            <select name="country" id="country" class="custom-select">
+                                                <option value="placeholder" disabled selected>Country</option>
+                                                <option value="option1">Option 1</option>
+                                                <option value="option2">Option 2</option>
+                                            </select>
+                                        </div>
+                                        <div class="select-field">
+                                            <label>Province/ State</label>
+                                            <select name="state" id="state" class="custom-select">
+                                                <option value="placeholder" disabled selected>Province/ State</option>
+                                                <option value="option1">Option 1</option>
+                                                <option value="option2">Option 2</option>
+                                            </select>
+                                        </div>
+                                        <div class="select-field">
+                                            <label>District</label>
+                                            <select name="district" id="district" class="custom-select">
+                                                <option value="placeholder" disabled selected>District</option>
+                                                <option value="option1">Option 1</option>
+                                                <option value="option2">Option 2</option>
+                                            </select>
+                                        </div>
+                                        <div class="date-picker-field">
+                                            <div class="date start">
+                                                <input type="text"
+                                                       id="dateStart"
+                                                       name="Start date"
+                                                       placeholder="Start date"
+                                                       onfocus="(this.type='date')"
+                                                       onblur="(this.type='text')" />
+                                            </div>
+                                            <div class="date end">
+                                                <input type="text"
+                                                       id="dateEnd"
+                                                       name="End date"
+                                                       placeholder="End date"
+                                                       onfocus="(this.type='date')"
+                                                       onblur="(this.type='text')" />
+                                            </div>
+                                        </div>
+                                        <div class="select-field">
+                                            <label>Cluster/Sector</label>
+                                            <select name="cluster" id="cluster" class="custom-select">
+                                                <option value="placeholder" disabled selected>Cluster/Sector</option>
+                                                <option value="option1">Option 1</option>
+                                                <option value="option2">Option 2</option>
+                                            </select>
+                                        </div>
+                                        <div class="select-field">
+                                            <label>Organization</label>
+                                            <select name="organisation" id="organisation" class="custom-select">
+                                                <option value="placeholder" disabled selected>Organization</option>
+                                                <option value="option1">Option 1</option>
+                                                <option value="option2">Option 2</option>
+                                            </select>
+                                        </div>
+                                        <div class="select-field">
+                                            <label>Activity Domain</label>
+                                            <select name="domain" id="domain" class="custom-select">
+                                                <option value="placeholder" disabled selected>Activity Domain</option>
+                                                <option value="option1">Option 1</option>
+                                                <option value="option2">Option 2</option>
+                                            </select>
                                         </div>
                                     </div>
-                                    <div class="select-field">
-                                        <label>Cluster/Sector</label>
-                                        <select name="cluster" id="cluster" class="custom-select">
-                                            <option value="placeholder" disabled selected>Cluster/Sector
-                                            </option>
-                                            <option value="option1">Option 1</option>
-                                            <option value="option2">Option 2</option>
-                                        </select>
-                                    </div>
-                                    <div class="select-field">
-                                        <label>Organization</label>
-                                        <select name="organisation" id="organisation" class="custom-select">
-                                            <option value="placeholder" disabled selected>Organization
-                                            </option>
-                                            <option value="option1">Option 1</option>
-                                            <option value="option2">Option 2</option>
-                                        </select>
-                                    </div>
-                                    <div class="select-field">
-                                        <label>Activity Domain</label>
-                                        <select name="domain" id="domain" class="custom-select">
-                                            <option value="placeholder" disabled selected>Activity Domain
-                                            </option>
-                                            <option value="option1">Option 1</option>
-                                            <option value="option2">Option 2</option>
-                                        </select>
+                                    <div class="block-footer">
+                                        <div class="btn-wrapper">
+                                            <button type="button" class="btn btn-gray-outline">Reset</button>
+                                            <button type="submit" class="btn btn-red">Apply</button>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="block-footer">
-                                    <div class="btn-wrapper">
-                                        <button type="button" class="btn btn-gray-outline">Reset</button>
-                                        <button type="submit" class="btn btn-red">Apply</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-
-                    <div class="export-formats-holder">
-                        <a href="#" class="btn btn-gray export-open">
-                            <span class="btn-text">Export</span>
-                            <span class="icon-download"></span>
-                        </a>
-                        <div class="export-formats">
-                            <span class="title">File format</span>
-                            <ul class="formats-list">
-
-                                <li>
-                                    <div class="input-check-holder">
-                                        <input type="radio" id="radio2" name="exportFormat" />
-                                        <label for="radio2">
-                                            <span class="input"></span>
-                                            <span class="text">CVS</span>
-                                        </label>
-                                    </div>
-                                </li>
-
-                                <li>
-                                    <div class="input-check-holder">
-                                        <input type="radio" id="radio4" name="exportFormat" />
-                                        <label for="radio4">
-                                            <span class="input"></span>
-                                            <span class="text">PDF</span>
-                                        </label>
-                                    </div>
-                                </li>
-                            </ul>
+                            </form>
                         </div>
-                    </div>
-                </div>
-            </div>
-        </div>
 
-        <form method="post" enctype="multipart/form-data">
-            {{ warehouse_location_formset.management_form }}
-            {% csrf_token %}
-            {% for form in warehouse_location_formset reversed %}
-            <div class="stock-block stock-accordion">
-                <div class="inner-holder">
-                    <a href="#" class="block-top stock-accordion-opener">
-                        <span class="title">
-                            {% if form.instance.id %}
-                            <i class="fa fa-map-marker" aria-hidden="true"></i> &nbsp;
-                            {{ form.instance.province }}, {{ form.instance.district }}, {{ form.instance.name }}
-                            {% else %}
-                            <i class="fa fa-plus-square" ></i>&nbsp; New warehouse
-                            {% endif %}
-                        </span>
-                    </a>
-                    <div class="stock-accordion-slide">
-                        <div class="row">
-                            <div class="col">
-                                <div class="multiple-fields-row three-items">
-                                    {{ form.id }}
-                                    <div class="field-col">
-                                        <div class="select-field">
-                                            {{ form.province.errors }}
-                                            <label for="{{ form.province.id_for_label }}">Province:</label>
-                                            {{ form.province }}
-                                        </div>
-                                    </div>
-                                    <div class="field-col">
-                                        <div class="select-field">
-                                            {{ form.district.errors }}
-                                            <label for="{{ form.district.id_for_label }}">District:</label>
-                                            {{ form.district }}
-                                        </div>
-                                    </div>
-                                    <div class="field-col">
-                                        <div class="input-field">
-                                            {{ form.name.errors }}
-                                            <label for="{{ form.name.id_for_label }}">Warehouse Name:</label>
-                                            {{ form.name }}
-                                        </div>
-                                    </div>
+                        <div class="export-formats-holder">
+                            <a href="#" class="btn btn-gray export-open">
+                                <span class="btn-text">Export</span>
+                                <span class="icon-download"></span>
+                            </a>
+                            <div class="export-formats">
+                                <span class="title">File format</span>
+                                <ul class="formats-list">
 
-                                </div>
-                                {% if form.instance.id %}
-                                    <div class="projects-options-panel projects-options-panel-small">
-                                        <input type="submit" class="btn btn-red" value="Edit Warehouse Location" />
-                                    </div>
-                                {% else %}
-                                    <div class="projects-options-panel projects-options-panel-small">
-                                        <input type="submit" class="btn btn-red" value="Save Warehouse Location" />
-                                    </div>
-                                {% endif %}
-                                {% if form.instance.id %}
-                                    <input type="submit" class="btn btn-gray" name="delete_{{ form.instance.id }}_warehouse"
-                                        value="Delete" />
-                                {% endif %}
+                                    <li>
+                                        <div class="input-check-holder">
+                                            <input type="radio" id="radio2" name="exportFormat" />
+                                            <label for="radio2">
+                                                <span class="input"></span>
+                                                <span class="text">CVS</span>
+                                            </label>
+                                        </div>
+                                    </li>
 
+                                    <li>
+                                        <div class="input-check-holder">
+                                            <input type="radio" id="radio4" name="exportFormat" />
+                                            <label for="radio4">
+                                                <span class="input"></span>
+                                                <span class="text">PDF</span>
+                                            </label>
+                                        </div>
+                                    </li>
+                                </ul>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            {% endfor %}
 
-        </form>
+            <form method="post" enctype="multipart/form-data">
+                {{ warehouse_location_formset.management_form }}
+                {% csrf_token %}
+                {% for form in warehouse_location_formset reversed %}
+                    <div class="stock-block stock-accordion">
+                        <div class="inner-holder">
+                            <a href="#" class="block-top stock-accordion-opener">
+                                <span class="title">
+                                    {% if form.instance.id %}
+                                        <i class="fa fa-map-marker" aria-hidden="true"></i> &nbsp;
+                                        {{ form.instance.province }}, {{ form.instance.district }}, {{ form.instance.name }}
+                                    {% else %}
+                                        <i class="fa fa-plus-square"></i>&nbsp; New warehouse
+                                    {% endif %}
+                                </span>
+                            </a>
+                            <div class="stock-accordion-slide">
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="multiple-fields-row three-items">
+                                            {{ form.id }}
+                                            <div class="field-col">
+                                                <div class="select-field">
+                                                    {{ form.province.errors }}
+                                                    <label for="{{ form.province.id_for_label }}">Province:</label>
+                                                    {{ form.province }}
+                                                </div>
+                                            </div>
+                                            <div class="field-col">
+                                                <div class="select-field">
+                                                    {{ form.district.errors }}
+                                                    <label for="{{ form.district.id_for_label }}">District:</label>
+                                                    {{ form.district }}
+                                                </div>
+                                            </div>
+                                            <div class="field-col">
+                                                <div class="input-field">
+                                                    {{ form.name.errors }}
+                                                    <label for="{{ form.name.id_for_label }}">Warehouse Name:</label>
+                                                    {{ form.name }}
+                                                </div>
+                                            </div>
 
+                                        </div>
+                                        {% if form.instance.id %}
+                                            <div class="projects-options-panel projects-options-panel-small">
+                                                <input type="submit" class="btn btn-red" value="Edit Warehouse Location" />
+                                            </div>
+                                        {% else %}
+                                            <div class="projects-options-panel projects-options-panel-small">
+                                                <input type="submit" class="btn btn-red" value="Save Warehouse Location" />
+                                            </div>
+                                        {% endif %}
+                                        {% if form.instance.id %}
+                                            <input type="submit"
+                                                   class="btn btn-gray"
+                                                   name="delete_{{ form.instance.id }}_warehouse"
+                                                   value="Delete" />
+                                        {% endif %}
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+
+            </form>
+
+        </div>
     </div>
-</div>
 {% endblock content %}
 
 {% comment %} This can be put in a base template {% endcomment %}
 {% block scripts %}
-<script src="{% static 'src/js/plugins/accordionPlugin.js' %}"></script>
-<script>
-  jQuery('.stock-accordion').slideAccordion({
-    opener: '.stock-accordion-opener',
-    slider: '.stock-accordion-slide',
-    animSpeed: 300,
-    activeClass: 'stock-accordion-active',
-    scrollToActiveItem: {
-      enable: true,
-      extraOffset: 0,
-    },
-   });
-</script>
+    <script src="{% static 'src/js/plugins/accordionPlugin.js' %}"></script>
+    <script>
+        jQuery('.stock-accordion').slideAccordion({
+            opener: '.stock-accordion-opener',
+            slider: '.stock-accordion-slide',
+            animSpeed: 300,
+            activeClass: 'stock-accordion-active',
+            scrollToActiveItem: {
+                enable: true,
+                extraOffset: 0,
+            },
+        });
+    </script>
 {% endblock scripts %}

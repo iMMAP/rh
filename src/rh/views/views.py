@@ -9,6 +9,7 @@ from project_reports.models import ProjectMonthlyReport as Report
 from django.shortcuts import get_object_or_404, render
 
 from ..models import ActivityDomain, Cluster, DisaggregationLocation, Location, TargetLocation, ActivityType, Indicator
+import json
 
 RECORDS_PER_PAGE = 10
 
@@ -108,7 +109,10 @@ def load_activity_domains(request):
     """
     Used in project form
     """
-    cluster_ids = [int(i) for i in request.POST.getlist("clusters[]") if i]
+    data = json.loads(request.body)
+    cluster_ids = data.get("clusters", [])
+    # listed_domains = data.get("listed_domains", [])
+
     user_location = request.user.profile.country
     # Define a Prefetch object to optimize the related activitydomain_set
     prefetch_activitydomain = Prefetch(
@@ -143,7 +147,6 @@ def copy_project_target_location(plan, location):
         new_location.project = plan.project
 
         # Set the location as active and in a draft state to indicate it's a copy.
-        new_location.active = True
         new_location.state = "draft"
 
         # Save the changes made to the duplicated location.

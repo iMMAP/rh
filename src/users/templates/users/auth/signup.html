@@ -3,28 +3,28 @@
 {% load static %}
 {% load vite %}
 
-{% block page_title %} 
+{% block title %}
     Register An Account
-{% endblock page_title %}
+{% endblock title %}
 
 
 {% block content %}
     <div class="login-section sign-up base-section">
         <div class="decor-holder">
-            <img src="{% static 'src/images/login-decor.webp' %}" alt="image description" fetchpriority="high" />
+            <img src="{% static 'src/images/login-decor.webp' %}"
+                 alt="image description"
+                 fetchpriority="high" />
         </div>
         <div class="container">
             <div class="section-heading">
                 <h1 class="title">Create Account</h1>
                 <div class="description">
                     <div class="text">
-                        <p>
-                            New to ReportHub? Quickly signup for an account now.
-                        </p>
+                        <p>New to ReportHub? Quickly signup for an account now.</p>
                     </div>
                 </div>
             </div>
-    
+ 
             <form method="post" class="login-form">
                 {% csrf_token %}
                 <div class="form-holder">
@@ -32,14 +32,14 @@
                         <div class="input-field is-required">
                             {{ field.label_tag }}
                             <div class="input-holder">{{ field }}</div>
-                            <div class="sign-up-field-error">{{field.errors}}</div>
+                            <div class="sign-up-field-error">{{ field.errors }}</div>
                         </div>
                     {% endfor %}
                     {% for field in p_form %}
                         <div class="input-field is-required">
                             {{ field.label_tag }}
                             {{ field }}
-                            <span class="sign-up-field-error">{{field.errors}}</span>
+                            <span class="sign-up-field-error">{{ field.errors }}</span>
                         </div>
                     {% endfor %}
                     <div class="input-check-holder">
@@ -65,19 +65,19 @@
 {% endblock content %}
 
 {% block scripts %}
-{% comment %} {% vite 'users/static/users/users.js' %} {% endcomment %}
-<script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
-<script>
-    document.querySelectorAll('.custom-select').forEach((select) => {
-        const choice = new Choices(select, {
-            searchEnabled: true,
-            itemSelectText: '',
-            removeItemButton: true,
-            classNames: {
-                listDropdown: 'choices__list--dropdown',
-            },
-            shouldSort: false,
-        });
-    })
-</script>
+    {% comment %} {% vite 'users/static/users/users.js' %} {% endcomment %}
+    <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+    <script>
+        document.querySelectorAll('.custom-select').forEach((select) => {
+            const choice = new Choices(select, {
+                searchEnabled: true,
+                itemSelectText: '',
+                removeItemButton: true,
+                classNames: {
+                    listDropdown: 'choices__list--dropdown',
+                },
+                shouldSort: false,
+            });
+        })
+    </script>
 {% endblock scripts %}

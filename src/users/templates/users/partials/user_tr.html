@@ -1,57 +1,50 @@
 {% load static %}
 {% load humanize %}
 
-<tr id="user-{{user.id}}">
-    <td >
-        {{ user.first_name }} {{user.last_name}} <em>({{ user.username }})</em>
+<tr id="user-{{ user.id }}">
+    <td>
+        {{ user.first_name }} {{ user.last_name }} <em>({{ user.username }})</em>
     </td>
-    <td >
-        {{ user.email }}
-    </td>
-    <td >
+    <td>{{ user.email }}</td>
+    <td>
         {% for cluster in user.profile.clusters.all %}
-        {{ cluster.title }}
-        {% if not forloop.last %},{% endif %}
+            {{ cluster.title }}
+            {% if not forloop.last %},{% endif %}
         {% endfor %}
     </td>
-    <td >
-        {{ user.date_joined|naturaltime}}
-    </td>
-    <td >
-        {{user.last_login|naturaltime}}
-    </td>
-    <td >
+    <td>{{ user.date_joined|naturaltime }}</td>
+    <td>{{ user.last_login|naturaltime }}</td>
+    <td>
         {% if user.is_active %}
-        <span class="in-progress">
-            Active
-        </span>
+            <span class="in-progress">Active</span>
         {% else %}
-        <span class="archive">
-            Deactive
-        </span>
+            <span class="archive">Deactive</span>
         {% endif %}
     </td>
     <td>
         <div class="table-flex-holder">
             <ul class="table-options-buttons">
                 {% if perms.rh.activate_deactivate_user %}
-                <li>
-                    <button 
-                        id="dectivate-button-{{user.id}}" class="btn btn-gray"
-                        hx-delete="{% url 'toggle-status' user.id %}" 
-                        hx-swap="outerHTML" 
-                        hx-target="#user-{{user.id}}" 
-                        hx-disable-element="#dectivate-button-{{user.id}}"
-                        hx-ext="disable-element"
-                    >
-                        {% if user.is_active %}
-                            <span class="project-detail icon-trashbin"></span> Deactivate
-                        {% else %}
-                            Activate
-                        {% endif %}
-                        <img class="htmx-indicator" id="spinner" style="width: 1.2rem;" src="{% static 'src/images/spinner.gif' %}" />
-                    </button>
-                </li>
+                    <li>
+                        <button id="dectivate-button-{{ user.id }}"
+                                class="btn btn-gray"
+                                hx-delete="{% url 'toggle-status' user.id %}"
+                                hx-swap="outerHTML"
+                                hx-target="#user-{{ user.id }}"
+                                hx-disable-element="#dectivate-button-{{ user.id }}"
+                                hx-ext="disable-element">
+                            {% if user.is_active %}
+                                <span class="project-detail icon-trashbin"></span> Deactivate
+                            {% else %}
+                                Activate
+                            {% endif %}
+                            <img class="htmx-indicator"
+                                 id="spinner"
+                                 alt="spinner"
+                                 style="width: 1.2rem"
+                                 src="{% static 'src/images/spinner.gif' %}" />
+                        </button>
+                    </li>
                 {% endif %}
             </ul>
         </div>

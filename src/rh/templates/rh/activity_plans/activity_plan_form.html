@@ -9,6 +9,10 @@
     {% endif %}
 {% endblock title %}
 
+{% block breadcrumb_li %}
+<li class="current">Activity Plan</li>
+{% endblock breadcrumb_li %}
+
 {% block project_contents %}
     <div class="flex flex-col gap-2 pt-2 pb-2">
         <div >
@@ -37,7 +41,14 @@
                                 New Activity Plan
                             {% endif %}
                         </span>
-                        {% comment %} <span class="btn btn-gray" style="float:right">Target Locations</span> {% endcomment %}
+                        {% if form.initial %}
+                        <span class="btn btn-gray" style="float:right">
+                            <a href="{% url 'target-locations-create' form.initial.id %}" class="btn btn-gray">
+                                <img src="{% static 'admin/img/icon-addlink.svg' %}" alt="add-btn-icon">
+                                Add Target Location
+                            </a>
+                        </span>
+                        {% endif %}
                     </span>
                     <br>
                     <span >
@@ -60,7 +71,7 @@
                             <div class="field-col">
                                 <div class="select-field is-required">
                                     <label for="{{ form.activity_domain.id_for_label }}">Activity Domain</label>
-                                    <select name="{{ form.activity_domain.name }}"
+                                    <select required name="{{ form.activity_domain.name }}"
                                             id="{{ form.activity_domain.id_for_label }}"
                                             class="form-control"
                                             hx-get="{% url 'activity-domains-types' %}"
@@ -76,7 +87,7 @@
                             <div class="field-col">
                                 <div class="select-field is-required">
                                     <label for="{{ form.activity_type.id_for_label }}">Activity Type</label>
-                                    <select name="{{ form.activity_type.name }}"
+                                    <select required name="{{ form.activity_type.name }}"
                                             id="{{ form.activity_type.id_for_label }}"
                                             class="form-control"
                                             hx-get="{% url 'activity-types-indicators' %}"
@@ -102,9 +113,9 @@
  
                 <div class="row">
                     <div class="col">
-                        <div class="select-field">
+                        <div class="select-field is-required">
                             <label for="{{ form.indicator.id_for_label }}">Indicator</label>
-                            <select name="{{ form.indicator.name }}"
+                            <select required name="{{ form.indicator.name }}"
                                     id="{{ form.indicator.id_for_label }}"
                                     class="form-control"
                                     hx-get="{% url 'update-indicator-type' %}"
@@ -155,8 +166,8 @@
  
                 <!-- Indicator types start to diaplay -->
                 <div class="row" id="indicator-types"></div>
-            </div>
-            <div class="plan-submit-holder">
+
+                <div class="plan-submit-holder">
                 {% if form.initial %}
                     <a id="delete-btn"
                        hx-delete="{% url 'activity-plans-delete' form.initial.id %}"
@@ -164,7 +175,7 @@
                        hx-indicator=".progress"
                        hx-confirm="Do you want to delete `{{ form.initial.id }}` and its Target Locations ?"
                        data-tippy-content="Delete Activity Plan"
-                       class="cursor-pointer">
+                       class="cursor-pointer btn btn-gray">
                         <span class="project-detail icon-trashbin"></span>
                         Delete
                     </a>
@@ -183,6 +194,8 @@
                     <input type="submit" name="_save" class="btn btn-red" value="Save">
                 </div>
             </div>
+            </div>
+            
         </form>
     </div>
 {% endblock project_contents %}

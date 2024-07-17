@@ -18,18 +18,10 @@
                         <li>
                             <a id="return-url"
                                href="{% url 'projects-list' %}?state={{ project.state }}">
-                                {% if project.state == 'in-progress' %}
-                                    Active Projects
-                                {% elif project.state == 'draft' %}
-                                    Draft Projects
-                                {% elif project.state == 'archive' %}
-                                    Archived Projects
-                                {% elif project.state == 'done' %}
-                                    Completed Projects
-                                {% endif %}
+                               {{ project.get_state_display }} Projects
                             </a>
                         </li>
-                        <li class="current">
+                        <li>
                             <a href="{% url 'projects-detail' project.id %}">{{ project.code }}</a>
                         </li>
                     {% else %}
@@ -38,6 +30,7 @@
                         </li>
                         <li class="current">New Project</li>
                     {% endif %}
+                    {% block breadcrumb_li %}{% endblock breadcrumb_li %}
                 </ul>
             </div>
         </div>
@@ -45,7 +38,7 @@
         <div class="page-navigation-panel">
             <div class="holder">
                 <div class="tabs-nav-holder">
-                    <ul class="tabs-nav">
+                    <ul class="tabs-nav divide-x">
                         <li class="{% if request.resolver_match.url_name == 'projects-update' %}active{% endif %}">
                             <a href="{% if project %}{% url 'projects-update' project.pk %}{% else %}{% url 'projects-create' %}{% endif %}">
                                 Project planning

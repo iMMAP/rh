@@ -11,7 +11,7 @@ class Profile(models.Model):
         blank=True,
         null=True,
         on_delete=models.SET_NULL,
-        limit_choices_to={"type": "Country"},
+        limit_choices_to={"level": 0},
     )
     clusters = models.ManyToManyField(Cluster)
     organization = models.ForeignKey(Organization, on_delete=models.SET_NULL, blank=True, null=True)

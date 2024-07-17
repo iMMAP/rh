@@ -17,15 +17,7 @@
                     <li>
                         <a id="return-url"
                            href="{% url 'projects-list' %}?state={{ project.state }}">
-                            {% if project.state == 'in-progress' %}
-                                Active Projects
-                            {% elif project.state == 'draft' %}
-                                Draft Projects
-                            {% elif project.state == 'archive' %}
-                                Archived Projects
-                            {% elif project.state == 'done' %}
-                                Completed Projects
-                            {% endif %}
+                            {{ project.get_state_display }} Projects
                         </a>
                     </li>
                     {% if project %}
@@ -71,7 +63,6 @@
                     {% csrf_token %}
                     {% for form in formset reversed %}
                         {{ form.id }}
-                        {{ form.active }}
                         {{ form.save }}
                         <input type="hidden"
                                name="country"

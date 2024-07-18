@@ -1,0 +1,112 @@
+{% load static %}
+<!DOCTYPE html>
+<html :class="{'dark': darkMode === 'dark' || (darkMode === 'system' &amp;&amp; window.matchMedia('(prefers-color-scheme: dark)').matches)}"
+      class="scroll-smooth"
+      data-content_root="./"
+      lang="en"
+      x-data="{ darkMode: localStorage.getItem('darkMode') || localStorage.setItem('darkMode', 'system'), activeSection: '' }"
+      x-init="$watch('darkMode', val =&gt; localStorage.setItem('darkMode', val))">
+      <head>
+            <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+            <meta charset="utf-8" />
+            <meta content="white"
+                  media="(prefers-color-scheme: light)"
+                  name="theme-color" />
+            <meta content="black"
+                  media="(prefers-color-scheme: dark)"
+                  name="theme-color" />
+            <meta content="kai687" name="author" />
+            <meta content="" name="keywords" />
+            <meta content="" name="description" />
+            <meta content="" name="twitter:description" />
+            <meta content="" property="og:title" />
+            <meta content="" name="twitter:title" />
+            <link rel="apple-touch-icon"
+                  sizes="180x180"
+                  href="{% static 'src/images/favicon/apple-touch-icon.png' %}" />
+            <link rel="icon"
+                  type="image/x-icon"
+                  sizes="32x32"
+                  href="{% static 'src/images/favicon/favicon-32x32.png' %}" />
+            <link rel="icon"
+                  type="image/x-icon"
+                  sizes="16x16"
+                  href="{% static 'src/images/favicon/favicon-16x16.png' %}" />
+            <link rel="mask-icon"
+                  href="{% static 'src/images/favicon/safari-pinned-tab.svg' %}"
+                  color="#5bbad5" />
+            <link href="{% static 'guides/theme.css' %}"
+                  rel="stylesheet"
+                  type="text/css" />
+            <link href="{% static 'guides/sphinx-design.min.css' %}"
+                  rel="stylesheet"
+                  type="text/css" />
+            <link href="{% static 'guides/feedback.css' %}"
+                  rel="stylesheet"
+                  type="text/css" />
+            <link href="{% static 'guides/awesome-sphinx-design.css' %}"
+                  rel="stylesheet"
+                  type="text/css" />
+            <title>
+                  {% block title %}
+                        ReportHub User Guides
+                  {% endblock title %}
+            </title>
+            <script>
+                  {% comment %} <!-- Prevent Flash of wrong theme --> {% endcomment %}
+                  const userPreference = localStorage.getItem('darkMode');
+                  let mode;
+                  if (userPreference === 'dark' || window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                        mode = 'dark';
+                        document.documentElement.classList.add('dark');
+                  } else {
+                        mode = 'light';
+                  }
+                  if (!userPreference) {localStorage.setItem('darkMode', mode)}
+            </script>
+            {% include "components/_analytics.html" %}
+            {% block head %}
+            {% endblock head %}
+      </head>
+      <body :class="{ 'overflow-hidden': showSidebar }"
+            class="min-h-screen font-sans antialiased bg-background text-foreground"
+            x-data="{ showSidebar: false }">
+            <div @click.self="showSidebar = false"
+                 class="fixed inset-0 z-50 overflow-hidden bg-background/80 backdrop-blur-sm md:hidden"
+                 x-cloak=""
+                 x-show="showSidebar"></div>
+            <div class="relative flex flex-col min-h-screen" id="page">
+                  <a class="absolute top-0 left-0 z-[100] block bg-background p-4 text-xl transition -translate-x-full opacity-0 focus:translate-x-0 focus:opacity-100"
+                     href="#content">Skip to content</a>
+                  {% comment %} Header {% endcomment %}
+                  {% include "guides/components/navbar.html" %}
+                  <div class="flex-1">
+                        <div class="container flex-1 items-start md:grid md:grid-cols-[220px_minmax(0,1fr)] md:gap-6 lg:grid-cols-[240px_minmax(0,1fr)] lg:gap-10">
+                              {% comment %} Left sidebar: TOC {% endcomment %}
+                              {% include "guides/components/toc_sidebar.html" %}
+                              <main class="relative py-6 lg:gap-10 lg:py-8 xl:grid xl:grid-cols-[1fr_300px]">
+                                    <div class="w-full min-w-0 mx-auto">
+                                          <div id="content" role="main">
+                                                {% block content %}
+                                                {% endblock content %}
+                                          </div>
+                                          {% comment %} <div class="flex justify-between items-center pt-6 mt-12 border-t border-border gap-4">
+                                                <div class="ml-auto">
+                                                      <a class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors border border-input hover:bg-accent hover:text-accent-foreground py-2 px-4" href="how-to/install/index.html">Next Guide</a>
+                                                </div>
+                                          </div> {% endcomment %}
+                                          {% include "guides/components/feedback.html" %}
+                                    </div>
+                                    {% include "guides/components/contents_sidebar.html" %}
+                              </main>
+                        </div>
+                  </div>
+                  {% include "guides/components/footer.html" %}
+            </div>
+            {% include "components/_error_tracker.html" %}
+            <script src="{% static 'guides/documentation_options.js' %}"></script>
+            <script defer="defer" src="{% static 'guides/theme.js' %}"></script>
+            {% block scripts %}
+            {% endblock scripts %}
+      </body>
+</html>

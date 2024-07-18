@@ -98,7 +98,7 @@ $("#downloadFilterForm").click(function (e) {
 		url: routeUrl,
 		method: "POST",
 		data: {
-			exportData: JSON.stringify(exportData),
+			exportData: JSON.stringify(selectedFieldList),
 			csrfmiddlewaretoken: csrftoken,
 		},
 		success: (response) => {

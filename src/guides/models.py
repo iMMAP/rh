@@ -4,8 +4,8 @@ from mdeditor.fields import MDTextField
 
 
 class Section(models.Model):
-    name = models.CharField(max_length=255)
-    slug = models.SlugField(unique=True)
+    name = models.CharField(max_length=255,null=False)
+    slug = models.SlugField(unique=True,null=False)
 
     description = models.TextField(blank=True, null=True)
 
@@ -14,11 +14,11 @@ class Section(models.Model):
 
 
 class Guide(models.Model):
-    section = models.ForeignKey(Section, on_delete=models.CASCADE)
-    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    section = models.ForeignKey(Section, on_delete=models.SET_NULL,null=True)
+    author = models.ForeignKey(User, on_delete=models.SET_NULL,null=True)
 
-    title = models.CharField(max_length=255)
-    slug = models.SlugField(unique=True)
+    title = models.CharField(max_length=512,null=False)
+    slug = models.SlugField(unique=True,null=False)
     content = MDTextField()
 
     created_at = models.DateTimeField(auto_now_add=True)

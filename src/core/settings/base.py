@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     "guardian",
     "dbbackup",
     "extra_settings",
+    "mdeditor",
     # RH apps
     "rh.apps.RhConfig",
     "users.apps.UsersConfig",
@@ -221,3 +222,37 @@ EXTRA_SETTINGS_DEFAULTS = [
         "description": "No of items in a paginated results.",
     },
 ]
+
+
+# MDEditor
+X_FRAME_OPTIONS = "SAMEORIGIN"
+MEDIA_URL = "/media/"
+MDEDITOR_CONFIGS = {
+    "default": {
+        "width": "100% ",  # Custom edit box width
+        # "height": 200,  # Custom edit box height
+        "imageUpload": True,
+        "upload_image_formats": [
+            "jpg",
+            "jpeg",
+            "gif",
+            "png",
+            "bmp",
+            "webp",
+        ],  # image upload format type
+        "image_folder": "editor",  # image save the folder name
+        "theme": "dark",  # edit box theme, dark / default
+        "preview_theme": "dark",  # Preview area theme, dark / default
+        "editor_theme": "pastel-on-dark",  # edit area theme, pastel-on-dark / default
+        "toolbar_autofixed": True,  # Whether the toolbar capitals
+        "search_replace": True,  # Whether to open the search for replacement
+        "emoji": True,  # whether to open the expression function
+        "tex": True,  # whether to open the tex chart function
+        "flow_chart": True,  # whether to open the flow chart function
+        "sequence": True,  # Whether to open the sequence diagram function
+        "watch": True,  # Live preview
+        "lineWrapping": False,  # lineWrapping
+        "lineNumbers": True,  # lineNumbers
+        "language": "en",  # zh / en / es
+    }
+}

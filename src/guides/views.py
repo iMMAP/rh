@@ -1,25 +1,25 @@
 from django.shortcuts import render, get_object_or_404
 from .models import Section, Guide, Feedback
 from django.views.decorators.http import require_http_methods
-from django.contrib import messages
+from django.http import JsonResponse
+import json
 
 
 @require_http_methods(["POST"])
-def toggle_status(request, guide):
-    upvote = bool(request.POST.get("upvote"))
+def feedback(request, guide):
+    upvote = json.loads(request.body).get("upvote", False)
 
     guide = get_object_or_404(Guide, slug=guide)
 
-    feedback, _ = Feedback.objects.get_or_create(guide=guide, user=request.user)
+    feedback, created = Feedback.objects.get_or_create(guide=guide, user=request.user, defaults={"upvote": upvote})
 
-    feedback.upvote = upvote
-    feedback.save()
+    if feedback.upvote == upvote and not created:
+        feedback.delete()
+    else:
+        feedback.upvote = upvote
+        feedback.save()
 
-    messages.success(request, "Your feedback has been sent")
-
-    context = {"feedback": feedback}
-
-    return render(request, "guides/components/feedback.html", context)
+    return JsonResponse({"upvote": feedback.upvote})
 
 
 def index(request):
@@ -34,8 +34,13 @@ def index(request):
 
 
 def guide_detail(request, guide):
-    # Get the category and guide based on slugs
     guide = get_object_or_404(Guide, slug=guide)
+
+    try:
+        feedback = Feedback.objects.get(guide=guide, user=request.user)
+        guide.upvote = "upvote" if feedback.upvote else "downvote"
+    except Exception:
+        guide.upvote = "none"
 
     # Get all categories and guides for the sidebar table of contents
     sections = Section.objects.all().prefetch_related("guide_set").only("id", "slug", "name")

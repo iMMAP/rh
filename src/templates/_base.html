@@ -19,7 +19,6 @@
         <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Open+Sans&display=optional"
               rel="stylesheet" />
         {% vite 'static/src/styles/style.scss' %}
- 
         <link rel="apple-touch-icon"
               sizes="180x180"
               href="{% static 'src/images/favicon/apple-touch-icon.png' %}" />
@@ -38,52 +37,7 @@
               color="#5bbad5" />
         <meta name="msapplication-TileColor" content="#da532c" />
         <meta name="theme-color" content="#ffffff" />
-        <!-- Analytics -->
-        {% if APP_ENV == 'production' %}
-            <script>
-                ! function(t, e) {
-                    var o, n, p, r;
-                    e.__SV || (window.posthog = e, e._i = [], e.init = function(i, s, a) {
-                        function g(t, e) {
-                            var o = e.split(".");
-                            2 == o.length && (t = t[o[0]], e = o[1]), t[e] = function() {
-                                t.push([e].concat(Array.prototype.slice.call(arguments, 0)))
-                            }
-                        }(p = t.createElement("script")).type = "text/javascript", p.async = !0, p.src = s.api_host + "/static/array.js", (r = t.getElementsByTagName("script")[0]).parentNode.insertBefore(p, r);
-                        var u = e;
-                        for (void 0 !== a ? u = e[a] = [] : a = "posthog", u.people = u.people || [], u.toString = function(t) {
-                                var e = "posthog";
-                                return "posthog" !== a && (e += "." + a), t || (e += " (stub)"), e
-                            }, u.people.toString = function() {
-                                return u.toString(1) + ".people (stub)"
-                            }, o = "capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags getFeatureFlag getFeatureFlagPayload reloadFeatureFlags group updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures getActiveMatchingSurveys getSurveys onSessionId".split(" "), n = 0; n < o.length; n++) g(u, o[n]);
-                        e._i.push([i, s, a])
-                    }, e.__SV = 1)
-                }(document, window.posthog || []);
-                posthog.init('phc_QFRKkL8FjDwTZHkgYMSsA2umnSQ41iuoBDcfIG2GlZL', {
-                    api_host: 'https://app.posthog.com'
-                })
-            </script>
-        {% endif %}
-        <!-- End Analytics -->
-
-        <noscript>
-            <style>
-                /**  * Reinstate scrolling for non-JS clients  */
-                .simplebar-content-wrapper {
-                    scrollbar-width: auto;
-                    -ms-overflow-style: auto;
-                }
-
-                .simplebar-content-wrapper::-webkit-scrollbar,
-                .simplebar-hide-scrollbar::-webkit-scrollbar {
-                    display: initial;
-                    width: initial;
-                    height: initial;
-                }
-            </style>
-        </noscript>
- 
+        {% include "components/_analytics.html" %}
         {% block head %}
         {% endblock head %}
     </head>
@@ -91,16 +45,13 @@
         <div class="wrapper" id="wrapper">
             <div class="wrapper-inner">
                 {% include "components/header.html" %}
-
                 <main id="main" class="main relative">
                     {% include "components/messages.html" %}
-
                     <div class="base-section">
                         {% block content %}
                         {% endblock content %}
                     </div>
                 </main>
-
                 <footer class="footer">
                     <div class="container">
                         <div class="footer-inner">
@@ -202,15 +153,10 @@
                 </footer>
             </div>
         </div>
-
-        {% if APP_ENV == 'production' %}
-            {% vite 'static/src/js/utils/initSentry.js' %}
-        {% endif %}
-
+        {% include "components/_error_tracker.html" %}
         <!-- jQuery CDN -->
         <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous">
         </script>
-
         {% comment %} HTMX {% endcomment %}
         <script src="https://unpkg.com/htmx.org@2.0.0"
                 integrity="sha384-wS5l5IKJBvK6sPTKa2WZ1js3d947pvWXbPJ1OmWfEuxLgeHcEbjUUA5i9V5ZkpCw"
@@ -221,8 +167,6 @@
         </script>
         <!-- Full Path relative to location of manage.py file -->
         {% vite 'static/src/js/app.js' %}
-        <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
-
         {% block scripts %}
         {% endblock scripts %}
     </body>

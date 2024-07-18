@@ -9,13 +9,36 @@
 {% block scripts %}
     <script>
     document.addEventListener("DOMContentLoaded", function() {
+        // highlight active headings Observer
+        const headingsObserver = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const activeHeading = entry.target 
+                // console.log("Heading is active",activeHeading.type)
+
+                // Remove active class from other toc links
+                document.querySelectorAll('.toc-heading').forEach(th => {
+                    th.classList.remove('!text-purple-400', 'font-bold')
+                })
+
+                // Add class to active link
+                document.querySelector(`a[href='#${activeHeading.id}']`).classList.add('font-bold')
+                // console.log(document.querySelector(`a[href='#${activeHeading.id}']`))
+            }
+            })
+        }, {
+            threshold: 0,
+            rootMargin: "-80px",
+        });
+
         let article = document.querySelector('article');
         let sidebar = document.getElementById('content_headings');
         let ul = document.createElement('ul');
 
-        article.querySelectorAll('h1, h2, h3').forEach(function(heading) {
+        article.querySelectorAll('h1, h2, h3, h4').forEach(function(heading) {
             heading.id = `heading-${Math.random().toString(36).substr(2, 9)}`;
-            ul.insertAdjacentHTML('beforeend', `<li><a href="#${heading.id}">${heading.textContent}</a></li>`);
+            headingsObserver.observe(heading);
+            ul.insertAdjacentHTML('beforeend', `<li><a class="toc-heading" href="#${heading.id}">${heading.textContent}</a></li>`);
         });
 
         sidebar.appendChild(ul);

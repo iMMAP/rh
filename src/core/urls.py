@@ -13,9 +13,10 @@ urlpatterns = [
     path("", include("users.urls")),
     path("", include("project_reports.urls")),
     path("", include("guides.urls")),
+    path("maintenance/", TemplateView.as_view(template_name="maintenance.html"), name="maintenance"),
     path("admin/", admin.site.urls),
     path("chaining/", include("smart_selects.urls")),
-    path("maintenance/", TemplateView.as_view(template_name="maintenance.html"), name="maintenance"),
+    path(r"mdeditor/", include("mdeditor.urls")),
     path("", include("django_vite_plugin.urls")),
 ]
 

@@ -269,6 +269,7 @@ class ProjectFilterExportView(View):
                 {"header": "Activity Detail", "type": "string", "width": 20},
                 {"header": "Indicators", "type": "string", "width": 40},
                 {"header": "Beneficiary", "type": "string", "width": 40},
+                {"header": "HRP Beneficiary", "type": "string", "width": 40},
                 {"header": "Beneficiary category", "type": "string", "width": 40},
                 {"header": "Activity description", "type": "string", "width": 40},
                 {"header": "Package Type", "type": "string", "width": 20},
@@ -285,12 +286,13 @@ class ProjectFilterExportView(View):
                 {"header": "region", "type": "string", "width": 20},
                 {"header": "admin2pcode", "type": "string", "width": 20},
                 {"header": "admin2name", "type": "string", "width": 20},
+                {"header": "NHS Code", "type": "string", "width": 20},
                 {"header": "classification", "type": "string", "width": 20},
                 {"header": "Zone/Ward", "type": "string", "width": 20},
                 {"header": "facility site type", "type": "string", "width": 20},
                 {"header": "facility monitoring", "type": "string", "width": 20},
-                {"header": "facility id", "type": "string", "width": 20},
                 {"header": "facility name", "type": "string", "width": 20},
+                {"header": "facility id", "type": "string", "width": 20},
                 {"header": "facility/site latitude", "type": "string", "width": 20},
                 {"header": "facility/site longitude", "type": "string", "width": 20},
             ]
@@ -388,8 +390,9 @@ class ProjectFilterExportView(View):
                         if "activity_detail" in selectedData and plan.activity_detail
                         else None,
                         plan.indicator.name if "indicator" in selectedData and plan.indicator else None,
+                        plan.beneficiary.name if "beneficiary" in selectedData and plan.beneficiary else None,
                         plan.hrp_beneficiary.name
-                        if "hrp_beneficiary" in selectedData and plan.hrp_beneficiary.name
+                        if "hrp_beneficiary" in selectedData and plan.hrp_beneficiary
                         else None,
                         plan.beneficiary_category
                         if "beneficiary_category" in selectedData and plan.beneficiary_category
@@ -413,14 +416,13 @@ class ProjectFilterExportView(View):
                         location.province.region_name if location.province else None,
                         location.district.code if "admin2code" in selectedData and location.district else None,
                         location.district.name if "admin2name" in selectedData and location.district else None,
+                        location.nhs_code if "nhs_code" in selectedData and location.nhs_code else None,
                         location.location_type if "admin1code" in selectedData and location.location_type else None,
                         location.zone.name if location.zone else None,
                         location.facility_site_type
                         if "facility_site_type" in selectedData and location.facility_site_type
                         else None,
-                        location.facility_monitoring
-                        if "facility_monitoring" in selectedData and location.facility_monitoring
-                        else None,
+                        "Yes" if "facility_monitoring" in selectedData and location.facility_monitoring else None,
                         location.facility_name if "facility_name" in selectedData and location.facility_name else None,
                         location.facility_id if "facility_id" in selectedData and location.facility_id else None,
                         location.facility_lat if "facility_lat" in selectedData and location.facility_lat else None,

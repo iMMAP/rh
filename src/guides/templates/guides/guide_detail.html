@@ -5,6 +5,7 @@
       {{ guide.title }}
 {% endblock title %}
 {% block content %}
+      <a href="{% url 'admin:guides_guide_change' guide.id %}">Edit Guide</a>
       <article id="awesome-sphinx-theme">
             <h2>{{ guide.title }}</h2>
             {{ guide.content | markdown | safe }}

@@ -12,6 +12,7 @@ urlpatterns = [
     path("", include("stock.urls")),
     path("", include("users.urls")),
     path("", include("project_reports.urls")),
+    path("", include("guides.urls")),
     path("admin/", admin.site.urls),
     path("chaining/", include("smart_selects.urls")),
     path("maintenance/", TemplateView.as_view(template_name="maintenance.html"), name="maintenance"),

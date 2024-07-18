@@ -1,0 +1,22 @@
+{% extends "guides/guide_base.html" %}
+{% load static %}
+{% block title %}
+      ReportHub User Guides
+{% endblock title %}
+{% block content %}
+      <article id="awesome-sphinx-theme">
+            <h2>ReportHub Guides</h2>
+            <nav class="table w-full min-w-full my-6 lg:my-8">
+                  {% for section in sections %}
+                        <h3 class="caption" role="heading">{{ section.name }}</h3>
+                        <ul>
+                              {% for g in section.guide_set.all %}
+                                    <li class="toctree-l1">
+                                          <a class="reference internal" href="{% url 'guides-detail' g.slug %}">{{ g.title }}</a>
+                                    </li>
+                              {% endfor %}
+                        </ul>
+                  {% endfor %}
+            </nav>
+      </article>
+{% endblock content %}

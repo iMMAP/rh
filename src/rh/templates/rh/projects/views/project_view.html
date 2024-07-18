@@ -148,22 +148,6 @@
                                         </div>
                                     </div>
                                     {% endif %}
-                                    {% if project.budget %}
-                                    <div class="field-col">
-                                        <div class="input-holder">
-                                            <input type="checkbox" id="budget" class="input-check" name="budget" value="{{project.id}}">
-                                            <label for="budget">Budget</label>
-                                        </div>
-                                    </div>
-                                    {% endif %}
-                                    {% if project.budget_received %}
-                                    <div class="field-col">
-                                        <div class="input-holder">
-                                            <input type="checkbox" id="budgetReceived" class="input-check" name="budget_received" value="{{project.id}}">
-                                            <label for="budgetReceived">Received Budget</label>
-                                        </div>
-                                    </div>
-                                    {% endif %}
                                     {% if project.user %}
                                     <div class="field-col">
                                         <div class="input-holder">
@@ -172,20 +156,38 @@
                                         </div>
                                     </div>
                                     {% endif %}
-                                    {% if project.start_date %}
-                                    <div class="field-col">
-                                        <div class="input-holder">
-                                            <input type="checkbox" id="startDate" class="input-check" name="start_date" value="{{project.id}}">
-                                            <label for="startDate">Start Date</label>
-                                        </div>
-                                    </div>
-                                    {% endif %}
+                                    
                                     {% if project.state %}
                                     <div class="field-col">
                                         <div class="input-holder">
                                             <input type="checkbox" id="state" 
                                             class="input-check" name="state" value="{{project.id}}">
                                             <label for="state">State</label>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                    {% if project.budget %}
+                                    <div class="field-col">
+                                        <div class="input-holder">
+                                            <input type="checkbox" id="budget" class="input-check" name="budget" value="{{project.id}}">
+                                            <label for="budget">Budget</label>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                    {% if project.budget_currency %}
+                                    <div class="field-col">
+                                        <div class="input-holder">
+                                            <input type="checkbox" id="budgetCurrency" 
+                                            class="input-check" name="budget_currency" value="{{project.id}}">
+                                            <label for="budgetCurrency">Budget Currency </label>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                    {% if project.budget_received %}
+                                    <div class="field-col">
+                                        <div class="input-holder">
+                                            <input type="checkbox" id="budgetReceived" class="input-check" name="budget_received" value="{{project.id}}">
+                                            <label for="budgetReceived">Received Budget</label>
                                         </div>
                                     </div>
                                     {% endif %}
@@ -207,6 +209,7 @@
                                         </div>
                                     </div>
                                     {% endif %}
+                                    
                                     {% if project.has_hrp_code %}
                                     <div class="field-col">
                                         <div class="input-holder">
@@ -216,12 +219,12 @@
                                         </div>
                                     </div>
                                     {% endif %}
-                                    {% if project.budget_currency %}
+                                    
+                                    {% if project.start_date %}
                                     <div class="field-col">
                                         <div class="input-holder">
-                                            <input type="checkbox" id="budgetCurrency" 
-                                            class="input-check" name="budget_currency" value="{{project.id}}">
-                                            <label for="budgetCurrency">Budget Currency </label>
+                                            <input type="checkbox" id="startDate" class="input-check" name="start_date" value="{{project.id}}">
+                                            <label for="startDate">Start Date</label>
                                         </div>
                                     </div>
                                     {% endif %}
@@ -237,8 +240,16 @@
                                     {% if project.description %}
                                     <div class="field-col">
                                         <div class="input-holder">
-                                            <input type="checkbox" id="description" class="input-check" name="description" value="{{project.id}}">
+                                            <input type="checkbox" id="description" class="input-check" name="pdescription" value="{{project.id}}">
                                             <label for="description">Description</label>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                    {% if project.donors %}
+                                    <div class="field-col">
+                                        <div class="input-holder">
+                                            <input type="checkbox" id="clusters" class="input-check" name="clusters" value="{{project.id}}">
+                                            <label for="clusters">Project Clusters</label>
                                         </div>
                                     </div>
                                     {% endif %}
@@ -317,7 +328,15 @@
                                     {% else %}
                                     <div class="field-col">
                                         <div class="input-holder">
-                                            <p class="label">Not Found...!</p>
+                                            <label>
+                                                <div class="programme-info">
+                                                    <i class="icon-info "></i>
+                                                    Not Provided !
+                                                    <span class="programme-text">
+                                                        The activity for this project has not been provided.
+                                                    </span>
+                                                </div>
+                                            </label>
                                         </div>
                                     </div>
                                     {% endif %}
@@ -379,19 +398,19 @@
                                     </div>
                                     <div class="field-col">
                                         <div class="input-holder">
-                                            <input type="checkbox" id="facility_site_id" class="input-check" name="facility_site_id" value="{{project.id}}">
+                                            <input type="checkbox" id="facility_site_id" class="input-check" name="facility_id" value="{{project.id}}">
                                             <label for="facility_site_id">Facility Site Id</label>
                                         </div>
                                     </div>
                                     <div class="field-col">
                                         <div class="input-holder">
-                                            <input type="checkbox" id="facility_site_name" class="input-check" name="facility_site_name" value="{{project.id}}">
+                                            <input type="checkbox" id="facility_site_name" class="input-check" name="facility_name" value="{{project.id}}">
                                             <label for="facility_site_name">Facility Site Name</label>
                                         </div>
                                     </div>
                                     <div class="field-col">
                                         <div class="input-holder">
-                                            <input type="checkbox" id="facility_site_lat" class="input-check" name="facility_site_lat" value="{{project.id}}">
+                                            <input type="checkbox" id="facility_site_lat" class="input-check" name="ffacility_lat" value="{{project.id}}">
                                             <label for="facility_site_lat">Facility Site Latitude</label>
                                         </div>
                                     </div>
@@ -404,13 +423,21 @@
                                     <div class="field-col">
                                         <div class="input-holder">
                                             <input type="checkbox" id="disaggregation" class="input-check" name="disaggregation" value="{{project.id}}">
-                                            <label for="disaggregation">Disaggregation</label>
+                                            <label for="disaggregation">Disaggregations</label>
                                         </div>
                                     </div>
                                     {% else %}
                                     <div class="field-col">
                                         <div class="input-holder">
-                                            <p class="label">Not Found...!</p>
+                                            <label>
+                                                <div class="programme-info">
+                                                    <i class="icon-info "></i>
+                                                    Not Provided !
+                                                    <span class="programme-text">
+                                                        The Target Location for this project has not been provided.
+                                                    </span>
+                                                </div>
+                                            </label>
                                         </div>
                                     </div>
                                     {% endif %}

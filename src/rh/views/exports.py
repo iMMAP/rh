@@ -1,10 +1,9 @@
 import base64
 import csv
 import json
+import datetime
 from io import BytesIO
-
 from django.http import HttpResponse, JsonResponse
-from django.utils import timezone
 from django.views import View
 from openpyxl import Workbook
 from openpyxl.styles import Font, NamedStyle
@@ -170,10 +169,12 @@ class ProjectExportExcelView(View):
                         else None,
                         ", ".join([clusters.code for clusters in project.clusters.all()]),
                         project.hrp_code,
-                        project.start_date.astimezone(timezone.utc).replace(tzinfo=None)
+                        project.start_date.astimezone(datetime.timezone.utc).replace(tzinfo=None)
                         if project.start_date
                         else None,
-                        project.end_date.astimezone(timezone.utc).replace(tzinfo=None) if project.end_date else None,
+                        project.end_date.astimezone(datetime.timezone.utc).replace(tzinfo=None)
+                        if project.end_date
+                        else None,
                         project.budget,
                         project.budget_received,
                         project.budget_gap,
@@ -235,10 +236,9 @@ class ProjectExportExcelView(View):
 class ProjectFilterExportView(View):
     def post(self, request, projectId):
         project = Project.objects.get(id=projectId)
-
+        print(project)
         try:
             selectedData = json.loads(request.POST.get("exportData"))
-
             workbook = Workbook()
             sheet = workbook.active
             sheet.title = "Project"
@@ -253,7 +253,7 @@ class ProjectFilterExportView(View):
                 {"header": "Project Description", "type": "string", "width": 50},
                 {"header": "Cluster", "type": "string", "width": 50},
                 {"header": "HRP project", "type": "string", "width": 50},
-                {"header": "HRP Project Code", "type": "string", "width": 20},
+                {"header": "Project HRP Code", "type": "string", "width": 20},
                 {"header": "Project Start Date", "type": "date", "width": 20},
                 {"header": "Project End Date", "type": "date", "width": 30},
                 {"header": "Project Budget", "type": "float", "width": 20},
@@ -271,6 +271,15 @@ class ProjectFilterExportView(View):
                 {"header": "Beneficiary", "type": "string", "width": 40},
                 {"header": "Beneficiary category", "type": "string", "width": 40},
                 {"header": "Activity description", "type": "string", "width": 40},
+                {"header": "Package Type", "type": "string", "width": 20},
+                {"header": "Unit Type", "type": "string", "width": 20},
+                {"header": "Grant Type", "type": "string", "width": 20},
+                {"header": "Transfer Category", "type": "string", "width": 20},
+                {"header": "Currency", "type": "string", "width": 20},
+                {"header": "Transfer mechanism type", "type": "string", "width": 20},
+                {"header": "implement modility type", "type": "string", "width": 20},
+                {"header": "admin0code", "type": "string", "width": 20},
+                {"header": "admin0name", "type": "string", "width": 20},
                 {"header": "admin1pcode", "type": "string", "width": 20},
                 {"header": "admin1name", "type": "string", "width": 20},
                 {"header": "region", "type": "string", "width": 20},
@@ -314,419 +323,132 @@ class ProjectFilterExportView(View):
                 sheet.column_dimensions[column_letter].width = column["width"]
             # defining rows
             rows = []
+
             plans = project.activityplan_set.all()
             for plan in plans:
                 locations = plan.targetlocation_set.all()
                 for location in locations:
-                    row = []
-                    try:
-                        row.append(
-                            project.title if str(project.id) in selectedData["title"] else None,
-                        )
-                    except Exception:
-                        row.append(
-                            " ",
-                        )
-                    try:
-                        row.append(
-                            project.code if str(project.id) in selectedData["code"] else None,
-                        )
-                    except Exception:
-                        row.append(
-                            " ",
-                        )
-                    try:
-                        row.append(
-                            project.user.username if str(project.user.id) in selectedData["focal_point"] else None,
-                        )
-                    except Exception:
-                        row.append(
-                            " ",
-                        )
-                    try:
-                        if len(selectedData["focal_point"]) > 0:
-                            row.append(
-                                project.user.email if project.user else None,
-                            )
-                    except Exception:
-                        row.append(
-                            " ",
-                        )
-                    try:
-                        if len(selectedData["focal_point"]) > 0:
-                            row.append(
-                                project.user.profile.organization.code
-                                if project.user and project.user.profile and project.user.profile.organization
-                                else None,
-                            )
-                    except Exception:
-                        row.append(
-                            " ",
-                        )
-                    try:
-                        if len(selectedData["focal_point"]) > 0:
-                            row.append(
-                                project.user.profile.organization.type
-                                if project.user and project.user.profile and project.user.profile.organization
-                                else None,
-                            )
-                    except Exception:
-                        row.append(
-                            " ",
-                        )
-                    try:
-                        row.append(
-                            project.description if str(project.id) in selectedData["description"] else None,
-                        )
-                    except Exception:
-                        row.append(
-                            " ",
-                        )
-                    try:
-                        row.append(
-                            ", ".join(
-                                [
-                                    clusters.code
-                                    for clusters in project.clusters.all()
-                                    if str(clusters.id) in selectedData["clusters"]
-                                ]
-                            ),
-                        )
-                    except Exception:
-                        row.append(
-                            " ",
-                        )
-                    try:
-                        if str(project.id) in selectedData["is_hrp_project"]:
-                            row.append(
-                                "yes" if project.is_hrp_project else None,
-                            )
-                    except Exception:
-                        row.append(
-                            " ",
-                        )
-                    try:
-                        row.append(
-                            project.has_hrp_code if str(project.id) in selectedData["hrp_code"] else None,
-                        )
-                    except Exception:
-                        row.append(
-                            " ",
-                        )
-                    try:
-                        row.append(
-                            project.start_date.astimezone(timezone.utc).replace(tzinfo=None)
-                            if str(project.id) in selectedData["start_date"]
-                            else None,
-                        )
-                    except Exception:
-                        row.append(
-                            " ",
-                        )
-                    try:
-                        row.append(
-                            project.end_date.astimezone(timezone.utc).replace(tzinfo=None)
-                            if str(project.id) in selectedData["end_date"]
-                            else None,
-                        )
-                    except Exception:
-                        row.append(
-                            " ",
-                        )
-                    try:
-                        row.append(
-                            project.budget if str(project.id) in selectedData["budget"] else None,
-                        )
-                    except Exception:
-                        row.append(
-                            " ",
-                        )
-                    try:
-                        row.append(
-                            project.budget_received if str(project.id) in selectedData["budget_received"] else None,
-                        )
-                    except Exception:
-                        row.append(
-                            " ",
-                        )
-                    try:
-                        row.append(
-                            project.budget_gap if str(project.id) in selectedData["budget_gap"] else None,
-                        )
-                    except Exception:
-                        row.append(
-                            " ",
-                        )
-                    try:
-                        row.append(
-                            project.budget_currency.name
-                            if str(project.budget_currency.id) in selectedData["currency"]
-                            else None,
-                        )
-                    except Exception:
-                        row.append(
-                            " ",
-                        )
-                    try:
-                        row.append(
-                            ", ".join(
-                                [
-                                    donor.name
-                                    for donor in project.donors.all()
-                                    if str(donor.id) in selectedData["donors"]
-                                ]
-                            ),
-                        )
-                    except Exception:
-                        row.append(
-                            " ",
-                        )
-                    try:
-                        row.append(
-                            ", ".join(
-                                [
-                                    implementing_partner.code
-                                    for implementing_partner in project.implementing_partners.all()
-                                    if str(implementing_partner.id) in selectedData["implementing_partners"]
-                                ]
-                            ),
-                        )
-                    except Exception:
-                        row.append(
-                            " ",
-                        )
-                    try:
-                        row.append(
-                            ", ".join(
-                                [
-                                    programme_partner.code
-                                    for programme_partner in project.programme_partners.all()
-                                    if str(programme_partner.id) in selectedData["programme_partners"]
-                                ]
-                            ),
-                        )
-                    except Exception:
-                        row.append(
-                            " ",
-                        )
-                    try:
-                        row.append(
-                            project.state if str(project.id) in selectedData["state"] else None,
-                        )
-                    except Exception:
-                        row.append(
-                            " ",
-                        )
-                    try:
-                        row.append(
-                            plan.activity_domain.name
-                            if str(plan.activity_domain.id) in selectedData["activity_domain"]
-                            else None,
-                        )
-                    except Exception:
-                        row.append(
-                            " ",
-                        )
-                    try:
-                        row.append(
-                            plan.activity_type.name
-                            if str(plan.activity_type.id) in selectedData["activity_type"]
-                            else None,
-                        )
-                    except Exception:
-                        row.append(
-                            " ",
-                        )
-                    try:
-                        row.append(
-                            plan.activity_detail.name
-                            if str(plan.activity_detail.id) in selectedData["activity_detail"]
-                            else None,
-                        )
-                    except Exception:
-                        row.append(
-                            " ",
-                        )
-                    try:
-                        row.append(
-                            plan.indicator.name if str(plan.indicator.id) in selectedData["indicator"] else None,
-                        )
-                    except Exception:
-                        row.append(
-                            " ",
-                        )
-                    try:
-                        row.append(
-                            plan.beneficiary.name if str(plan.beneficiary.id) in selectedData["beneficiary"] else None,
-                        )
-                    except Exception:
-                        row.append(
-                            " ",
-                        )
-                    try:
-                        row.append(
-                            plan.beneficiary_category
-                            if plan.beneficiary_category in selectedData["beneficiary_category"]
-                            else None,
-                        )
-                    except Exception:
-                        row.append(
-                            " ",
-                        )
-                    try:
-                        row.append(
-                            plan.description if str(plan.id) in selectedData["activity_description"] else None,
-                        )
-                    except Exception:
-                        row.append(
-                            " ",
-                        )
-                    try:
-                        row.append(
-                            location.province.code if str(location.province.id) in selectedData["admin1name"] else None,
-                        )
-                    except Exception:
-                        row.append(
-                            " ",
-                        )
-                    try:
-                        row.append(
-                            location.province.name if str(location.province.id) in selectedData["admin1name"] else None,
-                        )
-                    except Exception:
-                        row.append(
-                            " ",
-                        )
-                    try:
-                        row.append(
-                            location.province.region_name
-                            if str(location.province.id) in selectedData["admin1name"]
-                            else None,
-                        )
-                    except Exception:
-                        row.append(
-                            " ",
-                        )
-                    try:
-                        row.append(
-                            location.district.code if str(location.district.id) in selectedData["admin2name"] else None,
-                        )
-                    except Exception:
-                        row.append(
-                            " ",
-                        )
-                    try:
-                        row.append(
-                            location.district.name if str(location.district.id) in selectedData["admin2name"] else None,
-                        )
-                    except Exception:
-                        row.append(
-                            " ",
-                        )
-                    try:
-                        if location.distict.classification:
-                            row.append(
-                                location.district.classification
-                                if str(location.district.id) in selectedData["admin2name"]
-                                else None,
-                            )
-                        else:
-                            row.append("None,")
-                    except Exception:
-                        row.append(
-                            " ",
-                        )
-                    try:
-                        row.append(
-                            location.zone.name if str(location.province.id) in selectedData["admin1name"] else None,
-                        )
-                    except Exception:
-                        row.append(
-                            " ",
-                        )
-                    try:
-                        row.append(
-                            location.facility_site_type.name
-                            if str(location.facility_site_type.id) in selectedData["facility_site_type"]
-                            else None,
-                        )
-                    except Exception:
-                        row.append(
-                            " ",
-                        )
-                    try:
-                        row.append(
-                            str(location.facility_monitoring)
-                            if str(location.id) in selectedData["facility_monitoring"]
-                            else None,
-                        )
-                    except Exception:
-                        row.append(
-                            " ",
-                        )
-                    try:
-                        row.append(
-                            location.facility_id if str(location.id) in selectedData["facility_id"] else None,
-                        )
-                    except Exception:
-                        row.append(
-                            " ",
-                        )
-                    try:
-                        row.append(
-                            location.facility_name if str(location.id) in selectedData["facility_name"] else None,
-                        )
-                    except Exception:
-                        row.append(
-                            " ",
-                        )
-                    try:
-                        row.append(
-                            location.facility_lat if str(location.id) in selectedData["facility_latitude"] else None,
-                        )
-                    except Exception:
-                        row.append(
-                            " ",
-                        )
-                    try:
-                        row.append(
-                            location.facility_long if str(location.id) in selectedData["facility_longitude"] else None,
-                        )
-                    except Exception:
-                        row.append(
-                            " ",
-                        )
-                    target_location_disaggregation_list = []
-                    try:
-                        for item in selectedData["disaggregation"]:
-                            target_location_disaggregation_list.append(item)
-                    except Exception:
-                        pass
-
+                    # Create a dictionary to hold disaggregation data
                     disaggregation_data = {}
-                    disaggregation_locations = location.disaggregationlocation_set.all()
-                    disaggregation_location_list = {
-                        disaggregation_location.disaggregation.name: disaggregation_location.target
-                        for disaggregation_location in disaggregation_locations
-                        if str(location.id) in target_location_disaggregation_list
-                    }
+                    # check the selectedData if the field exist in the list then add to the row otherwise set it None
+                    row = [
+                        project.title if "title" in selectedData else None,
+                        project.code if "code" in selectedData else None,
+                        project.user.username if "user" in selectedData and project.user else None,
+                        project.user.email if "user" in selectedData and project.user else None,
+                        project.user.profile.organization.code
+                        if project.user
+                        and "user" in selectedData
+                        and project.user.profile
+                        and project.user.profile.organization
+                        else None,
+                        project.user.profile.organization.type
+                        if project.user
+                        and "user" in selectedData
+                        and project.user.profile
+                        and project.user.profile.organization
+                        else None,
+                        project.description if "pdescription" in selectedData and project.description else None,
+                        ", ".join([clusters.code for clusters in project.clusters.all() if "clusters" in selectedData]),
+                        "yes" if "is_hrp_project" in selectedData and project.is_hrp_project == 1 else None,
+                        project.hrp_code if "hrp_code" in selectedData else None,
+                        project.start_date.astimezone(datetime.timezone.utc).replace(tzinfo=None)
+                        if "start_date" in selectedData
+                        else None,
+                        project.end_date.astimezone(datetime.timezone.utc).replace(tzinfo=None)
+                        if "end_date" in selectedData
+                        else None,
+                        project.budget if "budget" in selectedData else None,
+                        project.budget_received if "budget_received" in selectedData else None,
+                        project.budget_gap if "budget_gap" in selectedData else None,
+                        project.budget_currency.name
+                        if "budget_currency" in selectedData and project.budget_currency
+                        else None,
+                        ", ".join([donor.name for donor in project.donors.all() if "donors" in selectedData]),
+                        ", ".join(
+                            [
+                                implementing_partner.code
+                                for implementing_partner in project.implementing_partners.all()
+                                if "implementing_partners" in selectedData
+                            ]
+                        ),
+                        ", ".join(
+                            [
+                                programme_partner.code
+                                for programme_partner in project.programme_partners.all()
+                                if "programme_partners" in selectedData
+                            ]
+                        ),
+                        project.state if "state" in selectedData else None,
+                        plan.activity_domain.name
+                        if "activity_domain" in selectedData and plan.activity_domain
+                        else None,
+                        plan.activity_type.name if "activity_type" in selectedData and plan.activity_type else None,
+                        plan.activity_detail.name
+                        if "activity_detail" in selectedData and plan.activity_detail
+                        else None,
+                        plan.indicator.name if "indicator" in selectedData and plan.indicator else None,
+                        plan.hrp_beneficiary.name
+                        if "hrp_beneficiary" in selectedData and plan.hrp_beneficiary.name
+                        else None,
+                        plan.beneficiary_category
+                        if "beneficiary_category" in selectedData and plan.beneficiary_category
+                        else None,
+                        plan.description if "description" in selectedData and plan.description else None,
+                        plan.package_type if "indicator" in selectedData and plan.package_type else None,
+                        plan.unit_type if "indicator" in selectedData and plan.unit_type else None,
+                        plan.grant_type if "indicator" in selectedData and plan.grant_type else None,
+                        plan.transfer_category if "indicator" in selectedData and plan.transfer_category else None,
+                        plan.currency if "indicator" in selectedData and plan.currency else None,
+                        plan.transfer_mechanism_type
+                        if "indicator" in selectedData and plan.transfer_mechanism_type
+                        else None,
+                        plan.implement_modility_type
+                        if "indicator" in selectedData and plan.implement_modility_type
+                        else None,
+                        location.country.code if "admin0code" in selectedData and location.province else None,
+                        location.country.name if "admin0name" in selectedData and location.province else None,
+                        location.province.code if "admin1code" in selectedData and location.province else None,
+                        location.province.name if "admin1name" in selectedData and location.province else None,
+                        location.province.region_name if location.province else None,
+                        location.district.code if "admin2code" in selectedData and location.district else None,
+                        location.district.name if "admin2name" in selectedData and location.district else None,
+                        location.location_type if "admin1code" in selectedData and location.location_type else None,
+                        location.zone.name if location.zone else None,
+                        location.facility_site_type
+                        if "facility_site_type" in selectedData and location.facility_site_type
+                        else None,
+                        location.facility_monitoring
+                        if "facility_monitoring" in selectedData and location.facility_monitoring
+                        else None,
+                        location.facility_name if "facility_name" in selectedData and location.facility_name else None,
+                        location.facility_id if "facility_id" in selectedData and location.facility_id else None,
+                        location.facility_lat if "facility_lat" in selectedData and location.facility_lat else None,
+                        location.facility_long if "facility_long" in selectedData and location.facility_long else None,
+                    ]
+                    if "disaggregation" in selectedData:
+                        # Iterate through disaggregation locations and get disaggregation values
+                        disaggregation_locations = location.disaggregationlocation_set.all()
+                        disaggregation_location_list = {
+                            disaggregation_location.disaggregation.name: disaggregation_location.target
+                            for disaggregation_location in disaggregation_locations
+                        }
 
-                    # Update disaggregation_data with values from disaggregation_location_list
-                    for disaggregation_entry in disaggregation_list:
-                        if disaggregation_entry not in disaggregation_location_list:
-                            disaggregation_data[disaggregation_entry] = None
+                        # Update disaggregation_data with values from disaggregation_location_list
+                        for disaggregation_entry in disaggregation_list:
+                            if disaggregation_entry not in disaggregation_location_list:
+                                disaggregation_data[disaggregation_entry] = None
 
-                    disaggregation_location_list.update(disaggregation_data)
+                        disaggregation_location_list.update(disaggregation_data)
 
-                    # Append disaggregation values to the row in the order of columns
-                    for column in columns:
-                        header = column["header"]
-                        if header in disaggregation_location_list:
-                            row.append(disaggregation_location_list[header])
+                        # Append disaggregation values to the row in the order of columns
+                        for column in columns:
+                            header = column["header"]
+                            if header in disaggregation_location_list:
+                                row.append(disaggregation_location_list[header])
 
+                        # Add row to the list of rows
                     rows.append(row)
-
-            # row.extend(disaggregation_rows)
             for row_idx, row in enumerate(rows, start=2):
                 for col_idx, value in enumerate(row, start=1):
                     try:
@@ -738,11 +460,12 @@ class ProjectFilterExportView(View):
             excel_file = BytesIO()
             workbook.save(excel_file)
             excel_file.seek(0)
-
+            # form the filename with today date
+            today_date = datetime.date.today()
             response = {
                 "file_url": "data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,"
                 + base64.b64encode(excel_file.read()).decode("utf-8"),
-                "file_name": "export.xlsx",
+                "file_name": f"project_{today_date}.xlsx",
             }
 
             return JsonResponse(response)
@@ -835,8 +558,12 @@ class ProjectExportCSV(View):
                     else None,
                     ", ".join([clusters.code for clusters in project.clusters.all()]),
                     project.hrp_code,
-                    project.start_date.astimezone(timezone.utc).replace(tzinfo=None) if project.start_date else None,
-                    project.end_date.astimezone(timezone.utc).replace(tzinfo=None) if project.end_date else None,
+                    project.start_date.astimezone(datetime.timezone.utc).replace(tzinfo=None)
+                    if project.start_date
+                    else None,
+                    project.end_date.astimezone(datetime.timezone.utc).replace(tzinfo=None)
+                    if project.end_date
+                    else None,
                     project.budget,
                     project.budget_received,
                     project.budget_gap,

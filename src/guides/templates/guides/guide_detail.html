@@ -1,11 +1,12 @@
 {% extends "guides/guide_base.html" %}
 {% load static %}
+{% load markdown_extras %}
 {% block title %}
       {{ guide.title }}
 {% endblock title %}
 {% block content %}
       <article id="awesome-sphinx-theme">
             <h2>{{ guide.title }}</h2>
-            {{ guide.content }}
+            {{ guide.content | markdown | safe }}
       </article>
 {% endblock content %}

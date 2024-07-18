@@ -12,11 +12,11 @@ class SectionAdmin(admin.ModelAdmin):
 @admin.register(Guide)
 class GuideAdmin(admin.ModelAdmin):
     list_display = (
-        "id",
         "section",
         "author",
         "title",
         "slug",
+        "feedbacks",
         "created_at",
         "updated_at",
     )
@@ -24,9 +24,12 @@ class GuideAdmin(admin.ModelAdmin):
     search_fields = ("slug",)
     date_hierarchy = "created_at"
 
+    def feedbacks(self, obj):
+        return f"Upvote: {obj.feedback_set.filter(upvote=True).count()} - Downvote: {obj.feedback_set.filter(upvote=False).count()}"
+
 
 @admin.register(Feedback)
 class FeedbackAdmin(admin.ModelAdmin):
-    list_display = ("id", "guide", "user", "upvote", "created_at")
+    list_display = ("guide", "user", "upvote", "created_at")
     list_filter = ("upvote", "created_at")
     date_hierarchy = "created_at"

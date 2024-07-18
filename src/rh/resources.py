@@ -491,6 +491,7 @@ class ProjectResource(resources.ModelResource):
             return "yes"
         else:
             return "no"
+
     def dehydrate_state(self, obj):
         if obj.state:
             return "active"

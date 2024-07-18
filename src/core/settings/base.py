@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     "users.apps.UsersConfig",
     "stock.apps.StockConfig",
     "project_reports.apps.ProjectReportsConfig",
+    "guides.apps.GuidesConfig",
 ]
 USE_DJANGO_JQUERY = True
 

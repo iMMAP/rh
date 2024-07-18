@@ -1,5 +1,5 @@
-// changing the checkbox color when it checked
 
+// changing the checkbox color when it checked
 $("input[type=checkbox]").change(function () {
 	$(this).css("accent-color", "#af4745");
 });

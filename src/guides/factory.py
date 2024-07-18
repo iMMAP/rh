@@ -4,10 +4,11 @@ from factory.django import DjangoModelFactory
 from .models import Section, Guide, Feedback
 from users.factory import UserFactory
 
+
 class SectionFactory(DjangoModelFactory):
     class Meta:
         model = Section
-    
+
     name = factory.Faker("name")
     slug = factory.LazyAttribute(lambda obj: obj.name.lower().replace(" ", "-"))
 
@@ -21,7 +22,6 @@ class GuideFactory(DjangoModelFactory):
 
     title = factory.Faker("name")
     slug = factory.LazyAttribute(lambda obj: obj.title.lower().replace(" ", "-").replace(".", "-"))
-
 
 
 class FeedbackFactory(DjangoModelFactory):

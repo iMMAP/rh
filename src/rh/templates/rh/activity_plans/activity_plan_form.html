@@ -1,32 +1,35 @@
 {% extends "rh/projects/forms/project_form_base.html" %}
 {% load static %}
 
-{% block page_title %} 
+{% block title %}
     {% if form.initial %}
         Edit Activity Plan
     {% else %}
-        New Activity Plan 
+        New Activity Plan
     {% endif %}
-{% endblock page_title %}
+{% endblock title %}
 
+{% block breadcrumb_li %}
+<li class="current">Activity Plan</li>
+{% endblock breadcrumb_li %}
 
 {% block project_contents %}
-    <div class="" style="justify-content: space-between;margin:0px;padding:10px 0px">
-        <div class="">
-            <span class="label">Project</span>
+    <div class="flex flex-col gap-2 pt-2 pb-2">
+        <div >
+            <span >Project</span>
             <div class="input-holder">
-                <span class="text-read-only">{{project.code}} - {{project.title}}</span>
+                <span class="text-read-only">{{ project.code }} - {{ project.title }}</span>
             </div>
         </div>
-        <div class="">
-            <span class="label">Duration</span>
+        <div >
+            <span >Duration</span>
             <div class="input-holder">
-                <span class="text-read-only">From {{project.start_date}} to {{project.end_date}}</span>
+                <span class="text-read-only">From {{ project.start_date }} to {{ project.end_date }}</span>
             </div>
         </div>
     </div>
 
-    <div class="main-content activity-planning">
+    <div class="main-content">
         <div class="activity-planning read-only">
             <div class="activity-block-holder">
                 <div class="top-activity-block">
@@ -38,19 +41,26 @@
                                 New Activity Plan
                             {% endif %}
                         </span>
-                        {% comment %} <span class="btn btn-gray" style="float:right">Target Locations</span> {% endcomment %}
+                        {% if form.initial %}
+                        <span class="btn btn-gray" style="float:right">
+                            <a href="{% url 'target-locations-create' form.initial.id %}" class="btn btn-gray">
+                                <img src="{% static 'admin/img/icon-addlink.svg' %}" alt="add-btn-icon">
+                                Add Target Location
+                            </a>
+                        </span>
+                        {% endif %}
                     </span>
                     <br>
-                <span class="">
-                    Use this form to provide detailed information about the activity for the above project, including the activity domain,type,indicator and other relevant details.
-                    Activity Domain list is taken from your project. If something is missing please update your project or contact your cluster.
-                </span>
+                    <span >
+                        Use this form to provide detailed information about the activity for the above project, including the activity domain,type,indicator and other relevant details.
+                        Activity Domain list is taken from your project. If something is missing please update your project or contact your cluster.
+                    </span>
                 </div>
             </div>
         </div>
 
         <form method="post" class="form-container">
-            <div class="progress bg-red" style="height:2px">
+            <div class="progress bg-red h-2">
                 <div class="indeterminate bg-white"></div>
             </div>
             {% csrf_token %}
@@ -60,42 +70,34 @@
                         <div class="multiple-fields-row two-items">
                             <div class="field-col">
                                 <div class="select-field is-required">
-                                    <label for="{{form.activity_domain.id_for_label}}">Activity Domain</label>
-                                    <select 
-                                        name="{{ form.activity_domain.name }}" 
-                                        id="{{ form.activity_domain.id_for_label }}" 
-                                        class="form-control"
-                                        hx-get="{% url 'activity-domains-types' %}"
-                                        hx-trigger="change"
-                                        hx-target="#{{form.activity_type.id_for_label}}" 
-                                        hx-swap="innerHTML"
-                                        hx-indicator=".progress"
-                                    >
-                                        {% for domain in form.activity_domain %}
-                                            {{domain}}
-                                        {% endfor %}
+                                    <label for="{{ form.activity_domain.id_for_label }}">Activity Domain</label>
+                                    <select required name="{{ form.activity_domain.name }}"
+                                            id="{{ form.activity_domain.id_for_label }}"
+                                            class="form-control"
+                                            hx-get="{% url 'activity-domains-types' %}"
+                                            hx-trigger="change"
+                                            hx-target="#{{ form.activity_type.id_for_label }}"
+                                            hx-swap="innerHTML"
+                                            hx-indicator=".progress">
+                                        {% for domain in form.activity_domain %}{{ domain }}{% endfor %}
                                     </select>
-                                    <div class="sign-up-field-error">{{form.activity_domain.errors}}</div>
+                                    <div class="sign-up-field-error">{{ form.activity_domain.errors }}</div>
                                 </div>
                             </div>
                             <div class="field-col">
                                 <div class="select-field is-required">
-                                    <label for="{{form.activity_type.id_for_label}}">Activity Type</label>
-                                    <select 
-                                        name="{{ form.activity_type.name }}" 
-                                        id="{{ form.activity_type.id_for_label }}" 
-                                        class="form-control"
-                                        hx-get="{% url 'activity-types-indicators' %}"
-                                        hx-trigger="change"
-                                        hx-target="#{{form.indicator.id_for_label}}" 
-                                        hx-swap="innerHTML"
-                                        hx-indicator=".progress"
-                                    >
-                                        {% for type in form.activity_type %}
-                                            {{type}}
-                                        {% endfor %}
+                                    <label for="{{ form.activity_type.id_for_label }}">Activity Type</label>
+                                    <select required name="{{ form.activity_type.name }}"
+                                            id="{{ form.activity_type.id_for_label }}"
+                                            class="form-control"
+                                            hx-get="{% url 'activity-types-indicators' %}"
+                                            hx-trigger="change"
+                                            hx-target="#{{ form.indicator.id_for_label }}"
+                                            hx-swap="innerHTML"
+                                            hx-indicator=".progress">
+                                        {% for type in form.activity_type %}{{ type }}{% endfor %}
                                     </select>
-                                    <div class="sign-up-field-error">{{form.activity_type.errors}}</div>
+                                    <div class="sign-up-field-error">{{ form.activity_type.errors }}</div>
                                 </div>
                             </div>
                             {% comment %} <div class="field-col">
@@ -108,52 +110,46 @@
                         </div>
                     </div>
                 </div>
-                
+ 
                 <div class="row">
                     <div class="col">
-                        <div class="select-field">
-                            <label for="{{form.indicator.id_for_label}}">
-                                Indicator
-                            </label>
-                            <select 
-                                name="{{ form.indicator.name }}" 
-                                id="{{ form.indicator.id_for_label }}" 
-                                class="form-control"
-                                hx-get="{% url 'update-indicator-type' %}"
-                                hx-trigger="change"
-                                hx-target="#indicator-types"
-                                hx-swap="innerHTML"
-                                hx-indicator=".progress"
-                            >
-                                {% for type in form.indicator %}
-                                    {{type}}
-                                {% endfor %}
+                        <div class="select-field is-required">
+                            <label for="{{ form.indicator.id_for_label }}">Indicator</label>
+                            <select required name="{{ form.indicator.name }}"
+                                    id="{{ form.indicator.id_for_label }}"
+                                    class="form-control"
+                                    hx-get="{% url 'update-indicator-type' %}"
+                                    hx-trigger="change"
+                                    hx-target="#indicator-types"
+                                    hx-swap="innerHTML"
+                                    hx-indicator=".progress">
+                                {% for type in form.indicator %}{{ type }}{% endfor %}
                             </select>
-                            <div class="sign-up-field-error">{{form.indicator.errors}}</div>
+                            <div class="sign-up-field-error">{{ form.indicator.errors }}</div>
 
                         </div>
                         <div class="multiple-fields-row">
                             <div class="field-col">
                                 <div class="select-field">
-                                    <label for="{{form.beneficiary.id_for_label}}">Beneficiary</label>
+                                    <label for="{{ form.beneficiary.id_for_label }}">Beneficiary</label>
                                     {{ form.beneficiary }}
-                                    <div class="sign-up-field-error">{{form.beneficiary.errors}}</div>
+                                    <div class="sign-up-field-error">{{ form.beneficiary.errors }}</div>
                                 </div>
                             </div>
 
                             <div class="field-col">
                                 <div class="select-field">
-                                    <label for="{{form.hrp_beneficiary.id_for_label}}">HRP Beneficiary</label>
-                                    {{ form.hrp_beneficiary}}
-                                    <div class="sign-up-field-error">{{form.hrp_beneficiary.errors}}</div>
+                                    <label for="{{ form.hrp_beneficiary.id_for_label }}">HRP Beneficiary</label>
+                                    {{ form.hrp_beneficiary }}
+                                    <div class="sign-up-field-error">{{ form.hrp_beneficiary.errors }}</div>
                                 </div>
                             </div>
 
                             <div class="field-col">
                                 <div class="select-field">
-                                    <label for="{{form.beneficiary_category.id_for_label}}">Beneficiary Category</label>
+                                    <label for="{{ form.beneficiary_category.id_for_label }}">Beneficiary Category</label>
                                     {{ form.beneficiary_category }}
-                                    <div class="sign-up-field-error">{{form.beneficiary_category.errors}}</div>
+                                    <div class="sign-up-field-error">{{ form.beneficiary_category.errors }}</div>
                                 </div>
                             </div>
                         </div>
@@ -162,27 +158,24 @@
 
                 <div class="row">
                     <div class="input-field is-required">
-                        <label for="{{ form.description.id_for_label}}">Activity Description</label>
+                        <label for="{{ form.description.id_for_label }}">Activity Description</label>
                         <div class="input-holder">{{ form.description }}</div>
-                            <div class="sign-up-field-error">{{form.description.errors}}</div>
+                        <div class="sign-up-field-error">{{ form.description.errors }}</div>
                     </div>
                 </div>
-            
+ 
                 <!-- Indicator types start to diaplay -->
-                <div class="row" id="indicator-types">
-                </div>
-            </div>
-            <div class="plan-submit-holder">
+                <div class="row" id="indicator-types"></div>
+
+                <div class="plan-submit-holder">
                 {% if form.initial %}
-                    <a
-                        id="delete-btn" 
-                        hx-delete="{% url 'activity-plans-delete' form.initial.id %}" 
-                        hx-trigger="click" 
-                        hx-indicator=".progress" 
-                        hx-confirm="Do you want to delete `{{form.initial.id}}` and its Target Locations ?"  
-                        data-tippy-content="Delete Activity Plan" 
-                        class="cursor-pointer"
-                    >
+                    <a id="delete-btn"
+                       hx-delete="{% url 'activity-plans-delete' form.initial.id %}"
+                       hx-trigger="click"
+                       hx-indicator=".progress"
+                       hx-confirm="Do you want to delete `{{ form.initial.id }}` and its Target Locations ?"
+                       data-tippy-content="Delete Activity Plan"
+                       class="cursor-pointer btn btn-gray">
                         <span class="project-detail icon-trashbin"></span>
                         Delete
                     </a>
@@ -190,11 +183,19 @@
                     <a href="#"></a>
                 {% endif %}
                 <div>
-                    <input type="submit" name="_addanother" class="btn btn-gray" value="Save and add another">
-                    <input type="submit" name="_continue" class="btn btn-gray" value="Save and continue editing" >
-                    <input type="submit" name="_save" class="btn btn-red" value="Save" >
+                    <input type="submit"
+                           name="_addanother"
+                           class="btn btn-gray"
+                           value="Save and add another">
+                    <input type="submit"
+                           name="_continue"
+                           class="btn btn-gray"
+                           value="Save and continue editing">
+                    <input type="submit" name="_save" class="btn btn-red" value="Save">
                 </div>
             </div>
+            </div>
+            
         </form>
     </div>
 {% endblock project_contents %}

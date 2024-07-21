@@ -206,7 +206,7 @@ admin.site.register(ActivityDomain, ActivityDomainAdmin)
 
 
 class ActivityTypeAdmin(admin.ModelAdmin):
-    list_display = ("name", "code", "activity_domain", "active")
+    list_display = ("name", "code", "activity_domain", "is_active")
     search_fields = (
         "name",
         "activity_domain__name",
@@ -249,7 +249,6 @@ class ProjectAdmin(admin.ModelAdmin):
         "budget",
         "budget_currency",
         "state",
-        "active",
     )
     search_fields = (
         "title",
@@ -259,7 +258,7 @@ class ProjectAdmin(admin.ModelAdmin):
         "programme_partners__code",
         "state",
     )
-    list_filter = ("state", "active", "clusters")
+    list_filter = ("state", "clusters")
 
     def show_clusters(self, obj):
         return ",\n".join([a.title for a in obj.clusters.all()])
@@ -271,15 +270,9 @@ admin.site.register(Project, ProjectAdmin)
 
 
 class ActivityPlanAdmin(admin.ModelAdmin):
-    list_display = (
-        "project",
-        "beneficiary",
-        "beneficiary_category",
-        "state",
-        "active",
-    )
-    search_fields = ("state", "active", "project__title")
-    list_filter = ("state", "active", "project__code")
+    list_display = ("project", "beneficiary", "beneficiary_category", "state")
+    search_fields = ("state", "project__title")
+    list_filter = ("state", "project__code")
     form = ActivityPlanModelAdminForm
 
 
@@ -300,10 +293,9 @@ class TargetLocationAdmin(admin.ModelAdmin):
         "district",
         "zone",
         "state",
-        "active",
     )
-    search_fields = ("title", "project__title", "state", "active")
-    list_filter = ("state", "active", "project__code")
+    search_fields = ("title", "project__title", "state")
+    list_filter = ("state", "project__code")
     inlines = [
         DisaggregationLocationInline,
     ]

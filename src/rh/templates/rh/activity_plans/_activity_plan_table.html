@@ -6,31 +6,27 @@
     </div>
     {% comment %} Table Actions and filters {% endcomment %}
     <div class="page-top-panel bottom-border">
-       <div class="actions-panel">
+        <div class="actions-panel">
             <!-- filter applied  -->
             <div class="filter-container" id="filter-container">
-                {% for field in activity_plans_filter.form%}
-                    {% if forloop.first %}
-                        <span>Applied Filters:</span>
-                    {% endif %}
+                {% for field in activity_plans_filter.form %}
+                    {% if forloop.first %}<span>Applied Filters:</span>{% endif %}
                     {% if field.value %}
-                        <span class="filter-item title" id="title">
-                            {{field.label}}
-                        </span>
-                    {% if forloop.last %}
-                        <span class="close-alert-message">&#x2715;</span>
+                        <span class="filter-item title" id="title">{{ field.label }}</span>
+                        {% if forloop.last %}<span class="close-alert-message">x</span>{% endif %}
                     {% endif %}
-                    {% endif %} 
+ 
                 {% endfor %}
             </div>
             <!-- filter applied end -->
-       </div> 
+        </div>
 
         <div class="actions-panel">
             {% if activity_plans_filter %}
                 {% include "components/_filter_drawer.html" with filter=activity_plans_filter %}
             {% endif %}
-            <a href="{% url 'activity-plans-create' project.id %}" class="btn btn-red">New Activity Plan</a>
+            <a href="{% url 'activity-plans-create' project.id %}"
+               class="btn btn-red">New Activity Plan</a>
         </div>
     </div>
 
@@ -40,52 +36,70 @@
             <table class="table all-projects-table">
                 <thead class="content-block ">
                     <tr>
-                        <th> <strong class="table-title"> Activity Domain </strong> </th>
-                        <th> <strong class="table-title"> Activity Type </strong> </th>
-                        <th> <strong class="table-title"> Indicator </strong> </th>
-                        <th><strong>Target Locations</strong></th>
+                        <th>
+                            <strong class="table-title">Activity Domain</strong>
+                        </th>
+                        <th>
+                            <strong class="table-title">Activity Type</strong>
+                        </th>
+                        <th>
+                            <strong class="table-title">Indicator</strong>
+                        </th>
+                        <th>
+                            <strong>Target Locations</strong>
+                        </th>
                         <th>Actions</th>
                     </tr>
                 </thead>
-                
+ 
                 <tbody>
                     <!--Include The Projects Details Here -->
                     {% for row in object_list %}
-                    <tr>
-                        <td> {{row.activity_domain}} </td>
-                        <td>{{row.activity_type}}</td>
-                        <td>{{row.indicator}}</td>
-                        <td> <a href="{% url 'target-locations-list' project.pk %}?activity_plan={{row.id}}">
-                            Has {{row.target_location_count}} Target Locations
-                        </a></td>
-                        <td>
-                             <div class="table-flex-holder">
-                                <ul class="table-options-buttons ">
-                                    <li>
-                                        <a href="{% url 'activity-plans-update' row.id %}" class="btn btn-gray">Edit</a>
-                                    </li>
-                                    <li>
-                                        <form action="{% url 'activity-plans-copy' row.id %}" method="post">
-                                            {% csrf_token %}
-                                            <button type="submit" class="btn btn-gray">Copy</button>
-                                        </form> 
-                                    </li>
-                                    <li>
-                                        <a href="{% url 'target-locations-create' row.id %}" class="btn btn-gray">
-                                            <img src="{% static 'admin/img/icon-addlink.svg' %}" alt="add-btn-icon">Location
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <button>
-                                            <a hx-delete="{% url 'activity-plans-delete' row.id %}" hx-trigger="click" hx-indicator=".progress" hx-confirm="Do you want to delete `{{row}}` and its Target Locations ?" hx-target="closest tr" data-tippy-content="Delete Activity Plan" class="">
-                                                <span class="project-detail icon-trashbin"></span>
+                        <tr>
+                            <td>{{ row.activity_domain }}</td>
+                            <td>{{ row.activity_type }}</td>
+                            <td>{{ row.indicator }}</td>
+                            <td>
+                                <a href="{% url 'target-locations-list' project.pk %}?activity_plan={{ row.id }}">
+                                    Has {{ row.target_location_count }} Target Locations
+                                </a>
+                            </td>
+                            <td>
+                                <div class="table-flex-holder">
+                                    <ul class="table-options-buttons ">
+                                        <li>
+                                            <a href="{% url 'activity-plans-update' row.id %}" class="btn btn-gray">Edit</a>
+                                        </li>
+                                        <li>
+                                            <form action="{% url 'activity-plans-copy' row.id %}" method="post">
+                                                {% csrf_token %}
+                                                <button type="submit" class="btn btn-gray">Copy</button>
+                                            </form>
+                                        </li>
+                                        <li>
+                                            <a href="{% url 'target-locations-create' row.id %}"
+                                               class="btn btn-gray">
+                                                <img src="{% static 'admin/img/icon-addlink.svg' %}" alt="add-btn-icon">
+                                                Location
                                             </a>
-                                        </button>
-                                    </li>
-                                </ul>
-                            </div>
-                        </td>
-                    </tr>
+                                        </li>
+                                        <li>
+                                            <button>
+                                                <a hx-delete="{% url 'activity-plans-delete' row.id %}"
+                                                   hx-trigger="click"
+                                                   hx-indicator=".progress"
+                                                   hx-confirm="Do you want to delete `{{ row }}` and its Target Locations ?"
+                                                   hx-target="closest tr"
+                                                   data-tippy-content="Delete Activity Plan"
+                                                   >
+                                                    <span class="project-detail icon-trashbin"></span>
+                                                </a>
+                                            </button>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </td>
+                        </tr>
                     {% endfor %}
                 </tbody>
             </table>
@@ -99,5 +113,5 @@
     {% endif %}
 
     {% comment %} Pagination {% endcomment %}
-    {% include 'components/_pagination.html' with object_list=object_list %}
+    {% include "components/_pagination.html" with object_list=object_list %}
 </div>

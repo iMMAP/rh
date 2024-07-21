@@ -7,12 +7,12 @@
   margin-bottom: 24px;
   font-size: 16px;
 }
-.rotate-90-degree{
+.rotate-90-degree {
   -webkit-transform: rotate(-180deg);
-        -moz-transform: rotate(-180deg);
-        -o-transform: rotate(-180deg);
-        -ms-transform: rotate(-180deg);
-        transform: rotate(-180deg);
+  -moz-transform: rotate(-180deg);
+  -o-transform: rotate(-180deg);
+  -ms-transform: rotate(-180deg);
+  transform: rotate(-180deg);
   transition: all 0.5s ease-in-out;
 }
 .choices:focus {
@@ -73,7 +73,9 @@
 .choices[data-type*="select-one"] .choices__button:focus {
   box-shadow: 0 0 0 2px #00bcd4;
 }
-.choices[data-type*="select-one"] .choices__item[data-value=""] .choices__button {
+.choices[data-type*="select-one"]
+  .choices__item[data-value=""]
+  .choices__button {
   display: none;
 }
 .choices[data-type*="select-one"]::after {
@@ -367,33 +369,58 @@
 
 /* =====  End of Choices  ====== */
 /* ===Details and summary style start */
-.details .summary{
-  background-color: rgb(228, 228, 228);
-  padding: 10px 4px;
-  border-radius: 3px;
-  font-size: 15px;
-  font-weight:600;
+.text-color-red {
+  font-size: 12px;
+  line-height: 1.2;
   color: #be2126;
-  cursor: pointer;
+  font-weight: 600;
 }
-.details{
-  margin-bottom: 5px;
+.summary {
+  background-color: #e9eaec;
+  padding: 10px;
+  border-radius: 5px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #000;
+  cursor: default;
+  box-shadow: none;
+  width: 100%;
 }
-details > summary{
-  list-style-type: '';
+.details-container .block-body .vertical-scroll {
+  border: 1px solid #c7c9ce;
+  padding: 12px;
+  border-radius: 5px;
+  background: #f9f9f9;
+}
+.details-container {
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+.custome-text {
+  font-size: 16px;
+  color: #000;
+  font-weight: 600;
 }
 
-.summary{
-  position: relative;
-  border-bottom: 2px solid rgb(187, 185, 185);
+.details-container::-webkit-scrollbar {
+  display: none;
 }
-.object-rotation{
+.details-container .bock-body::-webkit-scrollbar {
+  width: 3px;
+}
+.details-container .bock-body::-webkit-scrollbar-thumb {
+  background: red;
+}
+.summary {
+  position: relative;
+}
+.object-rotation {
   transform: rotate(180deg);
   -webkit-transform: rotate(180deg);
   -ms-transform: rotate(180deg);
   transition: all 0.5s ease-in-out;
 }
-.summary .icon-chevron-down{
+.summary .icon-chevron-down {
   position: absolute;
   right: 30px;
   top: 16px;
@@ -401,21 +428,14 @@ details > summary{
   font-weight: normal;
   color: gray;
 }
-.details{
-  overflow-y: scroll;
-  overflow-x: hidden;
+
+.field-col .input-holder .input-paragraph-content {
+  font-size: 12px;
+  padding-top: 5px;
+  font-weight: 700;
+  color: #606060;
 }
-/* ::-webkit-scrollbar{
-  width: 3px;
-  height: 3px;
-  color: #af4745;
-  background-color: rgb(214, 214, 214);
-} */
-/* ::-webkit-scrollbar-thumb{
-  background: #be2126;
-  border-radius: 8px;
-} */
-summary .export-badge {
+.summary .export-badge {
   position: absolute;
   top: 8px;
   right: 50px;
@@ -423,10 +443,10 @@ summary .export-badge {
   border-radius: 4px;
 }
 
-.export-badge .empty-text{
+.export-badge .empty-text {
   color: gray;
 }
 
-.downloading{
+.downloading {
   display: none;
 }

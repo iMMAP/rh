@@ -1,8 +1,6 @@
 {% extends "rh/projects/forms/project_form_base.html" %}
-
 {% load static %}
 {% load vite %}
-
 {% block title %}
     {% if project %}
         Update Project | {{ project }}
@@ -10,20 +8,19 @@
         Create Project
     {% endif %}
 {% endblock title %}
-
 {% block project_contents %}
     <div class="main-content">
-        <div class="project-plan create-plan">
+        <div class="create-plan">
             {% if project %}
                 <div class="flex flex-col gap-2 pt-2 pb-2">
-                    <div >
-                        <span >Project</span>
+                    <div>
+                        <span>Project</span>
                         <div class="input-holder">
                             <span class="text-read-only">{{ project.code }} - {{ project.title }}</span>
                         </div>
                     </div>
-                    <div >
-                        <span >Duration</span>
+                    <div>
+                        <span>Duration</span>
                         <div class="input-holder">
                             <span class="text-read-only">From {{ project.start_date }} to {{ project.end_date }}</span>
                         </div>
@@ -43,62 +40,53 @@
                     </span>
                 </div>
             </div>
- 
             <form method="post" class="form-container">
                 {% csrf_token %}
                 <div class="inner-holder">
-                    <div class="col ">
-                        <div class="input-field is-required">
-                            <label for="{{ form.title.id_for_label }}">Project Title</label>
-                            <div class="input-holder">{{ form.title }}</div>
-                            <span class="sign-up-field-error">{{ form.title.errors }}</span>
-                        </div>
-
-                        <div class="input-field is-required">
+                    <div class="input-field is-required">
+                        <label for="{{ form.title.id_for_label }}">Project Title</label>
+                        <div class="input-holder">{{ form.title }}</div>
+                        <span class="sign-up-field-error">{{ form.title.errors }}</span>
+                    </div>
+                    <div class="multiple-fields-row items-center">
+                        <div class="field-col input-field is-required">
                             <label for="{{ form.code.id_for_label }}">Project Code</label>
                             <div class="input-holder">{{ form.code }}</div>
                             <span class="sign-up-field-error">{{ form.code.errors }}</span>
                         </div>
-
-                        <div class="multiple-fields-row two-items">
-                            <div class="field-col">
-                                <div class="input-check-holder">
-                                    {{ form.is_hrp_project }}
-                                    <label for="{{ form.is_hrp_project.id_for_label }}">
-                                        <span class="input"></span>
-                                        <span class="text">HRP Project</span>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="input-field" id="prHrpCode">
-                            <label for="{{ form.hrp_code.id_for_label }}">HRP Project Code</label>
-                            <div class="input-holder">{{ form.hrp_code }}</div>
-                            <span class="sign-up-field-error">{{ form.hrp_code.errors }}</span>
+                        <div class="field-col input-field input-check-holder">
+                            {{ form.is_hrp_project }}
+                            <label for="{{ form.is_hrp_project.id_for_label }}">
+                                <span class="input"></span>
+                                <span class="text">HRP Project</span>
+                            </label>
                         </div>
                     </div>
- 
-                    <div class="col ">
-                        <span class="sign-up-field-error" id="date-validation-error">
-                            <i class="icon-info"></i> Start date cannot be greater then end date.
-                        </span>
-                        <div class="multiple-fields-row">
-                            <div class="field-col input-field is-required">
-                                <div class=" date start">
-                                    <label for="{{ form.start_date.id_for_label }}">Start Date</label>
-                                    <div class="date-picker-field">{{ form.start_date }}</div>
-                                    <span class="sign-up-field-error">{{ form.start_date.errors }}</span>
-                                </div>
+                    <div class="input-field" id="prHrpCode">
+                        <label for="{{ form.hrp_code.id_for_label }}">HRP Project Code</label>
+                        <div class="input-holder">{{ form.hrp_code }}</div>
+                        <span class="sign-up-field-error">{{ form.hrp_code.errors }}</span>
+                    </div>
+                    <div class="multiple-fields-row">
+                        <div class="field-col input-field is-required">
+                            <div class=" date start">
+                                <label for="{{ form.start_date.id_for_label }}">Start Date</label>
+                                <div class="date-picker-field">{{ form.start_date }}</div>
+                                <span class="sign-up-field-error">{{ form.start_date.errors }}</span>
                             </div>
-                            <div class="field-col input-field is-required">
-                                <div class="date end">
-                                    <label for="{{ form.end_date.id_for_label }}">End Date</label>
-                                    <div class="date-picker-field">{{ form.end_date }}</div>
-                                    <span class="sign-up-field-error">{{ form.end_date.errors }}</span>
-                                </div>
+                            <span class="sign-up-field-error" id="date-validation-error">
+                                <i class="icon-info"></i> Start date cannot be greater then end date.
+                            </span>
+                        </div>
+                        <div class="field-col input-field is-required">
+                            <div class="date end">
+                                <label for="{{ form.end_date.id_for_label }}">End Date</label>
+                                <div class="date-picker-field">{{ form.end_date }}</div>
+                                <span class="sign-up-field-error">{{ form.end_date.errors }}</span>
                             </div>
                         </div>
+                    </div>
+                    <fieldset class="field-col p-4 col-lg ">
                         <div class="multiple-fields-row">
                             <div class="field-col">
                                 <div class="input-field">
@@ -130,84 +118,76 @@
                                 </div>
                             </div>
                         </div>
+                    </fieldset>
+                    <div class="select-field is-required">
+                        <label for="{{ form.clusters.id_for_label }}">
+                            Clusters / Sectors [Hold Control/Command button to select
+                            multiple]
+                        </label>
+                        <div class="input-holder">{{ form.clusters }}</div>
+                        <span class="sign-up-field-error">{{ form.clusters.errors }}</span>
                     </div>
-
-                    <div class="col col-lg">
+                    <div class="field-col">
                         <div class="select-field is-required">
-                            <label for="{{ form.clusters.id_for_label }}">
-                                Clusters / Sectors [Hold Control/Command button to select
+                            <label for="{{ form.activity_domains.id_for_label }}">
+                                Activity Domains [Hold Control/Command button to select
                                 multiple]
                             </label>
-                            <div class="input-holder">{{ form.clusters }}</div>
-                            <span class="sign-up-field-error">{{ form.clusters.errors }}</span>
+                            <div class="input-holder">{{ form.activity_domains }}</div>
+                            <span class="sign-up-field-error">{{ form.activity_domains.errors }}</span>
                         </div>
-
+                    </div>
+                    <div class="multiple-fields-row two-items">
                         <div class="field-col">
-                            <div class="select-field is-required">
-                                <label for="{{ form.activity_domains.id_for_label }}">
-                                    Activity Domains [Hold Control/Command button to select
-                                    multiple]
+                            <div class="select-field">
+                                <label for="{{ form.implementing_partners.id_for_label }}">
+                                    Implementing Partners[implement the project in the field]
+                                    <div class="implement-info">
+                                        <i class="icon-info"></i>
+                                        <span class="implement-text">The partner who takes the project and implement the project in the field.</span>
+                                    </div>
                                 </label>
-                                <div class="input-holder">{{ form.activity_domains }}</div>
-                                <span class="sign-up-field-error">{{ form.activity_domains.errors }}</span>
+                                {{ form.implementing_partners }}
+                                <span class="sign-up-field-error">{{ form.implementing_partners.errors }}</span>
+                            </div>
+                        </div>
+                        <div class="field-col">
+                            <div class="select-field">
+                                <label for="{{ form.programme_partners.id_for_label }}">
+                                    Programme Partners[lead and administrate the project]
+                                    <div class="programme-info">
+                                        <i class="icon-info "></i>
+                                        <span class="programme-text">The partner who is leading and administrating the project</span>
+                                    </div>
+                                </label>
+                                {{ form.programme_partners }}
+                                <span class="sign-up-field-error">{{ form.programme_partners.errors }}</span>
                             </div>
                         </div>
                     </div>
-
-                    <div class="col col-lg">
-                        <div class="multiple-fields-row two-items">
-                            <div class="field-col">
-                                <div class="select-field">
-                                    <label for="{{ form.implementing_partners.id_for_label }}">
-                                        Implementing Partners[implement the project in the field]
-                                        <div class="implement-info">
-                                            <i class="icon-info"></i>
-                                            <span class="implement-text">The partner who takes the project and implement the project in the field.</span>
-                                        </div>
-                                    </label>
-                                    {{ form.implementing_partners }}
-                                    <span class="sign-up-field-error">{{ form.implementing_partners.errors }}</span>
-                                </div>
-                            </div>
-                            <div class="field-col">
-                                <div class="select-field">
-                                    <label for="{{ form.programme_partners.id_for_label }}">
-                                        Programme Partners[lead and administrate the project]
-                                        <div class="programme-info">
-                                            <i class="icon-info "></i>
-                                            <span class="programme-text">The partner who is leading and administrating the project</span>
-                                        </div>
- 
-                                    </label>
-                                    {{ form.programme_partners }}
-                                    <span class="sign-up-field-error">{{ form.programme_partners.errors }}</span>
-                                </div>
+                    <div class="multiple-fields-row two-items">
+                        <div class="field-col">
+                            <div class="select-field">
+                                <label for="{{ form.user.id_for_label }}">Focal Point</label>
+                                {{ form.user }}
+                                <span class="sign-up-field-error">{{ field.user.errors }}</span>
                             </div>
                         </div>
-                        <div class="multiple-fields-row two-items">
-                            <div class="field-col">
-                                <div class="select-field">
-                                    <label for="{{ form.user.id_for_label }}">Focal Point</label>
-                                    {{ form.user }}
-                                    <span class="sign-up-field-error">{{ field.user.errors }}</span>
-                                </div>
-                            </div>
-                            <div class="field-col">
-                                <div class="select-field">
-                                    <label for="{{ form.donors.id_for_label }}">
-                                        Project Donor [ Please contact us if your project donor is not
-                                        in the list]
-                                    </label>
-                                    <div class="input-holder">{{ form.donors }}</div>
-                                    <span class="sign-up-field-error">{{ form.donors.errors }}</span>
-                                </div>
+                        <div class="field-col">
+                            <div class="select-field">
+                                <label for="{{ form.donors.id_for_label }}">
+                                    Project Donor [ Please contact us if your project donor is not
+                                    in the list]
+                                </label>
+                                <div class="input-holder">{{ form.donors }}</div>
+                                <span class="sign-up-field-error">{{ form.donors.errors }}</span>
                             </div>
                         </div>
-                        <div class="input-field is-required">
-                            <label for="{{ form.description.id_for_label }}">Project Description &amp; Objectives</label>
-                            <div class="input-holder">{{ form.description }}</div>
-                            <span class="sign-up-field-error">{{ form.description.errors }}</span>
-                        </div>
+                    </div>
+                    <div class="input-field is-required">
+                        <label for="{{ form.description.id_for_label }}">Project Description &amp; Objectives</label>
+                        <div class="input-holder">{{ form.description }}</div>
+                        <span class="sign-up-field-error">{{ form.description.errors }}</span>
                     </div>
                     <div class="plan-submit-holder">
                         <div></div>
@@ -226,11 +206,9 @@
         </div>
     </div>
 {% endblock project_contents %}
-
 {% block project_form_scripts %}
     {% vite 'rh/static/rh/project_planning.js' %}
 {% endblock project_form_scripts %}
-
 {% block scripts %}
     {% comment %} {% vite 'users/static/users/users.js' %} {% endcomment %}
     <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>

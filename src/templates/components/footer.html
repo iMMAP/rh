@@ -1,0 +1,99 @@
+{% load static %}
+<footer class="footer">
+    <div class="container">
+        <div class="footer-inner">
+            <div class="logo-holder">
+                <strong class="logo">
+                    <a href="#">
+                        <img src="{% static 'src/images/immap-logo.svg' %}"
+                             alt="image description"
+                             width="100%"
+                             height="100%" />
+                    </a>
+                </strong>
+                <strong class="logo-text">ReportHub</strong>
+            </div>
+            {% if user.is_authenticated %}
+                <div class="footer-row">
+                    <div class="footer-col">
+                        <span class="col-label">Contact us</span>
+                        <ul class="footer-list">
+                            <li>
+                                <a href="mailto:rh-support@immap.org">rh-support@immap.org</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="footer-col">
+                        <span class="col-label">Help Desk</span>
+                        <ul class="footer-list">
+                            <li>
+                                <a href="mailto:rh-support@immap.org">Reporthub Service Desk</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="footer-col">
+                        <span class="col-label">Sources</span>
+                        <ul class="footer-list">
+                            <li>
+                                <a href="/media/documents/ReportHub-User-Guide.pdf" target="_blank">User Guide</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            {% else %}
+                <div class="footer-row alt">
+                    <div class="footer-col">
+                        <ul class="footer-list">
+                            <li>
+                                <span class="col-text">Meeting the Requirements of Humanitarian Reporting</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="footer-col">
+                        <div class="footer-info">
+                            <div class="block-top">
+                                <span class="block-label">Funded by:</span>
+                                <ul class="logos-list">
+                                    <li>
+                                        <a href="#">
+                                            <img src="{% static 'src/images/usaid.svg' %}"
+                                                 alt="image description"
+                                                 width="100%"
+                                                 height="100%" />
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="block-text">
+                                <p>
+                                    ReportHub services is provided through the generous support of the American
+                                    people, and is funded by United States Agency for International Development
+                                    (USAID)
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="footer-col">
+                        <ul class="social-list">
+                            <li>
+                                <a href="#" target="_blank">
+                                    <span class="icon-facebook"></span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" target="_blank">
+                                    <span class="icon-twitter"></span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" target="_blank">
+                                    <span class="icon-linkedin"></span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</footer>

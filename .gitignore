@@ -142,3 +142,5 @@ static-cdn
 .vscode
 db-backups
 notes.md
+
+src/media/

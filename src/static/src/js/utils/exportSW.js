@@ -1,13 +1,32 @@
-// changing the checkbox color when it checked
 
+// changing the checkbox color when it checked
 $("input[type=checkbox]").change(function () {
 	$(this).css("accent-color", "#af4745");
 });
+// count the number of checkbox selected for export
+try{
+	const checkedField = document.querySelectorAll(".input-check");
+	document.getElementById("totalCount").innerHTML=checkedField.length;
+	const countSpan = document.getElementById("selectedCount");
+	let selectedCount = 0;
+	checkedField.forEach(field => {
+		field.addEventListener("click", () =>{
+			if(field.checked == true){
+				selectedCount++;
+			} else if(field.checked == false){
+				selectedCount--;
+			}
+			countSpan.textContent = selectedCount;
+		})
+		countSpan.textContent = selectedCount;
+	});
+}catch{}
+
 
 //Reset the checkbox
 $("#resetFilterButton").on("click", () => {
-	selectedCount = 0;
 	const checkbox = $("input[type=checkbox]");
+	const countSpan = $("#selectedCount");
 	if (checkbox.is(":checked")) {
 		checkbox.prop("checked", false);
 	} else {
@@ -16,7 +35,10 @@ $("#resetFilterButton").on("click", () => {
 			$("#not-checked-message").text("");
 		}, 3000);
 	}
-	countSpan.textContent = selectedCount;
+	let selectedCount = 0;
+	countSpan.text(selectedCount);
+
+	
 });
 
 $("tr[data-url]").click(function () {
@@ -55,267 +77,28 @@ $(".export-button").click(function (event) {
 	});
 });
 // filter the project field and download start
-
 $("#downloadFilterForm").click(function (e) {
 	e.preventDefault();
 	e.stopPropagation();
-
+	// get the url
 	const routeUrl = $(this).find("a").data("url");
-	// console.log(routeUrl)
-	const exportData = {};
-	const userData = [];
-	const currencyData = [];
-	const donorData = [];
-	const clusterData = [];
-	const implementingPartnerData = [];
-	const programPartnerData = [];
-
-	const checkedDonor = document.querySelectorAll(".input-check-donor");
-	for (let i = 0; i < checkedDonor.length; i++) {
-		if (checkedDonor[i].checked === true) {
-			donorData.push(checkedDonor[i].value);
+	// create empty list
+	const selectedFieldList = {};
+	// get the selected fields and store it in the list
+	const checkedField = document.querySelectorAll(".input-check");
+	for (let i = 0; i < checkedField.length; i++) {
+		if (checkedField[i].checked === true) {
+			selectedFieldList[checkedField[i].name] = checkedField[i].value;
 		}
 	}
-	const checkedCluster = document.querySelectorAll(".input-check-cluster");
-	for (let i = 0; i < checkedCluster.length; i++) {
-		if (checkedCluster[i].checked === true) {
-			clusterData.push(checkedCluster[i].value);
-		}
-	}
-
-	const checkImplement = document.querySelectorAll(".input-check-implement");
-	for (let i = 0; i < checkImplement.length; i++) {
-		if (checkImplement[i].checked === true) {
-			implementingPartnerData.push(checkImplement[i].value);
-		}
-	}
-	const checkProgram = document.querySelectorAll(".input-check-program");
-	for (let i = 0; i < checkProgram.length; i++) {
-		if (checkProgram[i].checked === true) {
-			programPartnerData.push(checkProgram[i].value);
-		}
-	}
-	const checkUser = document.querySelector(".input-user");
-	if (checkUser.checked === true) {
-		userData.push(checkUser.name);
-	}
-	const checkCurrency = document.querySelector(".input-currency");
-	if (checkCurrency.checked === true) {
-		currencyData.push(checkCurrency.name);
-	}
-
-	if (userData.length !== 0) {
-		exportData.focal_point = userData;
-	}
-
-	const checkedItem = document.querySelectorAll(".input-check");
-	for (let i = 0; i < checkedItem.length; i++) {
-		if (checkedItem[i].checked === true) {
-			exportData[checkedItem[i].name] = checkedItem[i].value;
-		}
-	}
-	// ACTIVITY PLANNING
-	const activityDomain = [];
-	const activityType = [];
-	const activityDetail = [];
-	const beneficiary = [];
-	const BCategory = [];
-	const indicator = [];
-	const activityDescription = [];
-	const domainCheck = document.querySelectorAll(".domain-check");
-	for (let i = 0; i < domainCheck.length; i++) {
-		if (domainCheck[i].checked === true) {
-			activityDomain.push(domainCheck[i].value);
-		}
-	}
-	const typeCheck = document.querySelectorAll(".type-check");
-	for (let i = 0; i < typeCheck.length; i++) {
-		if (typeCheck[i].checked === true) {
-			activityType.push(typeCheck[i].value);
-		}
-	}
-	const detailCheck = document.querySelectorAll(".detail-check");
-	for (let i = 0; i < detailCheck.length; i++) {
-		if (detailCheck[i].checked === true) {
-			activityDetail.push(detailCheck[i].value);
-		}
-	}
-	const checkedIndicator = document.querySelectorAll(".checkedIndicator");
-	for (let i = 0; i < checkedIndicator.length; i++) {
-		if (checkedIndicator[i].checked === true) {
-			indicator.push(checkedIndicator[i].value);
-		}
-	}
-	const checkBeneficiary = document.querySelectorAll(".beneficiary-check");
-	for (let i = 0; i < checkBeneficiary.length; i++) {
-		if (checkBeneficiary[i].checked === true) {
-			beneficiary.push(checkBeneficiary[i].value);
-		}
-	}
-	const checkBCategory = document.querySelectorAll(
-		".beneficiary-category-check",
-	);
-	for (let i = 0; i < checkBCategory.length; i++) {
-		if (checkBCategory[i].checked === true) {
-			BCategory.push(checkBCategory[i].value);
-		}
-	}
-	const descriptionCheck = document.querySelectorAll(".description-check");
-	for (let i = 0; i < descriptionCheck.length; i++) {
-		if (descriptionCheck[i].checked === true) {
-			activityDescription.push(descriptionCheck[i].value);
-		}
-	}
-	// Target Location fields
-	const province = [];
-	const district = [];
-	//  let locationType = [];
-	const facilitySiteType = [];
-	const facilityName = [];
-	const facilityMonitoring = [];
-	const facilityId = [];
-	const facilityLat = [];
-	const facilityLong = [];
-	const provinceCheck = document.querySelectorAll(".province-check");
-	for (let i = 0; i < provinceCheck.length; i++) {
-		if (provinceCheck[i].checked === true) {
-			province.push(provinceCheck[i].value);
-		}
-	}
-	const districtCheck = document.querySelectorAll(".district-check");
-	for (let i = 0; i < districtCheck.length; i++) {
-		if (districtCheck[i].checked === true) {
-			district.push(districtCheck[i].value);
-		}
-	}
-	const facilitySiteTypeCheck = document.querySelectorAll(
-		".facility-site-type-check",
-	);
-	for (let i = 0; i < facilitySiteTypeCheck.length; i++) {
-		if (facilitySiteTypeCheck[i].checked === true) {
-			facilitySiteType.push(facilitySiteTypeCheck[i].value);
-		}
-	}
-
-	const facilityMonitoringCheck = document.querySelectorAll(
-		".facility-monitoring-check",
-	);
-	for (let i = 0; i < facilityMonitoringCheck.length; i++) {
-		if (facilityMonitoringCheck[i].checked === true) {
-			facilityMonitoring.push(facilityMonitoringCheck[i].value);
-		}
-	}
-	const facilityNameCheck = document.querySelectorAll(".facility-name-check");
-	for (let i = 0; i < facilityNameCheck.length; i++) {
-		if (facilityNameCheck[i].checked === true) {
-			facilityName.push(facilityNameCheck[i].value);
-		}
-	}
-	const facilityIdCheck = document.querySelectorAll(".facility-id-check");
-	for (let i = 0; i < facilityIdCheck.length; i++) {
-		if (facilityIdCheck[i].checked === true) {
-			facilityId.push(facilityIdCheck[i].value);
-		}
-	}
-	const facilityLatCheck = document.querySelectorAll(".facility-lat-check");
-	for (let i = 0; i < facilityLatCheck.length; i++) {
-		if (facilityLatCheck[i].checked === true) {
-			facilityLat.push(facilityLatCheck[i].value);
-		}
-	}
-	const facilityLongCheck = document.querySelectorAll(".facility-long-check");
-	for (let i = 0; i < facilityLongCheck.length; i++) {
-		if (facilityLongCheck[i].checked === true) {
-			facilityLong.push(facilityLongCheck[i].value);
-		}
-	}
-
-	const disaggregation = [];
-	const disaggregationCheck = document.querySelectorAll(
-		".disaggregation-check",
-	);
-	for (let i = 0; i < disaggregationCheck.length; i++) {
-		if (disaggregationCheck[i].checked === true) {
-			disaggregation.push(disaggregationCheck[i].value);
-		}
-	}
-	if (currencyData.length !== 0) {
-		exportData.currency = currencyData;
-	}
-	if (donorData.length !== 0) {
-		exportData.donors = donorData;
-	}
-	if (clusterData.length !== 0) {
-		exportData.clusters = clusterData;
-	}
-
-	if (implementingPartnerData.length !== 0) {
-		exportData.implementing_partners = implementingPartnerData;
-	}
-	if (programPartnerData.length !== 0) {
-		exportData.programme_partners = programPartnerData;
-	}
-	if (activityDomain.length !== 0) {
-		exportData.activity_domain = activityDomain;
-	}
-	if (activityType.length !== 0) {
-		exportData.activity_type = activityType;
-	}
-	if (activityDetail.length !== 0) {
-		exportData.activity_detail = activityDetail;
-	}
-
-	if (indicator.length !== 0) {
-		exportData.indicator = indicator;
-	}
-	if (beneficiary.length !== 0) {
-		exportData.beneficiary = beneficiary;
-	}
-	if (BCategory.length !== 0) {
-		exportData.beneficiary_category = BCategory;
-	}
-	if (activityDescription.length !== 0) {
-		exportData.activity_description = activityDescription;
-	}
-
-	if (province.length !== 0) {
-		exportData.admin1name = province;
-		exportData.admin1pcode = "admin1pcode";
-	}
-
-	if (district.length > 0) {
-		exportData.admin2name = district;
-		exportData.admin2pcode = "admin2pcode";
-		exportData.classification = "classification";
-	}
-	if (facilitySiteType.length > 0) {
-		exportData.facility_site_type = facilitySiteType;
-	}
-
-	if (facilityMonitoring.length !== 0) {
-		exportData.facility_monitoring = facilityMonitoring;
-	}
-	if (facilityId.length !== 0) {
-		exportData.facility_id = facilityId;
-	}
-	if (facilityName.length !== 0) {
-		exportData.facility_name = facilityName;
-	}
-	if (facilityLat.length !== 0) {
-		exportData.facility_latitude = facilityLat;
-	}
-	if (facilityLong.length !== 0) {
-		exportData.facility_longitude = facilityLong;
-	}
-	if (disaggregation.length !== 0) {
-		exportData.disaggregation = disaggregation;
-	}
-	//  console.log(exportData);
+	console.log(selectedFieldList);
+	console.log(Object.keys(selectedFieldList).length);
+	// create post request
 	$.post({
 		url: routeUrl,
 		method: "POST",
 		data: {
-			exportData: JSON.stringify(exportData),
+			exportData: JSON.stringify(selectedFieldList),
 			csrfmiddlewaretoken: csrftoken,
 		},
 		success: (response) => {

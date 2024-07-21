@@ -1,9 +1,7 @@
-import os
-from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.db.models import Prefetch
-from django.http import FileResponse, HttpResponseForbidden, JsonResponse
+from django.http import JsonResponse
 
 from project_reports.models import ProjectMonthlyReport as Report
 from django.shortcuts import get_object_or_404, render
@@ -64,20 +62,6 @@ def landing_page(request):
     }
 
     return render(request, "landing.html", context)
-
-
-@login_required
-def download_user_guide(request):
-    document_path = os.path.join(settings.MEDIA_ROOT, "documents", "ReportHub-User-Guide.pdf")
-
-    # Check if the user is authenticated
-    if not request.user.is_authenticated:
-        return HttpResponseForbidden("You do not have permission to access this resource.")
-
-    # Open the file in binary mode
-    response = FileResponse(open(document_path, "rb"))
-
-    return response
 
 
 #############################################

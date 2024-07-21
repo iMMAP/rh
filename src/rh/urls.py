@@ -4,7 +4,6 @@ from .views import exports as export_views
 
 from .views.views import (
     landing_page,
-    download_user_guide,
     load_facility_sites,
     load_activity_domains,
     get_activity_domain_types,
@@ -194,5 +193,4 @@ urlpatterns = [
         name="export_porjcet_CSV",
     ),
     # User Guide Download Link
-    path("rh/user_guide/download/", download_user_guide, name="download_user_guide"),
 ]

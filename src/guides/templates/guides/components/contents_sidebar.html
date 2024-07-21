@@ -1,0 +1,47 @@
+{% comment %} RIGHT: In this page {% endcomment %}
+<aside class="hidden text-sm xl:block" id="right-sidebar">
+    <div class="sticky top-16 -mt-10 max-h-[calc(100vh-5rem)] overflow-y-auto pt-6 space-y-2"
+         id="content_headings">
+        <p class="font-medium">On this page</p>
+        {% comment %} contents will be added by the below script {% endcomment %}
+    </div>
+</aside>
+{% block scripts %}
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // highlight active headings Observer
+        const headingsObserver = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const activeHeading = entry.target 
+                // console.log("Heading is active",activeHeading.type)
+
+                // Remove active class from other toc links
+                document.querySelectorAll('.toc-heading').forEach(th => {
+                    th.classList.remove('!text-purple-400', 'font-bold')
+                })
+
+                // Add class to active link
+                document.querySelector(`a[href='#${activeHeading.id}']`).classList.add('font-bold')
+                // console.log(document.querySelector(`a[href='#${activeHeading.id}']`))
+            }
+            })
+        }, {
+            threshold: 0,
+            rootMargin: "-80px",
+        });
+
+        let article = document.querySelector('article');
+        let sidebar = document.getElementById('content_headings');
+        let ul = document.createElement('ul');
+
+        article.querySelectorAll('h1, h2, h3, h4').forEach(function(heading) {
+            heading.id = `heading-${Math.random().toString(36).substr(2, 9)}`;
+            headingsObserver.observe(heading);
+            ul.insertAdjacentHTML('beforeend', `<li><a class="toc-heading" href="#${heading.id}">${heading.textContent}</a></li>`);
+        });
+
+        sidebar.appendChild(ul);
+    });
+    </script>
+{% endblock scripts %}

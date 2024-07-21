@@ -10,6 +10,9 @@
   border: 1px solid $gray-e6;
 }
 
+.row-form-errors{
+  background-color: $gray-d3;
+}
 
 .table {
   width: 100%;
@@ -111,7 +114,7 @@
 
   tbody {
     .add-row{
-      background-color: $gray-f3;
+      background-color: $gray-f5;
 
       a{
         background: url("/static/admin/img/icon-addlink.svg") 0 1px no-repeat;

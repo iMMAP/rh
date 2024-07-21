@@ -1,10 +1,8 @@
 {% for parent in parents %}
     <optgroup label="{{ parent.name }}">
-    {% if parent.children.exists %}
-        {% for location in parent.children.all %}
-            <option value="{{ location.pk }}">{{ location }}</option>
-        {% endfor %}
-    {% else %}
-    {% endif %}
+        {% if parent.children.exists %}
+            {% for location in parent.children.all %}<option value="{{ location.pk }}">{{ location }}</option>{% endfor %}
+        {% else %}
+        {% endif %}
     </optgroup>
 {% endfor %}

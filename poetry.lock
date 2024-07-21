@@ -450,6 +450,16 @@ django = ">=2.0"
 jsonschema = "*"
 
 [[package]]
+name = "django-mdeditor"
+version = "0.1.20"
+description = "A simple Django app to edit markdown text."
+optional = false
+python-versions = "*"
+files = [
+    {file = "django-mdeditor-0.1.20.tar.gz", hash = "sha256:d1f3b735b6202b8820f10e024a5aa28c5b948897ee7a8dbb84558df75339827e"},
+]
+
+[[package]]
 name = "django-smart-selects"
 version = "1.7.1"
 description = "Django application to handle chained model fields."
@@ -937,6 +947,21 @@ benchmark = ["pytest", "pytest-benchmark"]
 dev = ["black", "flake8", "isort", "pre-commit", "pyproject-flake8"]
 doc = ["myst-parser", "sphinx", "sphinx-book-theme"]
 test = ["coverage", "pytest", "pytest-cov"]
+
+[[package]]
+name = "markdown"
+version = "3.6"
+description = "Python implementation of John Gruber's Markdown."
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "Markdown-3.6-py3-none-any.whl", hash = "sha256:48f276f4d8cfb8ce6527c8f79e2ee29708508bf4d40aa410fbc3b4ee832c850f"},
+    {file = "Markdown-3.6.tar.gz", hash = "sha256:ed4f41f6daecbeeb96e576ce414c41d2d876daa9a16cb35fa8ed8c2ddfad0224"},
+]
+
+[package.extras]
+docs = ["mdx-gh-links (>=0.2)", "mkdocs (>=1.5)", "mkdocs-gen-files", "mkdocs-literate-nav", "mkdocs-nature (>=0.6)", "mkdocs-section-index", "mkdocstrings[python]"]
+testing = ["coverage", "pyyaml"]
 
 [[package]]
 name = "markdown-it-py"
@@ -2291,4 +2316,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "09ac2b931d01fe7e44126059ae70d15f7443bfe57baed9665b8fa9cca777a7e0"
+content-hash = "9b82d9f71e7cdbbea29198d64889bed14a93ff5132649edc54febc1aa2248f52"

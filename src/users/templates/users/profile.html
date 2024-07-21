@@ -4,10 +4,9 @@
 {% load compress %}
 {% load vite %}
 
-{% block page_title %} 
-Profile: {{user.username}}
-{% endblock page_title %}
-
+{% block title %}
+    Profile: {{ user.username }}
+{% endblock title %}
 
 {% block content %}
     <div class="base-section">
@@ -19,7 +18,7 @@ Profile: {{user.username}}
                             <h1>{{ user.profile.name }}</h1>
                             <strong class="user-position">{{ user.profile.position }}</strong>
                             <address>
-                                {% for cluster in user.profile.clusters.all %}{{ cluster.title }},&nbsp; {% endfor %}
+                                {% for cluster in user.profile.clusters.all %}{{ cluster.title }},&nbsp;{% endfor %}
                                 {{ user.profile.country }}
                                 <br />
                                 <a href="mailto:{{ user.email }}">{{ user.email }}</a>,
@@ -61,7 +60,7 @@ Profile: {{user.username}}
                     </div>
                 </div>
                 <div class="main-content">
-                  
+ 
                     <div class="user-info-form">
                         <form action="#" method="post" class="login-form">
                             {% csrf_token %}
@@ -97,18 +96,18 @@ Profile: {{user.username}}
 {% endblock content %}
 
 {% block scripts %}
-<script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
-<script>
-    document.querySelectorAll('.custom-select').forEach((select) => {
-        const choice = new Choices(select, {
-            searchEnabled: true,
-            itemSelectText: '',
-            removeItemButton: true,
-            classNames: {
-                listDropdown: 'choices__list--dropdown',
-            },
-            shouldSort: false,
-        });
-    })
-</script>
+    <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+    <script>
+        document.querySelectorAll('.custom-select').forEach((select) => {
+            const choice = new Choices(select, {
+                searchEnabled: true,
+                itemSelectText: '',
+                removeItemButton: true,
+                classNames: {
+                    listDropdown: 'choices__list--dropdown',
+                },
+                shouldSort: false,
+            });
+        })
+    </script>
 {% endblock scripts %}

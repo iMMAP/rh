@@ -69,7 +69,6 @@ def copy_budget_progress(request, project, budget):
         new_budget_progress.pk = None
         new_budget_progress.save()
         new_budget_progress.project = project
-        new_budget_progress.active = True
         new_budget_progress.state = "draft"
         new_budget_progress.title = f"[COPY] - {budget_progress.title}"
         new_budget_progress.save()

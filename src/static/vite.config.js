@@ -8,7 +8,7 @@ export default defineConfig({
         "src/styles/style.scss", 
         "src/js/app.js", 
         "src/js/utils/initSentry.js", 
-        "rh/js/project_planning.js",
+        "../rh/static/rh/project_planning.js",
 
         // relative to the folder that vite.config is located
         // "../users/static/users/users.js",

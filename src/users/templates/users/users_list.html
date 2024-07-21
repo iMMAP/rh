@@ -3,69 +3,65 @@
 {% load static %}
 {% load compress %}
 
-{% block page_title %}
-   Organization Members 
-{% endblock page_title %}
+{% block title %}
+    Organization Members
+{% endblock title %}
 
 {% block content %}
-<div class="container">
-    <div class="">
-        <div class="holder">
-            <div class="input-holder">
-                <h2>{{user.profile.organization}} Members</h1>
+    <div class="container">
+        <div>
+            <div class="holder">
+                <div class="input-holder">
+                    <h2>{{ user.profile.organization }} Members</h2>
+                </div>
             </div>
         </div>
-    </div>
 
-    <div class="tabs-nav-holder">
-        <ul class="tabs-nav">
-            <li class=" {% if not request.GET.is_active  %}active{% endif %}">
-                <a href="{% url 'users-organization' %}">All Users
-                    ({{ users_count }})
-                </a>
-            </li>
-            <li class=" {% if request.GET.is_active == 'true' %}active{% endif %}">
-                <a href="{{request.GET.url}}?is_active=true">Active Users
-                    (
-                    {% if active_users_count %}
-                        {{ active_users_count }}
-                    {% else %}
-                        {{ active_users | length }}
-                    {% endif %}
-                    )
-                </a>
-            </li>
-            <li class=" {% if request.GET.is_active == 'false' %}active{% endif %}">
-                <a href="{{request.GET.url}}?is_active=false">Deactivated Users
-                    (
-                    {% if deactive_users_count %}
-                        {{ deactive_users_count }}
-                    {% endif %}
-                    )
-                </a>
-            </li>
-        </ul>
-    </div>
+        <div class="tabs-nav-holder">
+            <ul class="tabs-nav">
+                <li class=" {% if not request.GET.is_active %}active{% endif %}">
+                    <a href="{% url 'users-organization' %}">All Users
+                        ({{ users_count }})
+                    </a>
+                </li>
+                <li class=" {% if request.GET.is_active == 'true' %}active{% endif %}">
+                    <a href="{{ request.GET.url }}?is_active=true">Active Users
+                        (
+                        {% if active_users_count %}
+                            {{ active_users_count }}
+                        {% else %}
+                            {{ active_users | length }}
+                        {% endif %}
+                        )
+                    </a>
+                </li>
+                <li class=" {% if request.GET.is_active == 'false' %}active{% endif %}">
+                    <a href="{{ request.GET.url }}?is_active=false">Deactivated Users
+                        (
+                        {% if deactive_users_count %}{{ deactive_users_count }}{% endif %}
+                        )
+                    </a>
+                </li>
+            </ul>
+        </div>
 
-    <div class="two-cols-layout">
-        <aside class="">
-            <form method="get" action="" class="form-container" >
-                <div class="page-top-panel bottom-border">
-                    <span class="title" style="padding: 0.2rem;font-weight:600">Filter</span>
-                </div>
-                <div style="padding:0.7rem">
-                    {{ users_filter.form.as_p }}
-                </div>
-                <div style="padding:0.7rem;">
-                    <a class="btn btn-gray-outline" href="">Reset</a>
-                    <button type="submit" class="btn btn-red">Apply</button>
-                </div>
-            </form>
-        </aside>
+        <div class="two-cols-layout">
+            <aside>
+                <form method="get" action="" class="form-container">
+                    <div class="page-top-panel bottom-border">
+                        <span class="title font-bold p-1">Filter</span>
+                    </div>
+                    <div class="p-2">{{ users_filter.form.as_p }}</div>
+                    <div class="p-2">
+                        <a class="btn btn-gray-outline" href="">Reset</a>
+                        <button type="submit" class="btn btn-red">Apply</button>
+                    </div>
+                </form>
+            </aside>
 
-        {% include "users/partials/_users_table.html" %}
+            {% include "users/partials/_users_table.html" %}
+        </div>
     </div>
-</div>
 {% endblock content %}
 
 {% block scripts %}

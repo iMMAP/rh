@@ -3,16 +3,18 @@
 {% load static %}
 {% load compress %}
 
-{% block page_title %}
+{% block title %}
     Projects - Organization
-{% endblock page_title %}
+{% endblock title %}
 
 {% block content %}
     <div class="container">
         <div class="projects-options-panel">
             <div class="holder">
                 <div class="input-holder">
-                    <h2>Your Oganization Projects</h1>
+                    <h2>
+                        Your Oganization Projects
+                    </h2>
                 </div>
                 <ul class="buttons-list-inline">
                     <li>
@@ -24,58 +26,51 @@
 
         <div class="tabs-nav-holder">
             <ul class="tabs-nav">
-                <li class=" {% if not request.GET.state  %}active{% endif %}">
-                    <a href="{{request.path}}">All
+                <li class=" {% if not request.GET.state %}active{% endif %}">
+                    <a href="{{ request.path }}">All
                         ({{ projects_count }})
                     </a>
                 </li>
                 <li class=" {% if request.GET.state == 'in-progress' %}active{% endif %}">
-                    <a href="{{request.GET.url}}?state=in-progress">Active 
+                    <a href="{{ request.GET.url }}?state=in-progress">Active
                         (
-                        {% if active_projects_count %}
-                            {{ active_projects_count }}
-                        {% endif %}
+                        {% if active_projects_count %}{{ active_projects_count }}{% endif %}
                         )
                     </a>
                 </li>
                 <li class=" {% if request.GET.state == 'draft' %}active{% endif %}">
-                    <a href="{{request.GET.url}}?state=draft">Draft
+                    <a href="{{ request.GET.url }}?state=draft">Draft
                         (
-                        {% if draft_projects_count %}
-                            {{ draft_projects_count }}
-                        {% endif %}
+                        {% if draft_projects_count %}{{ draft_projects_count }}{% endif %}
                         )
                     </a>
                 </li>
                 {% if completed_projects_count or completed_projects %}
-                    <li class=" {% if request.GET.state == 'done' %}active{% endif %}">
-                        <a href="{{request.GET.url}}?state=done">Done
+                    <li class=" {% if request.GET.state == 'completed' %}active{% endif %}">
+                        <a href="{{ request.GET.url }}?state=completed">Completed
                             (
-                            {% if completed_projects_count %}
-                                {{ completed_projects_count }}
-                            {% endif %}
+                            {% if completed_projects_count %}{{ completed_projects_count }}{% endif %}
                             )
                         </a>
                     </li>
                 {% endif %}
                 {% if archived_projects_count or archived_projects %}
-                    <li class=" {% if request.GET.state == 'archive' %}active{% endif %}">
-                        <a href="{{request.GET.url}}?state=archive">Archived
+                    <li class=" {% if request.GET.state == 'archived' %}active{% endif %}">
+                        <a href="{{ request.GET.url }}?state=archived">Archived
                             (
-                            {% if archived_projects_count %}
-                                {{ archived_projects_count }}
-                            {% endif %}
+                            {% if archived_projects_count %}{{ archived_projects_count }}{% endif %}
                             )
                         </a>
                     </li>
                 {% endif %}
             </ul>
         </div>
-        
+ 
         {% include "rh/projects/views/_projects_table.html" %}
     </div>
 {% endblock content %}
 
-{% block scripts %}    
-    <script src="{% static 'src/js/utils/exportSW.js' %}"></script> 
+{% block scripts %}
+ 
+    <script src="{% static 'src/js/utils/exportSW.js' %}"></script>
 {% endblock scripts %}

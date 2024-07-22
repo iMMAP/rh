@@ -1,7 +1,7 @@
-<!-- templates/_base.html -->
 {% load static %}
 {% load compress %}
 {% load vite %}
+
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -53,6 +53,7 @@
                 {% include "components/footer.html" %}
             </div>
         </div>
+
         {% include "components/_error_tracker.html" %}
         <!-- jQuery CDN -->
         <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous">
@@ -67,6 +68,7 @@
         </script>
         <!-- Full Path relative to location of manage.py file -->
         {% vite 'static/src/js/app.js' %}
+
         {% block scripts %}
         {% endblock scripts %}
     </body>

@@ -80,39 +80,65 @@ $(".export-button").click(function (event) {
 $("#downloadFilterForm").click(function (e) {
 	e.preventDefault();
 	e.stopPropagation();
+	
+	let currentDate = new Date();
+	// Extract date components
+	let day = currentDate.getDate();
+	let month = currentDate.getMonth() + 1; // Month is zero-based
+	let year = currentDate.getFullYear();
+	// Format the date as needed (example: DD/MM/YYYY)
+	let todayDate = year+'-'+month+'-'+day;
+	// write the file name
+	let filename = "custom_project_export_"+todayDate+".csv";
+
 	// get the url
 	const routeUrl = $(this).find("a").data("url");
-	// create empty list
-	const selectedFieldList = {};
-	// get the selected fields and store it in the list
-	const checkedField = document.querySelectorAll(".input-check");
-	for (let i = 0; i < checkedField.length; i++) {
-		if (checkedField[i].checked === true) {
-			selectedFieldList[checkedField[i].name] = checkedField[i].value;
+	const file_format = $("input[type=radio]:checked").val();
+	if(file_format){
+		// create empty list
+		const selectedFieldList = {};
+		// get the selected fields and store it in the list
+		const checkedField = document.querySelectorAll(".input-check");
+		for (let i = 0; i < checkedField.length; i++) {
+			if (checkedField[i].checked === true) {
+				selectedFieldList[checkedField[i].name] = checkedField[i].value;
+			}
 		}
-	}
-	console.log(selectedFieldList);
-	console.log(Object.keys(selectedFieldList).length);
-	// create post request
-	$.post({
-		url: routeUrl,
-		method: "POST",
-		data: {
-			exportData: JSON.stringify(selectedFieldList),
-			csrfmiddlewaretoken: csrftoken,
-		},
-		success: (response) => {
-			const link = document.createElement("a");
-			link.href = response.file_url;
-			link.download = response.file_name;
-			document.body.appendChild(link);
-			link.click();
-			document.body.removeChild(link);
-		},
-		error: (error) => {
-			swal(`Something went wrong! ${error}`);
-		},
+		selectedFieldList.format = file_format;
+		// create post request
+		$.post({
+			url: routeUrl,
+			method: "POST",
+			data: {
+				exportData: JSON.stringify(selectedFieldList),
+				csrfmiddlewaretoken: csrftoken,
+			},
+			success: (response) => {
+				if(file_format == 'xlsx'){
+				const link = document.createElement("a");
+				link.href = response.file_url;
+				link.download = response.file_name;
+				document.body.appendChild(link);
+				link.click();
+				document.body.removeChild(link);
+				} else if (file_format == 'csv') {
+					response.blob
+					const url = window.URL.createObjectURL(new Blob([response]));
+					const $a = $('<a style="display: none;"></a>');
+					$a.attr('href', url);
+					$a.attr('download', filename);
+					$('body').append($a);
+					$a[0].click();
+					window.URL.revokeObjectURL(url);
+				}
+			},
+			error: (error) => {
+				swal(`Something went wrong! ${error}`);
+			},
 	});
+	} else {
+		$(".file-format-error").css("display","block");
+	}
 });
 
 //filter the project field and download
@@ -230,41 +256,6 @@ $(".radio-select").on("click", function (e) {
 		},
 	});
 });
-
-// project activity plan export in csv file
-const exportCsvFile = document.querySelector(".export-button-csv");
-if (exportCsvFile) {
-	exportCsvFile.addEventListener("click", function (e) {
-		e.preventDefault();
-		e.stopPropagation();
-
-		const export_url = this.getAttribute("data-csvlink");
-		fetch(export_url, {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-				"X-CSRFToken": csrftoken,
-			},
-		})
-			.then((response) => response.blob())
-			.then((blob) => {
-				// create a download link for downloading the csv file
-				const url = window.URL.createObjectURL(new Blob([blob]));
-				const a = document.createElement("a");
-				a.style.display = "none";
-				a.href = url;
-				a.download = "export.csv";
-				document.body.appendChild(a);
-				a.click();
-				window.URL.revokeObjectURL(url);
-			})
-			.catch((error) => {
-				console.error("Error downloading CSV:", error);
-			});
-	});
-}
-
-
 // bulk export fetch request
 function exportButton(event) {
 	event.preventDefault();

@@ -401,7 +401,25 @@
   color: #000;
   font-weight: 600;
 }
-
+.file-format .format-description {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+.file-format input[type="radio"] {
+  accent-color: #af4745;
+  cursor: pointer;
+}
+.file-format .excel-file {
+  margin-right: 1rem;
+}
+.file-format-error {
+  color: #af4745;
+  padding: 0px;
+  margin-bottom: 10px;
+  font-size: 11px;
+  display: none;
+}
 .details-container::-webkit-scrollbar {
   display: none;
 }

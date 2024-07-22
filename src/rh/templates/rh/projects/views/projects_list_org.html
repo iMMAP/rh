@@ -22,6 +22,12 @@
                     </li>
                 </ul>
             </div>
+            <p>
+                The below table list all your organization's projects. 
+                You can filter the projects by their state(Active, Draft and etc). 
+                Also you can filter projects by Code, Name, Activity Domain and other feilds.
+                The actions column in the table lets gives you quick link to the most important link and action for a project.
+            </p>
         </div>
 
         <div class="tabs-nav-holder">
@@ -33,36 +39,24 @@
                 </li>
                 <li class=" {% if request.GET.state == 'in-progress' %}active{% endif %}">
                     <a href="{{ request.GET.url }}?state=in-progress">Active
-                        (
-                        {% if active_projects_count %}{{ active_projects_count }}{% endif %}
-                        )
+                        ({{ active_projects_count }})
                     </a>
                 </li>
                 <li class=" {% if request.GET.state == 'draft' %}active{% endif %}">
                     <a href="{{ request.GET.url }}?state=draft">Draft
-                        (
-                        {% if draft_projects_count %}{{ draft_projects_count }}{% endif %}
-                        )
+                        ({{ draft_projects_count }})
                     </a>
                 </li>
-                {% if completed_projects_count or completed_projects %}
                     <li class=" {% if request.GET.state == 'completed' %}active{% endif %}">
                         <a href="{{ request.GET.url }}?state=completed">Completed
-                            (
-                            {% if completed_projects_count %}{{ completed_projects_count }}{% endif %}
-                            )
+                            ({{ completed_projects_count }})
                         </a>
                     </li>
-                {% endif %}
-                {% if archived_projects_count or archived_projects %}
                     <li class=" {% if request.GET.state == 'archived' %}active{% endif %}">
                         <a href="{{ request.GET.url }}?state=archived">Archived
-                            (
-                            {% if archived_projects_count %}{{ archived_projects_count }}{% endif %}
-                            )
+                            ( {{ archived_projects_count }})
                         </a>
                     </li>
-                {% endif %}
             </ul>
         </div>
  
@@ -72,5 +66,5 @@
 
 {% block scripts %}
  
-    <script src="{% static 'src/js/utils/exportSW.js' %}"></script>
+    <script src="{% static 'js/utils/exportSW.js' %}"></script>
 {% endblock scripts %}

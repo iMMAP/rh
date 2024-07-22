@@ -22,7 +22,7 @@
     top: 0;
     left: 0;
     right: 0;
-    box-shadow: 0 0.5px 5px 0 rgba($black, 0.15);
+    // box-shadow: 0 0.5px 5px 0 rgba($black, 0.15);
     z-index: 999;
   }
 }
@@ -36,9 +36,9 @@
   // background: $gray-f5;
   z-index: 99;
 
-  @include media('>=desktop') {
-    padding: 14px 0;
-  }
+  // @include media('>=desktop') {
+  //   padding: 14px 0;
+  // }
 
   .nav-active & {
     &:after {
@@ -414,7 +414,7 @@
       box-shadow: 0 4px 4px 4px rgba(116, 114, 116, 0.1);
       height: auto !important;
       padding: 2px;
-      // min-width: 122px;
+      min-width: max-content; 
       color: $black;
       z-index: -2;
     }

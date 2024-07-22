@@ -5,9 +5,9 @@ export default defineConfig({
   plugins: [
     djangoVitePlugin({
       input: [
-        "src/styles/style.scss", 
-        "src/js/app.js", 
-        "src/js/utils/initSentry.js", 
+        "styles/style.scss", 
+        "js/app.js", 
+        "js/utils/initSentry.js", 
         "../rh/static/rh/project_planning.js",
 
         // relative to the folder that vite.config is located

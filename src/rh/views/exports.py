@@ -236,12 +236,21 @@ class ProjectExportExcelView(View):
 class ProjectFilterExportView(View):
     def post(self, request, projectId):
         project = Project.objects.get(id=projectId)
-        print(project)
+
         try:
             selectedData = json.loads(request.POST.get("exportData"))
+
             workbook = Workbook()
             sheet = workbook.active
             sheet.title = "Project"
+
+            # form the filename with today date
+            today_date = datetime.date.today()
+            # define CSV file
+            response = HttpResponse(content_type="text/csv")
+            response["Content-Disposition"] = "attachment; filename='project.csv'"
+            writer = csv.writer(response)
+
             # defining columns
             columns = [
                 {"header": "Project Title", "type": "string", "width": 40},
@@ -323,9 +332,16 @@ class ProjectFilterExportView(View):
                     sheet.column_dimensions[column_letter].number_format = "mm-dd-yyyy"
 
                 sheet.column_dimensions[column_letter].width = column["width"]
+
+            # defining the csv header file
+            if selectedData["format"] == "csv":
+                header_list = []
+                for item in columns:
+                    header_list.append(item["header"])
+                writer.writerow(header_list)
+
             # defining rows
             rows = []
-
             plans = project.activityplan_set.all()
             for plan in plans:
                 locations = plan.targetlocation_set.all()
@@ -413,12 +429,12 @@ class ProjectFilterExportView(View):
                         location.country.name if "admin0name" in selectedData and location.province else None,
                         location.province.code if "admin1code" in selectedData and location.province else None,
                         location.province.name if "admin1name" in selectedData and location.province else None,
-                        location.province.region_name if location.province else None,
+                        location.province.region_name if "admin1code" in selectedData and location.province else None,
                         location.district.code if "admin2code" in selectedData and location.district else None,
                         location.district.name if "admin2name" in selectedData and location.district else None,
                         location.nhs_code if "nhs_code" in selectedData and location.nhs_code else None,
                         location.location_type if "admin1code" in selectedData and location.location_type else None,
-                        location.zone.name if location.zone else None,
+                        location.zone.name if location.zone and "admin1code" in selectedData else None,
                         location.facility_site_type
                         if "facility_site_type" in selectedData and location.facility_site_type
                         else None,
@@ -449,8 +465,12 @@ class ProjectFilterExportView(View):
                             if header in disaggregation_location_list:
                                 row.append(disaggregation_location_list[header])
 
-                        # Add row to the list of rows
+                    # Add row to the list of rows
                     rows.append(row)
+
+                    # write row for CSV file
+                    writer.writerow(row)
+
             for row_idx, row in enumerate(rows, start=2):
                 for col_idx, value in enumerate(row, start=1):
                     try:
@@ -464,144 +484,17 @@ class ProjectFilterExportView(View):
             excel_file.seek(0)
             # form the filename with today date
             today_date = datetime.date.today()
-            response = {
-                "file_url": "data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,"
-                + base64.b64encode(excel_file.read()).decode("utf-8"),
-                "file_name": f"project_{today_date}.xlsx",
-            }
+            # check the requested format
+            if selectedData["format"] == "xlsx":
+                response = {
+                    "file_url": "data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,"
+                    + base64.b64encode(excel_file.read()).decode("utf-8"),
+                    "file_name": f"custom_project_export_{today_date}.xlsx",
+                }
+                return JsonResponse(response)
+            elif selectedData["format"] == "csv":
+                return response
 
-            return JsonResponse(response)
         except Exception as e:
             response = {"error": str(e)}
         return JsonResponse(response, status=500)
-
-
-# Exporting the project in csv file
-class ProjectExportCSV(View):
-    def post(self, request, project_id):
-        # Query the data you want to export
-        project = Project.objects.get(id=project_id)
-
-        # Create the HttpResponse object with CSV content type
-        response = HttpResponse(project, content_type="text/csv")
-        response["Content-Disposition"] = "attachment; filename=project.csv"
-
-        # Create a CSV writer object
-        writer = csv.writer(response)
-
-        # Write headers to the CSV file
-        headers = [
-            "Project title",
-            "Project code",
-            "focal_point",
-            "email",
-            "Project Description",
-            "Organization",
-            "Organization Type",
-            "Cluster",
-            "HRP Project Code",
-            "Project Start Date",
-            "Project End Date",
-            "Project Budget",
-            "Budget Received",
-            "Budget Gap",
-            "Project Budget Currency",
-            "Project Donors",
-            "Implementing Partners",
-            "Programme Partners",
-            "Status",
-            "Activity Domain",
-            "Activity Type",
-            "Activity Detail",
-            "Indicators",
-            "admin1pcode",
-            "admin1name",
-            "region",
-            "admin2pcode",
-            "admin2name",
-            "Zone/Ward",
-        ]
-        # adding disaggreation headers
-        disaggregation_cols = []
-        disaggregations = Disaggregation.objects.all()
-        disaggregation_list = []
-
-        for disaggregation in disaggregations:
-            if disaggregation.name not in disaggregation_list:
-                disaggregation_list.append(disaggregation.name)
-                disaggregation_cols.append(disaggregation.name)
-            else:
-                continue
-
-        if disaggregations:
-            for disaggregation_col in disaggregation_cols:
-                headers.append(disaggregation_col)
-        # writing headers to csv file
-        writer.writerow(headers)
-
-        rows = []
-        # Write data to the CSV file
-        plans = project.activityplan_set.all()
-        for plan in plans:
-            locations = plan.targetlocation_set.all()
-            for location in locations:
-                # Create a dictionary to hold disaggregation data
-                row = [
-                    project.title,
-                    project.code,
-                    project.user.username if project.user else None,
-                    project.user.email if project.user else None,
-                    project.description,
-                    project.user.profile.organization.code
-                    if project.user and project.user.profile and project.user.profile.organization
-                    else None,
-                    project.user.profile.organization.type
-                    if project.user and project.user.profile and project.user.profile.organization
-                    else None,
-                    ", ".join([clusters.code for clusters in project.clusters.all()]),
-                    project.hrp_code,
-                    project.start_date.astimezone(datetime.timezone.utc).replace(tzinfo=None)
-                    if project.start_date
-                    else None,
-                    project.end_date.astimezone(datetime.timezone.utc).replace(tzinfo=None)
-                    if project.end_date
-                    else None,
-                    project.budget,
-                    project.budget_received,
-                    project.budget_gap,
-                    project.budget_currency.name if project.budget_currency else None,
-                    ", ".join([donor.name for donor in project.donors.all()]),
-                    ", ".join(
-                        [implementing_partner.code for implementing_partner in project.implementing_partners.all()]
-                    ),
-                    ", ".join([programme_partner.code for programme_partner in project.programme_partners.all()]),
-                    project.state,
-                    plan.activity_domain.name if plan.activity_domain else None,
-                    plan.activity_type.name if plan.activity_type else None,
-                    plan.activity_detail.name if plan.activity_detail else None,
-                    plan.indicator.name if plan.indicator else None,
-                    location.province.code if location.province else None,
-                    location.province.name if location.province else None,
-                    location.province.region_name if location.province else None,
-                    location.district.code if location.district else None,
-                    location.district.name if location.district else None,
-                    location.zone.name if location.zone else None,
-                ]
-                disaggregation_data = {}
-                disaggregation_locations = location.disaggregationlocation_set.all()
-                disaggregation_location_list = {
-                    disaggregation_location.disaggregation.name: disaggregation_location.target
-                    for disaggregation_location in disaggregation_locations
-                }
-                # Update disaggregation_data with values from disaggregation_location_list
-                for disaggregation_entry in disaggregation_list:
-                    if disaggregation_entry not in disaggregation_location_list:
-                        disaggregation_data[disaggregation_entry] = None
-
-                disaggregation_location_list.update(disaggregation_data)
-                for item in headers:
-                    if item in disaggregation_location_list:
-                        row.append(disaggregation_location_list[item])
-                rows.append(row)
-                writer.writerow(row)
-        return response

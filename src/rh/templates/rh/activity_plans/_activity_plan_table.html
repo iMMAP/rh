@@ -15,12 +15,10 @@
                         <span class="filter-item title" id="title">{{ field.label }}</span>
                         {% if forloop.last %}<span class="close-alert-message">x</span>{% endif %}
                     {% endif %}
- 
                 {% endfor %}
             </div>
             <!-- filter applied end -->
         </div>
-
         <div class="actions-panel">
             {% if activity_plans_filter %}
                 {% include "components/_filter_drawer.html" with filter=activity_plans_filter %}
@@ -29,7 +27,6 @@
                class="btn btn-red">New Activity Plan</a>
         </div>
     </div>
-
     {% comment %} Table {% endcomment %}
     {% if object_list %}
         <div class="table-wrapper-scrollable">
@@ -51,7 +48,6 @@
                         <th>Actions</th>
                     </tr>
                 </thead>
- 
                 <tbody>
                     <!--Include The Projects Details Here -->
                     {% for row in object_list %}
@@ -61,6 +57,18 @@
                             <td>{{ row.indicator }}</td>
                             <td>
                                 <a href="{% url 'target-locations-list' project.pk %}?activity_plan={{ row.id }}">
+                                    <svg data-slot="icon"
+                                         width="14px"
+                                         data-darkreader-inline-stroke=""
+                                         fill="none"
+                                         stroke-width="1.5"
+                                         stroke="currentColor"
+                                         viewBox="0 0 24 24"
+                                         xmlns="http://www.w3.org/2000/svg"
+                                         aria-hidden="true">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M13.19 8.688a4.5 4.5 0 0 1 1.242 7.244l-4.5 4.5a4.5 4.5 0 0 1-6.364-6.364l1.757-1.757m13.35-.622 1.757-1.757a4.5 4.5 0 0 0-6.364-6.364l-4.5 4.5a4.5 4.5 0 0 0 1.242 7.244">
+                                        </path>
+                                    </svg>
                                     Has {{ row.target_location_count }} Target Locations
                                 </a>
                             </td>
@@ -79,7 +87,11 @@
                                         <li>
                                             <a href="{% url 'target-locations-create' row.id %}"
                                                class="btn btn-gray">
-                                                <img src="{% static 'admin/img/icon-addlink.svg' %}" alt="add-btn-icon">
+                                                <img src="{% static 'admin/img/icon-addlink.svg' %}"
+                                                     width="12px"
+                                                     height="12px"
+                                                     style="filter: grayscale(100%)"
+                                                     alt="add-btn-icon">
                                                 Location
                                             </a>
                                         </li>
@@ -90,8 +102,7 @@
                                                    hx-indicator=".progress"
                                                    hx-confirm="Do you want to delete `{{ row }}` and its Target Locations ?"
                                                    hx-target="closest tr"
-                                                   data-tippy-content="Delete Activity Plan"
-                                                   >
+                                                   data-tippy-content="Delete Activity Plan">
                                                     <span class="project-detail icon-trashbin"></span>
                                                 </a>
                                             </button>
@@ -111,7 +122,6 @@
             </div>
         </div>
     {% endif %}
-
     {% comment %} Pagination {% endcomment %}
     {% include "components/_pagination.html" with object_list=object_list %}
 </div>

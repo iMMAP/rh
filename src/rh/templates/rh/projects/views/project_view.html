@@ -67,38 +67,17 @@
                             </div>
                             <div class="export-format">
                                 <div class="custome-text">File Format</div>
-                                <div class="label">
-                                    <p>download the whole project without applying filter.</p>
+                                <div class="file-format">
+                                    <p class="format-description">select file format</p>
+                                    <input type="radio" name="file-format" class="file-format" value="xlsx">
+                                    <label for="excel-file" class="excel-file">Excel</label>
+                                    <input type="radio" name="file-format" class="file-format" value="csv">
+                                    <label for="csv-file">CSV</label>
                                 </div>
-                                <div>
-                                    <span class="label">
-                                        <svg xmlns="http://www.w3.org/2000/svg"
-                                             height="16"
-                                             width="16"
-                                             viewBox="0 0 590 412">
-                                            <path fill="#b56362" d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zm0-384c13.3 0 24 10.7 24 24V264c0 13.3-10.7 24-24 24s-24-10.7-24-24V152c0-13.3 10.7-24 24-24zM224 352a32 32 0 1 1 64 0 32 32 0 1 1 -64 0z" />
-                                        </svg>
-                                        The project fields will be exported
-                                        according to the selectiong order in CSV file.
-                                    </span>
-                                </div>
-                                <div class="project-title text-color-red">
-                                    <span id="selectedCount"></span>
-                                    <span>&nbsp;fields selected</span>
-                                </div>
+                                <div class="file-format-error"><span class="icon-info"> </span>please select the file format.</div>
+                            
                             </div>
-                            <div>
-                                <span class="label">
-                                    <svg xmlns="http://www.w3.org/2000/svg"
-                                         height="16"
-                                         width="16"
-                                         viewBox="0 0 590 412">
-                                        <path fill="#b56362" d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zm0-384c13.3 0 24 10.7 24 24V264c0 13.3-10.7 24-24 24s-24-10.7-24-24V152c0-13.3 10.7-24 24-24zM224 352a32 32 0 1 1 64 0 32 32 0 1 1 -64 0z" />
-                                    </svg>
-                                    The project fields will be exported
-                                    according to the selectiong order in CSV file.
-                                </span>
-                            </div>
+                           
                             <div class="text-color-red">
                                 <span id="selectedCount"></span> / <span id="totalCount"></span>
                                 <span>&nbsp;fields selected</span>
@@ -121,7 +100,7 @@
                                                 <div class="input-holder">
                                                     <input type="checkbox"
                                                            id="title"
-                                                           class="input-check project-check"
+                                                           class="input-check"
                                                            name="title"
                                                            value="{{ project.id }}">
                                                     <label for="title">Title</label>
@@ -133,7 +112,7 @@
                                                 <div class="input-holder">
                                                     <input type="checkbox"
                                                            id="code"
-                                                           class="input-check project-check"
+                                                           class="input-check"
                                                            name="code"
                                                            value="{{ project.id }}">
                                                     <label for="code">Code</label>
@@ -145,19 +124,20 @@
                                                 <div class="input-holder">
                                                     <input type="checkbox"
                                                            id="user"
-                                                           class="input-check project-check"
+                                                           class="input-check"
                                                            name="user"
                                                            value="{{ project.id }}">
                                                     <label for="user">Focal Point</label>
                                                 </div>
                                             </div>
                                         {% endif %}
+                                        
                                         {% if project.state %}
                                             <div class="field-col">
                                                 <div class="input-holder">
                                                     <input type="checkbox"
                                                            id="state"
-                                                           class="input-check project-check"
+                                                           class="input-check"
                                                            name="state"
                                                            value="{{ project.id }}">
                                                     <label for="state">State</label>
@@ -169,7 +149,7 @@
                                                 <div class="input-holder">
                                                     <input type="checkbox"
                                                            id="budget"
-                                                           class="input-check project-check"
+                                                           class="input-check"
                                                            name="budget"
                                                            value="{{ project.id }}">
                                                     <label for="budget">Budget</label>
@@ -181,7 +161,7 @@
                                                 <div class="input-holder">
                                                     <input type="checkbox"
                                                            id="budgetCurrency"
-                                                           class="input-check project-check"
+                                                           class="input-check"
                                                            name="budget_currency"
                                                            value="{{ project.id }}">
                                                     <label for="budgetCurrency">Budget Currency</label>
@@ -193,7 +173,7 @@
                                                 <div class="input-holder">
                                                     <input type="checkbox"
                                                            id="budgetReceived"
-                                                           class="input-check project-check"
+                                                           class="input-check"
                                                            name="budget_received"
                                                            value="{{ project.id }}">
                                                     <label for="budgetReceived">Received Budget</label>
@@ -205,7 +185,7 @@
                                                 <div class="input-holder">
                                                     <input type="checkbox"
                                                            id="budgetGap"
-                                                           class="input-check project-check"
+                                                           class="input-check"
                                                            name="budget_gap"
                                                            value="{{ project.id }}">
                                                     <label for="budgetGap">Budget Gap</label>
@@ -217,7 +197,7 @@
                                                 <div class="input-holder">
                                                     <input type="checkbox"
                                                            id="isHRPProject"
-                                                           class="input-check project-check"
+                                                           class="input-check"
                                                            name="is_hrp_project"
                                                            value="{{ project.id }}">
                                                     <label for="isHRPProject">Is HRP Project</label>
@@ -229,7 +209,7 @@
                                                 <div class="input-holder">
                                                     <input type="checkbox"
                                                            id="hrpCode"
-                                                           class="input-check project-check"
+                                                           class="input-check"
                                                            name="hrp_code"
                                                            value="{{ project.id }}">
                                                     <label for="hrpCode">HRP Code</label>
@@ -241,7 +221,7 @@
                                                 <div class="input-holder">
                                                     <input type="checkbox"
                                                            id="startDate"
-                                                           class="input-check project-check"
+                                                           class="input-check"
                                                            name="start_date"
                                                            value="{{ project.id }}">
                                                     <label for="startDate">Start Date</label>
@@ -253,7 +233,7 @@
                                                 <div class="input-holder">
                                                     <input type="checkbox"
                                                            id="endDate"
-                                                           class="input-check project-check"
+                                                           class="input-check"
                                                            name="end_date"
                                                            value="{{ project.id }}">
                                                     <label for="endDate">End Date</label>
@@ -265,7 +245,7 @@
                                                 <div class="input-holder">
                                                     <input type="checkbox"
                                                            id="description"
-                                                           class="input-check project-check"
+                                                           class="input-check"
                                                            name="pdescription"
                                                            value="{{ project.id }}">
                                                     <label for="description">Description</label>
@@ -277,7 +257,7 @@
                                                 <div class="input-holder">
                                                     <input type="checkbox"
                                                            id="clusters"
-                                                           class="input-check project-check"
+                                                           class="input-check"
                                                            name="clusters"
                                                            value="{{ project.id }}">
                                                     <label for="clusters">Project Clusters</label>
@@ -289,7 +269,7 @@
                                                 <div class="input-holder">
                                                     <input type="checkbox"
                                                            id="donors"
-                                                           class="input-check project-check"
+                                                           class="input-check"
                                                            name="donors"
                                                            value="{{ project.id }}">
                                                     <label for="donors">Project Donors</label>
@@ -301,7 +281,7 @@
                                                 <div class="input-holder">
                                                     <input type="checkbox"
                                                            id="implementing_partners"
-                                                           class="input-check project-check"
+                                                           class="input-check"
                                                            name="implementing_partners"
                                                            value="{{ project.id }}">
                                                     <label for="implementing_partners">Project Implementing Partners</label>
@@ -313,7 +293,7 @@
                                                 <div class="input-holder">
                                                     <input type="checkbox"
                                                            id="programme_partners"
-                                                           class="input-check project-check"
+                                                           class="input-check"
                                                            name="programme_partners"
                                                            value="{{ project.id }}">
                                                     <label for="programme_partners">Project Programme Partners</label>
@@ -829,5 +809,5 @@
 {% endblock content %}
 {% block scripts %}
     {{ block.super }}
-    <script type="module" src="{% static 'src/js/utils/exportSW.js' %}"></script>
+    <script type="module" src="{% static 'js/utils/exportSW.js' %}"></script>
 {% endblock scripts %}

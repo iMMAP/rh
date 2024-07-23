@@ -6,39 +6,35 @@
 {% endblock title %}
 
 {% block breadcrumb_li %}
-<li class="current">Activity Plans</li>
+    <li class="current">Activity Plans</li>
 {% endblock breadcrumb_li %}
 
 {% block project_contents %}
     <div class="flex flex-col gap-2 pt-2 pb-2">
-        <div >
-            <span >Project</span>
+        <div>
+            <span>Project</span>
             <div class="input-holder">
                 <span class="text-read-only">{{ project.code }} - {{ project.title }}</span>
             </div>
         </div>
-        <div >
-            <span >Duration</span>
+        <div>
+            <span>Duration</span>
             <div class="input-holder">
                 <span class="text-read-only">From {{ project.start_date }} to {{ project.end_date }}</span>
             </div>
         </div>
     </div>
-
     <div class="main-content">
         <div class="activity-planning create-activity">
             <div id="activity-formset-form">
                 <div class="activity-planning read-only">
                     <div class="top-activity-block">
-                        <span class="activity-title">
+                        <span class="activity-title pb-2">
                             <span>Project Activity Plans</span>
-                            <span class="btn btn-gray" style="float:right">{{ project.activityplan_set.all | length }}</span>
                         </span>
-                        <br>
-                        <span >Your project Activity Plans table. You can add Target Location, edit or search activity plans.</span>
+                        <p class="pt-2">Your project Activity Plans table. You can add Target Location, edit or search activity plans.</p>
                     </div>
                 </div>
-
                 {% include "rh/activity_plans/_activity_plan_table.html" with object_list=activity_plans %}
             </div>
         </div>

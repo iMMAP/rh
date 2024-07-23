@@ -1,30 +1,30 @@
 {% extends "rh/projects/forms/project_form_base.html" %}
+
 {% load static %}
 
 {% block title %}
-Target Locations
+    Target Locations
 {% endblock title %}
 
 {% block breadcrumb_li %}
-<li class="current">Target Locations</li>
+    <li class="current">Target Locations</li>
 {% endblock breadcrumb_li %}
 
 {% block project_contents %}
     <div class="flex flex-col gap-2 pt-2 pb-2">
         <div>
-            <span >Project</span>
+            <span>Project</span>
             <div class="input-holder">
                 <span class="text-read-only">{{ project.code }} - {{ project.title }}</span>
             </div>
         </div>
         <div>
-            <span >Duration</span>
+            <span>Duration</span>
             <div class="input-holder">
                 <span class="text-read-only">From {{ project.start_date }} to {{ project.end_date }}</span>
             </div>
         </div>
     </div>
-
     <div class="main-content">
         <div class="activity-planning create-activity">
             <div id="activity-formset-form">
@@ -33,10 +33,9 @@ Target Locations
                         <span class="activity-title pb-2">
                             <span>Project Target Locations</span>
                         </span>
-                        <p class="pt-2" >List all target locations of your project.</p>
+                        <p class="pt-2">List all target locations of your project.</p>
                     </div>
                 </div>
-
                 {% include "rh/target_locations/_target_location_table.html" with object_list=target_locations %}
             </div>
         </div>

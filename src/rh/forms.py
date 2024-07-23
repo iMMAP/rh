@@ -82,8 +82,7 @@ class ProjectForm(forms.ModelForm):
         self.fields["user"].required = True
 
         if self.instance.pk:
-            # Update mode
-            self.fields["activity_domains"].queryset = self.instance.activity_domains.all().order_by("name")
+            # Entering Update mode
             self.fields["user"].queryset = User.objects.filter(profile__organization=self.instance.organization)
 
             if self.instance.user:

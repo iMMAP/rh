@@ -1,6 +1,8 @@
 {% extends "rh/projects/forms/project_form_base.html" %}
+
 {% load static %}
 {% load vite %}
+
 {% block title %}
     {% if project %}
         Update Project | {{ project }}
@@ -8,6 +10,7 @@
         Create Project
     {% endif %}
 {% endblock title %}
+
 {% block project_contents %}
     <div class="main-content">
         <div class="create-plan">
@@ -206,9 +209,11 @@
         </div>
     </div>
 {% endblock project_contents %}
+
 {% block project_form_scripts %}
     {% vite 'rh/static/rh/project_planning.js' %}
 {% endblock project_form_scripts %}
+
 {% block scripts %}
     {% comment %} {% vite 'users/static/users/users.js' %} {% endcomment %}
     <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>

@@ -210,11 +210,11 @@
                         </p>
                         {{ disaggregation_formset.management_form }}
                         <fieldset class="table-wrapper-scrollable">
-                            <table class="table border border-solid border-gray rounded">
+                            <table class="table border border-solid border-gray-d1 rounded">
                                 <thead class="content-block bg-gray-f3">
                                     <tr class="divide-x">
                                         {% for field in disaggregation_formset.form.fields %}
-                                            <th class="border-r border-gray column-{{ field.title }}{% if field.required %} required{% endif %}{% if field.widget.is_hidden %} hidden{% endif %}">
+                                            <th class="border-r border-gray-e6 column-{{ field.title }}{% if field.required %} required{% endif %}{% if field.widget.is_hidden %} hidden{% endif %}">
                                                 {{ field|capfirst }}
                                             </th>
                                         {% endfor %}

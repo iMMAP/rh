@@ -1,15 +1,19 @@
 import pandas as pd
+import logging
 from django.db import transaction
 from django.http import JsonResponse
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse
 from rh.models import (
+    Project,
     ActivityDetail,
     ActivityDomain,
     ActivityPlan,
     ActivityType,
     Disaggregation,
     FacilitySiteType,
+    TargetLocation,
+    Organization,
     Indicator,
     Location,
     LocationType,
@@ -24,6 +28,8 @@ from ..models import (
     ProjectMonthlyReport,
     TargetLocationReport,
 )
+
+logger = logging.getLogger(__name__)
 
 RECORDS_PER_PAGE = 10
 
@@ -230,3 +236,145 @@ def import_monthly_reports(request, report):
             # Return the URL in a JSON response
             response_data = {"success": success, "redirect_url": url, "message": message}
             return JsonResponse(response_data)
+
+
+def import_data_with_project_plan(request):
+    if request.method == 'POST':
+        form = MonthlyReportFileUpload(request.POST, request.FILES)
+        if form.is_valid():
+            handle_uploaded_file(request.FILES['file'])
+            return redirect('success_url')
+    else:
+        form = MonthlyReportFileUpload()
+    return render(request, 'project_reports/monthly_reports/forms/file_upload_form.html', {'form': form})
+
+
+def handle_uploaded_file(file):
+    try:
+        df = pd.read_csv(file)
+    except Exception as e:
+        logger.error(f"Error reading CSV file: {e}")
+        return
+
+    required_fields = ['organization', 'activity_description_name', 'report_month', 'report_year',
+                       'admin1pcode', 'admin1name', 'admin2pcode', 'admin2name', 'indicator_name']
+
+    missing_fields = [field for field in required_fields if field not in df.columns]
+    if missing_fields:
+        logger.error(f"Missing required fields in CSV: {', '.join(missing_fields)}")
+        return
+
+    for _, row in df.iterrows():
+        try:
+            # Validate required fields
+            for field in required_fields:
+                if pd.isna(row[field]):
+                    logger.error(f"Missing required field: {field} in row: {row}")
+                    continue
+
+            organization, created = Organization.objects.get_or_create(name=row['organization'])
+            if created:
+                logger.info(f"Created new organization: {row['organization']}")
+
+            project, created = Project.objects.get_or_create(
+                organization=organization,
+                title=row['activity_description_name'],
+                defaults={
+                    'state': 'draft',
+                    'is_hrp_project': True,
+                    'start_date': '2024-01-01',  # Example start date
+                    'end_date': '2024-12-31',  # Example end date
+                }
+            )
+            if created:
+                logger.info(f"Created new project: {row['activity_description_name']}")
+
+            activity_domain, created = ActivityDomain.objects.get_or_create(name=row['activity_description_name'])
+            if created:
+                logger.info(f"Created new activity domain: {row['activity_description_name']}")
+
+            activity_plan, created = ActivityPlan.objects.get_or_create(
+                project=project,
+                activity_domain=activity_domain,
+                defaults={
+                    'state': 'draft',
+                    'total_target': int(row['total']),
+                    'total_set_target': int(row['total']),
+                    'description': row['activity_description_name'],
+                }
+            )
+            if created:
+                logger.info(f"Created new activity plan for project: {project.title}")
+
+            province, created = Location.objects.get_or_create(pcode=row['admin1pcode'], name=row['admin1name'],
+                                                               level=1)
+            if created:
+                logger.info(f"Created new province: {row['admin1name']}")
+
+            district, created = Location.objects.get_or_create(pcode=row['admin2pcode'], name=row['admin2name'],
+                                                               level=2)
+            if created:
+                logger.info(f"Created new district: {row['admin2name']}")
+
+            target_location, created = TargetLocation.objects.get_or_create(
+                project=project,
+                activity_plan=activity_plan,
+                province=province,
+                district=district,
+                defaults={
+                    'facility_name': row.get('facility_name'),
+                    'facility_id': row.get('facility_id'),
+                    'facility_lat': float(row['facility_lat']) if pd.notna(row.get('facility_lat')) else None,
+                    'facility_long': float(row['facility_long']) if pd.notna(row.get('facility_long')) else None,
+                }
+            )
+            if created:
+                logger.info(f"Created new target location for activity plan: {activity_plan.id}")
+
+            monthly_report, created = ProjectMonthlyReport.objects.get_or_create(
+                project=project,
+                report_period=f"{row['report_year']}-{row['report_month']}-01",
+                defaults={'state': 'todo'}
+            )
+            if created:
+                logger.info(f"Created new monthly report for project: {project.title}")
+
+            indicator, created = Indicator.objects.get_or_create(name=row['indicator_name'])
+            if created:
+                logger.info(f"Created new indicator: {row['indicator_name']}")
+
+            activity_plan_report, created = ActivityPlanReport.objects.get_or_create(
+                monthly_report=monthly_report,
+                activity_plan=activity_plan,
+                indicator=indicator,
+                defaults={'target_achieved': int(row['total'])}
+            )
+            if created:
+                logger.info(f"Created new activity plan report for monthly report: {monthly_report.id}")
+
+            target_location_report, created = TargetLocationReport.objects.get_or_create(
+                activity_plan_report=activity_plan_report,
+                target_location=target_location,
+                defaults={
+                    'facility_name': row.get('facility_name'),
+                    'facility_id': row.get('facility_id'),
+                    'facility_lat': float(row['facility_lat']) if pd.notna(row.get('facility_lat')) else None,
+                    'facility_long': float(row['facility_long']) if pd.notna(row.get('facility_long')) else None,
+                }
+            )
+            if created:
+                logger.info(f"Created new target location report for activity plan report: {activity_plan_report.id}")
+
+            # Handle DisaggregationLocationReport if needed
+            # For each disaggregation location report, you will need to fetch or create the disaggregation,
+            # then create the corresponding DisaggregationLocationReport entry.
+            # Example logic (assuming disaggregation fields are included in the CSV):
+            # disaggregation, created = Disaggregation.objects.get_or_create(name=row['disaggregation_name'])
+            # DisaggregationLocationReport.objects.get_or_create(
+            #     target_location_report=target_location_report,
+            #     disaggregation=disaggregation,
+            #     defaults={'target_required': int(row['target_required']), 'target': int(row['target'])}
+            # )
+
+        except Exception as e:
+            logger.error(f"Error processing row: {row}. Error: {e}")

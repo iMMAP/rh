@@ -23,6 +23,7 @@ class GuideAdmin(admin.ModelAdmin):
     list_filter = ("section", "created_at", "updated_at")
     search_fields = ("slug",)
     date_hierarchy = "created_at"
+    prepopulated_fields = {"slug": ["title"]}
 
     def feedbacks(self, obj):
         return f"Upvote: {obj.feedback_set.filter(upvote=True).count()} - Downvote: {obj.feedback_set.filter(upvote=False).count()}"

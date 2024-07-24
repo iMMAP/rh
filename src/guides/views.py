@@ -3,6 +3,7 @@ from .models import Section, Guide, Feedback
 from django.views.decorators.http import require_http_methods
 from django.http import JsonResponse
 import json
+from django.db.models import Prefetch
 
 
 @require_http_methods(["POST"])
@@ -24,8 +25,10 @@ def feedback(request, guide):
 
 def index(request):
     # Get all categories and guides for the sidebar table of contents
-    sections = Section.objects.all().prefetch_related("guide_set").only("id", "slug", "name")
-
+    # sections = Section.objects.all().prefetch_related("guide_set").only("id", "slug", "name")
+    sections = (
+        Section.objects.all().order_by("id").prefetch_related(Prefetch("guide_set", Guide.objects.all().order_by("id")))
+    )
     context = {
         "sections": sections,
     }
@@ -43,7 +46,12 @@ def guide_detail(request, guide):
         guide.upvote = "none"
 
     # Get all categories and guides for the sidebar table of contents
-    sections = Section.objects.all().prefetch_related("guide_set").only("id", "slug", "name")
+    sections = (
+        Section.objects.all()
+        .order_by("-id")
+        .prefetch_related(Prefetch("guide_set", Guide.objects.all().order_by("-id")))
+    )
+    # sections = Section.objects.all().prefetch_related("guide_set").only("id", "slug", "name")
 
     context = {
         "guide": guide,

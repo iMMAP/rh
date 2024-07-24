@@ -106,6 +106,7 @@ class TargetLocationForm(forms.ModelForm):
             "project",
             "state",
             "activity_plan",
+            "nhs_code",
         )
 
     def __init__(self, *args, **kwargs):
@@ -218,9 +219,19 @@ class ActivityPlanForm(forms.ModelForm):
         self.fields["activity_domain"].queryset = project.activity_domains.all()
 
         project_clusters = project.clusters.all()
-        self.fields["beneficiary"].queryset = self.fields["beneficiary"].queryset.filter(clusters__in=project_clusters)
-        self.fields["hrp_beneficiary"].queryset = self.fields["hrp_beneficiary"].queryset.filter(
-            clusters__in=project_clusters
+        self.fields["beneficiary"].queryset = (
+            self.fields["beneficiary"]
+            .queryset.filter(
+                clusters__in=project_clusters,
+            )
+            .distinct()
+        )
+        self.fields["hrp_beneficiary"].queryset = (
+            self.fields["hrp_beneficiary"]
+            .queryset.filter(
+                clusters__in=project_clusters,
+            )
+            .distinct()
         )
 
         # The choices, does not validate the data ,(self.fields["indicator"].widget.choices = [])

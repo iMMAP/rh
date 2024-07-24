@@ -4,7 +4,7 @@ from .models import Section, Guide, Feedback
 
 @admin.register(Section)
 class SectionAdmin(admin.ModelAdmin):
-    list_display = ("id", "name", "slug", "description")
+    list_display = ("name", "slug", "description")
     search_fields = ("name", "slug")
     prepopulated_fields = {"slug": ["name"]}
 

@@ -27,6 +27,15 @@ class ProjectForm(forms.ModelForm):
         fields = "__all__"
         exclude = ["organization"]
 
+        help_texts = {
+            "code": "A unique identifier for the project. It must be a string of alphanumeric characters, underscores, or hyphens. For example, 'project-123' or 'example_project'.",
+            "is_hrp_project": "Select this option if the project is part of the Humanitarian Response Plan. If selected, you will be required to enter a unique HRP project code.",
+            "end_date": "The date when the project is expected to end. It must be a date in the future.",
+            "user": "The person responsible for overseeing the project. This is a critical role that ensures the project's objectives are met.",
+            "implementing_partners": "The partner who takes the project and implement the project in the field.",
+            "programme_partners": "The partner who is leading and administrating the project",
+        }
+
         widgets = {
             "clusters": forms.SelectMultiple(
                 attrs={
@@ -203,6 +212,13 @@ class ActivityPlanForm(forms.ModelForm):
         model = ActivityPlan
         fields = "__all__"
         exclude = ["state", "project"]
+        help_texts = {
+            "activity_domain": "List of Activity Domain selected during project creation. To add new one update the project plan.",
+            "activity_type": "Activity Types of the selected Activity Domain.",
+            "indicator": "Indicators of the selected Activity Type.",
+            "beneficiary": "Non-HRP beneficiary related to the project's selected clusters.",
+            "hrp_beneficiary": "HRP beneficiary related to the project's selected clusters.",
+        }
 
     def __init__(self, *args, **kwargs):
         project = kwargs.pop("project", None)

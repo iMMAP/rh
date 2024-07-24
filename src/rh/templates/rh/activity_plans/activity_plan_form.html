@@ -5,7 +5,7 @@
     {% if form.initial %}
         Edit Activity Plan
     {% else %}
-        New Activity Plan
+        Add Activity Plan
     {% endif %}
 {% endblock title %}
 
@@ -38,7 +38,7 @@
                             {% if form.initial %}
                                 Update Activity Plan
                             {% else %}
-                                New Activity Plan
+                                Add Activity Plan
                             {% endif %}
                         </span>
                         {% if form.initial %}
@@ -187,10 +187,6 @@
                            name="_addanother"
                            class="btn btn-gray"
                            value="Save and add another">
-                    <input type="submit"
-                           name="_continue"
-                           class="btn btn-gray"
-                           value="Save and continue editing">
                     <input type="submit" name="_save" class="btn btn-red" value="Save">
                 </div>
             </div>

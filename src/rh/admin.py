@@ -31,6 +31,9 @@ from .models import (
     UnitType,
 )
 
+from django.urls import reverse
+from django.utils.html import format_html
+
 admin.site.register(Currency)
 admin.site.register(LocationType)
 admin.site.register(ImplementationModalityType)
@@ -122,7 +125,6 @@ class DonorAdmin(admin.ModelAdmin):
         "code",
         "name",
     )
-    # list_filter = ('cluster', 'country')
     filter_horizontal = (
         "countries",
         "clusters",
@@ -139,9 +141,12 @@ admin.site.register(Donor, DonorAdmin)
 
 
 class BeneficiaryTypeAdmin(admin.ModelAdmin):
-    list_display = ("name", "country", "Clusters")
+    list_display = ("name", "type", "country", "Clusters")
     search_fields = ("code", "name")
-    list_filter = ("clusters",)
+    list_filter = (
+        "type",
+        "clusters",
+    )
     filter_horizontal = ("clusters",)
 
     def Clusters(self, obj):
@@ -194,7 +199,7 @@ admin.site.register(Indicator, IndicatorAdmin)
 class ActivityDomainAdmin(admin.ModelAdmin):
     list_display = ("name", "code", "is_active")
     search_fields = ("name", "clusters__title", "code", "countries__name")
-    list_filter = ("clusters", "countries")
+    list_filter = ("clusters",)
 
     filter_horizontal = (
         "clusters",
@@ -214,7 +219,7 @@ class ActivityTypeAdmin(admin.ModelAdmin):
         "code",
         "countries__name",
     )
-    list_filter = ("activity_domain", "clusters")
+    list_filter = ("clusters",)
 
     filter_horizontal = ("clusters",)
 
@@ -229,7 +234,6 @@ class ActivityDetailAdmin(admin.ModelAdmin):
         "code",
     )
     search_fields = ("activity_type__name", "name", "code")
-    list_filter = ("activity_type",)
 
 
 admin.site.register(ActivityDetail, ActivityDetailAdmin)
@@ -270,10 +274,14 @@ admin.site.register(Project, ProjectAdmin)
 
 
 class ActivityPlanAdmin(admin.ModelAdmin):
-    list_display = ("project", "beneficiary", "beneficiary_category", "state")
+    list_display = ("activity_domain", "project_link", "state")
     search_fields = ("state", "project__title")
-    list_filter = ("state", "project__code")
+    list_filter = ("state",)
     form = ActivityPlanModelAdminForm
+
+    def project_link(self, obj):
+        url = reverse("admin:rh_project_change", args=[obj.project.id])
+        return format_html("<em><a href='{}'>{}</a></em>", url, obj.project.code)
 
 
 admin.site.register(ActivityPlan, ActivityPlanAdmin)
@@ -295,7 +303,7 @@ class TargetLocationAdmin(admin.ModelAdmin):
         "state",
     )
     search_fields = ("title", "project__title", "state")
-    list_filter = ("state", "project__code")
+    list_filter = ("state",)
     inlines = [
         DisaggregationLocationInline,
     ]
@@ -322,7 +330,7 @@ class BudgetProgressAdmin(admin.ModelAdmin):
         "country",
     )
     search_fields = ("project", "donor", "activity_domain", "country")
-    list_filter = ("project", "donor", "country")
+    list_filter = ("project",)
 
 
 admin.site.register(BudgetProgress, BudgetProgressAdmin)

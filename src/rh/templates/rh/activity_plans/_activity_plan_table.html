@@ -76,15 +76,6 @@
                                 <div class="table-flex-holder">
                                     <ul class="table-options-buttons ">
                                         <li>
-                                            <a href="{% url 'activity-plans-update' row.id %}" class="btn btn-gray">Edit</a>
-                                        </li>
-                                        <li>
-                                            <form action="{% url 'activity-plans-copy' row.id %}" method="post">
-                                                {% csrf_token %}
-                                                <button type="submit" class="btn btn-gray">Copy</button>
-                                            </form>
-                                        </li>
-                                        <li>
                                             <a href="{% url 'target-locations-create' row.id %}"
                                                class="btn btn-gray">
                                                 <img src="{% static 'admin/img/icon-addlink.svg' %}"
@@ -95,6 +86,16 @@
                                                 Location
                                             </a>
                                         </li>
+                                        <li>
+                                            <a href="{% url 'activity-plans-update' row.id %}" class="btn btn-gray">Edit</a>
+                                        </li>
+                                        <li>
+                                            <form action="{% url 'activity-plans-copy' row.id %}" method="post">
+                                                {% csrf_token %}
+                                                <button type="submit" class="btn btn-gray">Copy</button>
+                                            </form>
+                                        </li>
+                                      
                                         <li>
                                             <button>
                                                 <a hx-delete="{% url 'activity-plans-delete' row.id %}"

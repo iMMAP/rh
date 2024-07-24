@@ -60,7 +60,7 @@ admin.site.register(StockUnit)
 class WarehouseLocationAdmin(admin.ModelAdmin):
     list_display = ("name", "province", "district")
     search_fields = ("name", "province__name")
-    list_filter = ("name", "province")
+    list_filter = ("name",)
 
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         if db_field.name == "province":

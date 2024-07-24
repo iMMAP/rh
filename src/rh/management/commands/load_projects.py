@@ -44,7 +44,7 @@ class Command(BaseCommand):
         locations = df.to_dict(orient="records")
         for index, location in enumerate(locations):
             project = Project.objects.filter(old_id=location.get("project_id", "")).first()
-            country = Location.objects.filter(code='AF').first()
+            country = Location.objects.filter(code="AF").first()
             province = Location.objects.filter(code=location.get("admin1pcode", "").strip()).first()
             district = Location.objects.filter(code=location.get("admin2pcode", "").strip()).first()
             activity_plans = project.activityplan_set.all()

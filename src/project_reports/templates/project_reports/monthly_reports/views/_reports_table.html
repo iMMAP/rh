@@ -204,7 +204,7 @@
 
                                         <li>
                                             <button class="button-archive-unarchive">
-                                                {% if project_report.active %}
+                                                {% if project_report.is_active %}
                                                     <a hx-post="{% url 'archive_project_monthly_report' project_report.pk %}"
                                                        hx-trigger="click"
                                                        hx-swap="none"

@@ -200,6 +200,7 @@ class ActivityDomainAdmin(admin.ModelAdmin):
     list_display = ("name", "code", "is_active")
     search_fields = ("name", "clusters__title", "code", "countries__name")
     list_filter = ("clusters",)
+    prepopulated_fields = {"code": ["name"]}
 
     filter_horizontal = (
         "clusters",
@@ -215,12 +216,9 @@ class ActivityTypeAdmin(admin.ModelAdmin):
     search_fields = (
         "name",
         "activity_domain__name",
-        "clusters__title",
         "code",
     )
-    list_filter = ("clusters",)
-
-    filter_horizontal = ("clusters",)
+    prepopulated_fields = {"code": ["name"]}
 
 
 admin.site.register(ActivityType, ActivityTypeAdmin)

@@ -44,7 +44,7 @@ class Command(BaseCommand):
         locations = df.to_dict(orient="records")
         for index, location in enumerate(locations):
             project = Project.objects.filter(old_id=location.get("project_id", "")).first()
-            country = Location.objects.filter(code='AF').first()
+            country = Location.objects.filter(code="AF").first()
             province = Location.objects.filter(code=location.get("admin1pcode", "").strip()).first()
             district = Location.objects.filter(code=location.get("admin2pcode", "").strip()).first()
             activity_plans = project.activityplan_set.all()
@@ -130,7 +130,6 @@ class Command(BaseCommand):
                 end_date=aware_end_date,
                 state="in-progress",
                 is_hrp_project=True if project_vals.get("project_hrp_project", False) == 1 else False,
-                has_hrp_code=True if project_vals.get("project_hrp_project", False) == 1 else False,
                 hrp_code=project_vals.get("project_hrp_code", "test"),
                 budget=project_vals.get("project_budget", 0),
                 description=project_vals.get("project_description", "test"),

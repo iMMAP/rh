@@ -60,7 +60,6 @@ class ProjectResource(resources.ModelResource):
             "state",
             "code",
             "is_hrp_project",
-            "has_hrp_code",
             "hrp_code",
             "organization",
             "organization_type",
@@ -100,7 +99,6 @@ class ProjectResource(resources.ModelResource):
             "state",
             "code",
             "is_hrp_project",
-            "has_hrp_code",
             "hrp_code",
             "organization",
             "organization_type",
@@ -482,12 +480,6 @@ class ProjectResource(resources.ModelResource):
 
     def dehydrate_is_hrp_project(self, obj):
         if obj.is_hrp_project:
-            return "yes"
-        else:
-            return "no"
-
-    def dehydrate_has_hrp_code(self, obj):
-        if obj.has_hrp_code:
             return "yes"
         else:
             return "no"

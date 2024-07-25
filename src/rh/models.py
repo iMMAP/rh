@@ -1,6 +1,7 @@
 from django.contrib.auth.models import User
 from django.db import models
 from smart_selects.db_fields import ChainedForeignKey
+from django.core.validators import MinLengthValidator
 
 NAME_MAX_LENGTH = 200
 DESCRIPTION_MAX_LENGTH = 600
@@ -444,7 +445,7 @@ class Project(models.Model):
 
     state = models.CharField(max_length=15, choices=STATES, default="draft", null=True, blank=True)
 
-    title = models.CharField(max_length=DESCRIPTION_MAX_LENGTH)
+    title = models.CharField(max_length=DESCRIPTION_MAX_LENGTH, validators=[MinLengthValidator(6)])
     code = models.SlugField(max_length=NAME_MAX_LENGTH, unique=True)
 
     is_hrp_project = models.BooleanField(default=False)

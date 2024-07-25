@@ -256,6 +256,10 @@
 .p-4 {
     padding: 1rem;
 }
+.px-4 {
+    padding-right: 1rem;
+    padding-left: 1rem;
+}
 
 .p-5 {
     padding: 1.25rem;
@@ -3048,6 +3052,22 @@
 .border {
     border-width: 1px;
     border-style: solid;
+}
+
+.border-red-be{
+    border-color: $red-be;
+}
+.border-red-a5{
+    border-color: $red-a5;
+}
+.border-red{
+    border-color: $red;
+}
+.border-red-b5{
+    border-color: $red-b5;
+}
+.border-red-ae {
+    border-color: $red-ae;
 }
 
 .border-gray-35 {

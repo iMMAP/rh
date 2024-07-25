@@ -52,10 +52,17 @@
                         {% endif %}
                     </span>
                     <br>
-                    <span>
-                        Use this form to provide detailed information about the activity for the above project, including the activity domain,type,indicator and other relevant details.
-                        Activity Domain list is taken from your project. If something is missing please update your project or contact your cluster.
-                    </span>
+                    <ul class="space-y-2 bg-gray-fa p-4 border border-gray-e6 rounded">
+                        <li>
+                            <span class="icon-info mr-2"></span>
+                             Use this form to provide detailed information about the activity for the above project, including the activity domain,type,indicator and other relevant details.
+                        </li>
+                        <li>
+                            <span class="icon-info mr-2"></span>
+                            Activity Domain list is taken from your project. If something is missing please update your project or contact your cluster.
+                        </li>
+                        <li><span class="icon-info mr-2"></span> Required fields are marked with * </li>
+                    </ul>
                 </div>
             </div>
         </div>
@@ -72,7 +79,7 @@
                             <div class="field-col">
                                 <div class="select-field is-required">
                                     <label for="{{ form.activity_domain.id_for_label }}">Activity Domain</label>
-                                    <em class="help-text">{{ form.activity_domain.help_text }}</em>
+                                    <p class="help-text">{{ form.activity_domain.help_text }}</p>
                                     <select required
                                             name="{{ form.activity_domain.name }}"
                                             id="{{ form.activity_domain.id_for_label }}"
@@ -90,7 +97,7 @@
                             <div class="field-col">
                                 <div class="select-field is-required">
                                     <label for="{{ form.activity_type.id_for_label }}">Activity Type</label>
-                                    <em class="help-text">{{ form.activity_type.help_text }}</em>
+                                    <p class="help-text">{{ form.activity_type.help_text }}</p>
                                     <select required
                                             name="{{ form.activity_type.name }}"
                                             id="{{ form.activity_type.id_for_label }}"
@@ -120,7 +127,7 @@
                     <div class="col">
                         <div class="select-field is-required">
                             <label for="{{ form.indicator.id_for_label }}">Indicator</label>
-                            <em class="help-text">{{ form.indicator.help_text }}</em>
+                            <p class="help-text">{{ form.indicator.help_text }}</p>
                             <select required
                                     name="{{ form.indicator.name }}"
                                     id="{{ form.indicator.id_for_label }}"
@@ -139,7 +146,7 @@
                             <div class="field-col">
                                 <div class="select-field">
                                     <label for="{{ form.beneficiary.id_for_label }}">Beneficiary</label>
-                                    <em class="help-text">{{ form.beneficiary.help_text }}</em>
+                                    <p class="help-text">{{ form.beneficiary.help_text }}</p>
                                     {{ form.beneficiary }}
                                     <div class="sign-up-field-error">{{ form.beneficiary.errors }}</div>
                                 </div>
@@ -148,7 +155,7 @@
                             <div class="field-col">
                                 <div class="select-field">
                                     <label for="{{ form.hrp_beneficiary.id_for_label }}">HRP Beneficiary</label>
-                                    <em class="help-text">{{ form.hrp_beneficiary.help_text }}</em>
+                                    <p class="help-text">{{ form.hrp_beneficiary.help_text }}</p>
                                     {{ form.hrp_beneficiary }}
                                     <div class="sign-up-field-error">{{ form.hrp_beneficiary.errors }}</div>
                                 </div>
@@ -157,7 +164,7 @@
                             <div class="field-col">
                                 <div class="select-field">
                                     <label for="{{ form.beneficiary_category.id_for_label }}">Beneficiary Category</label>
-                                    <em class="help-text">{{ form.beneficiary_category.help_text }}</em>
+                                    <p class="help-text">{{ form.beneficiary_category.help_text }}</p>
                                     {{ form.beneficiary_category }}
                                     <div class="sign-up-field-error">{{ form.beneficiary_category.errors }}</div>
                                 </div>
@@ -196,7 +203,7 @@
                         <input type="submit"
                                name="_addanother"
                                class="btn btn-gray"
-                               value="Save and add another">
+                               value="Save and add another activity">
                         <input type="submit" name="_save" class="btn btn-red" value="Save">
                     </div>
                 </div>

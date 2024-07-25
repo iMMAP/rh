@@ -82,18 +82,26 @@ class ProjectsFilter(django_filters.FilterSet):
 
 class ActivityPlansFilter(django_filters.FilterSet):
     activity_domain = django_filters.ModelMultipleChoiceFilter(
-        queryset=ActivityDomain.objects.none(), widget=forms.SelectMultiple(attrs={"class": "custom-select"})
+        queryset=ActivityDomain.objects.none(),
+        widget=forms.SelectMultiple(attrs={"class": "custom-select"}),
     )
     activity_type = django_filters.ModelMultipleChoiceFilter(
-        queryset=ActivityType.objects.none(), widget=forms.SelectMultiple(attrs={"class": "custom-select"})
+        queryset=ActivityType.objects.none(),
+        widget=forms.SelectMultiple(attrs={"class": "custom-select"}),
     )
     indicator = django_filters.ModelMultipleChoiceFilter(
-        queryset=Indicator.objects.none(), widget=forms.SelectMultiple(attrs={"class": "custom-select"})
+        queryset=Indicator.objects.none(),
+        widget=forms.SelectMultiple(attrs={"class": "custom-select"}),
     )
 
     class Meta:
         model = ActivityPlan
         fields = ["activity_domain", "activity_type", "indicator"]
+        # fields = {
+        #     "activity_domain": ["contains"],
+        #     "activity_type": ["contains"],
+        #     "indicator": ["contains"],
+        # }
 
     def __init__(self, data=None, *args, **kwargs):
         project = kwargs.pop("project", None)

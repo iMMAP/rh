@@ -217,7 +217,6 @@ class ActivityTypeAdmin(admin.ModelAdmin):
         "activity_domain__name",
         "clusters__title",
         "code",
-        "countries__name",
     )
     list_filter = ("clusters",)
 

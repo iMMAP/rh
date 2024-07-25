@@ -28,6 +28,7 @@ class ProjectForm(forms.ModelForm):
         exclude = ["organization"]
 
         help_texts = {
+            "title": "Title should at least 6 characters long",
             "code": "A unique identifier for the project. It must be a string of alphanumeric characters, underscores, or hyphens. For example, 'project-123' or 'example_project'.",
             "is_hrp_project": "Select this option if the project is part of the Humanitarian Response Plan. If selected, you will be required to enter a unique HRP project code.",
             "end_date": "The date when the project is expected to end. It must be a date in the future.",

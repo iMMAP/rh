@@ -204,18 +204,6 @@
                                                 </div>
                                             </div>
                                         {% endif %}
-                                        {% if project.has_hrp_code %}
-                                            <div class="field-col">
-                                                <div class="input-holder">
-                                                    <input type="checkbox"
-                                                           id="hrpCode"
-                                                           class="input-check"
-                                                           name="hrp_code"
-                                                           value="{{ project.id }}">
-                                                    <label for="hrpCode">HRP Code</label>
-                                                </div>
-                                            </div>
-                                        {% endif %}
                                         {% if project.start_date %}
                                             <div class="field-col">
                                                 <div class="input-holder">
@@ -734,31 +722,13 @@
                                 </div>
                             </div>
                         </div>
-                        {% if project.is_hrp_project %}
-                            <div class="field-col">
-                                <div class="input-field">
-                                    <span class="label">Has HRP Code?</span>
-                                    <div class="input-holder">
-                                        <span class="text-read-only">
-                                            {% if project.has_hrp_code %}
-                                                Yes
-                                            {% else %}
-                                                No
-                                            {% endif %}
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                        {% endif %}
                     </div>
-                    {% if project.has_hrp_code %}
                         <div class="input-field">
                             <span class="label">HRP project code</span>
                             <div class="input-holder">
                                 <span class="text-read-only">{{ project.hrp_code }}</span>
                             </div>
                         </div>
-                    {% endif %}
                     <div class="input-field">
                         <span class="label">State</span>
                         <div class="input-holder">

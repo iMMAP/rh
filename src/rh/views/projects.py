@@ -286,7 +286,7 @@ def submit_project(request, pk):
             ),
         )
         messages.error(request, "The project must have at least one activity plan.")
-        return redirect("projects-detail", pk=project.pk)
+        return redirect("activity-plans-list", project=project.pk)
 
     for plan in activity_plans:
         target_locations = plan.targetlocation_set.all()
@@ -298,7 +298,7 @@ def submit_project(request, pk):
                 ),
             )
             # return redirect("target-locations-create", activity_plan=plan.pk)
-            return redirect("projects-detail", pk=project.pk)
+            return redirect("activity-plans-list", project=project.pk)
 
     project.state = "in-progress"
     project.save()

@@ -32,10 +32,15 @@
                         <span class="activity-title pb-2">
                             <span>Project Activity Plans</span>
                         </span>
-                        <p class="pt-2">Your project Activity Plans table. You can add Target Location, edit or search activity plans.</p>
+                        <p class="pt-2">The table below displays all activities under your project</p>
                     </div>
                 </div>
                 {% include "rh/activity_plans/_activity_plan_table.html" with object_list=activity_plans %}
+
+                 <div class="p-10 text-center">
+                    <a href="{% url 'project_submit' project.pk %}" class="btn btn-red">Submit Project</a>
+                </div>
+
             </div>
         </div>
     </div>

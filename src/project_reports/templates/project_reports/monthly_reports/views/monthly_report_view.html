@@ -59,7 +59,7 @@
                         </a>
                     </li>
 
-                    {% if monthly_report.active %}
+                    {% if monthly_report.is_active %}
                         <li>
                             <a hx-post="{% url 'archive_project_monthly_report' monthly_report.pk %}"
                                hx-trigger="click"

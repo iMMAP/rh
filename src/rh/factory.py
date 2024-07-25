@@ -26,6 +26,7 @@ from .models import (
     ImplementationModalityType,
     UnitType,
     PackageType,
+    STATES,
 )
 from users.factory import UserFactory
 
@@ -451,7 +452,7 @@ class ProjectFactory(DjangoModelFactory):
     class Meta:
         model = Project
 
-    state = factory.Iterator(Project.PROJECT_STATES, getter=lambda c: c[0])
+    state = factory.Iterator(STATES, getter=lambda c: c[0])
     title = factory.Faker("sentence")
     code = factory.Faker("word")
     # generate unique code

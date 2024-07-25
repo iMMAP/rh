@@ -83,10 +83,10 @@ def index_project_report_view(request, project):
     p_reports.adjusted_elided_pages = p.get_elided_page_range(page)
 
     reports = ProjectMonthlyReport.objects.filter(project=project).aggregate(
-        project_reports_todo_count=Count("id", filter=Q(state__in=["todo", "pending", "submit", "reject", "archive"])),
-        project_report_complete_count=Count("id", filter=Q(state="complete"), active=True),
-        project_report_archive_count=Count("id", filter=Q(state="archive", active=False)),
-        project_reports_count=Count("id", filter=Q(active=True)),
+        project_reports_todo_count=Count("id", filter=Q(state__in=ProjectMonthlyReport.REPORT_STATES)),
+        project_report_complete_count=Count("id", filter=Q(state="complete"), is_active=True),
+        project_report_archive_count=Count("id", filter=Q(state="archive", is_active=False)),
+        project_reports_count=Count("id", filter=Q(is_active=True)),
     )
 
     context = {
@@ -129,7 +129,7 @@ def create_project_monthly_report_view(request, project):
             if form.is_valid():
                 report = form.save(commit=False)
                 report.project = project
-                report.active = True
+                report.is_active = True
                 report.state = "pending"
                 report.save()
                 return redirect(
@@ -317,7 +317,7 @@ def copy_monthly_report_activity_plan(monthly_report, plan_report):
         new_plan_report.monthly_report = monthly_report
 
         # Set the plan report as active
-        new_plan_report.active = True
+        new_plan_report.is_active = True
 
         # Copy indicator from the current plan report to the duplicated plan report.
         new_plan_report.indicator = plan_report.indicator
@@ -396,7 +396,7 @@ def archive_project_monthly_report_view(request, report):
     monthly_report = get_object_or_404(ProjectMonthlyReport, pk=report)
     if monthly_report:
         monthly_report.state = "archive"
-        monthly_report.active = False
+        monthly_report.is_active = False
         monthly_report.save()
     url = reverse_lazy("project_reports_home", kwargs={"project": monthly_report.project.pk})
     url_with_params = f"{url}?state=todo&state=pending&state=submit&state=reject"
@@ -409,7 +409,7 @@ def unarchive_project_monthly_report_view(request, report):
     """Unarchive View for Project Reports"""
     monthly_report = get_object_or_404(ProjectMonthlyReport, pk=report)
     if monthly_report:
-        monthly_report.active = True
+        monthly_report.is_active = True
         monthly_report.state = "todo"
         monthly_report.save()
     url = reverse_lazy("project_reports_home", kwargs={"project": monthly_report.project.pk})

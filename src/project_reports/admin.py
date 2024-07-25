@@ -20,7 +20,7 @@ class ProjectMonthlyReportAdmin(admin.ModelAdmin):
     list_display = (
         "project",
         "state",
-        "active",
+        "is_active",
         "report_period",
         "report_date",
         "report_due_date",
@@ -52,7 +52,7 @@ admin.site.register(TargetLocationReport, TargetLocationReportAdmin)
 
 
 class DisaggregationLocationReportAdmin(admin.ModelAdmin):
-    list_display = ("target_location_report", "active", "disaggregation", "target")
+    list_display = ("target_location_report", "is_active", "disaggregation", "target")
 
 
 admin.site.register(DisaggregationLocationReport, DisaggregationLocationReportAdmin)

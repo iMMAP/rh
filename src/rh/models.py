@@ -318,11 +318,12 @@ class UnitType(models.Model):
 
 
 class ActivityDomain(models.Model):
-    is_active = models.BooleanField(default=True)
-    code = models.SlugField(max_length=NAME_MAX_LENGTH, unique=True)
-    name = models.CharField(max_length=NAME_MAX_LENGTH)
     countries = models.ManyToManyField(Location)
     clusters = models.ManyToManyField(Cluster)
+
+    name = models.CharField(max_length=NAME_MAX_LENGTH)
+    code = models.SlugField(max_length=NAME_MAX_LENGTH, unique=True)
+    is_active = models.BooleanField(default=True)
 
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, null=True)
@@ -337,18 +338,11 @@ class ActivityDomain(models.Model):
 
 class ActivityType(models.Model):
     activity_domain = models.ForeignKey(ActivityDomain, on_delete=models.SET_NULL, blank=True, null=True)
-    is_active = models.BooleanField(default=True)
-    code = models.SlugField(max_length=DESCRIPTION_MAX_LENGTH, unique=True)
-    name = models.CharField(max_length=DESCRIPTION_MAX_LENGTH)
-    clusters = models.ManyToManyField(Cluster)
-    # indicators = models.ManyToManyField(Indicator)
-    activity_date = models.DateTimeField(auto_now_add=True, blank=True, null=True)
-    hrp_code = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
-    code_indicator = models.BooleanField(default=False, blank=True, null=True)
-    start_date = models.DateTimeField(auto_now_add=True, blank=True, null=True)
-    end_date = models.DateTimeField(auto_now_add=True, blank=True, null=True)
-    ocha_code = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
     objective = models.ForeignKey(StrategicObjective, on_delete=models.SET_NULL, blank=True, null=True)
+
+    name = models.CharField(max_length=DESCRIPTION_MAX_LENGTH)
+    code = models.SlugField(max_length=DESCRIPTION_MAX_LENGTH, unique=True)
+    is_active = models.BooleanField(default=True)
 
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, null=True)
@@ -357,7 +351,6 @@ class ActivityType(models.Model):
         return self.name
 
     class Meta:
-        # ordering = ['id']
         verbose_name = "Activity Type"
         verbose_name_plural = "Activity Types"
         constraints = [

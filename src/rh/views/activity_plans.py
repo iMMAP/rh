@@ -79,9 +79,7 @@ def create_activity_plan(request, project):
                     f'The Activity Plan "<a href="{reverse("activity-plans-update", args=[activity_plan.pk])}">{activity_plan}</a>" was added successfully.',
                 ),
             )
-            if "_continue" in request.POST:
-                return redirect("activity-plans-update", pk=activity_plan.pk)
-            elif "_save" in request.POST:
+            if "_save" in request.POST:
                 return redirect("activity-plans-list", project=project.pk)
             elif "_addanother" in request.POST:
                 return redirect("activity-plans-create", project=project.pk)

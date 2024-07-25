@@ -5,24 +5,24 @@
     {% if form.initial %}
         Edit Activity Plan
     {% else %}
-        New Activity Plan
+        Add Activity Plan
     {% endif %}
 {% endblock title %}
 
 {% block breadcrumb_li %}
-<li class="current">Activity Plan</li>
+    <li class="current">Activity Plan</li>
 {% endblock breadcrumb_li %}
 
 {% block project_contents %}
     <div class="flex flex-col gap-2 pt-2 pb-2">
-        <div >
-            <span >Project</span>
+        <div>
+            <span>Project</span>
             <div class="input-holder">
                 <span class="text-read-only">{{ project.code }} - {{ project.title }}</span>
             </div>
         </div>
-        <div >
-            <span >Duration</span>
+        <div>
+            <span>Duration</span>
             <div class="input-holder">
                 <span class="text-read-only">From {{ project.start_date }} to {{ project.end_date }}</span>
             </div>
@@ -38,23 +38,31 @@
                             {% if form.initial %}
                                 Update Activity Plan
                             {% else %}
-                                New Activity Plan
+                                Add Activity Plan
                             {% endif %}
                         </span>
                         {% if form.initial %}
-                        <span class="btn btn-gray" style="float:right">
-                            <a href="{% url 'target-locations-create' form.initial.id %}" class="btn btn-gray">
-                                <img src="{% static 'admin/img/icon-addlink.svg' %}" alt="add-btn-icon">
-                                Add Target Location
-                            </a>
-                        </span>
+                            <span class="btn btn-gray" style="float:right">
+                                <a href="{% url 'target-locations-create' form.initial.id %}"
+                                   class="btn btn-gray">
+                                    <img src="{% static 'admin/img/icon-addlink.svg' %}" alt="add-btn-icon">
+                                    Add Target Location
+                                </a>
+                            </span>
                         {% endif %}
                     </span>
                     <br>
-                    <span >
-                        Use this form to provide detailed information about the activity for the above project, including the activity domain,type,indicator and other relevant details.
-                        Activity Domain list is taken from your project. If something is missing please update your project or contact your cluster.
-                    </span>
+                    <ul class="space-y-2 bg-gray-fa p-4 border border-gray-e6 rounded">
+                        <li>
+                            <span class="icon-info mr-2"></span>
+                             Use this form to provide detailed information about the activity for the above project, including the activity domain,type,indicator and other relevant details.
+                        </li>
+                        <li>
+                            <span class="icon-info mr-2"></span>
+                            Activity Domain list is taken from your project. If something is missing please update your project or contact your cluster.
+                        </li>
+                        <li><span class="icon-info mr-2"></span> Required fields are marked with * </li>
+                    </ul>
                 </div>
             </div>
         </div>
@@ -71,7 +79,9 @@
                             <div class="field-col">
                                 <div class="select-field is-required">
                                     <label for="{{ form.activity_domain.id_for_label }}">Activity Domain</label>
-                                    <select required name="{{ form.activity_domain.name }}"
+                                    <p class="help-text">{{ form.activity_domain.help_text }}</p>
+                                    <select required
+                                            name="{{ form.activity_domain.name }}"
                                             id="{{ form.activity_domain.id_for_label }}"
                                             class="form-control"
                                             hx-get="{% url 'activity-domains-types' %}"
@@ -87,7 +97,9 @@
                             <div class="field-col">
                                 <div class="select-field is-required">
                                     <label for="{{ form.activity_type.id_for_label }}">Activity Type</label>
-                                    <select required name="{{ form.activity_type.name }}"
+                                    <p class="help-text">{{ form.activity_type.help_text }}</p>
+                                    <select required
+                                            name="{{ form.activity_type.name }}"
                                             id="{{ form.activity_type.id_for_label }}"
                                             class="form-control"
                                             hx-get="{% url 'activity-types-indicators' %}"
@@ -115,7 +127,9 @@
                     <div class="col">
                         <div class="select-field is-required">
                             <label for="{{ form.indicator.id_for_label }}">Indicator</label>
-                            <select required name="{{ form.indicator.name }}"
+                            <p class="help-text">{{ form.indicator.help_text }}</p>
+                            <select required
+                                    name="{{ form.indicator.name }}"
                                     id="{{ form.indicator.id_for_label }}"
                                     class="form-control"
                                     hx-get="{% url 'update-indicator-type' %}"
@@ -132,6 +146,7 @@
                             <div class="field-col">
                                 <div class="select-field">
                                     <label for="{{ form.beneficiary.id_for_label }}">Beneficiary</label>
+                                    <p class="help-text">{{ form.beneficiary.help_text }}</p>
                                     {{ form.beneficiary }}
                                     <div class="sign-up-field-error">{{ form.beneficiary.errors }}</div>
                                 </div>
@@ -140,6 +155,7 @@
                             <div class="field-col">
                                 <div class="select-field">
                                     <label for="{{ form.hrp_beneficiary.id_for_label }}">HRP Beneficiary</label>
+                                    <p class="help-text">{{ form.hrp_beneficiary.help_text }}</p>
                                     {{ form.hrp_beneficiary }}
                                     <div class="sign-up-field-error">{{ form.hrp_beneficiary.errors }}</div>
                                 </div>
@@ -148,6 +164,7 @@
                             <div class="field-col">
                                 <div class="select-field">
                                     <label for="{{ form.beneficiary_category.id_for_label }}">Beneficiary Category</label>
+                                    <p class="help-text">{{ form.beneficiary_category.help_text }}</p>
                                     {{ form.beneficiary_category }}
                                     <div class="sign-up-field-error">{{ form.beneficiary_category.errors }}</div>
                                 </div>
@@ -157,7 +174,7 @@
                 </div>
 
                 <div class="row">
-                    <div class="input-field is-required">
+                    <div class="input-field">
                         <label for="{{ form.description.id_for_label }}">Activity Description</label>
                         <div class="input-holder">{{ form.description }}</div>
                         <div class="sign-up-field-error">{{ form.description.errors }}</div>
@@ -168,34 +185,30 @@
                 <div class="row" id="indicator-types"></div>
 
                 <div class="plan-submit-holder">
-                {% if form.initial %}
-                    <a id="delete-btn"
-                       hx-delete="{% url 'activity-plans-delete' form.initial.id %}"
-                       hx-trigger="click"
-                       hx-indicator=".progress"
-                       hx-confirm="Do you want to delete `{{ form.initial.id }}` and its Target Locations ?"
-                       data-tippy-content="Delete Activity Plan"
-                       class="cursor-pointer btn btn-gray">
-                        <span class="project-detail icon-trashbin"></span>
-                        Delete
-                    </a>
-                {% else %}
-                    <a href="#"></a>
-                {% endif %}
-                <div>
-                    <input type="submit"
-                           name="_addanother"
-                           class="btn btn-gray"
-                           value="Save and add another">
-                    <input type="submit"
-                           name="_continue"
-                           class="btn btn-gray"
-                           value="Save and continue editing">
-                    <input type="submit" name="_save" class="btn btn-red" value="Save">
+                    {% if form.initial %}
+                        <a id="delete-btn"
+                           hx-delete="{% url 'activity-plans-delete' form.initial.id %}"
+                           hx-trigger="click"
+                           hx-indicator=".progress"
+                           hx-confirm="Do you want to delete `{{ form.initial.id }}` and its Target Locations ?"
+                           data-tippy-content="Delete Activity Plan"
+                           class="cursor-pointer btn btn-gray">
+                            <span class="project-detail icon-trashbin"></span>
+                            Delete
+                        </a>
+                    {% else %}
+                        <a href="#"></a>
+                    {% endif %}
+                    <div>
+                        <input type="submit"
+                               name="_addanother"
+                               class="btn btn-gray"
+                               value="Save and add another activity">
+                        <input type="submit" name="_save" class="btn btn-red" value="Save">
+                    </div>
                 </div>
             </div>
-            </div>
-            
+ 
         </form>
     </div>
 {% endblock project_contents %}

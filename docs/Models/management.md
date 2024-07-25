@@ -33,6 +33,16 @@ poetry run python src/manage.py dbbackup
 poetry run python src/manage.py mediabackup
 ```
 
+#### Schedule the commands
+```shell
+crontab -e
+```
+Add the below line save, command runs daily at 2:00 AM
+```shell
+0 2 * * * cd /home/ubuntu/rh && poetry run python src/manage.py dbbackup
+0 2 * * * cd /home/ubuntu/rh && poetry run python src/manage.py mediabackup
+```
+
 ### Restore DB Backup
 
 ** Restore with django-dbbackup **

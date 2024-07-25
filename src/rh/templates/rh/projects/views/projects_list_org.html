@@ -18,15 +18,13 @@
                 </div>
                 <ul class="buttons-list-inline">
                     <li>
-                        <a href="{% url 'projects-create' %}" class="btn btn-red add-btn">New Project</a>
+                        <a href="{% url 'projects-create' %}" class="btn btn-red add-btn">Create New Project</a>
                     </li>
                 </ul>
             </div>
-            <p>
-                The below table list all your organization's projects. 
-                You can filter the projects by their state(Active, Draft and etc). 
-                Also you can filter projects by Code, Name, Activity Domain and other feilds.
-                The actions column in the table lets gives you quick link to the most important link and action for a project.
+            <p class="bg-gray-f5 p-4 border border-gray-e6 rounded flex items-center gap-2">
+                <span class="icon-info"></span>
+                The below table displays the projects according to their status (Active, Draft, Completed, etc).
             </p>
         </div>
 

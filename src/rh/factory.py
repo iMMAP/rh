@@ -457,7 +457,6 @@ class ProjectFactory(DjangoModelFactory):
     # generate unique code
 
     is_hrp_project = factory.Faker("boolean")
-    has_hrp_code = factory.Faker("boolean")
     hrp_code = factory.Faker("word")
 
     start_date = factory.Faker("date_time_this_decade", tzinfo=pytz.UTC)

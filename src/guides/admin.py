@@ -4,7 +4,7 @@ from .models import Section, Guide, Feedback
 
 @admin.register(Section)
 class SectionAdmin(admin.ModelAdmin):
-    list_display = ("id", "name", "slug", "description")
+    list_display = ("name", "slug", "description")
     search_fields = ("name", "slug")
     prepopulated_fields = {"slug": ["name"]}
 
@@ -23,6 +23,7 @@ class GuideAdmin(admin.ModelAdmin):
     list_filter = ("section", "created_at", "updated_at")
     search_fields = ("slug",)
     date_hierarchy = "created_at"
+    prepopulated_fields = {"slug": ["title"]}
 
     def feedbacks(self, obj):
         return f"Upvote: {obj.feedback_set.filter(upvote=True).count()} - Downvote: {obj.feedback_set.filter(upvote=False).count()}"

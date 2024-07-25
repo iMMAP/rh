@@ -7,7 +7,7 @@
     {% if target_location_form.initial %}
         Edit Target Location
     {% else %}
-        New Target Location
+        Add Target Location
     {% endif %}
 {% endblock title %}
 
@@ -43,15 +43,21 @@
                             {% if target_location_form.initial %}
                                 Update Target Location
                             {% else %}
-                                New Target Location
+                                Add Target Location
                             {% endif %}
                         </span>
                     </span>
                     <br>
-                    <span >
-                        Use this form to provide detailed information about the target location for the above activity plan, including the country, province or state, and other relevant details.
-                        Also specify the number of people you aim to reach with your activity in the selected location from the Disaggregation section.
-                    </span>
+                    <ul class="space-y-2 bg-gray-fa p-4 border border-gray-e6 rounded">
+                        <li>
+                            <span class="icon-info mr-2"></span>
+                            Use this form to provide detailed information about the target location for the above activity plan, including the country, province or state, and other relevant details.
+                        </li>
+                        <li>
+                            <span class="icon-info mr-2"></span>
+                             Also specify the number of people you aim to reach with your activity in the selected location from the Disaggregation section.
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>

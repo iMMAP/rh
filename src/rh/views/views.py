@@ -109,7 +109,17 @@ def load_activity_domains(request):
     clusters = [
         {
             "label": cluster.title,
-            "choices": [{"value": domain.pk, "label": domain.name} for domain in cluster.activitydomain_set.all()],
+            "id": cluster.code,
+            "choices": [
+                {
+                    "value": domain.pk,
+                    "label": domain.name,
+                    "customProperties": {
+                        "clusterId": cluster.id,
+                    },
+                }
+                for domain in cluster.activitydomain_set.all()
+            ],
         }
         for cluster in clusters
     ]

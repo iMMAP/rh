@@ -60,7 +60,7 @@
                             <span class="sign-up-field-error">{{ form.code.errors }}</span>
                         </div>
                         <div class="field-col">
-                            <div class="select-field">
+                            <div class="select-field is-required">
                                 <label for="{{ form.user.id_for_label }}">Focal Point</label>
                                 <p class="help-text">{{ form.user.help_text }}</p>
                                 {{ form.user }}
@@ -173,7 +173,9 @@
                                 multiple]
                             </label>
                             <p class="help-text">{{ form.activity_domains.help_text }}</p>
-                            <div class="input-holder">{{ form.activity_domains }}</div>
+                            <div class="input-holder">
+                                {{ form.activity_domains }}
+                            </div>
                             <span class="sign-up-field-error">{{ form.activity_domains.errors }}</span>
                         </div>
                     </div>
@@ -196,7 +198,7 @@
                         </div>
                     </div>
  
-                    <div class="input-field is-required">
+                    <div class="input-field">
                         <label for="{{ form.description.id_for_label }}">Project Description &amp; Objectives</label>
                         <p class="help-text">{{ form.description.help_text }}</p>
                         <div class="input-holder">{{ form.description }}</div>
@@ -227,28 +229,4 @@
 {% block scripts %}
     {% comment %} {% vite 'users/static/users/users.js' %} {% endcomment %}
     <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
-    <script>
-        document.querySelectorAll('.custom-select').forEach((select) => {
-            const choice = new Choices(select, {
-                searchEnabled: true,
-                itemSelectText: '',
-                removeItemButton: true,
-                classNames: {
-                    listDropdown: 'choices__list--dropdown',
-                },
-                shouldSort: false,
-            });
-        });
-
-        //  start date and end date validation 
-        document.querySelector(".end-date").addEventListener("change", function(e) {
-            let end_date = e.target.value;
-            let start_date = document.querySelector(".start-date");
-
-            if ((start_date.value) > end_date) {
-                document.getElementById("date-validation-error").style.display = "inline-block";
-                e.target.value = null;
-            }
-        });
-    </script>
 {% endblock scripts %}

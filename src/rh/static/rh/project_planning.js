@@ -2,6 +2,17 @@ const isHrpProject = document.getElementById("id_is_hrp_project");
 const prHrpCode = document.getElementById("prHrpCode");
 const idHrpCode = document.getElementById("id_hrp_code");
 
+document.querySelector(".end-date").addEventListener("change", (e) => {
+	const end_date = e.target.value;
+	const start_date = document.querySelector(".start-date");
+
+	if (start_date.value > end_date) {
+		document.getElementById("date-validation-error").style.display =
+			"inline-block";
+		e.target.value = null;
+	}
+});
+
 /**
  * Toggles the display of the HRP code form field based on whether the 'isHrpProject'
  * checkbox is checked or not. If checked, the HRP code form field and corresponding
@@ -9,7 +20,6 @@ const idHrpCode = document.getElementById("id_hrp_code");
  * and the 'hasHrpCode' checkbox is unchecked.
  */
 function toggleHrpCode() {
-	console.log("toggle hrp project");
 	if (isHrpProject.checked) {
 		prHrpCode.style.display = "block";
 	} else {
@@ -50,15 +60,23 @@ document
 	.getElementById("id_budget_received")
 	.addEventListener("input", calculateBudgetGap);
 
-const choice = new Choices("#id_activity_domains", {
+const choiceOptions = {
 	searchEnabled: true,
 	itemSelectText: "",
 	removeItemButton: true,
+	resetScrollPosition: false,
 	classNames: {
 		listDropdown: "choices__list--dropdown",
 	},
 	shouldSort: false,
-});
+};
+
+const userChoice = new Choices("#id_user", choiceOptions);
+const activityDomainChoice = new Choices("#id_activity_domains", choiceOptions);
+const donorChoice = new Choices("#id_donors", choiceOptions);
+const clusterChoice = new Choices("#id_clusters", choiceOptions);
+const iPChoice = new Choices("#id_implementing_partners", choiceOptions);
+const pPChoice = new Choices("#id_programme_partners", choiceOptions);
 
 function get_activity_domains() {
 	const domainsUrl = document
@@ -88,7 +106,8 @@ function get_activity_domains() {
 	})
 		.then((response) => response.json())
 		.then((data) => {
-			choice.setChoices(data, "value", "label", true);
+			// choice.removeActiveItems()
+			activityDomainChoice.setChoices(data, "value", "label", true);
 		});
 }
 
@@ -97,6 +116,20 @@ if (window.location.pathname.includes("update")) {
 	get_activity_domains();
 }
 
-document
-	.getElementById("id_clusters")
-	.addEventListener("change", get_activity_domains);
+clusterChoice.passedElement.element.addEventListener(
+	"change",
+	get_activity_domains,
+);
+
+clusterChoice.passedElement.element.addEventListener("removeItem", (e) => {
+	for (const element of activityDomainChoice.getValue()) {
+		if (
+			Number.parseInt(element?.customProperties?.clusterId) ===
+			Number.parseInt(e.detail.value)
+		) {
+			activityDomainChoice.removeActiveItemsByValue(element.value);
+		} else if (element.groupId === -1){
+			activityDomainChoice.removeActiveItemsByValue(element.value);
+		}
+	}
+});

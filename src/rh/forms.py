@@ -93,6 +93,10 @@ class ProjectForm(forms.ModelForm):
 
         if self.instance.pk:
             # Entering Update mode
+            # self.fields["activity_domains"].choices = self.fields["activity_domains"].queryset.filter(
+            #     clusters__in=self.instance.clusters.all(), countries=user.profile.country
+            # ).order_by("name").values_list("id","name")
+
             self.fields["user"].queryset = User.objects.filter(profile__organization=self.instance.organization)
 
             if self.instance.user:

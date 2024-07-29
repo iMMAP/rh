@@ -40,7 +40,7 @@ urlpatterns = [
         PasswordResetView.as_view(
             template_name="users/auth/password_reset.html",
             form_class=UserPasswordResetForm,
-            email_template_name="users/emails/password_reset_email.html",
+            html_email_template_name="users/emails/password_reset_email.html",
             subject_template_name="users/emails/password_reset_subject.txt",
         ),
         name="password_reset",

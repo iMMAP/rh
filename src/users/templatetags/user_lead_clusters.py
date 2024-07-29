@@ -7,7 +7,7 @@ register = template.Library()
 
 @register.simple_tag
 def user_lead_clusters(user: User) -> Cluster:
-    if not user.is_authenticated:
+    if not isinstance(user, User) or not user.is_authenticated:
         return Cluster.objects.none()
 
     user_groups = user.groups.filter(name__endswith="_CLUSTER_LEADS")

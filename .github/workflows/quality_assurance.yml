@@ -28,7 +28,7 @@ jobs:
         poetry-version: 1.4.2
     - name: Install Dependencies
       run: |
-        make install
+        make install-no-dev
         pip install ruff
         make collectstatic
     - name: Ruff Linting

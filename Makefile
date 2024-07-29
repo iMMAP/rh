@@ -22,7 +22,7 @@ migrations:
 env ?= local
 .PHONY: serve
 serve:
-	poetry run python src/manage.py runserver --settings=core.settings.$(env)
+	poetry run python src/manage.py runserver --setting=core.settings.$(env)
 
 .PHONY: vite
 vite:
@@ -51,10 +51,9 @@ superuser:
 .PHONY: update
 update: install migrate npm-install npm-build;
 
-env ?= local
 .PHONY: test
 test:
-	poetry run python src/manage.py test --settings=core.settings.$(env) src
+	poetry run python src/manage.py test src
 
 .PHONY: db-seed
 db-seed:
@@ -73,10 +72,9 @@ format-templates:
 lint-templates:
 	djlint --profile=django src
 
-env ?= local
 .PHONY: collectstatic
 collectstatic:
-	poetry run python src/manage.py collectstatic --settings=core.settings.$(env) src --no-input --ignore=node_modules --ignore=*.scss --ignore=*.json --ignore=vite.config.js 
+	poetry run python src/manage.py collectstatic --no-input --ignore=node_modules --ignore=*.scss --ignore=*.json --ignore=vite.config.js 
 
 .PHONY: run-dependencies
 run-dependencies:

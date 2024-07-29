@@ -2,14 +2,15 @@
 <header class="sticky top-0 z-40 w-full border-b border-border supports-backdrop-blur:bg-background/60 bg-background/95 backdrop-blur">
     <div class="container flex items-center h-14">
         <div class="hidden mr-4 md:flex">
-            <a class="flex items-center mr-6" href="#">
+            <a class="flex items-center mr-6" href="{% url 'docs' %}">
                 <img alt="Logo"
-                     class="mr-2 dark:invert"
-                     height="26"
-                     src="{% static 'images/immap-logo.svg' %}"
-                     width="26" />
+                    class="mr-2 h-6 w-6 dark:invert"
+                    src="{% static 'images/immap-logo.svg' %}"
+                     />
                 <a href="{% url 'docs' %}"
-                   class="hidden font-semibold sm:inline-block text-clip whitespace-nowrap">User Guides</a>
+                   class="hidden font-semibold sm:inline-block text-clip whitespace-nowrap">
+                   User Guides
+                </a>
             </a>
             {% comment %} <nav class="flex items-center space-x-6 text-sm font-medium">
                 <a href="/index.html">ReportHub</a>

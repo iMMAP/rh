@@ -204,6 +204,10 @@
                         <th class="month-col">
                             <strong class="table-title">Status</strong>
                         </th>
+
+                        <th class="month-col">
+                            <strong class="table-title">Actions</strong>
+                        </th>
                     </tr>
                 </thead>
                 {% if stock_reports %}
@@ -227,6 +231,32 @@
                                     {% else %}
                                         Pending
                                     {% endif %}
+                                </td>
+
+                                <td>
+                                    <div class="table-flex-holder">
+                                        <ul class="table-options-buttons">
+                                            <li>
+                                                <a href="{% url 'stock_report' report.id %}" data-tippy-content="Edit Monthly Stock Report">
+                                                    <span class="project-detail icon-pen"></span>
+                                                </a>
+                                            </li>
+
+                                            <li>
+                                                <button>
+                                                    <a hx-delete=""
+                                                       hx-trigger="click"
+                                                       hx-indicator=".progress"
+                                                       hx-confirm="Do you want to delete `{{ row }}` and its Target Locations ?"
+                                                       hx-target="closest tr"
+                                                       data-tippy-content="Delete Activity Plan">
+                                                        <span class="project-detail icon-trashbin"></span>
+                                                    </a>
+                                                </button>
+                                            </li>
+                                        </ul>
+                                    </div>
+
                                 </td>
                             </tr>
 

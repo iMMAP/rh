@@ -30,10 +30,10 @@ jobs:
       run: |
         make install-no-dev
         pip install ruff
-        make collectstatic
+        make collectstatic env=production
     - name: Ruff Linting
       run: |
         make lint
     - name: Run Tests
       run: |
-        make test
+        make test env=production

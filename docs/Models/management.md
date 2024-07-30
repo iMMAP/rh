@@ -54,3 +54,15 @@ poetry run python src/manage.py dbrestore
 ```shell
 pg_restore --clean --no-acl --no-owner -d <database> -U <user> <filename.dump>
 ```
+
+## Queue mail with django-mailer
+```shell
+crontab -e
+```
+
+Add the below to the cron
+```shell
+*       * * * * (/home/ubuntu/rh/.venv/bin/python /home/ubuntu/rh/src/manage.py send_mail >> ~/cron_mail.log 2>&1)
+0,20,40 * * * * (/home/ubuntu/rh/.venv/bin/python /home/ubuntu/rh/src/manage.py retry_deferred >> ~/cron_mail_deferred.log 2>&1)
+0 0 * * * (/home/ubuntu/rh/.venv/bin/python /home/ubuntu/rh/src/manage.py purge_mail_log 7 >> ~/cron_mail_purge.log 2>&1)
+```

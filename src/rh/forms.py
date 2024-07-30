@@ -28,13 +28,15 @@ class ProjectForm(forms.ModelForm):
         exclude = ["organization"]
 
         help_texts = {
-            "title": "Title should at least 6 characters long",
+            "title": "Title should at least 6 characters long.",
             "code": "A unique identifier for the project. It must be a string of alphanumeric characters, underscores, or hyphens. For example, 'project-123' or 'example_project'.",
             "is_hrp_project": "Select this option if the project is part of the Humanitarian Response Plan. If selected, you will be required to enter a unique HRP project code.",
             "end_date": "The date when the project is expected to end. It must be a date in the future.",
             "user": "The person responsible for overseeing the project. This is a critical role that ensures the project's objectives are met.",
             "implementing_partners": "The partner who takes the project and implement the project in the field.",
-            "programme_partners": "The partner who is leading and administrating the project",
+            "programme_partners": "The partner who is leading and administrating the project.",
+            "clusters": "Clusters that your project covers. The list is taken from your profile, if something is missing please update your profile.",
+            "donors": "Please contact us if your project donor is not in the list",
         }
 
         widgets = {

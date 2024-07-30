@@ -22,39 +22,44 @@
                     </li>
                 </ul>
             </div>
-            <p class="bg-gray-fa p-4 border border-gray-e6 rounded flex items-center gap-2">
+         <p class="flex items-center gap-2">
                 <span class="icon-info"></span>
                 The below table displays the projects according to their status (Active, Draft, Completed, etc).
             </p>
         </div>
 
+        <div class="overall-info-holder inline-style">
+            <div class="overall-info-block">
+                <span class="title">Total Activity Plans</span>
+                <span class="text">{{counts.activity_plans_count}}</span>
+            </div>
+            <div class="overall-info-block">
+                <span class="title">Total Targeted Provinces</span>
+                <span class="text">{{counts.target_locations_count}}</span>
+            </div>
+            <div class="overall-info-block">
+                <span class="title">Total Targeted Beneficiaries</span>
+                <span class="text">{{counts.total_beneficiary}}</span>
+            </div>
+        </div>
+
         <div class="tabs-nav-holder">
             <ul class="tabs-nav">
                 <li class=" {% if not request.GET.state %}active{% endif %}">
-                    <a href="{{ request.path }}">All
-                        ({{ projects_count }})
-                    </a>
+                    <a href="{{ request.path }}">All</a>
                 </li>
                 <li class=" {% if request.GET.state == 'in-progress' %}active{% endif %}">
-                    <a href="{{ request.GET.url }}?state=in-progress">Active
-                        ({{ active_projects_count }})
-                    </a>
+                    <a href="{{ request.GET.url }}?state=in-progress">Active </a>
                 </li>
                 <li class=" {% if request.GET.state == 'draft' %}active{% endif %}">
-                    <a href="{{ request.GET.url }}?state=draft">Draft
-                        ({{ draft_projects_count }})
-                    </a>
+                    <a href="{{ request.GET.url }}?state=draft">Draft </a>
                 </li>
-                    <li class=" {% if request.GET.state == 'completed' %}active{% endif %}">
-                        <a href="{{ request.GET.url }}?state=completed">Completed
-                            ({{ completed_projects_count }})
-                        </a>
-                    </li>
-                    <li class=" {% if request.GET.state == 'archived' %}active{% endif %}">
-                        <a href="{{ request.GET.url }}?state=archived">Archived
-                            ( {{ archived_projects_count }})
-                        </a>
-                    </li>
+                <li class=" {% if request.GET.state == 'completed' %}active{% endif %}">
+                    <a href="{{ request.GET.url }}?state=completed">Completed </a>
+                </li>
+                <li class=" {% if request.GET.state == 'archived' %}active{% endif %}">
+                    <a href="{{ request.GET.url }}?state=archived">Archived </a>
+                </li>
             </ul>
         </div>
  

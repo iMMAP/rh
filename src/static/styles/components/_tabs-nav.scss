@@ -12,7 +12,7 @@
   background-color: $gray-fa;
   padding: 10px;
   border: 1px solid $gray-e6;
-  border-radius: 10px;
+  border-radius: 0.4rem;
   max-width: fit-content;
 
   @include media('>=desktop') {
@@ -80,7 +80,7 @@
 
   .active {
     background-color: $red-a5;
-    border-radius: 10px;
+    border-radius: 0.4rem;
 
     
     border: 2px solid $red;

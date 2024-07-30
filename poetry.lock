@@ -435,6 +435,21 @@ django = ">=2.0"
 jsonschema = "*"
 
 [[package]]
+name = "django-mailer"
+version = "2.3.2"
+description = "A reusable Django app for queuing the sending of email"
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "django-mailer-2.3.2.tar.gz", hash = "sha256:6ea0cbec09f57eb91376780a5f20ab7a834b942435a575e92e8e021f7838d78f"},
+    {file = "django_mailer-2.3.2-py3-none-any.whl", hash = "sha256:c7ef5ad63d5484246908bd1ce583c22837c66c1a7b593c9b816f4ead2421c995"},
+]
+
+[package.dependencies]
+Django = ">=2.2"
+lockfile = ">=0.8"
+
+[[package]]
 name = "django-mdeditor"
 version = "0.1.20"
 description = "A simple Django app to edit markdown text."
@@ -850,6 +865,17 @@ benchmark = ["pytest", "pytest-benchmark"]
 dev = ["black", "flake8", "isort", "pre-commit", "pyproject-flake8"]
 doc = ["myst-parser", "sphinx", "sphinx-book-theme"]
 test = ["coverage", "pytest", "pytest-cov"]
+
+[[package]]
+name = "lockfile"
+version = "0.12.2"
+description = "Platform-independent file locking module"
+optional = false
+python-versions = "*"
+files = [
+    {file = "lockfile-0.12.2-py2.py3-none-any.whl", hash = "sha256:6c3cb24f344923d30b2785d5ad75182c8ea7ac1b6171b08657258ec7429d50fa"},
+    {file = "lockfile-0.12.2.tar.gz", hash = "sha256:6aed02de03cba24efabcd600b30540140634fc06cfa603822d508d5361e9f799"},
+]
 
 [[package]]
 name = "markdown"
@@ -2086,4 +2112,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "57dc04718b3a0d7c214264c24fc098d3b8aef4d073ffd45b07ad8dfa377be75d"
+content-hash = "6337a33cc083986a1e668c888c6e9693da51103e210953351c347b29bbb8ce0d"

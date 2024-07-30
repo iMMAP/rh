@@ -13,23 +13,14 @@
 
 {% block project_contents %}
     <div class="main-content">
+        <ul class="space-y-2 p-4 border border-gray-e6 rounded">
+            <li>
+                <span class="icon-info mr-2"></span>
+                Activity Domain list is provided by the clulsters, If something is missing please contact your cluster.
+            </li>
+            <li><span class="icon-info mr-2"></span> Required fields are marked with * </li>
+        </ul>
         <div class="create-plan">
-            {% if project %}
-                <div class="flex flex-col gap-2 pt-2 pb-2">
-                    <div>
-                        <span>Project</span>
-                        <div class="input-holder">
-                            <span class="text-read-only">{{ project.code }} - {{ project.title }}</span>
-                        </div>
-                    </div>
-                    <div>
-                        <span>Duration</span>
-                        <div class="input-holder">
-                            <span class="text-read-only">From {{ project.start_date }} to {{ project.end_date }}</span>
-                        </div>
-                    </div>
-                </div>
-            {% endif %}
             <div class="activity-planning read-only">
                 <div class="top-activity-block">
                     <span class="activity-title">
@@ -113,8 +104,7 @@
                         <div class="field-col">
                             <div class="select-field">
                                 <label for="{{ form.donors.id_for_label }}">
-                                    Project Donor [ Please contact us if your project donor is not
-                                    in the list]
+                                    Project Donor
                                 </label>
                                 <p class="help-text">{{ form.donors.help_text }}</p>
                                 <div class="input-holder">{{ form.donors }}</div>
@@ -159,8 +149,7 @@
                     </fieldset>
                     <div class="select-field is-required">
                         <label for="{{ form.clusters.id_for_label }}">
-                            Clusters / Sectors [Hold Control/Command button to select
-                            multiple]
+                            Clusters / Sectors 
                         </label>
                         <p class="help-text">{{ form.clusters.help_text }}</p>
                         <div class="input-holder">{{ form.clusters }}</div>
@@ -169,8 +158,7 @@
                     <div class="field-col">
                         <div class="select-field is-required">
                             <label for="{{ form.activity_domains.id_for_label }}">
-                                Activity Domains [Hold Control/Command button to select
-                                multiple]
+                                Activity Domains
                             </label>
                             <p class="help-text">{{ form.activity_domains.help_text }}</p>
                             <div class="input-holder">

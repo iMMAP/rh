@@ -10,20 +10,6 @@
 {% endblock breadcrumb_li %}
 
 {% block project_contents %}
-    <div class="flex flex-col gap-2 pt-2 pb-2">
-        <div>
-            <span>Project</span>
-            <div class="input-holder">
-                <span class="text-read-only">{{ project.code }} - {{ project.title }}</span>
-            </div>
-        </div>
-        <div>
-            <span>Duration</span>
-            <div class="input-holder">
-                <span class="text-read-only">From {{ project.start_date }} to {{ project.end_date }}</span>
-            </div>
-        </div>
-    </div>
     <div class="main-content">
         <div class="activity-planning create-activity">
             <div id="activity-formset-form">

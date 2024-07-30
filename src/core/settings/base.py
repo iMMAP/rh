@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     "dbbackup",
     "extra_settings",
     "mdeditor",
+    "mailer",
     # RH apps
     "rh.apps.RhConfig",
     "users.apps.UsersConfig",
@@ -152,7 +153,8 @@ INTERNAL_IPS = [
 ]
 
 # Can use MailTrap SMTP Setup for now (dev and staging only).
-EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+# EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_BACKEND = "mailer.backend.DbBackend"
 
 
 EMAIL_HOST = env("EMAIL_HOST", default="smtp.mailtrap.io")

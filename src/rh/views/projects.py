@@ -5,7 +5,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
 from django.core.exceptions import PermissionDenied
 from django.core.paginator import Paginator
-from django.db.models import Count, Prefetch, Q, Sum
+from django.db.models import Count, Prefetch, Q
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
@@ -14,7 +14,7 @@ from rh.resources import ProjectResource
 
 from ..filters import ProjectsFilter
 from ..forms import ProjectForm
-from ..models import ActivityPlan, Project, Cluster, DisaggregationLocation
+from ..models import ActivityPlan, Project, Cluster
 from .views import (
     copy_project_target_location,
     copy_target_location_disaggregation_locations,
@@ -190,18 +190,13 @@ def org_projects_list(request):
     p_projects.adjusted_elided_pages = p.get_elided_page_range(page)
 
     projects_counts = project_filter.qs.filter(organization=user_org, state="in-progress").aggregate(
+        # draft_projects_count=Count("id", filter=Q(state="draft")),
+        # active_projects_count=Count("id", filter=Q(state="in-progress")),
+        pending_reports_count=Count("projectmonthlyreport", filter=Q(state="pending")),
+        implementing_partners_count=Count("implementing_partners", distinct=True),
         activity_plans_count=Count("activityplan", distinct=True),
         target_locations_count=Count("targetlocation__province", distinct=True),
     )
-
-    projects_counts["total_beneficiary"] = (
-        DisaggregationLocation.objects.filter(target_location__project__in=p_projects.object_list).aggregate(
-            total_beneficiary=Sum("target")
-        )["total_beneficiary"]
-        or 0
-    )
-
-    # projects_counts["target_locations_count"] = TargetLocation.objects.filter(activity_plan__project__organization=user_org).count()
 
     context = {
         "projects": p_projects,

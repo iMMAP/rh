@@ -2,6 +2,7 @@
 
 {% load static %}
 {% load compress %}
+{% load humanize %}
 
 {% block title %}
     Projects - Organization
@@ -28,18 +29,22 @@
             </p>
         </div>
 
-        <div class="overall-info-holder inline-style">
+        <div class="overall-info-holder inline-style pb-4">
             <div class="overall-info-block">
                 <span class="title">Total Activity Plans</span>
-                <span class="text">{{counts.activity_plans_count}}</span>
+                <span class="text">{{counts.activity_plans_count|intcomma}}</span>
             </div>
             <div class="overall-info-block">
                 <span class="title">Total Targeted Provinces</span>
-                <span class="text">{{counts.target_locations_count}}</span>
+                <span class="text">{{counts.target_locations_count|intcomma}}</span>
             </div>
             <div class="overall-info-block">
-                <span class="title">Total Targeted Beneficiaries</span>
-                <span class="text">{{counts.total_beneficiary}}</span>
+                <span class="title">Implementing Partners</span>
+                <span class="text">{{counts.implementing_partners_count|intcomma}}</span>
+            </div>
+            <div class="overall-info-block">
+                <span class="title">Pending Reports</span>
+                <span class="text">{{counts.pending_reports_count|intcomma}}</span>
             </div>
         </div>
 

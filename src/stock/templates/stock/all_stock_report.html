@@ -241,19 +241,17 @@
                                                     <span class="project-detail icon-pen"></span>
                                                 </a>
                                             </li>
-
                                             <li>
-                                                <button>
-                                                    <a hx-delete=""
-                                                       hx-trigger="click"
-                                                       hx-indicator=".progress"
-                                                       hx-confirm="Do you want to delete `{{ row }}` and its Target Locations ?"
-                                                       hx-target="closest tr"
-                                                       data-tippy-content="Delete Activity Plan">
+                                                <form method="post" action="{% url 'delete_stock_report' report.id %}">
+                                                    {% csrf_token %}
+                                                    <button type="submit" data-tippy-content="Delete Stock Report">
                                                         <span class="project-detail icon-trashbin"></span>
-                                                    </a>
-                                                </button>
+                                                    </button>
+                                                </form>
                                             </li>
+                                            
+
+                               
                                         </ul>
                                     </div>
 

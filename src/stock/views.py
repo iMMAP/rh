@@ -6,7 +6,7 @@ from dateutil.relativedelta import relativedelta
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.forms import modelformset_factory
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect, render, get_object_or_404
 from django.views.decorators.http import require_http_methods
 
 from .forms import StockLocationDetailsForm, StockReportForm, WarehouseLocationForm
@@ -147,6 +147,7 @@ def stock_report_view(request, pk):
             form = StockReportForm(request.POST, instance=stock_report)
             if form.is_valid():
                 form.save()
+                return redirect("all_stock_report", flag=stock_report.state)  # Redirect to all stock reports after saving the monthly report. 
 
     context = {
         "report_form": form,
@@ -168,3 +169,11 @@ def submit_stock_report_form(request, pk):
 def update_stock_report(request, pk):
     StockReports.objects.filter(id=pk).update(state="todo")
     return redirect("stock_report", pk=pk)
+
+def delete_stock_report(request, pk):
+    stock_report = get_object_or_404(StockReports, pk=pk)
+    flag = stock_report.state  # Assuming 'state' is the field that represents the flag
+    if request.method == 'POST':
+        stock_report.delete()
+        return redirect("all_stock_report", flag=flag) 
+    return render(request, "stock/stock_report_form.html", {'stock_report': stock_report})

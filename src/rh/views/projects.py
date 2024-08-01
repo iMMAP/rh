@@ -14,7 +14,7 @@ from rh.resources import ProjectResource
 
 from ..filters import ProjectsFilter
 from ..forms import ProjectForm
-from ..models import ActivityPlan, Project, Cluster
+from ..models import ActivityPlan, Project, Cluster,TargetLocation,Disaggregation
 from .views import (
     copy_project_target_location,
     copy_target_location_disaggregation_locations,
@@ -23,6 +23,62 @@ from .views import (
 from ..utils import has_permission
 from django.utils.safestring import mark_safe
 from extra_settings.models import Setting
+from django_htmx.http import HttpResponseClientRedirect
+
+from openpyxl import Workbook,load_workbook
+
+
+@login_required
+@require_http_methods(["POST"])
+def import_activity_plans(request,pk):
+    project = get_object_or_404(Project,pk=pk)
+
+    file = request.FILES["file"]
+
+    wb = load_workbook(file)
+
+    for row in wb.active.values:
+        print(row)
+        # for value in row:
+            # print(value)
+
+    # return redirect('activity-plans-list',project=project.pk)
+
+
+@login_required
+def export_activity_plans_import_template(request,pk):
+    project = get_object_or_404(Project,pk=pk)
+
+    wb = Workbook()
+    ws1 = wb.active
+    ws1.title = "Activity Plans import template"
+
+    # Add column names for ActivityPlan and TargetLocation models
+    activity_plan_columns = [field.name for field in ActivityPlan._meta.get_fields() if field.concrete]
+    target_location_columns = [field.name for field in TargetLocation._meta.get_fields() if field.concrete and field.name != 'project']
+
+    disaggregation_columns = list(Disaggregation.objects.filter(clusters__in=project.clusters.all()).values_list('name', flat=True))
+    print(disaggregation_columns)
+
+    all_columns = activity_plan_columns + target_location_columns + disaggregation_columns
+
+    filtered_columns = [col for col in all_columns if col not in ['id', 'state', 'updated_at', 'created_at', 'activity_plan']]
+    for col_num, column in enumerate(filtered_columns, start=1):
+        ws1.cell(row=1, column=col_num, value=column)
+
+    from io import BytesIO
+
+    output = BytesIO()
+    wb.save(output)
+    output.seek(0)
+
+    response = HttpResponse(
+        content=output.getvalue(),
+        content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    )
+    response['Content-Disposition'] = 'attachment; filename=activity_plans_import_template.xlsx'
+
+    return response
 
 
 @login_required
@@ -189,7 +245,7 @@ def org_projects_list(request):
     p_projects = p.get_page(page)
     p_projects.adjusted_elided_pages = p.get_elided_page_range(page)
 
-    projects_counts = project_filter.qs.filter(organization=user_org, state="in-progress").aggregate(
+    projects_counts = project_filter.qs.aggregate(
         # draft_projects_count=Count("id", filter=Q(state="draft")),
         # active_projects_count=Count("id", filter=Q(state="in-progress")),
         pending_reports_count=Count("projectmonthlyreport", filter=Q(state="pending")),
@@ -431,57 +487,53 @@ def copy_project_activity_plan(project, plan):
 
 
 @login_required
+@require_http_methods(["POST"])
 def copy_project(request, pk):
     """Copying Project"""
     project = get_object_or_404(Project, pk=pk)
 
-    if project:
-        # Create a new project by duplicating the original project.
-        new_project = get_object_or_404(Project, pk=pk)
-        new_project.pk = None  # Generate a new primary key for the new project.
+    # Create a new project by duplicating the original project.
+    new_project = get_object_or_404(Project, pk=pk)
+    new_project.pk = None  # Generate a new primary key for the new project.
 
-        # Modify the title, code, and state of the new project to indicate it's a copy.
-        new_project.title = f"[COPY] - {project.title}"
-        new_project.code = f"[COPY] - {project.code}"  # Generate a new primary key for the new project.
-        new_project.state = "draft"
-        new_project.hrp_code = ""
+    # Modify the title, code, and state of the new project to indicate it's a copy.
+    new_project.title = f"DUPLICATED-{project.title}"
+    new_project.code = f"DUPLICATED-{project.code}"  # Generate a new primary key for the new project.
+    new_project.state = "draft"
 
-        new_project.save()  # Save the new project to the database.
+    new_project.save()  # Save the new project to the database.
 
-        # Copy related data from the original project to the new project.
-        new_project.clusters.set(project.clusters.all())
-        new_project.activity_domains.set(project.activity_domains.all())
-        new_project.donors.set(project.donors.all())
-        new_project.programme_partners.set(project.programme_partners.all())
-        new_project.implementing_partners.set(project.implementing_partners.all())
+    # Copy related data from the original project to the new project.
+    new_project.clusters.set(project.clusters.all())
+    new_project.activity_domains.set(project.activity_domains.all())
+    new_project.donors.set(project.donors.all())
+    new_project.programme_partners.set(project.programme_partners.all())
+    new_project.implementing_partners.set(project.implementing_partners.all())
 
-        # Check if the new project was successfully created.
-        if new_project:
-            # Get all activity plans associated with the original project.
-            activity_plans = project.activityplan_set.all()
+    # Check if the new project was successfully created.
+    if new_project:
+        # Get all activity plans associated with the original project.
+        activity_plans = project.activityplan_set.all()
 
-            # Iterate through each activity plan and copy it to the new project.
-            for plan in activity_plans:
-                new_plan = copy_project_activity_plan(new_project, plan)
-                target_locations = plan.targetlocation_set.all()
+        # Iterate through each activity plan and copy it to the new project.
+        for plan in activity_plans:
+            new_plan = copy_project_activity_plan(new_project, plan)
+            target_locations = plan.targetlocation_set.all()
 
-                # Iterate through target locations and copy them to the new plan.
-                for location in target_locations:
-                    new_location = copy_project_target_location(new_plan, location)
-                    disaggregation_locations = location.disaggregationlocation_set.all()
+            # Iterate through target locations and copy them to the new plan.
+            for location in target_locations:
+                new_location = copy_project_target_location(new_plan, location)
+                disaggregation_locations = location.disaggregationlocation_set.all()
 
-                    # Iterate through disaggregation locations and copy them to the new location.
-                    for disaggregation_location in disaggregation_locations:
-                        copy_target_location_disaggregation_locations(new_location, disaggregation_location)
+                # Iterate through disaggregation locations and copy them to the new location.
+                for disaggregation_location in disaggregation_locations:
+                    copy_target_location_disaggregation_locations(new_location, disaggregation_location)
 
-        # Save the changes made to the new project.
-        new_project.save()
+    # Save the changes made to the new project.
+    new_project.save()
 
-        url = reverse("projects-detail", args=[new_project.pk])
-
-        # Return the URL in a JSON response
-        response_data = {"redirect_url": url}
-        return JsonResponse(response_data)
+    messages.success(request, "Project its Activity Plans and Target Locations duplicated successfully!")
+    return HttpResponseClientRedirect(reverse("projects-detail", args=[new_project.id]))
 
 
 @login_required

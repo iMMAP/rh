@@ -12,21 +12,36 @@
 {% block project_contents %}
     <div class="main-content">
         <div class="activity-planning create-activity">
-            <div id="activity-formset-form">
-                <div class="activity-planning read-only">
-                    <div class="top-activity-block">
-                        <span class="activity-title pb-2">
-                            <span>Project Activity Plans</span>
-                        </span>
-                        <p class="pt-2">The table below displays all activities under your project</p>
+            <div class="activity-planning read-only">
+                <div class="top-activity-block">
+                    <span class="activity-title pb-2">
+                        <span>Project Activity Plans</span>
+                    </span>
+                    <p class="pt-2">The table below displays all activities under your project</p>
+                </div>
+            </div>
+
+            <div class="pb-4 flex items-center gap-4">
+                <a href="{% url 'projects-ap-import-template' project.pk %}" class="btn btn-grey">Download template</a>
+                <form 
+                    method="post" 
+                    class="flex p-2 items-center bg-gray-e6 " 
+                    enctype="multipart/form-data" 
+                    action="{% url 'projects-import-activity-plans' project.pk %}"
+                >
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="file">Upload Excel File:</label>
+                        <input type="file" id="file" name="file" accept=".xlsx">
                     </div>
-                </div>
-                {% include "rh/activity_plans/_activity_plan_table.html" with object_list=activity_plans %}
+                    <button type="submit" class="btn btn-red">Upload</button>
+                </form>
+            </div>
 
-                 <div class="p-10 text-center">
-                    <a href="{% url 'project_submit' project.pk %}" class="btn btn-red">Submit Project</a>
-                </div>
+            {% include "rh/activity_plans/_activity_plan_table.html" with object_list=activity_plans %}
 
+            <div class="p-10 text-center">
+                <a href="{% url 'project_submit' project.pk %}" class="btn btn-red">Submit Project</a>
             </div>
         </div>
     </div>

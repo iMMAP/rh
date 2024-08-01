@@ -14,7 +14,27 @@ from rh.resources import ProjectResource
 
 from ..filters import ProjectsFilter
 from ..forms import ProjectForm
-from ..models import ActivityPlan, Project, Cluster,TargetLocation,Disaggregation
+from ..models import (
+    ActivityPlan,
+    Project,
+    Cluster,
+    TargetLocation,
+    Disaggregation,
+    ActivityDomain,
+    Indicator,
+    ActivityType,
+    DisaggregationLocation,
+    Location,
+    BeneficiaryType,
+    Organization,
+    Currency,
+    UnitType,
+    GrantType,
+    ImplementationModalityType,
+    TransferCategory,
+    TransferMechanismType,
+    PackageType,
+)
 from .views import (
     copy_project_target_location,
     copy_target_location_disaggregation_locations,
@@ -24,59 +44,138 @@ from ..utils import has_permission
 from django.utils.safestring import mark_safe
 from extra_settings.models import Setting
 from django_htmx.http import HttpResponseClientRedirect
-
-from openpyxl import Workbook,load_workbook
+import csv
 
 
 @login_required
 @require_http_methods(["POST"])
-def import_activity_plans(request,pk):
-    project = get_object_or_404(Project,pk=pk)
+def import_activity_plans(request, pk):
+    project = get_object_or_404(Project, pk=pk)
 
-    file = request.FILES["file"]
+    file = request.FILES.get("file")
+    if file is None:
+        messages.error(request, "No file provided for import.")
+        return redirect(reverse("projects-ap-import-template", kwargs={"pk": project.pk}))
 
-    wb = load_workbook(file)
+    decoded_file = file.read().decode("utf-8").splitlines()
+    reader = csv.DictReader(decoded_file)
 
-    for row in wb.active.values:
-        print(row)
-        # for value in row:
-            # print(value)
+    activity_plans = {}
+    target_locations = []
+    disaggregation_locations = []
 
-    # return redirect('activity-plans-list',project=project.pk)
+    try:
+        for row in reader:
+            try:
+                activity_domain = ActivityDomain.objects.filter(name=row["activity_domain"]).first()
+                if not activity_domain:
+                    messages.error(
+                        request, f"Row {reader.line_num}: Activity domain '{row['activity_domain']}' does not exist."
+                    )
+                    continue
+
+                activity_type = ActivityType.objects.filter(name=row["activity_type"]).first()
+                if not activity_type:
+                    messages.error(
+                        request, f"Row {reader.line_num}: Activity Type '{row['activity_type']}' does not exist."
+                    )
+                    continue
+
+                indicator = Indicator.objects.filter(name=row["indicator"]).first()
+                if not indicator:
+                    messages.error(request, f"Row {reader.line_num}: Indicator '{row['indicator']}' does not exist.")
+                    continue
+
+                activity_plan_key = (row["activity_domain"], row["activity_type"], row["indicator"])
+
+                if activity_plan_key not in activity_plans:
+                    activity_plan = ActivityPlan(
+                        project=project,
+                        activity_domain=activity_domain,
+                        activity_type=activity_type,
+                        indicator=indicator,
+                        beneficiary=BeneficiaryType.objects.filter(name=row["beneficiary"]).first(),
+                        hrp_beneficiary=BeneficiaryType.objects.filter(name=row["hrp_beneficiary"]).first(),
+                        beneficiary_category=row["beneficiary_category"],
+                        package_type=PackageType.objects.filter(name=row["package_type"]).first(),
+                        unit_type=UnitType.objects.filter(name=row["unit_type"]).first(),
+                        grant_type=GrantType.objects.filter(name=row["grant_type"]).first(),
+                        transfer_category=TransferCategory.objects.filter(name=row["transfer_category"]).first(),
+                        currency=Currency.objects.filter(name=row["currency"]).first(),
+                        transfer_mechanism_type=TransferMechanismType.objects.filter(
+                            name=row["transfer_mechanism_type"]
+                        ).first(),
+                        implement_modility_type=ImplementationModalityType.objects.filter(
+                            name=row["implement_modility_type"]
+                        ).first(),
+                        description=row.get("description", None),
+                    )
+                    activity_plans[activity_plan_key] = activity_plan
+                else:
+                    activity_plan = activity_plans[activity_plan_key]
+
+                target_location = TargetLocation(
+                    activity_plan=activity_plan,
+                    country=Location.objects.get(code=row["country"]),
+                    province=Location.objects.get(code=row["province"]),
+                    district=Location.objects.get(code=row["district"]),
+                    zone=Location.objects.filter(code=row["zone"]).first(),
+                    implementing_partner=Organization.objects.filter(code=row["implementing_partner"]).first(),
+                    facility_name=row.get("facility_name") or None,
+                    facility_id=row.get("facility_id") or None,
+                    facility_lat=row.get("facility_lat") or None,
+                    facility_long=row.get("facility_long") or None,
+                    nhs_code=row.get("nhs_code", None),
+                )
+                target_locations.append(target_location)
+
+                all_disaggs = Disaggregation.objects.all()
+                for disag in all_disaggs:
+                    if row.get(disag.name):
+                        disaggregation_location = DisaggregationLocation(
+                            target_location=target_location,
+                            disaggregation=disag,
+                            target=row.get(disag.name),
+                        )
+                        disaggregation_locations.append(disaggregation_location)
+            except Exception as e:
+                messages.error(request, f"Error on row {reader.line_num}: {e}")
+
+        ActivityPlan.objects.bulk_create(activity_plans.values())
+        TargetLocation.objects.bulk_create(target_locations)
+        DisaggregationLocation.objects.bulk_create(disaggregation_locations)
+    except Exception as e:
+        messages.error(request, f"Someting went wrong please check your data : {e}")
+
+    messages.success(request, "Acitivities imported successfully!")
+    return redirect("activity-plans-list", project=project.pk)
 
 
 @login_required
-def export_activity_plans_import_template(request,pk):
-    project = get_object_or_404(Project,pk=pk)
-
-    wb = Workbook()
-    ws1 = wb.active
-    ws1.title = "Activity Plans import template"
+def export_activity_plans_import_template(request, pk):
+    project = get_object_or_404(Project, pk=pk)
 
     # Add column names for ActivityPlan and TargetLocation models
     activity_plan_columns = [field.name for field in ActivityPlan._meta.get_fields() if field.concrete]
-    target_location_columns = [field.name for field in TargetLocation._meta.get_fields() if field.concrete and field.name != 'project']
+    target_location_columns = [field.name for field in TargetLocation._meta.get_fields() if field.concrete]
 
-    disaggregation_columns = list(Disaggregation.objects.filter(clusters__in=project.clusters.all()).values_list('name', flat=True))
-    print(disaggregation_columns)
+    disaggregation_columns = list(
+        Disaggregation.objects.filter(clusters__in=project.clusters.all()).values_list("name", flat=True)
+    )
 
     all_columns = activity_plan_columns + target_location_columns + disaggregation_columns
 
-    filtered_columns = [col for col in all_columns if col not in ['id', 'state', 'updated_at', 'created_at', 'activity_plan']]
-    for col_num, column in enumerate(filtered_columns, start=1):
-        ws1.cell(row=1, column=col_num, value=column)
+    filtered_columns = [
+        col
+        for col in all_columns
+        if col not in ["id", "state", "updated_at", "created_at", "activity_plan", "disaggregations", "project"]
+    ]
 
-    from io import BytesIO
+    response = HttpResponse(content_type="text/csv")
+    response["Content-Disposition"] = "attachment; filename=activity_plans_import_template.csv"
 
-    output = BytesIO()
-    wb.save(output)
-    output.seek(0)
-
-    response = HttpResponse(
-        content=output.getvalue(),
-        content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-    )
-    response['Content-Disposition'] = 'attachment; filename=activity_plans_import_template.xlsx'
+    writer = csv.writer(response)
+    writer.writerow(filtered_columns)
 
     return response
 

@@ -21,6 +21,5 @@ urlpatterns = [
         "stocks/delete_stock_report/<str:pk>",
         user_views.delete_stock_report,
         name="delete_stock_report",
-
-    )
+    ),
 ]

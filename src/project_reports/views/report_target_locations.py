@@ -99,14 +99,6 @@ def create_report_target_locations(request, project, report, plan):
     """Create View"""
     monthly_report = get_object_or_404(ProjectMonthlyReport.objects.select_related("project"), pk=report)
     plan_report = get_object_or_404(ActivityPlanReport, pk=plan)
-    DisaggregationReportFormSet = inlineformset_factory(
-        parent_model=TargetLocationReport,
-        model=DisaggregationLocationReport,
-        form=DisaggregationLocationReportForm,
-        formset=BaseDisaggregationLocationReportFormSet,
-        extra=2,
-        can_delete=True,
-    )
 
     initial_data = []
     # Loop through each Indicator and retrieve its related Disaggregations
@@ -114,7 +106,15 @@ def create_report_target_locations(request, project, report, plan):
     related_disaggregations = indicator.disaggregation_set.all()
     for disaggregation in related_disaggregations:
         initial_data.append({"disaggregation": disaggregation})
-    DisaggregationReportFormSet.extra = len(related_disaggregations)
+
+    DisaggregationReportFormSet = inlineformset_factory(
+        parent_model=TargetLocationReport,
+        model=DisaggregationLocationReport,
+        form=DisaggregationLocationReportForm,
+        formset=BaseDisaggregationLocationReportFormSet,
+        extra=len(related_disaggregations),
+        can_delete=True,
+    )
 
     if request.method == "POST":
         location_report_form = TargetLocationReportForm(request.POST or None)
@@ -161,7 +161,7 @@ def create_report_target_locations(request, project, report, plan):
             report_plan=plan_report,
         )
 
-        report_disaggregation_formset = DisaggregationReportFormSet(plan_report=plan_report, initial=initial_data)
+        report_disaggregation_formset = DisaggregationReportFormSet(plan_report=plan_report)
     return render(
         request,
         "project_reports/report_target_locations/target_location_form.html",

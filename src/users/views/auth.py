@@ -52,7 +52,7 @@ def send_account_activation_email(request, user, to_email):
     current_site = get_current_site(request)
     mail_subject = "Email Activation link"
     message = loader.render_to_string(
-        "users/auth/activation_email_template.html",
+        "users/emails/activation_email_template.html",
         {
             "user": user,
             "domain": current_site.domain,

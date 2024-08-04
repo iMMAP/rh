@@ -19,6 +19,7 @@ from django.utils.safestring import mark_safe
 from ..filters import TargetLocationFilter
 from django_htmx.http import HttpResponseClientRedirect
 from extra_settings.models import Setting
+from django.db.models import Sum
 
 
 @login_required
@@ -146,6 +147,7 @@ def list_target_locations(request, project):
         request.GET,
         request=request,
         queryset=TargetLocation.objects.filter(activity_plan__project=project)
+        .annotate(total_target=Sum("disaggregationlocation__target"))
         .select_related("activity_plan", "country", "province", "district")
         .order_by("-id"),
         project=project,

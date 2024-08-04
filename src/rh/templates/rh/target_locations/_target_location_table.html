@@ -1,7 +1,8 @@
 {% load static %}
+{% load humanize %}
 
 <div class="content-block bottom-border table-container">
-    <div class="progress bg-red">
+    <div class="progress bg-red h-0.5">
         <div class="indeterminate bg-white"></div>
     </div>
     {% comment %} Table Actions and filters {% endcomment %}
@@ -37,6 +38,9 @@
                             <strong class="table-title">Location</strong>
                         </th>
                         <th>
+                            <strong class="table-title">Total Beneficiaries</strong>
+                        </th>
+                        <th>
                             <strong class="table-title">State</strong>
                         </th>
                         <th>Actions</th>
@@ -70,6 +74,9 @@
                                 {% if row.province %}{{ row.province }},{% endif %}
                                 {% if row.country %}{{ row.country }}{% endif %}
  
+                            </td>
+                            <td>
+                                {{ row.total_target|intcomma }}
                             </td>
                             <td>
                                 <span class="{{ row.state }}">{{ row.state }}</span>

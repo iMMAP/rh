@@ -39,7 +39,7 @@
             <div class="holder">
                 <div class="tabs-nav-holder">
                     <ul class="tabs-nav divide-x">
-                        <li class="{% if request.resolver_match.url_name == 'projects-update' %}active{% endif %}">
+                        <li class="{% if request.resolver_match.url_name == 'projects-update' or request.resolver_match.url_name == 'projects-create' %}active{% endif %}">
                             <a href="{% if project %}{% url 'projects-update' project.pk %}{% else %}{% url 'projects-create' %}{% endif %}">
                                 Project planning
                             </a>
@@ -54,6 +54,23 @@
                 </div>
             </div>
         </div>
+
+        {% if project and not activity_plan %}
+            <div class="flex flex-col gap-2 pt-2 pb-2">
+                <div>
+                    <span>Project</span>
+                    <div class="input-holder">
+                        <span class="text-read-only">{{ project.code }} - {{ project.title }}</span>
+                    </div>
+                </div>
+                <div>
+                    <span>Duration</span>
+                    <div class="input-holder">
+                        <span class="text-read-only">From {{ project.start_date }} to {{ project.end_date }}</span>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
  
         <div class="main-content">
             {% block project_contents %}

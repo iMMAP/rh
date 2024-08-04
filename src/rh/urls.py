@@ -25,6 +25,14 @@ urlpatterns = [
     path("organizations/create/", organizations.organization_register, name="organizations-create"),
     # Projects CRUD
     path("projects/", projects.org_projects_list, name="projects-list"),
+    path(
+        "projects/export-ap-import-template/<int:pk>",
+        projects.export_activity_plans_import_template,
+        name="projects-ap-import-template",
+    ),
+    path(
+        "projects/import-activity-plans/<int:pk>", projects.import_activity_plans, name="projects-import-activity-plans"
+    ),
     path("projects/clusters", projects.users_clusters_projects_list, name="user-clusters-projects-list"),
     path("projects/clusters/<str:cluster>", projects.cluster_projects_list, name="cluster-projects-list"),
     path("projects/create/", projects.create_project, name="projects-create"),

@@ -10,37 +10,42 @@
 {% endblock breadcrumb_li %}
 
 {% block project_contents %}
-    <div class="flex flex-col gap-2 pt-2 pb-2">
-        <div>
-            <span>Project</span>
-            <div class="input-holder">
-                <span class="text-read-only">{{ project.code }} - {{ project.title }}</span>
-            </div>
-        </div>
-        <div>
-            <span>Duration</span>
-            <div class="input-holder">
-                <span class="text-read-only">From {{ project.start_date }} to {{ project.end_date }}</span>
-            </div>
-        </div>
-    </div>
     <div class="main-content">
         <div class="activity-planning create-activity">
-            <div id="activity-formset-form">
-                <div class="activity-planning read-only">
-                    <div class="top-activity-block">
-                        <span class="activity-title pb-2">
-                            <span>Project Activity Plans</span>
-                        </span>
-                        <p class="pt-2">The table below displays all activities under your project</p>
-                    </div>
-                </div>
-                {% include "rh/activity_plans/_activity_plan_table.html" with object_list=activity_plans %}
 
-                 <div class="p-10 text-center">
-                    <a href="{% url 'project_submit' project.pk %}" class="btn btn-red">Submit Project</a>
+            <div class="p-2 flex items-center justify-between gap-4 rounded bg-gray-e6">
+                <strong>Import Activity Plans and Target Locations from a CSV file</strong>
+                <div class="flex items-center gap-4">
+                    <a href="{% url 'projects-ap-import-template' project.pk %}" class="btn btn-grey">Download template</a>
+                    <form 
+                        method="post" 
+                        class="flex p-2 items-center bg-white swal2-file" 
+                        enctype="multipart/form-data" 
+                        action="{% url 'projects-import-activity-plans' project.pk %}"
+                    >
+                        {% csrf_token %}
+                        <div class="">
+                            <label for="file">Upload CSV File:</label>
+                            <input type="file" id="file" name="file" required accept=".csv">
+                        </div>
+                        <button type="submit" class="btn btn-red">Upload</button>
+                    </form>
                 </div>
+            </div>
 
+            <div class="activity-planning read-only">
+                <div class="top-activity-block">
+                    <span class="activity-title pb-2">
+                        <span>Project Activity Plans</span>
+                    </span>
+                    <p class="pt-2">The table below displays all activities under your project</p>
+                </div>
+            </div>
+
+            {% include "rh/activity_plans/_activity_plan_table.html" with object_list=activity_plans %}
+
+            <div class="p-10 text-center">
+                <a href="{% url 'project_submit' project.pk %}" class="btn btn-red">Submit Project</a>
             </div>
         </div>
     </div>

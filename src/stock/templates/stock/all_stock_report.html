@@ -156,141 +156,116 @@
             </div>
         </div>
     </div>
-
-    <div class="container px-4 px-lg-5 h-100">
-        <div class="row h-100 align-items-center justify-content-center text-left">
-            <div class="col-lg-9 align-self-end">
-                <div class="projects-options-panel projects-options-panel-small page-top-panel-reports">
-                    <div class="holder tabs-nav-holder">
-                        <div>
-                            <ul class="tabs-nav tabs-nav-small">
-                                {% if flag == 'todo' %}
-                                    <li class="active">
-                                    {% else %}
-                                        <li>
-                                        {% endif %}
-                                        <strong><a href="{% url 'all_stock_report' 'todo' %}">Stock Reports Todo</a></strong>
-                                    </li>
-                                </li>
-
-                                {% if flag == 'submitted' %}
-                                    <li class="active">
-                                    {% else %}
-                                        <li>
-                                        {% endif %}
-                                        <strong><a href="{% url 'all_stock_report' 'submitted' %}">Stock Reports Completed</a></strong>
-                                    </li>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
+    <div class="container ">
+        <div class="page-navigation-panel bottom-border">
+            <div class="holder">
+                <div class="tabs-nav-holder">
+                    <ul class="tabs-nav">
+                        {% if flag == 'todo' %}
+                        <li class="active">
+                        {% else %}
+                            <li>
+                            {% endif %}
+                            <strong><a href="{% url 'all_stock_report' 'todo' %}">Stock Reports Todo</a></strong>
+                            </li>
+                        </li>
+                        {% if flag == 'submitted' %}
+                        <li class="active">
+                        {% else %}
+                            <li>
+                            {% endif %}
+                            <strong><a href="{% url 'all_stock_report' 'submitted' %}">Stock Reports Completed</a></strong>
+                        </li>
+                        </li>
+                    </ul>
                 </div>
- 
-                <div id="stock_reports_todo">
-                    <table class="table responsive-table report-table">
-                        <thead>
-                            <tr>
-                                <th class="month-col">
-                                    <strong class="table-title">Month</strong>
-                                </th>
- 
-                                <th class="progress-col">
-                                    <strong class="table-title">Srock Progress Report</strong>
-                                </th>
- 
-                                <th class="date-col">
-                                    {% if flag == "todo" %}
-                                        <strong class="table-title">Due Date</strong>
-                                    {% else %}
-                                        <strong class="table-title">Completed Date</strong>
-                                    {% endif %}
-                                </th>
- 
-                                <th class="month-col">
-                                    <strong class="table-title">Status</strong>
-                                </th>
-                            </tr>
-                        </thead>
-                        {% if stock_reports %}
-                            <tbody>
-                                {% for report in stock_reports %}
-                                    <tr>
-                                        <td class="month-col" data-title="Month">
-                                            <a href="{% url 'stock_report' report.id %}">
-                                                <div class="table-flex-holder">{{ report.created_at|date:"F, Y" }}</div>
-                                            </a>
-                                        </td>
-                                        <td class="progress-col" data-title="Progress Report">
-                                            Monthly progress for {{ report.created_at|date:"F, Y" }} {% now "r" as todays_date %}
-                                        </td>
- 
-                                        <td class="date-col" data-title="Due date">{{ report.due_date|date:"d F, Y" }}</td>
- 
-                                        <td class="date-col" data-title="Status">
-                                            {% if report.state == 'submitted' %}
-                                                submitted
-                                            {% else %}
-                                                Pending
-                                            {% endif %}
-                                        </td>
-                                    </tr>
-
-                                {% endfor %}
-                            </tbody>
-                        {% endif %}
- 
-                    </table>
-                </div>
-
-                <!-- <div id="reports_complete">
-                <table class="table responsive-table report-table">
-                    <thead>
-                        <tr>
-                            <th class="month-col">
-                                <strong class="table-title">Month</strong>
-                            </th>
-            
-                            <th class="progress-col">
-                                <strong class="table-title">Srock Progress Report</strong>
-                            </th>
-            
-                            <th class="date-col">
-                                <strong class="table-title">Submitted date</strong>
-                            </th>
-            
-                            <th class="month-col">
-                                <strong class="table-title">Status</strong>
-                            </th>
-                        </tr>
-                    </thead>
-                    {% if submitted_stock_reports %}
-                        <tbody>
-                            {% for report in submitted_stock_reports %}
-                                <tr>
-                                    <td class="month-col" data-title="Month">
-                                        <a href="{% url 'stock_report' report.id  %}">
-                                            <div class="table-flex-holder">
-                                                {{ report.created_at|date:"F, Y" }}
-                                            </div>
-                                        </a>
-                                    </td>  
-                                
-                                    <td class="progress-col" data-title="Progress Report">Monthly progress for {{ report.created_at|date:"F, Y" }}</td>
-                                
-                                    <td class="date-col" data-title="Submitted date">{{ report.submitted_at|date:"d F, Y" }}</td>
-                                
-                                    <td class="date-col" data-title="Status">Submitted</td>
-                                </tr>    
-
-                            {% endfor %}
-                        </tbody>
-                    {% endif %}
-                </table>  
-            </div> -->
             </div>
         </div>
+        <div class="content-block bottom-border table-container" id="stock_reports_todo">
+            <table class="table responsive-table report-table">
+                <thead>
+                    <tr>
+                        <th class="month-col">
+                            <strong class="table-title">Month</strong>
+                        </th>
+
+                        <th class="progress-col">
+                            <strong class="table-title">Srock Progress Report</strong>
+                        </th>
+
+                        <th class="date-col">
+                            {% if flag == "todo" %}
+                                <strong class="table-title">Due Date</strong>
+                            {% else %}
+                                <strong class="table-title">Completed Date</strong>
+                            {% endif %}
+                        </th>
+
+                        <th class="month-col">
+                            <strong class="table-title">Status</strong>
+                        </th>
+
+                        <th class="month-col">
+                            <strong class="table-title">Actions</strong>
+                        </th>
+                    </tr>
+                </thead>
+                {% if stock_reports %}
+                    <tbody>
+                        {% for report in stock_reports %}
+                            <tr>
+                                <td class="month-col" data-title="Month">
+                                    <a href="{% url 'stock_report' report.id %}">
+                                        <div class="table-flex-holder">{{ report.created_at|date:"F, Y" }}</div>
+                                    </a>
+                                </td>
+                                <td class="progress-col" data-title="Progress Report">
+                                    Monthly progress for {{ report.created_at|date:"F, Y" }} {% now "r" as todays_date %}
+                                </td>
+
+                                <td class="date-col" data-title="Due date">{{ report.due_date|date:"d F, Y" }}</td>
+
+                                <td class="date-col" data-title="Status">
+                                    {% if report.state == 'submitted' %}
+                                        submitted
+                                    {% else %}
+                                        Pending
+                                    {% endif %}
+                                </td>
+
+                                <td>
+                                    <div class="table-flex-holder">
+                                        <ul class="table-options-buttons">
+                                            <li>
+                                                <a href="{% url 'stock_report' report.id %}" data-tippy-content="Edit Monthly Stock Report">
+                                                    <span class="project-detail icon-pen"></span>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <form method="post" action="{% url 'delete_stock_report' report.id %}">
+                                                    {% csrf_token %}
+                                                    <button type="submit" data-tippy-content="Delete Stock Report">
+                                                        <span class="project-detail icon-trashbin"></span>
+                                                    </button>
+                                                </form>
+                                            </li>
+                                            
+
+                               
+                                        </ul>
+                                    </div>
+
+                                </td>
+                            </tr>
+
+                        {% endfor %}
+                    </tbody>
+                {% endif %}
+            </table>
+        </div>  
     </div>
-{% endblock %}
+{% endblock content %}
 
 {% block scripts %}
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.9.0/dist/sweetalert2.all.min.js"></script>
 {% endblock scripts %}

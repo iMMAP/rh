@@ -22,7 +22,6 @@
                             <span class="badge bg-success">{{ warehouse_location_stocks|length }}</span>
                             Selected Locations
                         </h5>
-
                         <form method="post" class="mt-3 p-2">
                             {% csrf_token %}
                             {% for warehouse_location, formset in warehouse_location_stocks.items %}
@@ -51,9 +50,7 @@
                                                         aria-controls="collapse_{{ warehouse_location.id }}_{{ forloop.counter0 }}">
  
                                                     {% if form.instance.id %}
- 
                                                         <span class="btn btn-red" aria-hidden="true">Edit Stock</span>
- 
                                                     {% else %}
                                                         <span class="btn btn-red">Add Stock</span>
                                                     {% endif %}
@@ -70,7 +67,6 @@
                                                     <div class="multiple-fields-row three-items">
  
                                                         <div class="field-col">
- 
                                                             <div class="select-field">
                                                                 <label>Cluster</label>
                                                                 {{ form.cluster }}
@@ -88,7 +84,6 @@
                                                         </div>
 
                                                         <div class="field-col">
- 
                                                             <div class="select-field">
                                                                 <label>Stock Purpose</label>
                                                                 {{ form.stock_purpose }}
@@ -100,13 +95,12 @@
                                                             </div>
 
                                                             <div class="input-field">
-                                                                <label>No. in Pipline</label>
+                                                                <label>No. in Pipeline</label>
                                                                 {{ form.qty_in_pipeline }}
                                                             </div>
                                                         </div>
 
                                                         <div class="field-col">
- 
                                                             <div class="select-field">
                                                                 <label>Targeted Groups</label>
                                                                 {{ form.targeted_groups }}
@@ -124,21 +118,17 @@
                                                         </div>
 
                                                         <div class="field-col">
- 
                                                             <div class="select-field">
                                                                 <label>No. of units required</label>
                                                                 {{ form.unit_required }}
                                                             </div>
- 
                                                         </div>
 
                                                         <div class="field-col">
-
                                                             <div class="select-field">
                                                                 <label>No. of people to be assisted</label>
                                                                 {{ form.people_to_assisted }}
                                                             </div>
-
                                                         </div>
 
                                                     </div>
@@ -163,15 +153,16 @@
                             {{ report_form }}
                             <div class="mb-3 mt-3 d-grid">
                                 <input type="submit"
-                                       class="btn btn-outline-dark"
+                                       class="btn btn-red"
                                        name="report_form_save"
-                                       value="Save" />
+                                       value="Save Report" />
                             </div>
                         </form>
-                        <form method="post" action="{% url 'submit_stock_report' report.id %}">
+                        
+                        <form method="post" action="{% url 'submit_stock_report' report.id %}" class="mt-3">
                             {% csrf_token %}
-                            <div class="mb-3 mt-3 d-grid">
-                                <button type="submit" class="btn btn-outline-dark" name="submit_stock_report">Submit Report</button>
+                            <div class="mb-3 d-grid">
+                                <button type="submit" class="btn btn-red" name="submit_stock_report">Submit Report</button>
                             </div>
                         </form>
                     </div>
@@ -181,7 +172,6 @@
     </div>
 {% endblock content %}
 
-{% comment %} This can be put in a base template {% endcomment %}
 {% block scripts %}
     <script src="{% static 'js/plugins/accordionPlugin.js' %}"></script>
     <script>

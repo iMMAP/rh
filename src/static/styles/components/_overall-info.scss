@@ -3,7 +3,7 @@
   grid-template-columns: repeat(4, auto);
   border-bottom: 1px solid $gray-bc;
   margin-bottom: 20px;
-  grid-gap: 0 10px;
+  grid-gap: 10px;
   text-align: center;
 
   @include media('>=desktop') {
@@ -14,13 +14,13 @@
   }
 
   &.inline-style {
-    grid-template-columns: repeat(3, 1fr);
-    grid-gap: 0 10px;
+    grid-template-columns: repeat(4, 1fr);
+    grid-gap: 10px;
     margin-bottom: 0;
 
     @include media('>=tablet') {
-      grid-template-columns: repeat(6, 1fr);
-      grid-gap: 0 45px;
+      // grid-template-columns: repeat(6, 1fr);
+      // grid-gap: 0 45px;
     }
 
     @include media('>=desktop') {
@@ -38,11 +38,14 @@
   margin: 0 0 8px;
   display: flex;
   flex-direction: column;
+  background-color: $gray-fa;
+  border: 1px solid $gray-e6;
+  border-radius: 0.4rem;
 
-  @include media('>=desktop') {
-    padding: 8px 0 16px;
-    border-bottom: 1px solid $gray-bc;
-  }
+  // @include media('>=desktop') {
+  //   padding: 8px 0 16px;
+  //   border-bottom: 1px solid $gray-bc;
+  // }
 
   .title {
     display: block;
@@ -61,7 +64,7 @@
     font-size: 18px;
     font-weight: 600;
     line-height: 1.2;
-    color: $gray-35;
+    color: $gray-53;
     margin-top: auto;
 
     @include media('>=desktop') {

@@ -13,6 +13,7 @@ from .models import (
     Indicator,
     TargetLocation,
     Location,
+    BeneficiaryType,
 )
 from django.db import models
 
@@ -93,6 +94,10 @@ class ActivityPlansFilter(django_filters.FilterSet):
         queryset=Indicator.objects.none(),
         widget=forms.SelectMultiple(attrs={"class": "custom-select"}),
     )
+    hrp_beneficiary = django_filters.ModelMultipleChoiceFilter(
+        queryset=BeneficiaryType.objects.none(),
+        widget=forms.SelectMultiple(attrs={"class": "custom-select"}),
+    )
 
     class Meta:
         model = ActivityPlan
@@ -113,6 +118,10 @@ class ActivityPlansFilter(django_filters.FilterSet):
         self.form.fields["activity_domain"].queryset = activity_domains
         self.form.fields["activity_type"].queryset = activity_types
         self.form.fields["indicator"].queryset = Indicator.objects.filter(activity_types__in=activity_types).distinct()
+
+        self.form.fields["hrp_beneficiary"].queryset = BeneficiaryType.objects.filter(
+            clusters__in=project.clusters.all()
+        )
 
 
 class TargetLocationFilter(django_filters.FilterSet):

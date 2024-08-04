@@ -12,34 +12,17 @@
 {% block project_contents %}
     <div class="main-content">
         <div class="activity-planning create-activity">
-
-            <div class="p-2 flex items-center justify-between gap-4 rounded bg-gray-e6">
-                <strong>Import Activity Plans and Target Locations from a CSV file</strong>
-                <div class="flex items-center gap-4">
-                    <a href="{% url 'projects-ap-import-template' project.pk %}" class="btn btn-grey">Download template</a>
-                    <form 
-                        method="post" 
-                        class="flex p-2 items-center bg-white swal2-file" 
-                        enctype="multipart/form-data" 
-                        action="{% url 'projects-import-activity-plans' project.pk %}"
-                    >
-                        {% csrf_token %}
-                        <div class="">
-                            <label for="file">Upload CSV File:</label>
-                            <input type="file" id="file" name="file" required accept=".csv">
-                        </div>
-                        <button type="submit" class="btn btn-red">Upload</button>
-                    </form>
-                </div>
-            </div>
-
+            
             <div class="activity-planning read-only">
-                <div class="top-activity-block">
-                    <span class="activity-title pb-2">
+                <div class="flex items-center justify-between pb-2">
+                    <div class="activity-title">
                         <span>Project Activity Plans</span>
-                    </span>
-                    <p class="pt-2">The table below displays all activities under your project</p>
+                    </div>
+                    <a class="btn btn-gray" href="{% url 'projects-import-activity-plans' project.pk %}">
+                        Import Activity Plans
+                    </a>
                 </div>
+                <p class="">The table below displays all activities under your project</p>
             </div>
 
             {% include "rh/activity_plans/_activity_plan_table.html" with object_list=activity_plans %}

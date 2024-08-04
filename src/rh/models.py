@@ -598,7 +598,7 @@ class TargetLocation(models.Model):
     # old_id = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
 
     # Facility Monitoring
-    facility_monitoring = models.BooleanField(default=False)
+    facility_monitoring = models.BooleanField(default=False, null=True)
     facility_name = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
     facility_id = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
     facility_lat = models.FloatField(null=True, blank=True)

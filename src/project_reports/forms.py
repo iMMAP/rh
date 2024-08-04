@@ -104,7 +104,6 @@ class DisaggregationLocationReportForm(forms.ModelForm):
         model = DisaggregationLocationReport
         fields = (
             "disaggregation",
-            "target_required",
             "target",
         )
 

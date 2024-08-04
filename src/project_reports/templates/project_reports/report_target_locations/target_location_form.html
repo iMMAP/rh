@@ -48,11 +48,19 @@
                                     </span>
                                 </span>
                                 <br>
-                                <span>
-                                    Use this form to provide detailed information about the report target location for the above report activity plan,
-                                    including the country, province or state, and other relevant details.
-                                    Also specify the number of people you have reached with your activity in the selected report location from the Disaggregation section.
-                                </span>
+                                <ul class="space-y-2 p-4 border border-gray-e6 rounded">
+                                    <li>
+                                        <span class="icon-info mr-2"></span>
+                                        Use this form to provide detailed information about the report target location for the above report activity plan,
+                                including the country, province or state, and other relevant details.
+
+                                    </li>
+                                    <li>
+                                        <span class="icon-info mr-2"></span>
+                                         Also specify the number of people you have reached with your activity in the selected report location from the Disaggregation section.
+                                    </li>
+                                    <li><span class="icon-info mr-2"></span> Required fields are marked with * </li>
+                                </ul>
                             </div>
                         </div>
                     </div>
@@ -249,7 +257,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="plan-submit-holder">
+                            <div class="plan-submit-holder pb-2">
                                 <div></div>
                                 <div>
                                     <input type="submit"
@@ -288,7 +296,6 @@
             });
 
             // Attach the change event handler to the original select element
-            debugger
             if (select.name == 'target_location'){
                 select.addEventListener('change', function() {
                     const targetLocationId = this.value;
@@ -315,7 +322,6 @@
                     xhr.setRequestHeader("X-CSRFToken", $('input[name="csrfmiddlewaretoken"]').val());
                 },
                 success: function(data) {
-                    debugger
                     let country = formElement.find(`#id_country`);
                     let province = formElement.find(`#id_province`);
                     let district = formElement.find(`#id_district`);

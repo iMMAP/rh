@@ -132,11 +132,15 @@ def create_project_monthly_report_view(request, project):
                 report.is_active = True
                 report.state = "pending"
                 report.save()
-                return redirect(
-                    "view_monthly_report",
-                    project=project.pk,
-                    report=report.pk,
-                )
+
+                return redirect("create_report_activity_plan", report=report.pk, project=project.pk)
+
+                # return render(request, "project_reports/report_activity_plans/activity_plan_form.html", context=context)
+                # return redirect(
+                #     "view_monthly_report",
+                #     project=project.pk,
+                #     report=report.pk,
+                # )
 
         context = {
             "project": project,
@@ -204,30 +208,29 @@ def details_monthly_progress_view(request, project, report):
         pk=report,
     )
 
-    activity_reports = monthly_report.activityplanreport_set
+    # activity_reports = monthly_report.activityplanreport_set
+    #
+    # activity_plans = project.activityplan_set.select_related(
+    #     "activity_domain",
+    #     "activity_type",
+    # )
+    #
+    # activity_plans = [plan for plan in activity_plans]
+    #
+    # report_plans = ActivityPlanReport.objects.filter(monthly_report=monthly_report.pk).annotate(
+    #     report_target_location_count=Count("targetlocationreport")
+    # )
+    #
+    # if not report_plans:
+    #     for plan in activity_plans:
+    #         if plan.state == "in-progress":
+    #             ActivityPlanReport.objects.create(
+    #                 monthly_report_id=monthly_report.pk,
+    #                 activity_plan_id=plan.pk,
+    #                 indicator_id=plan.indicator.pk,
+    #             )
 
-    activity_plans = project.activityplan_set.select_related(
-        "activity_domain",
-        "activity_type",
-    )
-
-    activity_plans = [plan for plan in activity_plans]
-
-    report_plans = ActivityPlanReport.objects.filter(monthly_report=monthly_report.pk).annotate(
-        report_target_location_count=Count("targetlocationreport")
-    )
-
-    if not report_plans:
-        for plan in activity_plans:
-            if plan.state == "in-progress":
-                ActivityPlanReport.objects.create(
-                    monthly_report_id=monthly_report.pk,
-                    activity_plan_id=plan.pk,
-                    indicator_id=plan.indicator.pk,
-                )
-
-        # Re-fetch activity_reports after creating new ActivityPlanReport instances
-        activity_reports = monthly_report.activityplanreport_set.all()
+    activity_reports = monthly_report.activityplanreport_set.all()
 
     context = {
         "project": project,

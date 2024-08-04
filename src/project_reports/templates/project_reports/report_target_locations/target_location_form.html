@@ -117,12 +117,14 @@
                                 <div class="row">
                                     <div class="col">
                                         <div class="multiple-fields-row two-items">
+                                            {% if location_report_form.facility_site_type.field.choices|length > 1 %}
                                             <div class="field-col">
                                                 <div class="input-field">
                                                     <label for="{{ location_report_form.facility_site_type.id_for_label }}">Facility Site Type</label>
                                                     <span>{{ location_report_form.facility_site_type }}</span>
                                                 </div>
                                             </div>
+                                            {% endif %}
                                             {% if location_report_form.nhs_code %}
                                                 <div class="field-col">
                                                     <div class="select-field is is-required">
@@ -207,9 +209,9 @@
                                             <table class="table ">
                                                 <thead class="content-block">
                                                     <tr>
-                                                        {% for field in report_disaggregation_formset.form.fields %}
+                                                        {% for field in report_disaggregation_formset.form.visible_fields %}
                                                             <th class="column-{{ field.name }}{% if field.required %} required{% endif %}{% if field.widget.is_hidden %} hidden{% endif %}">
-                                                                {{ field|capfirst }}
+                                                                {{ field.label }}
                                                             </th>
                                                         {% endfor %}
                                                         {% if report_disaggregation_formset.can_delete %}<th>Delete?</th>{% endif %}
@@ -219,29 +221,23 @@
                                                 <tbody>
                                                     {% for form in report_disaggregation_formset %}
                                                         {% if form.non_field_errors %}
-                                                            {% for error in form.non_field_errors %}
-                                                                <tr class="row-form-errors">
-                                                                    <td>{{ error }}</td>
-                                                                </tr>
-                                                            {% endfor %}
+                                                            <tr class="row-form-errors">
+                                                                <td colspan="4">{{ form.non_field_errors }}</td>
+                                                            </tr>
                                                         {% endif %}
-                                                        {% comment %} {% if form.errors %}
-                                                        <tr class="row-form-errors">
-                                                            <td colspan="2">{{ form.errors }}</td>
-                                                        </tr>
-                                                        {% endif %} {% endcomment %}
                                                         <tr class="form-row {% if forloop.last %}empty-form{% endif %} {% if form.instance.pk %}has_original{% endif %} "
                                                             id="{{ report_disaggregation_formset.prefix }}-{% if forloop.last %}empty{% else %}{{ forloop.counter0 }}{% endif %}">
 
                                                             {% for field in form %}
                                                                 {% if field.name != "DELETE" %}
                                                                     <td class="{% if field.name %}field-{{ field.name }}{% endif %}{% if field.is_hidden %} hidden{% endif %} ">
-                                                                        {{ field.errors.as_ul }}
                                                                         {{ field }}
+                                                                        {{ field.errors }}
                                                                     </td>
                                                                 {% endif %}
                                                             {% endfor %}
-                                                            <td class="delete" style="">
+
+                                                            <td class="delete">
                                                                 {% if form.instance.pk %}{{ form.DELETE }}{% endif %}
                                                             </td>
                                                         </tr>
@@ -292,10 +288,13 @@
             });
 
             // Attach the change event handler to the original select element
-            select.addEventListener('change', function() {
-                const targetLocationId = this.value;
-                autoPopulateTargetLocationReport(targetLocationId);
-            });
+            debugger
+            if (select.name == 'target_location'){
+                select.addEventListener('change', function() {
+                    const targetLocationId = this.value;
+                    autoPopulateTargetLocationReport(targetLocationId);
+                });
+            }
         });
 
         /**

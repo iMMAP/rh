@@ -51,7 +51,7 @@ class Command(BaseCommand):
             for activity_plan in activity_plans:
                 target_location, created = TargetLocation.objects.get_or_create(
                     project_id=project.id,
-                    is_active=True,
+                    # is_active=True,
                     state="in-progress",
                     activity_plan_id=activity_plan.id,
                     country_id=country.id,

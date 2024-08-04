@@ -75,9 +75,24 @@ urlpatterns = [
         name="list_report_activity_plans",
     ),
     path(
+        "project/<str:project>/monthly_progress/<str:report>/create",
+        plan_views.create_report_activity_plan,
+        name="create_report_activity_plan",
+    ),
+    path(
         "project/<str:project>/monthly_progress/<str:report>/report-activity-plan/<str:plan>/update",
         plan_views.update_report_activity_plan,
         name="update_report_activity_plans",
+    ),
+    path(
+        "project/monthly_progress/report-activity-plan/delete/<str:plan_report>/",
+        plan_views.delete_report_activity_plan,
+        name="update_report_activity_plans",
+    ),
+    path(
+        "ajax/get_activity_details_fields_data/",
+        plan_views.get_activity_details_fields_data,
+        name="ajax-get-activity-details-auto-fields",
     ),
     # Location Report URLS
     path(

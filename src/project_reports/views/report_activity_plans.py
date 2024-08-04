@@ -4,11 +4,12 @@ from django.core.paginator import Paginator
 from django.db.models import Count
 from django.urls import reverse
 from django.contrib import messages
+from django.http import JsonResponse
+from django.http import HttpResponseRedirect
+from django.urls import reverse_lazy
 from django.utils.safestring import mark_safe
 
-from rh.models import (
-    Project,
-)
+from rh.models import Project, ActivityPlan
 
 from ..forms import (
     ActivityPlanReportForm,
@@ -19,6 +20,14 @@ from ..models import (
 )
 
 from ..filters import PlansReportFilter
+
+
+class HTTPResponseHXRedirect(HttpResponseRedirect):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self["HX-Redirect"] = self["Location"]
+
+    status_code = 200
 
 
 @login_required
@@ -54,6 +63,47 @@ def list_report_activity_plans(request, project, report):
         "report_locations": False,
     }
     return render(request, "project_reports/report_activity_plans/activity_plans_list.html", context)
+
+
+@login_required
+def create_report_activity_plan(request, project, report):
+    """Create a new activity plan for a specific project"""
+    report_instance = get_object_or_404(ProjectMonthlyReport.objects.select_related("project"), pk=report)
+    if request.method == "POST":
+        form = ActivityPlanReportForm(request.POST, monthly_report=report_instance)
+        if form.is_valid():
+            report_plan = form.save(commit=False)
+            report_plan.monthly_report = report_instance
+            report_plan.save()
+            form.save_m2m()
+
+            messages.success(
+                request,
+                mark_safe(
+                    f'The Activity Plan Report "<a href="{reverse("update_report_activity_plans",  args=[report_instance.project, report, report_plan])}">{report_plan}</a>" was added successfully.',
+                ),
+            )
+            if "_save" in request.POST:
+                return redirect(
+                    "list_report_activity_plans", project=report_instance.project.pk, report=report_instance.pk
+                )
+            elif "_addanother" in request.POST:
+                return redirect("create_report_activity_plan", project=project, report=report_instance.pk)
+        else:
+            messages.error(request, "The form is invalid. Please check the fields and try again.")
+    else:
+        form = ActivityPlanReportForm(monthly_report=report_instance)
+
+    context = {
+        "form": form,
+        "project": report_instance.project,
+        "monthly_report": report_instance,
+        "report_view": False,
+        "report_activities": True,
+        "report_locations": False,
+    }
+
+    return render(request, "project_reports/report_activity_plans/activity_plan_form.html", context=context)
 
 
 @login_required
@@ -97,3 +147,44 @@ def update_report_activity_plan(request, project, report, plan):
         "report_locations": False,
     }
     return render(request, "project_reports/report_activity_plans/activity_plan_form.html", context=context)
+
+
+@login_required
+def delete_report_activity_plan(request, plan_report):
+    """Delete the target location report"""
+    plan_report = get_object_or_404(ActivityPlanReport, pk=plan_report)
+    monthly_report = plan_report.monthly_report
+    if plan_report:
+        plan_report.delete()
+
+    # Generate the URL using reverse
+    url = reverse_lazy(
+        "list_report_activity_plans", kwargs={"project": monthly_report.project.pk, "report": monthly_report.pk}
+    )
+    return HTTPResponseHXRedirect(redirect_to=url)
+
+
+@login_required
+def get_activity_details_fields_data(request):
+    try:
+        activity_plan_id = request.POST.get("activity_plan", False)
+        activity_plan = None
+        if activity_plan_id:
+            activity_plan = ActivityPlan.objects.get(pk=activity_plan_id)
+
+        data = {
+            "activity_domain": activity_plan.activity_domain.name
+            if activity_plan and activity_plan.activity_domain
+            else None,
+            "activity_type": activity_plan.activity_type.name
+            if activity_plan and activity_plan.activity_type
+            else None,
+            "activity_detail": activity_plan.activity_detail.name
+            if activity_plan and activity_plan.activity_detail
+            else None,
+            "indicator_id": activity_plan.indicator.pk if activity_plan and activity_plan.indicator else None,
+            "indicator_name": activity_plan.indicator.name if activity_plan and activity_plan.indicator else None,
+        }
+        return JsonResponse(data)
+    except ActivityPlan.DoesNotExist:
+        return JsonResponse({"error": "Activity Plan not found"}, status=404)

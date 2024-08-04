@@ -104,7 +104,7 @@ def create_report_target_locations(request, project, report, plan):
         model=DisaggregationLocationReport,
         form=DisaggregationLocationReportForm,
         formset=BaseDisaggregationLocationReportFormSet,
-        extra=1,
+        extra=2,
         can_delete=True,
     )
 
@@ -162,7 +162,6 @@ def create_report_target_locations(request, project, report, plan):
         )
 
         report_disaggregation_formset = DisaggregationReportFormSet(plan_report=plan_report, initial=initial_data)
-
     return render(
         request,
         "project_reports/report_target_locations/target_location_form.html",
@@ -293,19 +292,24 @@ def delete_location_report_view(request, location_report):
 @login_required
 def get_target_location_auto_fields(request):
     try:
-        target_location = TargetLocation.objects.get(pk=request.POST.get("target_location"))
+        target_location_id = request.POST.get("target_location")
+        target_location = None
+        if target_location_id:
+            target_location = TargetLocation.objects.get(pk=target_location_id)
         data = {
-            "country": target_location.country.id if target_location.country else None,
-            "province": target_location.province.id if target_location.province else None,
-            "district": target_location.district.id if target_location.district else None,
-            "zone": target_location.zone.id if target_location.zone else None,
-            "facility_site_type": target_location.facility_site_type.id if target_location.facility_site_type else None,
-            "facility_monitoring": target_location.facility_monitoring,
-            "facility_name": target_location.facility_name,
-            "facility_id": target_location.facility_id,
-            "facility_lat": target_location.facility_lat,
-            "facility_long": target_location.facility_long,
-            "nhs_code": target_location.nhs_code,
+            "country": target_location.country.id if target_location and target_location.country else None,
+            "province": target_location.province.id if target_location and target_location.province else None,
+            "district": target_location.district.id if target_location and target_location.district else None,
+            "zone": target_location.zone.id if target_location and target_location.zone else None,
+            "facility_site_type": target_location.facility_site_type.id
+            if target_location and target_location.facility_site_type
+            else None,
+            "facility_monitoring": target_location.facility_monitoring if target_location else None,
+            "facility_name": target_location.facility_name if target_location else None,
+            "facility_id": target_location.facility_id if target_location else None,
+            "facility_lat": target_location.facility_lat if target_location else None,
+            "facility_long": target_location.facility_long if target_location else None,
+            "nhs_code": target_location.nhs_code if target_location else None,
         }
         return JsonResponse(data)
     except TargetLocation.DoesNotExist:

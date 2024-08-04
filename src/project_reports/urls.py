@@ -4,6 +4,7 @@ from . import dashboards as dashboard_views
 from . import exports as export_views
 from .views.views import (
     import_monthly_reports,
+    import_data_with_project_plan,
 )
 from .views import (
     report_activity_plans as plan_views,
@@ -131,5 +132,11 @@ urlpatterns = [
         "export/all/monthly_progress_reports/",
         export_views.ReportsExportView.as_view(),
         name="export_all_reports",
+    ),
+
+    path(
+        "import/data/with_project_plan",
+        import_data_with_project_plan,
+        name="import_data_with_project_plan",
     ),
 ]

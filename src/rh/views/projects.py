@@ -165,7 +165,7 @@ def export_activity_plans_import_template(request, pk):
     target_location_columns = [field.name for field in TargetLocation._meta.get_fields() if field.concrete]
 
     disaggregation_columns = list(
-        Disaggregation.objects.filter(clusters__in=project.clusters.all()).values_list("name", flat=True)
+        Disaggregation.objects.filter(clusters__in=project.clusters.all()).distinct().values_list("name", flat=True)
     )
 
     all_columns = activity_plan_columns + target_location_columns + disaggregation_columns

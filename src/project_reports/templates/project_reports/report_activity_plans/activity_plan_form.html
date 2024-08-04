@@ -7,6 +7,21 @@
 
 {% block project_body %}
     <div class="content-block top-border">
+
+        <div class="flex flex-col gap-2 pt-3">
+            <div>
+                <span>Project</span>
+                <div class="input-holder">
+                    <span class="text-read-only">{{ project.code }} - {{ project.title }}</span>
+                </div>
+            </div>
+            <div>
+                <span>Monthly Report</span>
+                <div class="input-holder">
+                    <span class="text-read-only">{{ monthly_report.report_date | date:"F Y" }}</span>
+                </div>
+            </div>
+        </div>
         <div class="main-content">
             <div class="activity-planning create-activity">
                 <div id="activity-formset-form">
@@ -15,19 +30,30 @@
                             <div class="top-activity-block">
                                 <span class="activity-title">
                                     <span>
-                                        {% if report_activity_plan %}Update Report Activity{% endif %}
+                                        {% if report_activity_plan %}
+                                            Update Report Activity
+                                        {% else %}
+                                            Report Activity
+                                        {% endif %}
                                     </span>
                                     {% if report_activity_plan %}
-                                    <a href="{% url 'list_report_target_locations_with_plan' project.id monthly_report.pk report_activity_plan.pk %}"
-                                       class="btn btn-red"
-                                       style="float:right">Activity Target Locations</a>
+                                    <span class="btn btn-gray" style="float:right">
+                                        <a href="{% url 'list_report_target_locations_with_plan' project.id monthly_report.pk report_activity_plan.pk %}"
+                                           class="btn btn-gray">
+                                            <img src="{% static 'admin/img/icon-addlink.svg' %}" alt="add-btn-icon">
+                                            Report Target Location
+                                        </a>
+                                    </span>
                                     {% endif %}
                                 </span>
                                 <br>
-                                <span>
-                                    Use this form to provide detailed information about the report activity for the above the monthly report.
-                                    Some fields are auto-populated from the project activity plans.
-                                </span>
+                                <ul class="space-y-2 p-4 border border-gray-e6 rounded">
+                                    <li>
+                                        <span class="icon-info mr-2"></span>
+                                         Use this form to provide detailed information about the report activity for the above the monthly report.
+                                    </li>
+                                </ul>
+
                             </div>
                         </div>
                     </div>
@@ -69,7 +95,7 @@
                                             <div class="col">
                                                 <div class="field-col">
                                                     <div class="select-field">
-                                                        <span class="label">Report Activity Plan</span>
+                                                        <span class="label">Project Activity Plan</span>
                                                         {{ form.activity_plan }}
                                                     </div>
                                                 </div>

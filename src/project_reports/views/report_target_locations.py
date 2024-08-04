@@ -253,10 +253,6 @@ def update_report_target_locations(request, project, report, plan, location):
             request.POST or None, instance=location_report, plan_report=plan_report, queryset=disaggregation_reports
         )
 
-        # report_disaggregation_formset = DisaggregationReportFormSet(
-        #     request.POST or None, instance=location_report, plan_report=plan_report
-        # )
-
     return render(
         request,
         "project_reports/report_target_locations/target_location_form.html",

@@ -186,71 +186,65 @@
                                 <div class="table-flex-holder">
                                     <ul class="table-options-buttons ">
                                         <li>
-                                            <a href="{% url 'update_project_monthly_report' project=project.id report=project_report.pk %}"
-                                               data-tippy-content="Edit report and its activities">Edit</a>
+                                            <a href="{% url 'update_project_monthly_report' project=project.id report=project_report.id %}" data-tippy-content="Edit Monthly Report">
+                                                <span class="project-detail icon-pen"></span>
+                                            </a>
                                         </li>
 
                                         <li>
-                                            <button class="export-button">
-                                                <a href="#"
-                                                   data-url="{% url 'export_project_excel' project.pk %}"
-                                                   class="text-decoration-none"
-                                                   title="Export Excel"
-                                                   data-tippy-content="Export Excel">
-                                                    <span class="project-detail icon-download"></span>
-                                                </a>
-                                            </button>
+                                            <a href="#"
+                                               data-url="{% url 'export_project_excel' project.pk %}"
+                                               class="text-decoration-none"
+                                               title="Export Excel"
+                                               data-tippy-content="Export Excel">
+                                                <span class="project-detail icon-download"></span>
+                                            </a>
                                         </li>
 
                                         <li>
-                                            <button class="button-archive-unarchive">
-                                                {% if project_report.is_active %}
-                                                    <a hx-post="{% url 'archive_project_monthly_report' project_report.pk %}"
-                                                       hx-trigger="click"
-                                                       hx-swap="none"
-                                                       hx-confirm="Are you sure you want to archive this report?"
-                                                       data-tippy-content="Archive report">
-                                                        <svg xmlns="http://www.w3.org/2000/svg"
-                                                             class="archive-icon"
-                                                             width="16"
-                                                             height="16"
-                                                             viewBox="0 0 24 24">
-                                                            <path fill="currentColor" d="M3 3h18v4H3V3m1 18V8h16v13H4m10-7v-3h-4v3H7l5 5l5-5h-3Z" />
-                                                        </svg>
-                                                    </a>
-
-                                                {% else %}
-                                                    <a hx-post="{% url 'unarchive_project_monthly_report' project_report.pk %}"
-                                                       hx-trigger="click"
-                                                       hx-swap="none"
-                                                       hx-confirm="Are you sure you want to unarchive this report?"
-                                                       data-tippy-content="Unarchive report">
-                                                        <svg xmlns="http://www.w3.org/2000/svg"
-                                                             width="16"
-                                                             height="16"
-                                                             viewBox="0 0 36 36">
-                                                            <path fill="currentColor" d="M18 21a3 3 0 0 1-2.22-1H5v12a2 2 0 0 0 2 2h22a2 2 0 0 0 2-2V20H20.21A3 3 0 0 1 18 21Zm4 3a1 1 0 0 1-1 1h-6a1 1 0 0 1 0-2h6a1 1 0 0 1 1 1Z" class="clr-i-solid clr-i-solid-path-1" />
-                                                            <path fill="currentColor" d="M15 12H5.5A1.5 1.5 0 0 0 4 13.5V18h11Z" class="clr-i-solid clr-i-solid-path-2" />
-                                                            <path fill="currentColor" d="M30.5 12H21v6h11v-4.5a1.5 1.5 0 0 0-1.5-1.5Z" class="clr-i-solid clr-i-solid-path-3" />
-                                                            <path fill="currentColor" d="m13 9.55l4-3.95V18a1 1 0 1 0 2 0V5.6l4 3.95a1 1 0 1 0 1.41-1.42L18 1.78l-6.39 6.35A1 1 0 0 0 13 9.55Z" class="clr-i-solid clr-i-solid-path-4" />
-                                                            <path fill="none" d="M0 0h36v36H0z" />
-                                                        </svg>
-                                                    </a>
-
-                                                {% endif %}
-                                            </button>
-                                        </li>
-
-                                        <li>
-                                            <button>
-                                                <a hx-post="{% url 'delete_project_monthly_report' project_report.pk %}"
+                                            {% if project_report.is_active %}
+                                                <a hx-post="{% url 'archive_project_monthly_report' project_report.pk %}"
                                                    hx-trigger="click"
                                                    hx-swap="none"
-                                                   hx-confirm="Are you sure you want to delete this report?"
-                                                   data-tippy-content="Delete report">
-                                                    <span class="project-detail icon-trashbin"></span>
+                                                   hx-confirm="Are you sure you want to archive this report?"
+                                                   data-tippy-content="Archive report">
+                                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                                         class="archive-icon"
+                                                         width="16"
+                                                         height="16"
+                                                         viewBox="0 0 24 24">
+                                                        <path fill="currentColor" d="M3 3h18v4H3V3m1 18V8h16v13H4m10-7v-3h-4v3H7l5 5l5-5h-3Z" />
+                                                    </svg>
                                                 </a>
-                                            </button>
+
+                                            {% else %}
+                                                <a hx-post="{% url 'unarchive_project_monthly_report' project_report.pk %}"
+                                                   hx-trigger="click"
+                                                   hx-swap="none"
+                                                   hx-confirm="Are you sure you want to unarchive this report?"
+                                                   data-tippy-content="Unarchive report">
+                                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                                         width="16"
+                                                         height="16"
+                                                         viewBox="0 0 36 36">
+                                                        <path fill="currentColor" d="M18 21a3 3 0 0 1-2.22-1H5v12a2 2 0 0 0 2 2h22a2 2 0 0 0 2-2V20H20.21A3 3 0 0 1 18 21Zm4 3a1 1 0 0 1-1 1h-6a1 1 0 0 1 0-2h6a1 1 0 0 1 1 1Z" class="clr-i-solid clr-i-solid-path-1" />
+                                                        <path fill="currentColor" d="M15 12H5.5A1.5 1.5 0 0 0 4 13.5V18h11Z" class="clr-i-solid clr-i-solid-path-2" />
+                                                        <path fill="currentColor" d="M30.5 12H21v6h11v-4.5a1.5 1.5 0 0 0-1.5-1.5Z" class="clr-i-solid clr-i-solid-path-3" />
+                                                        <path fill="currentColor" d="m13 9.55l4-3.95V18a1 1 0 1 0 2 0V5.6l4 3.95a1 1 0 1 0 1.41-1.42L18 1.78l-6.39 6.35A1 1 0 0 0 13 9.55Z" class="clr-i-solid clr-i-solid-path-4" />
+                                                        <path fill="none" d="M0 0h36v36H0z" />
+                                                    </svg>
+                                                </a>
+                                            {% endif %}
+                                        </li>
+
+                                        <li>
+                                            <a hx-post="{% url 'delete_project_monthly_report' project_report.pk %}"
+                                               hx-trigger="click"
+                                               hx-swap="none"
+                                               hx-confirm="Are you sure you want to delete this report?"
+                                               data-tippy-content="Delete report">
+                                                <span class="project-detail icon-trashbin"></span>
+                                            </a>
                                         </li>
                                     </ul>
                                 </div>

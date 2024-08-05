@@ -352,7 +352,7 @@ def org_projects_list(request):
     projects_counts = project_filter.qs.aggregate(
         # draft_projects_count=Count("id", filter=Q(state="draft")),
         # active_projects_count=Count("id", filter=Q(state="in-progress")),
-        pending_reports_count=Count("projectmonthlyreport", filter=Q(state="pending")),
+        pending_reports_count=Count("projectmonthlyreport", filter=Q(projectmonthlyreport__state="pending")),
         implementing_partners_count=Count("implementing_partners", distinct=True),
         activity_plans_count=Count("activityplan", distinct=True),
         target_locations_count=Count("targetlocation__province", distinct=True),

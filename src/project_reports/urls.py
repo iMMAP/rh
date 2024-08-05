@@ -14,7 +14,7 @@ from .views import (
 urlpatterns = [
     # Monthly Report URLS
     path(
-        "project/<str:project>/monthly_progress",
+        "project/<str:project>/reports",
         report_views.index_project_report_view,
         name="project_reports_home",
     ),

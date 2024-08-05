@@ -38,19 +38,13 @@
                 <div class="export-formats">
                     <span class="title">File format</span>
                     <div class="format-list">
-                        <div class="export-link-holder"
-                             onclick="exportButton(event)"
-                             data-export-url="{% url 'export-org-projects' 'csv' %}">
+                        <div class="export-link-holder">
                             <span class="export-link cursor-pointer">CSV</span>
                         </div>
-                        <div class="export-link-holder"
-                             onclick="exportButton(event)"
-                             data-export-url="{% url 'export-org-projects' 'xls' %}">
+                        <div class="export-link-holder">
                             <span class="export-link cursor-pointer">Excel</span>
                         </div>
-                        <div class="export-link-holder"
-                             onclick="exportButton(event)"
-                             data-export-url="{% url 'export-org-projects' 'json' %}">
+                        <div class="export-link-holder">
                             <span class="export-link cursor-pointer">JSON</span>
                         </div>
                     </div>
@@ -190,17 +184,7 @@
                                                data-tippy-content="Edit report and its activities">Edit</a>
                                         </li>
 
-                                        <li>
-                                            <button class="export-button">
-                                                <a href="#"
-                                                   data-url="{% url 'export_project_excel' project.pk %}"
-                                                   class="text-decoration-none"
-                                                   title="Export Excel"
-                                                   data-tippy-content="Export Excel">
-                                                    <span class="project-detail icon-download"></span>
-                                                </a>
-                                            </button>
-                                        </li>
+                                       
 
                                         <li>
                                             <button class="button-archive-unarchive">

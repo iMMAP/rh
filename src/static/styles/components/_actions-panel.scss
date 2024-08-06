@@ -104,7 +104,7 @@ body.filter-active {
   }
 
   &.filter-active {
-    z-index: 9999;
+    z-index: 100001;
 
     &:after {
       opacity: 1;

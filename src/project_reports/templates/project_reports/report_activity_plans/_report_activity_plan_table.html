@@ -16,7 +16,6 @@
                 {% endfor %}
             </div>
         </div>
-
         <div class="actions-panel">
             {% if plans_report_filter %}
                 {% include "components/_filter_drawer.html" with filter=plans_report_filter %}
@@ -29,21 +28,11 @@
             <table class="table all-projects-table">
                 <thead class="content-block">
                     <tr>
-                        <th>
-                            <strong class="table-title">Activity Domain</strong>
-                        </th>
-                        <th>
-                            <strong class="table-title">Activity Type</strong>
-                        </th>
-                        <th>
-                            <strong class="table-title">Indicator</strong>
-                        </th>
-                        <th>
-                            <strong>Target Locations</strong>
-                        </th>
-                        <th style="text-align:center">
-                            <strong>Report Actions</strong>
-                        </th>
+                        <th><strong class="table-title">Activity Domain</strong></th>
+                        <th><strong class="table-title">Activity Type</strong></th>
+                        <th><strong class="table-title">Indicator</strong></th>
+                        <th><strong>Target Locations</strong></th>
+                        <th><strong>Actions</strong></th>
                     </tr>
                 </thead>
  
@@ -53,21 +42,13 @@
                         <tr>
                             <td>{{ report_plan.activity_plan.activity_domain }}</td>
                             <td>{{ report_plan.activity_plan.activity_type }}</td>
-                            <td>{{ report_plan.indicator }}</td>
-                            <td>{{ report_plan.report_target_location_count }}</td>
+                            <td>{{ report_plan.activity_plan.indicator }}</td>
+                            <td>{{report_plan.report_location_count}}</td>
                             <td>
                                 <div class="table-flex-holder">
                                     <ul class="table-options-buttons">
                                         <li>
-                                            <a href="{% url 'update_report_activity_plans' project.id report_plan.monthly_report.id report_plan.id %}"
-                                               class="btn btn-gray">Edit</a>
-                                        </li>
-                                        <li>
-                                            <a href="{% url 'create_report_target_locations' project.id monthly_report.id report_plan.id %}"
-                                               class="btn btn-gray">
-                                                <img src="{% static 'admin/img/icon-addlink.svg' %}" alt="add-btn-icon">
-                                                Location
-                                            </a>
+                                            <a href="{% url 'update_report_activity_plans' report_plan.monthly_report.id report_plan.id %}" class="btn btn-gray">Edit</a>
                                         </li>
                                     </ul>
                                 </div>

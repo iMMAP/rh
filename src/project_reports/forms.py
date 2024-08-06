@@ -62,13 +62,6 @@ class TargetLocationReportForm(forms.ModelForm):
         has_nhs_code = nhs_code in kwargs.get("data", {})
 
         # Get only the relevant facility types - related to cluster
-        if plan_report:
-            self.fields["facility_site_type"].queryset = FacilitySiteType.objects.filter(
-                cluster__in=plan_report.activity_plan.activity_domain.clusters.all()
-            )
-        else:
-            self.fields["facility_site_type"].queryset = FacilitySiteType.objects.all()
-
         if cluster_has_nhs_code or has_nhs_code:
             self.fields["nhs_code"] = forms.CharField(max_length=200, required=True)
         else:
@@ -104,8 +97,7 @@ class DisaggregationLocationReportForm(forms.ModelForm):
         model = DisaggregationLocationReport
         fields = (
             "disaggregation",
-            "target_required",
-            "target",
+            "reached",
         )
 
     def __init__(self, *args, **kwargs):
@@ -114,11 +106,11 @@ class DisaggregationLocationReportForm(forms.ModelForm):
 
         self.fields["disaggregation"].required = True
         self.fields["disaggregation"].empty_value = "hell"
-        self.fields["target"].required = True
+        self.fields["reached"].required = True
 
         if plan_report:
             self.fields["disaggregation"].queryset = self.fields["disaggregation"].queryset.filter(
-                indicators=plan_report.indicator
+                indicators=plan_report.activity_plan.indicator
             )
             # keep only the initial
 
@@ -135,46 +127,24 @@ class ActivityPlanReportForm(forms.ModelForm):
         fields = "__all__"
 
         widgets = {
-            "activity_plan": forms.widgets.HiddenInput(),
-            "report_types": forms.SelectMultiple(attrs={"class": "custom-select"}),
-            "implementing_partners": forms.SelectMultiple(attrs={"class": "custom-select"}),
+            "monthly_report":forms.HiddenInput(),
+            "activity_plan": forms.Select(attrs={"class":"custom-select"}),
+            "response_type": forms.SelectMultiple(attrs={"class": "custom-select"}),
             "beneficiary_status": forms.Select(attrs={"class": "custom-select"}),
-            "package_type": forms.Select(attrs={"class": "custom-select"}),
-            "unit_type": forms.Select(attrs={"class": "custom-select"}),
-            "grant_type": forms.Select(attrs={"class": "custom-select"}),
-            "transfer_category": forms.Select(attrs={"class": "custom-select"}),
-            "currency": forms.Select(attrs={"class": "custom-select"}),
-            "transfer_mechanism_type": forms.Select(attrs={"class": "custom-select"}),
-            "implement_modility_type": forms.Select(attrs={"class": "custom-select"}),
+            "seasonal_retargeting":forms.CheckboxInput(),
+            "modality_retargeting":forms.CheckboxInput(),
         }
 
     def __init__(self, *args, **kwargs):
+        report = kwargs.pop("report", None)
         super().__init__(*args, **kwargs)
 
-        # Retrieve the monthly_report_instance from initial data or instance
-        monthly_report_id = self.initial.get("monthly_report")
-        monthly_report_instance = get_object_or_404(ProjectMonthlyReport, pk=monthly_report_id)
+        self.fields["monthly_report"].initial = report.id
 
-        if monthly_report_instance:
-            project = monthly_report_instance.project
-            if project and project.implementing_partners.exists():
-                organizations = project.implementing_partners.all()
-            else:
-                organizations = Organization.objects.all().order_by("name")
-        else:
-            organizations = Organization.objects.all().order_by("name")
-
-        self.fields["indicator"].widget.attrs.update({"hidden": ""})
-        self.fields["monthly_report"].widget.attrs.update({"hidden": ""})
-        self.fields["activity_plan"].widget.attrs.update({"hidden": ""})
-        self.fields["implementing_partners"].queryset = organizations
-        self.fields["seasonal_retargeting"].widget = forms.CheckboxInput()
-        self.fields["modality_retargeting"].widget = forms.CheckboxInput()
-
+        self.fields["activity_plan"].queryset = self.fields["activity_plan"].queryset.filter(project=report.project)
 
 class RejectMonthlyReportForm(forms.Form):
     rejection_reason = forms.CharField(widget=forms.Textarea)
-
 
 class IndicatorsForm(forms.ModelForm):
     class Meta:

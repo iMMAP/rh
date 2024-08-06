@@ -54,25 +54,13 @@ class HTTPResponseHXRedirect(HttpResponseRedirect):
 @login_required
 def index_project_report_view(request, project):
     """Project Monthly Report View"""
-
-    project = get_object_or_404(Project.objects.filter(pk=project).order_by("-id"), pk=project)
+    project = get_object_or_404(Project, pk=project)
 
     # Setup Filter
     reports_filter = MonthlyReportsFilter(
         request.GET,
         request=request,
-        queryset=ProjectMonthlyReport.objects.filter(project=project)
-        .order_by("-id")
-        .prefetch_related(
-            Prefetch(
-                "activityplanreport_set",
-                ActivityPlanReport.objects.select_related("activity_plan").prefetch_related(
-                    Prefetch(
-                        "targetlocationreport_set", TargetLocationReport.objects.select_related("province", "district")
-                    ),
-                ),
-            ),
-        ),
+        queryset=ProjectMonthlyReport.objects.filter(project=project).order_by("-id"),
     )
 
     # Setup Pagination
@@ -84,9 +72,8 @@ def index_project_report_view(request, project):
 
     reports = ProjectMonthlyReport.objects.filter(project=project).aggregate(
         project_reports_todo_count=Count("id", filter=Q(state__in=ProjectMonthlyReport.REPORT_STATES)),
-        project_report_complete_count=Count("id", filter=Q(state="complete"), is_active=True),
-        project_report_archive_count=Count("id", filter=Q(state="archive", is_active=False)),
-        project_reports_count=Count("id", filter=Q(is_active=True)),
+        project_report_complete_count=Count("id", filter=Q(state="complete")),
+        project_report_archive_count=Count("id", filter=Q(state="archive")),
     )
 
     context = {
@@ -95,11 +82,8 @@ def index_project_report_view(request, project):
         "project_reports_todo": reports["project_reports_todo_count"],
         "project_report_complete": reports["project_report_complete_count"],
         "project_report_archive": reports["project_report_archive_count"],
-        "project_report_count": reports["project_reports_count"],
         "reports_filter": reports_filter,
-        "project_view": False,
-        "financial_view": False,
-        "reports_view": True,
+        "report_states": ProjectMonthlyReport.REPORT_STATES,
     }
 
     return render(request, "project_reports/monthly_reports/views/monthly_reports_view_base.html", context)
@@ -180,9 +164,6 @@ def update_project_monthly_report_view(request, project, report):
         "monthly_report": report,
         "project": report.project,
         "report_form": form,
-        "report_view": True,
-        "report_activities": False,
-        "report_locations": False,
     }
     return render(request, "project_reports/monthly_reports/forms/monthly_report_form.html", context)
 
@@ -197,45 +178,16 @@ def details_monthly_progress_view(request, project, report):
             Prefetch(
                 "activityplanreport_set",
                 ActivityPlanReport.objects.select_related(
-                    "activity_plan__activity_domain", "activity_plan__activity_type", "indicator"
-                ),
+                    "activity_plan__activity_domain", "activity_plan__activity_type"
+                ).annotate(report_location_count=Count("targetlocationreport")),
             ),
         ),
         pk=report,
     )
 
-    activity_reports = monthly_report.activityplanreport_set
-
-    activity_plans = project.activityplan_set.select_related(
-        "activity_domain",
-        "activity_type",
-    )
-
-    activity_plans = [plan for plan in activity_plans]
-
-    report_plans = ActivityPlanReport.objects.filter(monthly_report=monthly_report.pk).annotate(
-        report_target_location_count=Count("targetlocationreport")
-    )
-
-    if not report_plans:
-        for plan in activity_plans:
-            if plan.state == "in-progress":
-                ActivityPlanReport.objects.create(
-                    monthly_report_id=monthly_report.pk,
-                    activity_plan_id=plan.pk,
-                    indicator_id=plan.indicator.pk,
-                )
-
-        # Re-fetch activity_reports after creating new ActivityPlanReport instances
-        activity_reports = monthly_report.activityplanreport_set.all()
-
     context = {
         "project": project,
         "monthly_report": monthly_report,
-        "activity_reports": activity_reports,
-        "report_view": True,
-        "report_activities": False,
-        "report_locations": False,
     }
 
     return render(request, "project_reports/monthly_reports/views/monthly_report_view.html", context)

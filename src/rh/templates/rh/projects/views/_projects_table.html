@@ -9,8 +9,7 @@
             {% for field in project_filter.form %}
                 {% if forloop.first %}<span>Applied Filters:</span>{% endif %}
                 {% if field.value and field.name != 'state' %}
- 
-                    <span class="filter-item title" id="title">{{ field.name }}</span>
+                     <span class="filter-item title" id="title">{{ field.name }}</span>
                     {% if forloop.last %}<span class="close-alert-message">x</span>{% endif %}
                 {% endif %}
  

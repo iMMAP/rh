@@ -43,56 +43,6 @@ class HTTPResponseHXRedirect(HttpResponseRedirect):
     status_code = 200
 
 
-@login_required
-def list_report_target_locations(request, project, report, plan=None):
-    """Create View"""
-    project = get_object_or_404(Project, pk=project)
-    monthly_report_instance = get_object_or_404(ProjectMonthlyReport, pk=report)
-
-    report_plan = None
-    if plan:
-        report_plan = get_object_or_404(ActivityPlanReport.objects.select_related("monthly_report"), pk=plan)
-    if report_plan:
-        tl_filter = TargetLocationReportFilter(
-            request.GET,
-            request=request,
-            queryset=TargetLocationReport.objects.filter(activity_plan_report_id=report_plan.pk)
-            .select_related("activity_plan_report", "country", "province", "district")
-            .order_by("-id")
-            .annotate(report_disaggregation_locations_count=Count("disaggregationlocationreport")),
-            report=monthly_report_instance,
-        )
-
-    else:
-        tl_filter = TargetLocationReportFilter(
-            request.GET,
-            request=request,
-            queryset=TargetLocationReport.objects.filter(activity_plan_report__monthly_report=report)
-            .select_related("activity_plan_report", "country", "province", "district")
-            .order_by("-id")
-            .annotate(report_disaggregation_locations_count=Count("disaggregationlocationreport")),
-            report=monthly_report_instance,
-        )
-
-    per_page = request.GET.get("per_page", 10)
-    paginator = Paginator(tl_filter.qs, per_page=per_page)
-    page = request.GET.get("page", 1)
-    report_locations = paginator.get_page(page)
-    report_locations.adjusted_elided_pages = paginator.get_elided_page_range(page)
-
-    context = {
-        "project": project,
-        "monthly_report": monthly_report_instance,
-        "report_plan": report_plan,
-        "report_target_locations": report_locations,
-        "location_report_filter": tl_filter,
-        "report_view": False,
-        "report_activities": False,
-        "report_locations": True,
-    }
-
-    return render(request, "project_reports/report_target_locations/target_locations_list.html", context)
-
 
 @login_required
 def create_report_target_locations(request, project, report, plan):
@@ -110,7 +60,7 @@ def create_report_target_locations(request, project, report, plan):
 
     initial_data = []
     # Loop through each Indicator and retrieve its related Disaggregations
-    indicator = plan_report.indicator
+    indicator = plan_report.activity_plan.indicator
     related_disaggregations = indicator.disaggregation_set.all()
     for disaggregation in related_disaggregations:
         initial_data.append({"disaggregation": disaggregation})

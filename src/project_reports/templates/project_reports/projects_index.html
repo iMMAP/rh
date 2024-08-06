@@ -4,19 +4,109 @@
 
 {% block content %}
     <div class="container">
+        <div class="breadcrumbs-nav-panel">
+            <div class="holder">
+                <ul class="breadcrumbs">
+                    <li>
+                        <a href="{% url 'landing' %}">Home</a>
+                    </li>
+                    <li>
+                        <a id="return-url"
+                           href="{% url 'projects-list' %}?state={{ project.state }}">
+                            {{ project.get_state_display }} Projects
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'projects-detail' project.id %}">{{ project.code }}</a>
+                    </li>
+                    <li class="current">Project Reports</li>
+                </ul>
+                <div class="actions-panel">
+                    <div class="filter-holder">
+                        <!-- <a href="#" class="btn btn-red filter-open">Filter</a> -->
+                        <form action="#" class="filter-form">
+                            <div class="filter-options">
+                                <div class="block-top">
+                                    <span class="title">Filter</span>
+                                    <a class="filter-close" href="#"></a>
+                                </div>
+                                <div class="block-body">
+                                    <div class="select-field">
+                                        <label>Region</label>
+                                        <select name="region" id="region" class="custom-select">
+                                            <option value="placeholder" disabled selected placeholder>Region</option>
+                                            <option value="option1">Option 1</option>
+                                            <option value="option2">Option 2</option>
+                                        </select>
+                                    </div>
+                                    <div class="select-field">
+                                        <label for="report-country">Country</label>
+                                        {{ report_filter.form.country }}
+                                    </div>
+                                    <div class="select-field">
+                                        <label>Province/ State</label>
+                                        {{ report_filter.form.province }}
+                                    </div>
+                                    <div class="select-field">
+                                        <label>District</label>
+                                        {{ report_filter.form.district }}
+                                    </div>
+                                    <div class="date-picker-field">
+                                        <div class="date start">
+                                            <input type="text"
+                                                   id="dateStart"
+                                                   name="Start date"
+                                                   placeholder="Start date"
+                                                   onfocus="(this.type='date')"
+                                                   onblur="(this.type='text')" />
+                                        </div>
+                                        <div class="date end">
+                                            <input type="text"
+                                                   id="dateEnd"
+                                                   name="End date"
+                                                   placeholder="End date"
+                                                   onfocus="(this.type='date')"
+                                                   onblur="(this.type='text')" />
+                                        </div>
+                                    </div>
+                                    <div class="select-field">
+                                        <label>Cluster/Sector</label>
+                                        {{ report_filter.form.clusters }}
+                                    </div>
+                                    <div class="select-field">
+                                        <label>Organization</label>
+                                        {{ report_filter.form.organization }}
+                                    </div>
+                                    <div class="select-field">
+                                        <label>Activity Domain</label>
+                                        {{ report_filter.form.activity_domains }}
+                                    </div>
+                                </div>
+                                <div class="block-footer">
+                                    <div class="btn-wrapper">
+                                        <button type="button" class="btn btn-gray-outline">Reset</button>
+                                        <button type="submit" class="btn btn-red">Apply</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="page-navigation-panel">
             <div class="holder">
                 <div class="tabs-nav-holder">
                     <ul class="tabs-nav">
-                        <li class="{% if project_view %}active{% endif %}">
+                        <li class="{% if request.resolver_match.url_name == 'projects-detail' %} active {% endif %}">
                             <a href="{% if project %}{% url 'projects-detail' project.pk %}{% else %}{% url 'projects-create' %}{% endif %}">Project
                             planning</a>
                         </li>
-                        <li class="{% if financial_view %}active{% endif %}">
+                        <li class="">
                             <a href="{% if project %}{% url 'create_project_budget_progress' project.pk %}{% else %}#{% endif %}">Financial Reports</a>
                         </li>
-                        <li class="{% if reports_view %}active{% endif %}">
-                            <a href="{% if project %}{% url 'project_reports_home' project.pk %}?state=todo&state=pending&state=submit&state=reject{% else %}#{% endif %}">Monthly Progress</a>
+                        <li class="{% if request.resolver_match.url_name == 'project_reports_home' %} active {% endif %}">
+                            <a href="{% if project %}{% url 'project_reports_home' project.pk %}{% else %}#{% endif %}">Project Reports</a>
                         </li>
                     </ul>
                 </div>

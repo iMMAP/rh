@@ -1,8 +1,14 @@
 {% extends "project_reports/monthly_reports/forms/monthly_report_progress_form_base.html" %}
+
 {% load static %}
 
-{% block project_body %}
+{% block breadcrumb_li %}
+<li class="current">
+    {{ monthly_report.report_date | date:"F Y" }}
+</li>
+{% endblock breadcrumb_li %}
 
+{% block project_body %}
     <div class="content-block top-border">
         <div class="project-title">
             <div class="holder">
@@ -106,7 +112,7 @@
                 </ul>
             </div>
         </div>
-        <br />
+
         <div class="project-monthly_report read-only">
             <div class="row">
                 <div class="col">
@@ -133,7 +139,7 @@
                                 </div>
                             </div>
                         {% endif %}
-                        {% if monthly_report.approved_on and monthly_report.state == 'complete' %}
+                        {% if monthly_report.approved_on and monthly_report.state == 'completed' %}
                             <div class="field-col">
                                 <div class="input-field">
                                     <label>Approved On</label>
@@ -141,7 +147,7 @@
                                 </div>
                             </div>
                         {% endif %}
-                        {% if monthly_report.rejected_on and monthly_report.state == 'reject' %}
+                        {% if monthly_report.rejected_on and monthly_report.state == 'rejected' %}
                             <div class="field-col">
                                 <div class="input-field">
                                     <label>Rejected On</label>
@@ -165,20 +171,6 @@
             </div>
         </div>
 
-        <div class="activity-planning read-only">
-            <div class="activity-block-holder">
-                <div class="top-activity-block">
-                    <span class="activity-title">
-                        <span>Report Activity Plans</span>
-                        <span class="btn btn-gray" style="float:right">{{ activity_reports | length }}</span>
-                    </span>
-
-                </div>
-            </div>
-        </div>
-
-        {% include "project_reports/report_activity_plans/_activity_plan_table.html" with object_list=activity_reports.all %}
-        <br />
         <div class="monthly-reporting">
             <div class="row">
                 <div class="col">
@@ -190,6 +182,19 @@
             </div>
         </div>
 
+        <div class="activity-planning read-only">
+            <div class="activity-block-holder">
+                <div class="top-activity-block">
+                    <span class="activity-title">
+                        <span>Report Activity Plans</span>
+                        <a href="{% url 'create_report_activity_plans' monthly_report.id  %}" class="btn btn-red" style="float:right">Add New Activity Report</a>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        {% include "project_reports/report_activity_plans/_report_activity_plan_table.html" with object_list=monthly_report.activityplanreport_set.all %}
+     
         {% if monthly_report.comments and monthly_report.state == 'reject' %}
             <div class="monthly-reporting">
                 <div class="row">
@@ -204,7 +209,7 @@
         {% endif %}
 
         <div class="monthly-progress-submit-holder text-center">
-            {% if monthly_report.state in "pending,todo,reject" %}
+            {% if monthly_report.state in "pending,todo,rejected" %}
                 <a hx-post="{% url 'submit_monthly_report' monthly_report.pk %}"
                    hx-trigger="click"
                    hx-swap="none"
@@ -216,7 +221,7 @@
                          src="{% static 'images/spinner.gif' %}" />
                     Submit Monthly Report
                 </a>
-            {% elif monthly_report.state == "submit" %}
+            {% elif monthly_report.state == "submited" %}
                 <a data-url="{% url 'approve_monthly_report' monthly_report.pk %}"
                    data-button="Approve Report"
                    class="btn btn-red show-sw-confirm-button">
@@ -229,6 +234,5 @@
                 </a>
             {% endif %}
         </div>
-
     </div>
 {% endblock project_body %}

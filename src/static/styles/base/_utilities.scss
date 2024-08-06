@@ -209,6 +209,16 @@
     padding: 0.25rem;
 }
 
+.px-1 {
+    padding-right: 0.25rem;
+    padding-left: 0.25rem;
+}
+
+.py-1 {
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
+}
+
 .p-1\.5 {
     padding: 0.375rem;
 }
@@ -263,6 +273,16 @@
 .px-4 {
     padding-right: 1rem;
     padding-left: 1rem;
+}
+
+.px-2 {
+    padding-right: 0.5rem;
+    padding-left: 0.5rem;
+}
+
+.px-0 {
+    padding-right: 0px;
+    padding-left: 0px;
 }
 
 .p-5 {
@@ -1830,6 +1850,9 @@
 }
 
 
+.text-white{
+    color: $white !important;
+}
 
 .cursor-text {
     cursor: text;

@@ -6,191 +6,191 @@
 {% endblock title %}
 
 {% block breadcrumb_li %}
-<li class="">
-    {% if monthly_report %}
-        <a href="{% url 'view_monthly_report' monthly_report.project.id  monthly_report.id %}">
-            {{ monthly_report.report_date | date:"F Y" }}
-        </a>
-    {% else %}
-        New Progress Report
-    {% endif %}
-</li>
-<li class="current">
-     {% if report_ap %}
-        Update Report Activity
-     {% else %}
-        Create Report Activity
-     {% endif %}
-</li>
+    <li>
+        {% if monthly_report %}
+            <a href="{% url 'view_monthly_report' monthly_report.project.id  monthly_report.id %}">
+                {{ monthly_report.report_date | date:"F Y" }}
+            </a>
+        {% else %}
+            New Progress Report
+        {% endif %}
+    </li>
+    <li class="current">
+        {% if report_ap %}
+            Update Report Activity
+        {% else %}
+            Create Report Activity
+        {% endif %}
+    </li>
 {% endblock breadcrumb_li %}
 
 {% block project_body %}
     <div class="content-block top-border">
-        <div class="main-content">
-            <div class="activity-planning create-activity">
-                <div class="activity-planning read-only">
-                    <div class="activity-block-holder">
-                        <div class="top-activity-block">
-                            <span class="activity-title">
-                                <span>
-                                    {% if report_activity_plan %}
-                                        Update Report Activity
-                                    {% else %}
-                                        Create Report Activity
-                                    {% endif %}
-                                </span>
-                            </span>
-                            <br>
+        <div class="main-content ">
+            <div class="activity-planning read-only">
+                <div class="activity-block-holder">
+                    <div class="top-activity-block">
+                        <span class="activity-title">
                             <span>
-                                Use this form to provide detailed information about the report activity for the above the monthly report.
-                                Some fields are auto-populated from the project activity plans.
+                                {% if report_activity_plan %}
+                                    Update Report Activity
+                                {% else %}
+                                    Create Report Activity
+                                {% endif %}
                             </span>
-                        </div>
+                        </span>
+                        <br>
+                        <span>
+                            Use this form to provide detailed information about the report activity for the above the monthly report.
+                            Some fields are auto-populated from the project activity plans.
+                        </span>
                     </div>
                 </div>
+            </div>
 
-                <form method="post" class="form-container">
+            <div class="bg-gray-fa p-4 rounded border border-gray-e6 space-y-4">
+                <form hx-post="{% url 'create_report_activity_plans' monthly_report.id %}" hx-swap="none"  method="post" class="rounded p-4 ">
                     {% csrf_token %}
                     {{ form.monthly_report }}
-                    <div class="project-activity-block" data-form-id="{{ form.prefix }}">
-                        <div class="inner-holder unset-before">
-                            <div class="project-activity-accordion-slide" id="{{ form.prefix }}-details">
-                                <div class="select-field">
-                                    <label for="{{ form.activity_plan.id_for_label }}">Activity Plan</label>
-                                    <div class="input-holder">
-                                        {{ form.activity_plan }}
+                    <div class="select-field is-required">
+                        <label for="{{ form.activity_plan.id_for_label }}">Activity Plan</label>
+                        <div class="input-holder">
+                            {{ form.activity_plan }}
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col">
+                            <div class="multiple-fields-row two-items">
+                                <div class="field-col">
+                                    <div class="select-field is-required">
+                                        <label for="{{ form.response_type.id_for_label }}">Response Types</label>
+                                        <div class="input-holder">{{ form.response_type}}</div>
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="col">
-                                        <div class="multiple-fields-row two-items">
-                                            <div class="field-col">
-                                                <div class="select-field">
-                                                    <label for="{{ form.response_type.id_for_label }}">Response Types</label>
-                                                    <div class="input-holder">{{ form.response_type}}</div>
-                                                </div>
-                                            </div>
-                                            <div class="field-col">
-                                                <div class="select-field">
-                                                    <label>{{ form.beneficiary_status.label }}</label>
-                                                    {{ form.beneficiary_status }}
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                {% if report_activity_plan.indicator.enable_retargeting %}
-                                    <div class="row">
-                                        <div class="col col-lg">
-                                            <div class="multiple-fields-row two-items">
-                                                <div class="field-col">
-                                                    <div class="input-check-holder">
-                                                        {{ form.seasonal_retargeting }}
-                                                        <label for="{{ form.seasonal_retargeting.id_for_label }}">
-                                                            <span class="input"></span>
-                                                            <span class="text">Beneficiaries Retargeted due to seasonality</span>
-                                                        </label>
-                                                    </div>
-                                                </div>
-                                                <div class="field-col">
-                                                    <div class="input-check-holder">
-                                                        {{ form.modality_retargeting }}
-                                                        <label for="{{ form.modality_retargeting.id_for_label }}">
-                                                            <span class="input"></span>
-                                                            <span class="text">Beneficiaries Retargeted due to change in modality</span>
-                                                        </label>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                {% endif %}
-                                <!-- Indicator types start to diaplay -->
-                                <div class="row" id="{{ form.prefix }}-indicator-types">
-                                    <div class="multiple-fields-row">
-                                        {% if report_activity_plan.indicator.package_type %}
-                                            <div class="field-col">
-                                                <div class="select-field">
-                                                    <label>{{ form.package_type.label }}</label>
-                                                    {{ form.package_type }}
-                                                    <small class="sign-up-field-error">{{ form.package_type.errors }}</small>
-                                                </div>
-                                            </div>
-                                        {% endif %}
-                                        {% if report_activity_plan.indicator.unit_type %}
-                                            <div class="field-col">
-                                                <div class="select-field">
-                                                    <label>{{ form.unit_type.label }}</label>
-                                                    {{ form.unit_type }}
-                                                    <small class="sign-up-field-error">{{ form.unit_type.errors }}</small>
-                                                </div>
-                                            </div>
-                                        {% endif %}
-                                        {% if report_activity_plan.indicator.grant_type %}
-                                            <div class="field-col">
-                                                <div class="select-field">
-                                                    <label>{{ form.grant_type.label }}</label>
-                                                    {{ form.grant_type }}
-                                                    <small class="sign-up-field-error">{{ form.grant_type.errors }}</small>
-                                                </div>
-                                            </div>
-                                        {% endif %}
-                                        {% if report_activity_plan.indicator.implement_modility_type %}
-                                            <div class="field-col">
-                                                <div class="select-field">
-                                                    <label>{{ form.implement_modility_type.label }}</label>
-                                                    {{ form.implement_modility_type }}
-                                                    <small class="sign-up-field-error">{{ form.implement_modility_type.errors }}</small>
-                                                </div>
-                                            </div>
-                                        {% endif %}
-                                        {% if report_activity_plan.indicator.transfer_mechanism_type %}
-                                            <div class="field-col">
-                                                <div class="select-field">
-                                                    <label>{{ form.transfer_mechanism_type.label }}</label>
-                                                    {{ form.transfer_mechanism_type }}
-                                                    <small class="sign-up-field-error">{{ form.transfer_mechanism_type.errors }}</small>
-                                                </div>
-                                            </div>
-                                        {% endif %}
-                                        {% if report_activity_plan.indicator.transfer_category or form.initial.indicator.transfer_category %}
-                                            <div class="field-col">
-                                                <div class="select-field">
-                                                    <label>{{ form.transfer_category.label }}</label>
-                                                    {{ form.transfer_category }}
-                                                    <small class="sign-up-field-error">{{ form.transfer_category.errors }}</small>
-                                                </div>
-                                            </div>
-                                        {% endif %}
-                                        {% if report_activity_plan.indicator.currency or form.initial.indicator.currency %}
-                                            <div class="field-col">
-                                                <div class="select-field">
-                                                    <label>{{ form.currency.label }}</label>
-                                                    {{ form.currency }}
-                                                    <small class="sign-up-field-error">{{ form.currency.errors }}</small>
-                                                </div>
-                                            </div>
-                                        {% endif %}
+                                <div class="field-col">
+                                    <div class="select-field is-required">
+                                        <label for="{{form.beneficiary_status.id_for_label}}">{{ form.beneficiary_status.label }}</label>
+                                        {{ form.beneficiary_status }}
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+
+                    {% if report_activity_plan.indicator.enable_retargeting %}
+                        <div class="row">
+                            <div class="col col-lg">
+                                <div class="multiple-fields-row two-items">
+                                    <div class="field-col">
+                                        <div class="input-check-holder">
+                                            {{ form.seasonal_retargeting }}
+                                            <label for="{{ form.seasonal_retargeting.id_for_label }}">
+                                                <span class="input"></span>
+                                                <span class="text">Beneficiaries Retargeted due to seasonality</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="field-col">
+                                        <div class="input-check-holder">
+                                            {{ form.modality_retargeting }}
+                                            <label for="{{ form.modality_retargeting.id_for_label }}">
+                                                <span class="input"></span>
+                                                <span class="text">Beneficiaries Retargeted due to change in modality</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+
+                    <!-- Indicator types start to diaplay -->
+                    <div class="row" id="{{ form.prefix }}-indicator-types">
+                        <div class="multiple-fields-row">
+                            {% if report_activity_plan.indicator.package_type %}
+                                <div class="field-col">
+                                    <div class="select-field">
+                                        <label>{{ form.package_type.label }}</label>
+                                        {{ form.package_type }}
+                                        <small class="sign-up-field-error">{{ form.package_type.errors }}</small>
+                                    </div>
+                                </div>
+                            {% endif %}
+                            {% if report_activity_plan.indicator.unit_type %}
+                                <div class="field-col">
+                                    <div class="select-field">
+                                        <label>{{ form.unit_type.label }}</label>
+                                        {{ form.unit_type }}
+                                        <small class="sign-up-field-error">{{ form.unit_type.errors }}</small>
+                                    </div>
+                                </div>
+                            {% endif %}
+                            {% if report_activity_plan.indicator.grant_type %}
+                                <div class="field-col">
+                                    <div class="select-field">
+                                        <label>{{ form.grant_type.label }}</label>
+                                        {{ form.grant_type }}
+                                        <small class="sign-up-field-error">{{ form.grant_type.errors }}</small>
+                                    </div>
+                                </div>
+                            {% endif %}
+                            {% if report_activity_plan.indicator.implement_modility_type %}
+                                <div class="field-col">
+                                    <div class="select-field">
+                                        <label>{{ form.implement_modility_type.label }}</label>
+                                        {{ form.implement_modility_type }}
+                                        <small class="sign-up-field-error">{{ form.implement_modility_type.errors }}</small>
+                                    </div>
+                                </div>
+                            {% endif %}
+                            {% if report_activity_plan.indicator.transfer_mechanism_type %}
+                                <div class="field-col">
+                                    <div class="select-field">
+                                        <label>{{ form.transfer_mechanism_type.label }}</label>
+                                        {{ form.transfer_mechanism_type }}
+                                        <small class="sign-up-field-error">{{ form.transfer_mechanism_type.errors }}</small>
+                                    </div>
+                                </div>
+                            {% endif %}
+                            {% if report_activity_plan.indicator.transfer_category or form.initial.indicator.transfer_category %}
+                                <div class="field-col">
+                                    <div class="select-field">
+                                        <label>{{ form.transfer_category.label }}</label>
+                                        {{ form.transfer_category }}
+                                        <small class="sign-up-field-error">{{ form.transfer_category.errors }}</small>
+                                    </div>
+                                </div>
+                            {% endif %}
+                            {% if report_activity_plan.indicator.currency or form.initial.indicator.currency %}
+                                <div class="field-col">
+                                    <div class="select-field">
+                                        <label>{{ form.currency.label }}</label>
+                                        {{ form.currency }}
+                                        <small class="sign-up-field-error">{{ form.currency.errors }}</small>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+
                     <div class="plan-submit-holder">
                         <div></div>
                         <div>
-                            <input type="submit"
-                                    name="_continue"
-                                    class="btn btn-gray"
-                                    value="Save and continue editing">
+                            <a href="#" class="btn btn-gray">Delete</a>
                             <input type="submit" name="_save" class="btn btn-red" value="Save">
                         </div>
                     </div>
                 </form>
+
+                {% include "project_reports/report_target_locations/report_target_location_form.html" %}
+
+                <button id="addLocationButton" class="btn btn-red my-3">+ Add Location</button>
             </div>
         </div>
     </div>
 {% endblock project_body %}
+
 {% block scripts %}
     <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
     <script>
@@ -204,6 +204,17 @@
                 },
                 shouldSort: false,
             });
+        });
+    </script>
+
+    <script>
+        const addLocationButton = document.querySelector("#addLocationButton")
+        const targetLocationForm = document.querySelector("#target-location-form")
+
+        addLocationButton.addEventListener('click', () => {
+            const clone = targetLocationForm.cloneNode(true);
+            clone.id = `target-location-form-${Date.now()}`; // Generate a unique ID for the cloned form
+            addLocationButton.before(clone);
         });
     </script>
 {% endblock scripts %}

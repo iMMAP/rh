@@ -2,6 +2,10 @@
 {% load static %}
 
 <div class="content-block bottom-border table-container">
+    <div class="progress bg-red h-0.5">
+        <div class="indeterminate bg-white"></div>
+    </div>
+
     {% comment %} Table Actions and filters {% endcomment %}
     <div class="page-top-panel bottom-border">
         <div class="actions-panel">
@@ -50,6 +54,16 @@
                                         <li>
                                             <a href="{% url 'update_report_activity_plans' report_plan.monthly_report.id report_plan.id %}" class="btn btn-gray">Edit</a>
                                         </li>
+                                        <li><button>
+                                            <a hx-delete="{% url 'delete_report_activity_plan' report_plan.id %}"
+                                                hx-trigger="click"
+                                                hx-indicator=".progress"
+                                                hx-confirm="Do you want to delete `{{ report_plan }}` and its Target Locations ?"
+                                                hx-target="closest tr"
+                                                data-tippy-content="Delete Report Plan and its Targeted Locations">
+                                                <span class="project-detail icon-trashbin"></span>
+                                            </a>
+                                        </button></li>
                                     </ul>
                                 </div>
                             </td>

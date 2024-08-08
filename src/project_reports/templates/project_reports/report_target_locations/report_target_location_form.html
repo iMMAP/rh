@@ -5,8 +5,8 @@
     id="target-location-form"
 >
     <div class="flex items-center justify-between border-b border-red-b5 p-4 bg-gray-f5">
-        <span class="activity-title">
-            Targeted Locations
+        <span class="title font-bold text-red-a5">
+            Targeted Location
         </span>
         <div class="inline-deletelink" onclick="this.closest('form').remove()">
         </div>
@@ -16,11 +16,6 @@
     <div class="select-field p-4">
         <span class="label">Target Location</span>
         {{ location_report_form.target_location }}
-        <select name="options" id="options">
-            <option value="option1">Option 1</option>
-            <option value="option2">Option 2</option>
-            <option value="option3">Option 3</option>
-        </select>
     </div>
 
     <div class="disaggregation-block js-inline-admin-formset inline-group p-4"
@@ -41,9 +36,6 @@
                                 {{ field|capfirst }}
                             </th>
                         {% endfor %}
-                        <th>Random Heading 1</th>
-                        <th>Random Heading 2</th>
-                        <th>Random Heading 3</th>
                         {% if report_disaggregation_formset.can_delete %}<th>Delete?</th>{% endif %}
                     </tr>
                 </thead>
@@ -71,9 +63,6 @@
                             </td>
                         </tr>
                     {% endfor %}
-                    <td>Random Content 1</td>
-                    <td>Random Content 2</td>
-                    <td>Random Content 3</td>
                 </tbody>
             </table>
         </fieldset>

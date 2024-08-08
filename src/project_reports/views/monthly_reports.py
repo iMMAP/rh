@@ -190,7 +190,7 @@ def details_monthly_progress_view(request, project, report):
         "monthly_report": monthly_report,
     }
 
-    return render(request, "project_reports/monthly_reports/views/monthly_report_view.html", context)
+    return render(request, "project_reports/report_activity_plans/report_activity_plans_list.html", context)
 
 
 @login_required

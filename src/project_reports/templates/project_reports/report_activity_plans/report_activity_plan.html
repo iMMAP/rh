@@ -1,0 +1,87 @@
+{% extends "project_reports/monthly_reports/forms/monthly_report_progress_form_base.html" %}
+{% load static %}
+
+{% block title %}
+    Update Report Activities
+{% endblock title %}
+
+{% block breadcrumb_li %}
+    <li>
+        {% if monthly_report %}
+            <a href="{% url 'view_monthly_report' monthly_report.project.id  monthly_report.id %}">
+                {{ monthly_report.report_date | date:"F Y" }}
+            </a>
+        {% else %}
+            New Progress Report
+        {% endif %}
+    </li>
+    <li class="current">
+        {% if report_ap %}
+            Update Report Activity
+        {% else %}
+            Create Report Activity
+        {% endif %}
+    </li>
+{% endblock breadcrumb_li %}
+
+{% block project_body %}
+    <div class="content-block top-border">
+        <div class="main-content ">
+            <div class="activity-planning read-only">
+                <div class="activity-block-holder">
+                    <div class="top-activity-block">
+                        <span class="activity-title">
+                            <span>
+                                {% if report_activity_plan %}
+                                    Update Report Activity
+                                {% else %}
+                                    Create Report Activity
+                                {% endif %}
+                            </span>
+                        </span>
+                        <br>
+                        <span>
+                            Use this form to provide detailed information about the report activity for the above the monthly report.
+                            Some fields are auto-populated from the project activity plans.
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-gray-fa p-4 rounded border border-gray-e6 space-y-4">
+              {% include "project_reports/report_activity_plans/_report_ap_form.html" %} 
+            </div>
+
+            <div class="p-4" id="ap-report-target-locations"></div>
+
+        </div>
+    </div>
+{% endblock project_body %}
+
+{% block scripts %}
+    <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+    <script>
+        document.querySelectorAll('.custom-select').forEach((select) => {
+            const choice = new Choices(select, {
+                searchEnabled: true,
+                itemSelectText: '',
+                removeItemButton: true,
+                classNames: {
+                    listDropdown: 'choices__list--dropdown',
+                },
+                shouldSort: false,
+            });
+        });
+    </script>
+{% comment %} 
+    <script>
+        const addLocationButton = document.querySelector("#addLocationButton")
+        const targetLocationForm = document.querySelector("#target-location-form")
+
+        addLocationButton.addEventListener('click', () => {
+            const clone = targetLocationForm.cloneNode(true);
+            clone.id = `target-location-form-${Date.now()}`; // Generate a unique ID for the cloned form
+            addLocationButton.before(clone);
+        });
+    </script> {% endcomment %}
+{% endblock scripts %}

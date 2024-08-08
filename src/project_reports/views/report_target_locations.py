@@ -3,7 +3,6 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.core.paginator import Paginator
 from django.urls import reverse
 from django.db.models import Count
-from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
 
 from django.contrib import messages
@@ -33,22 +32,14 @@ from ..models import (
 )
 
 from ..filters import TargetLocationReportFilter
-
-
-class HTTPResponseHXRedirect(HttpResponseRedirect):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self["HX-Redirect"] = self["Location"]
-
-    status_code = 200
-
-
+from django_htmx.http import HttpResponseClientRedirect
+from django.http import  HttpResponse
 
 @login_required
-def create_report_target_locations(request, project, report, plan):
-    """Create View"""
-    monthly_report = get_object_or_404(ProjectMonthlyReport.objects.select_related("project"), pk=report)
+def store_report_target_locations(request, project, report, plan):
+    # monthly_report = get_object_or_404(ProjectMonthlyReport.objects.select_related("project"), pk=report)
     plan_report = get_object_or_404(ActivityPlanReport, pk=plan)
+
     DisaggregationReportFormSet = inlineformset_factory(
         parent_model=TargetLocationReport,
         model=DisaggregationLocationReport,
@@ -58,81 +49,62 @@ def create_report_target_locations(request, project, report, plan):
         can_delete=True,
     )
 
-    initial_data = []
-    # Loop through each Indicator and retrieve its related Disaggregations
-    indicator = plan_report.activity_plan.indicator
-    related_disaggregations = indicator.disaggregation_set.all()
-    for disaggregation in related_disaggregations:
-        initial_data.append({"disaggregation": disaggregation})
-    DisaggregationReportFormSet.extra = len(related_disaggregations)
+    location_report_form = TargetLocationReportForm(request.POST or None)
+    report_disaggregation_formset = DisaggregationReportFormSet(
+        request.POST, instance=location_report_form.instance, plan_report=plan_report
+    )
 
-    if request.method == "POST":
-        location_report_form = TargetLocationReportForm(request.POST or None)
-        report_disaggregation_formset = DisaggregationReportFormSet(
-            request.POST, instance=location_report_form.instance, plan_report=plan_report
+    if location_report_form.is_valid() and report_disaggregation_formset.is_valid():
+        location_report = location_report_form.save(commit=False)
+        location_report.activity_plan_report = plan_report
+        location_report.save()
+
+        report_disaggregation_formset.instance = location_report
+        report_disaggregation_formset.save()
+        messages.success(
+            request,
+            mark_safe(
+                f'The Report Target Location "<a href="{reverse("create_report_target_locations", args=[project, report, plan])}">{location_report}</a>" was added successfully.'
+            ),
         )
-        if location_report_form.is_valid() and report_disaggregation_formset.is_valid():
-            location_report = location_report_form.save(commit=False)
-            location_report.activity_plan_report = plan_report
-            location_report.save()
-
-            report_disaggregation_formset.instance = location_report
-            report_disaggregation_formset.save()
-            messages.success(
-                request,
-                mark_safe(
-                    f'The Report Target Location "<a href="{reverse("create_report_target_locations", args=[project, report, plan])}">{location_report}</a>" was added successfully.'
-                ),
-            )
-            if "_continue" in request.POST:
-                return redirect(
-                    "update_report_target_locations",
-                    project=monthly_report.project.pk,
-                    report=monthly_report.pk,
-                    plan=plan_report.pk,
-                    location=location_report.pk,
-                )
-            elif "_save" in request.POST:
-                return redirect(
-                    "list_report_target_locations", project=monthly_report.project.pk, report=monthly_report.pk
-                )
-            elif "_addanother" in request.POST:
-                return redirect(
-                    "create_report_target_locations",
-                    project=monthly_report.project.pk,
-                    report=monthly_report.pk,
-                    plan=plan_report.pk,
-                )
-        else:
-            messages.error(request, "The form is invalid. Please check the fields and try again.")
+        return
     else:
-        location_report_form = TargetLocationReportForm(
-            request.POST or None,
-            report_plan=plan_report,
-        )
+        messages.error(request, "The form is invalid. Please check the fields and try again.")
+    
+    return 
 
-        report_disaggregation_formset = DisaggregationReportFormSet(plan_report=plan_report, initial=initial_data)
+@login_required
+def create_report_target_locations(request, plan):
+    plan_report = get_object_or_404(ActivityPlanReport, pk=plan)
+
+    DisaggregationReportFormSet = inlineformset_factory(
+        parent_model=TargetLocationReport,
+        model=DisaggregationLocationReport,
+        form=DisaggregationLocationReportForm,
+        formset=BaseDisaggregationLocationReportFormSet,
+        extra=1,
+        can_delete=True,
+    )
+
+    location_report_form = TargetLocationReportForm(
+        request.POST or None,
+        report_plan=plan_report,
+    )
+    report_disaggregation_formset = DisaggregationReportFormSet(plan_report=plan_report)
 
     return render(
         request,
-        "project_reports/report_target_locations/target_location_form.html",
+        "project_reports/report_target_locations/report_target_location_form.html",
         {
             "location_report_form": location_report_form,
             "report_disaggregation_formset": report_disaggregation_formset,
             "report_plan": plan_report,
-            "monthly_report": monthly_report,
-            "project": monthly_report.project,
-            "report_view": False,
-            "report_activities": False,
-            "report_locations": True,
         },
     )
 
-
 @login_required
 def update_report_target_locations(request, project, report, plan, location):
-    """Update View"""
-    monthly_report = get_object_or_404(ProjectMonthlyReport.objects.select_related("project"), pk=report)
+    # monthly_report = get_object_or_404(ProjectMonthlyReport.objects.select_related("project"), pk=report)
     plan_report = get_object_or_404(ActivityPlanReport, pk=plan)
 
     # Get the existing location report to be updated
@@ -146,84 +118,35 @@ def update_report_target_locations(request, project, report, plan, location):
         extra=1,
         can_delete=True,
     )
-    if request.method == "POST":
-        location_report_form = TargetLocationReportForm(request.POST or None, instance=location_report)
 
-        # Optimize the queryset to prefetch related target_location_report
-        disaggregation_reports = DisaggregationLocationReport.objects.select_related(
-            "target_location_report", "disaggregation"
-        )
+    location_report_form = TargetLocationReportForm(request.POST or None, instance=location_report)
 
-        # When using the formset, pass the optimized queryset
-        report_disaggregation_formset = DisaggregationReportFormSet(
-            request.POST, queryset=disaggregation_reports, instance=location_report, plan_report=plan_report
-        )
-        if location_report_form.is_valid() and report_disaggregation_formset.is_valid():
-            location_report = location_report_form.save(commit=False)
-            location_report.activity_plan_report = plan_report
-            location_report.save()
-
-            report_disaggregation_formset.instance = location_report
-            report_disaggregation_formset.save()
-            messages.success(
-                request,
-                mark_safe(
-                    f'The Report Target Location "<a href="{reverse("update_report_target_locations", args=[project, report, plan, location])}">{location_report}</a>" was updated successfully.'
-                ),
-            )
-            if "_continue" in request.POST:
-                return redirect(
-                    "update_report_target_locations",
-                    project=monthly_report.project.pk,
-                    report=monthly_report.pk,
-                    plan=plan_report.pk,
-                    location=location_report.pk,
-                )
-            elif "_save" in request.POST:
-                return redirect(
-                    "list_report_target_locations", project=monthly_report.project.pk, report=monthly_report.pk
-                )
-            elif "_addanother" in request.POST:
-                return redirect(
-                    "create_report_target_locations",
-                    project=monthly_report.project.pk,
-                    report=monthly_report.pk,
-                    plan=plan_report.pk,
-                )
-        else:
-            messages.error(request, "The form is invalid. Please check the fields and try again.")
-    else:
-        location_report_form = TargetLocationReportForm(request.POST or None, instance=location_report)
-        # Optimize the queryset to prefetch related target_location_report
-        disaggregation_reports = DisaggregationLocationReport.objects.select_related(
-            "target_location_report", "disaggregation"
-        )
-
-        # When using the formset, pass the optimized queryset
-        report_disaggregation_formset = DisaggregationReportFormSet(
-            request.POST or None, instance=location_report, plan_report=plan_report, queryset=disaggregation_reports
-        )
-
-        # report_disaggregation_formset = DisaggregationReportFormSet(
-        #     request.POST or None, instance=location_report, plan_report=plan_report
-        # )
-
-    return render(
-        request,
-        "project_reports/report_target_locations/target_location_form.html",
-        {
-            "location_report": location_report,
-            "location_report_form": location_report_form,
-            "report_disaggregation_formset": report_disaggregation_formset,
-            "report_plan": plan_report,
-            "monthly_report": monthly_report,
-            "project": monthly_report.project,
-            "report_view": False,
-            "report_activities": False,
-            "report_locations": True,
-        },
+    # Optimize the queryset to prefetch related target_location_report
+    disaggregation_reports = DisaggregationLocationReport.objects.select_related(
+        "target_location_report", "disaggregation"
     )
 
+    # When using the formset, pass the optimized queryset
+    report_disaggregation_formset = DisaggregationReportFormSet(
+        request.POST, queryset=disaggregation_reports, instance=location_report, plan_report=plan_report
+    )
+    if location_report_form.is_valid() and report_disaggregation_formset.is_valid():
+        location_report = location_report_form.save(commit=False)
+        location_report.activity_plan_report = plan_report
+        location_report.save()
+
+        report_disaggregation_formset.instance = location_report
+        report_disaggregation_formset.save()
+        messages.success(
+            request,
+            mark_safe(
+                f'The Report Target Location "<a href="{reverse("update_report_target_locations", args=[project, report, plan, location])}">{location_report}</a>" was updated successfully.'
+            ),
+        )
+        return HttpResponse(200)
+    else:
+        messages.error(request, "The form is invalid. Please check the fields and try again.")
+        return HttpResponse(401)
 
 @login_required
 def delete_location_report_view(request, location_report):
@@ -237,8 +160,7 @@ def delete_location_report_view(request, location_report):
     url = reverse_lazy(
         "list_report_target_locations", kwargs={"project": monthly_report.project.pk, "report": monthly_report.pk}
     )
-    return HTTPResponseHXRedirect(redirect_to=url)
-
+    return HttpResponseClientRedirect(url)
 
 @login_required
 def get_target_location_auto_fields(request):

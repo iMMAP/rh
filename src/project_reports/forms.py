@@ -142,14 +142,11 @@ class ActivityPlanReportForm(forms.ModelForm):
         self.fields["monthly_report"].initial = report.id
 
         self.fields["activity_plan"].queryset = self.fields["activity_plan"].queryset.filter(project=report.project)
+        self.fields["activity_plan"].required = True 
+        self.fields["beneficiary_status"].required = True 
 
 class RejectMonthlyReportForm(forms.Form):
     rejection_reason = forms.CharField(widget=forms.Textarea)
-
-class IndicatorsForm(forms.ModelForm):
-    class Meta:
-        model = Indicator
-        fields = "__all__"
 
 
 class MonthlyReportFileUpload(forms.Form):

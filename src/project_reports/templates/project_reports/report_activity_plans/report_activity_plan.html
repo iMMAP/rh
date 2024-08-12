@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block title %}
-    Update Report Activities
+  {{ monthly_report.report_date | date:"F Y" }}  Report Activities
 {% endblock title %}
 
 {% block breadcrumb_li %}
@@ -16,11 +16,7 @@
         {% endif %}
     </li>
     <li class="current">
-        {% if report_ap %}
-            Update Report Activity
-        {% else %}
-            Create Report Activity
-        {% endif %}
+        Report Activity
     </li>
 {% endblock breadcrumb_li %}
 
@@ -49,39 +45,14 @@
             </div>
 
             <div class="bg-gray-fa p-4 rounded border border-gray-e6 space-y-4">
-              {% include "project_reports/report_activity_plans/_report_ap_form.html" %} 
+                {% include "project_reports/report_activity_plans/_report_ap_form.html" %} 
             </div>
 
             <div class="p-4" id="ap-report-target-locations"></div>
-
         </div>
     </div>
 {% endblock project_body %}
 
 {% block scripts %}
-    <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
-    <script>
-        document.querySelectorAll('.custom-select').forEach((select) => {
-            const choice = new Choices(select, {
-                searchEnabled: true,
-                itemSelectText: '',
-                removeItemButton: true,
-                classNames: {
-                    listDropdown: 'choices__list--dropdown',
-                },
-                shouldSort: false,
-            });
-        });
-    </script>
-{% comment %} 
-    <script>
-        const addLocationButton = document.querySelector("#addLocationButton")
-        const targetLocationForm = document.querySelector("#target-location-form")
-
-        addLocationButton.addEventListener('click', () => {
-            const clone = targetLocationForm.cloneNode(true);
-            clone.id = `target-location-form-${Date.now()}`; // Generate a unique ID for the cloned form
-            addLocationButton.before(clone);
-        });
-    </script> {% endcomment %}
+    <script src="{% static 'js/utils/inlines.js' %}"></script>
 {% endblock scripts %}

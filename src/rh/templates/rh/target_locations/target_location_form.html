@@ -205,10 +205,12 @@
                     </div>
                 </div>
 
-                <div class="disaggregation-block js-inline-admin-formset inline-group divide-y-2"
-                     id="{{ disaggregation_formset.prefix }}-group"
-                     data-inline-type="tabular"
-                     data-inline-formset='{"name":"#{{ disaggregation_formset.prefix }}","options":{"prefix":"{{ disaggregation_formset.prefix }}","addText":"Add Disaggregation","deleteText":"Delete"}}'>
+                <div 
+                    class="disaggregation-block js-inline-admin-formset inline-group divide-y-2"
+                    id="{{ disaggregation_formset.prefix }}-group"
+                    data-inline-type="tabular"
+                    data-inline-formset='{"name":"#{{ disaggregation_formset.prefix }}","options":{"prefix":"{{ disaggregation_formset.prefix }}","addText":"Add Disaggregation","deleteText":"Delete"}}'
+                >
                     <div class="tabular inline-related">
                         <div class="block-top">
                             <h2 class="title">Disaggregations</h2>

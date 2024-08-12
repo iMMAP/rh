@@ -243,21 +243,20 @@ class ActivityPlanForm(forms.ModelForm):
         self.fields["activity_domain"].required = True
         self.fields["activity_type"].required = True
         self.fields["indicator"].required = True
-
+ 
         self.fields["activity_domain"].queryset = project.activity_domains.all()
 
         project_clusters = project.clusters.all()
         self.fields["beneficiary"].queryset = (
             self.fields["beneficiary"]
-            .queryset.filter(
-                clusters__in=project_clusters,
-            )
+            .queryset.filter(clusters__in=project_clusters, country=project.user.profile.country)
             .distinct()
         )
         self.fields["hrp_beneficiary"].queryset = (
             self.fields["hrp_beneficiary"]
             .queryset.filter(
                 clusters__in=project_clusters,
+                country=project.user.profile.country
             )
             .distinct()
         )

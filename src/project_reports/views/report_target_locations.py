@@ -12,16 +12,13 @@ from django.forms import inlineformset_factory
 
 from rh.models import (
     Project,
+    TargetLocation,
 )
 
 from ..forms import (
     TargetLocationReportForm,
     DisaggregationLocationReportForm,
     BaseDisaggregationLocationReportFormSet,
-)
-
-from rh.models import (
-    TargetLocation,
 )
 
 from ..models import (
@@ -35,48 +32,11 @@ from ..filters import TargetLocationReportFilter
 from django_htmx.http import HttpResponseClientRedirect
 from django.http import  HttpResponse
 
-@login_required
-def store_report_target_locations(request, project, report, plan):
-    # monthly_report = get_object_or_404(ProjectMonthlyReport.objects.select_related("project"), pk=report)
-    plan_report = get_object_or_404(ActivityPlanReport, pk=plan)
-
-    DisaggregationReportFormSet = inlineformset_factory(
-        parent_model=TargetLocationReport,
-        model=DisaggregationLocationReport,
-        form=DisaggregationLocationReportForm,
-        formset=BaseDisaggregationLocationReportFormSet,
-        extra=1,
-        can_delete=True,
-    )
-
-    location_report_form = TargetLocationReportForm(request.POST or None)
-    report_disaggregation_formset = DisaggregationReportFormSet(
-        request.POST, instance=location_report_form.instance, plan_report=plan_report
-    )
-
-    if location_report_form.is_valid() and report_disaggregation_formset.is_valid():
-        location_report = location_report_form.save(commit=False)
-        location_report.activity_plan_report = plan_report
-        location_report.save()
-
-        report_disaggregation_formset.instance = location_report
-        report_disaggregation_formset.save()
-        messages.success(
-            request,
-            mark_safe(
-                f'The Report Target Location "<a href="{reverse("create_report_target_locations", args=[project, report, plan])}">{location_report}</a>" was added successfully.'
-            ),
-        )
-        return
-    else:
-        messages.error(request, "The form is invalid. Please check the fields and try again.")
-    
-    return 
+import uuid
 
 @login_required
 def create_report_target_locations(request, plan):
     plan_report = get_object_or_404(ActivityPlanReport, pk=plan)
-
     DisaggregationReportFormSet = inlineformset_factory(
         parent_model=TargetLocationReport,
         model=DisaggregationLocationReport,
@@ -86,21 +46,33 @@ def create_report_target_locations(request, plan):
         can_delete=True,
     )
 
-    location_report_form = TargetLocationReportForm(
-        request.POST or None,
-        report_plan=plan_report,
-    )
-    report_disaggregation_formset = DisaggregationReportFormSet(plan_report=plan_report)
+    if request.method == "POST":
+        print(f"Hello this is post - {plan_report} \n")
+        location_report_form = TargetLocationReportForm(request.POST,plan_report=plan_report)
+        report_disaggregation_formset = DisaggregationReportFormSet(
+            request.POST, plan_report=plan_report, prefix=f"disaggregation-{uuid.uuid4()}"
+        )
 
-    return render(
-        request,
-        "project_reports/report_target_locations/report_target_location_form.html",
-        {
-            "location_report_form": location_report_form,
-            "report_disaggregation_formset": report_disaggregation_formset,
-            "report_plan": plan_report,
-        },
-    )
+        if location_report_form.is_valid() and report_disaggregation_formset.is_valid():
+            location_report = location_report_form.save(commit=False)
+            location_report.activity_plan_report = plan_report
+            location_report.save()
+
+            report_disaggregation_formset.instance = location_report
+            report_disaggregation_formset.save()
+
+            messages.success(request,'The Report Target Location added successfully.')
+    else:
+        location_report_form = TargetLocationReportForm(plan_report=plan_report)
+        report_disaggregation_formset = DisaggregationReportFormSet(plan_report=plan_report, prefix=f"disaggregation-{uuid.uuid4()}")
+    
+    context = {
+        "location_report_form": location_report_form,
+        "report_disaggregation_formset": report_disaggregation_formset,
+        "plan_report": plan_report,
+    }
+
+    return render(request, "project_reports/report_target_locations/report_target_location_form.html",context)
 
 @login_required
 def update_report_target_locations(request, project, report, plan, location):

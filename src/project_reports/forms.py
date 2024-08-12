@@ -47,7 +47,7 @@ class TargetLocationReportForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         cluster_has_nhs_code = False
-        plan_report = kwargs.pop("report_plan", None)
+        plan_report = kwargs.pop("plan_report", None)
         super().__init__(*args, **kwargs)
 
         if "instance" in kwargs and kwargs["instance"]:

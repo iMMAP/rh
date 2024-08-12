@@ -30,10 +30,7 @@ def create_report_activity_plans(request, report):
 
     if form.is_valid():
         form.save()
-        messages.success(
-            request,
-            mark_safe("The Report Activity Plan created successfully!"),
-        )
+        messages.success(request, mark_safe("The Report Activity Plan created successfully!"))
     else:
         messages.error(request, "The form is invalid. Please check the fields and try again.")
     
@@ -55,12 +52,16 @@ def update_report_activity_plan(request, report, report_ap):
         form.save()
         messages.success(
             request,
-            mark_safe("The Report Activity Plan created successfully!"),
+            mark_safe("The Report Activity Plan updated successfully!"),
         )
-        return HttpResponse(status=200)
     else:
         messages.error(request, "The form is invalid. Please check the fields and try again.")
-        return HttpResponse(status=401)
+    
+    context = {
+        "form":form
+    }
+    
+    return render(request, "project_reports/report_activity_plans/_report_ap_form.html", context)
 
 
 @login_required

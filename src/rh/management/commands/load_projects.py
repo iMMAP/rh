@@ -235,7 +235,7 @@ class Command(BaseCommand):
                     project.programme_partners.set(organizations)
 
                 project_donors = project_vals.get("project_donor")
-                if project.title == 'CSP':
+                if project.title == "CSP":
                     if project_donors:
                         donors_list = project_donors.split(",")
                         donors = Donor.objects.filter(code__in=donors_list)
@@ -262,9 +262,9 @@ class Command(BaseCommand):
 
     def _import_data(self):
         # Import Projects
-        self.stdout.write(self.style.SUCCESS(f"Loading Projects!"))
+        self.stdout.write(self.style.SUCCESS("Loading Projects!"))
         self._load_projects()
-        self.stdout.write(self.style.SUCCESS(f"Loading Plans!"))
+        self.stdout.write(self.style.SUCCESS("Loading Plans!"))
         self._load_activity_plans()
         self.stdout.write(self.style.SUCCESS("Loading Locations!"))
         self._load_target_locations()

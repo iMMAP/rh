@@ -117,7 +117,7 @@ class Command(BaseCommand):
                             )
                             locations_created += 1
 
-                self.stdout.write(self.style.SUCCESS(f"{locations_created} Target Locations - created successfully!!!"))
+        self.stdout.write(self.style.SUCCESS(f"{locations_created} Target Locations - created successfully!!!"))
 
     def _load_activity_plans(self):
         # Import the actvity_domain, activity_types, activity_details
@@ -137,6 +137,8 @@ class Command(BaseCommand):
             activity_type = ActivityType.objects.filter(code=plan.get("activity_description_id", "").strip()).first()
             activity_detail = ActivityDetail.objects.filter(code=plan.get("activity_type_id", "").strip()).first()
             indicator = Indicator.objects.filter(name=plan.get("indicator_id", "").strip()).first()
+            if not indicator:
+                print(plan)
             package_type = PackageType.objects.filter(name=plan.get("package_type_name", "")).first()
             unit_type = UnitType.objects.filter(name=plan.get("unit_type_name", "")).first()
             grant_type = GrantType.objects.filter(name=plan.get("grant_type_name", "")).first()
@@ -233,10 +235,11 @@ class Command(BaseCommand):
                     project.programme_partners.set(organizations)
 
                 project_donors = project_vals.get("project_donor")
-                if project_donors:
-                    donors_list = project_donors.split(",")
-                    donors = Donor.objects.filter(code__in=donors_list)
-                    project.donors.set(donors)
+                if project.title == 'CSP':
+                    if project_donors:
+                        donors_list = project_donors.split(",")
+                        donors = Donor.objects.filter(code__in=donors_list)
+                        project.donors.set(donors)
 
                 users = User.objects.filter(
                     Q(username=project_vals.get("username", "test")) | Q(email=project_vals.get("email", "test"))
@@ -259,10 +262,10 @@ class Command(BaseCommand):
 
     def _import_data(self):
         # Import Projects
-        # self.stdout.write(self.style.SUCCESS(f"Loading Projects!"))
-        # self._load_projects()
-        # self.stdout.write(self.style.SUCCESS(f"Loading Plans!"))
-        # self._load_activity_plans()
+        self.stdout.write(self.style.SUCCESS(f"Loading Projects!"))
+        self._load_projects()
+        self.stdout.write(self.style.SUCCESS(f"Loading Plans!"))
+        self._load_activity_plans()
         self.stdout.write(self.style.SUCCESS("Loading Locations!"))
         self._load_target_locations()
         self.stdout.write(self.style.SUCCESS("ALL DONE!"))

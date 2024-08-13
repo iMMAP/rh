@@ -35,6 +35,7 @@ from ..models import (
     TransferMechanismType,
     PackageType,
 )
+from django.contrib.auth.models import User
 from .views import (
     copy_project_target_location,
     copy_target_location_disaggregation_locations,
@@ -192,7 +193,10 @@ def projects_detail(request, pk):
             "donors",
             "programme_partners",
             "implementing_partners",
-            "user",
+            Prefetch(
+                "user",
+                queryset=User.objects.select_related("profile")
+            ),
             Prefetch(
                 "activityplan_set",
                 ActivityPlan.objects.select_related("activity_domain", "indicator")

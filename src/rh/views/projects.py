@@ -193,10 +193,7 @@ def projects_detail(request, pk):
             "donors",
             "programme_partners",
             "implementing_partners",
-            Prefetch(
-                "user",
-                queryset=User.objects.select_related("profile")
-            ),
+            Prefetch("user", queryset=User.objects.select_related("profile")),
             Prefetch(
                 "activityplan_set",
                 ActivityPlan.objects.select_related("activity_domain", "indicator")

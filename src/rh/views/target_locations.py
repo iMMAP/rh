@@ -148,7 +148,7 @@ def list_target_locations(request, project):
         request=request,
         queryset=TargetLocation.objects.filter(activity_plan__project=project)
         .annotate(total_target=Sum("disaggregationlocation__target"))
-        .select_related("activity_plan", "country", "province", "district")
+        .select_related("activity_plan", "activity_plan__activity_domain", "activity_plan__indicator", "country", "province", "district")
         .order_by("-id"),
         project=project,
     )

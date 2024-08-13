@@ -43,6 +43,9 @@
                             <strong class="table-title">Indicator</strong>
                         </th>
                         <th>
+                            <strong class="table-title">HRP Beneficiary</strong>
+                        </th>
+                        <th>
                             <strong>Target Locations</strong>
                         </th>
                         <th>Actions</th>
@@ -55,6 +58,7 @@
                             <td>{{ row.activity_domain }}</td>
                             <td>{{ row.activity_type }}</td>
                             <td>{{ row.indicator }}</td>
+                            <td>{{ row.hrp_beneficiary.name }}</td>
                             <td>
                                 <a href="{% url 'target-locations-list' project.pk %}?activity_plan={{ row.id }}">
                                     <svg data-slot="icon"

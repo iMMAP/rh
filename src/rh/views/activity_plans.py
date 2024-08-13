@@ -152,7 +152,7 @@ def list_activity_plans(request, project):
         request.GET,
         request=request,
         queryset=ActivityPlan.objects.filter(project=project)
-        .select_related("activity_domain", "activity_type", "indicator")
+        .select_related("activity_domain", "activity_type", "indicator", "hrp_beneficiary")
         .annotate(target_location_count=Count("targetlocation"))
         .order_by("-id"),
         project=project,

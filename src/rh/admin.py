@@ -45,6 +45,7 @@ admin.site.register(UnitType)
 
 
 class FacilitySiteTypeAdmin(admin.ModelAdmin):
+    list_display = ("name", "cluster")
     list_filter = ("cluster",)
 
 

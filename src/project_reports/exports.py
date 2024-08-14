@@ -2,14 +2,16 @@ import base64
 from io import BytesIO
 
 from django.http import JsonResponse
+from django.shortcuts import get_object_or_404
 from django.views import View
 from openpyxl import Workbook
 from openpyxl.styles import Font, NamedStyle
 from openpyxl.utils import get_column_letter
+from django.db.models import Prefetch
 
-from rh.models import Disaggregation
+from rh.models import Disaggregation, ActivityPlan, TargetLocation
 
-from .models import ProjectMonthlyReport
+from .models import ProjectMonthlyReport, ActivityPlanReport
 
 #############################################
 ############### Export Views #################
@@ -37,7 +39,60 @@ class ReportTemplateExportView(View):
             JsonResponse: The JSON response containing the file URL and name, or an error message.
         """
         try:
-            project_report = ProjectMonthlyReport.objects.get(id=report)  # Get the project object
+            # project = get_object_or_404(
+            #     Project.objects.select_related("organization").prefetch_related(
+            #         "clusters",
+            #         "donors",
+            #         "programme_partners",
+            #         "implementing_partners",
+            #         "user",
+            #         Prefetch(
+            #             "activityplan_set",
+            #             ActivityPlan.objects.select_related("activity_domain", "indicator")
+            #             .prefetch_related("activity_type", "activity_detail")
+            #             .annotate(target_location_count=Count("targetlocation")),
+            #         ),
+            #     ),
+            #     pk=pk,
+            # )
+            project_report = get_object_or_404(
+                ProjectMonthlyReport.objects.prefetch_related(
+                    Prefetch(
+                        "activityplanreport_set",
+                        queryset=ActivityPlanReport.objects.select_related(
+                            "activity_plan__activity_domain",
+                            "activity_plan__activity_type",
+                        ).prefetch_related(
+                            Prefetch(
+                                "activity_plan__targetlocation_set",
+                                queryset=TargetLocation.objects.select_related("province", "district").prefetch_related(
+                                    "disaggregationlocation_set"
+                                ),
+                            )
+                        ),
+                    ),
+                    Prefetch(
+                        "project__activityplan_set",
+                        queryset=ActivityPlan.objects.select_related(
+                            "activity_domain", "activity_type", "indicator"
+                        ).prefetch_related(
+                            Prefetch(
+                                "targetlocation_set",
+                                queryset=TargetLocation.objects.select_related(
+                                    "country", "province", "district"
+                                ).prefetch_related("disaggregationlocation_set"),
+                            )
+                        ),
+                    ),
+                    Prefetch(
+                        "project__targetlocation_set",
+                        queryset=TargetLocation.objects.select_related(
+                            "country", "province", "district"
+                        ).prefetch_related("disaggregationlocation_set"),
+                    ),
+                ),
+                id=report,
+            )
 
             workbook = Workbook()
 
@@ -89,19 +144,31 @@ class ReportTemplateExportView(View):
             {"header": "location_type", "type": "string", "width": 20},
         ]
 
-        activity_plans = project_report.project.activityplan_set.all()
+        # # Get the project clusters
+        # project_clusters = project_report.project.clusters.all()
+
+        # # Filter disaggregations related to the project clusters
+        # all_disaggregations = Disaggregation.objects.filter(clusters__in=project_clusters).distinct()
+
+        # activity_plans = project_report.project.activityplan_set.all()
+        # disaggregations = []
+        # disaggregation_list = []
+        # for plan in activity_plans:
+        #     target_locations = plan.targetlocation_set.all()
+        #     for location in target_locations:
+        #         disaggregation_locations = location.disaggregationlocation_set.all()
+        #         for dl in disaggregation_locations:
+        #             if dl.disaggregation.name not in disaggregation_list:
+        #                 disaggregation_list.append(dl.disaggregation.name)
+        #                 disaggregations.append({"header": dl.disaggregation.name, "type": "string", "width": 20})
+        #             else:
+        #                 continue
+
         disaggregations = []
-        disaggregation_list = []
-        for plan in activity_plans:
-            target_locations = plan.targetlocation_set.all()
-            for location in target_locations:
-                disaggregation_locations = location.disaggregationlocation_set.all()
-                for dl in disaggregation_locations:
-                    if dl.disaggregation.name not in disaggregation_list:
-                        disaggregation_list.append(dl.disaggregation.name)
-                        disaggregations.append({"header": dl.disaggregation.name, "type": "string", "width": 20})
-                    else:
-                        continue
+        all_disaggregations = Disaggregation.objects.all()
+        for disaggregation in all_disaggregations:
+            disaggregations.append({"header": disaggregation.name, "type": "string", "width": 25})
+
         if disaggregations:
             for disaggregation in disaggregations:
                 columns.append(disaggregation)

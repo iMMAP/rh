@@ -46,11 +46,12 @@ def create_report_target_locations(request, plan):
         can_delete=True,
     )
 
+    prefix = request.POST.get("prefix", f"disaggregation-{uuid.uuid4()}")
+
     if request.method == "POST":
-        print(f"Hello this is post - {plan_report} \n")
         location_report_form = TargetLocationReportForm(request.POST,plan_report=plan_report)
         report_disaggregation_formset = DisaggregationReportFormSet(
-            request.POST, plan_report=plan_report, prefix=f"disaggregation-{uuid.uuid4()}"
+            request.POST, plan_report=plan_report,prefix=prefix
         )
 
         if location_report_form.is_valid() and report_disaggregation_formset.is_valid():
@@ -62,17 +63,20 @@ def create_report_target_locations(request, plan):
             report_disaggregation_formset.save()
 
             messages.success(request,'The Report Target Location added successfully.')
+        else:
+            messages.error(request,"Validation error! Please check the forms bellow")
     else:
         location_report_form = TargetLocationReportForm(plan_report=plan_report)
-        report_disaggregation_formset = DisaggregationReportFormSet(plan_report=plan_report, prefix=f"disaggregation-{uuid.uuid4()}")
+        report_disaggregation_formset = DisaggregationReportFormSet(plan_report=plan_report, prefix=prefix)
     
     context = {
         "location_report_form": location_report_form,
         "report_disaggregation_formset": report_disaggregation_formset,
         "plan_report": plan_report,
+        "prefix":prefix
     }
 
-    return render(request, "project_reports/report_target_locations/report_target_location_form.html",context)
+    return render(request, "project_reports/report_target_locations/_report_target_location_form.html",context)
 
 @login_required
 def update_report_target_locations(request, project, report, plan, location):

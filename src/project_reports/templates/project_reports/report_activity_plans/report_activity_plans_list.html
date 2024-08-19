@@ -193,7 +193,7 @@
             </div>
         </div>
 
-        {% include "project_reports/report_activity_plans/_report_activity_plan_table.html" with object_list=monthly_report.activityplanreport_set.all %}
+        {% include "project_reports/report_activity_plans/_report_activity_plan_table.html" with object_list=p_ap_plan_report_list %}
      
         {% if monthly_report.comments and monthly_report.state == 'reject' %}
             <div class="monthly-reporting">

@@ -1,5 +1,6 @@
 {% load compress %}
 {% load static %}
+{% load humanize %}
 
 <div class="content-block bottom-border table-container">
     <div class="progress bg-red h-0.5">
@@ -35,6 +36,9 @@
                         <th><strong class="table-title">Activity Domain</strong></th>
                         <th><strong class="table-title">Activity Type</strong></th>
                         <th><strong class="table-title">Indicator</strong></th>
+                        <th><strong class="table-title">Response Type</strong></th>
+                        <th><strong class="table-title">Beneficairy Status</strong></th>
+                        <th><strong class="table-title">Updated At</strong></th>
                         <th><strong>Target Locations</strong></th>
                         <th><strong>Actions</strong></th>
                     </tr>
@@ -47,6 +51,13 @@
                             <td>{{ report_plan.activity_plan.activity_domain }}</td>
                             <td>{{ report_plan.activity_plan.activity_type }}</td>
                             <td>{{ report_plan.activity_plan.indicator }}</td>
+                            <td>
+                                {% for type in report_plan.response_type.all %}
+                                    {{type}}
+                                {% endfor %}
+                            </td>
+                            <td>{{ report_plan.beneficiary_status }}</td>
+                            <td>{{ report_plan.updated_at|naturalday }}</td>
                             <td>{{report_plan.report_location_count}}</td>
                             <td>
                                 <div class="table-flex-holder">

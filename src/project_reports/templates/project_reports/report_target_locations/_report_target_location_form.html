@@ -3,8 +3,8 @@
 
 <form 
     class="bg-white rounded border border-gray-e6" 
-    id="{{location_report_form.prefix}}"
-    hx-post="{% url 'create_report_target_locations' plan_report.monthly_report.id %}"
+    id="{{prefix}}"
+    hx-post="{% url 'create_report_target_locations' plan_report.id %}"
     hx-swap="outerHTML"  
 >
     <div class="flex items-center justify-between border-b border-red-b5 p-4 bg-gray-f5">
@@ -19,6 +19,7 @@
     <div class="select-field p-4">
         <span class="label">Target Location</span>
         {{ location_report_form.target_location }}
+        <div class="sign-up-field-error">{{ location_report_form.target_location.errors }}</div>
     </div>
 
     <div class="disaggregation-block js-inline-admin-formset-{{report_disaggregation_formset.prefix}} inline-group p-4"
@@ -30,7 +31,10 @@
             <p class="pb-4">
                 The Disaggregation list is selected from the Indicator of your Activity plan. If there is someting missing, please contact your cluster.
             </p>
+
             {{ report_disaggregation_formset.management_form }}
+            <input type="hidden" name="prefix" value="{{prefix}}">
+
             <fieldset class="table-wrapper-scrollable">
                 <table class="table border border-solid border-gray-d1 rounded">
                     <thead class="content-block bg-gray-f3">
@@ -51,7 +55,7 @@
                                 </tr>
                             {% endif %}
 
-                            <tr class="form-row {% if forloop.last %}empty-form{% endif %} {% if form.instance.pk %}has_original{% endif %}"
+                            <tr class="form-row {% if forloop.last %} empty-form {% endif %} {% if form.instance.pk %}has_original{% endif %}"
                                 id="{{ report_disaggregation_formset.prefix }}-{% if forloop.last %}empty{% else %}{{ forloop.counter0 }}{% endif %}"
                             >
                                 {% for field in form %}
@@ -66,6 +70,7 @@
                                     {% if form.instance.pk %}{{ form.DELETE }}{% endif %}
                                 </td>
                             </tr>
+                            <tr onclick="addInlineClickHandler">Hello</tr>
                         {% endfor %}
                     </tbody>
                 </table>

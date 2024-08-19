@@ -69,7 +69,7 @@ class ProfileAdmin(admin.ModelAdmin):
     """
 
     list_display = ("user", "user_link", "organization", "position", "created_at", "Clusters")
-    search_fields = ("user__first_name", "user__username")
+    search_fields = ("user__first_name", "user__username","organization__code")
     list_filter = ("country", "clusters")
     form = ProfileForm
 

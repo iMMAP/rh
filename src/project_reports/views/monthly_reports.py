@@ -39,6 +39,7 @@ from ..models import (
 )
 
 from ..filters import MonthlyReportsFilter
+from extra_settings.models import Setting
 
 RECORDS_PER_PAGE = 10
 
@@ -173,21 +174,23 @@ def details_monthly_progress_view(request, project, report):
     """Project Monthly Report Read View"""
     project = get_object_or_404(Project, pk=project)
 
-    monthly_report = get_object_or_404(
-        ProjectMonthlyReport.objects.prefetch_related(
-            Prefetch(
-                "activityplanreport_set",
-                ActivityPlanReport.objects.select_related(
-                    "activity_plan__activity_domain", "activity_plan__activity_type"
-                ).annotate(report_location_count=Count("targetlocationreport")),
-            ),
-        ),
-        pk=report,
-    )
+    monthly_report = get_object_or_404(ProjectMonthlyReport.objects, pk=report)
+
+    activity_plan_report_list = ActivityPlanReport.objects.filter(monthly_report=monthly_report).select_related(
+        "activity_plan__activity_domain", "activity_plan__activity_type"
+    ).order_by("-id").annotate(report_location_count=Count("targetlocationreport"))
+
+    RECORDS_PER_PAGE = Setting.get("RECORDS_PER_PAGE", default=10)
+    per_page = request.GET.get("per_page", RECORDS_PER_PAGE)
+    p = Paginator(activity_plan_report_list, per_page=per_page)
+    page = request.GET.get("page", 1)
+    p_ap_plan_report_list = p.get_page(page)
+    p_ap_plan_report_list.adjusted_elided_pages = p.get_elided_page_range(page)
 
     context = {
         "project": project,
         "monthly_report": monthly_report,
+        "p_ap_plan_report_list":p_ap_plan_report_list
     }
 
     return render(request, "project_reports/report_activity_plans/report_activity_plans_list.html", context)

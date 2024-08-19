@@ -46,31 +46,12 @@ class TargetLocationReportForm(forms.ModelForm):
         }
 
     def __init__(self, *args, **kwargs):
-        cluster_has_nhs_code = False
         plan_report = kwargs.pop("plan_report", None)
         super().__init__(*args, **kwargs)
-
-        if "instance" in kwargs and kwargs["instance"]:
-            location_report = kwargs["instance"]
-            plan_report = location_report.activity_plan_report
-
-        if plan_report:
-            cluster_has_nhs_code = any(
-                cluster.has_nhs_code for cluster in plan_report.activity_plan.activity_domain.clusters.all()
-            )
-        nhs_code = f"{kwargs.get('prefix')}-nhs_code"
-        has_nhs_code = nhs_code in kwargs.get("data", {})
-
-        # Get only the relevant facility types - related to cluster
-        if cluster_has_nhs_code or has_nhs_code:
-            self.fields["nhs_code"] = forms.CharField(max_length=200, required=True)
-        else:
-            self.fields.pop("nhs_code", None)
-
-        if plan_report:
-            self.fields["target_location"].queryset = TargetLocation.objects.filter(
-                activity_plan=plan_report.activity_plan
-            )
+      
+        self.fields["target_location"].queryset = TargetLocation.objects.filter(
+            activity_plan=plan_report.activity_plan
+        )
 
 
 TargetLocationReportFormSet = inlineformset_factory(

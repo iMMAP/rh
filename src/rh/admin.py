@@ -102,7 +102,7 @@ admin.site.register(Location, LocationAdmin)
 
 class OrganizationAdmin(admin.ModelAdmin):
     list_display = ("name", "code", "type", "countries_count", "clusters_count")
-    search_fields = ("name", "type")
+    search_fields = ("name","code")
     list_filter = ("type",)
 
     filter_horizontal = (

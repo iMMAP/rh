@@ -6,14 +6,24 @@ from django.urls import reverse
 from django.utils.html import format_html
 
 from .models import Profile
+import csv
+from django.http import HttpResponse
 
 
-class ProfileInline(admin.StackedInline):
-    model = Profile
-    can_delete = False
-    verbose_name_plural = "profiles"
+@admin.action(description="Export selected")
+def export_as_csv(self, request, queryset):
+    meta = self.model._meta
+    field_names = [field.name for field in meta.fields if field.name != "password"]
 
-    filter_horizontal = ("clusters",)
+    response = HttpResponse(content_type="text/csv")
+    response["Content-Disposition"] = "attachment; filename={}.csv".format(meta)
+    writer = csv.writer(response)
+
+    writer.writerow(field_names)
+    for obj in queryset:
+        writer.writerow([getattr(obj, field) for field in field_names])
+
+    return response
 
 
 @admin.action(description="Mark selected users as active")
@@ -26,12 +36,22 @@ def make_inactive(modeladmin, request, queryset):
     queryset.update(is_active=False)
 
 
+class ProfileInline(admin.StackedInline):
+    model = Profile
+    can_delete = False
+    verbose_name_plural = "profiles"
+    raw_id_fields = ["organization"]
+
+    filter_horizontal = ("clusters",)
+
+
 class UserAdminCustom(UserAdmin):
     list_display = ("email", "username", "name", "is_active", "user_groups", "last_login")
     list_select_related = ["profile"]
 
     inlines = (ProfileInline,)
-    actions = [make_active, make_inactive]
+    actions = [make_active, make_inactive, export_as_csv]
+    date_hierarchy="last_login"
 
     def user_groups(self, obj):
         return ", ".join([g.name for g in obj.groups.all()])

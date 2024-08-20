@@ -5,7 +5,7 @@ from .base import *
 
 APP_ENV = env("APP_ENV", default="production")
 
-ALLOWED_HOSTS = ["localhost","127.0.0.1","dev.reporthub.immap.org"]
+ALLOWED_HOSTS = ["localhost", "127.0.0.1", "dev.reporthub.immap.org"]
 
 SENTRY_DSN = env("SENTRY_DSN", default="")
 

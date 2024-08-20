@@ -1,4 +1,3 @@
-from django import forms
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User
@@ -30,15 +29,15 @@ def make_inactive(modeladmin, request, queryset):
 class UserAdminCustom(UserAdmin):
     list_display = ("email", "username", "name", "organization", "is_active", "user_groups", "last_login")
     list_select_related = ["profile__organization"]
-    date_hierarchy="last_login"
+    date_hierarchy = "last_login"
 
     inlines = (ProfileInline,)
     actions = [make_active, make_inactive]
 
     def user_groups(self, obj):
         return ", ".join([g.name for g in obj.groups.all()])
-    
-    def organization(self,obj):
+
+    def organization(self, obj):
         return obj.profile.organization
 
     def name(self, obj):
@@ -54,11 +53,12 @@ admin.site.register(User, UserAdminCustom)
 # ########## Profile Model Admin ###########
 # ##############################################
 
+
 class ProfileAdmin(admin.ModelAdmin):
-    list_display = ("user", "user_link", "organization","country" ,"position", "created_at", "Clusters")
-    search_fields = ("user__first_name", "user__username","organization__code")
+    list_display = ("user", "user_link", "organization", "country", "position", "created_at", "Clusters")
+    search_fields = ("user__first_name", "user__username", "organization__code")
     list_filter = ("country", "clusters")
-    raw_id_fields = ["organization","user"]
+    raw_id_fields = ["organization", "user"]
 
     filter_horizontal = ("clusters",)
 

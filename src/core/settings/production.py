@@ -4,6 +4,9 @@ import sentry_sdk
 from .base import *
 
 APP_ENV = env("APP_ENV", default="production")
+
+ALLOWED_HOSTS = ["localhost","127.0.0.1","dev.reporthub.immap.org"]
+
 SENTRY_DSN = env("SENTRY_DSN", default="")
 
 if APP_ENV == "production":
@@ -12,10 +15,11 @@ if APP_ENV == "production":
         # Set traces_sample_rate to 1.0 to capture 100%
         # of transactions for performance monitoring.
         traces_sample_rate=1.0,
+        send_default_pii=True,
         # Set profiles_sample_rate to 1.0 to profile 100%
         # of sampled transactions.
         # We recommend adjusting this value in production.
-        profiles_sample_rate=1.0,
+        profiles_sample_rate=0.6,
     )
 
 

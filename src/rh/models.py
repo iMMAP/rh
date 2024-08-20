@@ -318,7 +318,7 @@ class UnitType(models.Model):
 
 
 class ActivityDomain(models.Model):
-    countries = models.ManyToManyField(Location)
+    countries = models.ManyToManyField(Location, limit_choices_to={"level": 0})
     clusters = models.ManyToManyField(Cluster)
 
     name = models.CharField(max_length=NAME_MAX_LENGTH)

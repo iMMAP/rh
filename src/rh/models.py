@@ -318,7 +318,7 @@ class UnitType(models.Model):
 
 
 class ActivityDomain(models.Model):
-    countries = models.ManyToManyField(Location)
+    countries = models.ManyToManyField(Location, limit_choices_to={"level": 0})
     clusters = models.ManyToManyField(Cluster)
 
     name = models.CharField(max_length=NAME_MAX_LENGTH)
@@ -588,7 +588,7 @@ class TargetLocation(models.Model):
     location_type = models.ForeignKey(LocationType, on_delete=models.SET_NULL, null=True, blank=True)
 
     implementing_partner = models.ForeignKey(Organization, on_delete=models.SET_NULL, null=True, blank=True)
-    
+
     # Facility Monitoring
     facility_site_type = models.ForeignKey(FacilitySiteType, on_delete=models.SET_NULL, null=True, blank=True)
     facility_monitoring = models.BooleanField(default=False)

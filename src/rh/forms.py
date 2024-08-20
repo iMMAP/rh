@@ -147,9 +147,11 @@ class TargetLocationForm(forms.ModelForm):
         )
         self.fields["implementing_partner"].widget.attrs.update({"class": "custom-select"})
 
-        self.fields["facility_site_type"].queryset = self.fields["facility_site_type"].queryset.filter(
-            cluster__in=activity_plan.project.clusters.all()
-        ).distinct()
+        self.fields["facility_site_type"].queryset = (
+            self.fields["facility_site_type"]
+            .queryset.filter(cluster__in=activity_plan.project.clusters.all())
+            .distinct()
+        )
 
         if self.data:
             # Creating

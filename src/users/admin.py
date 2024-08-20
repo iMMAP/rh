@@ -12,6 +12,7 @@ class ProfileInline(admin.StackedInline):
     model = Profile
     can_delete = False
     verbose_name_plural = "profiles"
+    raw_id_fields = ["organization"]
 
     filter_horizontal = ("clusters",)
 
@@ -27,14 +28,18 @@ def make_inactive(modeladmin, request, queryset):
 
 
 class UserAdminCustom(UserAdmin):
-    list_display = ("email", "username", "name", "is_active", "user_groups", "last_login")
-    list_select_related = ["profile"]
+    list_display = ("email", "username", "name", "organization", "is_active", "user_groups", "last_login")
+    list_select_related = ["profile__organization"]
+    date_hierarchy="last_login"
 
     inlines = (ProfileInline,)
     actions = [make_active, make_inactive]
 
     def user_groups(self, obj):
         return ", ".join([g.name for g in obj.groups.all()])
+    
+    def organization(self,obj):
+        return obj.profile.organization
 
     def name(self, obj):
         url = reverse("admin:users_profile_change", args=[obj.profile.id])
@@ -49,29 +54,11 @@ admin.site.register(User, UserAdminCustom)
 # ########## Profile Model Admin ###########
 # ##############################################
 
-
-class ProfileForm(forms.ModelForm):
-    """
-    Customize Default Profile form to add queryset
-    """
-
-    class Meta:
-        model = Profile
-        fields = "__all__"
-
-    def __init__(self, *args, **kwargs):
-        super(ProfileForm, self).__init__(*args, **kwargs)
-
-
 class ProfileAdmin(admin.ModelAdmin):
-    """
-    Customize Default ProfileAdmin
-    """
-
-    list_display = ("user", "user_link", "organization", "position", "created_at", "Clusters")
+    list_display = ("user", "user_link", "organization","country" ,"position", "created_at", "Clusters")
     search_fields = ("user__first_name", "user__username","organization__code")
     list_filter = ("country", "clusters")
-    form = ProfileForm
+    raw_id_fields = ["organization","user"]
 
     filter_horizontal = ("clusters",)
 
@@ -81,7 +68,7 @@ class ProfileAdmin(admin.ModelAdmin):
 
     def user_link(self, obj):
         url = reverse("admin:auth_user_change", args=[obj.user.id])
-        return format_html('<a href="{}">{}</a>', url, obj.user)
+        return format_html('<a href="{}">{}</a>', url, "🔗here")
 
     # Hides the profile from admin sidebar
     def has_module_permission(self, request):

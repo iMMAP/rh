@@ -102,7 +102,7 @@ admin.site.register(Location, LocationAdmin)
 
 class OrganizationAdmin(admin.ModelAdmin):
     list_display = ("name", "code", "type", "countries_count", "clusters_count")
-    search_fields = ("name","code")
+    search_fields = ("name", "code")
     list_filter = ("type",)
 
     filter_horizontal = (
@@ -262,7 +262,7 @@ class ProjectAdmin(admin.ModelAdmin):
         "state",
     )
     list_filter = ("state", "clusters")
-    raw_id_fields = ["organization","user"]
+    raw_id_fields = ["organization", "user"]
 
     def show_clusters(self, obj):
         return ",\n".join([a.title for a in obj.clusters.all()])
@@ -305,7 +305,7 @@ class TargetLocationAdmin(admin.ModelAdmin):
     )
     search_fields = ("title", "project__title", "state")
     list_filter = ("state",)
-    raw_id_fields = ["project","activity_plan","district","implementing_partner","zone"]
+    raw_id_fields = ["project", "activity_plan", "district", "implementing_partner", "zone"]
     inlines = [
         DisaggregationLocationInline,
     ]

@@ -45,6 +45,7 @@ admin.site.register(UnitType)
 
 
 class FacilitySiteTypeAdmin(admin.ModelAdmin):
+    list_display = ("name", "cluster")
     list_filter = ("cluster",)
 
 
@@ -101,7 +102,7 @@ admin.site.register(Location, LocationAdmin)
 
 class OrganizationAdmin(admin.ModelAdmin):
     list_display = ("name", "code", "type", "countries_count", "clusters_count")
-    search_fields = ("name", "type")
+    search_fields = ("name", "code")
     list_filter = ("type",)
 
     filter_horizontal = (
@@ -218,6 +219,7 @@ class ActivityTypeAdmin(admin.ModelAdmin):
         "activity_domain__name",
         "code",
     )
+    raw_id_fields = ["activity_domain"]
     prepopulated_fields = {"code": ["name"]}
 
 
@@ -260,6 +262,7 @@ class ProjectAdmin(admin.ModelAdmin):
         "state",
     )
     list_filter = ("state", "clusters")
+    raw_id_fields = ["organization", "user"]
 
     def show_clusters(self, obj):
         return ",\n".join([a.title for a in obj.clusters.all()])
@@ -274,6 +277,7 @@ class ActivityPlanAdmin(admin.ModelAdmin):
     list_display = ("activity_domain", "project_link", "state")
     search_fields = ("state", "project__title")
     list_filter = ("state",)
+    raw_id_fields = ["project"]
     form = ActivityPlanModelAdminForm
 
     def project_link(self, obj):
@@ -301,6 +305,7 @@ class TargetLocationAdmin(admin.ModelAdmin):
     )
     search_fields = ("title", "project__title", "state")
     list_filter = ("state",)
+    raw_id_fields = ["project", "activity_plan", "district", "implementing_partner", "zone"]
     inlines = [
         DisaggregationLocationInline,
     ]

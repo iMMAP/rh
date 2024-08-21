@@ -28,7 +28,7 @@
                     <div class="top-activity-block">
                         <span class="activity-title">
                             <span>
-                                {% if report_activity_plan %}
+                                {% if plan_report %}
                                     Update Report Activity
                                 {% else %}
                                     Create Report Activity
@@ -46,12 +46,13 @@
 
             <div class="bg-gray-fa p-4 rounded border border-gray-e6 space-y-4">
                 {% include "project_reports/report_activity_plans/_report_ap_form.html" %} 
-            </div>
 
-            <div class="p-4" id="ap-report-target-locations">
-                {% for report_tl_form in target_location_report_forms %}
-                    {% include "project_reports/report_target_locations/_report_target_location_form.html" with location_report_form=report_tl_form %}
-                {% endfor %}
+                <div class="p-4 space-y-4" id="ap-report-target-locations">
+                    {% for report_tl_form in target_location_report_forms %}
+                        {% include "project_reports/report_target_locations/_report_target_location_form.html" with location_report_form=report_tl_form.target_location_form report_disaggregation_formset=report_tl_form.dis_location_report_formset %}
+                    {% endfor %}
+                    {% include "components/_pagination.html" with object_list=target_location_reports%}
+                </div>
             </div>
         </div>
     </div>
@@ -59,4 +60,5 @@
 
 {% block scripts %}
     <script src="{% static 'js/utils/inlines.js' %}"></script>
+    {{block.super}}
 {% endblock scripts %}

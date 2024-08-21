@@ -11,10 +11,16 @@ from rh.models import (
     Project,
 )
 from django.views.decorators.http import require_http_methods
-from ..forms import ActivityPlanReportForm, TargetLocationReportForm
-from ..models import ActivityPlanReport, ProjectMonthlyReport, TargetLocationReport
+from ..forms import (
+    ActivityPlanReportForm,
+    TargetLocationReportForm,
+    DisaggregationLocationReportForm,
+    BaseDisaggregationLocationReportFormSet,
+)
+from ..models import ActivityPlanReport, ProjectMonthlyReport, TargetLocationReport, DisaggregationLocationReport
 
 from ..filters import PlansReportFilter
+from django.forms import inlineformset_factory
 
 
 @login_required
@@ -78,18 +84,32 @@ def update_report_activity_plans(request, report, report_ap):
     # get the target_location_reports of report_ap and create forms for it
     form = ActivityPlanReportForm(instance=report_ap, report=report_instance)
 
-    target_location_reports = Paginator(TargetLocationReport.objects.filter(activity_plan_report=report_ap), 4).page(
+    target_location_reports = Paginator(TargetLocationReport.objects.filter(activity_plan_report=report_ap), 3).page(
         request.GET.get("page", 1)
     )
-    target_location_report_forms = [
-        TargetLocationReportForm(instance=report, plan_report=report_ap) for report in target_location_reports
-    ]
+
+    DisaggregationReportFormSet = inlineformset_factory(
+        parent_model=TargetLocationReport,
+        model=DisaggregationLocationReport,
+        form=DisaggregationLocationReportForm,
+        formset=BaseDisaggregationLocationReportFormSet,
+        extra=1,
+        can_delete=True,
+    )
+
+    target_location_report_forms = []
+    for report in target_location_reports:
+        target_location_report_forms.append({
+            "target_location_form": TargetLocationReportForm(instance=report, plan_report=report_ap),
+            "dis_location_report_formset": DisaggregationReportFormSet(plan_report=report_ap),
+        })
 
     context = {
         "form": form,
         "project": report_instance.project,
         "monthly_report": report_instance,
         "target_location_report_forms": target_location_report_forms,
+        "target_location_reports":target_location_reports,
         "plan_report": report_ap,
     }
 

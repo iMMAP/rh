@@ -70,8 +70,12 @@
                                     {% if form.instance.pk %}{{ form.DELETE }}{% endif %}
                                 </td>
                             </tr>
-                            <tr onclick="addInlineClickHandler">Hello</tr>
                         {% endfor %}
+                        <tr class="add-row">
+                            <td colspan="5">
+                                <a href="#">Add Another</a>
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
             </fieldset>
@@ -85,6 +89,10 @@
             <input type="submit" name="_save" class="btn btn-red" value="Save">
         </div>
     </div>
+ 
+</form>
+
+{% block scripts %}
     <script>
         document.querySelectorAll(".js-inline-admin-formset-{{report_disaggregation_formset.prefix}}").forEach((element) => {
             const data = element.dataset;
@@ -98,5 +106,4 @@
             );
         });
     </script>
-</form>
-
+{% endblock scripts %}

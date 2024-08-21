@@ -7,6 +7,21 @@
 
 {% block project_body %}
     <div class="content-block top-border">
+
+        <div class="flex flex-col gap-2 pt-3">
+            <div>
+                <span>Project</span>
+                <div class="input-holder">
+                    <span class="text-read-only">{{ project.code }} - {{ project.title }}</span>
+                </div>
+            </div>
+            <div>
+                <span>Monthly Report</span>
+                <div class="input-holder">
+                    <span class="text-read-only">{{ monthly_report.report_date | date:"F Y" }}</span>
+                </div>
+            </div>
+        </div>
         <div class="main-content">
             <div class="activity-planning create-activity">
                 <div id="activity-formset-form">
@@ -15,27 +30,39 @@
                             <div class="top-activity-block">
                                 <span class="activity-title">
                                     <span>
-                                        {% if report_activity_plan %}Update Report Activity{% endif %}
+                                        {% if report_activity_plan %}
+                                            Update Report Activity
+                                        {% else %}
+                                            Report Activity
+                                        {% endif %}
                                     </span>
-                                    <a href="{% url 'list_report_target_locations_with_plan' project.id monthly_report.pk report_activity_plan.pk %}"
-                                       class="btn btn-red"
-                                       style="float:right">Activity Target Locations</a>
+                                    {% if report_activity_plan %}
+                                    <span class="btn btn-gray" style="float:right">
+                                        <a href="{% url 'list_report_target_locations_with_plan' project.id monthly_report.pk report_activity_plan.pk %}"
+                                           class="btn btn-gray">
+                                            <img src="{% static 'admin/img/icon-addlink.svg' %}" alt="add-btn-icon">
+                                            Report Target Location
+                                        </a>
+                                    </span>
+                                    {% endif %}
                                 </span>
                                 <br>
-                                <span>
-                                    Use this form to provide detailed information about the report activity for the above the monthly report.
-                                    Some fields are auto-populated from the project activity plans.
-                                </span>
+                                <ul class="space-y-2 p-4 border border-gray-e6 rounded">
+                                    <li>
+                                        <span class="icon-info mr-2"></span>
+                                         Use this form to provide detailed information about the report activity for the above the monthly report.
+                                    </li>
+                                </ul>
+
                             </div>
                         </div>
                     </div>
 
                     <div class="activity_form">
-                        <form method="post" class="form-container">
+                        <form method="post" class="form-container" id="report-plan-form">
                             {% csrf_token %}
                             {{ form.indicator }}
                             {{ form.monthly_report }}
-                            {{ form.activity_plan }}
                             <div class="project-activity-block" data-form-id="{{ form.prefix }}">
                                 <div class="inner-holder unset-before">
                                     <div class="project-activity-accordion-slide"
@@ -66,30 +93,37 @@
 
                                         <div class="row">
                                             <div class="col">
+                                                <div class="field-col">
+                                                    <div class="select-field">
+                                                        <span class="label">Project Activity Plan</span>
+                                                        {{ form.activity_plan }}
+                                                    </div>
+                                                </div>
+                                                <br/>
                                                 <div class="multiple-fields-row two-items">
                                                     <div class="field-col">
                                                         <div class="select-field">
                                                             <span class="label">Activity Domain</span>
-                                                            <span class="text-read-only">{{ report_activity_plan.activity_plan.activity_domain.name }}</span>
+                                                            <span class="text-read-only" id="activity_domain">{{ report_activity_plan.activity_plan.activity_domain.name }}</span>
                                                         </div>
                                                     </div>
                                                     <div class="field-col">
                                                         <div class="select-field">
                                                             <span class="label">Activity Type</span>
-                                                            <span class="text-read-only">{{ report_activity_plan.activity_plan.activity_type.name }}</span>
+                                                            <span class="text-read-only" id="activity_type">{{ report_activity_plan.activity_plan.activity_type.name }}</span>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
                                             {% if report_activity_plan.activity_plan.activity_detail %}
-                                                <div class="col">
-                                                    <div class="field-col">
-                                                        <div class="select-field">
-                                                            <span class="label">Activity Details</span>
-                                                            <span class="text-read-only">{{ report_activity_plan.activity_plan.activity_detail.name }}</span>
-                                                        </div>
+                                            <div class="col" id="activity_detail_info">
+                                                <div class="field-col">
+                                                    <div class="select-field">
+                                                        <span class="label">Activity Details</span>
+                                                        <span class="text-read-only" id="activity_detail">{{ report_activity_plan.activity_plan.activity_detail.name }}</span>
                                                     </div>
                                                 </div>
+                                            </div>
                                             {% endif %}
                                         </div>
 
@@ -97,7 +131,7 @@
                                             <div class="col">
                                                 <div class="select-field">
                                                     <span class="label">Indicator</span>
-                                                    <span class="text-read-only">{{ report_activity_plan.indicator }}</span>
+                                                    <span class="text-read-only" id="indicator_name">{{ report_activity_plan.indicator }}</span>
                                                 </div>
                                             </div>
                                             <div class="col">
@@ -262,6 +296,58 @@
                 },
                 shouldSort: false,
             });
+
+            // Attach the change event handler to the original select element
+            if (select.name == 'activity_plan'){
+                select.addEventListener('change', function() {
+                    const reportPlan = this.value;
+                    autoPopulateActivityFields(reportPlan);
+                });
+            }
         });
+        /**
+         * Handle Auto-population of activity plan report fields.
+         * @param {string} reportPlan - ID of the selected activity plan.
+         **/
+        function autoPopulateActivityFields(reportPlan) {
+        debugger
+            const formElement = $('#report-plan-form'); // Adjust the selector as needed
+
+            $.ajax({
+                url: '/ajax/get_activity_details_fields_data/',
+                data: {
+                    'activity_plan': reportPlan
+                },
+                type: 'POST',
+                dataType: 'json',
+                beforeSend: function(xhr, settings) {
+                    xhr.setRequestHeader("X-CSRFToken", $('input[name="csrfmiddlewaretoken"]').val());
+                },
+                success: function(data) {
+
+                    let activity_domain = formElement.find(`#activity_domain`);
+                    let activity_type = formElement.find(`#activity_type`);
+                    let activity_detail_info = formElement.find(`#activity_detail_info`);
+                    let activity_detail = formElement.find(`#activity_detail`);
+                    let indicator = formElement.find(`#id_indicator`);
+                    let indicator_name = formElement.find(`#indicator_name`);
+
+                    activity_domain.text(data.activity_domain);
+                    activity_type.text(data.activity_type);
+                    indicator_name.text(data.indicator_name);
+                    indicator.val(data.indicator_id);
+
+                    if (data.activity_detail){
+                        activity_detail.text(data.activity_detail);
+                        activity_detail_info.show()
+                    }else{
+                        activity_detail_info.hide()
+                    }
+                },
+                error: function(error) {
+                    console.log('Error fetching form data:', error);
+                }
+            });
+        };
     </script>
 {% endblock scripts %}

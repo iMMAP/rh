@@ -3,7 +3,7 @@ from django.forms.models import inlineformset_factory
 from django.shortcuts import get_object_or_404
 from django.forms import BaseInlineFormSet
 
-from rh.models import FacilitySiteType, Indicator, Organization, TargetLocation, Disaggregation
+from rh.models import ActivityPlan, FacilitySiteType, Indicator, Organization, TargetLocation, Disaggregation
 
 from .models import (
     ActivityPlanReport,
@@ -104,7 +104,6 @@ class DisaggregationLocationReportForm(forms.ModelForm):
         model = DisaggregationLocationReport
         fields = (
             "disaggregation",
-            "target_required",
             "target",
         )
 
@@ -135,7 +134,6 @@ class ActivityPlanReportForm(forms.ModelForm):
         fields = "__all__"
 
         widgets = {
-            "activity_plan": forms.widgets.HiddenInput(),
             "report_types": forms.SelectMultiple(attrs={"class": "custom-select"}),
             "implementing_partners": forms.SelectMultiple(attrs={"class": "custom-select"}),
             "beneficiary_status": forms.Select(attrs={"class": "custom-select"}),
@@ -146,13 +144,17 @@ class ActivityPlanReportForm(forms.ModelForm):
             "currency": forms.Select(attrs={"class": "custom-select"}),
             "transfer_mechanism_type": forms.Select(attrs={"class": "custom-select"}),
             "implement_modility_type": forms.Select(attrs={"class": "custom-select"}),
+            "activity_plan": forms.Select(attrs={"class": "custom-select"}),
         }
 
     def __init__(self, *args, **kwargs):
+        monthly_report = kwargs.pop("monthly_report", None)
+        report_plan = kwargs.get("instance", None)
         super().__init__(*args, **kwargs)
 
         # Retrieve the monthly_report_instance from initial data or instance
-        monthly_report_id = self.initial.get("monthly_report")
+        monthly_report_id = monthly_report.pk if monthly_report else report_plan.monthly_report.pk
+
         monthly_report_instance = get_object_or_404(ProjectMonthlyReport, pk=monthly_report_id)
 
         if monthly_report_instance:
@@ -166,10 +168,13 @@ class ActivityPlanReportForm(forms.ModelForm):
 
         self.fields["indicator"].widget.attrs.update({"hidden": ""})
         self.fields["monthly_report"].widget.attrs.update({"hidden": ""})
-        self.fields["activity_plan"].widget.attrs.update({"hidden": ""})
         self.fields["implementing_partners"].queryset = organizations
         self.fields["seasonal_retargeting"].widget = forms.CheckboxInput()
         self.fields["modality_retargeting"].widget = forms.CheckboxInput()
+
+        self.fields["activity_plan"].queryset = ActivityPlan.objects.filter(
+            project=monthly_report_instance.project.pk
+        ).select_related("activity_domain")
 
 
 class RejectMonthlyReportForm(forms.Form):

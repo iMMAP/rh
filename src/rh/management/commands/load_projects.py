@@ -6,15 +6,16 @@ from django.contrib.auth.models import User
 from django.core.management.base import BaseCommand
 from django.db.models import Q
 from django.utils import timezone
+from django.db import connection
 
 from rh.models import (
-    TargetLocation,
+    # TargetLocation,
     ActivityDetail,
     ActivityDomain,
     ActivityPlan,
     ActivityType,
     BeneficiaryType,
-    Location,
+    # Location,
     Cluster,
     Currency,
     Donor,
@@ -37,42 +38,108 @@ class Command(BaseCommand):
 
     def _load_target_locations(self):
         # Import the actvity_domain, activity_types, activity_details
-        path = os.path.join(BASE_DIR.parent, "scripts/data/updated_nov_2023/target_locations.xlsx")
+        # path = os.path.join(BASE_DIR.parent, "scripts/data/updated_nov_2023/fsac_locations.xlsx")
+        # df = pd.read_excel(path)
+        # df.fillna(False, inplace=True)
+        # locations_created = 0
+        # locations = df.to_dict(orient="records")
+        # for index, location in enumerate(locations):
+        #     project = Project.objects.filter(old_id=location.get("project_id", "")).first()
+        #     country = Location.objects.filter(code="AF").first()
+        #     province = Location.objects.filter(code=location.get("admin1pcode", "").strip()).first()
+        #     district = Location.objects.filter(code=location.get("admin2pcode", "").strip()).first()
+        #     activity_plans = project.activityplan_set.all()
+        #     for activity_plan in activity_plans:
+        #         target_location, created = TargetLocation.objects.get_or_create(
+        #             project_id=project.id,
+        #             state="in-progress",
+        #             activity_plan_id=activity_plan.id,
+        #             country_id=country.id,
+        #             province_id=province.id,
+        #             district_id=district.id,
+        #         )
+        #         target_location.save()
+        #
+        #         if created:
+        #             locations_created += 1
+
+        path = os.path.join(BASE_DIR.parent, "scripts/data/updated_nov_2023/fsac_locations.xlsx")
         df = pd.read_excel(path)
         df.fillna(False, inplace=True)
-
         locations = df.to_dict(orient="records")
-        for index, location in enumerate(locations):
-            project = Project.objects.filter(old_id=location.get("project_id", "")).first()
-            country = Location.objects.filter(code="AF").first()
-            province = Location.objects.filter(code=location.get("admin1pcode", "").strip()).first()
-            district = Location.objects.filter(code=location.get("admin2pcode", "").strip()).first()
-            activity_plans = project.activityplan_set.all()
-            for activity_plan in activity_plans:
-                target_location, created = TargetLocation.objects.get_or_create(
-                    project_id=project.id,
-                    # is_active=True,
-                    state="in-progress",
-                    activity_plan_id=activity_plan.id,
-                    country_id=country.id,
-                    province_id=province.id,
-                    district_id=district.id,
-                )
-                target_location.save()
+
+        locations_created = 0
+        with connection.cursor() as cursor:
+            for location in locations:
+                project_id = location.get("project_id", "")
+                cursor.execute("SELECT id FROM rh_project WHERE old_id = %s", [project_id])
+                project = cursor.fetchone()
+
+                if project:
+                    project_id = project[0]
+                    cursor.execute("SELECT id FROM rh_location WHERE code = 'AF'")
+                    country = cursor.fetchone()
+                    country_id = country[0] if country else None
+
+                    admin1pcode = location.get("admin1pcode", "").strip()
+                    cursor.execute("SELECT id FROM rh_location WHERE code = %s", [admin1pcode])
+                    province = cursor.fetchone()
+                    province_id = province[0] if province else None
+
+                    admin2pcode = location.get("admin2pcode", "").strip()
+                    cursor.execute("SELECT id FROM rh_location WHERE code = %s", [admin2pcode])
+                    district = cursor.fetchone()
+                    district_id = district[0] if district else None
+
+                    cursor.execute("SELECT id FROM rh_activityplan WHERE project_id = %s", [project_id])
+                    activity_plans = cursor.fetchall()
+
+                    for activity_plan in activity_plans:
+                        activity_plan_id = activity_plan[0]
+                        cursor.execute(
+                            """
+                                            SELECT id FROM rh_targetlocation 
+                                            WHERE project_id = %s AND state = %s AND activity_plan_id = %s 
+                                            AND country_id = %s AND province_id = %s AND district_id = %s
+                                        """,
+                            [project_id, "in-progress", activity_plan_id, country_id, province_id, district_id],
+                        )
+
+                        target_location = cursor.fetchone()
+
+                        if not target_location:
+                            cursor.execute(
+                                """
+                                            INSERT INTO rh_targetlocation 
+                                            (project_id, state, activity_plan_id, country_id, province_id, district_id)
+                                            VALUES (%s, %s, %s, %s, %s, %s)
+                                        """,
+                                [project_id, "in-progress", activity_plan_id, country_id, province_id, district_id],
+                            )
+                            locations_created += 1
+
+        self.stdout.write(self.style.SUCCESS(f"{locations_created} Target Locations - created successfully!!!"))
 
     def _load_activity_plans(self):
         # Import the actvity_domain, activity_types, activity_details
-        path = os.path.join(BASE_DIR.parent, "scripts/data/updated_nov_2023/activity_plans.xlsx")
+        path = os.path.join(BASE_DIR.parent, "scripts/data/updated_nov_2023/fsac_plans.xlsx")
         df = pd.read_excel(path)
         df.fillna(False, inplace=True)
-
+        plans_created = 0
         plans = df.to_dict(orient="records")
         for index, plan in enumerate(plans):
             project = Project.objects.filter(old_id=plan.get("project_id", "")).first()
-            activity_domain = ActivityDomain.objects.filter(code=plan.get("activity_type_id", "").strip()).first()
+            activity_domain_name = plan.get("activity_type_id", "")
+            if activity_domain_name:
+                activity_domain_name.strip()
+            else:
+                print("NONE")
+            activity_domain = ActivityDomain.objects.filter(code=activity_domain_name).first()
             activity_type = ActivityType.objects.filter(code=plan.get("activity_description_id", "").strip()).first()
             activity_detail = ActivityDetail.objects.filter(code=plan.get("activity_type_id", "").strip()).first()
             indicator = Indicator.objects.filter(name=plan.get("indicator_id", "").strip()).first()
+            if not indicator:
+                print(plan)
             package_type = PackageType.objects.filter(name=plan.get("package_type_name", "")).first()
             unit_type = UnitType.objects.filter(name=plan.get("unit_type_name", "")).first()
             grant_type = GrantType.objects.filter(name=plan.get("grant_type_name", "")).first()
@@ -104,15 +171,21 @@ class Command(BaseCommand):
                 transfer_mechanism_type_id=transfer_mechanism_type.id if transfer_mechanism_type else None,
                 implement_modility_type_id=implement_modility_type.id if implement_modility_type else None,
             )
+
+            if created:
+                plans_created += 1
+
             activity_plan.save()
+        self.stdout.write(self.style.SUCCESS(f"{plans_created} Plans - created successfully!!"))
 
     def _load_projects(self):
         # Import the actvity_domain, activity_types, activity_details
-        path = os.path.join(BASE_DIR.parent, "scripts/data/updated_nov_2023/projects.xlsx")
+        path = os.path.join(BASE_DIR.parent, "scripts/data/updated_nov_2023/fsac_projects.xlsx")
         df = pd.read_excel(path)
         df.fillna(False, inplace=True)
 
         projects = df.to_dict(orient="records")
+        projects_created = 0
 
         for index, project_vals in enumerate(projects):
             # Convert the naive datetime to an aware datetime using the timezone
@@ -138,6 +211,7 @@ class Command(BaseCommand):
 
             # Set ManyToMany field values and related field values
             if created:
+                projects_created += 1
                 cluster = Cluster.objects.filter(code=project_vals.get("cluster_id"))
                 project.clusters.set(cluster)
 
@@ -162,10 +236,11 @@ class Command(BaseCommand):
                     project.programme_partners.set(organizations)
 
                 project_donors = project_vals.get("project_donor")
-                if project_donors:
-                    donors_list = project_donors.split(",")
-                    donors = Donor.objects.filter(code__in=donors_list)
-                    project.donors.set(donors)
+                if project.title == "CSP":
+                    if project_donors:
+                        donors_list = project_donors.split(",")
+                        donors = Donor.objects.filter(code__in=donors_list)
+                        project.donors.set(donors)
 
                 users = User.objects.filter(
                     Q(username=project_vals.get("username", "test")) | Q(email=project_vals.get("email", "test"))
@@ -184,13 +259,17 @@ class Command(BaseCommand):
                     project.budget_currency = budget_currency
 
                 project.save()
-        self.stdout.write(self.style.SUCCESS(f"{len(projects)} Projects - created successfully"))
+        self.stdout.write(self.style.SUCCESS(f"{projects_created} Projects - created successfully"))
 
     def _import_data(self):
         # Import Projects
+        self.stdout.write(self.style.SUCCESS("Loading Projects!"))
         self._load_projects()
+        self.stdout.write(self.style.SUCCESS("Loading Plans!"))
         self._load_activity_plans()
+        self.stdout.write(self.style.SUCCESS("Loading Locations!"))
         self._load_target_locations()
+        self.stdout.write(self.style.SUCCESS("ALL DONE!"))
 
     def handle(self, *args, **options):
         self._import_data()

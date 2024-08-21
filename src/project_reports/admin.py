@@ -25,6 +25,7 @@ class ProjectMonthlyReportAdmin(admin.ModelAdmin):
         "report_date",
         "report_due_date",
     )
+    raw_id_fields = ["project"]
 
 
 admin.site.register(ProjectMonthlyReport, ProjectMonthlyReportAdmin)
@@ -32,6 +33,7 @@ admin.site.register(ProjectMonthlyReport, ProjectMonthlyReportAdmin)
 
 class ActivityPlanReportAdmin(admin.ModelAdmin):
     list_display = ("monthly_report", "activity_plan", "indicator")
+    raw_id_fields = ["monthly_report", "activity_plan", "indicator"]
 
 
 admin.site.register(ActivityPlanReport, ActivityPlanReportAdmin)

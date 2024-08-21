@@ -37,7 +37,9 @@ def update_target_location(request, pk):
     )
 
     if request.method == "POST":
-        target_location_form = TargetLocationForm(request.POST, instance=target_location, user=request.user)
+        target_location_form = TargetLocationForm(
+            request.POST, instance=target_location, user=request.user, activity_plan=target_location.activity_plan
+        )
         disaggregation_formset = DisaggregationFormSet(
             request.POST, instance=target_location, activity_plan=target_location.activity_plan
         )
@@ -64,7 +66,9 @@ def update_target_location(request, pk):
             messages.error(request, "The form is invalid. Please check the fields and try again.")
 
     else:
-        target_location_form = TargetLocationForm(instance=target_location, user=request.user)
+        target_location_form = TargetLocationForm(
+            instance=target_location, user=request.user, activity_plan=target_location.activity_plan
+        )
         disaggregation_formset = DisaggregationFormSet(
             instance=target_location, activity_plan=target_location.activity_plan
         )
@@ -95,7 +99,7 @@ def create_target_location(request, activity_plan):
     )
 
     if request.method == "POST":
-        target_location_form = TargetLocationForm(request.POST, user=request.user)
+        target_location_form = TargetLocationForm(request.POST, user=request.user, activity_plan=activity_plan)
         disaggregation_formset = DisaggregationFormSet(
             request.POST, instance=target_location_form.instance, activity_plan=activity_plan
         )
@@ -123,7 +127,7 @@ def create_target_location(request, activity_plan):
         else:
             messages.error(request, "The form is invalid. Please check the fields and try again.")
     else:
-        target_location_form = TargetLocationForm(user=request.user)
+        target_location_form = TargetLocationForm(user=request.user, activity_plan=activity_plan)
         disaggregation_formset = DisaggregationFormSet(activity_plan=activity_plan)
 
     return render(
@@ -148,7 +152,14 @@ def list_target_locations(request, project):
         request=request,
         queryset=TargetLocation.objects.filter(activity_plan__project=project)
         .annotate(total_target=Sum("disaggregationlocation__target"))
-        .select_related("activity_plan", "country", "province", "district")
+        .select_related(
+            "activity_plan",
+            "activity_plan__activity_domain",
+            "activity_plan__indicator",
+            "country",
+            "province",
+            "district",
+        )
         .order_by("-id"),
         project=project,
     )

@@ -127,6 +127,7 @@ class TargetLocationForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         user = kwargs.pop("user", None)
+        activity_plan = kwargs.pop("activity_plan", None)
         super().__init__(*args, **kwargs)
 
         self.fields["country"].disabled = True
@@ -145,6 +146,12 @@ class TargetLocationForm(forms.ModelForm):
             countries=user.profile.country
         )
         self.fields["implementing_partner"].widget.attrs.update({"class": "custom-select"})
+
+        self.fields["facility_site_type"].queryset = (
+            self.fields["facility_site_type"]
+            .queryset.filter(cluster__in=activity_plan.project.clusters.all())
+            .distinct()
+        )
 
         if self.data:
             # Creating

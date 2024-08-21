@@ -35,6 +35,7 @@ from ..models import (
     TransferMechanismType,
     PackageType,
 )
+from django.contrib.auth.models import User
 from .views import (
     copy_project_target_location,
     copy_target_location_disaggregation_locations,
@@ -165,7 +166,7 @@ def export_activity_plans_import_template(request, pk):
     target_location_columns = [field.name for field in TargetLocation._meta.get_fields() if field.concrete]
 
     disaggregation_columns = list(
-        Disaggregation.objects.filter(clusters__in=project.clusters.all()).values_list("name", flat=True)
+        Disaggregation.objects.filter(clusters__in=project.clusters.all()).distinct().values_list("name", flat=True)
     )
 
     all_columns = activity_plan_columns + target_location_columns + disaggregation_columns
@@ -197,7 +198,7 @@ def projects_detail(request, pk):
             "donors",
             "programme_partners",
             "implementing_partners",
-            "user",
+            Prefetch("user", queryset=User.objects.select_related("profile")),
             Prefetch(
                 "activityplan_set",
                 ActivityPlan.objects.select_related("activity_domain", "indicator")

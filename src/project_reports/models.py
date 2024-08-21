@@ -207,8 +207,8 @@ class DisaggregationLocationReport(models.Model):
     disaggregation = models.ForeignKey(Disaggregation, on_delete=models.CASCADE, null=True, blank=True)
 
     is_active = models.BooleanField(default=True)
-    target_required = models.IntegerField(default=0, null=True, blank=True, verbose_name="Required Target")
-    target = models.IntegerField(default=0, null=True, blank=True)
+    target_required = models.IntegerField(default=0, null=True, blank=True, verbose_name="Target Required")
+    target = models.IntegerField(default=0, null=True, blank=True, verbose_name="Target Reached")
 
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, null=True)

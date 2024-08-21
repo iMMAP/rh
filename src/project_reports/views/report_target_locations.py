@@ -99,6 +99,7 @@ def create_report_target_locations(request, project, report, plan):
     """Create View"""
     monthly_report = get_object_or_404(ProjectMonthlyReport.objects.select_related("project"), pk=report)
     plan_report = get_object_or_404(ActivityPlanReport, pk=plan)
+
     DisaggregationReportFormSet = inlineformset_factory(
         parent_model=TargetLocationReport,
         model=DisaggregationLocationReport,
@@ -107,14 +108,6 @@ def create_report_target_locations(request, project, report, plan):
         extra=1,
         can_delete=True,
     )
-
-    initial_data = []
-    # Loop through each Indicator and retrieve its related Disaggregations
-    indicator = plan_report.indicator
-    related_disaggregations = indicator.disaggregation_set.all()
-    for disaggregation in related_disaggregations:
-        initial_data.append({"disaggregation": disaggregation})
-    DisaggregationReportFormSet.extra = len(related_disaggregations)
 
     if request.method == "POST":
         location_report_form = TargetLocationReportForm(request.POST or None)
@@ -161,7 +154,7 @@ def create_report_target_locations(request, project, report, plan):
             report_plan=plan_report,
         )
 
-        report_disaggregation_formset = DisaggregationReportFormSet(plan_report=plan_report, initial=initial_data)
+        report_disaggregation_formset = DisaggregationReportFormSet(plan_report=plan_report)
 
     return render(
         request,
@@ -254,10 +247,6 @@ def update_report_target_locations(request, project, report, plan, location):
             request.POST or None, instance=location_report, plan_report=plan_report, queryset=disaggregation_reports
         )
 
-        # report_disaggregation_formset = DisaggregationReportFormSet(
-        #     request.POST or None, instance=location_report, plan_report=plan_report
-        # )
-
     return render(
         request,
         "project_reports/report_target_locations/target_location_form.html",
@@ -293,19 +282,24 @@ def delete_location_report_view(request, location_report):
 @login_required
 def get_target_location_auto_fields(request):
     try:
-        target_location = TargetLocation.objects.get(pk=request.POST.get("target_location"))
+        target_location_id = request.POST.get("target_location")
+        target_location = None
+        if target_location_id:
+            target_location = TargetLocation.objects.get(pk=target_location_id)
         data = {
-            "country": target_location.country.id if target_location.country else None,
-            "province": target_location.province.id if target_location.province else None,
-            "district": target_location.district.id if target_location.district else None,
-            "zone": target_location.zone.id if target_location.zone else None,
-            "facility_site_type": target_location.facility_site_type.id if target_location.facility_site_type else None,
-            "facility_monitoring": target_location.facility_monitoring,
-            "facility_name": target_location.facility_name,
-            "facility_id": target_location.facility_id,
-            "facility_lat": target_location.facility_lat,
-            "facility_long": target_location.facility_long,
-            "nhs_code": target_location.nhs_code,
+            "country": target_location.country.id if target_location and target_location.country else None,
+            "province": target_location.province.id if target_location and target_location.province else None,
+            "district": target_location.district.id if target_location and target_location.district else None,
+            "zone": target_location.zone.id if target_location and target_location.zone else None,
+            "facility_site_type": target_location.facility_site_type.id
+            if target_location and target_location.facility_site_type
+            else None,
+            "facility_monitoring": target_location.facility_monitoring if target_location else None,
+            "facility_name": target_location.facility_name if target_location else None,
+            "facility_id": target_location.facility_id if target_location else None,
+            "facility_lat": target_location.facility_lat if target_location else None,
+            "facility_long": target_location.facility_long if target_location else None,
+            "nhs_code": target_location.nhs_code if target_location else None,
         }
         return JsonResponse(data)
     except TargetLocation.DoesNotExist:

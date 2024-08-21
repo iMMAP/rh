@@ -67,6 +67,7 @@ class Command(BaseCommand):
         df = pd.read_excel(path)
         df.fillna(False, inplace=True)
         locations = df.to_dict(orient="records")
+
         locations_created = 0
         with connection.cursor() as cursor:
             for location in locations:

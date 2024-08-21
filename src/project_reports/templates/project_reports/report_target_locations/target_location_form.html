@@ -284,6 +284,18 @@
     <script defer src="{% static 'js/utils/inlines.js' %}"></script>
     <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
     <script>
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const formElement = $('#location-form');
+            let facilityDetails = formElement.find(`#facility_details`);
+            let facilityMonitoring = formElement.find(`#id_facility_monitoring`);
+            if (!facilityMonitoring.is(':checked')) {
+                facilityDetails.hide();
+            }else{
+                facilityDetails.hide();
+            }
+        });
+
         document.querySelectorAll('.custom-select').forEach((select) => {
             const choice = new Choices(select, {
                 searchEnabled: true,
@@ -309,7 +321,7 @@
          * @param {string} targetLocationId - ID of the selected target location.
          **/
         function autoPopulateTargetLocationReport(targetLocationId) {
-            const formElement = $('#location-form'); // Adjust the selector as needed
+            const formElement = $('#location-form');
 
             $.ajax({
                 url: '/ajax/get_target_location_auto_fields/',

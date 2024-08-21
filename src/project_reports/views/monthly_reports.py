@@ -189,12 +189,11 @@ def details_monthly_progress_view(request, project, report):
                 "activityplanreport_set",
                 ActivityPlanReport.objects.select_related(
                     "activity_plan__activity_domain", "activity_plan__activity_type", "indicator"
-                ),
+                ).annotate(report_target_location_count=Count("targetlocationreport")),
             ),
         ),
         pk=report,
     )
-
 
     activity_reports = monthly_report.activityplanreport_set.all()
 

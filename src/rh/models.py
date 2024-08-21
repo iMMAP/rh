@@ -1,7 +1,8 @@
 from django.contrib.auth.models import User
 from django.db import models
 from smart_selects.db_fields import ChainedForeignKey
-from django.core.validators import MinLengthValidator
+from django.core.validators import MinLengthValidator, MaxValueValidator, MinValueValidator
+
 
 NAME_MAX_LENGTH = 200
 DESCRIPTION_MAX_LENGTH = 600
@@ -395,6 +396,10 @@ class Indicator(models.Model):
     # RELATIONSHIPS
     package_type = models.ForeignKey(PackageType, on_delete=models.SET_NULL, null=True, blank=True)
     unit_type = models.ForeignKey(UnitType, on_delete=models.SET_NULL, null=True, blank=True)
+    units = models.IntegerField(default=0, null=True, blank=True)
+    no_of_transfers = models.IntegerField(
+        default=0, null=True, blank=True, validators=[MinValueValidator(0), MaxValueValidator(30)]
+    )
     grant_type = models.ForeignKey(GrantType, on_delete=models.SET_NULL, null=True, blank=True)
     transfer_category = models.ForeignKey(TransferCategory, on_delete=models.SET_NULL, null=True, blank=True)
     currency = models.ForeignKey(Currency, on_delete=models.SET_NULL, null=True, blank=True)
@@ -545,6 +550,10 @@ class ActivityPlan(models.Model):
 
     package_type = models.ForeignKey(PackageType, on_delete=models.SET_NULL, null=True, blank=True)
     unit_type = models.ForeignKey(UnitType, on_delete=models.SET_NULL, null=True, blank=True)
+    units = models.IntegerField(default=0, null=True, blank=True)
+    no_of_transfers = models.IntegerField(
+        default=0, null=True, blank=True, validators=[MinValueValidator(0), MaxValueValidator(30)]
+    )
     grant_type = models.ForeignKey(GrantType, on_delete=models.SET_NULL, null=True, blank=True)
     transfer_category = models.ForeignKey(TransferCategory, on_delete=models.SET_NULL, null=True, blank=True)
     currency = models.ForeignKey(Currency, on_delete=models.SET_NULL, null=True, blank=True)

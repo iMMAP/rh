@@ -8,44 +8,8 @@
             <div class="holder">
                 <strong class="h5">{{ monthly_report.report_date | date:"F Y" }}</strong>
                 <ul class="buttons-list-inline">
-                    {% if monthly_report.pk %}
-                        <li>
-                            <a hx-post="{% url 'copy_project_monthly_report' monthly_report.pk %}"
-                               hx-trigger="click"
-                               hx-swap="none"
-                               hx-confirm="Are you sure you want to duplicate last month activities?"
-                               data-tippy-content="Copy last month approved report"
-                               class="btn btn-gray">
-                                <img class='htmx-indicator'
-                                     style="width: 1rem"
-                                     src="{% static 'images/spinner.gif' %}" />
-                                <span class="icon-copy-outline"></span>
-                                Copy last month activities
-                            </a>
-                        </li>
-                    {% endif %}
                     {% if monthly_report %}
-                        <li>
-                            <button class="export-button">
-                                <a href="#"
-                                   data-url="{% url 'export_monthly_report_template' monthly_report.pk %}"
-                                   class="btn btn-gray project-detail"
-                                   title="Export Template">
-                                    <span class="btn-text">Export Template</span>
-                                    <span class="icon-download"></span>
-                                    <!-- <span class="project-detail icon-download"></span> -->
-                                </a>
-                            </button>
-                        </li>
-                        <li>
-                            <a href="#"
-                               data-url="{% url 'import_monthly_reports' monthly_report.pk %}"
-                               class="btn btn-gray show-sw-import-popup">
-                                <span class="btn-text">Import Activities</span>
-                                {% csrf_token %}
-                                <span class="icon-upload"></span>
-                            </a>
-                        </li>
+
                     {% endif %}
                     <li>
                         <a hx-post="{% url 'delete_project_monthly_report' monthly_report.pk %}"
@@ -172,7 +136,6 @@
                         <span>Report Activity Plans</span>
                         <span class="btn btn-gray" style="float:right">{{ activity_reports | length }}</span>
                     </span>
-
                 </div>
             </div>
         </div>

@@ -1,0 +1,62 @@
+{% extends "project_reports/monthly_reports/forms/monthly_report_progress_form_base.html" %}
+{% load static %}
+
+{% block title %}
+  Update {{ monthly_report.report_date | date:"F Y" }}  Report Activities
+{% endblock title %}
+
+{% block breadcrumb_li %}
+    <li>
+        {% if monthly_report %}
+            <a href="{% url 'view_monthly_report' monthly_report.project.id  monthly_report.id %}">
+                {{ monthly_report.report_date | date:"F Y" }}
+            </a>
+        {% else %}
+            New Progress Report
+        {% endif %}
+    </li>
+    <li class="current">
+        Report Activity
+    </li>
+{% endblock breadcrumb_li %}
+
+{% block project_body %}
+    <div class="content-block top-border">
+        <div class="main-content ">
+            <div class="activity-planning read-only">
+                <div class="activity-block-holder">
+                    <div class="top-activity-block">
+                        <span class="activity-title">
+                            <span>
+                                {% if report_activity_plan %}
+                                    Update Report Activity
+                                {% else %}
+                                    Create Report Activity
+                                {% endif %}
+                            </span>
+                        </span>
+                        <br>
+                        <span>
+                            Use this form to provide detailed information about the report activity for the above the monthly report.
+                            Some fields are auto-populated from the project activity plans.
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-gray-fa p-4 rounded border border-gray-e6 space-y-4">
+                {% include "project_reports/report_activity_plans/_report_ap_form.html" %} 
+            </div>
+
+            <div class="p-4" id="ap-report-target-locations">
+                {% for report_tl_form in target_location_report_forms %}
+                    {% include "project_reports/report_target_locations/_report_target_location_form.html" with location_report_form=report_tl_form %}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock project_body %}
+
+{% block scripts %}
+    <script src="{% static 'js/utils/inlines.js' %}"></script>
+{% endblock scripts %}

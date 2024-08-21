@@ -70,9 +70,9 @@ urlpatterns = [
     ),
     # Activity Plan Report URLS
     path(
-        "project/monthly-progress/<str:report>/report-activity-plan/<int:report_ap>/update",
+        "project/report-activity-plan/<int:report_ap>/update",
         plan_views.update_report_activity_plan,
-        name="update_report_activity_plans",
+        name="update_report_activity_plan",
     ),
     path(
         "project/monthly-progress/<str:report>/report-activity-plan",
@@ -80,16 +80,20 @@ urlpatterns = [
         name="report_activity_plans",
     ),
     path(
-        "project/monthly-progress/<str:report>/report-activity-plan/create",
-        plan_views.create_report_activity_plans,
-        name="create_report_activity_plans",
+        "project/monthly-progress/<str:report>/report-activity-plan/<int:report_ap>/update",
+        plan_views.update_report_activity_plans,
+        name="update_report_activity_plans",
+    ),
+    path(
+        "project/<str:report>/report-activity-plan/create",
+        plan_views.create_report_activity_plan,
+        name="create_report_activity_plan",
     ),
     path(
         "project/monthly-progress/<int:ap_report>/report-activity-plan/delete",
         plan_views.delete_report_activity_plan,
         name="delete_report_activity_plan",
     ),
-    
     # Location Report URLS
     path(
         "project/report-plan/<str:plan>/report-target-locations/create",

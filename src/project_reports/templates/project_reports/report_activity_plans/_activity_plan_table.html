@@ -18,8 +18,24 @@
         </div>
 
         <div class="actions-panel">
+
             <a href="{% url 'create_report_activity_plan' project.pk monthly_report.id %}"
                class="btn btn-red">Report New Activity</a>
+            <a class="btn btn-gray" href="{% url 'import-report-activities' monthly_report.pk %}">
+                Import Report Activities from CSV
+            </a>
+            <a hx-post="{% url 'copy_project_monthly_report' monthly_report.pk %}"
+               hx-trigger="click"
+               hx-swap="none"
+               hx-confirm="Are you sure you want to duplicate last month activities?"
+               data-tippy-content="Copy last month approved report"
+               class="btn btn-gray">
+                <img class='htmx-indicator'
+                     style="width: 1rem"
+                     src="{% static 'images/spinner.gif' %}" />
+                <span class="icon-copy-outline"></span>
+                Copy last month activities
+            </a>
             {% if plans_report_filter %}
                 {% include "components/_filter_drawer.html" with filter=plans_report_filter %}
             {% endif %}

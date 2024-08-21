@@ -3,7 +3,8 @@ from django.urls import path
 from . import dashboards as dashboard_views
 from . import exports as export_views
 from .views.views import (
-    import_monthly_reports,
+    import_report_activities,
+    export_report_activities_import_template,
 )
 from .views import (
     report_activity_plans as plan_views,
@@ -128,13 +129,11 @@ urlpatterns = [
     # Exports
     path(
         "project/monthly_progress/export/<str:report>/",
-        export_views.ReportTemplateExportView.as_view(),
+        export_report_activities_import_template,
         name="export_monthly_report_template",
     ),
     path(
-        "project/monthly_progress/import/<str:report>/",
-        import_monthly_reports,
-        name="import_monthly_reports",
+        "monthly_progress/import-report-activities/<str:pk>", import_report_activities, name="import-report-activities"
     ),
     # Dashboard Paths
     path(

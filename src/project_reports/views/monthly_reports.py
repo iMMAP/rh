@@ -59,20 +59,7 @@ def index_project_report_view(request, project):
 
     # Setup Filter
     reports_filter = MonthlyReportsFilter(
-        request.GET,
-        request=request,
-        queryset=ProjectMonthlyReport.objects.filter(project=project)
-        .order_by("-id")
-        .prefetch_related(
-            Prefetch(
-                "activityplanreport_set",
-                ActivityPlanReport.objects.select_related("activity_plan").prefetch_related(
-                    Prefetch(
-                        "targetlocationreport_set", TargetLocationReport.objects.select_related("province", "district")
-                    ),
-                ),
-            ),
-        ),
+        request.GET, request=request, queryset=ProjectMonthlyReport.objects.filter(project=project).order_by("-id")
     )
 
     # Setup Pagination
@@ -208,27 +195,6 @@ def details_monthly_progress_view(request, project, report):
         pk=report,
     )
 
-    # activity_reports = monthly_report.activityplanreport_set
-    #
-    # activity_plans = project.activityplan_set.select_related(
-    #     "activity_domain",
-    #     "activity_type",
-    # )
-    #
-    # activity_plans = [plan for plan in activity_plans]
-    #
-    # report_plans = ActivityPlanReport.objects.filter(monthly_report=monthly_report.pk).annotate(
-    #     report_target_location_count=Count("targetlocationreport")
-    # )
-    #
-    # if not report_plans:
-    #     for plan in activity_plans:
-    #         if plan.state == "in-progress":
-    #             ActivityPlanReport.objects.create(
-    #                 monthly_report_id=monthly_report.pk,
-    #                 activity_plan_id=plan.pk,
-    #                 indicator_id=plan.indicator.pk,
-    #             )
 
     activity_reports = monthly_report.activityplanreport_set.all()
 

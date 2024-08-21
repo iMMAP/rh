@@ -100,19 +100,12 @@ def create_report_target_locations(request, project, report, plan):
     monthly_report = get_object_or_404(ProjectMonthlyReport.objects.select_related("project"), pk=report)
     plan_report = get_object_or_404(ActivityPlanReport, pk=plan)
 
-    initial_data = []
-    # Loop through each Indicator and retrieve its related Disaggregations
-    indicator = plan_report.indicator
-    related_disaggregations = indicator.disaggregation_set.all()
-    for disaggregation in related_disaggregations:
-        initial_data.append({"disaggregation": disaggregation})
-
     DisaggregationReportFormSet = inlineformset_factory(
         parent_model=TargetLocationReport,
         model=DisaggregationLocationReport,
         form=DisaggregationLocationReportForm,
         formset=BaseDisaggregationLocationReportFormSet,
-        extra=len(related_disaggregations),
+        extra=1,
         can_delete=True,
     )
 
@@ -162,6 +155,7 @@ def create_report_target_locations(request, project, report, plan):
         )
 
         report_disaggregation_formset = DisaggregationReportFormSet(plan_report=plan_report)
+
     return render(
         request,
         "project_reports/report_target_locations/target_location_form.html",

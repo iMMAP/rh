@@ -114,16 +114,6 @@
                         </th>
                         <th>
                             <div class="table-flex-holder">
-                                <strong class="table-title">Activities</strong>
-                            </div>
-                        </th>
-                        <th>
-                            <div class="table-flex-holder">
-                                <strong class="table-title">Locations</strong>
-                            </div>
-                        </th>
-                        <th>
-                            <div class="table-flex-holder">
                                 <strong class="table-title">Notes</strong>
                             </div>
                         </th>
@@ -162,21 +152,7 @@
                             </td>
                             <td data-title="Progress Report">Monthly report for {{ project_report.report_date | date:"F Y" }}</td>
                             <td data-title="Due date">{{ project_report.report_due_date | date:"d F Y" }}</td>
-                            <td data-title="Locations">
-                                {% for plan_report in project_report.activityplanreport_set.all %}
-                                    {{ plan_report.activity_plan.activity_domain }}
-                                    {% if not forloop.last %},{% endif %}
-                                {% endfor %}
-                            </td>
 
-                            <td class="id-col" data-title="Locations">
-                                {% for plan_report in project_report.activityplanreport_set.all %}
-                                    {% for location_report in plan_report.targetlocationreport_set.all %}
-                                        {{ location_report.province.name }}, {{ location_report.district.name }}
-                                    {% endfor %}
-                                    {% if not forloop.last %}<b>|</b>{% endif %}
-                                {% endfor %}
-                            </td>
                             <td data-title="Notes">{{ project_report.description }}</td>
 
                             <td data-title="Due date">

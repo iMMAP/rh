@@ -114,7 +114,6 @@ def create_project_monthly_report_view(request, project):
             if form.is_valid():
                 report = form.save(commit=False)
                 report.project = project
-                report.is_active = True
                 report.state = "pending"
                 report.save()
                 return redirect(

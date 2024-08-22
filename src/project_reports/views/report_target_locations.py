@@ -31,18 +31,19 @@ from ..models import (
 from ..filters import TargetLocationReportFilter
 from django_htmx.http import HttpResponseClientRedirect
 from django.http import  HttpResponse
+from django.views.decorators.http import require_http_methods
 
 import uuid
 
 @login_required
-def create_report_target_locations(request, plan):
+def create_report_target_location(request, plan):
     plan_report = get_object_or_404(ActivityPlanReport, pk=plan)
     DisaggregationReportFormSet = inlineformset_factory(
         parent_model=TargetLocationReport,
         model=DisaggregationLocationReport,
         form=DisaggregationLocationReportForm,
         formset=BaseDisaggregationLocationReportFormSet,
-        extra=1,
+        extra=2,
         can_delete=True,
     )
 
@@ -51,7 +52,7 @@ def create_report_target_locations(request, plan):
     if request.method == "POST":
         location_report_form = TargetLocationReportForm(request.POST,plan_report=plan_report)
         report_disaggregation_formset = DisaggregationReportFormSet(
-            request.POST, plan_report=plan_report,prefix=prefix
+            request.POST,instance=location_report_form.instance ,plan_report=plan_report,prefix=prefix
         )
 
         if location_report_form.is_valid() and report_disaggregation_formset.is_valid():
@@ -124,19 +125,17 @@ def update_report_target_locations(request, project, report, plan, location):
         messages.error(request, "The form is invalid. Please check the fields and try again.")
         return HttpResponse(401)
 
-@login_required
-def delete_location_report_view(request, location_report):
-    """Delete the target location report"""
-    location_report = get_object_or_404(TargetLocationReport, pk=location_report)
-    monthly_report = location_report.activity_plan_report.monthly_report
-    if location_report:
-        location_report.delete()
 
-    # Generate the URL using reverse
-    url = reverse_lazy(
-        "list_report_target_locations", kwargs={"project": monthly_report.project.pk, "report": monthly_report.pk}
-    )
-    return HttpResponseClientRedirect(url)
+@login_required
+@require_http_methods(["DELETE"])
+def delete_location_report_view(request, pk):
+    report_target_location = get_object_or_404(TargetLocationReport, pk=pk)
+
+    report_target_location.delete()
+
+    messages.success(request, "Target Location Report has been deleted.")
+
+    return HttpResponse(status=200)
 
 @login_required
 def get_target_location_auto_fields(request):

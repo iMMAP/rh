@@ -24,30 +24,34 @@ from django.forms import inlineformset_factory
 
 
 @login_required
-@require_http_methods(["POST"])
 def create_report_activity_plan(request, report):
     report_instance = get_object_or_404(ProjectMonthlyReport, pk=report)
-    form = ActivityPlanReportForm(request.POST, report=report_instance)
 
-    if form.is_valid():
-        form.save()
-        messages.success(request, mark_safe("The Report Activity Plan created successfully!"))
+    if request.method == "POST":
+        form = ActivityPlanReportForm(request.POST, report=report_instance)
+        if form.is_valid():
+            report_activity_plan = form.save()
+            messages.success(request, mark_safe("The Report Activity Plan created successfully!"))
+            return redirect("report_activity_plan_location_reports", report_instance.pk,report_activity_plan.id)
+        else:
+            messages.error(request, "The form is invalid. Please check the fields and try again.")
     else:
-        messages.error(request, "The form is invalid. Please check the fields and try again.")
+        form = ActivityPlanReportForm(report=report_instance)
 
     context = {
         "form": form,
+        "project": report_instance.project,
         "monthly_report": report_instance,
     }
 
-    return render(request, "project_reports/report_activity_plans/_report_ap_form.html", context)
+    return render(request, "project_reports/report_activity_plans/report_activity_plan.html", context=context)
 
 
 @login_required
 @require_http_methods(["POST"])
-def update_report_activity_plan(request, report, report_ap):
+def update_report_activity_plan(request, report_ap):
     report_ap = get_object_or_404(ActivityPlanReport, pk=report_ap)
-    form = ActivityPlanReportForm(request.POST, instance=report_ap)
+    form = ActivityPlanReportForm(request.POST, instance=report_ap,report=report_ap.monthly_report)
 
     if form.is_valid():
         form.save()
@@ -63,21 +67,8 @@ def update_report_activity_plan(request, report, report_ap):
     return render(request, "project_reports/report_activity_plans/_report_ap_form.html", context)
 
 
-@login_required
-def report_activity_plans(request, report):
-    report_instance = get_object_or_404(ProjectMonthlyReport, pk=report)
-    form = ActivityPlanReportForm(report=report_instance)
 
-    context = {
-        "form": form,
-        "project": report_instance.project,
-        "monthly_report": report_instance,
-    }
-
-    return render(request, "project_reports/report_activity_plans/report_activity_plan.html", context=context)
-
-
-def update_report_activity_plans(request, report, report_ap):
+def report_activity_plan_location_reports(request, report, report_ap):
     report_instance = get_object_or_404(ProjectMonthlyReport, pk=report)
     report_ap = get_object_or_404(ActivityPlanReport, pk=report_ap)
 
@@ -101,7 +92,7 @@ def update_report_activity_plans(request, report, report_ap):
     for report in target_location_reports:
         target_location_report_forms.append({
             "target_location_form": TargetLocationReportForm(instance=report, plan_report=report_ap),
-            "dis_location_report_formset": DisaggregationReportFormSet(plan_report=report_ap),
+            "dis_location_report_formset": DisaggregationReportFormSet(instance=report,plan_report=report_ap),
         })
 
     context = {
@@ -134,3 +125,24 @@ def delete_report_activity_plan(request, ap_report):
         )
 
     return HttpResponse(status=200)
+
+
+
+# @login_required
+# @require_http_methods(["POST"])
+# def store_report_activity_plan(request, report):
+#     report_instance = get_object_or_404(ProjectMonthlyReport, pk=report)
+#     form = ActivityPlanReportForm(request.POST, report=report_instance)
+
+#     if form.is_valid():
+#         form.save()
+#         messages.success(request, mark_safe("The Report Activity Plan created successfully!"))
+#     else:
+#         messages.error(request, "The form is invalid. Please check the fields and try again.")
+
+#     context = {
+#         "form": form,
+#         "monthly_report": report_instance,
+#     }
+
+#     return render(request, "project_reports/report_activity_plans/_report_ap_form.html", context)

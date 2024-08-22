@@ -63,7 +63,7 @@
                                 <div class="table-flex-holder">
                                     <ul class="table-options-buttons">
                                         <li>
-                                            <a href="{% url 'update_report_activity_plans' report_plan.monthly_report.id report_plan.id %}" class="btn btn-gray">Edit</a>
+                                            <a href="{% url 'report_activity_plan_location_reports' report_plan.monthly_report.id report_plan.id %}" class="btn btn-gray">Locations</a>
                                         </li>
                                         <li><button>
                                             <a hx-delete="{% url 'delete_report_activity_plan' report_plan.id %}"
@@ -92,5 +92,7 @@
     {% endif %}
 
     {% comment %} Pagination {% endcomment %}
-    {% include "components/_pagination.html" with object_list=object_list %}
+    <div class="border-t border-gray-bc">
+        {% include "components/_pagination.html" with object_list=object_list %}
+    </div>
 </div>

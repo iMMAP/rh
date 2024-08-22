@@ -125,7 +125,7 @@ class TargetLocationReport(models.Model):
     updated_at = models.DateTimeField(auto_now=True, null=True)
 
     def __str__(self):
-        return f"Location Report: {self.province}, {self.district}"
+        return f"Location Report: {self.location_type}, {self.id}"
 
     class Meta:
         verbose_name = "Target Location Report"

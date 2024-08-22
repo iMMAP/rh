@@ -2,9 +2,9 @@
 {% load compress %}
 
 <form 
-    class="bg-white rounded border border-gray-e6" 
+    class="rounded border border-gray-e6 bg-gray-fa" 
     id="{{prefix}}"
-    hx-post="{% url 'create_report_target_locations' plan_report.id %}"
+    hx-post="{% url 'create_report_target_location' plan_report.id %}"
     hx-swap="outerHTML"  
 >
     <div class="flex items-center justify-between border-b border-red-b5 p-4 bg-gray-f5">
@@ -71,11 +71,19 @@
                                 </td>
                             </tr>
                         {% endfor %}
+
                         <tr class="add-row">
                             <td colspan="5">
-                                <a href="#">Add Another</a>
+                                <a href="#" onclick="
+                                    event.preventDefault();
+                                    const emptyTr = this.closest('tbody').querySelector('.empty-form');
+                                    const clone = emptyTr.cloneNode(true);
+                                    clone.id = `{{report_disaggregation_formset.prefix}}-${Date.now()}`; // Generate a unique ID for the cloned form
+                                    clone.classList.remove('empty-form');
+                                    this.closest('tr').before(clone);
+                                ">Add Another</a>
                             </td>
-                        </tr>
+                        </tr>  
                     </tbody>
                 </table>
             </fieldset>
@@ -85,7 +93,19 @@
     <div class="plan-submit-holder">
         <div></div>
         <div>
-            <a href="#" class="btn btn-gray">Delete</a>
+            {% if location_report_form.initial %}
+                <a id="delete-btn"
+                    hx-delete="{% url 'delete_location_report' location_report_form.instance.id %}"
+                    hx-target="closest form"
+                    hx-trigger="click"
+                    hx-indicator=".progress"
+                    hx-confirm="Do you want to delete `{{ location_report_form.initial.id }}` and its disaggregations?"
+                    data-tippy-content="Delete Activity Plan"
+                    class="cursor-pointer btn btn-gray">
+                    <span class="project-detail icon-trashbin"></span>
+                    Delete
+                </a>
+            {% endif %}
             <input type="submit" name="_save" class="btn btn-red" value="Save">
         </div>
     </div>
@@ -93,7 +113,7 @@
 </form>
 
 {% block scripts %}
-    <script>
+    {% comment %} <script>
         document.querySelectorAll(".js-inline-admin-formset-{{report_disaggregation_formset.prefix}}").forEach((element) => {
             const data = element.dataset;
             const inlineOptions = JSON.parse(data.inlineFormset);
@@ -105,5 +125,5 @@
                 inlineOptions.options,
             );
         });
-    </script>
+    </script> {% endcomment %}
 {% endblock scripts %}

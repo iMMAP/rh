@@ -1,7 +1,13 @@
 <form 
-    hx-post="{% url 'create_report_activity_plan' monthly_report.id %}" 
-    hx-swap="outerHTML"  
-    class="rounded p-4 border border-gray-e6"
+    {% if form.instance.id %}
+        hx-post="{% url 'update_report_activity_plan' form.instance.id %}" 
+        hx-swap="innerHTML"
+    {% else %}
+        action="{% url 'create_report_activity_plan' monthly_report.id %}" 
+    {% endif %}
+
+    method="post"
+    class="rounded p-4 border border-gray-e6 bg-gray-f5"
 >
     {% csrf_token %}
     {{ form.monthly_report }}
@@ -137,7 +143,7 @@
 
     {% if form.instance.id %}
         <button 
-            hx-get="{% url 'create_report_target_locations' form.instance.id %}" 
+            hx-get="{% url 'create_report_target_location' form.instance.id %}" 
             class="btn btn-red my-3"
             id="addLocationButton" 
             hx-target="#ap-report-target-locations"
@@ -146,33 +152,21 @@
             + Add Location
         </button>
     {% endif %}
-
-    <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
-    <script>
-        document.querySelectorAll('.custom-select').forEach((select) => {
-            const choice = new Choices(select, {
-                searchEnabled: true,
-                itemSelectText: '',
-                removeItemButton: true,
-                classNames: {
-                    listDropdown: 'choices__list--dropdown',
-                },
-                shouldSort: false,
-            });
-        });
-    </script>
 </form>
 
-{% comment %} {% include "project_reports/report_target_locations/report_target_location_form.html" %} {% endcomment %}
-{% comment %} 
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
 <script>
-    const addLocationButton = document.querySelector("#addLocationButton")
-    const targetLocationForm = document.querySelector("#target-location-form")
-
-    addLocationButton.addEventListener('click', () => {
-        const clone = targetLocationForm.cloneNode(true);
-        clone.id = `target-location-form-${Date.now()}`; // Generate a unique ID for the cloned form
-        addLocationButton.before(clone);
+    document.querySelectorAll('.custom-select').forEach((select) => {
+        const choice = new Choices(select, {
+            searchEnabled: true,
+            itemSelectText: '',
+            removeItemButton: true,
+            classNames: {
+                listDropdown: 'choices__list--dropdown',
+            },
+            shouldSort: false,
+        });
     });
-</script> 
-{% endcomment %}
+</script>
+{% endblock scripts %}

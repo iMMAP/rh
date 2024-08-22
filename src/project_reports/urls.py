@@ -75,19 +75,14 @@ urlpatterns = [
         name="update_report_activity_plan",
     ),
     path(
-        "project/monthly-progress/<str:report>/report-activity-plan",
-        plan_views.report_activity_plans,
-        name="report_activity_plans",
+        "project/monthly-progress/<str:report>/report-activity-plan/create",
+        plan_views.create_report_activity_plan,
+        name="create_report_activity_plan",
     ),
     path(
         "project/monthly-progress/<str:report>/report-activity-plan/<int:report_ap>/update",
-        plan_views.update_report_activity_plans,
-        name="update_report_activity_plans",
-    ),
-    path(
-        "project/<str:report>/report-activity-plan/create",
-        plan_views.create_report_activity_plan,
-        name="create_report_activity_plan",
+        plan_views.report_activity_plan_location_reports,
+        name="report_activity_plan_location_reports",
     ),
     path(
         "project/monthly-progress/<int:ap_report>/report-activity-plan/delete",
@@ -97,8 +92,8 @@ urlpatterns = [
     # Location Report URLS
     path(
         "project/report-plan/<str:plan>/report-target-locations/create",
-        location_views.create_report_target_locations,
-        name="create_report_target_locations",
+        location_views.create_report_target_location,
+        name="create_report_target_location",
     ),
     # path(
     #     "project/<str:project>/monthly-progress/<str:report>/report-target-locations/view",
@@ -121,7 +116,7 @@ urlpatterns = [
         name="ajax-get-target-location-auto-fields",
     ),
     path(
-        "project/monthly-progress/location_report/delete/<str:location_report>/",
+        "target-location-report/<int:pk>",
         location_views.delete_location_report_view,
         name="delete_location_report",
     ),

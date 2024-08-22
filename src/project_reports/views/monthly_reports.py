@@ -120,14 +120,12 @@ def create_project_monthly_report_view(request, project):
                 report.state = "pending"
                 report.save()
 
-                return redirect("create_report_activity_plan", report=report.pk, project=project.pk)
-
-                # return render(request, "project_reports/report_activity_plans/activity_plan_form.html", context=context)
-                # return redirect(
-                #     "view_monthly_report",
-                #     project=project.pk,
-                #     report=report.pk,
-                # )
+                # return redirect("create_report_activity_plan", report=report.pk, project=project.pk)
+                return redirect(
+                    "view_monthly_report",
+                    project=project.pk,
+                    report=report.pk,
+                )
 
         context = {
             "project": project,

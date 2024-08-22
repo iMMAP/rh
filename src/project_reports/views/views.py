@@ -277,7 +277,7 @@ def import_report_activities(request, pk):
             if len(errors) > 0:
                 messages.error(request, "Failed to import the Activities! Please check the errors below and try again.")
             else:
-                ActivityPlanReport.objects.bulk_create(report_activities.values())
+                activities = ActivityPlanReport.objects.bulk_create(report_activities.values())
 
                 # Assign Manytomany fields after bulk_create
                 for activity_plan_report in activity_plan_reports_list:
@@ -307,7 +307,10 @@ def import_report_activities(request, pk):
 
                 TargetLocationReport.objects.bulk_create(report_target_locations)
                 DisaggregationLocationReport.objects.bulk_create(disaggregation_locations)
-                messages.success(request, "Activities imported successfully.")
+                messages.success(request, f"[{len(activities)}] Activities imported successfully.")
+                return redirect(
+                    "list_report_activity_plans", project=monthly_report.project.pk, report=monthly_report.pk
+                )
         except Exception as e:
             errors.append(f"Someting went wrong please check your data : {e}")
             messages.error(request, "An error occurred during the import process.")

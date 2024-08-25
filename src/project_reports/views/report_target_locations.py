@@ -68,7 +68,9 @@ def list_report_target_locations(request, project, report, plan=None):
             request.GET,
             request=request,
             queryset=TargetLocationReport.objects.filter(activity_plan_report__monthly_report=report)
-            .select_related("activity_plan_report", "country", "province", "district")
+            .select_related(
+                "activity_plan_report",
+            )
             .order_by("-id")
             .annotate(report_disaggregation_locations_count=Count("disaggregationlocationreport")),
             report=monthly_report_instance,

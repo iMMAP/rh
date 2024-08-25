@@ -20,7 +20,6 @@ class ProjectMonthlyReportAdmin(admin.ModelAdmin):
     list_display = (
         "project",
         "state",
-        "is_active",
         "report_period",
         "report_date",
         "report_due_date",
@@ -32,8 +31,8 @@ admin.site.register(ProjectMonthlyReport, ProjectMonthlyReportAdmin)
 
 
 class ActivityPlanReportAdmin(admin.ModelAdmin):
-    list_display = ("monthly_report", "activity_plan", "indicator")
-    raw_id_fields = ["monthly_report", "activity_plan", "indicator"]
+    list_display = ("monthly_report", "activity_plan")
+    raw_id_fields = ["monthly_report", "activity_plan"]
 
 
 admin.site.register(ActivityPlanReport, ActivityPlanReportAdmin)
@@ -42,10 +41,6 @@ admin.site.register(ActivityPlanReport, ActivityPlanReportAdmin)
 class TargetLocationReportAdmin(admin.ModelAdmin):
     list_display = (
         "activity_plan_report",
-        "country",
-        "province",
-        "district",
-        "zone",
         "location_type",
     )
 
@@ -54,7 +49,7 @@ admin.site.register(TargetLocationReport, TargetLocationReportAdmin)
 
 
 class DisaggregationLocationReportAdmin(admin.ModelAdmin):
-    list_display = ("target_location_report", "is_active", "disaggregation", "target")
+    list_display = ("target_location_report", "disaggregation", "reached")
 
 
 admin.site.register(DisaggregationLocationReport, DisaggregationLocationReportAdmin)

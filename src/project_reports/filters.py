@@ -1,8 +1,6 @@
-import datetime
 from django import forms
 
 import django_filters
-from django_filters.widgets import RangeWidget
 
 from .models import ProjectMonthlyReport, ActivityPlanReport, TargetLocationReport
 from rh.models import (
@@ -14,25 +12,15 @@ from rh.models import (
 
 
 class MonthlyReportsFilter(django_filters.FilterSet):
-    """Monthly Report Filter Form"""
-
     # Define the DateFromToRangeFilter with initial value of current month
-    current_month = datetime.date.today().replace(day=1)
-    report_date = django_filters.DateFromToRangeFilter(widget=RangeWidget(attrs={"type": "date"}))
-
+    # current_month = datetime.date.today().replace(day=1)
+    # report_date = django_filters.DateFromToRangeFilter(widget=RangeWidget(attrs={"type": "date"}))
     class Meta:
         model = ProjectMonthlyReport
-        fields = {
-            "project__clusters": ["exact"],  # Exact match for clusters
-            "project__implementing_partners": ["exact"],  # Exact match for implementing partners
-            "report_date": ["gte", "lte"],  # Date range
-        }
+        fields = ["report_date", "state"]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-
-        self.form.fields["project__clusters"].widget.attrs.update({"class": "custom-select"})
-        self.form.fields["project__implementing_partners"].widget.attrs.update({"class": "custom-select"})
 
 
 class PlansReportFilter(django_filters.FilterSet):
@@ -70,16 +58,16 @@ class TargetLocationReportFilter(django_filters.FilterSet):
     activity_plan_report = django_filters.ModelMultipleChoiceFilter(
         queryset=ActivityPlanReport.objects.none(), widget=forms.SelectMultiple(attrs={"class": "custom-select"})
     )
-    province = django_filters.ModelMultipleChoiceFilter(
+    target_location__province = django_filters.ModelMultipleChoiceFilter(
         queryset=Location.objects.filter(level=1), widget=forms.SelectMultiple(attrs={"class": "custom-select"})
     )
-    district = django_filters.ModelMultipleChoiceFilter(
+    target_location__district = django_filters.ModelMultipleChoiceFilter(
         queryset=Location.objects.filter(level=2), widget=forms.SelectMultiple(attrs={"class": "custom-select"})
     )
 
     class Meta:
         model = TargetLocationReport
-        fields = ["activity_plan_report", "province", "district"]
+        fields = ["activity_plan_report", "target_location__province", "target_location__district"]
 
     def __init__(self, data=None, *args, **kwargs):
         report = kwargs.pop("report", None)

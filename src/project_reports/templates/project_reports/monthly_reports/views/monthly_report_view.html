@@ -97,7 +97,7 @@
                                 </div>
                             </div>
                         {% endif %}
-                        {% if monthly_report.approved_on and monthly_report.state == 'complete' %}
+                        {% if monthly_report.approved_on and monthly_report.state == 'completed' %}
                             <div class="field-col">
                                 <div class="input-field">
                                     <label>Approved On</label>
@@ -105,7 +105,7 @@
                                 </div>
                             </div>
                         {% endif %}
-                        {% if monthly_report.rejected_on and monthly_report.state == 'reject' %}
+                        {% if monthly_report.rejected_on and monthly_report.state == 'rejected' %}
                             <div class="field-col">
                                 <div class="input-field">
                                     <label>Rejected On</label>
@@ -153,7 +153,7 @@
             </div>
         </div>
 
-        {% if monthly_report.comments and monthly_report.state == 'reject' %}
+        {% if monthly_report.comments and monthly_report.state == 'rejected' %}
             <div class="monthly-reporting">
                 <div class="row">
                     <div class="col">
@@ -167,7 +167,7 @@
         {% endif %}
 
         <div class="monthly-progress-submit-holder text-center">
-            {% if monthly_report.state in "pending,todo,reject" %}
+            {% if monthly_report.state in "pending,todo,rejected" %}
                 <a hx-post="{% url 'submit_monthly_report' monthly_report.pk %}"
                    hx-trigger="click"
                    hx-swap="none"
@@ -179,7 +179,7 @@
                          src="{% static 'images/spinner.gif' %}" />
                     Submit Monthly Report
                 </a>
-            {% elif monthly_report.state == "submit" %}
+            {% elif monthly_report.state == "submited" %}
                 <a data-url="{% url 'approve_monthly_report' monthly_report.pk %}"
                    data-button="Approve Report"
                    class="btn btn-red show-sw-confirm-button">

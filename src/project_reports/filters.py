@@ -58,21 +58,18 @@ class PlansReportFilter(django_filters.FilterSet):
 
 
 class TargetLocationReportFilter(django_filters.FilterSet):
-    activity_plan_report = django_filters.ModelMultipleChoiceFilter(
-        queryset=ActivityPlanReport.objects.none(), widget=forms.SelectMultiple(attrs={"class": "custom-select"})
-    )
-    province = django_filters.ModelMultipleChoiceFilter(
+    target_location__province = django_filters.ModelMultipleChoiceFilter(
         queryset=Location.objects.filter(level=1), widget=forms.SelectMultiple(attrs={"class": "custom-select"})
     )
-    district = django_filters.ModelMultipleChoiceFilter(
+    target_location__district = django_filters.ModelMultipleChoiceFilter(
         queryset=Location.objects.filter(level=2), widget=forms.SelectMultiple(attrs={"class": "custom-select"})
     )
 
     class Meta:
         model = TargetLocationReport
-        fields = ["activity_plan_report", "province", "district"]
+        fields = ["target_location__province","target_location__district"]
 
     def __init__(self, data=None, *args, **kwargs):
-        report = kwargs.pop("report", None)
+        # report = kwargs.pop("report", None)
         super().__init__(data, *args, **kwargs)
-        self.form.fields["activity_plan_report"].queryset = report.activityplanreport_set.all()
+        # self.form.fields["activity_plan_report"].queryset = report.activityplanreport_set.all()

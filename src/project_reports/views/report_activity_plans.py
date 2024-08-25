@@ -1,4 +1,5 @@
 from django.contrib.auth.decorators import login_required
+import uuid
 from django.shortcuts import get_object_or_404, redirect, render
 from django.core.paginator import Paginator
 from django.db.models import Count
@@ -19,7 +20,7 @@ from ..forms import (
 )
 from ..models import ActivityPlanReport, ProjectMonthlyReport, TargetLocationReport, DisaggregationLocationReport
 
-from ..filters import PlansReportFilter
+from ..filters import TargetLocationReportFilter
 from django.forms import inlineformset_factory
 
 
@@ -75,9 +76,15 @@ def report_activity_plan_location_reports(request, report, report_ap):
     # get the target_location_reports of report_ap and create forms for it
     form = ActivityPlanReportForm(instance=report_ap, report=report_instance)
 
-    target_location_reports = Paginator(TargetLocationReport.objects.filter(activity_plan_report=report_ap), 3).page(
-        request.GET.get("page", 1)
+    report_target_location_filter = TargetLocationReportFilter(
+        request.GET,
+        queryset=TargetLocationReport.objects.filter(activity_plan_report=report_ap).order_by("-updated_at"),
     )
+
+    page = request.GET.get("page", 1)
+    tl_reports_paginator = Paginator(report_target_location_filter.qs, 10)
+    target_location_reports = tl_reports_paginator.page(page)
+    target_location_reports.adjusted_elided_pages = tl_reports_paginator.get_elided_page_range(page)
 
     DisaggregationReportFormSet = inlineformset_factory(
         parent_model=TargetLocationReport,
@@ -90,18 +97,30 @@ def report_activity_plan_location_reports(request, report, report_ap):
 
     target_location_report_forms = []
     for report in target_location_reports:
-        target_location_report_forms.append({
-            "target_location_form": TargetLocationReportForm(instance=report, plan_report=report_ap),
-            "dis_location_report_formset": DisaggregationReportFormSet(instance=report,plan_report=report_ap),
-        })
+        prefix = f"disaggregation-{uuid.uuid4()}"
+        target_location_report_forms.append(
+            {
+                "target_location_form": TargetLocationReportForm(instance=report, plan_report=report_ap),
+                "dis_location_report_formset": DisaggregationReportFormSet(
+                    instance=report,
+                    queryset=DisaggregationLocationReport.objects.select_related(
+                        "target_location_report", "disaggregation"
+                    ),
+                    plan_report=report_ap,
+                    prefix=prefix,
+                ),
+                "prefix":prefix
+            }
+        )
 
     context = {
         "form": form,
         "project": report_instance.project,
         "monthly_report": report_instance,
         "target_location_report_forms": target_location_report_forms,
-        "target_location_reports":target_location_reports,
+        "target_location_reports": target_location_reports,
         "plan_report": report_ap,
+        "report_target_location_filter": report_target_location_filter,
     }
 
     return render(request, "project_reports/report_activity_plans/update_report_activity_plan.html", context=context)

@@ -39,6 +39,7 @@ class TargetLocationReportForm(forms.ModelForm):
     class Meta:
         model = TargetLocationReport
         fields = "__all__"
+        exclude=("activity_plan_report",)
         widgets = {
             "nhs_code": forms.widgets.TextInput(),
             "facility_site_type": forms.Select(attrs={"class": "custom-select"}),

@@ -106,9 +106,9 @@ urlpatterns = [
     #     name="list_report_target_locations_with_plan",
     # ),
     path(
-        "project/<str:project>/monthly-progress/<str:report>/report_plan/<str:plan>/report-target-locations/<str:location>/update",
-        location_views.update_report_target_locations,
-        name="update_report_target_locations",
+        "report-target-location/<int:location>/update",
+        location_views.update_report_target_location,
+        name="update_report_target_location",
     ),
     path(
         "ajax/get_target_location_auto_fields/",

@@ -4,15 +4,26 @@
 <form 
     class="rounded border border-gray-e6 bg-gray-fa" 
     id="{{prefix}}"
-    hx-post="{% url 'create_report_target_location' plan_report.id %}"
+
+    {% if location_report_form.instance.id %}
+        hx-post="{% url 'update_report_target_location' location_report_form.instance.id %}" 
+    {% else %}
+        hx-post="{% url 'create_report_target_location' plan_report.id %}"
+    {% endif %}
+    hx-indicator=".progress-{{prefix}}"
     hx-swap="outerHTML"  
 >
+    <div class="progress bg-red h-0.5 progress-{{prefix}}">
+        <div class="indeterminate bg-white"></div>
+    </div>
     <div class="flex items-center justify-between border-b border-red-b5 p-4 bg-gray-f5">
         <span class="title font-bold text-red-a5">
             Targeted Location
         </span>
-        <div class="inline-deletelink" onclick="this.closest('form').remove()">
-        </div>
+        {% if not location_report_form.instance.id %}
+            <div class="inline-deletelink" onclick="this.closest('form').remove()">
+            </div>
+        {% endif %}
     </div>
 
     {% csrf_token %}
@@ -74,16 +85,18 @@
 
                         <tr class="add-row">
                             <td colspan="5">
-                                <a href="#" onclick="
-                                    event.preventDefault();
-                                    const emptyTr = this.closest('tbody').querySelector('.empty-form');
-                                    const clone = emptyTr.cloneNode(true);
-                                    clone.id = `{{report_disaggregation_formset.prefix}}-${Date.now()}`; // Generate a unique ID for the cloned form
-                                    clone.classList.remove('empty-form');
-                                    this.closest('tr').before(clone);
-                                ">Add Another</a>
+                                <a href="#" 
+                                    {% comment %} onclick="
+                                        event.preventDefault();
+                                        const emptyTr = this.closest('tbody').querySelector('.empty-form');
+                                        const clone = emptyTr.cloneNode(true);
+                                        clone.id = `{{report_disaggregation_formset.prefix}}-${Date.now()}`; // Generate a unique ID for the cloned form
+                                        clone.classList.remove('empty-form');
+                                        this.closest('tr').before(clone);
+                                    " {% endcomment %}
+                                >Add Another</a>
                             </td>
-                        </tr>  
+                        </tr> 
                     </tbody>
                 </table>
             </fieldset>
@@ -98,7 +111,8 @@
                     hx-delete="{% url 'delete_location_report' location_report_form.instance.id %}"
                     hx-target="closest form"
                     hx-trigger="click"
-                    hx-indicator=".progress"
+                    hx-indicator=".progress-{{prefix}}"
+                    hx-swap="outerHTML swap:1s"
                     hx-confirm="Do you want to delete `{{ location_report_form.initial.id }}` and its disaggregations?"
                     data-tippy-content="Delete Activity Plan"
                     class="cursor-pointer btn btn-gray">
@@ -109,21 +123,23 @@
             <input type="submit" name="_save" class="btn btn-red" value="Save">
         </div>
     </div>
- 
 </form>
 
+
 {% block scripts %}
-    {% comment %} <script>
+    <script>
         document.querySelectorAll(".js-inline-admin-formset-{{report_disaggregation_formset.prefix}}").forEach((element) => {
             const data = element.dataset;
             const inlineOptions = JSON.parse(data.inlineFormset);
             const selector = `${inlineOptions.name}-group .tabular.inline-related tbody > tr.form-row`;
 
+            const addButton = document.querySelector(`${inlineOptions.name}-group .tabular.inline-related tbody > tr.add-row`)
+
             // defined in inlines.js file
             tabularFormset(
                 document.querySelectorAll(selector),
-                inlineOptions.options,
+                { ...inlineOptions.options, addButton: addButton },
             );
         });
-    </script> {% endcomment %}
+    </script> 
 {% endblock scripts %}

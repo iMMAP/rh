@@ -579,11 +579,25 @@ class TargetLocation(models.Model):
     country = models.ForeignKey(
         Location, related_name="target_country", on_delete=models.SET_NULL, null=True, limit_choices_to={"level": 0}
     )
-    province = models.ForeignKey(Location, related_name="target_province", on_delete=models.SET_NULL, null=True)
-    district = models.ForeignKey(
-        Location, related_name="target_district", on_delete=models.SET_NULL, null=True, blank=True
+    province = models.ForeignKey(
+        Location, related_name="target_province", on_delete=models.SET_NULL, null=True, limit_choices_to={"level": 1}
     )
-    zone = models.ForeignKey(Location, related_name="target_zones", on_delete=models.SET_NULL, null=True, blank=True)
+    district = models.ForeignKey(
+        Location,
+        related_name="target_district",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        limit_choices_to={"level": 2},
+    )
+    zone = models.ForeignKey(
+        Location,
+        related_name="target_zones",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        limit_choices_to={"level": 3},
+    )
     location_type = models.ForeignKey(LocationType, on_delete=models.SET_NULL, null=True, blank=True)
 
     implementing_partner = models.ForeignKey(Organization, on_delete=models.SET_NULL, null=True, blank=True)

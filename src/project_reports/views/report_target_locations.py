@@ -80,11 +80,7 @@ def create_report_target_location(request, plan):
     return render(request, "project_reports/report_target_locations/_report_target_location_form.html",context)
 
 @login_required
-def update_report_target_locations(request, project, report, plan, location):
-    # monthly_report = get_object_or_404(ProjectMonthlyReport.objects.select_related("project"), pk=report)
-    plan_report = get_object_or_404(ActivityPlanReport, pk=plan)
-
-    # Get the existing location report to be updated
+def update_report_target_location(request, location):
     location_report = get_object_or_404(TargetLocationReport, pk=location)
 
     DisaggregationReportFormSet = inlineformset_factory(
@@ -92,38 +88,48 @@ def update_report_target_locations(request, project, report, plan, location):
         model=DisaggregationLocationReport,
         form=DisaggregationLocationReportForm,
         formset=BaseDisaggregationLocationReportFormSet,
-        extra=1,
+        extra=2,
         can_delete=True,
     )
 
-    location_report_form = TargetLocationReportForm(request.POST or None, instance=location_report)
+    location_report_form = TargetLocationReportForm(request.POST or None, instance=location_report,plan_report=location_report.activity_plan_report)
 
     # Optimize the queryset to prefetch related target_location_report
     disaggregation_reports = DisaggregationLocationReport.objects.select_related(
         "target_location_report", "disaggregation"
     )
 
+    prefix = request.POST.get("prefix", f"disaggregation-{uuid.uuid4()}")
+
     # When using the formset, pass the optimized queryset
     report_disaggregation_formset = DisaggregationReportFormSet(
-        request.POST, queryset=disaggregation_reports, instance=location_report, plan_report=plan_report
+        request.POST,
+        queryset=disaggregation_reports,
+        instance=location_report,
+        plan_report=location_report.activity_plan_report,
+        prefix=prefix
     )
-    if location_report_form.is_valid() and report_disaggregation_formset.is_valid():
-        location_report = location_report_form.save(commit=False)
-        location_report.activity_plan_report = plan_report
-        location_report.save()
 
-        report_disaggregation_formset.instance = location_report
+    if location_report_form.is_valid() and report_disaggregation_formset.is_valid():
+        updated_location_report = location_report_form.save(commit=False)
+        updated_location_report.activity_plan_report=location_report.activity_plan_report
+        updated_location_report.save()
+
         report_disaggregation_formset.save()
-        messages.success(
-            request,
-            mark_safe(
-                f'The Report Target Location "<a href="{reverse("update_report_target_locations", args=[project, report, plan, location])}">{location_report}</a>" was updated successfully.'
-            ),
-        )
-        return HttpResponse(200)
+
+        messages.success(request,"Location Report updated successfully!")
     else:
         messages.error(request, "The form is invalid. Please check the fields and try again.")
-        return HttpResponse(401)
+    
+    context = {
+        "location_report_form": location_report_form,
+        "report_disaggregation_formset": report_disaggregation_formset,
+        "plan_report": location_report.activity_plan_report,
+        "prefix":prefix
+    }
+
+    return render(request, "project_reports/report_target_locations/_report_target_location_form.html",context)
+
 
 
 @login_required

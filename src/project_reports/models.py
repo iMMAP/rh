@@ -76,8 +76,8 @@ class ProjectMonthlyReport(models.Model):
 class ActivityPlanReport(models.Model):
     """Activity Plans model"""
 
-    monthly_report = models.ForeignKey(ProjectMonthlyReport, on_delete=models.CASCADE, null=True, blank=True)
-    activity_plan = models.ForeignKey(ActivityPlan, on_delete=models.CASCADE, null=True, blank=True)
+    monthly_report = models.ForeignKey(ProjectMonthlyReport, on_delete=models.CASCADE)
+    activity_plan = models.ForeignKey(ActivityPlan, on_delete=models.CASCADE)
 
     response_type = models.ManyToManyField(ResponseType, blank=True)
 
@@ -117,8 +117,8 @@ class ActivityPlanReport(models.Model):
 
 class TargetLocationReport(models.Model):
     """Target Locations model"""
-    activity_plan_report = models.ForeignKey(ActivityPlanReport, on_delete=models.CASCADE, null=True, blank=True)
-    target_location = models.ForeignKey(TargetLocation, on_delete=models.CASCADE, null=True, blank=True)
+    activity_plan_report = models.ForeignKey(ActivityPlanReport, on_delete=models.CASCADE)
+    target_location = models.ForeignKey(TargetLocation, on_delete=models.CASCADE)
     location_type = models.ForeignKey(LocationType, on_delete=models.SET_NULL, null=True, blank=True)
 
     created_at = models.DateTimeField(auto_now_add=True, null=True)

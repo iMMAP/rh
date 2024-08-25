@@ -12,7 +12,7 @@ from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.core.paginator import Paginator
-from django.db.models import Count, Prefetch, Q
+from django.db.models import Count, Q
 
 from rh.models import (
     ActivityDetail,
@@ -39,6 +39,7 @@ from ..models import (
 )
 
 from ..filters import MonthlyReportsFilter
+from extra_settings.models import Setting
 
 RECORDS_PER_PAGE = 10
 
@@ -55,7 +56,7 @@ class HTTPResponseHXRedirect(HttpResponseRedirect):
 def index_project_report_view(request, project):
     """Project Monthly Report View"""
 
-    project = get_object_or_404(Project.objects.filter(pk=project).order_by("-id"), pk=project)
+    project = get_object_or_404(Project, pk=project)
 
     # Setup Filter
     reports_filter = MonthlyReportsFilter(
@@ -71,9 +72,8 @@ def index_project_report_view(request, project):
 
     reports = ProjectMonthlyReport.objects.filter(project=project).aggregate(
         project_reports_todo_count=Count("id", filter=Q(state__in=ProjectMonthlyReport.REPORT_STATES)),
-        project_report_complete_count=Count("id", filter=Q(state="complete"), is_active=True),
-        project_report_archive_count=Count("id", filter=Q(state="archive", is_active=False)),
-        project_reports_count=Count("id", filter=Q(is_active=True)),
+        project_report_complete_count=Count("id", filter=Q(state="complete")),
+        project_report_archive_count=Count("id", filter=Q(state="archive")),
     )
 
     context = {
@@ -82,11 +82,7 @@ def index_project_report_view(request, project):
         "project_reports_todo": reports["project_reports_todo_count"],
         "project_report_complete": reports["project_report_complete_count"],
         "project_report_archive": reports["project_report_archive_count"],
-        "project_report_count": reports["project_reports_count"],
         "reports_filter": reports_filter,
-        "project_view": False,
-        "financial_view": False,
-        "reports_view": True,
     }
 
     return render(request, "project_reports/monthly_reports/views/monthly_reports_view_base.html", context)
@@ -116,7 +112,6 @@ def create_project_monthly_report_view(request, project):
             if form.is_valid():
                 report = form.save(commit=False)
                 report.project = project
-                report.is_active = True
                 report.state = "pending"
                 report.save()
 
@@ -130,10 +125,8 @@ def create_project_monthly_report_view(request, project):
         context = {
             "project": project,
             "report_form": form,
-            "report_view": True,
-            "report_activities": False,
-            "report_locations": False,
         }
+
         return render(request, "project_reports/monthly_reports/forms/monthly_report_form.html", context)
 
     messages.error(request, "Your project is not ready for reporting! Please submit your project first.")
@@ -180,28 +173,26 @@ def update_project_monthly_report_view(request, project, report):
 def details_monthly_progress_view(request, project, report):
     """Project Monthly Report Read View"""
     project = get_object_or_404(Project, pk=project)
+    monthly_report = get_object_or_404(ProjectMonthlyReport, pk=report)
 
-    monthly_report = get_object_or_404(
-        ProjectMonthlyReport.objects.prefetch_related(
-            Prefetch(
-                "activityplanreport_set",
-                ActivityPlanReport.objects.select_related(
-                    "activity_plan__activity_domain", "activity_plan__activity_type", "indicator"
-                ).annotate(report_target_location_count=Count("targetlocationreport")),
-            ),
-        ),
-        pk=report,
+    activity_plan_report_list = (
+        ActivityPlanReport.objects.filter(monthly_report=monthly_report)
+        .select_related("activity_plan__activity_domain", "activity_plan__activity_type")
+        .order_by("-id")
+        .annotate(report_location_count=Count("targetlocationreport"))
     )
 
-    activity_reports = monthly_report.activityplanreport_set.all()
+    RECORDS_PER_PAGE = Setting.get("RECORDS_PER_PAGE", default=10)
+    per_page = request.GET.get("per_page", RECORDS_PER_PAGE)
+    p = Paginator(activity_plan_report_list, per_page=per_page)
+    page = request.GET.get("page", 1)
+    p_ap_plan_report_list = p.get_page(page)
+    p_ap_plan_report_list.adjusted_elided_pages = p.get_elided_page_range(page)
 
     context = {
         "project": project,
         "monthly_report": monthly_report,
-        "activity_reports": activity_reports,
-        "report_view": True,
-        "report_activities": False,
-        "report_locations": False,
+        "p_ap_plan_report_list": p_ap_plan_report_list,
     }
 
     return render(request, "project_reports/monthly_reports/views/monthly_report_view.html", context)
@@ -361,7 +352,7 @@ def archive_project_monthly_report_view(request, report):
     """Archive View for Project Reports"""
     monthly_report = get_object_or_404(ProjectMonthlyReport, pk=report)
     if monthly_report:
-        monthly_report.state = "archive"
+        monthly_report.state = "archived"
         monthly_report.is_active = False
         monthly_report.save()
     url = reverse_lazy("project_reports_home", kwargs={"project": monthly_report.project.pk})
@@ -388,7 +379,7 @@ def unarchive_project_monthly_report_view(request, report):
 def submit_monthly_report_view(request, report):
     monthly_report = get_object_or_404(ProjectMonthlyReport, pk=report)
     # TODO: Handle with access rights and groups
-    monthly_report.state = "complete"
+    monthly_report.state = "completed"
     monthly_report.submitted_on = timezone.now()
     monthly_report.approved_on = timezone.now()
     monthly_report.save()
@@ -405,7 +396,7 @@ def submit_monthly_report_view(request, report):
 def approve_monthly_report_view(request, report):
     monthly_report = get_object_or_404(ProjectMonthlyReport, pk=report)
     # TODO: Handle with access rights and groups
-    monthly_report.state = "complete"
+    monthly_report.state = "completed"
     monthly_report.approved_on = timezone.now()
     monthly_report.save()
     # Generate the URL using reverse
@@ -430,7 +421,7 @@ def reject_monthly_report_view(request, report):
         message = request.GET.get("message")
 
     # TODO: Handle with access rights and groups
-    monthly_report.state = "reject"
+    monthly_report.state = "rejected"
     monthly_report.rejected_on = timezone.now()
     monthly_report.comments = message
 

@@ -109,9 +109,11 @@
                                                 <a hx-delete="{% url 'activity-plans-delete' row.id %}"
                                                    hx-trigger="click"
                                                    hx-indicator=".progress"
+                                                   hx-swap="outerHTML swap:1s"
                                                    hx-confirm="Do you want to delete `{{ row }}` and its Target Locations ?"
                                                    hx-target="closest tr"
-                                                   data-tippy-content="Delete Activity Plan">
+                                                   data-tippy-content="Delete Activity Plan"
+                                                >
                                                     <span class="project-detail icon-trashbin"></span>
                                                 </a>
                                             </button>

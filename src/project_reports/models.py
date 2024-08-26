@@ -109,10 +109,10 @@ class ActivityPlanReport(models.Model):
     modality_retargeting = models.BooleanField(blank=True, null=True)
 
     beneficiary_status = models.CharField(
-        max_length=15,
+        max_length=25,
         choices=[
             ("new_beneficiary", "New Beneficiary"),
-            ("old_beneficiary", "Old Beneficiary"),
+            ("existing_beneficiaries", "Existing Beneficiaries"),
         ],
         null=True,
         blank=True,

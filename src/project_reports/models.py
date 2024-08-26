@@ -80,7 +80,7 @@ class ActivityPlanReport(models.Model):
         Organization, related_name="reporting_implementing_partners", blank=True
     )
 
-    response_type = models.ManyToManyField(ResponseType, blank=True)
+    response_types = models.ManyToManyField(ResponseType, blank=True)
 
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, null=True)

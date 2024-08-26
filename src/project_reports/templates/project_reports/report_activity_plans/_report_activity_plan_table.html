@@ -39,7 +39,7 @@
                         <th><strong class="table-title">Response Type</strong></th>
                         <th><strong class="table-title">Beneficairy Status</strong></th>
                         <th><strong class="table-title">Updated At</strong></th>
-                        <th><strong>Target Locations</strong></th>
+                        <th><strong>Targeted Locations</strong></th>
                         <th><strong>Actions</strong></th>
                     </tr>
                 </thead>
@@ -52,7 +52,7 @@
                             <td>{{ report_plan.activity_plan.activity_type }}</td>
                             <td>{{ report_plan.activity_plan.indicator }}</td>
                             <td>
-                                {% for type in report_plan.response_type.all %}
+                                {% for type in report_plan.response_types.all %}
                                     {{type}}
                                 {% endfor %}
                             </td>
@@ -64,24 +64,26 @@
                                     <ul class="table-options-buttons">
                                         <li>
                                             <a href="{% url 'create_report_target_location' report_plan.id %}"
-                                               class="btn btn-red">
-                                                <img src="{% static 'admin/img/icon-addlink.svg' %}" alt="add-btn-icon">
+                                               class="btn btn-gray">
+                                                <img src="{% static 'admin/img/icon-addlink.svg' %}" alt="add-btn-icon" style="filter: grayscale(100%)">
                                                 Location
                                             </a>
                                         </li>
                                         <li>
-                                            <a href="{% url 'update_report_activity_plans' project.id report_plan.monthly_report.id report_plan.id %}" data-tippy-content="Edit Report Activity Plan">
+                                            <a class="btn btn-gray" href="{% url 'update_report_activity_plans' project.id report_plan.monthly_report.id report_plan.id %}" data-tippy-content="Edit Report Activity Plan">
                                                 <span class="project-detail icon-pen"></span>
                                             </a>
                                         </li>
                                         <li>
-                                            <a hx-delete="{% url 'update_report_activity_plans' report_plan.id %}"
+                                            <a hx-delete="{% url 'delete_report_activity_plan' report_plan.id %}"
                                                hx-trigger="click"
                                                hx-indicator=".progress"
                                                hx-confirm="Do you want to delete `{{ report_plan }}` and the related Reporting Target Locations ?"
                                                hx-swap="outerHTML swap:1s"
                                                hx-target="closest tr"
-                                               data-tippy-content="Delete Activity Plan Report">
+                                               data-tippy-content="Delete Activity Plan Report"
+                                               class="btn btn-gray"
+                                            >
                                                 <span class="project-detail icon-trashbin"></span>
                                             </a>
                                         </li>

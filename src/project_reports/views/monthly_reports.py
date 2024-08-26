@@ -38,7 +38,7 @@ from ..models import (
     TargetLocationReport,
 )
 
-from ..filters import MonthlyReportsFilter
+from ..filters import MonthlyReportsFilter, ActivityPlanReportFilter
 from extra_settings.models import Setting
 
 RECORDS_PER_PAGE = 10
@@ -183,9 +183,13 @@ def details_monthly_progress_view(request, project, report):
         .annotate(report_location_count=Count("targetlocationreport"))
     )
 
+    ap_report_filter = ActivityPlanReportFilter(
+        request.GET, queryset=activity_plan_report_list, monthly_report=monthly_report
+    )
+
     RECORDS_PER_PAGE = Setting.get("RECORDS_PER_PAGE", default=10)
     per_page = request.GET.get("per_page", RECORDS_PER_PAGE)
-    p = Paginator(activity_plan_report_list, per_page=per_page)
+    p = Paginator(ap_report_filter.qs, per_page=per_page)
     page = request.GET.get("page", 1)
     p_ap_plan_report_list = p.get_page(page)
     p_ap_plan_report_list.adjusted_elided_pages = p.get_elided_page_range(page)
@@ -194,6 +198,7 @@ def details_monthly_progress_view(request, project, report):
         "project": project,
         "monthly_report": monthly_report,
         "p_ap_plan_report_list": p_ap_plan_report_list,
+        "ap_report_filter": ap_report_filter,
     }
 
     return render(request, "project_reports/monthly_reports/views/monthly_report_view.html", context)

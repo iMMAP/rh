@@ -117,7 +117,7 @@ class ActivityPlanReportForm(forms.ModelForm):
         exclude = ("monthly_report",)
 
         widgets = {
-            "response_type": forms.SelectMultiple(attrs={"class": "custom-select"}),
+            "response_types": forms.SelectMultiple(attrs={"class": "custom-select"}),
             "implementing_partners": forms.SelectMultiple(attrs={"class": "custom-select"}),
             "beneficiary_status": forms.Select(attrs={"class": "custom-select"}),
             "package_type": forms.Select(attrs={"class": "custom-select"}),

@@ -3,12 +3,13 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.core.paginator import Paginator
 from django.urls import reverse
 from django.db.models import Count
-from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
 
 from django.contrib import messages
 from django.utils.safestring import mark_safe
 from django.forms import inlineformset_factory
+from django_htmx.http import HttpResponseClientRedirect
+from django.http import HttpResponse
 
 from rh.models import (
     Project,
@@ -32,14 +33,6 @@ from ..models import (
 )
 
 from ..filters import TargetLocationReportFilter
-
-
-class HTTPResponseHXRedirect(HttpResponseRedirect):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self["HX-Redirect"] = self["Location"]
-
-    status_code = 200
 
 
 @login_required
@@ -259,17 +252,20 @@ def update_report_target_locations(request, project, report, plan, location):
 
 @login_required
 def delete_location_report_view(request, location_report):
-    """Delete the target location report"""
     location_report = get_object_or_404(TargetLocationReport, pk=location_report)
     monthly_report = location_report.activity_plan_report.monthly_report
-    if location_report:
-        location_report.delete()
 
-    # Generate the URL using reverse
-    url = reverse_lazy(
-        "list_report_target_locations", kwargs={"project": monthly_report.project.pk, "report": monthly_report.pk}
-    )
-    return HTTPResponseHXRedirect(redirect_to=url)
+    location_report.delete()
+
+    messages.success(request, "Target Location Report has been delete.")
+
+    if request.headers.get("Hx-Trigger", "") == "delete-btn":
+        url = reverse_lazy(
+            "list_report_target_locations", kwargs={"project": monthly_report.project.pk, "report": monthly_report.pk}
+        )
+        return HttpResponseClientRedirect(url)
+
+    return HttpResponse(status=200)
 
 
 @login_required

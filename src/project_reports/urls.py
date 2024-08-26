@@ -15,7 +15,7 @@ from .views import (
 urlpatterns = [
     # Monthly Report URLS
     path(
-        "project/<str:project>/monthly_progress",
+        "project/<str:project>/reports",
         report_views.index_project_report_view,
         name="project_reports_home",
     ),
@@ -71,11 +71,6 @@ urlpatterns = [
     ),
     # Activity Plan Report URLS
     path(
-        "project/<str:project>/monthly_progress/<str:report>/report-activity-plans/view",
-        plan_views.list_report_activity_plans,
-        name="list_report_activity_plans",
-    ),
-    path(
         "project/<str:project>/monthly_progress/<str:report>/create",
         plan_views.create_report_activity_plan,
         name="create_report_activity_plan",
@@ -91,15 +86,15 @@ urlpatterns = [
         name="update_report_activity_plans",
     ),
     path(
-        "ajax/get_activity_details_fields_data/",
-        plan_views.get_activity_details_fields_data,
-        name="ajax-get-activity-details-auto-fields",
+        "hx/activity-plans/info",
+        plan_views.hx_activity_plan_info,
+        name="hx-acitivity-plans-info",
     ),
     # Location Report URLS
     path(
-        "project/<str:project>/monthly_progress/<str:report>/report-plan/<str:plan>/report-target-locations/create",
-        location_views.create_report_target_locations,
-        name="create_report_target_locations",
+        "report-target-locations/activity-plan-report/<int:plan>/create",
+        location_views.create_report_target_location,
+        name="create_report_target_location",
     ),
     path(
         "project/<str:project>/monthly_progress/<str:report>/report-target-locations/view",
@@ -117,9 +112,9 @@ urlpatterns = [
         name="update_report_target_locations",
     ),
     path(
-        "ajax/get_target_location_auto_fields/",
-        location_views.get_target_location_auto_fields,
-        name="ajax-get-target-location-auto-fields",
+        "hx/target-locations/info",
+        location_views.hx_target_location_info,
+        name="hx_target_location_info",
     ),
     path(
         "project/monthly_progress/location_report/delete/<str:location_report>/",

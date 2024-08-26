@@ -12,6 +12,8 @@ from .models import (
     TargetLocationReport,
 )
 
+from django.urls import reverse_lazy
+
 
 class ProjectMonthlyReportForm(forms.ModelForm):
     class Meta:
@@ -39,27 +41,25 @@ class TargetLocationReportForm(forms.ModelForm):
     class Meta:
         model = TargetLocationReport
         fields = "__all__"
+        exclude = ("activity_plan_report",)
         widgets = {
-            "nhs_code": forms.widgets.TextInput(),
             "facility_site_type": forms.Select(attrs={"class": "custom-select"}),
-            "target_location": forms.Select(attrs={"class": "custom-select"}),
         }
 
     def __init__(self, *args, **kwargs):
-        plan_report = kwargs.pop("report_plan", None)
+        plan_report = kwargs.pop("plan_report", None)
         super().__init__(*args, **kwargs)
 
-        if "instance" in kwargs and kwargs["instance"]:
-            location_report = kwargs["instance"]
-            plan_report = location_report.activity_plan_report
-
-        # Get only the relevant facility types - related to cluster
-        self.fields["nhs_code"] = forms.IntegerField(max_length=200, required=True)
-
-        if plan_report:
-            self.fields["target_location"].queryset = TargetLocation.objects.filter(
-                activity_plan=plan_report.activity_plan
-            )
+        self.fields["target_location"].widget = forms.Select(
+            attrs={
+                "class": "custom-select",
+                "hx-post": reverse_lazy("hx_target_location_info"),
+                "hx-target": "#target-location-info",
+                "hx-indicator": ".progress",
+                "hx-trigger": "change",
+            }
+        )
+        self.fields["target_location"].queryset = TargetLocation.objects.filter(activity_plan=plan_report.activity_plan)
 
 
 TargetLocationReportFormSet = inlineformset_factory(
@@ -114,9 +114,10 @@ class ActivityPlanReportForm(forms.ModelForm):
     class Meta:
         model = ActivityPlanReport
         fields = "__all__"
+        exclude = ("monthly_report",)
 
         widgets = {
-            "report_types": forms.SelectMultiple(attrs={"class": "custom-select"}),
+            "response_type": forms.SelectMultiple(attrs={"class": "custom-select"}),
             "implementing_partners": forms.SelectMultiple(attrs={"class": "custom-select"}),
             "beneficiary_status": forms.Select(attrs={"class": "custom-select"}),
             "package_type": forms.Select(attrs={"class": "custom-select"}),
@@ -126,7 +127,6 @@ class ActivityPlanReportForm(forms.ModelForm):
             "currency": forms.Select(attrs={"class": "custom-select"}),
             "transfer_mechanism_type": forms.Select(attrs={"class": "custom-select"}),
             "implement_modility_type": forms.Select(attrs={"class": "custom-select"}),
-            "activity_plan": forms.Select(attrs={"class": "custom-select"}),
         }
 
     def __init__(self, *args, **kwargs):
@@ -148,11 +148,19 @@ class ActivityPlanReportForm(forms.ModelForm):
         else:
             organizations = Organization.objects.all().order_by("name")
 
-        self.fields["monthly_report"].widget.attrs.update({"hidden": ""})
         self.fields["implementing_partners"].queryset = organizations
         self.fields["seasonal_retargeting"].widget = forms.CheckboxInput()
         self.fields["modality_retargeting"].widget = forms.CheckboxInput()
 
+        self.fields["activity_plan"].widget = forms.Select(
+            attrs={
+                "class": "custom-select",
+                "hx-post": reverse_lazy("hx-acitivity-plans-info"),
+                "hx-target": "#activity-plan-info",
+                "hx-indicator": ".progress",
+                "hx-trigger": "change",
+            }
+        )
         self.fields["activity_plan"].queryset = ActivityPlan.objects.filter(
             project=monthly_report_instance.project.pk
         ).select_related("activity_domain")

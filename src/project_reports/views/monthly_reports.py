@@ -60,7 +60,9 @@ def index_project_report_view(request, project):
 
     # Setup Filter
     reports_filter = MonthlyReportsFilter(
-        request.GET, request=request, queryset=ProjectMonthlyReport.objects.filter(project=project).order_by("-id")
+        request.GET,
+        request=request,
+        queryset=ProjectMonthlyReport.objects.filter(project=project).order_by("-created_at"),
     )
 
     # Setup Pagination
@@ -83,6 +85,7 @@ def index_project_report_view(request, project):
         "project_report_complete": reports["project_report_complete_count"],
         "project_report_archive": reports["project_report_archive_count"],
         "reports_filter": reports_filter,
+        "report_states": ProjectMonthlyReport.REPORT_STATES,
     }
 
     return render(request, "project_reports/monthly_reports/views/monthly_reports_view_base.html", context)
@@ -147,13 +150,11 @@ def update_project_monthly_report_view(request, project, report):
         form = ProjectMonthlyReportForm(request.POST, instance=report)
         if form.is_valid():
             report = form.save()
+
             report.project_id = project
             report.save()
-            return redirect(
-                "list_report_activity_plans",
-                project=project,
-                report=report.pk,
-            )
+
+            return redirect("view_monthly_report", project=project, report=report.pk)
     else:
         form = ProjectMonthlyReportForm(instance=report)
 
@@ -246,7 +247,7 @@ def copy_project_monthly_report_view(request, report):
                     copy_disaggregation_location_reports(new_location_report, disaggregation_location_report)
         messages.success(request, "Report activities copied successfully.")
         url = reverse_lazy(
-            "list_report_activity_plans", kwargs={"project": monthly_report.project.pk, "report": monthly_report.pk}
+            "view_monthly_report", kwargs={"project": monthly_report.project.pk, "report": monthly_report.pk}
         )
 
     else:

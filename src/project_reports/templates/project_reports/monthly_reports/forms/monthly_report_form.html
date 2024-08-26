@@ -9,6 +9,14 @@
     {% endif %}
 {% endblock title %}
 
+{% block breadcrumb_li %}
+    {% if monthly_report %}
+        <li class="current">Update Report Period</li>
+    {% else %}
+        <li class="current">Create Report Period</li>
+    {% endif %}
+{% endblock breadcrumb_li %}
+
 {% block project_body %}
     <div class="content-block top-border">
         <div class="main-content">
@@ -70,6 +78,4 @@
             </div>
         </div>
     </div>
-
-    {{ activity_plan_formset.media.js }}
 {% endblock project_body %}

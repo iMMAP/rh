@@ -1,0 +1,37 @@
+{% if target_location %}
+<div class="multiple-fields-row four-items">
+    <div class="field-col">
+        <div class="select-field ">
+            <label for="{{ target_location.country.id_for_label }}">Country: </label>
+            {{ target_location.country }}
+        </div>
+    </div>
+
+    {% if target_location.province %}
+    <div class="field-col">
+        <div class="select-field ">
+            <label for="{{ target_locations.province.id_for_label }}">Province / State: </label>
+            <span>{{ target_location.province }}</span>
+        </div>
+    </div>
+    {% endif %}
+
+    {% if target_location.district %}
+    <div class="field-col">
+        <div class="input-field">
+            <label for="{{ target_locations.district.id_for_label }}">District: </label>
+            <span>{{ target_location.district }}</span>
+        </div>
+    </div>
+    {% endif %}
+
+    {% if target_location.zone %}
+    <div class="field-col">
+        <div class="input-field">
+            <label for="{{ target_locations.zone.id_for_label }}">Ward / Zone: </label>
+            <span>{{ target_location.zone }}</span>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endif %}

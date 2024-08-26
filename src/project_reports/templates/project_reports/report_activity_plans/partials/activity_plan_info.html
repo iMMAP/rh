@@ -1,0 +1,17 @@
+{% comment %} activity plan info {% endcomment %}
+{% if activity_plan %}
+<div class="multiple-fields-row two-items">
+    <div class="field-col">
+        <div class="select-field">
+            <span class="label">Activity Domain</span>
+            <span class="text-read-only" >{{ activity_plan.activity_domain.name }}</span>
+        </div>
+    </div>
+    <div class="field-col">
+        <div class="select-field">
+            <span class="label">Activity Type</span>
+            <span class="text-read-only">{{ activity_plan.activity_type.name }}</span>
+        </div>
+    </div>
+</div>
+{% endif %}

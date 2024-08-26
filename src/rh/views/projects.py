@@ -682,8 +682,17 @@ def export_org_projects(request, format):
     name: export-org-projects
     """
     selected_projects_id = json.loads(request.body)
+    user_org = request.user.profile.organization
+    p_queryset = Project.objects.filter(organization=user_org)
+    # projects = Project.objects.filter(organization=request.user.profile.organization)
 
-    projects = Project.objects.filter(organization=request.user.profile.organization)
+    projects = ProjectsFilter(
+        request.GET,
+        request=request,
+        queryset=p_queryset.select_related("organization")
+        .prefetch_related("clusters", "programme_partners", "implementing_partners")
+        .order_by("-id"),
+    )
 
     if selected_projects_id:
         projects = projects.filter(id__in=selected_projects_id)

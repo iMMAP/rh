@@ -261,9 +261,21 @@ function exportButton(event) {
 	event.preventDefault();
 	// getting export url
 	const export_url = event.currentTarget.dataset.exportUrl;
+	const fileFormat = event.currentTarget.dataset.exportFormat;
 	const downloadButton = document.querySelector(".export-open");
 	const downloading_spinner = document.querySelector(".downloading");
 	const icon_downloading = document.querySelector(".icon-download");
+
+	// create filename
+	let currentDate = new Date();
+	// Extract date components
+	let day = currentDate.getDate();
+	let month = currentDate.getMonth() + 1; // Month is zero-based
+	let year = currentDate.getFullYear();
+	// Format the date as needed (example: DD/MM/YYYY)
+	let todayDate = year+'-'+month+'-'+day;
+	// write the file name
+	let filename = "projects_bulk_export_"+todayDate;
 
 	downloadButton.setAttribute("disabled", "disabled");
 	downloading_spinner.style.display = "inline-block";
@@ -276,28 +288,25 @@ function exportButton(event) {
 			selected_project_list.push(selectedProject[i].value);
 		}
 	}
-
-	fetch(export_url, {
-		method: "POST",
-		headers: {
-			"Content-Type": "application/json",
-			"X-CSRFToken": csrftoken,
-		},
-		body: JSON.stringify(selected_project_list),
-	})
-		.then(async (response) => {
-			// getting filename
-			const contentDisposition = response.headers.get("Content-Disposition");
-			const filename = contentDisposition.split("=")[1].replace(/"/g, "");
-
-			const blob = await response.blob();
-			const url = window.URL.createObjectURL(blob);
-			const a = document.createElement("a");
-			a.href = url;
-			a.download = filename;
-			document.body.appendChild(a);
-			a.click();
-			window.URL.revokeObjectURL(url);
+	if(fileFormat === 'xlsx'){
+		fetch(export_url, {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+				"X-CSRFToken": csrftoken,
+			},
+			body: JSON.stringify(selected_project_list),
+		}).then(response => response.json())
+		.then(data => {
+			// Create a link element
+			const link = document.createElement('a');
+			link.href = data.file_url; // Use the base64-encoded URL
+			link.download = data.file_name; // Set the filename for download
+			
+			// Append the link to the body, click it to start download, and then remove it
+			document.body.appendChild(link);
+			link.click();
+			document.body.removeChild(link);
 		})
 		.catch((error) => {
 			console.error("Error downloading:", error);
@@ -306,4 +315,57 @@ function exportButton(event) {
 			downloading_spinner.style.display = "none";
 			icon_downloading.style.display = "inline-block";
 		});
+	} else if(fileFormat === 'csv'){
+		fetch(export_url, {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+				"X-CSRFToken": csrftoken,
+			},
+			body: JSON.stringify(selected_project_list),
+		}).then(response => response.blob())
+        .then(blob => {
+            const url = window.URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = filename+".csv";
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            window.URL.revokeObjectURL(url);
+        })
+		.catch((error) => {
+			console.error("Error downloading:", error);
+		}).finally(()=>{
+			downloadButton.setAttribute("disabled", "false");
+			downloading_spinner.style.display = "none";
+			icon_downloading.style.display = "inline-block";
+		});
+	} else if(fileFormat === 'json'){
+		fetch(export_url, {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+				"X-CSRFToken": csrftoken,
+			},
+			body: JSON.stringify(selected_project_list),
+		}).then(response => response.blob()).then(blob =>{
+			const url = window.URL.createObjectURL(blob); 
+			const link = document.createElement('a'); 
+			link.href = url;
+			link.download = filename+'.json';
+			document.body.appendChild(link); 
+			link.click(); 
+			document.body.removeChild(link);
+			window.URL.revokeObjectURL(url); 
+	
+		})
+		.catch((error) => {
+			console.error("Error downloading:", error);
+		}).finally(()=>{
+			downloadButton.setAttribute("disabled", "false");
+			downloading_spinner.style.display = "none";
+			icon_downloading.style.display = "inline-block";
+		});
+	}
 }

@@ -3,6 +3,7 @@
 {% block title %}
     {{ monthly_report.report_date | date:"F Y" }}  Report Activities
 {% endblock title %}
+
 {% block breadcrumb_li %}
     <li>
         {% if monthly_report %}
@@ -13,8 +14,13 @@
             New Progress Report
         {% endif %}
     </li>
-    <li class="current">Report Activity</li>
+    {% if form.instance.id %}
+        <li class="current">Update Report Activity</li>
+    {% else %}
+        <li class="current">New Report Activity</li>
+    {% endif %}
 {% endblock breadcrumb_li %}
+
 {% block project_body %}
     <div class="content-block top-border">
         <div class="flex flex-col gap-2 pt-3">

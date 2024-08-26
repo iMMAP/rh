@@ -83,7 +83,7 @@ urlpatterns = [
     path(
         "project/monthly_progress/report-activity-plan/delete/<str:plan_report>/",
         plan_views.delete_report_activity_plan,
-        name="update_report_activity_plans",
+        name="delete_report_activity_plan",
     ),
     path(
         "hx/activity-plans/info",

@@ -2,9 +2,9 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.contrib import messages
-from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.utils.safestring import mark_safe
+from django.http import HttpResponse
 
 from rh.models import ActivityPlan
 
@@ -15,14 +15,7 @@ from ..models import (
     ActivityPlanReport,
     ProjectMonthlyReport,
 )
-
-
-class HTTPResponseHXRedirect(HttpResponseRedirect):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self["HX-Redirect"] = self["Location"]
-
-    status_code = 200
+from django_htmx.http import HttpResponseClientRedirect
 
 
 @login_required
@@ -107,17 +100,20 @@ def update_report_activity_plan(request, project, report, plan):
 
 @login_required
 def delete_report_activity_plan(request, plan_report):
-    """Delete the target location report"""
     plan_report = get_object_or_404(ActivityPlanReport, pk=plan_report)
-    monthly_report = plan_report.monthly_report
-    if plan_report:
-        plan_report.delete()
 
-    # Generate the URL using reverse
-    url = reverse_lazy(
-        "view_monthly_report", kwargs={"project": monthly_report.project.pk, "report": monthly_report.pk}
-    )
-    return HTTPResponseHXRedirect(redirect_to=url)
+    plan_report.delete()
+
+    messages.success(request, "Activity plan report and its targeted locations has been delete.")
+
+    if request.headers.get("Hx-Trigger", "") == "delete-btn":
+        url = reverse_lazy(
+            "view_monthly_report",
+            kwargs={"project": plan_report.monthly_report.project.pk, "report": plan_report.monthly_report.pk},
+        )
+        return HttpResponseClientRedirect(url)
+
+    return HttpResponse(status=200)
 
 
 @login_required

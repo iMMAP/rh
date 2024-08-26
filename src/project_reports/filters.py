@@ -23,7 +23,7 @@ class MonthlyReportsFilter(django_filters.FilterSet):
         super().__init__(*args, **kwargs)
 
 
-class PlansReportFilter(django_filters.FilterSet):
+class ActivityPlanReportFilter(django_filters.FilterSet):
     activity_domain = django_filters.ModelMultipleChoiceFilter(
         field_name="activity_plan__activity_domain",
         queryset=ActivityDomain.objects.all(),
@@ -35,15 +35,17 @@ class PlansReportFilter(django_filters.FilterSet):
         widget=forms.SelectMultiple(attrs={"class": "custom-select"}),
     )
     indicator = django_filters.ModelMultipleChoiceFilter(
-        queryset=Indicator.objects.none(), widget=forms.SelectMultiple(attrs={"class": "custom-select"})
+        field_name="activity_plan__indicator",
+        queryset=Indicator.objects.none(),
+        widget=forms.SelectMultiple(attrs={"class": "custom-select"}),
     )
 
     class Meta:
         model = ActivityPlanReport
-        fields = ["activity_domain", "activity_type", "indicator"]
+        fields = ["activity_domain", "activity_type", "indicator", "response_types", "beneficiary_status"]
 
     def __init__(self, data=None, *args, **kwargs):
-        report = kwargs.pop("report", None)
+        report = kwargs.pop("monthly_report", None)
         super().__init__(data, *args, **kwargs)
 
         activity_domains = report.project.activity_domains.all()

@@ -1,10 +1,8 @@
 {% extends "project_reports/monthly_reports/forms/monthly_report_progress_form_base.html" %}
 {% load static %}
-
 {% block title %}
-  {{ monthly_report.report_date | date:"F Y" }}  Report Activities
+    {{ monthly_report.report_date | date:"F Y" }}  Report Activities
 {% endblock title %}
-
 {% block breadcrumb_li %}
     <li>
         {% if monthly_report %}
@@ -15,14 +13,10 @@
             New Progress Report
         {% endif %}
     </li>
-    <li class="current">
-        Report Activity
-    </li>
+    <li class="current">Report Activity</li>
 {% endblock breadcrumb_li %}
-
 {% block project_body %}
     <div class="content-block top-border">
-
         <div class="flex flex-col gap-2 pt-3">
             <div>
                 <span>Project</span>
@@ -52,71 +46,63 @@
                                         {% endif %}
                                     </span>
                                     {% if report_activity_plan %}
-                                    <span class="btn btn-gray" style="float:right">
-                                        <a href="{% url 'list_report_target_locations_with_plan' project.id monthly_report.pk report_activity_plan.pk %}"
-                                           class="btn btn-gray">
-                                            <img src="{% static 'admin/img/icon-addlink.svg' %}" alt="add-btn-icon">
-                                            Report Target Location
-                                        </a>
-                                    </span>
+                                        <span class="btn btn-gray" style="float:right">
+                                            <a href="{% url 'list_report_target_locations_with_plan' project.id monthly_report.pk report_activity_plan.pk %}"
+                                               class="btn btn-gray">
+                                                <img src="{% static 'admin/img/icon-addlink.svg' %}" alt="add-btn-icon">
+                                                Report Target Location
+                                            </a>
+                                        </span>
                                     {% endif %}
                                 </span>
                                 <br>
                                 <ul class="space-y-2 p-4 border border-gray-e6 rounded">
                                     <li>
                                         <span class="icon-info mr-2"></span>
-                                         Use this form to provide detailed information about the report activity for the above the monthly report.
+                                        Use this form to provide detailed information about the report activity for the above the monthly report.
                                     </li>
                                 </ul>
-
                             </div>
                         </div>
                     </div>
-
                     <div class="activity_form">
                         <div class="progress bg-red h-0.5">
-        <div class="indeterminate bg-white"></div>
-    </div>
-                        <form method="post" class="form-container" id="report-plan-form">
+                            <div class="indeterminate bg-white"></div>
+                        </div>
+                        <form method="post" class="" id="report-plan-form">
                             {% csrf_token %}
                             <div class="project-activity-block" data-form-id="{{ form.prefix }}">
                                 <div class="inner-holder unset-before">
-                                    <div class="project-activity-accordion-slide" id="{{ form.prefix }}-details">
+                                    <div class="project-activity-accordion-slide"
+                                         id="{{ form.prefix }}-details">
                                         <!-- ERRORS SECTION STARTS -->
                                         {% if form.errors %}
                                             <div class="message-container">
-                                                {% for error in form.non_field_errors %}
-                                                    <div class="message-danger-alert">
-                                                        {{ error }}
-                                                    </div>
-                                                {% endfor %}
+                                                {% for error in form.non_field_errors %}<div class="message-danger-alert">{{ error }}</div>{% endfor %}
                                             </div>
                                         {% endif %}
                                         <!-- ERRORS SECTION ENDS -->
-
                                         <div class="row">
-                                                    <div class="select-field">
-                                                        <span class="label">Project Activity Plan</span>
-                                                        {{ form.activity_plan }}
-                                                        <p class="sign-up-field-error">{{ form.activity_plan.errors }}</p>
-                                                    </div>
-                                                    
-                                                    <div id="activity-plan-info"></div>
+                                            <div class="select-field">
+                                                <span class="label">Project Activity Plan</span>
+                                                {{ form.activity_plan }}
+                                                <p class="sign-up-field-error">{{ form.activity_plan.errors }}</p>
+                                            </div>
+                                            <div id="activity-plan-info"></div>
                                         </div>
-
                                         <div class="row">
                                             <div class="col">
                                                 <div class="multiple-fields-row two-items">
                                                     <div class="field-col">
                                                         <div class="select-field">
-                                                            <label for="{{ form.response_type.id_for_label }}">Response Types</label>
-                                                            {{ form.response_type }}
-                                                            <p class="sign-up-field-error">{{ form.response_type.errors }}</p>
+                                                            <label for="{{ form.response_types.id_for_label }}">Response Types</label>
+                                                            {{ form.response_types }}
+                                                            <p class="sign-up-field-error">{{ form.response_types.errors }}</p>
                                                         </div>
                                                     </div>
                                                     <div class="field-col">
                                                         <div class="select-field">
-                                                            <label for="{{ form.implementing_partners.id_for_label }}"> Implementing Partners </label>
+                                                            <label for="{{ form.implementing_partners.id_for_label }}">Implementing Partners</label>
                                                             {{ form.implementing_partners }}
                                                             <p class="sign-up-field-error">{{ form.implementing_partners.errors }}</p>
                                                         </div>
@@ -124,7 +110,6 @@
                                                 </div>
                                             </div>
                                         </div>
-
                                         {% if report_activity_plan.indicator.enable_retargeting %}
                                             <div class="row">
                                                 <div class="col col-lg">
@@ -151,7 +136,6 @@
                                                 </div>
                                             </div>
                                         {% endif %}
-
                                         <div class="multiple-fields-row">
                                             <div class="field-col">
                                                 <div class="select-field">
@@ -161,7 +145,6 @@
                                                 </div>
                                             </div>
                                         </div>
-
                                         <!-- Indicator types start to diaplay -->
                                         <div id="{{ form.prefix }}-indicator-types">
                                             <div class="row">
@@ -176,13 +159,13 @@
                                                         </div>
                                                     {% endif %}
                                                     {% if report_activity_plan.indicator.grant_type %}
-                                                    <div class="field-col">
-                                                        <div class="select-field">
-                                                            <label>{{ form.grant_type.label }}</label>
-                                                            {{ form.grant_type }}
-                                                            <small class="sign-up-field-error">{{ form.grant_type.errors }}</small>
+                                                        <div class="field-col">
+                                                            <div class="select-field">
+                                                                <label>{{ form.grant_type.label }}</label>
+                                                                {{ form.grant_type }}
+                                                                <small class="sign-up-field-error">{{ form.grant_type.errors }}</small>
+                                                            </div>
                                                         </div>
-                                                    </div>
                                                     {% endif %}
                                                 </div>
                                             </div>
@@ -222,7 +205,7 @@
                                             <div class="row">
                                                 <div class="multiple-fields-row">
                                                     {% if report_activity_plan.indicator.implement_modility_type %}
-                                                    <div class="field-col">
+                                                        <div class="field-col">
                                                             <div class="select-field">
                                                                 <label>{{ form.implement_modility_type.label }}</label>
                                                                 {{ form.implement_modility_type }}
@@ -275,13 +258,11 @@
                             </div>
                         </form>
                     </div>
-
                 </div>
             </div>
         </div>
     </div>
 {% endblock project_body %}
-
 {% block scripts %}
     <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
     <script>

@@ -4,23 +4,75 @@ $("input[type=checkbox]").change(function () {
 	$(this).css("accent-color", "#af4745");
 });
 // count the number of checkbox selected for export
+
+document.querySelectorAll(".input-check").forEach(element => {
+	element.addEventListener('change', checkboxCounter());
+});
 try{
-	const checkedField = document.querySelectorAll(".input-check");
-	document.getElementById("totalCount").innerHTML=checkedField.length;
-	const countSpan = document.getElementById("selectedCount");
-	let selectedCount = 0;
-	checkedField.forEach(field => {
-		field.addEventListener("click", () =>{
-			if(field.checked == true){
-				selectedCount++;
-			} else if(field.checked == false){
-				selectedCount--;
+	
+	const all_checks = document.querySelectorAll(".select-all");
+	const project_checkbox = document.querySelectorAll(".project-check");
+	const activity_checkbox = document.querySelectorAll(".activity-check");
+	const location_checkbox = document.querySelectorAll(".targetlocation-check");
+	all_checks.forEach(checkElement => {
+		checkElement.addEventListener('click',(e)=>{
+			let checkElementId = e.target.id;
+			let checkbox_array = new Array();
+			let condition = true;
+			if(checkElement.checked){
+				if(checkElementId === "project-plan"){
+					checkbox_array = project_checkbox;
+					condition = true;
+				} else if (checkElementId === "activity-plan"){
+					checkbox_array = activity_checkbox;
+					condition = true;
+				}else if(checkElementId === "target-location"){
+					checkbox_array = location_checkbox;
+					condition = true;
+				}
+				checkboxManager(checkbox_array, condition);
+			} else if(checkElement.checked == false){
+				if(checkElementId === "project-plan"){
+					checkbox_array = project_checkbox;
+					condition = false;
+				} else if (checkElementId === "activity-plan"){
+					checkbox_array = activity_checkbox;
+					condition = false;
+				}else if(checkElementId === "target-location"){
+					checkbox_array = location_checkbox;
+					condition = false;
+				}
+				checkboxManager(checkbox_array, condition);
 			}
-			countSpan.textContent = selectedCount;
-		})
-		countSpan.textContent = selectedCount;
+		});
 	});
+
 }catch{}
+
+function checkboxManager(checkboxes, condition){
+	checkboxes.forEach(checkElement => {
+		checkElement.checked = condition;
+		checkElement.style.accentColor='#a52824';
+	});
+	checkboxCounter();
+}
+function checkboxCounter(){
+	const checkboxes = document.querySelectorAll(".input-check");
+	const checkedCounterElement = document.getElementById("selectedCount");
+	const uncheckedCounterElement = document.getElementById("notSelectedCount");
+	let checkedCounter = 0;
+	let uncheckedCounter = 0;
+	let x = checkboxes.length;
+	checkboxes.forEach(checkbox => {
+		if(checkbox.checked == true){
+			checkedCounter++;
+		}else if(checkbox.checked == false){
+			uncheckedCounter++;
+		}
+	});
+	checkedCounterElement.textContent=checkedCounter;
+	uncheckedCounterElement.textContent=uncheckedCounter;
+}
 
 
 //Reset the checkbox
@@ -35,8 +87,7 @@ $("#resetFilterButton").on("click", () => {
 			$("#not-checked-message").text("");
 		}, 3000);
 	}
-	let selectedCount = 0;
-	countSpan.text(selectedCount);
+	checkboxCounter()
 
 	
 });
@@ -104,7 +155,6 @@ $("#downloadFilterForm").click(function (e) {
 				selectedFieldList[checkedField[i].name] = checkedField[i].value;
 			}
 		}
-		console.log(selectedFieldList);
 		selectedFieldList.format = file_format;
 		// create post request
 		$.post({

@@ -97,14 +97,9 @@ urlpatterns = [
         name="create_report_target_location",
     ),
     path(
-        "project/<str:project>/monthly_progress/<str:report>/report-target-locations/view",
+        "project/<str:project>/monthly_progress/<str:report>/report-target-locations",
         location_views.list_report_target_locations,
         name="list_report_target_locations",
-    ),
-    path(
-        "project/<str:project>/monthly_progress/<str:report>/report_plan/<str:plan>/report-target-locations/view",
-        location_views.list_report_target_locations,
-        name="list_report_target_locations_with_plan",
     ),
     path(
         "project/<str:project>/monthly_progress/<str:report>/report_plan/<str:plan>/report-target-locations/<str:location>/update",

@@ -18,12 +18,14 @@ admin.site.register(ResponseType)
 
 class ProjectMonthlyReportAdmin(admin.ModelAdmin):
     list_display = (
+        "id",
         "project",
         "state",
         "report_period",
         "report_date",
         "report_due_date",
     )
+    search_fields = ("id", "project__code")
     raw_id_fields = ["project"]
 
 

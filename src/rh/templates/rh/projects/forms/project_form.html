@@ -11,6 +11,14 @@
     {% endif %}
 {% endblock title %}
 
+{% block breadcrumb_li %}
+    {% if form.instance.id %}
+        <li class="current">Update Project</li> 
+    {% else %}
+        <li class="current">Create Project</li> 
+    {% endif %}
+{% endblock breadcrumb_li %}
+
 {% block project_contents %}
     <div class="main-content">
         <ul class="space-y-2 p-4 border border-gray-e6 rounded">

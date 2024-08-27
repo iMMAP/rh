@@ -42,9 +42,7 @@
                         <th>
                             <strong class="table-title">Month</strong>
                         </th>
-                        <th>
-                            <strong class="table-title">Progress Report</strong>
-                        </th>
+                       
                         <th>
                             <strong class="table-title">Due date</strong>
                         </th>
@@ -73,7 +71,6 @@
                                     {{ project_report.report_date | date:"F Y" }}
                                 </a>
                             </td>
-                            <td data-title="Progress Report">Monthly report for {{ project_report.report_date | date:"F Y" }}</td>
                             <td data-title="Due date">{{ project_report.report_due_date | date:"d F Y" }}</td>
                             <td data-title="Locations">
                                1 
@@ -133,9 +130,11 @@
 
                                         <li>
                                             <button>
-                                                <a hx-post="{% url 'delete_project_monthly_report' project_report.pk %}"
+                                                <a hx-delete="{% url 'delete_project_monthly_report' project_report.pk %}"
                                                    hx-trigger="click"
-                                                   hx-swap="none"
+                                                    hx-indicator=".progress"
+                                                    hx-swap="outerHTML swap:1s"
+                                                    hx-target="closest tr"
                                                    hx-confirm="Are you sure you want to delete this report?"
                                                    data-tippy-content="Delete report">
                                                     <span class="project-detail icon-trashbin"></span>

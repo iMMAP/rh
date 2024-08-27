@@ -42,7 +42,7 @@
                             <strong class="table-title">Location</strong>
                         </th>
                         <th>
-                            <strong class="table-title">Disaggregations</strong>
+                            <strong class="table-title">Total Reached</strong>
                         </th>
                         <th>
                             <strong>Actions</strong>
@@ -56,9 +56,9 @@
                         <tr>
                             <td>{{ row.activity_plan_report }}</td>
                             <td>
-                                location
+                               {{ row.target_location }} 
                             </td>
-                            <td>{{ row.report_disaggregation_locations_count }}</td>
+                            <td>{{ row.total_target_reached }}</td>
                             <td>
                                 <a href="{% url 'update_report_target_locations' project.id report.id row.activity_plan_report.id row.id %}"
                                    class="btn btn-gray">Edit</a>

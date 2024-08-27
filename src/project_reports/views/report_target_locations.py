@@ -2,7 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect, render
 from django.core.paginator import Paginator
 from django.urls import reverse
-from django.db.models import Count
+from django.db.models import Sum
 from django.urls import reverse_lazy
 
 from django.contrib import messages
@@ -41,32 +41,17 @@ def list_report_target_locations(request, project, report, plan=None):
     project = get_object_or_404(Project, pk=project)
     monthly_report_instance = get_object_or_404(ProjectMonthlyReport, pk=report)
 
-    report_plan = None
-    if plan:
-        report_plan = get_object_or_404(ActivityPlanReport.objects.select_related("monthly_report"), pk=plan)
-    if report_plan:
-        tl_filter = TargetLocationReportFilter(
-            request.GET,
-            request=request,
-            queryset=TargetLocationReport.objects.filter(activity_plan_report_id=report_plan.pk)
-            .select_related("activity_plan_report")
-            .order_by("-id")
-            .annotate(report_disaggregation_locations_count=Count("disaggregationlocationreport")),
-            report=monthly_report_instance,
+    tl_filter = TargetLocationReportFilter(
+        request.GET,
+        request=request,
+        queryset=TargetLocationReport.objects.filter(activity_plan_report__monthly_report=report)
+        .select_related(
+            "activity_plan_report",
         )
-
-    else:
-        tl_filter = TargetLocationReportFilter(
-            request.GET,
-            request=request,
-            queryset=TargetLocationReport.objects.filter(activity_plan_report__monthly_report=report)
-            .select_related(
-                "activity_plan_report",
-            )
-            .order_by("-id")
-            .annotate(report_disaggregation_locations_count=Count("disaggregationlocationreport")),
-            report=monthly_report_instance,
-        )
+        .order_by("-id")
+        .annotate(total_target_reached=Sum("disaggregationlocationreport__reached")),
+        report=monthly_report_instance,
+    )
 
     per_page = request.GET.get("per_page", 10)
     paginator = Paginator(tl_filter.qs, per_page=per_page)
@@ -77,12 +62,8 @@ def list_report_target_locations(request, project, report, plan=None):
     context = {
         "project": project,
         "monthly_report": monthly_report_instance,
-        "report_plan": report_plan,
         "report_target_locations": report_locations,
         "location_report_filter": tl_filter,
-        "report_view": False,
-        "report_activities": False,
-        "report_locations": True,
     }
 
     return render(request, "project_reports/report_target_locations/target_locations_list.html", context)
@@ -178,7 +159,9 @@ def update_report_target_locations(request, project, report, plan, location):
         can_delete=True,
     )
     if request.method == "POST":
-        location_report_form = TargetLocationReportForm(request.POST or None, instance=location_report)
+        location_report_form = TargetLocationReportForm(
+            request.POST or None, instance=location_report, plan_report=plan_report
+        )
 
         # Optimize the queryset to prefetch related target_location_report
         disaggregation_reports = DisaggregationLocationReport.objects.select_related(
@@ -222,7 +205,9 @@ def update_report_target_locations(request, project, report, plan, location):
         else:
             messages.error(request, "The form is invalid. Please check the fields and try again.")
     else:
-        location_report_form = TargetLocationReportForm(request.POST or None, instance=location_report)
+        location_report_form = TargetLocationReportForm(
+            request.POST or None, instance=location_report, plan_report=plan_report
+        )
         # Optimize the queryset to prefetch related target_location_report
         disaggregation_reports = DisaggregationLocationReport.objects.select_related(
             "target_location_report", "disaggregation"

@@ -15,7 +15,11 @@
 <li>
     <a href="{% url 'activity-plans-update' activity_plan.id %}">{{activity_plan}}</a>
 </li>
-<li class="current">Target Location</li>
+    {% if target_location_form.instance.id %}
+        <li class="current">Update Target Location</li>
+    {% else %}
+        <li class="current">Create Target Location</li>
+    {% endif %}
 {% endblock breadcrumb_li %}
 
 {% block project_contents %}

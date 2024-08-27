@@ -21,9 +21,8 @@ class ProjectMonthlyReportAdmin(admin.ModelAdmin):
         "id",
         "project",
         "state",
-        "report_period",
-        "report_date",
-        "report_due_date",
+        "from_date",
+        "to_date",
     )
     search_fields = ("id", "project__code")
     raw_id_fields = ["project"]

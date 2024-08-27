@@ -20,14 +20,14 @@ class ProjectMonthlyReportForm(forms.ModelForm):
         model = ProjectMonthlyReport
         fields = "__all__"
         widgets = {
-            "report_date": forms.widgets.DateInput(
+            "from_date": forms.widgets.DateInput(
                 attrs={
                     "type": "date",
                     "onfocus": "(this.type='date')",
                     "onblur": "(this.type='text')",
                 }
             ),
-            "report_due_date": forms.widgets.DateInput(
+            "to_date": forms.widgets.DateInput(
                 attrs={
                     "type": "date",
                     "onfocus": "(this.type='date')",

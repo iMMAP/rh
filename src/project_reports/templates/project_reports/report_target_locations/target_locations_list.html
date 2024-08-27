@@ -9,7 +9,7 @@
 {% block breadcrumb_li %}
     <li>
         <a href="{% url 'view_monthly_report' monthly_report.project.id  monthly_report.id %}">
-            {{ monthly_report.report_date | date:"F Y" }}
+            {{ monthly_report.from_date| date:"F Y" }}
         </a>
     </li>
     <li class="current">All Target Location Report</li>
@@ -27,9 +27,9 @@
                                 <span class="activity-title">
                                     <span>
                                         {% if report_plan %}
-                                            {{ monthly_report.report_date | date:"F Y" }}: Report Activity Target Locations
+                                            {{ monthly_report.from_date| date:"F Y" }}: Report Activity Target Locations
                                         {% else %}
-                                            {{ monthly_report.report_date | date:"F Y" }}: All Activities Target Locations
+                                            {{ monthly_report.from_date| date:"F Y" }}: All Activities Target Locations
                                         {% endif %}
                                     </span>
                                 </span>
@@ -41,7 +41,7 @@
                                         <b><a href="{% url 'update_report_activity_plans' project.id report_plan.monthly_report.id report_plan.id %}">Activity</a>.</b>
                                         You can add report target location for this activity, edit or search target locations.
                                     {% else %}
-                                        Your monthly report target locations table for <b>all the activities</b> of monthly report: <b>{{ monthly_report.report_date | date:"F Y" }}</b>
+                                        Your monthly report target locations table for <b>all the activities</b> of monthly report: <b>{{ monthly_report.from_date| date:"F Y" }}</b>
                                         You can edit or search target locations.
                                     {% endif %}
                                 </span>

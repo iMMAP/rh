@@ -14,10 +14,10 @@ from rh.models import (
 class MonthlyReportsFilter(django_filters.FilterSet):
     # Define the DateFromToRangeFilter with initial value of current month
     # current_month = datetime.date.today().replace(day=1)
-    # report_date = django_filters.DateFromToRangeFilter(widget=RangeWidget(attrs={"type": "date"}))
+    # from_date = django_filters.DateFromToRangeFilter(widget=RangeWidget(attrs={"type": "date"}))
     class Meta:
         model = ProjectMonthlyReport
-        fields = ["report_date", "state"]
+        fields = ["from_date", "to_date"]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

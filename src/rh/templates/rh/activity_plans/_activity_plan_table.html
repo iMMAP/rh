@@ -59,8 +59,8 @@
                             <td>{{ row.activity_type }}</td>
                             <td>{{ row.indicator }}</td>
                             <td>{{ row.hrp_beneficiary.name }}</td>
-                            <td>
-                                <a href="{% url 'target-locations-list' project.pk %}?activity_plan={{ row.id }}">
+                            <td class="{% if row.target_location_count == 0 %}text-red{% endif %}">
+                                <a href="{% url 'target-locations-list' project.pk %}?activity_plan={{ row.id }}" >
                                     <svg data-slot="icon"
                                          width="14px"
                                          data-darkreader-inline-stroke=""

@@ -1,14 +1,14 @@
 {% extends "project_reports/monthly_reports/forms/monthly_report_progress_form_base.html" %}
 {% load static %}
 {% block title %}
-    {{ monthly_report.report_date | date:"F Y" }}  Report Activities
+    {{ monthly_report.from_date| date:"F Y" }}  Report Activities
 {% endblock title %}
 
 {% block breadcrumb_li %}
     <li>
         {% if monthly_report %}
             <a href="{% url 'view_monthly_report' monthly_report.project.id  monthly_report.id %}">
-                {{ monthly_report.report_date | date:"F Y" }}
+                {{ monthly_report.from_date| date:"F Y" }}
             </a>
         {% else %}
             New Progress Report
@@ -33,7 +33,7 @@
             <div>
                 <span>Monthly Report</span>
                 <div class="input-holder">
-                    <span class="text-read-only">{{ monthly_report.report_date | date:"F Y" }}</span>
+                    <span class="text-read-only">{{ monthly_report.from_date| date:"F Y" }}</span>
                 </div>
             </div>
         </div>

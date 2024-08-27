@@ -8,7 +8,7 @@
 {% block breadcrumb_li %}
     <li>
         <a href="{% url 'view_monthly_report' monthly_report.project.id  monthly_report.id %}">
-            {{ monthly_report.report_date | date:"F Y" }}
+            {{ monthly_report.from_date| date:"F Y" }}
         </a>
     </li>
     <li class="current">Import Reports</li>

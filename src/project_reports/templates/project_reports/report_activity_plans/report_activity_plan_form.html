@@ -61,7 +61,7 @@
                                     {% endif %}
                                 </span>
                                 <br>
-                                <ul class="space-y-2 p-4 border border-gray-e6 rounded">
+                                <ul class="space-y-2 p-4">
                                     <li>
                                         <span class="icon-info mr-2"></span>
                                         Use this form to provide detailed information about the report activity for the above the monthly report.
@@ -93,7 +93,11 @@
                                                 {{ form.activity_plan }}
                                                 <p class="sign-up-field-error">{{ form.activity_plan.errors }}</p>
                                             </div>
-                                            <div id="activity-plan-info"></div>
+                                            <div id="activity-plan-info">
+                                                {% if report_activity_plan %}
+                                                    {% include "project_reports/report_activity_plans/partials/activity_plan_info.html" with activity_plan=report_activity_plan.activity_plan %}
+                                                {% endif %}
+                                            </div>
                                         </div>
                                         <div class="row">
                                             <div class="col">

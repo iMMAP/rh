@@ -1,5 +1,7 @@
 {% extends "project_reports/monthly_reports/forms/monthly_report_progress_form_base.html" %}
+
 {% load static %}
+
 {% block title %}
     {% if location_report_form.instance.id %}
         Update Report Target Location
@@ -7,6 +9,7 @@
         New Report Target Location
     {% endif %}
 {% endblock title %}
+
 {% block breadcrumb_li %}
     <li>
         <a href="{% url 'view_monthly_report' monthly_report.project.id  monthly_report.id %}">
@@ -19,6 +22,7 @@
         <li class="current">New Report Target Location</li>
     {% endif %}
 {% endblock breadcrumb_li %}
+
 {% block project_body %}
     <div class="content-block top-border">
         <div class="multiple-fields-row"
@@ -60,7 +64,7 @@
                                     </span>
                                 </span>
                                 <br>
-                                <ul class="space-y-2 p-4 border border-gray-e6 rounded">
+                                <ul class="space-y-2 p-4">
                                     <li>
                                         <span class="icon-info mr-2"></span>
                                         Use this form to provide detailed information about the report target location for the above report activity plan,
@@ -96,79 +100,88 @@
                                     <td colspan="4">{{ location_report_form.errors }}</td>
                                 </tr>
                             {% endif %}
-                            <div class="select-field p-4">
-                                <span class="label">Target Location</span>
-                                {{ location_report_form.target_location }}
-                                <div class="sign-up-field-error">{{ location_report_form.target_location.errors }}</div>
-                                <div id="target-location-info"></div>
-                            </div>
-                            <div class="disaggregation-block js-inline-admin-formset inline-group p-4"
-                                 id="{{ report_disaggregation_formset.prefix }}-group"
-                                 data-inline-type="tabular"
-                                 data-inline-formset='{"name":"#{{ report_disaggregation_formset.prefix }}","options":{"prefix":"{{ report_disaggregation_formset.prefix }}","addText":"Add another","deleteText":"Delete"}}'>
-                                <div class="tabular inline-related">
-                                    <p class="pb-4">
-                                        The Disaggregation list is selected from the Indicator of your Activity plan. If there is someting missing, please contact your cluster.
-                                    </p>
-                                    {{ report_disaggregation_formset.management_form }}
-                                    <input type="hidden" name="prefix" value="{{ prefix }}">
-                                    <fieldset class="table-wrapper-scrollable">
-                                        <table class="table border border-solid border-gray-d1 rounded">
-                                            <thead class="content-block bg-gray-f3">
-                                                <tr class="divide-x">
-                                                    {% for field in report_disaggregation_formset.form.fields %}
-                                                        <th class="border-r border-gray-e6 column-{{ field.name }}{% if field.required %} required{% endif %}{% if field.widget.is_hidden %} hidden{% endif %}">
-                                                            {{ field|capfirst }}
-                                                        </th>
-                                                    {% endfor %}
-                                                    {% if report_disaggregation_formset.can_delete %}<th>Delete?</th>{% endif %}
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                {% for form in report_disaggregation_formset %}
-                                                    {% if form.non_field_errors %}
-                                                        <tr class="row-form-errors">
-                                                            <td colspan="4">{{ form.non_field_errors }}</td>
-                                                        </tr>
-                                                    {% endif %}
-                                                    <tr class="form-row {% if forloop.last %}empty-form{% endif %} {% if form.instance.pk %}has_original{% endif %}"
-                                                        id="{{ report_disaggregation_formset.prefix }}-{% if forloop.last %}empty{% else %}{{ forloop.counter0 }}{% endif %}">
-                                                        {% for field in form %}
-                                                            {% if field.name != "DELETE" %}
-                                                                <td class="{% if field.name %}field-{{ field.name }}{% endif %}{% if field.is_hidden %} hidden{% endif %} ">
-                                                                    {{ field }}
-                                                                    {{ field.errors }}
-                                                                </td>
-                                                            {% endif %}
-                                                        {% endfor %}
-                                                        <td class="delete">
-                                                            {% if form.instance.pk %}{{ form.DELETE }}{% endif %}
-                                                        </td>
-                                                    </tr>
-                                                {% endfor %}
-                                            </tbody>
-                                        </table>
-                                    </fieldset>
+                            <div class="form-wrapper p-4">
+                                <div class="select-field">
+                                    <span class="label">Target Location</span>
+                                    {{ location_report_form.target_location }}
+                                    <div class="sign-up-field-error">{{ location_report_form.target_location.errors }}</div> 
                                 </div>
-                            </div>
-                            <div class="plan-submit-holder">
-                                <div></div>
-                                <div>
-                                    {% if location_report_form.initial %}
-                                        <a id="delete-btn"
-                                           hx-delete="{% url 'delete_location_report' location_report_form.instance.id %}"
-                                           hx-target="closest form"
-                                           hx-trigger="click"
-                                           hx-indicator=".progress"
-                                           hx-swap="outerHTML swap:1s"
-                                           hx-confirm="Do you want to delete `{{ location_report_form.initial.id }}` and its disaggregations?"
-                                           data-tippy-content="Delete Activity Plan"
-                                           class="cursor-pointer btn btn-gray">
-                                            <span class="project-detail icon-trashbin"></span>
-                                            Delete
-                                        </a>
+
+                                <div id="target-location-info">
+                                    {% if location_report %}
+                                        {% include "project_reports/report_target_locations/partials/_target_location_info.html" with target_location=location_report.target_location %}
                                     {% endif %}
-                                    <input type="submit" name="_save" class="btn btn-red" value="Save">
+                                </div>
+
+                                <div class="disaggregation-block js-inline-admin-formset inline-group "
+                                    id="{{ report_disaggregation_formset.prefix }}-group"
+                                    data-inline-type="tabular"
+                                    data-inline-formset='{"name":"#{{ report_disaggregation_formset.prefix }}","options":{"prefix":"{{ report_disaggregation_formset.prefix }}","addText":"Add another","deleteText":"Delete"}}'>
+                                    <div class="tabular inline-related">
+                                        <p class="pb-4">
+                                            The Disaggregation list is selected from the Indicator of your Activity plan. If there is someting missing, please contact your cluster.
+                                        </p>
+                                        {{ report_disaggregation_formset.management_form }}
+                                        <input type="hidden" name="prefix" value="{{ prefix }}">
+                                        <fieldset class="table-wrapper-scrollable">
+                                            <table class="table border border-solid border-gray-d1 rounded">
+                                                <thead class="content-block bg-gray-f3">
+                                                    <tr class="divide-x">
+                                                        {% for field in report_disaggregation_formset.form.fields %}
+                                                            <th class="border-r border-gray-e6 column-{{ field.name }}{% if field.required %} required{% endif %}{% if field.widget.is_hidden %} hidden{% endif %}">
+                                                                {{ field|capfirst }}
+                                                            </th>
+                                                        {% endfor %}
+                                                        {% if report_disaggregation_formset.can_delete %}<th>Delete?</th>{% endif %}
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {% for form in report_disaggregation_formset %}
+                                                        {% if form.non_field_errors %}
+                                                            <tr class="row-form-errors">
+                                                                <td colspan="4">{{ form.non_field_errors }}</td>
+                                                            </tr>
+                                                        {% endif %}
+                                                        <tr class="form-row {% if forloop.last %}empty-form{% endif %} {% if form.instance.pk %}has_original{% endif %}"
+                                                            id="{{ report_disaggregation_formset.prefix }}-{% if forloop.last %}empty{% else %}{{ forloop.counter0 }}{% endif %}">
+                                                            {% for field in form %}
+                                                                {% if field.name != "DELETE" %}
+                                                                    <td class="{% if field.name %}field-{{ field.name }}{% endif %}{% if field.is_hidden %} hidden{% endif %} ">
+                                                                        {{ field }}
+                                                                        {{ field.errors }}
+                                                                    </td>
+                                                                {% endif %}
+                                                            {% endfor %}
+                                                            <td class="delete">
+                                                                {% if form.instance.pk %}{{ form.DELETE }}{% endif %}
+                                                            </td>
+                                                        </tr>
+                                                    {% endfor %}
+                                                </tbody>
+                                            </table>
+                                        </fieldset>
+                                    </div>
+                                </div>
+
+                                <div class="plan-submit-holder">
+                                    <div></div>
+                                    <div>
+                                        {% if location_report_form.initial %}
+                                            <a id="delete-btn"
+                                            hx-delete="{% url 'delete_location_report' location_report_form.instance.id %}"
+                                            hx-target="closest form"
+                                            hx-trigger="click"
+                                            hx-indicator=".progress"
+                                            hx-swap="outerHTML swap:1s"
+                                            hx-confirm="Do you want to delete `{{ location_report_form.initial.id }}` and its disaggregations?"
+                                            data-tippy-content="Delete Activity Plan"
+                                            class="cursor-pointer btn btn-gray">
+                                                <span class="project-detail icon-trashbin"></span>
+                                                Delete
+                                            </a>
+                                        {% endif %}
+                                        <input type="submit" name="_save" class="btn btn-red" value="Save">
+                                    </div>
                                 </div>
                             </div>
                         </form>

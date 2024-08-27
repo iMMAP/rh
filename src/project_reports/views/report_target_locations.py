@@ -228,9 +228,6 @@ def update_report_target_locations(request, project, report, plan, location):
             "report_plan": plan_report,
             "monthly_report": monthly_report,
             "project": monthly_report.project,
-            "report_view": False,
-            "report_activities": False,
-            "report_locations": True,
         },
     )
 

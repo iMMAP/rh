@@ -49,9 +49,6 @@ def create_report_activity_plan(request, project, report):
         "form": form,
         "project": report_instance.project,
         "monthly_report": report_instance,
-        "report_view": False,
-        "report_activities": True,
-        "report_locations": False,
     }
 
     return render(request, "project_reports/report_activity_plans/report_activity_plan_form.html", context=context)
@@ -86,15 +83,14 @@ def update_report_activity_plan(request, project, report, plan):
             messages.error(request, "The form is invalid. Please check the fields and try again.")
     else:
         form = ActivityPlanReportForm(instance=report_plan)
+
     context = {
         "form": form,
         "report_activity_plan": report_plan,
         "project": report_instance.project,
         "monthly_report": report_instance,
-        "report_view": False,
-        "report_activities": True,
-        "report_locations": False,
     }
+
     return render(request, "project_reports/report_activity_plans/report_activity_plan_form.html", context=context)
 
 

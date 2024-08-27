@@ -4,7 +4,7 @@
 
 {% block breadcrumb_li %}
     <li class="current">
-        {{ monthly_report.report_date | date:"F Y" }}
+        {{ monthly_report.from_date| date:"F Y" }}
     </li>
 {% endblock breadcrumb_li %}
 
@@ -12,7 +12,7 @@
     <div class="content-block top-border">
         <div class="project-title">
             <div class="holder">
-                <strong class="h5">{{ monthly_report.report_date | date:"F Y" }}</strong>
+                <strong class="h5">{{ monthly_report.from_date| date:"F Y" }}</strong>
                 <ul class="buttons-list-inline">
                     <li>
                         <a class="btn btn-gray" href="{% url 'import-report-activities' monthly_report.pk %}">
@@ -102,13 +102,13 @@
                         <div class="field-col">
                             <div class="input-field">
                                 <label>Report Date</label>
-                                <span class="text-read-only">{{ monthly_report.report_date | date:"F Y" }}</span>
+                                <span class="text-read-only">{{ monthly_report.from_date| date:"F Y" }}</span>
                             </div>
                         </div>
                         <div class="field-col">
                             <div class="input-field">
                                 <label>Report Due Date</label>
-                                <span class="text-read-only">{{ monthly_report.report_due_date }}</span>
+                                <span class="text-read-only">{{ monthly_report.to_date}}</span>
                             </div>
                         </div>
                     </div>

@@ -33,8 +33,6 @@ class ResponseType(models.Model):
 
 
 class ProjectMonthlyReport(models.Model):
-    """Project Monthly Reporting"""
-
     project = models.ForeignKey(Project, on_delete=models.SET_NULL, null=True, blank=True)
     REPORT_STATES = [
         ("todo", "Todo"),
@@ -45,10 +43,12 @@ class ProjectMonthlyReport(models.Model):
         ("archived", "Archived"),
     ]
     state = models.CharField(max_length=15, choices=REPORT_STATES, default="todo", null=True, blank=True)
-    report_period = models.DateField(blank=True, null=True)
-    report_date = models.DateField(blank=True, null=True)
-    report_due_date = models.DateField(blank=True, null=True)
+
+    from_date = models.DateField(blank=True, null=True)
+    to_date = models.DateField(blank=True, null=True)
+
     description = models.TextField(blank=True, null=True)
+
     submitted_on = models.DateTimeField(blank=True, null=True)
     approved_on = models.DateTimeField(blank=True, null=True)
     rejected_on = models.DateTimeField(blank=True, null=True)
@@ -58,8 +58,8 @@ class ProjectMonthlyReport(models.Model):
 
     def __str__(self):
         name = "Monthly Report"
-        if self.report_date:
-            name = f"{self.report_date.strftime('%B')}, {self.report_date.year} Report"
+        if self.from_date:
+            name = f"{self.from_date.strftime('%B')}, {self.to_date.year} Report"
         return name
 
     class Meta:

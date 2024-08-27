@@ -68,10 +68,10 @@
                             <td>
                                 <a class="table-flex-holder"
                                    href="{% url 'view_monthly_report' project=project.id report=project_report.id %}">
-                                    {{ project_report.report_date | date:"F Y" }}
+                                    {{ project_report.from_date| date:"F Y" }}
                                 </a>
                             </td>
-                            <td data-title="Due date">{{ project_report.report_due_date | date:"d F Y" }}</td>
+                            <td data-title="Due date">{{ project_report.to_date| date:"d F Y" }}</td>
                             <td data-title="Locations">
                                1 
                             </td>

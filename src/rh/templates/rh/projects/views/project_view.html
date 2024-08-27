@@ -82,10 +82,16 @@
                                 <span id="selectedCount"></span> / <span id="totalCount"></span>
                                 <span>&nbsp;fields selected</span>
                             </div>
+                            {% if project.state == 'draft' %}
+                            <p class="text-warning">
+                                <i class="icon-info"></i>
+                                We are not able to export your draft project. 
+                            </p>
+                            {% else %}
                             <div class="summary project-planning">
                                 Custom Data Export
-                                <span class="project-chevron icon-chevron-down"></span>
                             </div>
+                            {% endif %}
                             <div class="details-container">
                                 <div class="block-body">
                                     <small class="label">Available fields:</small>
@@ -556,11 +562,19 @@
                                         <button class="btn btn-red" id="resetFilterButton">Reset</button>
                                     </div>
                                     <div class="field-col">
+                                        {% if project.state == 'draft' %}
+                                        <button id="downloadFilterForm" disabled>
+                                            <a href="#"
+                                               class="btn btn-red"
+                                               data-url="{% url 'export_project_filter' project.id %}">Download</a>
+                                        </button>
+                                        {% else %}
                                         <button id="downloadFilterForm">
                                             <a href="#"
                                                class="btn btn-red"
                                                data-url="{% url 'export_project_filter' project.id %}">Download</a>
                                         </button>
+                                        {% endif %}
                                     </div>
                                 </div>
                             </div>

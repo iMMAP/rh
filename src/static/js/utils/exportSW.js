@@ -104,6 +104,7 @@ $("#downloadFilterForm").click(function (e) {
 				selectedFieldList[checkedField[i].name] = checkedField[i].value;
 			}
 		}
+		console.log(selectedFieldList);
 		selectedFieldList.format = file_format;
 		// create post request
 		$.post({

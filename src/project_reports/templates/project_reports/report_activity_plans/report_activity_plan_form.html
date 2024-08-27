@@ -53,9 +53,8 @@
                                     </span>
                                     {% if report_activity_plan %}
                                         <span class="btn btn-gray" style="float:right">
-                                            <a href="{% url 'list_report_target_locations_with_plan' project.id monthly_report.pk report_activity_plan.pk %}"
+                                            <a href="{% url 'list_report_target_locations' project.id monthly_report.pk %}?activity_plan_report={{ report_activity_plan.id }}"
                                                class="btn btn-gray">
-                                                <img src="{% static 'admin/img/icon-addlink.svg' %}" alt="add-btn-icon">
                                                 Report Target Location
                                             </a>
                                         </span>

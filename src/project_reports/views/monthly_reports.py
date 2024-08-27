@@ -40,6 +40,8 @@ from ..models import (
 
 from ..filters import MonthlyReportsFilter, ActivityPlanReportFilter
 from extra_settings.models import Setting
+from django_htmx.http import HttpResponseClientRedirect
+from django.http import HttpResponse
 
 RECORDS_PER_PAGE = 10
 
@@ -223,7 +225,7 @@ def copy_project_monthly_report_view(request, report):
         project=monthly_report.project.pk,
         report_date__gte=first_day_of_last_month,
         report_date__lt=first_day_of_current_month,
-        state="complete",  # Filter by the "Submitted" state
+        state="completed",  # Filter by the "Submitted" state
         approved_on__isnull=False,  # Ensure the report has a submission date
     )
     if last_month_reports:
@@ -342,15 +344,19 @@ def copy_disaggregation_location_reports(location_report, disaggregation_locatio
 
 @login_required
 def delete_project_monthly_report_view(request, report):
-    """Delete View for Project Reports"""
     monthly_report = get_object_or_404(ProjectMonthlyReport, pk=report)
-    # TODO: Check access rights before deleting
-    if monthly_report:
-        monthly_report.delete()
-    url = reverse_lazy("project_reports_home", kwargs={"project": monthly_report.project.pk})
-    url_with_params = f"{url}?state=todo&state=pending&state=submit&state=reject"
 
-    return HTTPResponseHXRedirect(redirect_to=url_with_params)
+    # TODO: Check access rights before deleting
+    monthly_report.delete()
+
+    messages.success(request, "The reporting period and its dependencies has been deleted")
+
+    if request.headers.get("Hx-Trigger", "") == "delete-btn":
+        url = reverse_lazy("project_reports_home", kwargs={"project": monthly_report.project.pk})
+
+        return HttpResponseClientRedirect(url)
+
+    return HttpResponse(status=200)
 
 
 @login_required

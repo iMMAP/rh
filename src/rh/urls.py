@@ -174,13 +174,13 @@ urlpatterns = [
     # Exports
     path(
         "project/export-excel/<str:format>/",
-        export_views.ProjectExportExcelView.as_view(),
+        export_views.project_export_excel_view,
         name="export_project_excel",
     ),
     # Filter Export
     path(
         "project/export/<int:projectId>",
-        export_views.ProjectFilterExportView.as_view(),
+        export_views.project_filter_export_view,
         name="export_project_filter",
     ),
     # bulk export

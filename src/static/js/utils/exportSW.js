@@ -339,84 +339,47 @@ function exportButton(event) {
 			selected_project_list.push(selectedProject[i].value);
 		}
 	}
-	if(fileFormat === 'xlsx'){
-		fetch(export_url, {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-				"X-CSRFToken": csrftoken,
-			},
-			body: JSON.stringify(selected_project_list),
-		}).then(response => response.json())
-		.then(data => {
-			// Create a link element
+	fetch(export_url, {
+		method: "POST",
+		headers: {
+			"Content-Type": "application/json",
+			"X-CSRFToken": csrftoken,
+		},
+		body: JSON.stringify(selected_project_list),
+	}).then(response => {
+		if(fileFormat === "csv" || fileFormat === 'json'){
+			return response.blob();
+		} else if(fileFormat === "xlsx"){
+			return response.json();
+		} else {
+			throw Error("Unsupported file format");
+		}
+		
+	}).then(data => {
+		if(fileFormat === "csv" || fileFormat === "json"){
+			const url = window.URL.createObjectURL(data);
+			const link = document.createElement('a');
+			link.href = url;
+			link.download = filename+"."+fileFormat;
+			document.body.appendChild(link);
+			link.click();
+			document.body.removeChild(link);
+			window.URL.revokeObjectURL(url);
+		} else if(fileFormat === "xlsx"){
 			const link = document.createElement('a');
 			link.href = data.file_url; // Use the base64-encoded URL
 			link.download = data.file_name; // Set the filename for download
-			
 			// Append the link to the body, click it to start download, and then remove it
 			document.body.appendChild(link);
 			link.click();
 			document.body.removeChild(link);
-		})
-		.catch((error) => {
-			console.error("Error downloading:", error);
-		}).finally(()=>{
-			downloadButton.setAttribute("disabled", "false");
-			downloading_spinner.style.display = "none";
-			icon_downloading.style.display = "inline-block";
-		});
-	} else if(fileFormat === 'csv'){
-		fetch(export_url, {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-				"X-CSRFToken": csrftoken,
-			},
-			body: JSON.stringify(selected_project_list),
-		}).then(response => response.blob())
-        .then(blob => {
-            const url = window.URL.createObjectURL(blob);
-            const link = document.createElement('a');
-            link.href = url;
-            link.download = filename+".csv";
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            window.URL.revokeObjectURL(url);
-        })
-		.catch((error) => {
-			console.error("Error downloading:", error);
-		}).finally(()=>{
-			downloadButton.setAttribute("disabled", "false");
-			downloading_spinner.style.display = "none";
-			icon_downloading.style.display = "inline-block";
-		});
-	} else if(fileFormat === 'json'){
-		fetch(export_url, {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-				"X-CSRFToken": csrftoken,
-			},
-			body: JSON.stringify(selected_project_list),
-		}).then(response => response.blob()).then(blob =>{
-			const url = window.URL.createObjectURL(blob); 
-			const link = document.createElement('a'); 
-			link.href = url;
-			link.download = filename+'.json';
-			document.body.appendChild(link); 
-			link.click(); 
-			document.body.removeChild(link);
-			window.URL.revokeObjectURL(url); 
-	
-		})
-		.catch((error) => {
-			console.error("Error downloading:", error);
-		}).finally(()=>{
-			downloadButton.setAttribute("disabled", "false");
-			downloading_spinner.style.display = "none";
-			icon_downloading.style.display = "inline-block";
-		});
-	}
+		}
+	})
+	.catch((error) => {
+		console.error("Error downloading:", error);
+	}).finally(()=>{
+		downloadButton.setAttribute("disabled", "false");
+		downloading_spinner.style.display = "none";
+		icon_downloading.style.display = "inline-block";
+	});
 }

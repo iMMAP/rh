@@ -1,5 +1,5 @@
 import calendar
-from datetime import datetime, timedelta
+from datetime import datetime
 
 import pandas as pd
 from django.contrib.auth.decorators import login_required
@@ -9,10 +9,9 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.utils import timezone
 from django.contrib import messages
-from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.core.paginator import Paginator
-from django.db.models import Count, Prefetch, Q
+from django.db.models import Count, Q
 
 from rh.models import (
     ActivityDetail,
@@ -38,28 +37,25 @@ from ..models import (
     TargetLocationReport,
 )
 
-from ..filters import MonthlyReportsFilter
+from ..filters import MonthlyReportsFilter, ActivityPlanReportFilter
+from extra_settings.models import Setting
+from django_htmx.http import HttpResponseClientRedirect
+from django.http import HttpResponse
 
 RECORDS_PER_PAGE = 10
-
-
-class HTTPResponseHXRedirect(HttpResponseRedirect):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self["HX-Redirect"] = self["Location"]
-
-    status_code = 200
 
 
 @login_required
 def index_project_report_view(request, project):
     """Project Monthly Report View"""
 
-    project = get_object_or_404(Project.objects.filter(pk=project).order_by("-id"), pk=project)
+    project = get_object_or_404(Project, pk=project)
 
     # Setup Filter
     reports_filter = MonthlyReportsFilter(
-        request.GET, request=request, queryset=ProjectMonthlyReport.objects.filter(project=project).order_by("-id")
+        request.GET,
+        request=request,
+        queryset=ProjectMonthlyReport.objects.filter(project=project).order_by("-created_at"),
     )
 
     # Setup Pagination
@@ -71,9 +67,8 @@ def index_project_report_view(request, project):
 
     reports = ProjectMonthlyReport.objects.filter(project=project).aggregate(
         project_reports_todo_count=Count("id", filter=Q(state__in=ProjectMonthlyReport.REPORT_STATES)),
-        project_report_complete_count=Count("id", filter=Q(state="complete"), is_active=True),
-        project_report_archive_count=Count("id", filter=Q(state="archive", is_active=False)),
-        project_reports_count=Count("id", filter=Q(is_active=True)),
+        project_report_complete_count=Count("id", filter=Q(state="complete")),
+        project_report_archive_count=Count("id", filter=Q(state="archive")),
     )
 
     context = {
@@ -82,11 +77,8 @@ def index_project_report_view(request, project):
         "project_reports_todo": reports["project_reports_todo_count"],
         "project_report_complete": reports["project_report_complete_count"],
         "project_report_archive": reports["project_report_archive_count"],
-        "project_report_count": reports["project_reports_count"],
         "reports_filter": reports_filter,
-        "project_view": False,
-        "financial_view": False,
-        "reports_view": True,
+        "report_states": ProjectMonthlyReport.REPORT_STATES,
     }
 
     return render(request, "project_reports/monthly_reports/views/monthly_reports_view_base.html", context)
@@ -116,7 +108,6 @@ def create_project_monthly_report_view(request, project):
             if form.is_valid():
                 report = form.save(commit=False)
                 report.project = project
-                report.is_active = True
                 report.state = "pending"
                 report.save()
 
@@ -130,10 +121,8 @@ def create_project_monthly_report_view(request, project):
         context = {
             "project": project,
             "report_form": form,
-            "report_view": True,
-            "report_activities": False,
-            "report_locations": False,
         }
+
         return render(request, "project_reports/monthly_reports/forms/monthly_report_form.html", context)
 
     messages.error(request, "Your project is not ready for reporting! Please submit your project first.")
@@ -154,13 +143,11 @@ def update_project_monthly_report_view(request, project, report):
         form = ProjectMonthlyReportForm(request.POST, instance=report)
         if form.is_valid():
             report = form.save()
+
             report.project_id = project
             report.save()
-            return redirect(
-                "list_report_activity_plans",
-                project=project,
-                report=report.pk,
-            )
+
+            return redirect("view_monthly_report", project=project, report=report.pk)
     else:
         form = ProjectMonthlyReportForm(instance=report)
 
@@ -180,28 +167,31 @@ def update_project_monthly_report_view(request, project, report):
 def details_monthly_progress_view(request, project, report):
     """Project Monthly Report Read View"""
     project = get_object_or_404(Project, pk=project)
+    monthly_report = get_object_or_404(ProjectMonthlyReport, pk=report)
 
-    monthly_report = get_object_or_404(
-        ProjectMonthlyReport.objects.prefetch_related(
-            Prefetch(
-                "activityplanreport_set",
-                ActivityPlanReport.objects.select_related(
-                    "activity_plan__activity_domain", "activity_plan__activity_type", "indicator"
-                ).annotate(report_target_location_count=Count("targetlocationreport")),
-            ),
-        ),
-        pk=report,
+    activity_plan_report_list = (
+        ActivityPlanReport.objects.filter(monthly_report=monthly_report)
+        .select_related("activity_plan__activity_domain", "activity_plan__activity_type")
+        .order_by("-id")
+        .annotate(report_location_count=Count("targetlocationreport"))
     )
 
-    activity_reports = monthly_report.activityplanreport_set.all()
+    ap_report_filter = ActivityPlanReportFilter(
+        request.GET, queryset=activity_plan_report_list, monthly_report=monthly_report
+    )
+
+    RECORDS_PER_PAGE = Setting.get("RECORDS_PER_PAGE", default=10)
+    per_page = request.GET.get("per_page", RECORDS_PER_PAGE)
+    p = Paginator(ap_report_filter.qs, per_page=per_page)
+    page = request.GET.get("page", 1)
+    p_ap_plan_report_list = p.get_page(page)
+    p_ap_plan_report_list.adjusted_elided_pages = p.get_elided_page_range(page)
 
     context = {
         "project": project,
         "monthly_report": monthly_report,
-        "activity_reports": activity_reports,
-        "report_view": True,
-        "report_activities": False,
-        "report_locations": False,
+        "p_ap_plan_report_list": p_ap_plan_report_list,
+        "ap_report_filter": ap_report_filter,
     }
 
     return render(request, "project_reports/monthly_reports/views/monthly_report_view.html", context)
@@ -212,25 +202,12 @@ def copy_project_monthly_report_view(request, report):
     """Copy report view"""
     monthly_report = get_object_or_404(ProjectMonthlyReport, pk=report)
 
-    # Calculate the first day of the current month
-    today = datetime.now()
-    first_day_of_current_month = today.replace(day=1)
-
-    # Calculate the first day of the last month
-    first_day_of_last_month = (first_day_of_current_month - timedelta(days=1)).replace(day=1)
-
-    last_month_report = None
-
     # Filter the reports for the last month and find the latest submitted report
-    last_month_reports = ProjectMonthlyReport.objects.filter(
-        project=monthly_report.project.pk,
-        report_date__gte=first_day_of_last_month,
-        report_date__lt=first_day_of_current_month,
-        state="complete",  # Filter by the "Submitted" state
-        approved_on__isnull=False,  # Ensure the report has a submission date
+    last_month_report = ProjectMonthlyReport.objects.filter(project=monthly_report.project, state="completed").latest(
+        "approved_on"
     )
-    if last_month_reports:
-        last_month_report = last_month_reports.latest("approved_on")
+
+    print(f"monthly_report_current:{monthly_report} ----- last_month_report: {last_month_report}")
 
     # Check if the new monthly report was successfully created.
     if monthly_report and last_month_report:
@@ -255,7 +232,7 @@ def copy_project_monthly_report_view(request, report):
                     copy_disaggregation_location_reports(new_location_report, disaggregation_location_report)
         messages.success(request, "Report activities copied successfully.")
         url = reverse_lazy(
-            "list_report_activity_plans", kwargs={"project": monthly_report.project.pk, "report": monthly_report.pk}
+            "view_monthly_report", kwargs={"project": monthly_report.project.pk, "report": monthly_report.pk}
         )
 
     else:
@@ -268,7 +245,7 @@ def copy_project_monthly_report_view(request, report):
     monthly_report.state = "todo"
     monthly_report.save()
 
-    return HTTPResponseHXRedirect(redirect_to=url)
+    return HttpResponseClientRedirect(url)
 
 
 def copy_monthly_report_activity_plan(monthly_report, plan_report):
@@ -276,20 +253,13 @@ def copy_monthly_report_activity_plan(monthly_report, plan_report):
     try:
         # Duplicate the original activity plan report by retrieving it with the provided primary key.
         new_plan_report = get_object_or_404(ActivityPlanReport, pk=plan_report.pk)
+        response_types = new_plan_report.response_types.all()
         new_plan_report.pk = None  # Generate a new primary key for the duplicated plan report.
-        new_plan_report.save()  # Save the duplicated plan report to the database.
-
-        # Associate the duplicated plan report with the new monthly report.
         new_plan_report.monthly_report = monthly_report
 
-        # Set the plan report as active
-        new_plan_report.is_active = True
-
-        # Copy indicator from the current plan report to the duplicated plan report.
-        new_plan_report.indicator = plan_report.indicator
-
-        # Save the changes made to the duplicated plan report.
         new_plan_report.save()
+
+        new_plan_report.response_types.set(response_types)
 
         # Return the duplicated plan report.
         return new_plan_report
@@ -345,67 +315,74 @@ def copy_disaggregation_location_reports(location_report, disaggregation_locatio
 
 @login_required
 def delete_project_monthly_report_view(request, report):
-    """Delete View for Project Reports"""
     monthly_report = get_object_or_404(ProjectMonthlyReport, pk=report)
-    # TODO: Check access rights before deleting
-    if monthly_report:
-        monthly_report.delete()
-    url = reverse_lazy("project_reports_home", kwargs={"project": monthly_report.project.pk})
-    url_with_params = f"{url}?state=todo&state=pending&state=submit&state=reject"
 
-    return HTTPResponseHXRedirect(redirect_to=url_with_params)
+    # TODO: Check access rights before deleting
+    monthly_report.delete()
+
+    messages.success(request, "The reporting period and its dependencies has been deleted")
+
+    if request.headers.get("Hx-Trigger", "") == "delete-btn":
+        url = reverse_lazy("project_reports_home", kwargs={"project": monthly_report.project.pk})
+
+        return HttpResponseClientRedirect(url)
+
+    return HttpResponse(status=200)
 
 
 @login_required
 def archive_project_monthly_report_view(request, report):
-    """Archive View for Project Reports"""
     monthly_report = get_object_or_404(ProjectMonthlyReport, pk=report)
-    if monthly_report:
-        monthly_report.state = "archive"
-        monthly_report.is_active = False
-        monthly_report.save()
-    url = reverse_lazy("project_reports_home", kwargs={"project": monthly_report.project.pk})
-    url_with_params = f"{url}?state=todo&state=pending&state=submit&state=reject"
 
-    return HTTPResponseHXRedirect(redirect_to=url_with_params)
+    if monthly_report:
+        monthly_report.state = "archived"
+        monthly_report.save()
+
+    url = reverse_lazy("project_reports_home", kwargs={"project": monthly_report.project.pk})
+
+    return HttpResponseClientRedirect(url)
 
 
 @login_required
 def unarchive_project_monthly_report_view(request, report):
     """Unarchive View for Project Reports"""
     monthly_report = get_object_or_404(ProjectMonthlyReport, pk=report)
-    if monthly_report:
-        monthly_report.is_active = True
-        monthly_report.state = "todo"
-        monthly_report.save()
-    url = reverse_lazy("project_reports_home", kwargs={"project": monthly_report.project.pk})
-    url_with_params = f"{url}?state=todo&state=pending&state=submit&state=reject"
 
-    return HTTPResponseHXRedirect(redirect_to=url_with_params)
+    monthly_report.is_active = True
+    monthly_report.state = "todo"
+    monthly_report.save()
+
+    url = reverse_lazy("project_reports_home", kwargs={"project": monthly_report.project.pk})
+
+    return HttpResponseClientRedirect(url)
 
 
 @login_required
 def submit_monthly_report_view(request, report):
     monthly_report = get_object_or_404(ProjectMonthlyReport, pk=report)
+
     # TODO: Handle with access rights and groups
-    monthly_report.state = "complete"
+    monthly_report.state = "completed"
     monthly_report.submitted_on = timezone.now()
     monthly_report.approved_on = timezone.now()
+
     monthly_report.save()
+
     messages.success(request, "Report Submitted and Approved!")
 
     # Return the URL in a JSON response
     url = reverse_lazy(
         "view_monthly_report", kwargs={"project": monthly_report.project.pk, "report": monthly_report.pk}
     )
-    return HTTPResponseHXRedirect(redirect_to=url)
+
+    return HttpResponseClientRedirect(url)
 
 
 @login_required
 def approve_monthly_report_view(request, report):
     monthly_report = get_object_or_404(ProjectMonthlyReport, pk=report)
     # TODO: Handle with access rights and groups
-    monthly_report.state = "complete"
+    monthly_report.state = "completed"
     monthly_report.approved_on = timezone.now()
     monthly_report.save()
     # Generate the URL using reverse
@@ -430,7 +407,7 @@ def reject_monthly_report_view(request, report):
         message = request.GET.get("message")
 
     # TODO: Handle with access rights and groups
-    monthly_report.state = "reject"
+    monthly_report.state = "rejected"
     monthly_report.rejected_on = timezone.now()
     monthly_report.comments = message
 

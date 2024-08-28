@@ -9,6 +9,14 @@
     {% endif %}
 {% endblock title %}
 
+{% block breadcrumb_li %}
+    {% if monthly_report %}
+        <li class="current">Update Report Period</li>
+    {% else %}
+        <li class="current">Create Report Period</li>
+    {% endif %}
+{% endblock breadcrumb_li %}
+
 {% block project_body %}
     <div class="content-block top-border">
         <div class="main-content">
@@ -38,14 +46,14 @@
                         <div class="monthly-reporting multiple-fields-row two-items">
                             <div class="field-col">
                                 <div class="date start">
-                                    <label for="{{ report_form.report_date.id_for_label }}">Reporting Date</label>
-                                    <div class="date-picker-field start-date">{{ report_form.report_date }}</div>
+                                    <label for="{{ report_form.from_date.id_for_label }}">Reporting Date from</label>
+                                    <div class="date-picker-field start-date">{{ report_form.from_date}}</div>
                                 </div>
                             </div>
                             <div class="field-col">
                                 <div class="date end">
-                                    <label for="{{ report_form.report_due_date.id_for_label }}">Report Due Date</label>
-                                    <div class="date-picker-field end-date">{{ report_form.report_due_date }}</div>
+                                    <label for="{{ report_form.to_date.id_for_label }}">to</label>
+                                    <div class="date-picker-field end-date">{{ report_form.to_date}}</div>
                                 </div>
                             </div>
                         </div>
@@ -70,6 +78,4 @@
             </div>
         </div>
     </div>
-
-    {{ activity_plan_formset.media.js }}
 {% endblock project_body %}

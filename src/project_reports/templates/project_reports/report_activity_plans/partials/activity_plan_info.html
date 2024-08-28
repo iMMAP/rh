@@ -1,22 +1,27 @@
 {% comment %} activity plan info {% endcomment %}
 {% if activity_plan %}
-<div class="multiple-fields-row two-items">
-    <div class="field-col">
-        <div class="select-field">
-            <span class="label">Activity Domain</span>
-            <span class="text-read-only" >{{ activity_plan.activity_domain.name }}</span>
+<div class="bg-gray-f5 border border-gray-e6">
+    <p class="p-2 text-gray-53 font-semibold border-b border-gray-e6">
+        <a href="{% url 'activity-plans-update' activity_plan.id %}" target="_blank"> Activity Plan Info </a>
+    </p>
+    <div class="multiple-fields-row two-items p-2">
+        <div class="field-col">
+            <div class="select-field">
+                <span class="label">Activity Domain</span>
+                <span class="text-read-only" >{{ activity_plan.activity_domain.name }}</span>
+            </div>
         </div>
-    </div>
-    <div class="field-col">
-        <div class="select-field">
-            <span class="label">Activity Type</span>
-            <span class="text-read-only">{{ activity_plan.activity_type.name }}</span>
+        <div class="field-col">
+            <div class="select-field">
+                <span class="label">Activity Type</span>
+                <span class="text-read-only">{{ activity_plan.activity_type.name }}</span>
+            </div>
         </div>
-    </div>
-    <div class="field-col">
-        <div class="select-field">
-            <span class="label">Indicator</span>
-            <span class="text-read-only">{{ activity_plan.indicator.name }}</span>
+        <div class="field-col">
+            <div class="select-field">
+                <span class="label">Indicator</span>
+                <span class="text-read-only">{{ activity_plan.indicator.name }}</span>
+            </div>
         </div>
     </div>
 </div>

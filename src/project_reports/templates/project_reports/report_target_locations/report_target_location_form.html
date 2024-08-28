@@ -103,6 +103,9 @@
                             <div class="form-wrapper p-4">
                                 <div class="select-field">
                                     <span class="label">Target Location</span>
+                                    <p class="help-text">{{ form.implementing_partners.help_text }}
+                                        <span class="icon-info mr-1 "></span> If you the don't see your desired location in the list, go to <a target="_blank" href="{% url 'target-locations-create' report_plan.activity_plan.pk %}" class="text-red underline">add target location</a> page to add new target location for this Activity Plan
+                                    </p>
                                     {{ location_report_form.target_location }}
                                     <div class="sign-up-field-error">{{ location_report_form.target_location.errors }}</div> 
                                 </div>

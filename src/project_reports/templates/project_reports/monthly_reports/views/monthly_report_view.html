@@ -38,6 +38,7 @@
                     <li>
                         <a hx-post="{% url 'delete_project_monthly_report' monthly_report.pk %}"
                            hx-trigger="click"
+                           id="delete-btn"
                            hx-swap="none"
                            hx-confirm="Are you sure you want to delete this report?"
                            data-tippy-content="Delete report"

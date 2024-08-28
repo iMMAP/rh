@@ -4,15 +4,18 @@
 {% endblock head %}
 
 {% block title %}
-    Project Reports
+    {{ project.code }} Project Reports
 {% endblock title %}
 
 {% block project_body %}
     <div class="content-block">
         <div class="activity-planning read-only">
-            <h2 class="activity-title">
-               Project Reports 
-            </h2>
+            <div class="flex items-center justify-between pb-2">
+                <div class="activity-title">
+                    <span>Project Report Periods</span>
+                </div>
+                <a href="{% url 'create_project_monthly_report' project=project.pk %}" class="btn btn-red add-btn">Add Report </a>
+            </div>
         </div>
 
         {% include "project_reports/monthly_reports/views/_reports_table.html" %}

@@ -33,5 +33,14 @@
         </div>
     </div>
     {% endif %}
+
+    {% if target_location.implementing_partner %}
+    <div class="field-col">
+        <div class="input-field">
+            <label for="implementing_partner">Implementing Partner</label>
+            <span>{{ target_location.implementing_partner }}</span>
+        </div>
+    </div>
+    {% endif %}
 </div>
 {% endif %}

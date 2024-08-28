@@ -22,6 +22,7 @@
             </div>
         </div>
         <div class="actions-panel">
+            <a class="btn btn-gray" href="{% url 'list_report_target_locations' project.id monthly_report.pk %}">All Report Locations </a>
             {% if plans_report_filter %}
                 {% include "components/_filter_drawer.html" with filter=plans_report_filter %}
             {% endif %}

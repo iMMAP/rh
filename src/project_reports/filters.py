@@ -17,7 +17,7 @@ class MonthlyReportsFilter(django_filters.FilterSet):
     # from_date = django_filters.DateFromToRangeFilter(widget=RangeWidget(attrs={"type": "date"}))
     class Meta:
         model = ProjectMonthlyReport
-        fields = ["from_date", "to_date"]
+        fields = ["from_date", "to_date", "state"]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

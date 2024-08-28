@@ -6,7 +6,7 @@ $("input[type=checkbox]").change(function () {
 // count the number of checkbox selected for export
 
 document.querySelectorAll(".input-check").forEach(element => {
-	element.addEventListener('change', checkboxCounter());
+	element.addEventListener('click', ()=>{checkboxCounter();});
 });
 try{
 	
@@ -62,7 +62,6 @@ function checkboxCounter(){
 	const uncheckedCounterElement = document.getElementById("notSelectedCount");
 	let checkedCounter = 0;
 	let uncheckedCounter = 0;
-	let x = checkboxes.length;
 	checkboxes.forEach(checkbox => {
 		if(checkbox.checked == true){
 			checkedCounter++;

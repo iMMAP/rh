@@ -157,7 +157,15 @@
                                         <div class="multiple-fields-row">
                                             <div class="field-col">
                                                 <div class="select-field">
-                                                    <label>{{ form.beneficiary_status.label }}</label>
+                                                    <label>{{ form.beneficiary_status.label }}
+                                                        [Read the description]
+                                                        <div class="implement-info">
+                                                            <i class="icon-info"></i>
+                                                            <span class="implement-text">Select 'New Beneficiary' if this activity for this project has not 
+                                                                been previously reported for the selected target location. 
+                                                                Select 'Existing Beneficiary' if the activity has already been reported for this target location.</span>
+                                                        </div>
+                                                    </label>
                                                     {{ form.beneficiary_status }}
                                                     <p class="sign-up-field-error">{{ form.beneficiary_status.errors }}</p>
                                                 </div>

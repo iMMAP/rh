@@ -66,7 +66,7 @@ def list_report_target_locations(request, project, report, plan=None):
         "location_report_filter": tl_filter,
     }
 
-    return render(request, "project_reports/report_target_locations/target_locations_list.html", context)
+    return render(request, "project_reports/report_target_locations/report_target_locations_list.html", context)
 
 
 @login_required

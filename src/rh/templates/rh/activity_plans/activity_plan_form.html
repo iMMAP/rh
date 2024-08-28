@@ -10,7 +10,11 @@
 {% endblock title %}
 
 {% block breadcrumb_li %}
-    <li class="current">Activity Plan</li>
+    {% if form.instance.id %}
+        <li class="current">Updated Activity Plan</li> 
+    {% else %}
+        <li class="current">Create Activity Plan</li> 
+    {% endif %}
 {% endblock breadcrumb_li %}
 
 {% block project_contents %}

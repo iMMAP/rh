@@ -805,7 +805,7 @@ a.text-decoration-none{
   word-break: break-word;
 }
 
-.complete {
+.completed {
   @extend .c-pill;
   border: 1px solid rgb(68, 117, 203);
   background-color: rgb(68, 117, 203,0.8);
@@ -841,7 +841,7 @@ a.text-decoration-none{
   border: 1px solid #ff4436;
   background: #ffd5d1;
 }
-.archive {
+.archived {
   @extend .c-pill;
   border: 1px solid black;
   background: gray;
@@ -966,6 +966,11 @@ a.text-decoration-none{
 
 .htmx-request.progress {
   display: block;
+}
+
+.htmx-swapping {
+  opacity: 0;
+  transition: opacity 1s ease-out;
 }
 
 @-webkit-keyframes indeterminate {

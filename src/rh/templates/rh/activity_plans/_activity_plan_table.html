@@ -59,8 +59,8 @@
                             <td>{{ row.activity_type }}</td>
                             <td>{{ row.indicator }}</td>
                             <td>{{ row.hrp_beneficiary.name }}</td>
-                            <td>
-                                <a href="{% url 'target-locations-list' project.pk %}?activity_plan={{ row.id }}">
+                            <td class="{% if row.target_location_count == 0 %}text-red{% endif %}">
+                                <a href="{% url 'target-locations-list' project.pk %}?activity_plan={{ row.id }}" >
                                     <svg data-slot="icon"
                                          width="14px"
                                          data-darkreader-inline-stroke=""
@@ -109,9 +109,11 @@
                                                 <a hx-delete="{% url 'activity-plans-delete' row.id %}"
                                                    hx-trigger="click"
                                                    hx-indicator=".progress"
+                                                   hx-swap="outerHTML swap:1s"
                                                    hx-confirm="Do you want to delete `{{ row }}` and its Target Locations ?"
                                                    hx-target="closest tr"
-                                                   data-tippy-content="Delete Activity Plan">
+                                                   data-tippy-content="Delete Activity Plan"
+                                                >
                                                     <span class="project-detail icon-trashbin"></span>
                                                 </a>
                                             </button>

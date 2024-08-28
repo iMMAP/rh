@@ -62,10 +62,6 @@ class Cluster(models.Model):
     code = models.SlugField(max_length=NAME_MAX_LENGTH, unique=True)
     title = models.CharField(max_length=NAME_MAX_LENGTH)
     ocha_code = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
-    has_nhs_code = models.BooleanField(default=False, null=True)
-
-    def check_nhs_code(self):
-        return self.has_nhs_code
 
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, null=True)
@@ -540,8 +536,6 @@ class ActivityPlan(models.Model):
         max_length=15, choices=CATEGORY_TYPES, default="non-disabled", null=True, blank=True
     )
 
-    total_target = models.IntegerField(default=0, blank=True, null=True)
-    total_set_target = models.IntegerField(default=0, blank=True, null=True)
     description = models.TextField(blank=True, null=True)
     # old_id = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
 
@@ -589,11 +583,25 @@ class TargetLocation(models.Model):
     country = models.ForeignKey(
         Location, related_name="target_country", on_delete=models.SET_NULL, null=True, limit_choices_to={"level": 0}
     )
-    province = models.ForeignKey(Location, related_name="target_province", on_delete=models.SET_NULL, null=True)
-    district = models.ForeignKey(
-        Location, related_name="target_district", on_delete=models.SET_NULL, null=True, blank=True
+    province = models.ForeignKey(
+        Location, related_name="target_province", on_delete=models.SET_NULL, null=True, limit_choices_to={"level": 1}
     )
-    zone = models.ForeignKey(Location, related_name="target_zones", on_delete=models.SET_NULL, null=True, blank=True)
+    district = models.ForeignKey(
+        Location,
+        related_name="target_district",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        limit_choices_to={"level": 2},
+    )
+    zone = models.ForeignKey(
+        Location,
+        related_name="target_zones",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        limit_choices_to={"level": 3},
+    )
     location_type = models.ForeignKey(LocationType, on_delete=models.SET_NULL, null=True, blank=True)
 
     implementing_partner = models.ForeignKey(Organization, on_delete=models.SET_NULL, null=True, blank=True)

@@ -51,7 +51,7 @@
                                                 {{ reports_filter.form.project__implementing_partners }}
                                             </div>
                                             <label>Date Range</label>
-                                            <div class="date-picker-field">{{ reports_filter.form.report_date }}</div>
+                                            <div class="date-picker-field">{{ reports_filter.form.from_date}}</div>
  
                                         </div>
                                         <div class="block-footer">
@@ -260,7 +260,7 @@
                                     {{report.project.user.email}}
                                 </td>
                                 <td class="location-col">
-                                    {{ report.report_date }}
+                                    {{ report.from_date}}
                                 </td>
                                 <td class="location-col">
                                     <span class="{{ report.state }}">

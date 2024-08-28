@@ -29,7 +29,6 @@
 
         <div class="actions-panel">
             {% include "components/_filter_drawer.html" with filter=reports_filter %}
-            <a href="{% url 'create_project_monthly_report' project=project.pk %}" class="btn btn-red add-btn">Add Report </a>
         </div>
     </div>
 
@@ -45,9 +44,6 @@
                        
                         <th>
                             <strong class="table-title">Due date</strong>
-                        </th>
-                        <th>
-                            <strong class="table-title">Activities</strong>
                         </th>
                         <th>
                             <strong class="table-title">Notes</strong>
@@ -72,9 +68,6 @@
                                 </a>
                             </td>
                             <td data-title="Due date">{{ project_report.to_date| date:"d F Y" }}</td>
-                            <td data-title="Locations">
-                               1 
-                            </td>
                             <td data-title="Notes">{{ project_report.description }}</td>
                             <td data-title="Due date">
                                 <span class="{{ project_report.state }}">{{ project_report.get_state_display }}</span>

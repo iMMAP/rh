@@ -1,5 +1,7 @@
 {% extends "project_reports/monthly_reports/forms/monthly_report_progress_form_base.html" %}
+
 {% load static %}
+
 {% block title %}
     {{ monthly_report.from_date| date:"F Y" }}  Report Activities
 {% endblock title %}
@@ -63,8 +65,10 @@
                                 <br>
                                 <ul class="space-y-2 p-4">
                                     <li>
-                                        <span class="icon-info mr-2"></span>
-                                        Use this form to provide detailed information about the report activity for the above the monthly report.
+                                        <span class="icon-info mr-2"></span> Use this form to provide detailed information about the report activity for the above the monthly report.
+                                    </li>
+                                    <li>
+                                        <span class="icon-info mr-2"></span> If you the don't see your indicator in the list, go to <a target="_blank" href="{% url 'activity-plans-list' project.pk %}" class="text-red underline">activity plans</a> page to add new activity plans. 
                                     </li>
                                 </ul>
                             </div>
@@ -90,10 +94,13 @@
                                         <div class="row">
                                             <div class="select-field">
                                                 <span class="label">Project Activity Plan</span>
+                                                <p class="help-text">{{ form.activity_plan.help_text }}
+                                                    <span class="icon-info mr-1 "></span> If you the don't see your indicator in the list, go to <a target="_blank" href="{% url 'activity-plans-list' project.pk %}" class="text-red underline">activity plans</a> page to add new activity plan. 
+                                                </p>
                                                 {{ form.activity_plan }}
                                                 <p class="sign-up-field-error">{{ form.activity_plan.errors }}</p>
                                             </div>
-                                            <div id="activity-plan-info">
+                                            <div id="activity-plan-info" class="mb-3">
                                                 {% if report_activity_plan %}
                                                     {% include "project_reports/report_activity_plans/partials/activity_plan_info.html" with activity_plan=report_activity_plan.activity_plan %}
                                                 {% endif %}
@@ -105,6 +112,7 @@
                                                     <div class="field-col">
                                                         <div class="select-field">
                                                             <label for="{{ form.response_types.id_for_label }}">Response Types</label>
+                                                            <p class="help-text">{{ form.response_types.help_text }}</p>
                                                             {{ form.response_types }}
                                                             <p class="sign-up-field-error">{{ form.response_types.errors }}</p>
                                                         </div>
@@ -112,6 +120,7 @@
                                                     <div class="field-col">
                                                         <div class="select-field">
                                                             <label for="{{ form.implementing_partners.id_for_label }}">Implementing Partners</label>
+                                                            <p class="help-text">{{ form.implementing_partners.help_text }}</p>
                                                             {{ form.implementing_partners }}
                                                             <p class="sign-up-field-error">{{ form.implementing_partners.errors }}</p>
                                                         </div>

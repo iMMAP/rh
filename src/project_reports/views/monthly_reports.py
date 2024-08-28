@@ -1,5 +1,5 @@
 import calendar
-from datetime import datetime, timedelta
+from datetime import datetime
 
 import pandas as pd
 from django.contrib.auth.decorators import login_required
@@ -9,7 +9,6 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.utils import timezone
 from django.contrib import messages
-from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.core.paginator import Paginator
 from django.db.models import Count, Q
@@ -44,14 +43,6 @@ from django_htmx.http import HttpResponseClientRedirect
 from django.http import HttpResponse
 
 RECORDS_PER_PAGE = 10
-
-
-class HTTPResponseHXRedirect(HttpResponseRedirect):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self["HX-Redirect"] = self["Location"]
-
-    status_code = 200
 
 
 @login_required
@@ -211,25 +202,12 @@ def copy_project_monthly_report_view(request, report):
     """Copy report view"""
     monthly_report = get_object_or_404(ProjectMonthlyReport, pk=report)
 
-    # Calculate the first day of the current month
-    today = datetime.now()
-    first_day_of_current_month = today.replace(day=1)
-
-    # Calculate the first day of the last month
-    first_day_of_last_month = (first_day_of_current_month - timedelta(days=1)).replace(day=1)
-
-    last_month_report = None
-
     # Filter the reports for the last month and find the latest submitted report
-    last_month_reports = ProjectMonthlyReport.objects.filter(
-        project=monthly_report.project.pk,
-        from_date__gte=first_day_of_last_month,
-        from_date__lt=first_day_of_current_month,
-        state="completed",  # Filter by the "Submitted" state
-        approved_on__isnull=False,  # Ensure the report has a submission date
+    last_month_report = ProjectMonthlyReport.objects.filter(project=monthly_report.project, state="completed").latest(
+        "approved_on"
     )
-    if last_month_reports:
-        last_month_report = last_month_reports.latest("approved_on")
+
+    print(f"monthly_report_current:{monthly_report} ----- last_month_report: {last_month_report}")
 
     # Check if the new monthly report was successfully created.
     if monthly_report and last_month_report:
@@ -267,7 +245,7 @@ def copy_project_monthly_report_view(request, report):
     monthly_report.state = "todo"
     monthly_report.save()
 
-    return HTTPResponseHXRedirect(redirect_to=url)
+    return HttpResponseClientRedirect(url)
 
 
 def copy_monthly_report_activity_plan(monthly_report, plan_report):
@@ -275,20 +253,13 @@ def copy_monthly_report_activity_plan(monthly_report, plan_report):
     try:
         # Duplicate the original activity plan report by retrieving it with the provided primary key.
         new_plan_report = get_object_or_404(ActivityPlanReport, pk=plan_report.pk)
+        response_types = new_plan_report.response_types.all()
         new_plan_report.pk = None  # Generate a new primary key for the duplicated plan report.
-        new_plan_report.save()  # Save the duplicated plan report to the database.
-
-        # Associate the duplicated plan report with the new monthly report.
         new_plan_report.monthly_report = monthly_report
 
-        # Set the plan report as active
-        new_plan_report.is_active = True
-
-        # Copy indicator from the current plan report to the duplicated plan report.
-        new_plan_report.indicator = plan_report.indicator
-
-        # Save the changes made to the duplicated plan report.
         new_plan_report.save()
+
+        new_plan_report.response_types.set(response_types)
 
         # Return the duplicated plan report.
         return new_plan_report
@@ -361,47 +332,50 @@ def delete_project_monthly_report_view(request, report):
 
 @login_required
 def archive_project_monthly_report_view(request, report):
-    """Archive View for Project Reports"""
     monthly_report = get_object_or_404(ProjectMonthlyReport, pk=report)
+
     if monthly_report:
         monthly_report.state = "archived"
-        monthly_report.is_active = False
         monthly_report.save()
-    url = reverse_lazy("project_reports_home", kwargs={"project": monthly_report.project.pk})
-    url_with_params = f"{url}?state=todo&state=pending&state=submit&state=reject"
 
-    return HTTPResponseHXRedirect(redirect_to=url_with_params)
+    url = reverse_lazy("project_reports_home", kwargs={"project": monthly_report.project.pk})
+
+    return HttpResponseClientRedirect(url)
 
 
 @login_required
 def unarchive_project_monthly_report_view(request, report):
     """Unarchive View for Project Reports"""
     monthly_report = get_object_or_404(ProjectMonthlyReport, pk=report)
-    if monthly_report:
-        monthly_report.is_active = True
-        monthly_report.state = "todo"
-        monthly_report.save()
-    url = reverse_lazy("project_reports_home", kwargs={"project": monthly_report.project.pk})
-    url_with_params = f"{url}?state=todo&state=pending&state=submit&state=reject"
 
-    return HTTPResponseHXRedirect(redirect_to=url_with_params)
+    monthly_report.is_active = True
+    monthly_report.state = "todo"
+    monthly_report.save()
+
+    url = reverse_lazy("project_reports_home", kwargs={"project": monthly_report.project.pk})
+
+    return HttpResponseClientRedirect(url)
 
 
 @login_required
 def submit_monthly_report_view(request, report):
     monthly_report = get_object_or_404(ProjectMonthlyReport, pk=report)
+
     # TODO: Handle with access rights and groups
     monthly_report.state = "completed"
     monthly_report.submitted_on = timezone.now()
     monthly_report.approved_on = timezone.now()
+
     monthly_report.save()
+
     messages.success(request, "Report Submitted and Approved!")
 
     # Return the URL in a JSON response
     url = reverse_lazy(
         "view_monthly_report", kwargs={"project": monthly_report.project.pk, "report": monthly_report.pk}
     )
-    return HTTPResponseHXRedirect(redirect_to=url)
+
+    return HttpResponseClientRedirect(url)
 
 
 @login_required

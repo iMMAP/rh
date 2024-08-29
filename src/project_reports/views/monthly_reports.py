@@ -55,7 +55,7 @@ def index_project_report_view(request, project):
     reports_filter = MonthlyReportsFilter(
         request.GET,
         request=request,
-        queryset=ProjectMonthlyReport.objects.filter(project=project).order_by("-created_at"),
+        queryset=ProjectMonthlyReport.objects.filter(project=project).order_by("-from_date"),
     )
 
     # Setup Pagination

@@ -339,7 +339,7 @@ def org_projects_list(request):
         request=request,
         queryset=p_queryset.select_related("organization")
         .prefetch_related("clusters", "programme_partners", "implementing_partners")
-        .order_by("-id"),
+        .order_by("-updated_at"),
     )
 
     # Setup Pagination
@@ -351,9 +351,9 @@ def org_projects_list(request):
     p_projects.adjusted_elided_pages = p.get_elided_page_range(page)
 
     projects_counts = project_filter.qs.aggregate(
-        # draft_projects_count=Count("id", filter=Q(state="draft")),
-        # active_projects_count=Count("id", filter=Q(state="in-progress")),
-        pending_reports_count=Count("projectmonthlyreport", filter=Q(state="pending")),
+        pending_reports_count=Count(
+            "projectmonthlyreport", filter=Q(projectmonthlyreport__state="pending"), distinct=True
+        ),
         implementing_partners_count=Count("implementing_partners", distinct=True),
         activity_plans_count=Count("activityplan", distinct=True),
         target_locations_count=Count("targetlocation__province", distinct=True),

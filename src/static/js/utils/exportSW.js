@@ -4,23 +4,74 @@ $("input[type=checkbox]").change(function () {
 	$(this).css("accent-color", "#af4745");
 });
 // count the number of checkbox selected for export
+
+document.querySelectorAll(".input-check").forEach(element => {
+	element.addEventListener('click', ()=>{checkboxCounter();});
+});
 try{
-	const checkedField = document.querySelectorAll(".input-check");
-	document.getElementById("totalCount").innerHTML=checkedField.length;
-	const countSpan = document.getElementById("selectedCount");
-	let selectedCount = 0;
-	checkedField.forEach(field => {
-		field.addEventListener("click", () =>{
-			if(field.checked == true){
-				selectedCount++;
-			} else if(field.checked == false){
-				selectedCount--;
+	
+	const all_checks = document.querySelectorAll(".select-all");
+	const project_checkbox = document.querySelectorAll(".project-check");
+	const activity_checkbox = document.querySelectorAll(".activity-check");
+	const location_checkbox = document.querySelectorAll(".targetlocation-check");
+	all_checks.forEach(checkElement => {
+		checkElement.addEventListener('click',(e)=>{
+			let checkElementId = e.target.id;
+			let checkbox_array = new Array();
+			let condition = true;
+			if(checkElement.checked){
+				if(checkElementId === "project-plan"){
+					checkbox_array = project_checkbox;
+					condition = true;
+				} else if (checkElementId === "activity-plan"){
+					checkbox_array = activity_checkbox;
+					condition = true;
+				}else if(checkElementId === "target-location"){
+					checkbox_array = location_checkbox;
+					condition = true;
+				}
+				checkboxManager(checkbox_array, condition);
+			} else if(checkElement.checked == false){
+				if(checkElementId === "project-plan"){
+					checkbox_array = project_checkbox;
+					condition = false;
+				} else if (checkElementId === "activity-plan"){
+					checkbox_array = activity_checkbox;
+					condition = false;
+				}else if(checkElementId === "target-location"){
+					checkbox_array = location_checkbox;
+					condition = false;
+				}
+				checkboxManager(checkbox_array, condition);
 			}
-			countSpan.textContent = selectedCount;
-		})
-		countSpan.textContent = selectedCount;
+		});
 	});
+
 }catch{}
+
+function checkboxManager(checkboxes, condition){
+	checkboxes.forEach(checkElement => {
+		checkElement.checked = condition;
+		checkElement.style.accentColor='#a52824';
+	});
+	checkboxCounter();
+}
+function checkboxCounter(){
+	const checkboxes = document.querySelectorAll(".input-check");
+	const checkedCounterElement = document.getElementById("selectedCount");
+	const uncheckedCounterElement = document.getElementById("notSelectedCount");
+	let checkedCounter = 0;
+	let uncheckedCounter = 0;
+	checkboxes.forEach(checkbox => {
+		if(checkbox.checked == true){
+			checkedCounter++;
+		}else if(checkbox.checked == false){
+			uncheckedCounter++;
+		}
+	});
+	checkedCounterElement.textContent=checkedCounter;
+	uncheckedCounterElement.textContent=uncheckedCounter;
+}
 
 
 //Reset the checkbox
@@ -35,8 +86,7 @@ $("#resetFilterButton").on("click", () => {
 			$("#not-checked-message").text("");
 		}, 3000);
 	}
-	let selectedCount = 0;
-	countSpan.text(selectedCount);
+	checkboxCounter()
 
 	
 });
@@ -174,9 +224,21 @@ function exportButton(event) {
 	event.preventDefault();
 	// getting export url
 	const export_url = event.currentTarget.dataset.exportUrl;
+	const fileFormat = event.currentTarget.dataset.exportFormat;
 	const downloadButton = document.querySelector(".export-open");
 	const downloading_spinner = document.querySelector(".downloading");
 	const icon_downloading = document.querySelector(".icon-download");
+
+	// create filename
+	let currentDate = new Date();
+	// Extract date components
+	let day = currentDate.getDate();
+	let month = currentDate.getMonth() + 1; // Month is zero-based
+	let year = currentDate.getFullYear();
+	// Format the date as needed (example: DD/MM/YYYY)
+	let todayDate = year+'-'+month+'-'+day;
+	// write the file name
+	let filename = "projects_bulk_export_"+todayDate;
 
 	downloadButton.setAttribute("disabled", "disabled");
 	downloading_spinner.style.display = "inline-block";
@@ -189,7 +251,6 @@ function exportButton(event) {
 			selected_project_list.push(selectedProject[i].value);
 		}
 	}
-
 	fetch(export_url, {
 		method: "POST",
 		headers: {
@@ -197,26 +258,40 @@ function exportButton(event) {
 			"X-CSRFToken": csrftoken,
 		},
 		body: JSON.stringify(selected_project_list),
-	})
-		.then(async (response) => {
-			// getting filename
-			const contentDisposition = response.headers.get("Content-Disposition");
-			const filename = contentDisposition.split("=")[1].replace(/"/g, "");
-
-			const blob = await response.blob();
-			const url = window.URL.createObjectURL(blob);
-			const a = document.createElement("a");
-			a.href = url;
-			a.download = filename;
-			document.body.appendChild(a);
-			a.click();
+	}).then(response => {
+		if(fileFormat === "csv" || fileFormat === 'json'){
+			return response.blob();
+		} else if(fileFormat === "xlsx"){
+			return response.json();
+		} else {
+			throw Error("Unsupported file format");
+		}
+		
+	}).then(data => {
+		if(fileFormat === "csv" || fileFormat === "json"){
+			const url = window.URL.createObjectURL(data);
+			const link = document.createElement('a');
+			link.href = url;
+			link.download = filename+"."+fileFormat;
+			document.body.appendChild(link);
+			link.click();
+			document.body.removeChild(link);
 			window.URL.revokeObjectURL(url);
-		})
-		.catch((error) => {
-			console.error("Error downloading:", error);
-		}).finally(()=>{
-			downloadButton.setAttribute("disabled", "false");
-			downloading_spinner.style.display = "none";
-			icon_downloading.style.display = "inline-block";
-		});
+		} else if(fileFormat === "xlsx"){
+			const link = document.createElement('a');
+			link.href = data.file_url; // Use the base64-encoded URL
+			link.download = data.file_name; // Set the filename for download
+			// Append the link to the body, click it to start download, and then remove it
+			document.body.appendChild(link);
+			link.click();
+			document.body.removeChild(link);
+		}
+	})
+	.catch((error) => {
+		console.error("Error downloading:", error);
+	}).finally(()=>{
+		downloadButton.setAttribute("disabled", "false");
+		downloading_spinner.style.display = "none";
+		icon_downloading.style.display = "inline-block";
+	});
 }

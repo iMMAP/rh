@@ -40,6 +40,10 @@ input[type="date"] {
   &::-ms-clear { display: none; }
 }
 
+input[type=checkbox]:checked {
+  accent-color: $red;
+}
+
 #{$form-elements} {
   @include placeholder {
     @include transition(color);
@@ -495,7 +499,7 @@ label,
 .text-read-only {
   pointer-events: none;
   font-size: 14px;
-  font-weight: 500;
+  // font-weight: 500;
   line-height: 1.43;
   display: block;
   color: $gray-35;

@@ -37,7 +37,7 @@ urlpatterns = [
     path("projects/clusters/<str:cluster>", projects.cluster_projects_list, name="cluster-projects-list"),
     path("projects/create/", projects.create_project, name="projects-create"),
     path(
-        "projects/<str:pk>/",
+        "projects/<str:pk>",
         projects.projects_detail,
         name="projects-detail",
     ),
@@ -52,17 +52,17 @@ urlpatterns = [
         name="projects-delete",
     ),
     path(
-        "projects/project_plan/archive/<str:pk>/",
+        "projects/project_plan/archive/<str:pk>",
         projects.archive_project,
         name="archive_project",
     ),
     path(
-        "projects/project_plan/unarchive/<str:pk>/",
+        "projects/project_plan/unarchive/<str:pk>",
         projects.unarchive_project,
         name="unarchive_project",
     ),
     path(
-        "projects/project_plan/copy/<str:pk>/",
+        "projects/project_plan/copy/<str:pk>",
         projects.copy_project,
         name="copy_project",
     ),

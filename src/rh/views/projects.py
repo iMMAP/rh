@@ -5,7 +5,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
 from django.core.exceptions import PermissionDenied
 from django.core.paginator import Paginator
-from django.db.models import Count, Prefetch, Q
+from django.db.models import Count, Q
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
@@ -35,7 +35,6 @@ from ..models import (
     TransferMechanismType,
     PackageType,
 )
-from django.contrib.auth.models import User
 from .views import (
     copy_project_target_location,
     copy_target_location_disaggregation_locations,
@@ -193,7 +192,7 @@ def projects_detail(request, pk):
     url: projects/<int:pk>
     """
     project = get_object_or_404(
-        Project.objects.select_related("organization","user").prefetch_related(
+        Project.objects.select_related("organization", "user").prefetch_related(
             "clusters",
             "donors",
             "programme_partners",

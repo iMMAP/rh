@@ -26,14 +26,14 @@
                 </ul>
             </div>
         </div>
-
         <div class="page-navigation-panel">
             <div class="holder">
                 <div class="tabs-nav-holder">
                     <ul class="tabs-nav">
                         <li class="{% if project_view %}active{% endif %}">
-                            <a href="{% if project %}{% url 'projects-detail' project.pk %}{% else %}{% url 'projects-create' %}{% endif %}">Project
-                            planning</a>
+                            <a href="{% url 'projects-update' project.pk %}">
+                                Project planning
+                            </a>
                         </li>
                         <li class="{% if financial_view %}active{% endif %}">
                             <a href="{% if project %}{% url 'create_project_budget_progress' project.pk %}{% else %}#{% endif %}">Financial Reports</a>
@@ -44,128 +44,247 @@
                     </ul>
                 </div>
             </div>
-        </div>
-
+        </div/bud>
         {% comment %} Project Details Here {% endcomment %}
-        <section class="">
-            <div class="">
-                <h2 class=""> {{project.title}}</h2>
+        <section class="space-y-4">
+            <h2 class="">{{ project.title }}</h2>
+            <div>
                 <div class="flex items-center justify-between py-2 border-t border-b border-gray-d1">
                     <p class="flex items-center gap-2">
-                        <svg  fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                        <svg fill="none"
+                                viewBox="0 0 24 24"
+                                stroke-width="1.5"
+                                stroke="currentColor"
+                                class="size-6">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 21h16.5M4.5 3h15M5.25 3v18m13.5-18v18M9 6.75h1.5m-1.5 3h1.5m-1.5 3h1.5m3-6H15m-1.5 3H15m-1.5 3H15M9 21v-3.375c0-.621.504-1.125 1.125-1.125h3.75c.621 0 1.125.504 1.125 1.125V21" />
                         </svg>
-                        {{project.organization}}
+                        {{ project.organization.name }} ({{ project.organization.code }})
                     </p>
                     <p class="flex items-center gap-2">
-                        <svg  fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                        <svg fill="none"
+                                viewBox="0 0 24 24"
+                                stroke-width="1.5"
+                                stroke="currentColor"
+                                class="size-6">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
                         </svg>
-                        {{project.user.get_full_name}}
+                        {{ project.user.get_full_name }} ({{ project.user.username }})
                     </p>
                     <p class="flex items-center gap-2">
-                        <span class="{{project.state}}">{{project.state}} </span>
+                        <svg width="800px"
+                                height="800px"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                xmlns="http://www.w3.org/2000/svg"
+                                class="size-6">
+                            <path opacity="0.4" d="M2.44922 14.9702C3.51922 18.4102 6.39923 21.0602 9.97923 21.7902" stroke="#292D32" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
+                            <path d="M2.05078 10.98C2.56078 5.93 6.82078 2 12.0008 2C17.1808 2 21.4408 5.94 21.9508 10.98" stroke="#292D32" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
+                            <path d="M14.0098 21.8C17.5798 21.07 20.4498 18.45 21.5398 15.02" stroke="#292D32" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                        <span class="{{ project.state }}">{{ project.state }}</span>
                     </p>
                 </div>
-            </div>
-
-            <h4>Description:</h4>
-            <p>{{project.description}}</p>
-
-            {% comment %} Project timeline {% endcomment %}
-            <div class="">
-                <h4>Timeline:</h4>
-                <div class="bg-gray-f5 ">
-                    <div class="progress-bar-container">
-                        <div class="progress-bar rounded" id="projectProgressBar"></div>
+                <div class="flex items-center justify-between py-2 border-b border-gray-d1 gap-3">
+                    <span>Actions</span>
+                    <div class="flex items-center gap-2">
+                       {% include "rh/projects/views/_project_export_drawer.html" %} 
+                        <a href="{% url 'projects-update' project.pk %}" class="btn btn-red">Edit</a>
                     </div>
-                    <div class="flex items-center justify-between gap-2 px-4 py-4 ">
-                        <p class="flex items-center gap-2">
-                            <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5" />
-                            </svg>
-                            Start Date: {{project.start_date}}</p>
-                        <p class="flex items-center gap-2">
-                            <svg  fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-                            </svg>
-                            End Date: {{project.end_date}}
-                        </p>
-                        <p class="flex items-center gap-2">
-                            <svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" class="size-6">
-                                <path d="M9 18.5H15M6.6 2H17.4C17.9601 2 18.2401 2 18.454 2.10899C18.6422 2.20487 18.7951 2.35785 18.891 2.54601C19 2.75992 19 3.03995 19 3.6V5.67452C19 6.1637 19 6.40829 18.9447 6.63846C18.8957 6.84254 18.8149 7.03763 18.7053 7.21657C18.5816 7.4184 18.4086 7.59135 18.0627 7.93726L15.1314 10.8686C14.7354 11.2646 14.5373 11.4627 14.4632 11.691C14.3979 11.8918 14.3979 12.1082 14.4632 12.309C14.5373 12.5373 14.7354 12.7354 15.1314 13.1314L18.0627 16.0627C18.4086 16.4086 18.5816 16.5816 18.7053 16.7834C18.8149 16.9624 18.8957 17.1575 18.9447 17.3615C19 17.5917 19 17.8363 19 18.3255V20.4C19 20.9601 19 21.2401 18.891 21.454C18.7951 21.6422 18.6422 21.7951 18.454 21.891C18.2401 22 17.9601 22 17.4 22H6.6C6.03995 22 5.75992 22 5.54601 21.891C5.35785 21.7951 5.20487 21.6422 5.10899 21.454C5 21.2401 5 20.9601 5 20.4V18.3255C5 17.8363 5 17.5917 5.05526 17.3615C5.10425 17.1575 5.18506 16.9624 5.29472 16.7834C5.4184 16.5816 5.59135 16.4086 5.93726 16.0627L8.86863 13.1314C9.26465 12.7354 9.46265 12.5373 9.53684 12.309C9.6021 12.1082 9.6021 11.8918 9.53684 11.691C9.46266 11.4627 9.26464 11.2646 8.86863 10.8686L5.93726 7.93726C5.59136 7.59136 5.4184 7.4184 5.29472 7.21657C5.18506 7.03763 5.10425 6.84254 5.05526 6.63846C5 6.40829 5 6.1637 5 5.67452V3.6C5 3.03995 5 2.75992 5.10899 2.54601C5.20487 2.35785 5.35785 2.20487 5.54601 2.10899C5.75992 2 6.03995 2 6.6 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg>
-                            <span id="progressPercentage" class=""></span>
-                        </p>
-                    </div> 
-                    <script>
-                            const startDate = new Date("{{project.start_date|date:'Y-m-d'}}");
-                            const endDate = new Date("{{project.end_date|date:'Y-m-d'}}");
-                            const today = new Date();
-
-                            const totalDuration = endDate - startDate;
-                            const elapsedDuration = today - startDate;
-                            let progress = (elapsedDuration / totalDuration) * 100;
-
-                            // Ensure progress is between 0 and 100
-                            progress = Math.max(0, Math.min(100, progress));
-
-                            const progressBar = document.getElementById('projectProgressBar');
-                            const progressPercentage = document.getElementById('progressPercentage');
-
-                            progressBar.style.width = progress + '%';
-                            progressPercentage.textContent = 'Progress: ' + progress.toFixed(1) + '%';
-                    </script>
-                    <style>
-                        .progress-bar-container {
-                            width: 100%;
-                            background-color: #e0e0e0;
-                        }
-                        .progress-bar {
-                            height: 3px;
-                            background-color: #4CAF50;
-                            transition: width 0.5s ease-in-out;
-                        }
-                    </style>
                 </div>
             </div>
 
-            <h4>Budget Info:</h4>
-        <div class="flex items-center justify-between gap-4 py-4 bg-gray-f5 rounded px-4 py-4">
-          <div class="flex flex-col items-center justify-center space-y-2">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-  <path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Zm8.25 2.25a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z" />
-</svg>
+            <h4>Project Info</h4>
+            <div class="input-field read-only">
+                <span class="label">Project description</span>
+                <div class="input-holder">{{ project.description | linebreaksbr }}</div>
+            </div>
 
-            <span class="text-sm text-muted-foreground">Donors</span>
-            <span class="font-medium">WFP, USAID</span>
-          </div>
-          <div class="flex flex-col items-center justify-center space-y-2">
-            <svg  fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-  <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18.75a60.07 60.07 0 0 1 15.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 0 1 3 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 0 0-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 0 1-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 0 0 3 15h-.75M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm3 0h.008v.008H18V10.5Zm-12 0h.008v.008H6V10.5Z" />
-</svg>
-            <span class="text-sm text-muted-foreground">Total Budget</span>
-            <span class="font-medium">{{project.budget|intcomma}} {{project.budget_currency}}</span>
-          </div>
-          <div class="flex flex-col items-center justify-center space-y-2">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-  <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6 9 12.75l4.286-4.286a11.948 11.948 0 0 1 4.306 6.43l.776 2.898m0 0 3.182-5.511m-3.182 5.51-5.511-3.181" />
-</svg>
+            <div class="select-field read-only">
+                <span class="label">Clusters</span>
+                <span class="text-read-only m2m-badges">
+                    {% for cluster in project.clusters.all %}
+                        <span class="border border-gray-d1 rounded-full px-4 py-1 bg-gray-f5">{{ cluster.title }}</span>
+                    {% endfor %}
+                </span>
+            </div>
+            <div class="select-field read-only">
+                <span class="label">Activity Domains</span>
+                <span class="text-read-only m2m-badges">
+                    {% for activity_domain in project.activity_domains.all %}
+                        <span class="border border-gray-d1 rounded-full px-4 py-1 bg-gray-f5">{{ activity_domain.name }}</span>
+                    {% endfor %}
+                </span>
+            </div>
+            {% if project.programme_partners.all %}
+                <div class="select-field read-only">
+                    <span class="label">Implementing Partners</span>
+                    <span class="text-read-only m2m-badges">
+                        {% for implementing_partner in project.implementing_partners.all %}
+                            <span class="border border-gray-d1 rounded-full px-4 py-1 bg-gray-f5">{{ implementing_partner.code }}</span>
+                        {% endfor %}
+                    </span>
+                </div>
+            {% endif %}
+            {% if project.programme_partners.all %}
+                <div class="select-field read-only">
+                    <span class="label">Programme Partners</span>
+                    <span class="text-read-only m2m-badges">
+                        {% for programme_partner in project.programme_partners.all %}
+                            <span class="border border-gray-d1 rounded-full px-4 py-1 bg-gray-f5">{{ programme_partner.code }}</span>
+                        {% endfor %}
+                    </span>
+                </div>
+            {% endif %}
 
-            <span class="text-sm ">Budget Gap</span>
-            <span class="font-medium text-destructive">{{project.budget_gap|intcomma}} {{project.budget_currency}}</span>
-          </div>
-          <div class="flex flex-col items-center justify-center space-y-2">
-            <svg  fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-  <path stroke-linecap="round" stroke-linejoin="round" d="M21 12a2.25 2.25 0 0 0-2.25-2.25H15a3 3 0 1 1-6 0H5.25A2.25 2.25 0 0 0 3 12m18 0v6a2.25 2.25 0 0 1-2.25 2.25H5.25A2.25 2.25 0 0 1 3 18v-6m18 0V9M3 12V9m18 0a2.25 2.25 0 0 0-2.25-2.25H5.25A2.25 2.25 0 0 0 3 9m18 0V6a2.25 2.25 0 0 0-2.25-2.25H5.25A2.25 2.25 0 0 0 3 6v3" />
-</svg>
-            <span class="text-sm text-muted-foreground">Budget Received</span>
-            <span class="font-medium text-green-600">{{project.budget_received|intcomma}} {{project.budget_currency}}</span>
-          </div>
-        </div>
+            {% comment %} Project timeline {% endcomment %}
+            <h4>Timeline</h4>
+            <div class="bg-gray-fa ">
+                <div class="w-full bg-gray-d1">
+                    <div class="rounded h-1"
+                            style="background-color:#4CAF50"
+                            id="projectProgressBar"></div>
+                </div>
+                <div class="flex items-center justify-between gap-2 px-4 py-4 ">
+                    <p class="flex items-center gap-2">
+                        <svg fill="none"
+                                viewBox="0 0 24 24"
+                                stroke-width="1.5"
+                                stroke="currentColor"
+                                class="size-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5" />
+                        </svg>
+                        Start Date: {{ project.start_date }}
+                    </p>
+                    <p class="flex items-center gap-2">
+                        <svg fill="none"
+                                viewBox="0 0 24 24"
+                                stroke-width="1.5"
+                                stroke="currentColor"
+                                class="size-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                        </svg>
+                        End Date: {{ project.end_date }}
+                    </p>
+                    <p class="flex items-center gap-2">
+                        <svg width="100%"
+                                height="100%"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                class="size-6">
+                            <path d="M9 18.5H15M6.6 2H17.4C17.9601 2 18.2401 2 18.454 2.10899C18.6422 2.20487 18.7951 2.35785 18.891 2.54601C19 2.75992 19 3.03995 19 3.6V5.67452C19 6.1637 19 6.40829 18.9447 6.63846C18.8957 6.84254 18.8149 7.03763 18.7053 7.21657C18.5816 7.4184 18.4086 7.59135 18.0627 7.93726L15.1314 10.8686C14.7354 11.2646 14.5373 11.4627 14.4632 11.691C14.3979 11.8918 14.3979 12.1082 14.4632 12.309C14.5373 12.5373 14.7354 12.7354 15.1314 13.1314L18.0627 16.0627C18.4086 16.4086 18.5816 16.5816 18.7053 16.7834C18.8149 16.9624 18.8957 17.1575 18.9447 17.3615C19 17.5917 19 17.8363 19 18.3255V20.4C19 20.9601 19 21.2401 18.891 21.454C18.7951 21.6422 18.6422 21.7951 18.454 21.891C18.2401 22 17.9601 22 17.4 22H6.6C6.03995 22 5.75992 22 5.54601 21.891C5.35785 21.7951 5.20487 21.6422 5.10899 21.454C5 21.2401 5 20.9601 5 20.4V18.3255C5 17.8363 5 17.5917 5.05526 17.3615C5.10425 17.1575 5.18506 16.9624 5.29472 16.7834C5.4184 16.5816 5.59135 16.4086 5.93726 16.0627L8.86863 13.1314C9.26465 12.7354 9.46265 12.5373 9.53684 12.309C9.6021 12.1082 9.6021 11.8918 9.53684 11.691C9.46266 11.4627 9.26464 11.2646 8.86863 10.8686L5.93726 7.93726C5.59136 7.59136 5.4184 7.4184 5.29472 7.21657C5.18506 7.03763 5.10425 6.84254 5.05526 6.63846C5 6.40829 5 6.1637 5 5.67452V3.6C5 3.03995 5 2.75992 5.10899 2.54601C5.20487 2.35785 5.35785 2.20487 5.54601 2.10899C5.75992 2 6.03995 2 6.6 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                        <span id="progressPercentage" class=""></span>
+                    </p>
+                </div>
+                <script>
+                        const startDate = new Date("{{project.start_date|date:'Y-m-d'}}");
+                        const endDate = new Date("{{project.end_date|date:'Y-m-d'}}");
+                        const today = new Date();
 
+                        const totalDuration = endDate - startDate;
+                        const elapsedDuration = today - startDate;
+                        let progress = (elapsedDuration / totalDuration) * 100;
+
+                        // Ensure progress is between 0 and 100
+                        progress = Math.max(0, Math.min(100, progress));
+
+                        const progressBar = document.getElementById('projectProgressBar');
+                        const progressPercentage = document.getElementById('progressPercentage');
+
+                        progressBar.style.width = progress + '%';
+                        progressPercentage.textContent = 'Progress: ' + progress.toFixed(1) + '%';
+                </script>
+            </div>
+
+            <h4>Budget Info</h4>
+            <div class="flex items-center justify-between gap-4 py-4 bg-gray-fa rounded px-4 py-4">
+                <div class="flex flex-col items-center justify-center space-y-2">
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                         fill="none"
+                         viewBox="0 0 24 24"
+                         stroke-width="1.5"
+                         stroke="currentColor"
+                         class="size-6">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Zm8.25 2.25a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z" />
+                    </svg>
+                    <span class="text-sm text-muted-foreground">Donors</span>
+                    <span class="font-medium">
+                        {% for implementing_partner in project.implementing_partners.all %}
+                            {{ implementing_partner.code }}  {% if not forloop.last %}, {% endif %}
+                        {% endfor %}
+                    </span>
+                </div>
+                <div class="flex flex-col items-center justify-center space-y-2">
+                    <svg fill="none"
+                         viewBox="0 0 24 24"
+                         stroke-width="1.5"
+                         stroke="currentColor"
+                         class="size-6">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18.75a60.07 60.07 0 0 1 15.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 0 1 3 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 0 0-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 0 1-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 0 0 3 15h-.75M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm3 0h.008v.008H18V10.5Zm-12 0h.008v.008H6V10.5Z" />
+                    </svg>
+                    <span class="text-sm text-muted-foreground">Total Budget</span>
+                    <span class="font-medium">{{ project.budget|intcomma }} {{ project.budget_currency }}</span>
+                </div>
+                <div class="flex flex-col items-center justify-center space-y-2 text-red">
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                         fill="none"
+                         viewBox="0 0 24 24"
+                         stroke-width="1.5"
+                         stroke="currentColor"
+                         class="size-6">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6 9 12.75l4.286-4.286a11.948 11.948 0 0 1 4.306 6.43l.776 2.898m0 0 3.182-5.511m-3.182 5.51-5.511-3.181" />
+                    </svg>
+                    <span class="text-sm ">Budget Gap</span>
+                    <span class="font-medium text-destructive">{{ project.budget_gap|intcomma }} {{ project.budget_currency }}</span>
+                </div>
+                <div class="flex flex-col items-center justify-center space-y-2">
+                    <svg fill="none"
+                         viewBox="0 0 24 24"
+                         stroke-width="1.5"
+                         stroke="currentColor"
+                         class="size-6">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M21 12a2.25 2.25 0 0 0-2.25-2.25H15a3 3 0 1 1-6 0H5.25A2.25 2.25 0 0 0 3 12m18 0v6a2.25 2.25 0 0 1-2.25 2.25H5.25A2.25 2.25 0 0 1 3 18v-6m18 0V9M3 12V9m18 0a2.25 2.25 0 0 0-2.25-2.25H5.25A2.25 2.25 0 0 0 3 9m18 0V6a2.25 2.25 0 0 0-2.25-2.25H5.25A2.25 2.25 0 0 0 3 6v3" />
+                    </svg>
+                    <span class="text-sm text-muted-foreground">Budget Received</span>
+                    <span class="font-medium text-green-600">{{ project.budget_received|intcomma }} {{ project.budget_currency }}</span>
+                </div>
+            </div>
         </section>
         {% comment %} End project details here {% endcomment %}
+
+        <div class="plan-submit-holder bg-gray-f5 my-4 py-4 border border-gray-d1 px-2 rounded ">
+            <a href="{% url 'projects-delete' project.pk %}" class="btn btn-gray">
+                <span class="btn-text">Delete Project</span>
+                <span class="icon-trashbin-outline"></span>
+            </a>
+            <div>
+                <a href="{% url 'copy_project' project.pk %}"
+                    data-type="copy"
+                    data-name="project"
+                    class="btn btn-gray show-sw-action-popup">
+                    <span class="btn-text">Duplicate</span>
+                    <span class="icon-copy-outline"></span>
+                </a>
+                <a 
+                    href="{% if project.state != 'in-progress' %} {% url 'archive_project' project.pk %} {% else %} {% url 'unarchive_project' project.pk %} {% endif %}" class="btn btn-gray">
+                    <span class="btn-text">Archive</span>
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                            class="project-view archive-icon"
+                            width="15"
+                            height="15"
+                            viewBox="0 0 24 24">
+                        <path fill="currentColor" d="M20 21H4V10h2v9h12v-9h2v11M3 3h18v6H3V3m2 2v2h14V5m-8.5 6v3H8l4 4l4-4h-2.5v-3" />
+                    </svg>
+                </a>
+                <a 
+                    href="{% if project.state == 'draft' %} {% url 'project_submit' project.pk %} {% else %} javascript:void(0) {% endif %}" 
+                    class="btn btn-red" 
+                    data-tippy-content="{% if project.state != 'draft' %} DEACTIVATED: The project is already in progress {% else %} Submit the project for review and begin reporting {% endif %} "
+                >
+                    Submit Project
+                </a>
+            </div>
+        </div>
     </div>
 {% endblock content %}
 {% block scripts %}

@@ -1,5 +1,5 @@
 from django.contrib.auth.models import User
-from rh.models import Project
+from rh.models import Project, TargetLocation
 
 
 def is_cluster_lead(user: User, clusters: list) -> bool:
@@ -36,24 +36,10 @@ def update_project_plan_state(project: Project, state: str):
     state: should be from rh.models.STATES
     """
     activity_plans = project.activityplan_set.all()
+    activity_plans.update(state=state)
 
-    # Iterate through activity plans and archive them.
-    for plan in activity_plans:
-        target_locations = plan.targetlocation_set.all()
-
-        # Iterate through target locations and archive them.
-        for location in target_locations:
-            disaggregation_locations = location.disaggregationlocation_set.all()
-
-            # Iterate through disaggregation locations and archive.
-            for disaggregation_location in disaggregation_locations:
-                disaggregation_location.save()
-
-            location.state = state
-            location.save()
-
-        plan.state = state
-        plan.save()
+    target_locations = TargetLocation.objects.filter(activity_plan__in=activity_plans)
+    target_locations.update(state=state)
 
     project.state = state
     project.save()

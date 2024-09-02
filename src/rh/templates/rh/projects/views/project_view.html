@@ -87,6 +87,8 @@
                 <div class="flex items-center justify-between py-2 border-b border-gray-d1 gap-3">
                     <span>Actions</span>
                     <div class="flex items-center gap-2">
+                        <a href="{% url 'activity-plans-list' project.pk %}" class="btn btn-gray">Activity Plans</a>
+                        <a href="{% url 'target-locations-list' project.pk %}" class="btn btn-gray">Target Locations</a>
                        {% include "rh/projects/views/_project_export_drawer.html" %} 
                         <a href="{% url 'projects-update' project.pk %}" class="btn btn-red">Edit</a>
                     </div>

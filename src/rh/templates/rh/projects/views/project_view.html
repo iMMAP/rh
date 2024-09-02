@@ -198,7 +198,7 @@
                     </p>
                 </div>
                 <script>
-                        const startDate = new Date();
+                        const startDate = new Date("{{project.start_date|date:'Y-m-d'}}");
                         const endDate = new Date("{{project.end_date|date:'Y-m-d'}}");
                         const today = new Date();
 

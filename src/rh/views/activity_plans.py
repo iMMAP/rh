@@ -40,7 +40,7 @@ def update_activity_plan(request, pk):
             messages.success(
                 request,
                 mark_safe(
-                    f'The Activity Plan "<a href="{reverse("activity-plans-update", args=[activity_plan.pk])}">{activity_plan}</a>" was changed successfully.'
+                    f'The Activity Plan "<a class="underline" href="{reverse("activity-plans-update", args=[activity_plan.pk])}">{activity_plan}</a>" was changed successfully.'
                 ),
             )
             if "_continue" in request.POST:
@@ -76,7 +76,7 @@ def create_activity_plan(request, project):
             messages.success(
                 request,
                 mark_safe(
-                    f'The Activity Plan "<a href="{reverse("activity-plans-update", args=[activity_plan.pk])}">{activity_plan}</a>" was added successfully.',
+                    f'The Activity Plan "<a class="underline" href="{reverse("activity-plans-update", args=[activity_plan.pk])}">{activity_plan}</a>" was added successfully.',
                 ),
             )
             if "_save" in request.POST:

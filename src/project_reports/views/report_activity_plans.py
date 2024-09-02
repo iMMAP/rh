@@ -33,7 +33,7 @@ def create_report_activity_plan(request, project, report):
             messages.success(
                 request,
                 mark_safe(
-                    f'The Activity Plan Report "<a href="{reverse("update_report_activity_plans",  args=[report_instance.project, report, report_plan])}">{report_plan}</a>" was added successfully.',
+                    f'The Activity Plan Report "<a class="underline" href="{reverse("update_report_activity_plans",  args=[report_instance.project, report, report_plan])}">{report_plan}</a>" was added successfully.',
                 ),
             )
             if "_save" in request.POST:
@@ -67,7 +67,7 @@ def update_report_activity_plan(request, project, report, plan):
             messages.success(
                 request,
                 mark_safe(
-                    f'The Report Activity Plan "<a href="{reverse("update_report_activity_plans", args=[project, report, plan])}">{report_plan}</a>" was updated successfully.'
+                    f'The Report Activity Plan "<a class="underline" href="{reverse("update_report_activity_plans", args=[project, report, plan])}">{report_plan}</a>" was updated successfully.'
                 ),
             )
             if "_continue" in request.POST:

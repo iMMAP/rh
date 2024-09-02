@@ -112,9 +112,9 @@ function get_activity_domains() {
 }
 
 // Run when updating a new project
-if (window.location.pathname.includes("update")) {
-	get_activity_domains();
-}
+// if (window.location.pathname.includes("update")) {
+// 	get_activity_domains();
+// }
 
 clusterChoice.passedElement.element.addEventListener(
 	"change",

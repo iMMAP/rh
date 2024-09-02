@@ -6,7 +6,7 @@ from django.contrib.auth.decorators import login_required, permission_required
 from django.core.exceptions import PermissionDenied
 from django.core.paginator import Paginator
 from django.db.models import Count, Q
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.views.decorators.http import require_http_methods
@@ -40,11 +40,12 @@ from .views import (
     copy_target_location_disaggregation_locations,
 )
 
-from ..utils import has_permission
+from ..utils import has_permission, update_project_plan_state
 from django.utils.safestring import mark_safe
 from extra_settings.models import Setting
 from django_htmx.http import HttpResponseClientRedirect
 import csv
+from django.core.exceptions import ValidationError
 
 
 @login_required
@@ -420,23 +421,21 @@ def update_project(request, pk):
 @login_required
 @permission_required("rh.submit_project", raise_exception=True)
 def submit_project(request, pk):
-    """Project Submission"""
-
     project = get_object_or_404(Project, pk=pk)
 
     if not has_permission(user=request.user, project=project):
         raise PermissionDenied
 
     activity_plans = project.activityplan_set.all()
+
     if not activity_plans.exists():
         messages.error(
             request,
             mark_safe(
-                f"The project must have at least one activity plan. Check project's <a href=`{reverse('activity-plans-list', args=[project.pk])}`>activity plans</a>'."
+                f"The project must have at least one activity plan and each Activity Plan must have one Target Location.Check project's `<a class='underline' href='{reverse('activity-plans-list', args=[project.pk])}'>Activity Plans</a>`"
             ),
         )
-        messages.error(request, "The project must have at least one activity plan.")
-        return redirect("activity-plans-list", project=project.pk)
+        return redirect("projects-detail", pk=project.pk)
 
     for plan in activity_plans:
         target_locations = plan.targetlocation_set.all()
@@ -447,11 +446,12 @@ def submit_project(request, pk):
                     f"Each activity plan must have at least one target location. Check project's `<a href='{reverse('target-locations-list', args=[project.pk])}'>target locations</a>`."
                 ),
             )
-            # return redirect("target-locations-create", activity_plan=plan.pk)
-            return redirect("activity-plans-list", project=project.pk)
+            return redirect("projects-detail", pk=project.pk)
 
     project.state = "in-progress"
     project.save()
+
+    messages.success(request, "Project submited successfully!. You can start reporting now.")
 
     for plan in activity_plans:
         target_locations = plan.targetlocation_set.all()
@@ -467,79 +467,31 @@ def submit_project(request, pk):
 
 @login_required
 @permission_required("rh.archive_unarchive_project", raise_exception=True)
+@require_http_methods(["POST"])
 def archive_project(request, pk):
-    """Archiving Project"""
     project = get_object_or_404(Project, pk=pk)
+
     if project:
-        activity_plans = project.activityplan_set.all()
+        update_project_plan_state(project=project, state="archived")
 
-        # Iterate through activity plans and archive them.
-        for plan in activity_plans:
-            target_locations = plan.targetlocation_set.all()
-
-            # Iterate through target locations and archive them.
-            for location in target_locations:
-                disaggregation_locations = location.disaggregationlocation_set.all()
-
-                # Iterate through disaggregation locations and archive.
-                for disaggregation_location in disaggregation_locations:
-                    disaggregation_location.save()
-
-                location.state = "archived"
-                location.save()
-
-            plan.state = "archived"
-            plan.save()
-
-        project.state = "archived"
-        project.save()
-
-    url = reverse(
-        "projects-list",
-    )
-
-    # Return the URL in a JSON response
-    response_data = {"redirect_url": url}
-    return JsonResponse(response_data)
-
-    # return JsonResponse({"success": True})
+    messages.success(request, "Project its activities and target locations has been archived")
+    return HttpResponseClientRedirect(reverse("projects-detail", args=[project.id]))
 
 
 @login_required
 @permission_required("rh.archive_unarchive_project", raise_exception=True)
+@require_http_methods(["POST"])
 def unarchive_project(request, pk):
-    """Unarchiving Project"""
     project = get_object_or_404(Project, pk=pk)
+
     if project:
-        activity_plans = project.activityplan_set.all()
+        update_project_plan_state(project=project, state="draft")
 
-        # Iterate through activity plans and archive them.
-        for plan in activity_plans:
-            target_locations = plan.targetlocation_set.all()
-
-            # Iterate through target locations and archive them.
-            for location in target_locations:
-                disaggregation_locations = location.disaggregationlocation_set.all()
-
-                # Iterate through disaggregation locations and archive.
-                for disaggregation_location in disaggregation_locations:
-                    disaggregation_location.save()
-
-                location.state = "draft"
-                location.save()
-
-            plan.state = "draft"
-            plan.save()
-
-        project.state = "draft"
-        project.save()
-
-    url = reverse(
-        "projects-list",
+    messages.success(
+        request,
+        "Project its activities and target locations has been set to draft. submit the project again to start reporting",
     )
-    # Return the URL in a JSON response
-    response_data = {"redirect_url": url}
-    return JsonResponse(response_data)
+    return HttpResponseClientRedirect(reverse("projects-detail", args=[project.id]))
 
 
 @login_required
@@ -556,7 +508,7 @@ def delete_project(request, pk):
             return redirect("projects-list")
 
 
-def copy_project_activity_plan(project, plan):
+def _copy_project_activity_plan(project, plan):
     """Copy Activity Plans"""
     try:
         # Duplicate the original activity plan by retrieving it with the provided primary key.
@@ -586,7 +538,7 @@ def copy_project_activity_plan(project, plan):
 @login_required
 @require_http_methods(["POST"])
 def copy_project(request, pk):
-    """Copying Project"""
+    """Copying Project its Activity Plans and Target Locations"""
     project = get_object_or_404(Project, pk=pk)
 
     # Create a new project by duplicating the original project.
@@ -597,6 +549,12 @@ def copy_project(request, pk):
     new_project.title = f"DUPLICATED-{project.title}"
     new_project.code = f"DUPLICATED-{project.code}"  # Generate a new primary key for the new project.
     new_project.state = "draft"
+
+    try:
+        new_project.full_clean()
+    except ValidationError as e:
+        messages.error(request, f"Error duplicating project: {e}")
+        return HttpResponseClientRedirect(reverse("projects-detail", args=[project.id]))
 
     new_project.save()  # Save the new project to the database.
 
@@ -614,7 +572,7 @@ def copy_project(request, pk):
 
         # Iterate through each activity plan and copy it to the new project.
         for plan in activity_plans:
-            new_plan = copy_project_activity_plan(new_project, plan)
+            new_plan = _copy_project_activity_plan(new_project, plan)
             target_locations = plan.targetlocation_set.all()
 
             # Iterate through target locations and copy them to the new plan.

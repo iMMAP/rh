@@ -81,7 +81,7 @@
                             <path d="M2.05078 10.98C2.56078 5.93 6.82078 2 12.0008 2C17.1808 2 21.4408 5.94 21.9508 10.98" stroke="#292D32" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
                             <path d="M14.0098 21.8C17.5798 21.07 20.4498 18.45 21.5398 15.02" stroke="#292D32" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
                         </svg>
-                        <span class="{{ project.state }}">{{ project.state }}</span>
+                        <span class="{{ project.state }}">{{ project.get_state_display}}</span>
                     </p>
                 </div>
                 <div class="flex items-center justify-between py-2 border-b border-gray-d1 gap-3">
@@ -258,16 +258,47 @@
                 <span class="icon-trashbin-outline"></span>
             </a>
             <div>
-                <a href="{% url 'copy_project' project.pk %}"
-                    data-type="copy"
-                    data-name="project"
-                    class="btn btn-gray show-sw-action-popup">
+                <a hx-post="{% url 'copy_project' project.pk %}"
+                    class="btn btn-gray"
+                >
                     <span class="btn-text">Duplicate</span>
                     <span class="icon-copy-outline"></span>
+                    <img class="htmx-indicator"
+                        id="spinner"
+                        alt="spinner"
+                        style="width: 1.2rem;filter: invert(100%)"
+                        src="{% static 'images/spinner.gif' %}"
+                    />
                 </a>
+
+                {% if project.state != "archived" %}
+                    <a 
+                        hx-post="{% url 'archive_project' project.pk %}" 
+                        hx-swap="none"
+                        class="btn btn-gray"
+                    >
+                        <span class="btn-text">Archive</span>
+                        <svg xmlns="http://www.w3.org/2000/svg"
+                                class="project-view archive-icon"
+                                width="15"
+                                height="15"
+                                viewBox="0 0 24 24">
+                            <path fill="currentColor" d="M20 21H4V10h2v9h12v-9h2v11M3 3h18v6H3V3m2 2v2h14V5m-8.5 6v3H8l4 4l4-4h-2.5v-3" />
+                        </svg>
+                        <img class="htmx-indicator"
+                            id="spinner"
+                            alt="spinner"
+                            style="width: 1.2rem;filter: invert(100%)"
+                            src="{% static 'images/spinner.gif' %}"
+                        />
+                    </a>
+                {% else %}
                 <a 
-                    href="{% if project.state != 'in-progress' %} {% url 'archive_project' project.pk %} {% else %} {% url 'unarchive_project' project.pk %} {% endif %}" class="btn btn-gray">
-                    <span class="btn-text">Archive</span>
+                    hx-post="{% url 'unarchive_project' project.pk %}" 
+                    hx-swap="none"
+                    class="btn btn-gray"
+                >
+                    <span class="btn-text">Unarchive</span>
                     <svg xmlns="http://www.w3.org/2000/svg"
                             class="project-view archive-icon"
                             width="15"
@@ -275,12 +306,26 @@
                             viewBox="0 0 24 24">
                         <path fill="currentColor" d="M20 21H4V10h2v9h12v-9h2v11M3 3h18v6H3V3m2 2v2h14V5m-8.5 6v3H8l4 4l4-4h-2.5v-3" />
                     </svg>
+                    <img class="htmx-indicator"
+                        id="spinner"
+                        alt="spinner"
+                        style="width: 1.2rem;filter: invert(100%)"
+                        src="{% static 'images/spinner.gif' %}"
+                    />
                 </a>
+                {% endif %}
                 <a 
-                    href="{% if project.state == 'draft' %} {% url 'project_submit' project.pk %} {% else %} javascript:void(0) {% endif %}" 
+                    hx-post="{% if project.state == 'draft' %} {% url 'projects-submit' project.pk %} {% else %} javascript:void(0) {% endif %}" 
+                    hx-swap="none"
                     class="btn btn-red" 
-                    data-tippy-content="{% if project.state != 'draft' %} DEACTIVATED: The project is already in progress {% else %} Submit the project for review and begin reporting {% endif %} "
+                    data-tippy-content="{% if project.state != 'draft' %} DEACTIVATED: The project is already in progress or archived {% else %} Submit the project for review and begin reporting {% endif %} "
                 >
+                    <img class="htmx-indicator"
+                        id="spinner"
+                        alt="spinner"
+                        style="width: 1.2rem;filter: invert(100%)"
+                        src="{% static 'images/spinner.gif' %}"
+                    />
                     Submit Project
                 </a>
             </div>

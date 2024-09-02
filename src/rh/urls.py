@@ -52,12 +52,12 @@ urlpatterns = [
         name="projects-delete",
     ),
     path(
-        "projects/project_plan/archive/<str:pk>",
+        "projects/project-plan/<int:pk>/archive",
         projects.archive_project,
         name="archive_project",
     ),
     path(
-        "projects/project_plan/unarchive/<str:pk>",
+        "projects/project-plan/<int:pk>/unarchive",
         projects.unarchive_project,
         name="unarchive_project",
     ),
@@ -65,6 +65,11 @@ urlpatterns = [
         "projects/project_plan/copy/<str:pk>",
         projects.copy_project,
         name="copy_project",
+    ),
+    path(
+        "projects/<int:pk>/submit",
+        projects.submit_project,
+        name="projects-submit",
     ),
     # load
     path(
@@ -133,11 +138,6 @@ urlpatterns = [
         "target-locations/<int:pk>/delete",
         target_locations.delete_target_location,
         name="target-locations-delete",
-    ),
-    path(
-        "projects/<str:pk>/project_plan/submit/",
-        projects.submit_project,
-        name="project_submit",
     ),
     # Financial Reporting
     path(

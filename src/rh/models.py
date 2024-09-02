@@ -1,6 +1,5 @@
 from django.contrib.auth.models import User
 from django.db import models
-from smart_selects.db_fields import ChainedForeignKey
 from django.core.validators import MinLengthValidator, MaxValueValidator, MinValueValidator
 
 
@@ -160,27 +159,6 @@ class Donor(models.Model):
         verbose_name_plural = "Donors"
 
 
-class StrategicObjective(models.Model):
-    """Objectives"""
-
-    strategic_objective_name = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
-    strategic_objective_description = models.CharField(max_length=DESCRIPTION_MAX_LENGTH, blank=True, null=True)
-    output_objective_name = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
-    sector_objective_name = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
-    sector_objective_description = models.CharField(max_length=DESCRIPTION_MAX_LENGTH, blank=True, null=True)
-    denominator = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
-
-    created_at = models.DateTimeField(auto_now_add=True, null=True)
-    updated_at = models.DateTimeField(auto_now=True, null=True)
-
-    def __str__(self):
-        return self.strategic_objective_name
-
-    class Meta:
-        verbose_name = "Objective"
-        verbose_name_plural = "Objectives"
-
-
 class Currency(models.Model):
     """Currencies model"""
 
@@ -335,7 +313,6 @@ class ActivityDomain(models.Model):
 
 class ActivityType(models.Model):
     activity_domain = models.ForeignKey(ActivityDomain, on_delete=models.SET_NULL, blank=True, null=True)
-    objective = models.ForeignKey(StrategicObjective, on_delete=models.SET_NULL, blank=True, null=True)
 
     name = models.CharField(max_length=DESCRIPTION_MAX_LENGTH)
     code = models.SlugField(max_length=DESCRIPTION_MAX_LENGTH, unique=True)
@@ -487,34 +464,10 @@ class ActivityPlan(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     state = models.CharField(max_length=15, choices=STATES, null=True, default="draft")
 
-    activity_domain = models.ForeignKey(ActivityDomain, on_delete=models.SET_NULL, null=True)
-    activity_type = ChainedForeignKey(
-        ActivityType,
-        chained_field="activity_domain",
-        chained_model_field="activity_domain",
-        show_all=False,
-        auto_choose=True,
-        null=True,
-        sort=True,
-    )
-    activity_detail = ChainedForeignKey(
-        ActivityDetail,
-        chained_field="activity_type",
-        chained_model_field="activity_type",
-        show_all=False,
-        auto_choose=True,
-        blank=True,
-        null=True,
-        sort=True,
-    )
-    indicator = ChainedForeignKey(
-        Indicator,
-        chained_field="activity_type",
-        chained_model_field="activity_types",
-        show_all=False,
-        auto_choose=True,
-        sort=True,
-    )
+    activity_domain = models.ForeignKey(ActivityDomain, on_delete=models.DO_NOTHING)
+    activity_type = models.ForeignKey(ActivityType, on_delete=models.DO_NOTHING)
+    activity_detail = models.ForeignKey(ActivityDetail, on_delete=models.DO_NOTHING, null=True, blank=True)
+    indicator = models.ForeignKey(Indicator, on_delete=models.DO_NOTHING)
 
     beneficiary = models.ForeignKey(
         BeneficiaryType,

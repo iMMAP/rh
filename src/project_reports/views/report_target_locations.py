@@ -182,7 +182,7 @@ def update_report_target_locations(request, project, report, plan, location):
             messages.success(
                 request,
                 mark_safe(
-                    f'The Report Target Location "<a href="{reverse("update_report_target_locations", args=[project, report, plan, location])}">{location_report}</a>" was updated successfully.'
+                    f'The Report Target Location "<a class="underline" href="{reverse("update_report_target_locations", args=[project, report, plan, location])}">{location_report}</a>" was updated successfully.'
                 ),
             )
             if "_continue" in request.POST:

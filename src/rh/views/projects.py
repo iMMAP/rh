@@ -419,15 +419,17 @@ def create_project(request):
 def update_project(request, pk):
     """View for updating a project."""
 
-    project = get_object_or_404(Project, pk=pk)
+    project = get_object_or_404(Project.objects.select_related("user").prefetch_related("clusters"), pk=pk)
 
     if not has_permission(user=request.user, project=project):
         raise PermissionDenied
 
     if request.method == "POST":
         form = ProjectForm(request.POST, instance=project, user=request.user)
+
         if form.is_valid():
             project = form.save()
+
             return redirect("activity-plans-list", project=project.pk)
         else:
             messages.error(request, "The form is invalid. Please check the fields and try again.")
@@ -438,10 +440,8 @@ def update_project(request, pk):
         "form": form,
         "project": project,
         "project_planning": True,
-        "project_view": True,
-        "financial_view": False,
-        "reports_view": False,
     }
+
     return render(request, "rh/projects/forms/project_form.html", context)
 
 

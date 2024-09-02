@@ -6,7 +6,7 @@ from django.contrib.auth.decorators import login_required, permission_required
 from django.core.exceptions import PermissionDenied
 from django.core.paginator import Paginator
 from django.db.models import Count, Q
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.views.decorators.http import require_http_methods
@@ -35,16 +35,13 @@ from ..models import (
     TransferMechanismType,
     PackageType,
 )
-from .views import (
-    copy_project_target_location,
-    copy_target_location_disaggregation_locations,
-)
 
 from ..utils import has_permission
 from django.utils.safestring import mark_safe
 from extra_settings.models import Setting
 from django_htmx.http import HttpResponseClientRedirect
 import csv
+from django.core.exceptions import ValidationError
 
 
 @login_required
@@ -420,23 +417,21 @@ def update_project(request, pk):
 @login_required
 @permission_required("rh.submit_project", raise_exception=True)
 def submit_project(request, pk):
-    """Project Submission"""
-
     project = get_object_or_404(Project, pk=pk)
 
     if not has_permission(user=request.user, project=project):
         raise PermissionDenied
 
     activity_plans = project.activityplan_set.all()
+
     if not activity_plans.exists():
         messages.error(
             request,
             mark_safe(
-                f"The project must have at least one activity plan. Check project's <a href=`{reverse('activity-plans-list', args=[project.pk])}`>activity plans</a>'."
+                f"The project must have at least one activity plan and each Activity Plan must have one Target Location.Check project's `<a class='underline' href='{reverse('activity-plans-list', args=[project.pk])}'>Activity Plans</a>`"
             ),
         )
-        messages.error(request, "The project must have at least one activity plan.")
-        return redirect("activity-plans-list", project=project.pk)
+        return redirect("projects-detail", pk=project.pk)
 
     for plan in activity_plans:
         target_locations = plan.targetlocation_set.all()
@@ -447,11 +442,12 @@ def submit_project(request, pk):
                     f"Each activity plan must have at least one target location. Check project's `<a href='{reverse('target-locations-list', args=[project.pk])}'>target locations</a>`."
                 ),
             )
-            # return redirect("target-locations-create", activity_plan=plan.pk)
-            return redirect("activity-plans-list", project=project.pk)
+            return redirect("projects-detail", pk=project.pk)
 
     project.state = "in-progress"
     project.save()
+
+    messages.success(request, "Project submited successfully!. You can start reporting now.")
 
     for plan in activity_plans:
         target_locations = plan.targetlocation_set.all()
@@ -467,79 +463,47 @@ def submit_project(request, pk):
 
 @login_required
 @permission_required("rh.archive_unarchive_project", raise_exception=True)
+@require_http_methods(["POST"])
 def archive_project(request, pk):
-    """Archiving Project"""
     project = get_object_or_404(Project, pk=pk)
-    if project:
-        activity_plans = project.activityplan_set.all()
+    state = "archived"
 
-        # Iterate through activity plans and archive them.
-        for plan in activity_plans:
-            target_locations = plan.targetlocation_set.all()
+    activity_plans = project.activityplan_set.all()
+    activity_plans.update(state=state)
 
-            # Iterate through target locations and archive them.
-            for location in target_locations:
-                disaggregation_locations = location.disaggregationlocation_set.all()
+    target_locations = TargetLocation.objects.filter(activity_plan__in=activity_plans)
+    target_locations.update(state=state)
 
-                # Iterate through disaggregation locations and archive.
-                for disaggregation_location in disaggregation_locations:
-                    disaggregation_location.save()
+    project.state = state
+    project.save()
 
-                location.state = "archived"
-                location.save()
+    messages.success(request, "Project its activities and target locations has been archived")
 
-            plan.state = "archived"
-            plan.save()
-
-        project.state = "archived"
-        project.save()
-
-    url = reverse(
-        "projects-list",
-    )
-
-    # Return the URL in a JSON response
-    response_data = {"redirect_url": url}
-    return JsonResponse(response_data)
-
-    # return JsonResponse({"success": True})
+    return HttpResponseClientRedirect(reverse("projects-detail", args=[project.id]))
 
 
 @login_required
 @permission_required("rh.archive_unarchive_project", raise_exception=True)
+@require_http_methods(["POST"])
 def unarchive_project(request, pk):
-    """Unarchiving Project"""
     project = get_object_or_404(Project, pk=pk)
-    if project:
-        activity_plans = project.activityplan_set.all()
+    state = "draft"
 
-        # Iterate through activity plans and archive them.
-        for plan in activity_plans:
-            target_locations = plan.targetlocation_set.all()
+    activity_plans = project.activityplan_set.all()
+    activity_plans.update(state=state)
 
-            # Iterate through target locations and archive them.
-            for location in target_locations:
-                disaggregation_locations = location.disaggregationlocation_set.all()
+    target_locations = TargetLocation.objects.filter(activity_plan__in=activity_plans)
+    target_locations.update(state=state)
 
-                # Iterate through disaggregation locations and archive.
-                for disaggregation_location in disaggregation_locations:
-                    disaggregation_location.save()
+    project.state = state
+    project.save()
 
-                location.state = "draft"
-                location.save()
-
-            plan.state = "draft"
-            plan.save()
-
-        project.state = "draft"
-        project.save()
-
-    url = reverse(
-        "projects-list",
+    messages.success(
+        request,
+        "Project its activities and target locations has been set to draft. submit the project again to start reporting",
     )
-    # Return the URL in a JSON response
-    response_data = {"redirect_url": url}
-    return JsonResponse(response_data)
+
+    return HttpResponseClientRedirect(reverse("projects-detail", args=[project.id]))
 
 
 @login_required
@@ -556,37 +520,10 @@ def delete_project(request, pk):
             return redirect("projects-list")
 
 
-def copy_project_activity_plan(project, plan):
-    """Copy Activity Plans"""
-    try:
-        # Duplicate the original activity plan by retrieving it with the provided primary key.
-        new_plan = get_object_or_404(ActivityPlan, pk=plan.pk)
-        new_plan.pk = None  # Generate a new primary key for the duplicated plan.
-        new_plan.save()  # Save the duplicated plan to the database.
-
-        # Associate the duplicated plan with the new project.
-        new_plan.project = project
-
-        # Set the plan as active and in a draft state to indicate it's a copy.
-        new_plan.state = "draft"
-
-        # Copy indicators from the original plan to the duplicated plan.
-        new_plan.indicator = plan.indicator
-
-        # Save the changes made to the duplicated plan.
-        new_plan.save()
-
-        # Return the duplicated plan.
-        return new_plan
-    except Exception as _:
-        # If an exception occurs, return False to indicate the copy operation was not successful.
-        return False
-
-
 @login_required
 @require_http_methods(["POST"])
 def copy_project(request, pk):
-    """Copying Project"""
+    """Copying Project its Activity Plans and Target Locations"""
     project = get_object_or_404(Project, pk=pk)
 
     # Create a new project by duplicating the original project.
@@ -597,6 +534,12 @@ def copy_project(request, pk):
     new_project.title = f"DUPLICATED-{project.title}"
     new_project.code = f"DUPLICATED-{project.code}"  # Generate a new primary key for the new project.
     new_project.state = "draft"
+
+    try:
+        new_project.full_clean()
+    except ValidationError as e:
+        messages.error(request, f"Error duplicating project: {e}")
+        return HttpResponseClientRedirect(reverse("projects-detail", args=[project.id]))
 
     new_project.save()  # Save the new project to the database.
 
@@ -614,17 +557,42 @@ def copy_project(request, pk):
 
         # Iterate through each activity plan and copy it to the new project.
         for plan in activity_plans:
-            new_plan = copy_project_activity_plan(new_project, plan)
+            new_plan = ActivityPlan.objects.get(pk=plan.pk)
+            new_plan.pk = None  # Generate a new primary key for the duplicated plan.
+            new_plan.save()  # Save the duplicated plan to the database.
+
+            # Associate the duplicated plan with the new project.
+            new_plan.project = project
+            new_plan.save()
+
             target_locations = plan.targetlocation_set.all()
 
             # Iterate through target locations and copy them to the new plan.
             for location in target_locations:
-                new_location = copy_project_target_location(new_plan, location)
+                new_location = TargetLocation.objects.get(pk=location.pk)
+                new_location.pk = None  # Generate a new primary key for the duplicated location.
+                new_location.save()  # Save the duplicated location to the database.
+
+                # Associate the duplicated location with the new activity plan.
+                new_location.activity_plan = plan
+                new_location.project = plan.project
+
+                new_location.save()
+
                 disaggregation_locations = location.disaggregationlocation_set.all()
 
                 # Iterate through disaggregation locations and copy them to the new location.
                 for disaggregation_location in disaggregation_locations:
-                    copy_target_location_disaggregation_locations(new_location, disaggregation_location)
+                    # Duplicate the original disaggregation location by retrieving it with the provided primary key.
+                    new_disaggregation_location = DisaggregationLocation.objects.get(pk=disaggregation_location.pk)
+                    new_disaggregation_location.pk = None  # Generate a new primary key for the duplicated location.
+                    new_disaggregation_location.save()  # Save the duplicated location to the database.
+
+                    # Associate the duplicated disaggregation location with the new target location.
+                    new_disaggregation_location.target_location = location
+
+                    # Save the changes made to the duplicated disaggregation location.
+                    new_disaggregation_location.save()
 
     # Save the changes made to the new project.
     new_project.save()

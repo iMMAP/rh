@@ -447,16 +447,13 @@ def submit_project(request, pk):
     project.state = "in-progress"
     project.save()
 
+    activity_plans.update(state="in-progress")
+
+    target_locations = TargetLocation.objects.filter(activity_plan__in=activity_plans)
+
+    target_locations.update(state="in-progres")
+
     messages.success(request, "Project submited successfully!. You can start reporting now.")
-
-    for plan in activity_plans:
-        target_locations = plan.targetlocation_set.all()
-        for target in target_locations:
-            target.state = "in-progress"
-            target.save()
-
-        plan.state = "in-progress"
-        plan.save()
 
     return redirect("projects-detail", pk=project.pk)
 

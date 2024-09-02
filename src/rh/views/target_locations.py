@@ -52,7 +52,7 @@ def update_target_location(request, pk):
             messages.success(
                 request,
                 mark_safe(
-                    f'The Target Location "<a href="{reverse("target-locations-update", args=[target_location.pk])}">{target_location}</a>" was changed successfully.'
+                    f'The Target Location "<a class="underline" href="{reverse("target-locations-update", args=[target_location.pk])}">{target_location}</a>" was changed successfully.'
                 ),
             )
             if "_continue" in request.POST:
@@ -114,7 +114,7 @@ def create_target_location(request, activity_plan):
             messages.success(
                 request,
                 mark_safe(
-                    f'The Target Location "<a href="{reverse("target-locations-update", args=[target_location.pk])}">{target_location}</a>" was added successfully.'
+                    f'The Target Location "<a class="underline" href="{reverse("target-locations-update", args=[target_location.pk])}">{target_location}</a>" was added successfully.'
                 ),
             )
             if "_continue" in request.POST:

@@ -20,9 +20,6 @@ from ..models import (
     Cluster,
     TargetLocation,
     Disaggregation,
-    ActivityDomain,
-    Indicator,
-    ActivityType,
     DisaggregationLocation,
     Location,
     BeneficiaryType,
@@ -42,6 +39,7 @@ from extra_settings.models import Setting
 from django_htmx.http import HttpResponseClientRedirect
 import csv
 from django.core.exceptions import ValidationError
+from django.views.decorators.csrf import csrf_protect
 
 
 @login_required
@@ -67,21 +65,25 @@ def import_activity_plans(request, pk):
         try:
             for row in reader:
                 try:
-                    activity_domain = ActivityDomain.objects.filter(name=row["activity_domain"]).first()
+                    activity_domain = project.activity_domains.filter(name=row["activity_domain"]).first()
                     if not activity_domain:
                         errors.append(
-                            f"Row {reader.line_num}: Activity domain '{row['activity_domain']}' does not exist."
+                            f"Row {reader.line_num}: Activity domain '{row['activity_domain']}' does not exist in your project plan."
                         )
                         continue
 
-                    activity_type = ActivityType.objects.filter(name=row["activity_type"]).first()
+                    activity_type = activity_domain.activitytype_set.filter(name=row["activity_type"]).first()
                     if not activity_type:
-                        errors.append(f"Row {reader.line_num}: Activity Type '{row['activity_type']}' does not exist.")
+                        errors.append(
+                            f"Row {reader.line_num}:Activity Domain {activity_domain.name} does not have Activity Type '{row['activity_type']}'"
+                        )
                         continue
 
-                    indicator = Indicator.objects.filter(name=row["indicator"]).first()
+                    indicator = activity_type.indicator_set.filter(name=row["indicator"]).first()
                     if not indicator:
-                        errors.append(f"Row {reader.line_num}: Indicator '{row['indicator']}' does not exist.")
+                        errors.append(
+                            f"Row {reader.line_num}: Activity Type {activity_type.name} does not have Indicator '{row['indicator']}'"
+                        )
                         continue
 
                     activity_plan_key = (row["activity_domain"], row["activity_type"], row["indicator"])
@@ -114,11 +116,11 @@ def import_activity_plans(request, pk):
 
                     target_location = TargetLocation(
                         activity_plan=activity_plan,
-                        country=Location.objects.get(code=row["country"]),
-                        province=Location.objects.get(code=row["province"]),
-                        district=Location.objects.get(code=row["district"]),
-                        zone=Location.objects.filter(code=row["zone"]).first(),
-                        implementing_partner=Organization.objects.filter(code=row["implementing_partner"]).first(),
+                        country=Location.objects.get(code=row["country_code"]),
+                        province=Location.objects.get(code=row["province_code"]),
+                        district=Location.objects.get(code=row["district_code"]),
+                        zone=Location.objects.filter(code=row["zone_code"]).first(),
+                        implementing_partner=Organization.objects.filter(code=row["implementing_partner_code"]).first(),
                         facility_name=row.get("facility_name") or None,
                         facility_id=row.get("facility_id") or None,
                         facility_lat=row.get("facility_lat") or None,
@@ -154,27 +156,56 @@ def import_activity_plans(request, pk):
 
 
 @login_required
+@csrf_protect
 def export_activity_plans_import_template(request, pk):
-    project = get_object_or_404(Project, pk=pk)
+    project = get_object_or_404(Project.objects.prefetch_related("clusters"), pk=pk)
 
     # Add column names for ActivityPlan and TargetLocation models
-    activity_plan_columns = [field.name for field in ActivityPlan._meta.get_fields() if field.concrete]
-    target_location_columns = [field.name for field in TargetLocation._meta.get_fields() if field.concrete]
+    all_columns = [
+        "activity_domain",
+        "activity_type",
+        "activity_detail",
+        "indicator",
+        "beneficiary",
+        "hrp_beneficiary",
+        "beneficiary_category",
+        "description",
+        "package_type",
+        "unit_type",
+        "units",
+        "no_of_transfers",
+        "grant_type",
+        "transfer_category",
+        "currency",
+        "transfer_mechanism_type",
+        "implement_modility_type",
+        "country_name",
+        "country_code",
+        "province_name",
+        "province_code",
+        "district_name",
+        "district_code",
+        "zone_name",
+        "zone_code",
+        "location_type",
+        "implementing_partner_code",
+        "facility_site_type",
+        "facility_monitoring",
+        "facility_name",
+        "facility_id",
+        "facility_lat",
+        "facility_long",
+        "nhs_code",
+    ]
 
     disaggregation_columns = list(
         Disaggregation.objects.filter(clusters__in=project.clusters.all()).distinct().values_list("name", flat=True)
     )
 
-    all_columns = activity_plan_columns + target_location_columns + disaggregation_columns
-
-    filtered_columns = [
-        col
-        for col in all_columns
-        if col not in ["id", "state", "updated_at", "created_at", "activity_plan", "disaggregations", "project"]
-    ]
+    filtered_columns = all_columns + disaggregation_columns
 
     response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = "attachment; filename=activity_plans_import_template.csv"
+    response["Content-Disposition"] = f"attachment; filename=project_{project.code}_activity_plans_import_template.csv"
 
     writer = csv.writer(response)
     writer.writerow(filtered_columns)
@@ -439,7 +470,7 @@ def submit_project(request, pk):
             messages.error(
                 request,
                 mark_safe(
-                    f"Each activity plan must have at least one target location. Check project's `<a href='{reverse('target-locations-list', args=[project.pk])}'>target locations</a>`."
+                    f"Each activity plan must have at least one target location. Check project's `<a class='underline' href='{reverse('target-locations-list', args=[project.pk])}'>target locations</a>`."
                 ),
             )
             return redirect("projects-detail", pk=project.pk)

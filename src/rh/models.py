@@ -466,7 +466,7 @@ class ActivityPlan(models.Model):
 
     activity_domain = models.ForeignKey(ActivityDomain, on_delete=models.DO_NOTHING)
     activity_type = models.ForeignKey(ActivityType, on_delete=models.DO_NOTHING)
-    activity_detail = models.ForeignKey(ActivityDetail, on_delete=models.DO_NOTHING, null=True)
+    activity_detail = models.ForeignKey(ActivityDetail, on_delete=models.DO_NOTHING, null=True, blank=True)
     indicator = models.ForeignKey(Indicator, on_delete=models.DO_NOTHING)
 
     beneficiary = models.ForeignKey(

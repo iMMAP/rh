@@ -85,7 +85,11 @@
                     </p>
                 </div>
                 <div class="flex items-center justify-between py-2 border-b border-gray-d1 gap-3">
-                    <span>Actions</span>
+                    <div class="flex gap-2 text-gray-7d">
+                        <span class="">Created At: {{project.created_at}}</span>
+                        <span class="">|</span>
+                        <span class="">Updated At: {{project.updated_at}}</span>
+                    </div>
                     <div class="flex items-center gap-2">
                         <a href="{% url 'activity-plans-list' project.pk %}" class="btn btn-gray">Activity Plans</a>
                         <a href="{% url 'target-locations-list' project.pk %}" class="btn btn-gray">Target Locations</a>
@@ -101,22 +105,37 @@
                 <div class="input-holder">{{ project.description | linebreaksbr }}</div>
             </div>
 
-            <div class="select-field read-only">
-                <span class="label">Clusters</span>
-                <span class="text-read-only m2m-badges">
-                    {% for cluster in project.clusters.all %}
-                        <span class="border border-gray-d1 rounded-full px-4 py-1 bg-gray-f5">{{ cluster.title }}</span>
-                    {% endfor %}
-                </span>
+            <div class="flex gap-4"> 
+                <div class="input-field read-only">
+                    <span class="label">Is HRP Project</span>
+                    <div class="input-holder"> {% if project.is_hrp_project %} Yes {% else %} No {% endif %} </div>
+                </div>
+                <div class="input-field read-only">
+                    <span class="label">HRP Code</span>
+                    <div class="input-holder"> {{project.hrp_code}} </div>
+                </div>
             </div>
-            <div class="select-field read-only">
-                <span class="label">Activity Domains</span>
-                <span class="text-read-only m2m-badges">
-                    {% for activity_domain in project.activity_domains.all %}
-                        <span class="border border-gray-d1 rounded-full px-4 py-1 bg-gray-f5">{{ activity_domain.name }}</span>
-                    {% endfor %}
-                </span>
+
+
+            <div class="flex gap-4">
+                <div class="select-field read-only">
+                    <span class="label">Clusters</span>
+                    <span class="text-read-only m2m-badges">
+                        {% for cluster in project.clusters.all %}
+                            <span class="border border-gray-d1 rounded-full px-4 py-1 bg-gray-f5">{{ cluster.title }}</span>
+                        {% endfor %}
+                    </span>
+                </div>
+                <div class="select-field read-only">
+                    <span class="label">Activity Domains</span>
+                    <span class="text-read-only m2m-badges">
+                        {% for activity_domain in project.activity_domains.all %}
+                            <span class="border border-gray-d1 rounded-full px-4 py-1 bg-gray-f5">{{ activity_domain.name }}</span>
+                        {% endfor %}
+                    </span>
+                </div>
             </div>
+
             {% if project.programme_partners.all %}
                 <div class="select-field read-only">
                     <span class="label">Implementing Partners</span>
@@ -251,10 +270,20 @@
                     <span class="font-medium text-green-600">{{ project.budget_received|intcomma }} {{ project.budget_currency }}</span>
                 </div>
             </div>
-        </section>
-        {% comment %} End project details here {% endcomment %}
 
-        <div class="plan-submit-holder bg-gray-f5 my-4 py-4 border border-gray-d1 px-2 rounded ">
+
+            <h4>Metadata</h4>
+            <div class="input-field read-only">
+                <span class="label">Created At</span>
+                <div class="input-holder">{{ project.created_at}}</div>
+            </div>
+            <div class="input-field read-only">
+                <span class="label">Updated At</span>
+                <div class="input-holder">{{ project.updated_at}}</div>
+            </div>
+            
+            {% comment %} Actions {% endcomment %}
+            <div class="plan-submit-holder bg-gray-f5 my-4 py-4 border border-gray-d1 px-2 rounded ">
             <a href="{% url 'projects-delete' project.pk %}" class="btn btn-gray">
                 <span class="btn-text">Delete Project</span>
                 <span class="icon-trashbin-outline"></span>
@@ -332,6 +361,10 @@
                 </a>
             </div>
         </div>
+        </section>
+        {% comment %} End project details here {% endcomment %}
+
+        
     </div>
 {% endblock content %}
 {% block scripts %}

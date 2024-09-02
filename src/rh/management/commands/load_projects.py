@@ -63,7 +63,7 @@ class Command(BaseCommand):
         #         if created:
         #             locations_created += 1
 
-        path = os.path.join(BASE_DIR.parent, "scripts/data/updated_nov_2023/fsac_locations.xlsx")
+        path = os.path.join(BASE_DIR.parent, "scripts/data/updated_nov_2023/health_locations.xlsx")
         df = pd.read_excel(path)
         df.fillna(False, inplace=True)
         locations = df.to_dict(orient="records")
@@ -122,13 +122,16 @@ class Command(BaseCommand):
 
     def _load_activity_plans(self):
         # Import the actvity_domain, activity_types, activity_details
-        path = os.path.join(BASE_DIR.parent, "scripts/data/updated_nov_2023/fsac_plans.xlsx")
+        path = os.path.join(BASE_DIR.parent, "scripts/data/updated_nov_2023/health_plans.xlsx")
         df = pd.read_excel(path)
         df.fillna(False, inplace=True)
         plans_created = 0
         plans = df.to_dict(orient="records")
         for index, plan in enumerate(plans):
             project = Project.objects.filter(old_id=plan.get("project_id", "")).first()
+            if not project:
+                print(plan.get("project_id", ""))
+                continue
             activity_domain_name = plan.get("activity_type_id", "")
             if activity_domain_name:
                 activity_domain_name.strip()
@@ -136,6 +139,9 @@ class Command(BaseCommand):
                 print("NONE")
             activity_domain = ActivityDomain.objects.filter(code=activity_domain_name).first()
             activity_type = ActivityType.objects.filter(code=plan.get("activity_description_id", "").strip()).first()
+            if not activity_type:
+                print(plan.get("activity_description_id", ""))
+                continue
             activity_detail = ActivityDetail.objects.filter(code=plan.get("activity_type_id", "").strip()).first()
             indicator = Indicator.objects.filter(name=plan.get("indicator_id", "").strip()).first()
             if not indicator:
@@ -163,7 +169,7 @@ class Command(BaseCommand):
                 beneficiary_id=beneficiary.id if beneficiary else None,
                 hrp_beneficiary_id=hrp_beneficiary.id if hrp_beneficiary else None,
                 beneficiary_category=plan.get("beneficiary_category_id", ""),
-                total_set_target=plan.get("total_beneficiaries", 0),
+                # total_set_target=plan.get("total_beneficiaries", 0),
                 package_type_id=package_type.id if package_type else None,
                 unit_type_id=unit_type.id if unit_type else None,
                 grant_type_id=grant_type.id if grant_type else None,
@@ -180,7 +186,7 @@ class Command(BaseCommand):
 
     def _load_projects(self):
         # Import the actvity_domain, activity_types, activity_details
-        path = os.path.join(BASE_DIR.parent, "scripts/data/updated_nov_2023/fsac_projects.xlsx")
+        path = os.path.join(BASE_DIR.parent, "scripts/data/updated_nov_2023/health_projects.xlsx")
         df = pd.read_excel(path)
         df.fillna(False, inplace=True)
 
@@ -195,26 +201,27 @@ class Command(BaseCommand):
             project_code = project_vals.get("project_code")
             if not project_code:
                 project_code = f"TEST-CODE-{index}"
-
-            project, created = Project.objects.get_or_create(
-                title=project_vals.get("project_title", "test"),
-                code=project_code,
-                start_date=aware_start_date,
-                end_date=aware_end_date,
-                state="in-progress",
-                is_hrp_project=True if project_vals.get("project_hrp_project", False) == 1 else False,
-                hrp_code=project_vals.get("project_hrp_code", "test"),
-                budget=project_vals.get("project_budget", 0),
-                description=project_vals.get("project_description", "test"),
-                old_id=project_vals.get("_id", "test"),
-            )
+            try:
+                project, created = Project.objects.get_or_create(
+                    title=project_vals.get("project_title", "test"),
+                    code=project_code,
+                    start_date=aware_start_date,
+                    end_date=aware_end_date,
+                    state="in-progress",
+                    is_hrp_project=True if project_vals.get("project_hrp_project", False) == 1 else False,
+                    hrp_code=project_vals.get("project_hrp_code", "test"),
+                    budget=project_vals.get("project_budget", 0),
+                    description=project_vals.get("project_description", "test"),
+                    old_id=project_vals.get("_id", "test"),
+                )
+            except Exception as e:
+                print(e)
 
             # Set ManyToMany field values and related field values
             if created:
                 projects_created += 1
                 cluster = Cluster.objects.filter(code=project_vals.get("cluster_id"))
                 project.clusters.set(cluster)
-
                 activity_types = project_vals.get("activity_type").split(",")
                 activity_domains = ActivityDomain.objects.filter(code__in=activity_types)
                 project.activity_domains.set(activity_domains)
@@ -236,11 +243,10 @@ class Command(BaseCommand):
                     project.programme_partners.set(organizations)
 
                 project_donors = project_vals.get("project_donor")
-                if project.title == "CSP":
-                    if project_donors:
-                        donors_list = project_donors.split(",")
-                        donors = Donor.objects.filter(code__in=donors_list)
-                        project.donors.set(donors)
+                if project_donors:
+                    donors_list = project_donors.split(",")
+                    donors = Donor.objects.filter(code__in=donors_list)
+                    project.donors.set(donors)
 
                 users = User.objects.filter(
                     Q(username=project_vals.get("username", "test")) | Q(email=project_vals.get("email", "test"))
@@ -248,6 +254,10 @@ class Command(BaseCommand):
 
                 if users.exists():
                     user = users.first()
+                    project.user = user
+                    project.organization = user.profile.organization
+                else:
+                    user = User.objects.get(username='admin')
                     project.user = user
                     project.organization = user.profile.organization
 
@@ -263,12 +273,12 @@ class Command(BaseCommand):
 
     def _import_data(self):
         # Import Projects
-        self.stdout.write(self.style.SUCCESS("Loading Projects!"))
-        self._load_projects()
+        # self.stdout.write(self.style.SUCCESS("Loading Projects!"))
+        # self._load_projects()
         self.stdout.write(self.style.SUCCESS("Loading Plans!"))
         self._load_activity_plans()
-        self.stdout.write(self.style.SUCCESS("Loading Locations!"))
-        self._load_target_locations()
+        # self.stdout.write(self.style.SUCCESS("Loading Locations!"))
+        # self._load_target_locations()
         self.stdout.write(self.style.SUCCESS("ALL DONE!"))
 
     def handle(self, *args, **options):

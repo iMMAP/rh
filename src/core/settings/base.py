@@ -32,7 +32,6 @@ INSTALLED_APPS = [
     "django.contrib.humanize",
     # Installed packages apps
     "django_filters",
-    "smart_selects",
     "django_vite_plugin",
     "import_export",
     "django_htmx",

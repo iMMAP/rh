@@ -28,7 +28,7 @@
             {% include "rh/activity_plans/_activity_plan_table.html" with object_list=activity_plans %}
 
             <div class="p-10 text-center">
-                <a href="{% url 'project_submit' project.pk %}" class="btn btn-red">Submit Project</a>
+                <a href="{% url 'projects-submit' project.pk %}" class="btn btn-red">Submit Project</a>
             </div>
         </div>
     </div>

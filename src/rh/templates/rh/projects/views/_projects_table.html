@@ -162,21 +162,6 @@
                                             <a href="{% if project %}{% url 'project_reports_home' project.pk %}{% else %}#{% endif %}"
                                                class="btn btn-gray">Report</a>
                                         </li>
-
-                                        {% if perms.rh.copy_project %}
-                                            <li>
-                                                <button>
-                                                    <a hx-post="{% url 'copy_project' project.pk %}"
-                                                    hx-indicator=".progress"
-                                                    hx-confirm="Do you want to duplicate Project: `{{ project }}` and its Activities and Target Locations ?"
-                                                    hx-swap="none"
-                                                    data-tippy-content="Duplicate Project and its Activities"
-                                                    >
-                                                        <span class="project-detail icon-copy"></span>
-                                                    </a>
-                                                </button>
-                                            </li>
-                                        {% endif %}
                                     </ul>
                                 </div>
                             </td>

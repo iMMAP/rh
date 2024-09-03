@@ -56,6 +56,18 @@
             </div>
         </div>
 
+        {% comment %} No field form errors {% endcomment %}
+        {% if form.non_field_errors %}
+            <div class="message-container space-y-1">
+                {% for error in form.non_field_errors %}
+                    <div class="error space-x-2">
+                        {{ error }}
+                        <span class="rounded-full px-2 bg-gray-d1" onclick="this.closest('div').remove()" class="cursor-pointer">x</span>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
         <form method="post" class="form-container">
             <div class="progress bg-red h-0.5">
                 <div class="indeterminate bg-white"></div>
@@ -191,7 +203,6 @@
                     </div>
                 </div>
             </div>
- 
         </form>
     </div>
 {% endblock project_contents %}

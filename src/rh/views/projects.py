@@ -41,7 +41,6 @@ import csv
 from django.core.exceptions import ValidationError
 from django.views.decorators.csrf import csrf_protect
 from django.db import transaction
-from django.db.utils import IntegrityError
 
 
 @login_required
@@ -227,10 +226,11 @@ def projects_detail(request, pk):
             "clusters",
             "programme_partners",
             "implementing_partners",
-        ).annotate(
-            activity_plans_count=Count('activityplan', distinct=True),
-            target_locations_count=Count('activityplan__targetlocation', distinct=True)
-        ), 
+        )
+        .annotate(
+            activity_plans_count=Count("activityplan", distinct=True),
+            target_locations_count=Count("activityplan__targetlocation", distinct=True),
+        ),
         pk=pk,
     )
 
@@ -240,7 +240,7 @@ def projects_detail(request, pk):
     context = {
         "project": project,
     }
-    
+
     return render(request, "rh/projects/views/project_view.html", context)
 
 
@@ -563,7 +563,7 @@ def copy_project(request, pk):
     try:
         with transaction.atomic():
             new_project = Project.objects.get(pk=pk)
-            new_project.pk = None 
+            new_project.pk = None
             new_project.title = f"DUPLICATED-{project.title}"
             new_project.code = f"DUPLICATED-{project.code}"
             new_project.state = "draft"
@@ -572,9 +572,9 @@ def copy_project(request, pk):
                 new_project.full_clean()
             except ValidationError as e:
                 messages.error(request, f"Error duplicating project: {e}")
-                return HttpResponse(401) 
+                return HttpResponse(401)
 
-            new_project.save()  
+            new_project.save()
 
             # Copy related data from the original project to the new project.
             new_project.clusters.set(project.clusters.all())
@@ -588,48 +588,49 @@ def copy_project(request, pk):
             new_activity_plans = []
             for plan in original_activity_plans:
                 new_plan = copy(plan)
-                new_plan.pk=None
-                new_plan.project=new_project
+                new_plan.pk = None
+                new_plan.project = new_project
 
                 new_activity_plans.append(new_plan)
 
             new_activity_plans = ActivityPlan.objects.bulk_create(new_activity_plans)
-            
+
             activity_plan_mapping = {}
             for old_plan, new_plan in zip(original_activity_plans, new_activity_plans):
                 activity_plan_mapping[old_plan.pk] = new_plan.pk
 
-            
             # Copy TargetLocation
             original_target_locations = list(TargetLocation.objects.filter(activity_plan__project=project))
             new_target_locations = []
             for location in original_target_locations:
                 new_location = copy(location)
-                new_location.pk=None
-                new_location.project= new_project
+                new_location.pk = None
+                new_location.project = new_project
                 new_location.activity_plan_id = activity_plan_mapping[location.activity_plan_id]
 
                 new_target_locations.append(new_location)
-            
+
             new_target_locations = TargetLocation.objects.bulk_create(new_target_locations)
 
             target_location_mapping = {}
             for old, new in zip(original_target_locations, new_target_locations):
                 target_location_mapping[old.id] = new.id
-            
-            # Copy DisaggregationLocation 
-            original_disagg_locations = DisaggregationLocation.objects.filter(target_location__in=original_target_locations)
+
+            # Copy DisaggregationLocation
+            original_disagg_locations = DisaggregationLocation.objects.filter(
+                target_location__in=original_target_locations
+            )
             new_disagg_locations = []
             for disagg_location in original_disagg_locations:
                 new_disagg_location = copy(disagg_location)
-                new_disagg_location.pk=None
+                new_disagg_location.pk = None
                 new_disagg_location.target_location_id = target_location_mapping[disagg_location.target_location_id]
 
                 new_disagg_locations.append(new_disagg_location)
 
             DisaggregationLocation.objects.bulk_create(new_disagg_locations)
     except Exception as e:
-        messages.error(request,f"Error duplicating project : {str(e)}")
+        messages.error(request, f"Error duplicating project : {str(e)}")
         return HttpResponse(500)
 
     messages.success(request, "Project its Activity Plans and Target Locations duplicated successfully!")

@@ -39,6 +39,7 @@ class DateTimeEncoder(json.JSONEncoder):
             return obj.isoformat()
         return super().default(obj)
 
+
 def update_project_plan_state(project: Project, state: str):
     """Updates the states of a project its activity plans and target locations
     state: should be from rh.models.STATES
@@ -51,4 +52,3 @@ def update_project_plan_state(project: Project, state: str):
 
     project.state = state
     project.save()
-

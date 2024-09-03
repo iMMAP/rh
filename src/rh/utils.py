@@ -1,3 +1,5 @@
+from datetime import datetime
+import json
 from django.contrib.auth.models import User
 from rh.models import Project, TargetLocation
 
@@ -29,6 +31,13 @@ def has_permission(user: User, project: Project = None, clusters: list = [], per
             return False
 
     return True
+
+
+class DateTimeEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, datetime):
+            return obj.isoformat()
+        return super().default(obj)
 
 
 def update_project_plan_state(project: Project, state: str):

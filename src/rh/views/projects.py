@@ -1,6 +1,6 @@
 import json
 from datetime import date
-
+from copy import copy
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
 from django.core.exceptions import PermissionDenied
@@ -40,6 +40,8 @@ from django_htmx.http import HttpResponseClientRedirect
 import csv
 from django.core.exceptions import ValidationError
 from django.views.decorators.csrf import csrf_protect
+from django.db import transaction
+from django.db.utils import IntegrityError
 
 
 @login_required
@@ -216,16 +218,19 @@ def export_activity_plans_import_template(request, pk):
 @login_required
 @permission_required("rh.view_project", raise_exception=True)
 def projects_detail(request, pk):
-    """View for viewing a project.
+    """View a project details.
     url: projects/<int:pk>
     """
     project = get_object_or_404(
-        Project.objects.select_related("organization", "user").prefetch_related(
+        Project.objects.select_related("organization", "user")
+        .prefetch_related(
             "clusters",
-            "donors",
             "programme_partners",
             "implementing_partners",
-        ),
+        ).annotate(
+            activity_plans_count=Count('activityplan', distinct=True),
+            target_locations_count=Count('activityplan__targetlocation', distinct=True)
+        ), 
         pk=pk,
     )
 
@@ -235,6 +240,7 @@ def projects_detail(request, pk):
     context = {
         "project": project,
     }
+    
     return render(request, "rh/projects/views/project_view.html", context)
 
 
@@ -551,79 +557,80 @@ def delete_project(request, pk):
 @login_required
 @require_http_methods(["POST"])
 def copy_project(request, pk):
-    """Copying Project its Activity Plans and Target Locations"""
+    """Copy Project its Activity Plans and Target Locations"""
     project = get_object_or_404(Project, pk=pk)
 
-    # Create a new project by duplicating the original project.
-    new_project = get_object_or_404(Project, pk=pk)
-    new_project.pk = None  # Generate a new primary key for the new project.
-
-    # Modify the title, code, and state of the new project to indicate it's a copy.
-    new_project.title = f"DUPLICATED-{project.title}"
-    new_project.code = f"DUPLICATED-{project.code}"  # Generate a new primary key for the new project.
-    new_project.state = "draft"
-
     try:
-        new_project.full_clean()
-    except ValidationError as e:
-        messages.error(request, f"Error duplicating project: {e}")
-        return HttpResponseClientRedirect(reverse("projects-detail", args=[project.id]))
+        with transaction.atomic():
+            new_project = Project.objects.get(pk=pk)
+            new_project.pk = None 
+            new_project.title = f"DUPLICATED-{project.title}"
+            new_project.code = f"DUPLICATED-{project.code}"
+            new_project.state = "draft"
 
-    new_project.save()  # Save the new project to the database.
+            try:
+                new_project.full_clean()
+            except ValidationError as e:
+                messages.error(request, f"Error duplicating project: {e}")
+                return HttpResponse(401) 
 
-    # Copy related data from the original project to the new project.
-    new_project.clusters.set(project.clusters.all())
-    new_project.activity_domains.set(project.activity_domains.all())
-    new_project.donors.set(project.donors.all())
-    new_project.programme_partners.set(project.programme_partners.all())
-    new_project.implementing_partners.set(project.implementing_partners.all())
+            new_project.save()  
 
-    # Check if the new project was successfully created.
-    if new_project:
-        # Get all activity plans associated with the original project.
-        activity_plans = project.activityplan_set.all()
+            # Copy related data from the original project to the new project.
+            new_project.clusters.set(project.clusters.all())
+            new_project.activity_domains.set(project.activity_domains.all())
+            new_project.donors.set(project.donors.all())
+            new_project.programme_partners.set(project.programme_partners.all())
+            new_project.implementing_partners.set(project.implementing_partners.all())
 
-        # Iterate through each activity plan and copy it to the new project.
-        for plan in activity_plans:
-            new_plan = ActivityPlan.objects.get(pk=plan.pk)
-            new_plan.pk = None  # Generate a new primary key for the duplicated plan.
-            new_plan.save()  # Save the duplicated plan to the database.
+            # Copy ActivityPlan
+            original_activity_plans = project.activityplan_set.all()
+            new_activity_plans = []
+            for plan in original_activity_plans:
+                new_plan = copy(plan)
+                new_plan.pk=None
+                new_plan.project=new_project
 
-            # Associate the duplicated plan with the new project.
-            new_plan.project = project
-            new_plan.save()
+                new_activity_plans.append(new_plan)
 
-            target_locations = plan.targetlocation_set.all()
+            new_activity_plans = ActivityPlan.objects.bulk_create(new_activity_plans)
+            
+            activity_plan_mapping = {}
+            for old_plan, new_plan in zip(original_activity_plans, new_activity_plans):
+                activity_plan_mapping[old_plan.pk] = new_plan.pk
 
-            # Iterate through target locations and copy them to the new plan.
-            for location in target_locations:
-                new_location = TargetLocation.objects.get(pk=location.pk)
-                new_location.pk = None  # Generate a new primary key for the duplicated location.
-                new_location.save()  # Save the duplicated location to the database.
+            
+            # Copy TargetLocation
+            original_target_locations = list(TargetLocation.objects.filter(activity_plan__project=project))
+            new_target_locations = []
+            for location in original_target_locations:
+                new_location = copy(location)
+                new_location.pk=None
+                new_location.project= new_project
+                new_location.activity_plan_id = activity_plan_mapping[location.activity_plan_id]
 
-                # Associate the duplicated location with the new activity plan.
-                new_location.activity_plan = plan
-                new_location.project = plan.project
+                new_target_locations.append(new_location)
+            
+            new_target_locations = TargetLocation.objects.bulk_create(new_target_locations)
 
-                new_location.save()
+            target_location_mapping = {}
+            for old, new in zip(original_target_locations, new_target_locations):
+                target_location_mapping[old.id] = new.id
+            
+            # Copy DisaggregationLocation 
+            original_disagg_locations = DisaggregationLocation.objects.filter(target_location__in=original_target_locations)
+            new_disagg_locations = []
+            for disagg_location in original_disagg_locations:
+                new_disagg_location = copy(disagg_location)
+                new_disagg_location.pk=None
+                new_disagg_location.target_location_id = target_location_mapping[disagg_location.target_location_id]
 
-                disaggregation_locations = location.disaggregationlocation_set.all()
+                new_disagg_locations.append(new_disagg_location)
 
-                # Iterate through disaggregation locations and copy them to the new location.
-                for disaggregation_location in disaggregation_locations:
-                    # Duplicate the original disaggregation location by retrieving it with the provided primary key.
-                    new_disaggregation_location = DisaggregationLocation.objects.get(pk=disaggregation_location.pk)
-                    new_disaggregation_location.pk = None  # Generate a new primary key for the duplicated location.
-                    new_disaggregation_location.save()  # Save the duplicated location to the database.
-
-                    # Associate the duplicated disaggregation location with the new target location.
-                    new_disaggregation_location.target_location = location
-
-                    # Save the changes made to the duplicated disaggregation location.
-                    new_disaggregation_location.save()
-
-    # Save the changes made to the new project.
-    new_project.save()
+            DisaggregationLocation.objects.bulk_create(new_disagg_locations)
+    except Exception as e:
+        messages.error(request,f"Error duplicating project : {str(e)}")
+        return HttpResponse(500)
 
     messages.success(request, "Project its Activity Plans and Target Locations duplicated successfully!")
     return HttpResponseClientRedirect(reverse("projects-detail", args=[new_project.id]))

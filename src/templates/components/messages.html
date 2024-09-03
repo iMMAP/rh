@@ -2,7 +2,7 @@
     {% for message in messages %}
         <div class="{{ message.tags }}">
             {{ message }}
-            <span class="cursor-pointer" onclick="this.closest('div').remove()" class="cursor-pointer">x</span>
+            <span class="ml-4 cursor-pointer" onclick="this.closest('div').remove()" class="cursor-pointer">x</span>
         </div>
     {% endfor %}
 </div>

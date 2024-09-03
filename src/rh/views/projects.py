@@ -1,5 +1,3 @@
-import json
-from datetime import date
 from copy import copy
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
@@ -10,7 +8,7 @@ from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.views.decorators.http import require_http_methods
-from rh.resources import ProjectResource
+
 
 from ..filters import ProjectsFilter
 from ..forms import ProjectForm
@@ -635,67 +633,3 @@ def copy_project(request, pk):
 
     messages.success(request, "Project its Activity Plans and Target Locations duplicated successfully!")
     return HttpResponseClientRedirect(reverse("projects-detail", args=[new_project.id]))
-
-
-@login_required
-@require_http_methods(["POST"])
-@permission_required("rh.export_clusters_projects", raise_exception=True)
-def export_cluster_projects(request, format):
-    """Export your all of your org projects and its activities
-    url: /projects/bulk_export/<format>/cluster
-    name: export-clusters-projects
-    """
-    selected_projects_id = json.loads(request.body)
-
-    projects = Project.objects.filter(clusters__in=request.user.profile.clusters.all())
-
-    if selected_projects_id:
-        projects = projects.filter(id__in=selected_projects_id)
-
-    dataset = ProjectResource().export(projects)
-
-    if format == "xls":
-        ds = dataset.xls
-    elif format == "csv":
-        ds = dataset.csv
-    else:
-        ds = dataset.json
-
-    today_date = date.today()
-    file_name = f"projects_{today_date}"
-    response = HttpResponse(ds, content_type=f"{format}")
-    response["Content-Disposition"] = f"attachment; filename={file_name}.{format}"
-
-    return response
-
-
-@login_required
-@require_http_methods(["POST"])
-@permission_required("rh.export_clusters_projects", raise_exception=True)
-def export_org_projects(request, format):
-    """Export your all of your org projects and its activities
-    url: /projects/bulk_export/<format>/org
-    name: export-org-projects
-    """
-    selected_projects_id = json.loads(request.body)
-
-    projects = Project.objects.filter(organization=request.user.profile.organization)
-
-    if selected_projects_id:
-        projects = projects.filter(id__in=selected_projects_id)
-
-    dataset = ProjectResource().export(projects)
-
-    if format == "xls":
-        ds = dataset.xls
-    elif format == "csv":
-        ds = dataset.csv
-    else:
-        ds = dataset.json
-
-    today_date = date.today()
-    file_name = f"projects_{today_date}"
-    response = HttpResponse(ds, content_type=f"{format}")
-    response["Content-Disposition"] = f"attachment; filename={file_name}.{format}"
-
-    return response

@@ -62,7 +62,7 @@ urlpatterns = [
         name="unarchive_project",
     ),
     path(
-        "projects/project_plan/copy/<str:pk>",
+        "projects/project-plan/<int:pk>/copy",
         projects.copy_project,
         name="copy_project",
     ),

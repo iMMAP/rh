@@ -3,8 +3,7 @@ import csv
 import json
 import datetime
 from io import BytesIO
-from django.http import HttpResponse, JsonResponse
-
+from django.http import HttpResponse, JsonResponse, HttpResponseForbidden
 from openpyxl import Workbook
 from openpyxl.styles import Font, NamedStyle
 from openpyxl.utils import get_column_letter
@@ -23,31 +22,41 @@ header_style.font = Font(bold=True)
 
 def project_export_excel_view(request, format):
     selected_projects_id = json.loads(request.body)
-    user_org = request.user.profile.organization
-    projects = (
-        Project.objects.select_related("organization", "budget_currency", "user")
-        .prefetch_related(
-            "implementing_partners",
-            "programme_partners",
-            "donors",
-            "clusters",
-            Prefetch(
-                "activityplan_set",
-                queryset=ActivityPlan.objects.prefetch_related(
-                    Prefetch(
-                        "targetlocation_set",
-                        queryset=TargetLocation.objects.prefetch_related(
-                            Prefetch(
-                                "disaggregationlocation_set",
-                                queryset=DisaggregationLocation.objects.select_related("disaggregation"),
-                            )
-                        ),
-                    )
-                ),
+    user = request.user
+    user_org = user.profile.organization
+
+    projects = Project.objects.select_related("organization", "budget_currency", "user").prefetch_related(
+        "implementing_partners",
+        "programme_partners",
+        "donors",
+        "clusters",
+        Prefetch(
+            "activityplan_set",
+            queryset=ActivityPlan.objects.prefetch_related(
+                Prefetch(
+                    "targetlocation_set",
+                    queryset=TargetLocation.objects.prefetch_related(
+                        Prefetch(
+                            "disaggregationlocation_set",
+                            queryset=DisaggregationLocation.objects.select_related("disaggregation"),
+                        )
+                    ),
+                )
             ),
-        )
-        .filter(organization=user_org)
+        ),
     )
+    #
+    # check the user permission
+    if user.has_perm("rh.view_cluster_projects") or user.has_perm("rh.add_organization"):
+        projects = projects.filter(organization=user_org)
+    elif (
+        user.has_perm("rh.view_org_projects")
+        or user.has_perm("rh.add_project")
+        or user.has_perm("users.view_org_users")
+    ):
+        projects = projects.filter(organization=user_org)
+    else:
+        return HttpResponseForbidden("Permission Denied !")
 
     if selected_projects_id:
         projects = projects.filter(id__in=selected_projects_id)
@@ -74,6 +83,7 @@ def project_export_excel_view(request, format):
             {"header": "Email", "type": "string", "width": 25},
             {"header": "Organization", "type": "string", "width": 40},
             {"header": "Organization Type", "type": "string", "width": 40},
+            {"header": "Status", "type": "string", "width": 10},
             {"header": "Project Description", "type": "string", "width": 50},
             {"header": "Cluster", "type": "string", "width": 50},
             {"header": "HRP project", "type": "string", "width": 50},
@@ -87,55 +97,8 @@ def project_export_excel_view(request, format):
             {"header": "Project Donors", "type": "string", "width": 30},
             {"header": "Implementing Partners", "type": "string", "width": 30},
             {"header": "Programme Partners", "type": "string", "width": 30},
-            {"header": "Status", "type": "string", "width": 10},
             {"header": "Activity Domain", "type": "string", "width": 50},
-            {"header": "Activity Type", "type": "string", "width": 20},
-            {"header": "Activity Detail", "type": "string", "width": 20},
-            {"header": "Indicators", "type": "string", "width": 40},
-            {"header": "Beneficiary", "type": "string", "width": 40},
-            {"header": "HRP Beneficiary", "type": "string", "width": 40},
-            {"header": "Beneficiary category", "type": "string", "width": 40},
-            {"header": "Activity description", "type": "string", "width": 40},
-            {"header": "Package Type", "type": "string", "width": 20},
-            {"header": "Unit Type", "type": "string", "width": 20},
-            {"header": "Grant Type", "type": "string", "width": 20},
-            {"header": "Transfer Category", "type": "string", "width": 20},
-            {"header": "Currency", "type": "string", "width": 20},
-            {"header": "Transfer mechanism type", "type": "string", "width": 20},
-            {"header": "implement modility type", "type": "string", "width": 20},
-            {"header": "admin0code", "type": "string", "width": 20},
-            {"header": "admin0name", "type": "string", "width": 20},
-            {"header": "admin1pcode", "type": "string", "width": 20},
-            {"header": "admin1name", "type": "string", "width": 20},
-            {"header": "region", "type": "string", "width": 20},
-            {"header": "admin2pcode", "type": "string", "width": 20},
-            {"header": "admin2name", "type": "string", "width": 20},
-            {"header": "NHS Code", "type": "string", "width": 20},
-            {"header": "classification", "type": "string", "width": 20},
-            {"header": "Zone/Ward", "type": "string", "width": 20},
-            {"header": "facility site type", "type": "string", "width": 20},
-            {"header": "facility monitoring", "type": "string", "width": 20},
-            {"header": "facility name", "type": "string", "width": 20},
-            {"header": "facility id", "type": "string", "width": 20},
-            {"header": "facility/site latitude", "type": "string", "width": 20},
-            {"header": "facility/site longitude", "type": "string", "width": 20},
         ]
-
-        disaggregation_cols = []
-        disaggregations = Disaggregation.objects.all()
-        disaggregation_list = []
-
-        for disaggregation in disaggregations:
-            if disaggregation.name not in disaggregation_list:
-                disaggregation_list.append(disaggregation.name)
-                disaggregation_cols.append({"header": disaggregation.name, "type": "string", "width": 30})
-            else:
-                continue
-
-        if disaggregations:
-            for disaggregation_col in disaggregation_cols:
-                columns.append(disaggregation_col)
-
         for idx, column in enumerate(columns, start=1):
             cell = sheet.cell(row=1, column=idx, value=column["header"])
             cell.style = header_style
@@ -158,8 +121,6 @@ def project_export_excel_view(request, format):
         # defining rows
         rows = []
         for project in projects:
-            disaggregation_data = {}
-            # check the selectedData if the field exist in the list then add to the row otherwise set it None
             row = [
                 project.title,
                 project.code,
@@ -171,6 +132,7 @@ def project_export_excel_view(request, format):
                 project.user.profile.organization.type
                 if project.user and project.user.profile and project.user.profile.organization
                 else None,
+                project.state,
                 project.description if project.description else None,
                 ", ".join([clusters.code for clusters in project.clusters.all()]),
                 "yes" if project.is_hrp_project == 1 else None,
@@ -184,184 +146,8 @@ def project_export_excel_view(request, format):
                 ", ".join([donor.name for donor in project.donors.all()]),
                 ", ".join([implementing_partner.code for implementing_partner in project.implementing_partners.all()]),
                 ", ".join([programme_partner.code for programme_partner in project.programme_partners.all()]),
-                project.state,
+                ", ".join([activity_domain.name for activity_domain in project.activity_domains.all()]),
             ]
-            plans = project.activityplan_set.all()
-            activityplan_row = [
-                ", ".join([plan.activity_domain.name for plan in plans if plan.activity_domain]),
-                ", ".join([plan.activity_type.name for plan in plans if plan.activity_type]),
-                ", ".join([plan.activity_detail.name for plan in plans if plan.activity_detail]),
-                ", ".join([plan.indicator.name for plan in plans if plan.indicator]),
-                ", ".join([plan.beneficiary.name for plan in plans if plan.beneficiary]),
-                ", ".join([plan.hrp_beneficiary.name for plan in plans if plan.hrp_beneficiary]),
-                ", ".join([plan.beneficiary_category for plan in plans if plan.beneficiary_category]),
-                ", ".join([plan.description for plan in plans if plan.description]),
-                ", ".join([str(plan.package_type) for plan in plans if plan.package_type]),
-                ", ".join([str(plan.unit_type) for plan in plans if plan.unit_type]),
-                ", ".join([str(plan.grant_type) for plan in plans if plan.grant_type]),
-                ", ".join([str(plan.transfer_category) for plan in plans if plan.transfer_category]),
-                ", ".join([plan.currency.name for plan in plans if plan.currency]),
-                ", ".join([str(plan.transfer_mechanism_type) for plan in plans if plan.transfer_mechanism_type]),
-                ", ".join([str(plan.implement_modility_type) for plan in plans if plan.implement_modility_type]),
-                ", ".join(
-                    [
-                        location.country.code
-                        for plan in plans
-                        for location in plan.targetlocation_set.all()
-                        if location.province
-                    ]
-                ),
-                ", ".join(
-                    [
-                        location.country.name
-                        for plan in plans
-                        for location in plan.targetlocation_set.all()
-                        if location.province
-                    ]
-                ),
-                ", ".join(
-                    [
-                        location.province.code
-                        for plan in plans
-                        for location in plan.targetlocation_set.all()
-                        if location.province
-                    ]
-                ),
-                ", ".join(
-                    [
-                        location.province.name
-                        for plan in plans
-                        for location in plan.targetlocation_set.all()
-                        if location.province
-                    ]
-                ),
-                ", ".join(
-                    [
-                        location.province.region_name
-                        for plan in plans
-                        for location in plan.targetlocation_set.all()
-                        if location.province
-                    ]
-                ),
-                ", ".join(
-                    [
-                        location.district.code
-                        for plan in plans
-                        for location in plan.targetlocation_set.all()
-                        if location.district
-                    ]
-                ),
-                ", ".join(
-                    [
-                        location.district.name
-                        for plan in plans
-                        for location in plan.targetlocation_set.all()
-                        if location.district
-                    ]
-                ),
-                ", ".join(
-                    [
-                        location.nhs_code
-                        for plan in plans
-                        for location in plan.targetlocation_set.all()
-                        if location.nhs_code
-                    ]
-                ),
-                ", ".join(
-                    [
-                        location.location_type
-                        for plan in plans
-                        for location in plan.targetlocation_set.all()
-                        if location.location_type
-                    ]
-                ),
-                ", ".join(
-                    [
-                        location.zone.name
-                        for plan in plans
-                        for location in plan.targetlocation_set.all()
-                        if location.zone
-                    ]
-                ),
-                ", ".join(
-                    [
-                        location.facility_site_type.name
-                        for plan in plans
-                        for location in plan.targetlocation_set.all()
-                        if location.facility_site_type
-                    ]
-                ),
-                ", ".join(
-                    [
-                        "yes"
-                        for plan in plans
-                        for location in plan.targetlocation_set.all()
-                        if location.facility_monitoring
-                    ]
-                ),
-                ", ".join(
-                    [
-                        location.facility_name
-                        for plan in plans
-                        for location in plan.targetlocation_set.all()
-                        if location.facility_name
-                    ]
-                ),
-                ", ".join(
-                    [
-                        location.facility_id
-                        for plan in plans
-                        for location in plan.targetlocation_set.all()
-                        if location.facility_id
-                    ]
-                ),
-                ", ".join(
-                    [
-                        str(location.facility_lat)
-                        for plan in plans
-                        for location in plan.targetlocation_set.all()
-                        if location.facility_lat
-                    ]
-                ),
-                ", ".join(
-                    [
-                        str(location.facility_long)
-                        for plan in plans
-                        for location in plan.targetlocation_set.all()
-                        if location.facility_long
-                    ]
-                ),
-            ]
-            row = row + activityplan_row
-            # Iterate through disaggregation locations and get disaggregation values
-            # for plan in plans:
-            #     for location in plan.targetlocation_set.all():
-            #         disaggregation_locations = location.disaggregationlocation_set.all()
-            #         disaggregation_location_list = {
-            #             disaggregation_location.disaggregation.name: disaggregation_location.target
-            #             for disaggregation_location in disaggregation_locations
-            #         }
-
-            new_disaggregation_location_list = {}
-            for plan in plans:
-                for location in plan.targetlocation_set.all():
-                    for dl in location.disaggregationlocation_set.all():
-                        if dl.disaggregation.name in new_disaggregation_location_list:
-                            new_disaggregation_location_list[dl.disaggregation.name] += f", {str(dl.target)}"
-                        else:
-                            new_disaggregation_location_list[dl.disaggregation.name] = str(dl.target)
-
-            for disaggregation_entry in disaggregation_list:
-                if disaggregation_entry not in new_disaggregation_location_list:
-                    disaggregation_data[disaggregation_entry] = None
-
-            # disaggregation_location_list.update(disaggregation_data)
-
-            # Append disaggregation values to the row in the order of columns
-            for column in columns:
-                header = column["header"]
-                if header in new_disaggregation_location_list:
-                    row.append(new_disaggregation_location_list[header])
 
             # Add row to the list of rows
             rows.append(row)

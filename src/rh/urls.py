@@ -171,7 +171,7 @@ urlpatterns = [
         load_facility_sites,
         name="ajax-load-facility_sites",
     ),
-    # Exports
+    # Bulk Exports
     path(
         "project/export-excel/<str:format>/",
         export_views.project_export_excel_view,
@@ -182,16 +182,5 @@ urlpatterns = [
         "project/export/<int:projectId>",
         export_views.project_filter_export_view,
         name="export_project_filter",
-    ),
-    # bulk export
-    path(
-        "projects/bulk_export/<str:format>/org",
-        projects.export_org_projects,
-        name="export-org-projects",
-    ),
-    path(
-        "projects/bulk_export/<str:format>/clusters",
-        projects.export_cluster_projects,
-        name="export-clusters-projects",
     ),
 ]

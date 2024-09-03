@@ -164,6 +164,7 @@ $("#downloadFilterForm").click(function (e) {
 				csrfmiddlewaretoken: csrftoken,
 			},
 			success: (response) => {
+				
 				if(file_format == 'xlsx'){
 				const link = document.createElement("a");
 				link.href = response.file_url;
@@ -259,6 +260,8 @@ function exportButton(event) {
 		},
 		body: JSON.stringify(selected_project_list),
 	}).then(response => {
+		console.log(response);
+		if(response.status === 200 && response.ok === true){
 		if(fileFormat === "csv" || fileFormat === 'json'){
 			return response.blob();
 		} else if(fileFormat === "xlsx"){
@@ -266,6 +269,10 @@ function exportButton(event) {
 		} else {
 			throw Error("Unsupported file format");
 		}
+	} else{
+		window.alert("You don’t have the necessary permissions to complete this action.");
+		throw "Permission Denied";
+	}
 		
 	}).then(data => {
 		if(fileFormat === "csv" || fileFormat === "json"){

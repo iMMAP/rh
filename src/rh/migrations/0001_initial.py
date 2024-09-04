@@ -3,7 +3,6 @@
 from django.conf import settings
 from django.db import migrations, models
 import django.db.models.deletion
-import smart_selects.db_fields
 
 
 class Migration(migrations.Migration):
@@ -79,11 +78,8 @@ class Migration(migrations.Migration):
                 ("updated_at", models.DateTimeField(auto_now=True, null=True)),
                 (
                     "activity_detail",
-                    smart_selects.db_fields.ChainedForeignKey(
-                        auto_choose=True,
+                    models.ForeignKey(
                         blank=True,
-                        chained_field="activity_type",
-                        chained_model_field="activity_type",
                         null=True,
                         on_delete=django.db.models.deletion.CASCADE,
                         to="rh.activitydetail",
@@ -865,11 +861,8 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name="activityplan",
             name="activity_type",
-            field=smart_selects.db_fields.ChainedForeignKey(
-                auto_choose=True,
+            field=models.ForeignKey(
                 blank=True,
-                chained_field="activity_domain",
-                chained_model_field="activity_domain",
                 null=True,
                 on_delete=django.db.models.deletion.CASCADE,
                 to="rh.activitytype",
@@ -900,11 +893,8 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name="activityplan",
             name="indicator",
-            field=smart_selects.db_fields.ChainedForeignKey(
-                auto_choose=True,
+            field=models.ForeignKey(
                 blank=True,
-                chained_field="activity_type",
-                chained_model_field="activity_types",
                 null=True,
                 on_delete=django.db.models.deletion.CASCADE,
                 to="rh.indicator",

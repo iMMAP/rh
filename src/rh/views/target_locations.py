@@ -11,7 +11,6 @@ from ..forms import (
 )
 from ..models import Project, TargetLocation, ActivityPlan, DisaggregationLocation
 
-from .views import copy_target_location_disaggregation_locations
 from django.core.paginator import Paginator
 from django.forms import inlineformset_factory
 from django.contrib import messages
@@ -53,7 +52,7 @@ def update_target_location(request, pk):
             messages.success(
                 request,
                 mark_safe(
-                    f'The Target Location "<a href="{reverse("target-locations-update", args=[target_location.pk])}">{target_location}</a>" was changed successfully.'
+                    f'The Target Location "<a class="underline" href="{reverse("target-locations-update", args=[target_location.pk])}">{target_location}</a>" was changed successfully.'
                 ),
             )
             if "_continue" in request.POST:
@@ -115,7 +114,7 @@ def create_target_location(request, activity_plan):
             messages.success(
                 request,
                 mark_safe(
-                    f'The Target Location "<a href="{reverse("target-locations-update", args=[target_location.pk])}">{target_location}</a>" was added successfully.'
+                    f'The Target Location "<a class="underline" href="{reverse("target-locations-update", args=[target_location.pk])}">{target_location}</a>" was added successfully.'
                 ),
             )
             if "_continue" in request.POST:
@@ -189,7 +188,15 @@ def copy_target_location(request, project, location):
 
         # Iterate through disaggregation locations and copy them to the new location.
         for disaggregation_location in disaggregation_locations:
-            copy_target_location_disaggregation_locations(new_location, disaggregation_location)
+            new_disaggregation_location = get_object_or_404(DisaggregationLocation, pk=disaggregation_location.pk)
+            new_disaggregation_location.pk = None  # Generate a new primary key for the duplicated location.
+            new_disaggregation_location.save()  # Save the duplicated location to the database.
+
+            # Associate the duplicated disaggregation location with the new target location.
+            new_disaggregation_location.target_location = location
+
+            # Save the changes made to the duplicated disaggregation location.
+            new_disaggregation_location.save()
 
         new_location.project = project
         new_location.state = "draft"

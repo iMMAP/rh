@@ -32,11 +32,9 @@ INSTALLED_APPS = [
     "django.contrib.humanize",
     # Installed packages apps
     "django_filters",
-    "smart_selects",
     "django_vite_plugin",
     "import_export",
     "django_htmx",
-    "compressor",
     "guardian",
     "dbbackup",
     "extra_settings",
@@ -118,7 +116,6 @@ USE_TZ = True
 STATICFILES_FINDERS = [
     "django.contrib.staticfiles.finders.FileSystemFinder",
     "django.contrib.staticfiles.finders.AppDirectoriesFinder",
-    "compressor.finders.CompressorFinder",
 ]
 
 
@@ -133,8 +130,6 @@ MEDIA_URL = "/media/"
 
 # Directory where media files are stored
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
-
-COMPRESS_ENABLED = True
 
 
 # Default primary key field type

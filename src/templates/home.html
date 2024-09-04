@@ -1,0 +1,39 @@
+{% extends "_base.html" %}
+
+{% load static %}
+
+{% block title %}
+    ReportHub - Home
+{% endblock title %}
+
+{% block head %}
+ <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+<style>
+    #map {
+        height: 55vh; 
+        width: 100%;
+    }
+</style>
+{% endblock head %}
+
+{% block content %}
+<section class="visual-map-section main-map">
+    <div class="container space-y-4">
+        <div class="top-panel">
+            <span class="locations">
+                Active Locations
+            </span >
+            <div class="actions-panel">
+            </div>
+        </div>
+        <ul class="location-select flex gap-2 py-2 rounded my-2 flex-wrap"></ul>
+        <div id="map" data-locations-url="{% url 'organizations-target-locations' request.user.profile.organization.id %}"></div> 
+        {% include "rh/projects/views/_projects_table.html" with projects=active_projects%}
+    </div>
+</section>
+{% endblock content %}
+
+{% block scripts %}
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script src="{% static 'js/components/map.js' %}"></script>
+{% endblock scripts %}

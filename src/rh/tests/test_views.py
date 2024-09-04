@@ -2,13 +2,18 @@ from django.contrib.auth.models import User
 from django.test import Client, TestCase
 from django.urls import reverse
 
-from rh.models import Cluster, Location
+from rh.models import Cluster, Location, Organization
+from users.models import Profile
 
 
 class TestLoggedInViews(TestCase):
     def setUp(self):
         self.client = Client()
+
         self.user = User.objects.create_user(username="testuser", password="testpassword")
+        org = Organization.objects.create(name="immap", code="immap")
+        Profile.objects.create(user=self.user, organization=org)
+
         self.client.login(username="testuser", password="testpassword")
 
         self.landing_url = reverse("landing")
@@ -21,11 +26,7 @@ class TestLoggedInViews(TestCase):
 
         response = self.client.get(self.landing_url)
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, "landing.html")
-        self.assertContains(response, "Users")
-        self.assertContains(response, "Locations")
-        self.assertContains(response, User.objects.all().count())
-        self.assertContains(response, Location.objects.all().count())
+        self.assertTemplateUsed(response, "home.html")
         print("Logged In! Welcome to landing Page. Test for landing view (authenticated user) passed.")
 
     def test_load_locations_details_view(self):

@@ -19,7 +19,8 @@ def landing_page(request):
             Project.objects.select_related("organization")
             .prefetch_related("clusters", "implementing_partners", "programme_partners")
             .filter(state="in-progress")
-            .filter(organization=user_org)[:10]
+            .filter(organization=user_org)
+            .order_by("-projectmonthlyreport__updated_at")[:10]
         )
 
         context = {"active_projects": active_projects}

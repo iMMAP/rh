@@ -28,6 +28,7 @@
         </div>
         <ul class="location-select flex gap-2 py-2 rounded my-2 flex-wrap"></ul>
         <div id="map" data-locations-url="{% url 'organizations-target-locations' request.user.profile.organization.id %}"></div> 
+        <h4>Recent Projects</h4>
         {% include "rh/projects/views/_projects_table.html" with projects=active_projects%}
     </div>
 </section>

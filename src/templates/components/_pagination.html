@@ -1,5 +1,6 @@
 {% load template_tags %}
 
+{% if object_list.paginator.count > 0 %}
 <div class="pagination-holder">
     <div class="select-field view-options">
         <ul class="main-nav custom-select">
@@ -54,3 +55,4 @@
         </ul>
     </div>
 </div>
+{% endif %}

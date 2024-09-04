@@ -23,6 +23,11 @@ urlpatterns = [
     path("", landing_page, name="landing"),
     # Organization CRUD
     path("organizations/create", organizations.organization_register, name="organizations-create"),
+    path(
+        "organizations/<int:org_pk>/target-locations",
+        organizations.target_locations,
+        name="organizations-target-locations",
+    ),
     # Projects CRUD
     path("projects", projects.org_projects_list, name="projects-list"),
     path(

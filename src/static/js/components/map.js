@@ -6,7 +6,16 @@ navigator.geolocation.getCurrentPosition(function(position) {
     console.log("Unable to get location");
 });
 
-const map = L.map('map').setView(userLoc, 5,{
+// config map
+let config = {
+  minZoom: 3,
+  maxZoom: 18,
+  zoomControl: false, // zoom control off
+};
+// magnification with which the map will start
+const zoom = 5;
+
+const map = L.map('map',config).setView(userLoc, zoom,{
     animate:true,
     pan:{
         duration:1
@@ -17,6 +26,8 @@ L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 19,
     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
 }).addTo(map);
+
+L.control.zoom({ position: "bottomleft" }).addTo(map);
 
 // Fetch target locations from the Django route
 const locationList = document.querySelector(".location-select");
@@ -47,7 +58,7 @@ fetch(targetLocationUrl)
                         <ul> 
                             <strong>District: ${location_name} (${loc.district_code})</strong>
                             ${loc.target_locations.map(tl => (
-                                `<li>Targeted in project <a class="underline" href="/projects/${tl.project_id}"> ${tl.project_code}</a>${tl.facility_name ? ',Facility '+tl.facility_name : '' } in <a href="target-locations/${tl.id}/update">this</a> target location</li>`
+                                `<li>Targeted in project <a href="/projects/${tl.project_id}"> ${tl.project_code}</a>${tl.facility_name ? ',Facility '+tl.facility_name : '' } in this <a href="target-locations/${tl.id}/update">Target Location</a></li>`
                             )).join('')}
                         </ul>
                     `
@@ -95,3 +106,9 @@ function clickOnItem() {
     });
   });
 }
+
+// obtaining coordinates after clicking on the map
+map.on("click", function (e) {
+  const markerPlace = document.querySelector(".marker-position");
+  markerPlace.textContent = e.latlng;
+});

@@ -13,6 +13,31 @@
         height: 55vh; 
         width: 100%;
     }
+    .marker-position {
+        position: absolute;
+        z-index: 999;
+        padding: 10px;
+        font-weight: 700;
+        background-color: #fff;
+        margin:5px;
+    }
+
+    /* Popup width is defined in JS using options */
+    .leaflet-popup .leaflet-popup-content-wrapper {
+        border-radius:0px;
+        max-height:300px;
+        overflow-y: auto;
+    }
+
+    .leaflet-popup .leaflet-popup-content {
+        margin:8px;
+        line-height:unset;
+        width: 270px !important;
+    }
+
+    .leaflet-container a.leaflet-popup-close-button{
+        right:12px;
+    }
 </style>
 {% endblock head %}
 
@@ -21,13 +46,19 @@
     <div class="container space-y-4">
         <div class="top-panel">
             <span class="locations">
-                Active Locations
+                {{ request.user.profile.organization }}'s Active Locations
             </span >
             <div class="actions-panel">
             </div>
         </div>
+
         <ul class="location-select flex gap-2 py-2 rounded my-2 flex-wrap"></ul>
-        <div id="map" data-locations-url="{% url 'organizations-target-locations' request.user.profile.organization.id %}"></div> 
+
+        <section>
+            <div class="marker-position">Click on map to get coords</div>
+            <div id="map" data-locations-url="{% url 'organizations-target-locations' request.user.profile.organization.id %}"></div> 
+        </section>
+
         <h4>Recent Projects</h4>
         {% include "rh/projects/views/_projects_table.html" with projects=active_projects%}
     </div>

@@ -318,6 +318,7 @@
                     <a 
                         hx-post="{% url 'archive_project' project.pk %}" 
                         hx-swap="none"
+                        hx-confirm="Do you want to archive Project: `{{ project }}` and its Activities and Target Locations ? You will not be able to report if the project is archived!!"
                         class="btn btn-gray"
                     >
                         <span class="btn-text">Archive</span>
@@ -339,6 +340,7 @@
                 <a 
                     hx-post="{% url 'unarchive_project' project.pk %}" 
                     hx-swap="none"
+                    hx-confirm="Do you want to archive Project: `{{ project }}` and its Activities and Target Locations ?"
                     class="btn btn-gray"
                 >
                     <span class="btn-text">Unarchive</span>

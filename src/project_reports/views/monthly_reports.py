@@ -1,17 +1,18 @@
 import calendar
 from datetime import datetime
-
+import csv
 import pandas as pd
 from django.contrib.auth.decorators import login_required
 from django.db import transaction
-from django.http import JsonResponse
+from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.utils import timezone
 from django.contrib import messages
 from django.urls import reverse_lazy
 from django.core.paginator import Paginator
-from django.db.models import Count, Q
+from django.db.models import Count, Q, Prefetch
+
 
 from rh.models import (
     ActivityDetail,
@@ -201,45 +202,66 @@ def details_monthly_progress_view(request, project, report):
 def copy_project_monthly_report_view(request, report):
     """Copy report view"""
     monthly_report = get_object_or_404(ProjectMonthlyReport, pk=report)
-
     # Filter the reports for the last month and find the latest submitted report
-    last_month_report = ProjectMonthlyReport.objects.filter(project=monthly_report.project, state="completed").latest(
-        "approved_on"
-    )
+    # last_month_report = ProjectMonthlyReport.objects.filter(project=monthly_report.project, state="completed").latest(
+    #     "approved_on"
+    # )
+
+    last_month_report = None
+
+    try:
+        last_month_report = (
+            ProjectMonthlyReport.objects.select_related("project")
+            .prefetch_related(
+                Prefetch(
+                    "activityplanreport_set",
+                    queryset=ActivityPlanReport.objects.prefetch_related(
+                        Prefetch(
+                            "targetlocationreport_set",
+                            queryset=TargetLocationReport.objects.prefetch_related(
+                                Prefetch(
+                                    "disaggregationlocationreport_set",
+                                    DisaggregationLocationReport.objects.select_related("disaggregation"),
+                                )
+                            ),
+                        )
+                    ),
+                )
+            )
+            .filter(project=monthly_report.project, state="completed")
+            .latest("approved_on")
+        )
+    except Exception:
+        messages.error(request, "At least one last month approved report is required.")
+        return HttpResponse(200)
 
     print(f"monthly_report_current:{monthly_report} ----- last_month_report: {last_month_report}")
 
     # Check if the new monthly report was successfully created.
-    if monthly_report and last_month_report:
-        # Get all activity plans reports associated with the current monthly report.
-        activity_plan_reports = last_month_report.activityplanreport_set.all()
+    # Get all activity plans reports associated with the current monthly report.
+    activity_plan_reports = last_month_report.activityplanreport_set.all()
 
-        # delete existing records
-        monthly_report.activityplanreport_set.all().delete()
+    # delete existing records
+    monthly_report.activityplanreport_set.all().delete()
 
-        # Iterate through each activity plan  report and copy it to the new monthly report.
-        for plan_report in activity_plan_reports:
-            new_plan_report = copy_monthly_report_activity_plan(monthly_report, plan_report)
-            location_reports = plan_report.targetlocationreport_set.all()
+    # Iterate through each activity plan  report and copy it to the new monthly report.
+    for plan_report in activity_plan_reports:
+        new_plan_report = copy_monthly_report_activity_plan(monthly_report, plan_report)
+        location_reports = plan_report.targetlocationreport_set.all()
 
-            # Iterate through target locations reports and copy them to the new plan report.
-            for location_report in location_reports:
-                new_location_report = copy_target_location_report(new_plan_report, location_report)
-                disaggregation_location_reports = location_report.disaggregationlocationreport_set.all()
+        # Iterate through target locations reports and copy them to the new plan report.
+        for location_report in location_reports:
+            new_location_report = copy_target_location_report(new_plan_report, location_report)
+            disaggregation_location_reports = location_report.disaggregationlocationreport_set.all()
 
-                # Iterate through disaggregation locations reports and copy them to the new location report.
-                for disaggregation_location_report in disaggregation_location_reports:
-                    copy_disaggregation_location_reports(new_location_report, disaggregation_location_report)
-        messages.success(request, "Report activities copied successfully.")
-        url = reverse_lazy(
-            "view_monthly_report", kwargs={"project": monthly_report.project.pk, "report": monthly_report.pk}
-        )
+            # Iterate through disaggregation locations reports and copy them to the new location report.
+            for disaggregation_location_report in disaggregation_location_reports:
+                copy_disaggregation_location_reports(new_location_report, disaggregation_location_report)
 
-    else:
-        messages.error(request, "At least one last month approved report is required.")
-        url = reverse_lazy(
-            "view_monthly_report", kwargs={"project": monthly_report.project.pk, "report": monthly_report.pk}
-        )
+    messages.success(request, "Report activities copied successfully.")
+    url = reverse_lazy(
+        "view_monthly_report", kwargs={"project": monthly_report.project.pk, "report": monthly_report.pk}
+    )
 
     # Save the changes made to the new monthly report.
     monthly_report.state = "todo"
@@ -630,3 +652,165 @@ def import_monthly_reports(request, report):
             # Return the URL in a JSON response
             response_data = {"success": success, "redirect_url": url, "message": message}
             return JsonResponse(response_data)
+
+
+# download last month activity report
+def download_project_monthly_report_view(request, report):
+    monthly_report = get_object_or_404(ProjectMonthlyReport, pk=report)
+
+    # Filter the reports for the last month and find the latest submitted report
+    # last_month_report = ProjectMonthlyReport.objects.filter(project=monthly_report.project, state="completed").latest(
+    #     "approved_on"
+    # )
+    last_month_report = None
+    # error handling
+    try:
+        last_month_report = (
+            ProjectMonthlyReport.objects.select_related("project")
+            .prefetch_related(
+                Prefetch(
+                    "activityplanreport_set",
+                    queryset=ActivityPlanReport.objects.prefetch_related(
+                        Prefetch(
+                            "targetlocationreport_set",
+                            queryset=TargetLocationReport.objects.prefetch_related(
+                                Prefetch(
+                                    "disaggregationlocationreport_set",
+                                    DisaggregationLocationReport.objects.select_related("disaggregation"),
+                                )
+                            ),
+                        )
+                    ),
+                )
+            )
+            .filter(project=monthly_report.project, state="completed")
+            .latest("approved_on")
+        )
+    except Exception:
+        url = reverse_lazy(
+            "view_monthly_report", kwargs={"project": monthly_report.project.pk, "report": monthly_report.pk}
+        )
+        messages.error(request, "At least one last month approved report is required.")
+        return HttpResponseRedirect(url)
+
+    # define csv
+    response = HttpResponse(content_type="text/csv")
+    response["Content-Disposition"] = "attachment; filename=last_month_activity_report.csv"
+    writer = csv.writer(response)
+    columns = [
+        "project_code",
+        "indicator",
+        "activity_domain",
+        "activity_type",
+        "response_types",
+        "implementing_partners",
+        "package_type",
+        "unit_type",
+        "units",
+        "no_of_transfers",
+        "grant_type",
+        "transfer_category",
+        "currency",
+        "transfer_mechanism_type",
+        "implement_modility_type",
+        "beneficiary_status",
+        "admin0name",
+        "admin0pcode",
+        "admin1pcode",
+        "admin1name",
+        "admin2pcode",
+        "admin2name",
+        "zone",
+        "location_type",
+        "facility_site_type",
+        "facility_monitoring",
+        "facility_id",
+        "facility_name",
+        "facility_lat",
+        "facility_long",
+    ]
+    disaggregation_cols = []
+    disaggregation_list = []
+    plan_reports = last_month_report.activityplanreport_set.all()
+    for plan_report in plan_reports:
+        location_reports = plan_report.targetlocationreport_set.all()
+        for location_report in location_reports:
+            disaggregations = location_report.disaggregationlocationreport_set.all()
+            for disaggregation in disaggregations:
+                if disaggregation.disaggregation.name not in disaggregation_list:
+                    disaggregation_list.append(disaggregation.disaggregation.name)
+                    disaggregation_cols.append(disaggregation.disaggregation.name)
+                else:
+                    continue
+
+            if disaggregations:
+                for disaggregation_col in disaggregation_cols:
+                    columns.append(disaggregation_col)
+    # write the column header to the csv file
+
+    writer.writerow(columns)
+
+    # retrieving the rows from the queryset
+
+    plan_reports = last_month_report.activityplanreport_set.all()
+    for plan_report in plan_reports:
+        location_reports = plan_report.targetlocationreport_set.all()
+        for location_report in location_reports:
+            # Create a dictionary to hold disaggregation data
+            disaggregation_data = {}
+            row = [
+                last_month_report.project.code if last_month_report.project.code else None,
+                plan_report.activity_plan.indicator.name if plan_report.activity_plan.indicator else None,
+                plan_report.activity_plan.activity_domain.name if plan_report.activity_plan.activity_domain else None,
+                plan_report.activity_plan.activity_type.name if plan_report.activity_plan.activity_type else None,
+                plan_report.response_types if plan_report.response_types else None,
+                plan_report.implementing_partners,
+                plan_report.activity_plan.package_type,
+                plan_report.activity_plan.unit_type,
+                plan_report.activity_plan.units,
+                plan_report.activity_plan.no_of_transfers,
+                plan_report.activity_plan.grant_type,
+                plan_report.activity_plan.transfer_category,
+                plan_report.activity_plan.currency,
+                plan_report.activity_plan.transfer_mechanism_type,
+                plan_report.activity_plan.implement_modility_type,
+                plan_report.beneficiary_status,
+                # write target location
+                location_report.target_location.country.name,
+                location_report.target_location.country.code,
+                location_report.target_location.province.code,
+                location_report.target_location.province.name,
+                location_report.target_location.district.code,
+                location_report.target_location.district.name,
+                location_report.target_location.zone,
+                location_report.target_location.location_type,
+                location_report.target_location.facility_site_type,
+                location_report.target_location.facility_monitoring,
+                location_report.target_location.facility_id,
+                location_report.target_location.facility_name,
+                location_report.target_location.facility_lat,
+                location_report.target_location.facility_long,
+            ]
+            disaggregation_locations = location_report.disaggregationlocationreport_set.all()
+            disaggregation_location_list = {
+                disaggregation_location.disaggregation.name: str(disaggregation_location.reached)
+                for disaggregation_location in disaggregation_locations
+            }
+
+            # Update disaggregation_data with values from disaggregation_location_list
+            for disaggregation_entry in disaggregation_list:
+                if disaggregation_entry not in disaggregation_location_list:
+                    disaggregation_data[disaggregation_entry] = None
+
+            disaggregation_location_list.update(disaggregation_data)
+
+            # Append disaggregation values to the row in the order of columns
+            for header in columns:
+                if header in disaggregation_location_list:
+                    row.append(disaggregation_location_list[header])
+
+            # Add row to the list of rows
+
+            writer.writerow(row)
+
+    return response

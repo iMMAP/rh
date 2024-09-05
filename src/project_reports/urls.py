@@ -39,6 +39,12 @@ urlpatterns = [
         report_views.copy_project_monthly_report_view,
         name="copy_project_monthly_report",
     ),
+    # download last month activity report
+    path(
+        "project/monthly-progress/<str:report>/download",
+        report_views.download_project_monthly_report_view,
+        name="download_project_monthly_report",
+    ),
     path(
         "project/monthly-progress/<str:report>/delete",
         report_views.delete_project_monthly_report_view,

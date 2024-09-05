@@ -3,7 +3,9 @@
 
 <tr id="user-{{ user.id }}">
     <td>
-        {{ user.first_name }} {{ user.last_name }} <em>({{ user.username }})</em>
+        <a href="{% url 'profiles-show' user.username %}">
+            {{ user.first_name }} {{ user.last_name }} <em>({{ user.username }})</em>
+        </a>
     </td>
     <td>{{ user.email }}</td>
     <td>

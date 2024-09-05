@@ -14,15 +14,16 @@ from .forms import UserPasswordChangeForm, UserPasswordResetForm, UserSetPasswor
 
 urlpatterns = [
     # Profile routes
-    path("profile/", users_views.profile, name="profile"),
+    path("profile", users_views.profile, name="profile"),
+    path("profiles/<str:username>", users_views.profile_show, name="profiles-show"),
     path("users/organization", users_views.org_users_list, name="users-organization"),
     path("users/<int:user_id>/toggle_status", users_views.toggle_status, name="toggle-status"),
-    path("login/", auth_views.login_view, name="login"),
-    path("logout/", auth_views.logout_view, name="logout"),
-    path("register/", auth_views.register_view, name="register"),
+    path("login", auth_views.login_view, name="login"),
+    path("logout", auth_views.logout_view, name="logout"),
+    path("register", auth_views.register_view, name="register"),
     # Password change routes
     path(
-        "password_change/",
+        "password_change",
         PasswordChangeView.as_view(
             template_name="users/auth/password_change.html",
             form_class=UserPasswordChangeForm,
@@ -30,13 +31,13 @@ urlpatterns = [
         name="password_change",
     ),
     path(
-        "password_change/done/",
+        "password_change/done",
         PasswordChangeDoneView.as_view(template_name="users/auth/password_change_done.html"),
         name="password_change_done",
     ),
     # Password reset routes
     path(
-        "password_reset/",
+        "password_reset",
         PasswordResetView.as_view(
             template_name="users/auth/password_reset.html",
             form_class=UserPasswordResetForm,
@@ -46,12 +47,12 @@ urlpatterns = [
         name="password_reset",
     ),
     path(
-        "password_reset/done/",
+        "password_reset/done",
         PasswordResetDoneView.as_view(template_name="users/auth/password_reset_done.html"),
         name="password_reset_done",
     ),
     path(
-        "reset/<uidb64>/<token>/",
+        "reset/<uidb64>/<token>",
         PasswordResetConfirmView.as_view(
             template_name="users/auth/password_reset_confirm.html",
             form_class=UserSetPasswordForm,
@@ -59,7 +60,7 @@ urlpatterns = [
         name="password_reset_confirm",
     ),
     path(
-        "reset/done/",
+        "reset/done",
         PasswordResetCompleteView.as_view(template_name="users/auth/password_reset_complete.html"),
         name="password_reset_complete",
     ),

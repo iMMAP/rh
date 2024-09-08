@@ -43,6 +43,15 @@
                     <li> <span class="icon-info mr-2"></span> 
                         The disaggregations are based on the clusters of your project. Update the project accordingly.
                     </li>
+                    <li>
+                        <span class="icon-checkmark mr-2"></span>To import data from the previous month, follow these steps:
+                    </li>
+                    <ol>
+                        <li>Please make sure that your project has at least one month approved report</li>
+                        <li>Click on "Download last month activities" button to get the data.</li>
+                        <li>Make the necessary changes to the downloaded file.</li>
+                        <li>Upload the updated file here to import the data.</li>
+                    </ol>
                     <li> <span class="icon-info mr-2"></span> 
                         If the data is wrong you will get error messages. Please resolve them before trying again.
                         If the problem persists contact us from the `Report a Bug` button from the bottom right side of the website.
@@ -50,6 +59,7 @@
                     <li> <span class="icon-info mr-2"></span> 
                         <a class="underline" href="{% url 'guides-detail' 'project-reporting-management' %}">Project Reporting Management Guide</a>
                     </li>
+                    
                 </ul>
 
                 {% if errors %}

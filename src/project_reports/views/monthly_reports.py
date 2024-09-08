@@ -763,8 +763,14 @@ def download_project_monthly_report_view(request, report):
                 plan_report.activity_plan.indicator.name if plan_report.activity_plan.indicator else None,
                 plan_report.activity_plan.activity_domain.name if plan_report.activity_plan.activity_domain else None,
                 plan_report.activity_plan.activity_type.name if plan_report.activity_plan.activity_type else None,
-                plan_report.response_types if plan_report.response_types else None,
-                plan_report.implementing_partners,
+                ", ".join([responseType.name for responseType in plan_report.response_types.all() if responseType]),
+                ", ".join(
+                    [
+                        implementing_partner.code
+                        for implementing_partner in plan_report.implementing_partners.all()
+                        if implementing_partner
+                    ]
+                ),
                 plan_report.activity_plan.package_type,
                 plan_report.activity_plan.unit_type,
                 plan_report.activity_plan.units,
@@ -774,7 +780,7 @@ def download_project_monthly_report_view(request, report):
                 plan_report.activity_plan.currency,
                 plan_report.activity_plan.transfer_mechanism_type,
                 plan_report.activity_plan.implement_modility_type,
-                plan_report.beneficiary_status,
+                plan_report.get_beneficiary_status_display(),
                 # write target location
                 location_report.target_location.country.name,
                 location_report.target_location.country.code,

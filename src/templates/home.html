@@ -49,7 +49,7 @@
         right:0;
         height:98%;
         margin:5px;
-        z-index: 999;
+        z-index: 490;
         background-color: #fff;
         overflow:auto;
         width: 230px;
@@ -115,7 +115,7 @@
     position: absolute;
     width: 46px;
     max-width: 370px;
-    z-index: 9999;
+    z-index: 460;
     background: #fff;
     box-shadow: none;
     overflow: hidden;
@@ -333,15 +333,13 @@
                             <h2 class="px-2">Recent Projects</h2>
                             <div class="content">
                                 {% for project in active_projects %}
-                                    <div class="p-2 border-b border-gray-d1">
+                                    <div class="p-2 border-b border-gray-d1 space-y-2">
                                         <a class="" href="{% url 'projects-detail' project.id %}">
                                             (<em>{{ project.code }}</em>)  <span class="font-medium">{{ project.title }}</span>
                                         </a>
                                         <div class="flex justify-between items-center">
                                             <span class="block text-xs text-muted-foreground">End Date: {{ project.end_date }}</span>
-                                            <a href="{% url 'project_reports_home' project.pk %}"
-                                               href="#"
-                                               class="px-2 bg-gray-d1 text-xs rounded-full">Reports</a>
+                                            <a href="{% url 'project_reports_home' project.pk %}" class="px-2 bg-gray-d1 text-xs rounded-full">Reports</a>
                                         </div>
                                     </div>
                                 {% endfor %}

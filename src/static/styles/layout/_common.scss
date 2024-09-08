@@ -18,6 +18,21 @@
   padding: 4px;
   vertical-align: middle;
 }
+.filter-container .flex {
+  display:  flex;
+  gap: 3px;
+  flex-wrap: wrap;
+  padding: 4px;
+  vertical-align: middle;
+}
+.filter-container .flex > *{
+  flex-shrink: 1;
+  flex-grow: 1;
+  flex-basis: auto;
+}
+.page-top-panel .actions-panel{
+  margin: auto 0px;
+}
 .field-col .input-holder .input-paragraph-content {
   font-size: 13px;
   font-weight: 600;

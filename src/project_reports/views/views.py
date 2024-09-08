@@ -132,6 +132,7 @@ def import_report_activities(request, pk):
                         continue
 
                     indicator = Indicator.objects.filter(name=row["indicator"]).first()
+
                     if not indicator:
                         errors.append(f"Row {reader.line_num}: Indicator '{row['indicator']}' does not exist.")
                         continue
@@ -198,7 +199,6 @@ def import_report_activities(request, pk):
                     if response_types:
                         response_types_list = [response.strip() for response in response_types.split(",")]
 
-                    facility_site_type = FacilitySiteType.objects.filter(name=row.get("facility_site_type")).first()
                     location_type = LocationType.objects.filter(name=row.get("location_type")).first()
 
                     project_activity_plan = ActivityPlan.objects.filter(
@@ -219,7 +219,6 @@ def import_report_activities(request, pk):
                         activity_plan_report = ActivityPlanReport(
                             monthly_report=monthly_report,
                             activity_plan=project_activity_plan,
-                            indicator=indicator,
                             package_type=package_type,
                             unit_type=unit_type,
                             units=units,
@@ -247,18 +246,7 @@ def import_report_activities(request, pk):
                     target_location = TargetLocationReport(
                         activity_plan_report=activity_plan_report,
                         target_location=project_target_location,
-                        country=Location.objects.get(code=row["admin0pcode"]),
-                        province=Location.objects.get(code=row["admin1pcode"]),
-                        district=Location.objects.get(code=row["admin2pcode"]),
-                        zone=Location.objects.filter(code=row["zone"]).first(),
                         location_type=location_type or None,
-                        facility_site_type=facility_site_type or None,
-                        facility_monitoring=row.get("facility_monitoring") or False,
-                        facility_name=row.get("facility_name") or None,
-                        facility_id=row.get("facility_id") or None,
-                        facility_lat=row.get("facility_lat") or None,
-                        facility_long=row.get("facility_long") or None,
-                        nhs_code=row.get("nhs_code", None),
                     )
                     report_target_locations.append(target_location)
 
@@ -268,7 +256,7 @@ def import_report_activities(request, pk):
                             disaggregation_location = DisaggregationLocationReport(
                                 target_location_report=target_location,
                                 disaggregation=disag,
-                                target=row.get(disag.name),
+                                reached=row.get(disag.name),
                             )
                             disaggregation_locations.append(disaggregation_location)
                 except Exception as e:
@@ -285,7 +273,6 @@ def import_report_activities(request, pk):
                         (
                             activity_plan_report.activity_plan.activity_domain.name,
                             activity_plan_report.activity_plan.activity_type.name,
-                            activity_plan_report.indicator.name,
                         ),
                         [],
                     )
@@ -297,7 +284,6 @@ def import_report_activities(request, pk):
                         (
                             activity_plan_report.activity_plan.activity_domain.name,
                             activity_plan_report.activity_plan.activity_type.name,
-                            activity_plan_report.indicator.name,
                         ),
                         [],
                     )

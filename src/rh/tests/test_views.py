@@ -27,7 +27,6 @@ class TestLoggedInViews(TestCase):
         response = self.client.get(self.landing_url)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "home.html")
-        print("Logged In! Welcome to landing Page. Test for landing view (authenticated user) passed.")
 
     def test_load_locations_details_view(self):
         # Create dummy provinces and districts
@@ -42,8 +41,6 @@ class TestLoggedInViews(TestCase):
 
         self.assertEqual(response.status_code, 200)
 
-        print("Test for load_locations_details view passed.")
-
     def test_load_facility_sites_view(self):
         # Create dummy clusters and facility sites
         cluster1 = Cluster.objects.create(name="Cluster 1", code="c1")
@@ -56,8 +53,6 @@ class TestLoggedInViews(TestCase):
         response = self.client.get(self.load_facility_sites_url, params)
 
         self.assertEqual(response.status_code, 200)
-
-        print("Test for load_facility_sites view passed.")
 
 
 class TestNotLoggedInViews(TestCase):
@@ -79,7 +74,6 @@ class TestNotLoggedInViews(TestCase):
         self.assertContains(response, "Locations")
         self.assertContains(response, User.objects.all().count())
         self.assertContains(response, Location.objects.all().count())
-        print("Logged In! Welcome to landing Page. Test for landing view (unauthenticated user) passed.")
 
     def test_load_locations_details_view(self):
         # Create dummy provinces and districts
@@ -92,7 +86,6 @@ class TestNotLoggedInViews(TestCase):
         response = self.client.get(self.load_locations_details_url, params)
 
         self.assertEqual(response.status_code, 302)
-        print("Access Denied! Please login and try again. Test for load_locations_details view passed.")
 
     def test_load_facility_sites_view(self):
         # Create dummy clusters and facility sites
@@ -105,4 +98,3 @@ class TestNotLoggedInViews(TestCase):
         response = self.client.get(self.load_facility_sites_url, params)
 
         self.assertEqual(response.status_code, 302)
-        print("Access Denied! Please login and try again. Test for load_facility_sites view passed.")

@@ -16,9 +16,7 @@ def landing_page(request):
     if request.user.is_authenticated:
         user_org = request.user.profile.organization
         active_projects = (
-            Project.objects.select_related("organization")
-            .prefetch_related("clusters", "implementing_partners", "programme_partners")
-            .filter(state="in-progress")
+            Project.objects.filter(state="in-progress")
             .filter(organization=user_org)
             .order_by("-projectmonthlyreport__updated_at")[:10]
         )

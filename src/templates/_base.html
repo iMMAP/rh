@@ -65,7 +65,7 @@
             const csrftoken = '{{ csrf_token }}';
             htmx.config.useTemplateFragments = true;
         </script>
-        <!-- Full Path relative to location of manage.py file -->
+        {% comment %} <!-- Full Path relative to location of manage.py file --> {% endcomment %}
         {% vite 'static/js/app.js' %}
 
         {% block scripts %}

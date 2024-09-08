@@ -79,7 +79,7 @@
                                 {{ row.total_target|intcomma }}
                             </td>
                             <td>
-                                <span class="{{ row.state }}">{{ row.state }}</span>
+                                <span class="{{ row.state }}">{{ row.get_state_display}}</span>
                             </td>
                             <td>
                                 <div class="table-flex-holder">

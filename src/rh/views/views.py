@@ -18,7 +18,7 @@ def landing_page(request):
         active_projects = (
             Project.objects.filter(state="in-progress")
             .filter(organization=user_org)
-            .order_by("-projectmonthlyreport__updated_at")[:10]
+            .order_by("-projectmonthlyreport__updated_at")[:12]
         )
 
         context = {"active_projects": active_projects}

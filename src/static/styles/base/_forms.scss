@@ -250,7 +250,7 @@ label,
   }
 
   input {
-    @extend %hidden;
+    // @extend %hidden;
 
     &[type="checkbox"] {
       ~ label .input {
@@ -455,7 +455,7 @@ label,
   }
 
   input {
-    @extend %hidden;
+    // @extend %hidden;
 
     &:checked {
       ~ .slider {

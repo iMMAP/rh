@@ -13,7 +13,6 @@ from rh.models import (
     ActivityPlan,
     ActivityType,
     Disaggregation,
-    FacilitySiteType,
     Indicator,
     Location,
     LocationType,

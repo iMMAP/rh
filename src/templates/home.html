@@ -1,6 +1,7 @@
 {% extends "_base.html" %}
 
 {% load static %}
+{% load humanize %}
 
 {% block title %}
     ReportHub - Home
@@ -120,12 +121,13 @@
     box-shadow: none;
     overflow: hidden;
     border-right: 2px solid rgba(0, 0, 0, 0.2);
-    height: 100%;
+    height: 100%; 
   }
 
   .active-sidebar .sidebar {
       max-width: 370px;
       width: 100%;
+      
   }
 
   @media (min-width: 768px) {
@@ -238,6 +240,7 @@
     margin-top: 8px;
     {% comment %} padding-right: 10px; {% endcomment %}
     height: 100%;
+    
   }
 
   .item-content .content {
@@ -245,6 +248,7 @@
     margin-top: 15px;
     height: calc(100% - 50px);
     padding-right: 5px;
+    scrollbar-width: thin;
   }
 
   .sidebar-content {
@@ -293,6 +297,26 @@
                 <span class="icon-info"></span>
                 The below map marks the active location in your project. you can see the details by clicking the marker.
             </p>
+
+            <div class="overall-info-holder inline-style pb-4">
+              <div class="overall-info-block">
+                  <span class="title">Activity Plans</span>
+                  <span class="text">{{counts.activity_plans_count|intcomma}}</span>
+              </div>
+              <div class="overall-info-block">
+                  <span class="title">Targeted Provinces</span>
+                  <span class="text">{{counts.target_locations_count|intcomma}}</span>
+              </div>
+              <div class="overall-info-block">
+                  <span class="title">Implementing Partners</span>
+                  <span class="text">{{counts.implementing_partners_count|intcomma}}</span>
+              </div>
+              <div class="overall-info-block">
+                  <span class="title">Pending Reports</span>
+                  <span class="text">{{counts.pending_reports_count|intcomma}}</span>
+              </div>
+          </div>
+
             <section class="relative">
                 <div class="marker-position">Click on map to get coords</div>
                 <svg xmlns="http://www.w3.org/2000/svg" style="display: none">
@@ -333,9 +357,10 @@
                             <h2 class="px-2">Recent Projects</h2>
                             <div class="content">
                                 {% for project in active_projects %}
-                                    <div class="p-2 border-b border-gray-d1 space-y-2">
+                                    <div class="p-2 border-b border-gray-d1">
+                                        <span class="block text-xs text-muted-foreground">Code: {{ project.code }}</span>
                                         <a class="" href="{% url 'projects-detail' project.id %}">
-                                            (<em>{{ project.code }}</em>)  <span class="font-medium">{{ project.title }}</span>
+                                            <span class="font-medium">{{ project.title }}</span>
                                         </a>
                                         <div class="flex justify-between items-center">
                                             <span class="block text-xs text-muted-foreground">End Date: {{ project.end_date }}</span>
@@ -357,7 +382,7 @@
                 <ul class="location-select"></ul>
                 </div> {% endcomment %}
                 <div id="map"
-                     style="height: 80vh;
+                     style="height: 70vh;
                             width: 100%"
                      data-locations-url="{% url 'organizations-target-locations' request.user.profile.organization.id %}">
                 </div>

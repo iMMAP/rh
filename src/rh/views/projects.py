@@ -486,7 +486,7 @@ def submit_project(request, pk):
 
     target_locations = TargetLocation.objects.filter(activity_plan__in=activity_plans)
 
-    target_locations.update(state="in-progres")
+    target_locations.update(state="in-progress")
 
     messages.success(request, "Project submited successfully!. You can start reporting now.")
 

@@ -46,6 +46,9 @@
                         <th>
                             <strong>Target Locations</strong>
                         </th>
+                        <th>
+                            <strong>State</strong>
+                        </th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -73,6 +76,9 @@
                                     </svg>
                                     Has {{ row.target_location_count }} Target Locations
                                 </a>
+                            </td>
+                            <td>
+                                <span class="{{ row.state }}">{{ row.get_state_display}}</span>
                             </td>
                             <td>
                                 <div class="table-flex-holder">

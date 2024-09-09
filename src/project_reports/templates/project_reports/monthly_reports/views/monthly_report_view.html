@@ -34,6 +34,17 @@
                             Copy last month activities
                         </a>
                     </li>
+                    <li>
+                        <a href="{% url 'download_project_monthly_report' monthly_report.pk %}?csrfmiddlewaretoken={{ csrf_token }}"
+                        
+                        class="btn btn-gray">
+                            <img class='htmx-indicator'
+                                style="width: 1rem"
+                                src="{% static 'images/spinner.gif' %}" />
+                            <span class="icon-download"></span>
+                            Download last month activities
+                        </a>
+                    </li>
 
                     <li>
                         <a hx-post="{% url 'delete_project_monthly_report' monthly_report.pk %}"
@@ -90,7 +101,7 @@
                     {% endif %}
                     <li>
                         <a href="{% url 'update_project_monthly_report' project=project.id report=monthly_report.pk %}"
-                           class="btn btn-red">Edit</a>
+                           class="btn btn-gray">Edit Report Period</a>
                     </li>
                 </ul>
             </div>

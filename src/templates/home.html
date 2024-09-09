@@ -1,0 +1,374 @@
+{% extends "_base.html" %}
+
+{% load static %}
+
+{% block title %}
+    ReportHub - Home
+{% endblock title %}
+
+{% block head %}
+<link rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+      crossorigin="" />
+<style>
+    .marker-position {
+        position: absolute;
+        right: 0px;
+        z-index: 12;
+        padding: 5px;
+        font-weight: 700;
+        background-color: #fff;
+        margin:5px;
+    }
+
+    .leaflet-pane{
+      z-index: 10;
+    }
+
+    /* Popup width is defined in JS using options */
+    .leaflet-popup .leaflet-popup-content-wrapper {
+        border-radius:0px;
+        max-height:300px;
+        overflow-y: auto;
+    }
+
+    .leaflet-popup .leaflet-popup-content {
+        margin:8px;
+        line-height:unset;
+        width: 270px !important;
+    }
+
+    .leaflet-container a.leaflet-popup-close-button{
+        right:12px;
+    }
+
+    .location-select-wrapper{
+        scrollbar-width: thin;
+        position:absolute;
+        right:0;
+        height:98%;
+        margin:5px;
+        z-index: 490;
+        background-color: #fff;
+        overflow:auto;
+        width: 230px;
+    }
+
+    @media (max-width: 768px) {
+        .location-select-wrapper {
+            display: none;
+        }
+    }
+
+    .leaflet-marker-icon {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: #fff;
+        font-size: 12px;
+        line-height: 13px;
+        box-shadow: 0px 0px 10px rgba(0, 255, 0,0.5);
+        border-radius: 100%;
+        border: 2px solid #fff;
+        padding: 13px;
+        background: #52a793;
+    }
+
+    @keyframes border-pulse {
+        0% {
+            box-shadow: 0 0 0 0 rgba(255, 255, 255, 1);
+        }
+
+        70% {
+            box-shadow: 0 0 0 20px rgba(255, 0, 0, 0);
+        }
+
+        100% {
+            box-shadow: 0 0 0 0 rgba(255, 0, 0, 0);
+        }
+    }
+
+  .animation {
+      background: #000;
+      animation: border-pulse 1.5s infinite;
+  }
+
+
+  {% comment %}  {% endcomment %}
+  svg:not(:root) {
+    overflow: hidden;
+  }
+
+  .leaflet-left {
+    transform: translateX(55px);
+  }
+
+  .active-sidebar .leaflet-left {
+    transform: translateX(370px);
+    transition: transform 350ms;
+  }
+
+  .sidebar {
+    display: flex;
+    {% comment %} gap: 1rem; {% endcomment %}
+    position: absolute;
+    width: 46px;
+    max-width: 370px;
+    z-index: 460;
+    background: #fff;
+    box-shadow: none;
+    overflow: hidden;
+    border-right: 2px solid rgba(0, 0, 0, 0.2);
+    height: 100%;
+  }
+
+  .active-sidebar .sidebar {
+      max-width: 370px;
+      width: 100%;
+  }
+
+  @media (min-width: 768px) {
+    .sidebar {
+      top: 10px;
+      left: 10px;
+      height: calc(100% - 20px);
+      border: 2px solid rgba(0, 0, 0, 0.2);
+      transition: width 500ms;
+    }
+
+    .leaflet-left {
+      transform: translateX(55px);
+    }
+
+    .active-sidebar .sidebar {
+      max-width: 370px;
+      width: 100%;
+      transition: width 1s;
+    }
+  }
+
+  .close-button {
+    cursor: pointer;
+    position: absolute;
+    top: 10px;
+    right: 8px;
+    border: none;
+    padding: 5px;
+    margin: 0;
+    padding: 0;
+    border-radius: 3px;
+    background: none;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .active-sidebar .close-button {
+    pointer-events: all;
+    opacity: 1;
+    transition: opacity 100ms ease-in-out;
+  }
+
+  .sidebar .close-button svg {
+    fill: #fff;
+  }
+
+  .sidebar::before {
+    position: absolute;
+    content: "";
+    z-index: -1;
+    top: 0;
+    left: 44px;
+    width: 100%;
+    height: 40px;
+    background: #af4745;
+  }
+
+  .active-sidebar .sidebar::before {
+    left: 42px;
+  }
+
+  .sidebar svg {
+    display: block;
+    width: 20px;
+    height: 20px;
+    pointer-events: none;
+  }
+
+  .sidebar-menu {
+    display: flex;
+    flex-direction: column;
+    list-style: none;
+    height: 100%;
+  }
+
+  .sidebar-menu li {
+    padding: 10px 11px;
+    cursor: pointer;
+  }
+
+  .sidebar-menu li:last-child {
+    margin-top: auto;
+  }
+
+  .sidebar-menu li:hover:last-child svg {
+    animation: rotation 500ms ease-in;
+    transform-origin: center;
+  }
+
+  @keyframes rotation {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(180deg);
+    }
+  }
+
+  .active-item {
+    background: #af4745;
+  }
+
+  .active-item svg {
+    fill: #fff;
+  }
+
+  .item-content {
+    display: none;
+    margin-top: 8px;
+    {% comment %} padding-right: 10px; {% endcomment %}
+    height: 100%;
+  }
+
+  .item-content .content {
+    overflow: auto;
+    margin-top: 15px;
+    height: calc(100% - 50px);
+    padding-right: 5px;
+  }
+
+  .sidebar-content {
+    width: 100%;
+    opacity: 0;
+    pointer-events: none;
+    {% comment %} margin-bottom: 15px; {% endcomment %}
+    transition: opacity 500ms;
+    overflow: hidden;
+  }
+
+  .active-sidebar .sidebar-content {
+    opacity: 1;
+    pointer-events: visible;
+    transition: opacity 200ms;
+  }
+
+  .sidebar-content h2 {
+    font-size: 1.2rem;
+    {% comment %} font-weight: bold; {% endcomment %}
+    {% comment %} letter-spacing: 1px; {% endcomment %}
+    color: #fff;
+    white-space: nowrap;
+    width: calc(100% - 10px);
+    height: 25px;
+    margin: 0;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+
+  .active-content {
+    display: block;
+  }
+  {% comment %}  {% endcomment %}
+</style>
+{% endblock head %}
+
+{% block content %}
+    <section class="visual-map-section main-map active-sidebar">
+        <div class="container space-y-4">
+            <div class="top-panel">
+                <span class="locations">{{ request.user.profile.organization }}'s Active Locations</span>
+                <div class="actions-panel"></div>
+            </div>
+            <p class="flex items-center gap-2">
+                <span class="icon-info"></span>
+                The below map marks the active location in your project. you can see the details by clicking the marker.
+            </p>
+            <section class="relative">
+                <div class="marker-position">Click on map to get coords</div>
+                <svg xmlns="http://www.w3.org/2000/svg" style="display: none">
+                    <symbol id="icon-arrow-left" viewBox="0 0 24 24">
+                    <path d="M15.422 16.594 14.016 18l-6-6 6-6 1.406 1.406L10.828 12z" />
+                    </symbol>
+                    <symbol id="icon-clear" viewBox="0 0 24 24">
+                    <path d="M18.984 6.422 13.406 12l5.578 5.578-1.406 1.406L12 13.406l-5.578 5.578-1.406-1.406L10.594 12 5.016 6.422l1.406-1.406L12 10.594l5.578-5.578z" />
+                    </symbol>
+                    <symbol id="icon-menu" viewBox="0 0 24 24">
+                    <path d="M3 13h18a1 1 0 0 0 0-2H3a1 1 0 0 0 0 2zm0-6h18a1 1 0 0 0 0-2H3a1 1 0 0 0 0 2zm0 12h18a1 1 0 0 0 0-2H3a1 1 0 0 0 0 2z" />
+                    </symbol>
+                </svg>
+                {% comment %} sidebar {% endcomment %}
+                <div class="sidebar">
+                    <button aria-label="close sidebar" type="button" class="close-button">
+                        <svg>
+                            <use xlink:href="#icon-clear" />
+                        </svg>
+                    </button>
+                    <ul class="sidebar-menu border-r border-gray-d1">
+                        <li class="menu-item active-item " data-item="projects">
+                            <svg>
+                                <use xlink:href="#icon-menu"></use>
+                            </svg>
+                        </li>
+                        <li class="menu-item" data-item="locations">
+                            <svg xmlns="http://www.w3.org/2000/svg"
+                                 viewBox="0 0 24 24"
+                                 fill="currentColor"
+                                 class="size-6">
+                                <path fill-rule="evenodd" d="m11.54 22.351.07.04.028.016a.76.76 0 0 0 .723 0l.028-.015.071-.041a16.975 16.975 0 0 0 1.144-.742 19.58 19.58 0 0 0 2.683-2.282c1.944-1.99 3.963-4.98 3.963-8.827a8.25 8.25 0 0 0-16.5 0c0 3.846 2.02 6.837 3.963 8.827a19.58 19.58 0 0 0 2.682 2.282 16.975 16.975 0 0 0 1.145.742ZM12 13.5a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" clip-rule="evenodd" />
+                            </svg>
+                        </li>
+                    </ul>
+                    <div class="sidebar-content">
+                        <div class="item-content active-content" id="projects">
+                            <h2 class="px-2">Recent Projects</h2>
+                            <div class="content">
+                                {% for project in active_projects %}
+                                    <div class="p-2 border-b border-gray-d1 space-y-2">
+                                        <a class="" href="{% url 'projects-detail' project.id %}">
+                                            (<em>{{ project.code }}</em>)  <span class="font-medium">{{ project.title }}</span>
+                                        </a>
+                                        <div class="flex justify-between items-center">
+                                            <span class="block text-xs text-muted-foreground">End Date: {{ project.end_date }}</span>
+                                            <a href="{% url 'project_reports_home' project.pk %}" class="px-2 bg-gray-d1 text-xs rounded-full">Reports</a>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="item-content" id="locations">
+                            <h2 class="px-2">Locations</h2>
+                            <div class="content location-select">{% comment %} location inserted from map.js {% endcomment %}</div>
+                        </div>
+                    </div>
+                </div>
+                {% comment %} end sidebar  {% endcomment %}
+                {% comment %} <div class="location-select-wrapper space-y-2 rounded">
+                <h5 class="border-b border-gray-d1 px-2 py-4">Locations</h5>
+                <ul class="location-select"></ul>
+                </div> {% endcomment %}
+                <div id="map"
+                     style="height: 80vh;
+                            width: 100%"
+                     data-locations-url="{% url 'organizations-target-locations' request.user.profile.organization.id %}">
+                </div>
+            </section>
+        </div>
+    </section>
+{% endblock content %}
+
+{% block scripts %}
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+          integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+          crossorigin=""></script>
+  <script src="{% static 'js/components/map.js' %}"></script>
+{% endblock scripts %}

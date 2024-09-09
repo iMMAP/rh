@@ -143,3 +143,16 @@ def profile(request):
         "p_form": p_form,
     }
     return HttpResponse(template.render(context, request))
+
+
+@login_required
+@permission_required("users.change_profile", raise_exception=True)
+def profile_show(request, username):
+    user = get_object_or_404(User, username=username)
+
+    if not has_permission(user=request.user, user_obj=user):
+        raise PermissionDenied
+
+    context = {"user": user}
+
+    return render(request, "users/profile_show.html", context)

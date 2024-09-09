@@ -144,17 +144,29 @@
                     </div>
                 </div>
 
-                <div class="row ">
-                    <div class="col">
-                        <div class="field-col">
-                            <div class="input-check-holder">
+                <div class="row" id="">
+                    <div class="col col-lg">
+                        <div class="multiple-fields-row two-items">
+                            <div class="field-col input-check-holder">
                                 {{ target_location_form.facility_monitoring }}
                                 <label for="{{ target_location_form.facility_monitoring.id_for_label }}">
-                                    <span class="input"></span>
                                     <span class="text">Facility Monitoring</span>
                                 </label>
                                 <div class="sign-up-field-error">{{ target_location_form.facility_monitoring.errors }}</div>
                             </div>
+                             
+                            {% if target_location_form.instance.id %}
+                                <div class="field-col">
+                                    <div class="select-field">
+                                        <label for="">State</label>
+                                        <div>
+                                            <span class="{{ target_location_form.instance.state}}">
+                                                {{ target_location_form.instance.state}}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endif %}
                         </div>
                     </div>
                 </div>

@@ -1,15 +1,41 @@
+import json
+
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.db.models import Prefetch
 from django.http import JsonResponse
-
-from project_reports.models import ProjectMonthlyReport as Report
 from django.shortcuts import render
+from project_reports.models import ProjectMonthlyReport as Report
 
-from ..models import ActivityDomain, Cluster, Location, ActivityType, Indicator
-import json
+from ..models import ActivityDomain, ActivityType, Cluster, Indicator, Location, Project
 
 RECORDS_PER_PAGE = 10
+
+
+def landing_page(request):
+    if request.user.is_authenticated:
+        user_org = request.user.profile.organization
+        active_projects = (
+            Project.objects.filter(state="in-progress")
+            .filter(organization=user_org)
+            .order_by("-projectmonthlyreport__updated_at")[:12]
+        )
+
+        context = {"active_projects": active_projects}
+
+        return render(request, "home.html", context)
+
+    users_count = User.objects.all().count()
+    locations_count = Location.objects.all().count()
+    reports_count = Report.objects.all().count()
+
+    context = {
+        "users": users_count,
+        "locations": locations_count,
+        "reports": reports_count,
+    }
+
+    return render(request, "landing.html", context)
 
 
 @login_required
@@ -48,20 +74,6 @@ def get_activity_type_indicators(request):
         indicators = Indicator.objects.none()
 
     return render(request, "rh/activity_plans/_select_options.html", {"options": indicators})
-
-
-def landing_page(request):
-    users_count = User.objects.all().count()
-    locations_count = Location.objects.all().count()
-    reports_count = Report.objects.all().count()
-
-    context = {
-        "users": users_count,
-        "locations": locations_count,
-        "reports": reports_count,
-    }
-
-    return render(request, "landing.html", context)
 
 
 @login_required

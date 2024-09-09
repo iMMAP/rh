@@ -14,7 +14,7 @@
                     <h2>{{ user.profile.organization }} Members</h2>
                 </div>
             </div>
-             <p class="bg-gray-f5 p-4 border border-gray-e6 rounded flex items-center gap-2">
+             <p class="py-4 rounded flex items-center gap-2">
                 <span class="icon-info"></span>
                 The below table list your organization's users. 
                 You can filter the users by their using the filter sidebar. 
@@ -50,20 +50,7 @@
             </ul>
         </div>
 
-        <div class="two-cols-layout">
-            <aside>
-                <form method="get" action="" class="form-container">
-                    <div class="page-top-panel bottom-border">
-                        <span class="title font-bold p-1">Filter</span>
-                    </div>
-                    <div class="p-2">{{ users_filter.form.as_p }}</div>
-                    <div class="p-2">
-                        <a class="btn btn-gray-outline" href="">Reset</a>
-                        <button type="submit" class="btn btn-red">Apply</button>
-                    </div>
-                </form>
-            </aside>
-
+        <div class="">
             {% include "users/partials/_users_table.html" %}
         </div>
     </div>

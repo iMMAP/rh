@@ -23,7 +23,7 @@
     left: 0;
     right: 0;
     // box-shadow: 0 0.5px 5px 0 rgba($black, 0.15);
-    z-index: 999;
+    z-index: 99999;
   }
 }
 
@@ -34,7 +34,7 @@
   position: relative;
   background: $white;
   // background: $gray-f5;
-  z-index: 99;
+  z-index: 999;
 
   // @include media('>=desktop') {
   //   padding: 14px 0;
@@ -192,7 +192,7 @@
     // box-shadow: 10px 0 18px -10px rgba($gray-35, 0.75);
     max-width: 280px;
     transform: translateX(-110%);
-    z-index: -99;
+    z-index: 999;
   }
 
   // @include media('>=tablet') {
@@ -237,7 +237,7 @@
   .nav-active & {
     @include media('<desktop') {
       transform: translateX(0);
-      z-index: 99;
+      z-index: 999;
     }
 
     &:after {

@@ -4,6 +4,7 @@ from django.db import models
 from rh.models import (
     ActivityPlan,
     Currency,
+    Cluster,
     Disaggregation,
     FacilitySiteType,
     GrantType,
@@ -224,3 +225,26 @@ class DisaggregationLocationReport(models.Model):
     class Meta:
         verbose_name = "Disaggregation Location Report"
         verbose_name_plural = "Disaggregation Location Reports"
+
+
+class ClusterDashboardReport(models.Model):
+    cluster = models.ForeignKey(Cluster, on_delete=models.CASCADE, null=True, blank=True)
+
+    report_link = models.CharField(
+        max_length=200,
+        blank=True,
+        null=True,
+    )
+
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
+
+    def cluster_name(self):
+        return self.cluster.name if self.cluster else "No Cluster"
+
+    def __str__(self):
+        return f"{self.cluster.name if self.cluster else 'No Cluster'}"
+
+    class Meta:
+        verbose_name = "Cluster Dashboard Report"
+        verbose_name_plural = "Cluster Dashboard Reports"

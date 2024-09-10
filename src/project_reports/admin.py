@@ -6,6 +6,7 @@ from .models import (
     ProjectMonthlyReport,
     TargetLocationReport,
     ResponseType,
+    ClusterDashboardReport,
 )
 
 ##############################################
@@ -58,3 +59,11 @@ class DisaggregationLocationReportAdmin(admin.ModelAdmin):
 
 
 admin.site.register(DisaggregationLocationReport, DisaggregationLocationReportAdmin)
+
+class ClusterDashboardReportAdmin(admin.ModelAdmin):
+    list_display = (
+        'cluster_name',
+        'report_link',
+    )
+
+admin.site.register(ClusterDashboardReport, ClusterDashboardReportAdmin)

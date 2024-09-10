@@ -59,7 +59,9 @@ class TargetLocationReportForm(forms.ModelForm):
                 "hx-trigger": "change",
             }
         )
-        self.fields["target_location"].queryset = TargetLocation.objects.filter(activity_plan=plan_report.activity_plan)
+        self.fields["target_location"].queryset = TargetLocation.objects.filter(
+            activity_plan=plan_report.activity_plan, state="in-progress"
+        )
 
 
 TargetLocationReportFormSet = inlineformset_factory(

@@ -45,15 +45,15 @@ DATABASES = {
     },
     "postgresql": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": env("DB_NAME", default="rh"),
-        "USER": env("DB_USER", default="postgres"),
-        "PASSWORD": env("DB_PASSWORD", default="admin"),
+        "NAME": env("DB_NAME", default="test"),
+        "USER": env("DB_USER", default="root"),
+        "PASSWORD": env("DB_PASSWORD", default=""),
         "HOST": env("DB_HOST", default="localhost"),
-        "PORT": env("DB_PORT", default="5432"),
+        "PORT": env("DB_PORT", default="3306"),
     },
 }
 
-DB = env("DB", default="postgresql")
+DB = env("DB", default="sqlite")
 
 DATABASES["default"] = DATABASES[DB]
 
@@ -80,5 +80,5 @@ DJANGO_VITE_PLUGIN = {
     "BUILD_URL_PREFIX": "/" + STATIC_URL + "build",
     "DEV_MODE": True,
     "STATIC_LOOKUP": False,
-    "SERVER": {"HOST": "localhost", "PORT": 3000},
+    # "SERVER": {"HOST": "localhost", "PORT": 3000},
 }

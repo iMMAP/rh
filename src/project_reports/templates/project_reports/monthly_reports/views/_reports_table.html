@@ -29,10 +29,17 @@
 
         <div class="actions-panel">
             <a href="#" 
-            class="btn btn-gray export-btn" 
+            class="btn btn-gray export-monthly-report"
+            data-request-url='{% url "export_monthly_report" project.pk%}'
             data-field-from="{{reports_filter.form.from_date.value}}" 
             data-field-to="{{reports_filter.form.to_date.value}}"
-            data-field-state="{{reports_filter.form.state.value}}">Export <span class="icon-download"></span>
+            data-field-state="{{reports_filter.form.state.value}}">Export 
+            <span class="icon-download"></span>
+            <!-- spinner start-->
+            <img class="downloading"
+            style="width: 1.2rem"
+            src="{% static 'images/spinner.gif' %}" />
+            <!-- spinner end -->
             </a>
             {% include "components/_filter_drawer.html" with filter=reports_filter %}
             
@@ -162,10 +169,4 @@
         {% include "components/_pagination.html" with object_list=project_reports %}
     </div>
 </div>
-<script>
-    document.querySelector('.export-btn').addEventListener("click", (e)=>{
-        console.log("from data: "+e.currentTarget.dataset.fieldFrom);
-        console.log("To data: "+e.currentTarget.dataset.fieldTo);
-        console.log("State: "+e.currentTarget.dataset.fieldState);
-    });
-</script>
+

@@ -188,7 +188,7 @@ def write_project_report_sheet(workbook, monthly_progress_report):
                         if location_report.target_location.district
                         else None,
                         "yes" if location_report.target_location.facility_monitoring else "No",
-                        location_report.target_location.facility_site_type
+                        location_report.target_location.facility_site_type.name
                         if location_report.target_location.facility_site_type
                         else None,
                         location_report.target_location.facility_name

@@ -144,7 +144,7 @@ urlpatterns = [
     ),
     path(
         "project/monthly-report/export/<int:pk>",
-        export_views.Export_monthly_report_view,
+        export_views.export_monthly_report_view,
         name="export_monthly_report",
     ),
 ]

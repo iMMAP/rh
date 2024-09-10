@@ -69,9 +69,9 @@ def export_all_monthly_reports_view(request):
 
 
 # export monthly report for single project
-def Export_monthly_report_view(request, pk):
+def export_monthly_report_view(request, pk):
     if request.method == "POST":
-        state = "All"
+        state = None
         start_date = request.POST.get("start_date")
         end_date = request.POST.get("end_date")
         state = request.POST.get("state")
@@ -98,9 +98,15 @@ def Export_monthly_report_view(request, pk):
             .filter(project=project)
         )
         try:
-            monthly_progress_report.filter(Q(from_date=start_date), Q(to_date=end_date), Q(state=state))
+            monthly_progress_report = monthly_progress_report.filter(
+                Q(from_date__gte=start_date) & Q(to_date__lte=end_date)
+            )
+
         except Exception:
             print("No filter applied.")
+        # check the state criteria
+        if state:
+            monthly_progress_report = monthly_progress_report.filter(state=state)
 
         try:
             workbook = Workbook()

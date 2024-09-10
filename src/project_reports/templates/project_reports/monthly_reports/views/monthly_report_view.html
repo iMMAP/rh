@@ -17,6 +17,9 @@
                     <li>
                         <a class="btn btn-gray" href="{% url 'import-report-activities' monthly_report.pk %}">
                             Import Report Activities from CSV
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5m-13.5-9L12 3m0 0 4.5 4.5M12 3v13.5" />
+                            </svg>
                         </a>
                     </li>
 
@@ -30,8 +33,8 @@
                             <img class='htmx-indicator'
                                 style="width: 1rem"
                                 src="{% static 'images/spinner.gif' %}" />
-                            <span class="icon-copy-outline"></span>
                             Copy last month activities
+                            <span class="icon-copy-outline"></span>
                         </a>
                     </li>
                     <li>
@@ -41,8 +44,8 @@
                             <img class='htmx-indicator'
                                 style="width: 1rem"
                                 src="{% static 'images/spinner.gif' %}" />
-                            <span class="icon-download"></span>
                             Download last month activities
+                            <span class="icon-download"></span>
                         </a>
                     </li>
 
@@ -101,7 +104,10 @@
                     {% endif %}
                     <li>
                         <a href="{% url 'update_project_monthly_report' project=project.id report=monthly_report.pk %}"
-                           class="btn btn-gray">Edit Report Period</a>
+                           class="btn btn-gray">
+                           Edit Report Period
+                            <span class="icon-pen"></span>
+                        </a>
                     </li>
                 </ul>
             </div>

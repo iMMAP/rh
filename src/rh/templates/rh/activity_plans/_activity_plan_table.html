@@ -77,8 +77,34 @@
                                     Has {{ row.target_location_count }} Target Locations
                                 </a>
                             </td>
-                            <td>
-                                <span class="{{ row.state }}">{{ row.get_state_display}}</span>
+                             <td class="flex items-center gap-2">
+                                <span class="h-4 w-4 rounded-full
+                                        {% if row.state == 'draft' %}bg-yellow{% endif %}
+                                        {% if row.state == 'in-progress' %}bg-green-light{% endif %}
+                                        {% if row.state == 'archived' %}bg-gray{% endif %}
+                                        {% if row.state == 'completed' %}bg-gray-d1{% endif %}
+                                    "
+                                >
+                                </span>
+                                <select 
+                                    hx-post="{% url 'activity-plans-update-state' row.id %}" 
+                                    hx-trigger="change" 
+                                    hx-swap="none"
+                                    hx-indicator=".progress"
+                                    name="state"
+                                    class=""
+                                    style="width: unset;padding:1px 6px;height:36px;appearance:auto;"
+                                >
+                                    {% for state in row.get_available_states %}
+                                        <option 
+                                            value="{{ state }}" 
+                                            {% if state == row.state %}selected{% endif %}
+                                        >
+                                            {{state}}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                                
                             </td>
                             <td>
                                 <div class="table-flex-holder">

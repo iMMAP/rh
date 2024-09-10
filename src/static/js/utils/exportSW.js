@@ -59,7 +59,6 @@ function checkboxManager(checkboxes, condition){
 function checkboxCounter(){
 	const checkboxes = document.querySelectorAll(".input-check");
 	const checkedCounterElement = document.getElementById("selectedCount");
-	const uncheckedCounterElement = document.getElementById("notSelectedCount");
 	let checkedCounter = 0;
 	let uncheckedCounter = 0;
 	checkboxes.forEach(checkbox => {
@@ -70,7 +69,6 @@ function checkboxCounter(){
 		}
 	});
 	checkedCounterElement.textContent=checkedCounter;
-	uncheckedCounterElement.textContent=uncheckedCounter;
 }
 
 
@@ -142,7 +140,7 @@ $("#downloadFilterForm").click(function (e) {
 	let filename = "custom_project_export_"+todayDate+".csv";
 
 	// get the url
-	const routeUrl = $(this).find("a").data("url");
+	const routeUrl = $(this).data("url");
 	const file_format = $("input[type=radio]:checked").val();
 	if(file_format){
 		// create empty list
@@ -184,7 +182,8 @@ $("#downloadFilterForm").click(function (e) {
 				}
 			},
 			error: (error) => {
-				alert(`Something went wrong! ${error}`);
+				console.log(error);
+				// alert(`Something went wrong! ${error}`);
 			},
 	});
 	} else {
@@ -302,6 +301,7 @@ function exportButton(event) {
 		icon_downloading.style.display = "inline-block";
 	});
 }
+try{
 // Export monthly report
     // Export monthly report
 	document.querySelector('.export-monthly-report').addEventListener("click", (e) =>{
@@ -344,3 +344,4 @@ function exportButton(event) {
 		}));
 		
 	});
+}catch{}

@@ -428,7 +428,7 @@ def project_filter_export_view(request, projectId):
                     sheet.cell(row=row_idx, column=col_idx, value=value)
                 except Exception as e:
                     print("Error:", e)
-        print(rows)
+
         sheet.freeze_panes = sheet["A2"]
         excel_file = BytesIO()
         workbook.save(excel_file)

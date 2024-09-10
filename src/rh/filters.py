@@ -101,7 +101,7 @@ class ActivityPlansFilter(django_filters.FilterSet):
 
     class Meta:
         model = ActivityPlan
-        fields = ["activity_domain", "activity_type", "indicator"]
+        fields = ["activity_domain", "activity_type", "indicator", "state"]
         # fields = {
         #     "activity_domain": ["contains"],
         #     "activity_type": ["contains"],

@@ -21,6 +21,24 @@ from extra_settings.models import Setting
 from django.db.models import Sum
 
 
+@require_http_methods(["POST"])
+def update_target_location_state(request, pk):
+    new_state = request.POST.get("state", None)
+
+    if new_state is None:
+        messages.error(request, "Invalid input, state is required!")
+        return HttpResponse(status=200)
+
+    tl = TargetLocation.objects.get(id=pk)
+    tl.state = new_state
+
+    tl.save()
+
+    messages.success(request, f"Target location state updated to '{new_state}' !")
+
+    return HttpResponse(200)
+
+
 @login_required
 def update_target_location(request, pk):
     target_location = get_object_or_404(TargetLocation, pk=pk)

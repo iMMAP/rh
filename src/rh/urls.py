@@ -99,6 +99,11 @@ urlpatterns = [
         name="activity-plans-update",
     ),
     path(
+        "activity-plans/<int:pk>/state/update",
+        activity_plans.update_activity_plan_state,
+        name="activity-plans-update-state",
+    ),
+    path(
         "activity-plans/<int:pk>/delete",
         activity_plans.delete_activity_plan,
         name="activity-plans-delete",
@@ -124,6 +129,11 @@ urlpatterns = [
         name="activity-plans-list",
     ),
     # Projects Target Locations CRUD
+    path(
+        "target-locations/<int:pk>/state/update",
+        target_locations.update_target_location_state,
+        name="target-locations-update-state",
+    ),
     path(
         "target-locations/<int:pk>/update",
         target_locations.update_target_location,

@@ -28,6 +28,23 @@ from django_htmx.http import HttpResponseClientRedirect
 from extra_settings.models import Setting
 
 
+@require_http_methods(["POST"])
+def update_activity_plan_state(request, pk):
+    new_state = request.POST.get("state", None)
+    if new_state is None:
+        messages.error(request, "Invalid input, state is required!")
+        return HttpResponse(status=200)
+
+    activity_plan = ActivityPlan.objects.get(id=pk)
+    activity_plan.state = new_state
+
+    activity_plan.save()
+
+    messages.success(request, f"Activity Plan state updated to '{new_state}' !")
+
+    return HttpResponse(200)
+
+
 @login_required
 def update_activity_plan(request, pk):
     """Update an existing activity plan"""

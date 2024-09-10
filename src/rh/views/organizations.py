@@ -13,7 +13,7 @@ from django.http import JsonResponse
 @login_required
 def target_locations(request, org_pk):
     target_locations = (
-        TargetLocation.objects.select_related("project", "district","province")
+        TargetLocation.objects.select_related("project", "district", "province")
         .filter(project__organization_id=org_pk, project__state="in-progress")
         .order_by("province__name")
     )

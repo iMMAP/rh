@@ -162,7 +162,7 @@ class ActivityPlanReportForm(forms.ModelForm):
             }
         )
         self.fields["activity_plan"].queryset = ActivityPlan.objects.filter(
-            project=monthly_report_instance.project.pk
+            project=monthly_report_instance.project.pk, state="in-progress"
         ).select_related("activity_domain")
 
 

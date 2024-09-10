@@ -95,7 +95,7 @@
                                             <div class="select-field">
                                                 <span class="label">Project Activity Plan</span>
                                                 <p class="help-text">{{ form.activity_plan.help_text }}
-                                                    <span class="icon-info mr-1 "></span> If you the don't see your indicator in the list, go to <a target="_blank" href="{% url 'activity-plans-list' project.pk %}" class="text-red underline">activity plans</a> page to add new activity plan. 
+                                                    <span class="icon-info mr-1 "></span>Only `In-progress` Activity plans are displayed. If you the don't see your indicator in the list, go to <a target="_blank" href="{% url 'activity-plans-list' project.pk %}" class="text-red underline">activity plans</a> page to add new activity plan or update existing one.
                                                 </p>
                                                 {{ form.activity_plan }}
                                                 <p class="sign-up-field-error">{{ form.activity_plan.errors }}</p>

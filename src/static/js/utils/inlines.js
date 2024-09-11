@@ -344,28 +344,25 @@ const stackedFormset = (elements, options) => {
 	return rows;
 };
 
-document.addEventListener("DOMContentLoaded", () => {
-	// biome-ignore lint/complexity/noForEach: <explanation>
-	document.querySelectorAll(".js-inline-admin-formset").forEach((element) => {
-		const data = element.dataset;
-		const inlineOptions = JSON.parse(data.inlineFormset);
-		let selector;
-		switch (data.inlineType) {
-			case "stacked":
-				selector = `${inlineOptions.name}-group .inline-related`;
-				stackedFormset(
-					document.querySelectorAll(selector),
-					inlineOptions.options,
-				);
-				break;
-			case "tabular":
-				selector = `${inlineOptions.name}-group .tabular.inline-related tbody > tr.form-row`;
-				tabularFormset(
-					document.querySelectorAll(selector),
-					inlineOptions.options,
-				);
-
-				break;
-		}
-	});
+// biome-ignore lint/complexity/noForEach: <explanation>
+document.querySelectorAll(".js-inline-admin-formset").forEach((element) => {
+	const data = element.dataset;
+	const inlineOptions = JSON.parse(data.inlineFormset);
+	let selector;
+	switch (data.inlineType) {
+		case "stacked":
+			selector = `${inlineOptions.name}-group .inline-related`;
+			stackedFormset(
+				document.querySelectorAll(selector),
+				inlineOptions.options,
+			);
+			break;
+		case "tabular":
+			selector = `${inlineOptions.name}-group .tabular.inline-related tbody > tr.form-row`;
+			tabularFormset(
+				document.querySelectorAll(selector),
+				inlineOptions.options,
+			);
+			break;
+	}
 });

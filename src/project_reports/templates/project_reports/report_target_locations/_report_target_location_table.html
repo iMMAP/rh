@@ -59,7 +59,7 @@
                             </td>
                             <td>{{ row.total_target_reached }}</td>
                             <td>
-                                <a href="{% url 'update_report_target_locations' project.id report.id row.activity_plan_report.id row.id %}"
+                                <a href="{% url 'update_report_target_locations' project.id row.activity_plan_report.id row.id %}"
                                    class="btn btn-gray">Edit</a>
                                 <a hx-post="{% url 'delete_location_report' row.id %}"
                                    hx-trigger="click"

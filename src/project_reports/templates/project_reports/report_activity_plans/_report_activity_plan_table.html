@@ -79,7 +79,7 @@
                                             </a>
                                         </li>
                                         <li>
-                                            <a class="btn btn-gray" href="{% url 'update_report_activity_plans' project.id report_plan.monthly_report.id report_plan.id %}" data-tippy-content="Edit Report Activity Plan">
+                                            <a class="btn btn-gray" href="{% url 'update_report_activity_plans' project.id report_plan.id %}" data-tippy-content="Edit Report Activity Plan">
                                                 <span class="project-detail icon-pen"></span>
                                             </a>
                                         </li>
@@ -88,7 +88,7 @@
                                                hx-trigger="click"
                                                hx-indicator=".progress"
                                                hx-confirm="Do you want to delete `{{ report_plan }}` and the related Reporting Target Locations ?"
-                                               hx-swap="outerHTML swap:1s"
+                                               hx-swap="outerHTML swap:0.5s"
                                                hx-target="closest tr"
                                                data-tippy-content="Delete Activity Plan Report"
                                                class="btn btn-gray"

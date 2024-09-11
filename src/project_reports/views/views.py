@@ -1,39 +1,37 @@
 import csv
+
 from django.contrib import messages
-from django.http import HttpResponse
-
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import redirect, render
-from django.views.decorators.http import require_http_methods
-from django.shortcuts import get_object_or_404
+from django.http import HttpResponse
+from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
-
+from django.views.decorators.http import require_http_methods
 from rh.models import (
     ActivityDomain,
     ActivityPlan,
     ActivityType,
+    BeneficiaryType,
+    Currency,
     Disaggregation,
+    GrantType,
+    ImplementationModalityType,
     Indicator,
     Location,
     LocationType,
-    BeneficiaryType,
-    TargetLocation,
-    PackageType,
-    UnitType,
-    GrantType,
-    TransferCategory,
-    Currency,
-    TransferMechanismType,
-    ImplementationModalityType,
     Organization,
+    PackageType,
+    TargetLocation,
+    TransferCategory,
+    TransferMechanismType,
+    UnitType,
 )
 
 from ..models import (
     ActivityPlanReport,
     DisaggregationLocationReport,
     ProjectMonthlyReport,
-    TargetLocationReport,
     ResponseType,
+    TargetLocationReport,
 )
 
 RECORDS_PER_PAGE = 10

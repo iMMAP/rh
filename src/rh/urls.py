@@ -1,23 +1,29 @@
 from django.urls import path
 
+from .views import (
+    activity_plans as activity_plans,
+)
+from .views import (
+    budget_progress as budget_progress,
+)
 from .views import exports as export_views
-
-from .views.views import (
-    landing_page,
-    load_facility_sites,
-    load_activity_domains,
-    get_activity_domain_types,
-    get_activity_type_indicators,
-    get_locations_details,
+from .views import (
+    organizations as organizations,
 )
 from .views import (
     projects as projects,
-    activity_plans as activity_plans,
-    organizations as organizations,
-    budget_progress as budget_progress,
+)
+from .views import (
     target_locations as target_locations,
 )
-
+from .views.views import (
+    get_activity_domain_types,
+    get_activity_type_indicators,
+    get_locations_details,
+    landing_page,
+    load_activity_domains,
+    load_facility_sites,
+)
 
 urlpatterns = [
     path("", landing_page, name="landing"),

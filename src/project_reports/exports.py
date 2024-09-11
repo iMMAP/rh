@@ -6,7 +6,6 @@ from django.views import View
 from openpyxl import Workbook
 from openpyxl.styles import Font, NamedStyle
 from openpyxl.utils import get_column_letter
-
 from rh.models import Disaggregation
 
 from .models import ProjectMonthlyReport

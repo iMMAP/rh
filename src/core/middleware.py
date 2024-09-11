@@ -1,8 +1,7 @@
-from django.shortcuts import redirect
-from django.urls import reverse
-
 from django.contrib.messages import get_messages
+from django.shortcuts import redirect
 from django.template.loader import render_to_string
+from django.urls import reverse
 from django.utils.deprecation import MiddlewareMixin
 from extra_settings.models import Setting
 

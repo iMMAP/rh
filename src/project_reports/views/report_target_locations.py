@@ -1,38 +1,30 @@
-from django.contrib.auth.decorators import login_required
-from django.shortcuts import get_object_or_404, redirect, render
-from django.core.paginator import Paginator
-from django.urls import reverse
-from django.db.models import Sum
-from django.urls import reverse_lazy
-
 from django.contrib import messages
-from django.utils.safestring import mark_safe
+from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator
+from django.db.models import Sum
 from django.forms import inlineformset_factory
-from django_htmx.http import HttpResponseClientRedirect
 from django.http import HttpResponse
-
+from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse, reverse_lazy
+from django.utils.safestring import mark_safe
+from django_htmx.http import HttpResponseClientRedirect
 from rh.models import (
     Project,
-)
-
-from ..forms import (
-    TargetLocationReportForm,
-    DisaggregationLocationReportForm,
-    BaseDisaggregationLocationReportFormSet,
-)
-
-from rh.models import (
     TargetLocation,
 )
 
+from ..filters import TargetLocationReportFilter
+from ..forms import (
+    BaseDisaggregationLocationReportFormSet,
+    DisaggregationLocationReportForm,
+    TargetLocationReportForm,
+)
 from ..models import (
     ActivityPlanReport,
+    DisaggregationLocationReport,
     ProjectMonthlyReport,
     TargetLocationReport,
-    DisaggregationLocationReport,
 )
-
-from ..filters import TargetLocationReportFilter
 
 
 @login_required

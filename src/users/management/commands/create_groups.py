@@ -1,7 +1,7 @@
 from django.contrib.auth.models import Group
 from django.core.management.base import BaseCommand
-from users.utils import assign_default_permissions_to_group
 from rh.models import Cluster
+from users.utils import assign_default_permissions_to_group
 
 
 class Command(BaseCommand):

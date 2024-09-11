@@ -358,13 +358,13 @@
                             <div class="content">
                                 {% for project in active_projects %}
                                     <div class="p-2 border-b border-gray-d1">
-                                        <span class="block text-xs text-muted-foreground">Code: {{ project.code }}</span>
+                                        <p class="pb-1 text-xs">Code: {{ project.code }}</p>
                                         <a class="" href="{% url 'projects-detail' project.id %}">
                                             <span class="font-medium">{{ project.title }}</span>
                                         </a>
-                                        <div class="flex justify-between items-center">
+                                        <div class="flex justify-between items-center pt-2">
                                             <span class="block text-xs text-muted-foreground">End Date: {{ project.end_date }}</span>
-                                            <a href="{% url 'project_reports_home' project.pk %}" class="px-2 bg-gray-d1 text-xs rounded-full">Reports</a>
+                                            <a href="{% url 'project_reports_home' project.pk %}" class="px-2 py-1 bg-gray-d1 text-xs rounded">Reports</a>
                                         </div>
                                     </div>
                                 {% endfor %}

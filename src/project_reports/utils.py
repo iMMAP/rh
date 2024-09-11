@@ -233,7 +233,7 @@ def write_project_report_sheet(workbook, monthly_progress_report):
                         plan_report.package_type.name if plan_report.package_type else None,
                         plan_report.transfer_category.name if plan_report.transfer_category else None,
                         plan_report.grant_type.name if plan_report.grant_type else None,
-                        plan_report.currency if plan_report.currency else None,
+                        plan_report.currency.name if plan_report.currency else None,
                         project_reports.created_at.astimezone(datetime.timezone.utc).replace(tzinfo=None),
                         project_reports.updated_at.astimezone(datetime.timezone.utc).replace(tzinfo=None),
                     ]

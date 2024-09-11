@@ -24,32 +24,30 @@
         <div class="main-content">
             <div class="activity-planning create-activity">
                 <div id="activity-formset-form">
-                    <div class="activity-planning read-only">
-                        <div class="activity-block-holder">
-                            <div class="top-activity-block">
-                                <span class="activity-title">
-                                    <span>
-                                        {% if location_report %}
-                                            Update Report Target Location
-                                        {% else %}
-                                            New Report Target Location
-                                        {% endif %}
-                                    </span>
+                    <div class="activity-block-holder">
+                        <div class="top-activity-block">
+                            <span class="activity-title">
+                                <span>
+                                    {% if location_report %}
+                                        Update Report Target Location
+                                    {% else %}
+                                        New Report Target Location
+                                    {% endif %}
                                 </span>
-                                <br>
-                                <ul class="space-y-2">
-                                    <li>
-                                        <span class="icon-info mr-2"></span>
-                                        Use this form to provide detailed information about the report target location for the above report activity plan,
-                                        including the country, province or state, and other relevant details.
-                                    </li>
-                                    <li> <span class="icon-info mr-2"></span>
-                                        Also specify the number of people you have reached with your activity in the selected report location from the Disaggregation section.
-                                    </li>
-                                    <li> <span class="icon-info mr-2"></span> Required fields are marked with * </li>
-                                    <li><span class="icon-info mr-2"></span>If you the don't see your location in the list, go to <a target="_blank" class="underline" href="{% url 'target-locations-list' project.pk %}">Target Locations</a> page to add new target location.</li>
-                                </ul>
-                            </div>
+                            </span>
+                            <br>
+                            <ul class="space-y-2">
+                                <li>
+                                    <span class="icon-info mr-2"></span>
+                                    Use this form to provide detailed information about the report target location for the above report activity plan,
+                                    including the country, province or state, and other relevant details.
+                                </li>
+                                <li> <span class="icon-info mr-2"></span>
+                                    Also specify the number of people you have reached with your activity in the selected report location from the Disaggregation section.
+                                </li>
+                                <li> <span class="icon-info mr-2"></span> Required fields are marked with * </li>
+                                <li><span class="icon-info mr-2"></span>If you the don't see your location in the list, go to <a target="_blank" class="underline" href="{% url 'target-locations-list' project.pk %}">Target Locations</a> page to add new target location.</li>
+                            </ul>
                         </div>
                     </div>
                     <div class="target-location-form">

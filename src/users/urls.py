@@ -1,16 +1,16 @@
 from django.contrib.auth.views import (
-    PasswordChangeView,
     PasswordChangeDoneView,
-    PasswordResetView,
-    PasswordResetDoneView,
-    PasswordResetConfirmView,
+    PasswordChangeView,
     PasswordResetCompleteView,
+    PasswordResetConfirmView,
+    PasswordResetDoneView,
+    PasswordResetView,
 )
 from django.urls import path
 
-from .views import users as users_views
-from .views import auth as auth_views
 from .forms import UserPasswordChangeForm, UserPasswordResetForm, UserSetPasswordForm
+from .views import auth as auth_views
+from .views import users as users_views
 
 urlpatterns = [
     # Profile routes

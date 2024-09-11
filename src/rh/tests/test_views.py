@@ -1,9 +1,9 @@
 from django.contrib.auth.models import User
 from django.test import Client, TestCase
 from django.urls import reverse
+from users.models import Profile
 
 from rh.models import Cluster, Location, Organization
-from users.models import Profile
 
 
 class TestLoggedInViews(TestCase):

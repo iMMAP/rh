@@ -1,11 +1,10 @@
-from django.contrib.auth.decorators import login_required
-from django.shortcuts import get_object_or_404, redirect, render
-from django.urls import reverse
 from django.contrib import messages
-from django.urls import reverse_lazy
-from django.utils.safestring import mark_safe
+from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
-
+from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse, reverse_lazy
+from django.utils.safestring import mark_safe
+from django_htmx.http import HttpResponseClientRedirect
 from rh.models import ActivityPlan
 
 from ..forms import (
@@ -15,7 +14,6 @@ from ..models import (
     ActivityPlanReport,
     ProjectMonthlyReport,
 )
-from django_htmx.http import HttpResponseClientRedirect
 
 
 @login_required

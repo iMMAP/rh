@@ -1,0 +1,51 @@
+{% if target_location %}
+<div class="bg-gray-f5 border border-gray-e6 mb-2">
+    <p class="p-2 text-gray-53 font-semibold border-b border-gray-e6">
+        <a href="{% url 'target-locations-update' target_location.id %}" target="_blank">Target Location Info</a>
+    </p>
+    <div class="multiple-fields-row four-items p-2">
+        <div class="field-col">
+            <div class="select-field ">
+                <label for="{{ target_location.country.id_for_label }}">Country: </label>
+                {{ target_location.country }}
+            </div>
+        </div>
+
+        {% if target_location.province %}
+        <div class="field-col">
+            <div class="select-field ">
+                <label for="{{ target_locations.province.id_for_label }}">Province / State: </label>
+                <span>{{ target_location.province }}</span>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if target_location.district %}
+        <div class="field-col">
+            <div class="input-field">
+                <label for="{{ target_locations.district.id_for_label }}">District: </label>
+                <span>{{ target_location.district }}</span>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if target_location.zone %}
+        <div class="field-col">
+            <div class="input-field">
+                <label for="{{ target_locations.zone.id_for_label }}">Ward / Zone: </label>
+                <span>{{ target_location.zone }}</span>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if target_location.implementing_partner %}
+        <div class="field-col">
+            <div class="input-field">
+                <label for="implementing_partner">Implementing Partner</label>
+                <span>{{ target_location.implementing_partner }}</span>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endif %}

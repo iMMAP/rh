@@ -168,9 +168,9 @@ class ReportsExportView(View):
                         row = [
                             report.__str__(),
                             report.get_state_display(),
-                            report.report_date.strftime("%B"),
-                            report.report_date.strftime("%Y"),
-                            report.report_date.strftime("%Y-%m-%d"),
+                            report.from_date.strftime("%B"),
+                            report.from_date.strftime("%Y"),
+                            report.from_date.strftime("%Y-%m-%d"),
                             report.project.code,
                             report.project.title,
                             report.project.budget,

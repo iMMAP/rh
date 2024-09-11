@@ -2,13 +2,18 @@ from django.contrib.auth.models import User
 from django.test import Client, TestCase
 from django.urls import reverse
 
-from rh.models import Cluster, Location
+from rh.models import Cluster, Location, Organization
+from users.models import Profile
 
 
 class TestLoggedInViews(TestCase):
     def setUp(self):
         self.client = Client()
+
         self.user = User.objects.create_user(username="testuser", password="testpassword")
+        org = Organization.objects.create(name="immap", code="immap")
+        Profile.objects.create(user=self.user, organization=org)
+
         self.client.login(username="testuser", password="testpassword")
 
         self.landing_url = reverse("landing")
@@ -21,12 +26,7 @@ class TestLoggedInViews(TestCase):
 
         response = self.client.get(self.landing_url)
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, "landing.html")
-        self.assertContains(response, "Users")
-        self.assertContains(response, "Locations")
-        self.assertContains(response, User.objects.all().count())
-        self.assertContains(response, Location.objects.all().count())
-        print("Logged In! Welcome to landing Page. Test for landing view (authenticated user) passed.")
+        self.assertTemplateUsed(response, "home.html")
 
     def test_load_locations_details_view(self):
         # Create dummy provinces and districts
@@ -41,8 +41,6 @@ class TestLoggedInViews(TestCase):
 
         self.assertEqual(response.status_code, 200)
 
-        print("Test for load_locations_details view passed.")
-
     def test_load_facility_sites_view(self):
         # Create dummy clusters and facility sites
         cluster1 = Cluster.objects.create(name="Cluster 1", code="c1")
@@ -55,8 +53,6 @@ class TestLoggedInViews(TestCase):
         response = self.client.get(self.load_facility_sites_url, params)
 
         self.assertEqual(response.status_code, 200)
-
-        print("Test for load_facility_sites view passed.")
 
 
 class TestNotLoggedInViews(TestCase):
@@ -78,7 +74,6 @@ class TestNotLoggedInViews(TestCase):
         self.assertContains(response, "Locations")
         self.assertContains(response, User.objects.all().count())
         self.assertContains(response, Location.objects.all().count())
-        print("Logged In! Welcome to landing Page. Test for landing view (unauthenticated user) passed.")
 
     def test_load_locations_details_view(self):
         # Create dummy provinces and districts
@@ -91,7 +86,6 @@ class TestNotLoggedInViews(TestCase):
         response = self.client.get(self.load_locations_details_url, params)
 
         self.assertEqual(response.status_code, 302)
-        print("Access Denied! Please login and try again. Test for load_locations_details view passed.")
 
     def test_load_facility_sites_view(self):
         # Create dummy clusters and facility sites
@@ -104,4 +98,3 @@ class TestNotLoggedInViews(TestCase):
         response = self.client.get(self.load_facility_sites_url, params)
 
         self.assertEqual(response.status_code, 302)
-        print("Access Denied! Please login and try again. Test for load_facility_sites view passed.")

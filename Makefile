@@ -15,6 +15,7 @@ install-no-dev:
 lint:
 	ruff check --output-format=github ./src
 	ruff format ./src
+	ruff check --select I --fix
 
 .PHONY: migrate
 migrate:

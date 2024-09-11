@@ -98,73 +98,21 @@
                                 <div class="select-field">
                                     <span class="label">Target Location</span>
                                     <p class="help-text">
-                                        {{ form.implementing_partners.help_text }}
+                                        {{ location_report_form.target_location.help_text }}
                                         </span> If you the don't see your desired location in the list, go to <a target="_blank" href="{% url 'target-locations-create' report_plan.activity_plan.pk %}" class="text-red underline">add target location</a> page to add new target location for this Activity Plan
                                     </p>
                                     {{ location_report_form.target_location }}
                                     <div class="sign-up-field-error">{{ location_report_form.target_location.errors }}</div>
                                 </div>
 
-                                {% comment %} TargetLocation info box {% endcomment %}
+                                {% comment %} the TL info and Tabular Disaggregation Here {% endcomment %}
                                 <div id="target-location-info">
                                     {% if location_report %}
-                                        {% include "project_reports/report_target_locations/partials/_target_location_info.html" with target_location=location_report.target_location %}
+                                        {% include "project_reports/report_target_locations/partials/_disaggregation_tabular_form.html" with target_location=location_report.target_location %}
                                     {% endif %}
                                 </div>
                                 {% comment %} end of TargetLocation info box {% endcomment %}
-
-                                {% comment %} Tabular Disaggregation Table form {% endcomment %}
-                                <div class="disaggregation-block js-inline-admin-formset inline-group "
-                                     id="{{ report_disaggregation_formset.prefix }}-group"
-                                     data-inline-type="tabular"
-                                     data-inline-formset='{"name":"#{{ report_disaggregation_formset.prefix }}","options":{"prefix":"{{ report_disaggregation_formset.prefix }}","addText":"Add another","deleteText":"Delete"}}'>
-                                    <div class="tabular inline-related">
-                                        <p class="pb-4">
-                                            The Disaggregation list is selected from the Indicator of your Activity plan. If there is someting missing, please contact your cluster.
-                                        </p>
-                                        {{ report_disaggregation_formset.management_form }}
-                                        <input type="hidden" name="prefix" value="{{ prefix }}">
-                                        <fieldset class="table-wrapper-scrollable">
-                                            <table class="table border border-solid border-gray-d1 rounded">
-                                                <thead class="content-block bg-gray-f3">
-                                                    <tr class="divide-x">
-                                                        {% for field in report_disaggregation_formset.form.fields %}
-                                                            <th class="border-r border-gray-e6 column-{{ field.name }}{% if field.required %} required{% endif %}{% if field.widget.is_hidden %} hidden{% endif %}">
-                                                                {{ field|capfirst }}
-                                                            </th>
-                                                        {% endfor %}
-                                                        {% if report_disaggregation_formset.can_delete %}<th>Delete?</th>{% endif %}
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    {% for form in report_disaggregation_formset %}
-                                                        {% if form.non_field_errors %}
-                                                            <tr class="row-form-errors">
-                                                                <td colspan="4">{{ form.non_field_errors }}</td>
-                                                            </tr>
-                                                        {% endif %}
-                                                        <tr class="form-row {% if forloop.last %}empty-form{% endif %} {% if form.instance.pk %}has_original{% endif %}"
-                                                            id="{{ report_disaggregation_formset.prefix }}-{% if forloop.last %}empty{% else %}{{ forloop.counter0 }}{% endif %}">
-                                                            {% for field in form %}
-                                                                {% if field.name != "DELETE" %}
-                                                                    <td class="{% if field.name %}field-{{ field.name }}{% endif %}{% if field.is_hidden %} hidden{% endif %} ">
-                                                                        {{ field }}
-                                                                        {{ field.errors }}
-                                                                    </td>
-                                                                {% endif %}
-                                                            {% endfor %}
-                                                            <td class="delete">
-                                                                {% if form.instance.pk %}{{ form.DELETE }}{% endif %}
-                                                            </td>
-                                                        </tr>
-                                                    {% endfor %}
-                                                </tbody>
-                                            </table>
-                                        </fieldset>
-                                    </div>
-                                </div>
-                                {% comment %} end of Tabular Disaggregation Table form {% endcomment %}
-
+                             
                                 <div class="plan-submit-holder">
                                     <div></div>
                                     <div>
@@ -195,7 +143,6 @@
 {% endblock project_body %}
 
 {% block scripts %}
-    <script defer src="{% static 'js/utils/inlines.js' %}"></script>
     <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
     <script>
      document.addEventListener('DOMContentLoaded', function() {
@@ -209,7 +156,7 @@
       }
      });
 
-     document.querySelectorAll('.custom-select').forEach((select) => {
+    document.querySelectorAll('.custom-select').forEach((select) => {
       const choice = new Choices(select, {
        searchEnabled: true,
        itemSelectText: '',
@@ -219,6 +166,6 @@
        },
        shouldSort: false,
       });
-     });
+    });
     </script>
 {% endblock scripts %}

@@ -1,6 +1,8 @@
-from datetime import datetime
 import json
+from datetime import datetime
+
 from django.contrib.auth.models import User
+
 from rh.models import Project, TargetLocation
 
 

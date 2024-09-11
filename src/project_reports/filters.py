@@ -1,14 +1,13 @@
-from django import forms
-
 import django_filters
-
-from .models import ProjectMonthlyReport, ActivityPlanReport, TargetLocationReport
+from django import forms
 from rh.models import (
-    Location,
     ActivityDomain,
     ActivityType,
     Indicator,
+    Location,
 )
+
+from .models import ActivityPlanReport, ProjectMonthlyReport, TargetLocationReport
 
 
 class MonthlyReportsFilter(django_filters.FilterSet):

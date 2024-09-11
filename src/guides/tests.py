@@ -1,7 +1,8 @@
+from django.contrib.auth.models import User
 from django.test import TestCase
 from django.urls import reverse
-from .factory import SectionFactory, GuideFactory, FeedbackFactory
-from django.contrib.auth.models import User
+
+from .factory import FeedbackFactory, GuideFactory, SectionFactory
 
 
 class ViewsTestCase(TestCase):

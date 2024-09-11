@@ -1,5 +1,4 @@
 from django import forms
-
 from rh.models import Location
 
 from .models import StockLocationDetails, StockReports, WarehouseLocation

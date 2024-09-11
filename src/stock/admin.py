@@ -1,11 +1,10 @@
 from django.contrib import admin
-
 from rh.models import Location
 
 from .models import (
+    StockItemsType,
     StockLocationDetails,
     StockReports,
-    StockItemsType,
     StockUnit,
     WarehouseLocation,
 )

@@ -1,6 +1,6 @@
 from django import template
-from rh.models import Cluster
 from django.contrib.auth.models import User
+from rh.models import Cluster
 
 register = template.Library()
 

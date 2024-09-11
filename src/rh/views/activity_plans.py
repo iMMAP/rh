@@ -1,31 +1,27 @@
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.views.decorators.http import require_POST, require_http_methods
+from django.core.paginator import Paginator
+from django.db.models import Count
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
-
-from ..forms import (
-    ProjectIndicatorTypeForm,
-    ActivityPlanForm,
-)
-
-from ..models import (
-    ActivityPlan,
-    Project,
-    Indicator,
-    TargetLocation,
-    DisaggregationLocation,
-)
-from django.core.paginator import Paginator
-from django.db.models import Count
-from django.contrib import messages
 from django.utils.safestring import mark_safe
+from django.views.decorators.http import require_http_methods, require_POST
+from django_htmx.http import HttpResponseClientRedirect
+from extra_settings.models import Setting
 
 from ..filters import ActivityPlansFilter
-from django_htmx.http import HttpResponseClientRedirect
-
-
-from extra_settings.models import Setting
+from ..forms import (
+    ActivityPlanForm,
+    ProjectIndicatorTypeForm,
+)
+from ..models import (
+    ActivityPlan,
+    DisaggregationLocation,
+    Indicator,
+    Project,
+    TargetLocation,
+)
 
 
 @require_http_methods(["POST"])

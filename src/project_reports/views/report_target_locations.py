@@ -39,7 +39,7 @@ def list_report_target_locations(request, project, report, plan=None):
         queryset=TargetLocationReport.objects.filter(activity_plan_report__monthly_report=report)
         .select_related(
             "activity_plan_report",
-            "activity_plan_report__activity_plan", 
+            "activity_plan_report__activity_plan",
             "target_location",
         )
         .order_by("-updated_at")

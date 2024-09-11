@@ -316,13 +316,11 @@ try{
 			// get the filter criteria
 			let start_data = e.currentTarget.dataset.fieldFrom;
 			let end_data = e.currentTarget.dataset.fieldTo;
-			let state = e.currentTarget.dataset.fieldState;
 			let export_url = e.currentTarget.dataset.requestUrl;
 	
 			const formData = new FormData();
 			formData.append("start_date", start_data);
 			formData.append("end_date", end_data);
-			formData.append("state", state);
 			formData.append("csrfmiddlewaretoken", csrftoken);
 			console.log(formData);
 			fetch(export_url, {

@@ -44,7 +44,7 @@ def export_all_monthly_reports_view(request):
                     ),
                 )
             )
-            .filter(project__clusters__in=user_clusters)
+            .filter(Q(project__clusters__in=user_clusters) & Q(state="complete"))
             .distinct()
         )
         workbook = Workbook()
@@ -69,10 +69,8 @@ def export_all_monthly_reports_view(request):
 # export monthly report for single project
 def export_monthly_report_view(request, pk):
     if request.method == "POST":
-        state = None
         start_date = request.POST.get("start_date")
         end_date = request.POST.get("end_date")
-        state = request.POST.get("state")
         # set the query
         project = get_object_or_404(Project, pk=pk)
         monthly_progress_report = (
@@ -93,18 +91,14 @@ def export_monthly_report_view(request, pk):
                     ),
                 )
             )
-            .filter(project=project)
+            .filter(project=project, state="completed")
         )
         try:
             monthly_progress_report = monthly_progress_report.filter(
                 Q(from_date__gte=start_date) & Q(to_date__lte=end_date)
             )
-
         except Exception:
             print("No filter applied.")
-        # check the state criteria
-        if state:
-            monthly_progress_report = monthly_progress_report.filter(state=state)
 
         try:
             workbook = Workbook()

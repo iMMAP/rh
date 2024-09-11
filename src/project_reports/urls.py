@@ -2,14 +2,18 @@ from django.urls import path
 
 from . import dashboards as dashboard_views
 from . import exports as export_views
-from .views.views import (
-    import_report_activities,
-    export_report_activities_import_template,
+from .views import (
+    monthly_reports as report_views,
 )
 from .views import (
     report_activity_plans as plan_views,
+)
+from .views import (
     report_target_locations as location_views,
-    monthly_reports as report_views,
+)
+from .views.views import (
+    export_report_activities_import_template,
+    import_report_activities,
 )
 
 urlpatterns = [

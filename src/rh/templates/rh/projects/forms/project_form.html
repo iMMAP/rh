@@ -70,14 +70,16 @@
                     </div>
 
                      <div class="multiple-fields-row ">
-                         <div class="field-col input-field input-check-holder">
-                            {{ form.is_hrp_project }}
-                            <label for="{{ form.is_hrp_project.id_for_label }}">
-                                <span class="input"></span>
-                                <span class="text">HRP Project</span>
-                            </label>
-                            <p class="help-text">{{ form.is_hrp_project.help_text }}</p>
+                         <div class="field-col input-field input-check-holder flex gap-3">
+                            <div class="flex h-6 items-center">
+                                {{ form.is_hrp_project }}
+                            </div>
+                            <div for="{{ form.is_hrp_project.id_for_label }}">
+                                <label for="id_is_hrp_project" class="font-medium text-gray-900">Is HRP Project?</label>
+                                <p class="help-text">{{ form.is_hrp_project.help_text }}</p>
+                            </div>
                         </div>
+
                         <div class="field-col input-field" id="prHrpCode">
                             <label for="{{ form.hrp_code.id_for_label }}">HRP Project Code</label>
                             <p class="help-text">{{ form.hrp_code.help_text }}</p>

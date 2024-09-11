@@ -5,19 +5,19 @@ from django.urls import reverse_lazy
 
 from .models import (
     ActivityPlan,
+    ActivityType,
     BudgetProgress,
     Cluster,
     Currency,
+    Disaggregation,
     DisaggregationLocation,
     Donor,
-    Disaggregation,
+    Indicator,
+    Location,
     Organization,
     Project,
     ProjectIndicatorType,
     TargetLocation,
-    Indicator,
-    ActivityType,
-    Location,
 )
 
 

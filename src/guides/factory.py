@@ -1,8 +1,8 @@
 import factory
-
 from factory.django import DjangoModelFactory
-from .models import Section, Guide, Feedback
 from users.factory import UserFactory
+
+from .models import Feedback, Guide, Section
 
 
 class SectionFactory(DjangoModelFactory):

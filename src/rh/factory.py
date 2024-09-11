@@ -1,34 +1,35 @@
-import factory
 import random
 
+import factory
+import pytz
 from factory.django import DjangoModelFactory
 from factory.faker import faker
-import pytz
+from users.factory import UserFactory
+
 from .models import (
-    Project,
-    Indicator,
-    Disaggregation,
-    Cluster,
-    Location,
-    BeneficiaryType,
-    Organization,
-    Donor,
-    ActivityDomain,
-    ActivityType,
+    STATES,
     ActivityDetail,
+    ActivityDomain,
     ActivityPlan,
-    LocationType,
-    TargetLocation,
+    ActivityType,
+    BeneficiaryType,
+    Cluster,
+    Disaggregation,
     DisaggregationLocation,
+    Donor,
     GrantType,
+    ImplementationModalityType,
+    Indicator,
+    Location,
+    LocationType,
+    Organization,
+    PackageType,
+    Project,
+    TargetLocation,
     TransferCategory,
     TransferMechanismType,
-    ImplementationModalityType,
     UnitType,
-    PackageType,
-    STATES,
 )
-from users.factory import UserFactory
 
 FAKE = faker.Faker()
 

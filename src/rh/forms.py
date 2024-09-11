@@ -95,9 +95,12 @@ class ProjectForm(forms.ModelForm):
 
         if self.instance.pk:
             # Entering Update mode
-            # self.fields["activity_domains"].choices = self.fields["activity_domains"].queryset.filter(
-            #     clusters__in=self.instance.clusters.all(), countries=user.profile.country
-            # ).order_by("name").values_list("id","name")
+            self.fields["activity_domains"].choices = (
+                self.fields["activity_domains"]
+                .queryset.filter(clusters__in=self.instance.clusters.all(), countries=user.profile.country)
+                .order_by("name")
+                .values_list("id", "name")
+            )
 
             self.fields["user"].queryset = User.objects.filter(profile__organization=self.instance.organization)
 
@@ -246,7 +249,13 @@ class ActivityPlanForm(forms.ModelForm):
         self.fields["activity_type"].required = True
         self.fields["indicator"].required = True
 
-        self.fields["activity_domain"].queryset = project.activity_domains.all()
+        if not self.initial:
+            self.fields["activity_domain"].queryset = project.activity_domains.all()
+        else:
+            # if an activity_domain is deleted from project.activity_domains but it has reports for that activity in the past
+            # this will handle it
+            initial_queryset = self.fields["activity_domain"].queryset.filter(id=self.initial["activity_domain"])
+            self.fields["activity_domain"].queryset = project.activity_domains.all().union(initial_queryset)
 
         project_clusters = project.clusters.all()
         self.fields["beneficiary"].queryset = (

@@ -22,9 +22,14 @@ from .views import (
 urlpatterns = [
     path("", landing_page, name="landing"),
     # Organization CRUD
-    path("organizations/create/", organizations.organization_register, name="organizations-create"),
+    path("organizations/create", organizations.organization_register, name="organizations-create"),
+    path(
+        "organizations/<int:org_pk>/target-locations",
+        organizations.target_locations,
+        name="organizations-target-locations",
+    ),
     # Projects CRUD
-    path("projects/", projects.org_projects_list, name="projects-list"),
+    path("projects", projects.org_projects_list, name="projects-list"),
     path(
         "projects/export-ap-import-template/<int:pk>",
         projects.export_activity_plans_import_template,
@@ -35,9 +40,9 @@ urlpatterns = [
     ),
     path("projects/clusters", projects.users_clusters_projects_list, name="user-clusters-projects-list"),
     path("projects/clusters/<str:cluster>", projects.cluster_projects_list, name="cluster-projects-list"),
-    path("projects/create/", projects.create_project, name="projects-create"),
+    path("projects/create", projects.create_project, name="projects-create"),
     path(
-        "projects/<str:pk>/",
+        "projects/<str:pk>",
         projects.projects_detail,
         name="projects-detail",
     ),
@@ -52,19 +57,24 @@ urlpatterns = [
         name="projects-delete",
     ),
     path(
-        "projects/project_plan/archive/<str:pk>/",
+        "projects/project-plan/<int:pk>/archive",
         projects.archive_project,
         name="archive_project",
     ),
     path(
-        "projects/project_plan/unarchive/<str:pk>/",
+        "projects/project-plan/<int:pk>/unarchive",
         projects.unarchive_project,
         name="unarchive_project",
     ),
     path(
-        "projects/project_plan/copy/<str:pk>/",
+        "projects/project-plan/<int:pk>/copy",
         projects.copy_project,
         name="copy_project",
+    ),
+    path(
+        "projects/<int:pk>/submit",
+        projects.submit_project,
+        name="projects-submit",
     ),
     # load
     path(
@@ -89,7 +99,12 @@ urlpatterns = [
         name="activity-plans-update",
     ),
     path(
-        "activity-plans/<int:pk>/delete/",
+        "activity-plans/<int:pk>/state/update",
+        activity_plans.update_activity_plan_state,
+        name="activity-plans-update-state",
+    ),
+    path(
+        "activity-plans/<int:pk>/delete",
         activity_plans.delete_activity_plan,
         name="activity-plans-delete",
     ),
@@ -115,6 +130,11 @@ urlpatterns = [
     ),
     # Projects Target Locations CRUD
     path(
+        "target-locations/<int:pk>/state/update",
+        target_locations.update_target_location_state,
+        name="target-locations-update-state",
+    ),
+    path(
         "target-locations/<int:pk>/update",
         target_locations.update_target_location,
         name="target-locations-update",
@@ -125,7 +145,7 @@ urlpatterns = [
         name="target-locations-create",
     ),
     path(
-        "projects/<int:project>/target_location/<str:location>/copy/",
+        "projects/<int:project>/target_location/<str:location>/copy",
         target_locations.copy_target_location,
         name="copy_location",
     ),
@@ -134,64 +154,48 @@ urlpatterns = [
         target_locations.delete_target_location,
         name="target-locations-delete",
     ),
-    path(
-        "projects/<str:pk>/project_plan/submit/",
-        projects.submit_project,
-        name="project_submit",
-    ),
     # Financial Reporting
     path(
-        "projects/<int:project>/financials/budget_progress/",
+        "projects/<int:project>/financials/budget_progress",
         budget_progress.create_project_budget_progress_view,
         name="create_project_budget_progress",
     ),
     path(
-        "projects/<int:project>/budget_progress/<str:budget>/copy/",
+        "projects/<int:project>/budget_progress/<str:budget>/copy",
         budget_progress.copy_budget_progress,
         name="copy_budget",
     ),
     path(
-        "projects/budget_progress/<str:pk>/delete/",
+        "projects/budget_progress/<str:pk>/delete",
         budget_progress.delete_budget_progress,
         name="delete_budget",
     ),
     # Ajax for data load
     path(
-        "ajax/load-activity_domains/",
+        "ajax/load-activity_domains",
         load_activity_domains,
         name="ajax-load-activity_domains",
     ),
     path(
-        "ajax/load-locations-details/",
+        "ajax/load-locations-details",
         get_locations_details,
         name="get-locations-details",
     ),
     path(
-        "ajax/load-facility_sites/",
+        "ajax/load-facility_sites",
         load_facility_sites,
         name="ajax-load-facility_sites",
     ),
-    # Exports
+    # Bulk Exports
     path(
-        "project/export-excel/<int:project_id>/",
-        export_views.ProjectExportExcelView.as_view(),
+        "project/export-excel/<str:format>/",
+        export_views.project_export_excel_view,
         name="export_project_excel",
     ),
     # Filter Export
     path(
         "project/export/<int:projectId>",
-        export_views.ProjectFilterExportView.as_view(),
+        export_views.project_filter_export_view,
         name="export_project_filter",
-    ),
-    # bulk export
-    path(
-        "projects/bulk_export/<str:format>/org",
-        projects.export_org_projects,
-        name="export-org-projects",
-    ),
-    path(
-        "projects/bulk_export/<str:format>/clusters",
-        projects.export_cluster_projects,
-        name="export-clusters-projects",
     ),
 ]

@@ -16,8 +16,29 @@
   gap: 3px;
   flex-wrap: wrap;
   padding: 4px;
+  vertical-align: middle;
+}
+.field-col .input-holder .input-paragraph-content {
+  font-size: 13px;
+  font-weight: 600;
+  color: #808080;
+  display: inline-block;
+  padding-top: 5px;
+  cursor: pointer;
 }
 
+.text-warning{
+  color: $red-be;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 10px;
+  border-radius: 5px;
+  margin: 2px 0px;
+  background-color: rgb(248, 242, 242);
+  i{
+    margin-right: 5px;
+  }
+}
 .filter-item {
   padding: 2px 3px;
   background-color: $gray-7d;
@@ -51,7 +72,7 @@ label .implement-info, .programme-info{
 }
 label .implement-info .implement-text, .programme-info .programme-text{
   visibility: hidden;
-  width: 220px;
+  width: 280px;
   background-color: #636161;
   color: white;
   text-align: center;
@@ -673,7 +694,7 @@ ul{
 
   .actions-panel {
     flex-wrap: wrap;
-    margin-bottom: -8px;
+    // margin-bottom: -8px;
 
     .btn {
       margin-bottom: 8px;
@@ -805,7 +826,7 @@ a.text-decoration-none{
   word-break: break-word;
 }
 
-.complete {
+.completed {
   @extend .c-pill;
   border: 1px solid rgb(68, 117, 203);
   background-color: rgb(68, 117, 203,0.8);
@@ -841,7 +862,7 @@ a.text-decoration-none{
   border: 1px solid #ff4436;
   background: #ffd5d1;
 }
-.archive {
+.archived {
   @extend .c-pill;
   border: 1px solid black;
   background: gray;
@@ -966,6 +987,11 @@ a.text-decoration-none{
 
 .htmx-request.progress {
   display: block;
+}
+
+.htmx-swapping {
+  opacity: 0;
+  transition: opacity 1s ease-out;
 }
 
 @-webkit-keyframes indeterminate {

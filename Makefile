@@ -1,3 +1,8 @@
+.PHONY: help
+help:
+	@echo "Available commands:"
+	@grep -E '^\.\PHONY: ' $(MAKEFILE_LIST) | sed 's/\.PHONY: //; s/^/  /'
+
 .PHONY: install
 install:
 	poetry install

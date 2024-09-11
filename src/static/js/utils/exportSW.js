@@ -4,23 +4,74 @@ $("input[type=checkbox]").change(function () {
 	$(this).css("accent-color", "#af4745");
 });
 // count the number of checkbox selected for export
+
+document.querySelectorAll(".input-check").forEach(element => {
+	element.addEventListener('click', ()=>{checkboxCounter();});
+});
 try{
-	const checkedField = document.querySelectorAll(".input-check");
-	document.getElementById("totalCount").innerHTML=checkedField.length;
-	const countSpan = document.getElementById("selectedCount");
-	let selectedCount = 0;
-	checkedField.forEach(field => {
-		field.addEventListener("click", () =>{
-			if(field.checked == true){
-				selectedCount++;
-			} else if(field.checked == false){
-				selectedCount--;
+	
+	const all_checks = document.querySelectorAll(".select-all");
+	const project_checkbox = document.querySelectorAll(".project-check");
+	const activity_checkbox = document.querySelectorAll(".activity-check");
+	const location_checkbox = document.querySelectorAll(".targetlocation-check");
+	all_checks.forEach(checkElement => {
+		checkElement.addEventListener('click',(e)=>{
+			let checkElementId = e.target.id;
+			let checkbox_array = new Array();
+			let condition = true;
+			if(checkElement.checked){
+				if(checkElementId === "project-plan"){
+					checkbox_array = project_checkbox;
+					condition = true;
+				} else if (checkElementId === "activity-plan"){
+					checkbox_array = activity_checkbox;
+					condition = true;
+				}else if(checkElementId === "target-location"){
+					checkbox_array = location_checkbox;
+					condition = true;
+				}
+				checkboxManager(checkbox_array, condition);
+			} else if(checkElement.checked == false){
+				if(checkElementId === "project-plan"){
+					checkbox_array = project_checkbox;
+					condition = false;
+				} else if (checkElementId === "activity-plan"){
+					checkbox_array = activity_checkbox;
+					condition = false;
+				}else if(checkElementId === "target-location"){
+					checkbox_array = location_checkbox;
+					condition = false;
+				}
+				checkboxManager(checkbox_array, condition);
 			}
-			countSpan.textContent = selectedCount;
-		})
-		countSpan.textContent = selectedCount;
+		});
 	});
+
 }catch{}
+
+function checkboxManager(checkboxes, condition){
+	checkboxes.forEach(checkElement => {
+		checkElement.checked = condition;
+		checkElement.style.accentColor='#a52824';
+	});
+	checkboxCounter();
+}
+function checkboxCounter(){
+	const checkboxes = document.querySelectorAll(".input-check");
+	const checkedCounterElement = document.getElementById("selectedCount");
+	const uncheckedCounterElement = document.getElementById("notSelectedCount");
+	let checkedCounter = 0;
+	let uncheckedCounter = 0;
+	checkboxes.forEach(checkbox => {
+		if(checkbox.checked == true){
+			checkedCounter++;
+		}else if(checkbox.checked == false){
+			uncheckedCounter++;
+		}
+	});
+	checkedCounterElement.textContent=checkedCounter;
+	uncheckedCounterElement.textContent=uncheckedCounter;
+}
 
 
 //Reset the checkbox
@@ -35,8 +86,7 @@ $("#resetFilterButton").on("click", () => {
 			$("#not-checked-message").text("");
 		}, 3000);
 	}
-	let selectedCount = 0;
-	countSpan.text(selectedCount);
+	checkboxCounter()
 
 	
 });
@@ -114,6 +164,7 @@ $("#downloadFilterForm").click(function (e) {
 				csrfmiddlewaretoken: csrftoken,
 			},
 			success: (response) => {
+				
 				if(file_format == 'xlsx'){
 				const link = document.createElement("a");
 				link.href = response.file_url;
@@ -133,100 +184,13 @@ $("#downloadFilterForm").click(function (e) {
 				}
 			},
 			error: (error) => {
-				swal(`Something went wrong! ${error}`);
+				alert(`Something went wrong! ${error}`);
 			},
 	});
 	} else {
 		$(".file-format-error").css("display","block");
 	}
 });
-
-//filter the project field and download
-function showConfirmModal(event) {
-	// Prevent the default behavior of the click event
-	event.preventDefault();
-	event.stopPropagation();
-
-	// Get the relevant data attributes from the clicked element
-	const dataURL = event.currentTarget.dataset.url;
-	let returnURL = event.currentTarget.dataset.returnUrl;
-	const name = event.currentTarget.dataset.recordName;
-	const popupType = event.currentTarget.dataset.type;
-
-	// Initialize variables to be used in the SweetAlert2 modal
-	let title;
-	let text;
-	let icon;
-	let dangerMode;
-	let successMessage;
-
-	// Set the modal variables based on the type of popup requested
-	if (popupType === "copy") {
-		title = `Are you sure you want to duplicate ${name}?`;
-		text = "";
-		icon = "warning";
-		dangerMode = true;
-		successMessage = `Done! ${name} has been duplicated successfully!`;
-	} else if (popupType === "delete") {
-		title = `Are you sure you want to delete this ${name}?`;
-		text = "Once deleted, you will not be able to recover this record!";
-		icon = "warning";
-		dangerMode = true;
-		successMessage = `Done! ${name} has been deleted successfully!`;
-	} else if (popupType === "archive") {
-		title = `Are you sure you want to archive ${name}?`;
-		text =
-			"Archiving the selected record will deactivate it and make it unavailable to users. Please contact the administrator if you need to access the archived records in the future!";
-		icon = "warning";
-		dangerMode = true;
-		successMessage = `Done! ${name} has been archived successfully!`;
-	} else if (popupType === "unarchive") {
-		title = `Are you sure you want to unarchive ${name}?`;
-		text = "Unarchiving the selected record will be reactivate in draft state.";
-		icon = "warning";
-		dangerMode = true;
-		successMessage = `Done! ${name} has been unarchived successfully!`;
-	}
-
-	// Display the SweetAlert2 modal with the appropriate variables
-	swal({
-		title: title,
-		text: text,
-		icon: icon,
-		buttons: true,
-		dangerMode: dangerMode,
-	}).then((willDelete) => {
-		// If the user confirms the action in the modal, send an AJAX request
-		if (willDelete) {
-			$.ajax({
-				method: "GET",
-				url: dataURL,
-				success: (data) => {
-					// If the AJAX request is successful, display a success message and redirect
-					if (data.success) {
-						swal(successMessage, {
-							icon: "success",
-						}).then(() => {
-							if (popupType === "copy") {
-								if (data.returnURL) {
-									returnURL = data.returnURL;
-								}
-							}
-							window.location.href = returnURL;
-						});
-					}
-				},
-				error: (error_data) => {
-					// If the AJAX request fails, display an error message
-					swal(`Something went wrong! ${error_data}`);
-				},
-			});
-		}
-	});
-}
-
-// Attach the click event listener to all elements with class "show_confirm"
-$(".show_confirm").click(showConfirmModal);
 
 $(".radio-select").on("click", function (e) {
 	e.preventDefault();
@@ -261,9 +225,21 @@ function exportButton(event) {
 	event.preventDefault();
 	// getting export url
 	const export_url = event.currentTarget.dataset.exportUrl;
+	const fileFormat = event.currentTarget.dataset.exportFormat;
 	const downloadButton = document.querySelector(".export-open");
 	const downloading_spinner = document.querySelector(".downloading");
 	const icon_downloading = document.querySelector(".icon-download");
+
+	// create filename
+	let currentDate = new Date();
+	// Extract date components
+	let day = currentDate.getDate();
+	let month = currentDate.getMonth() + 1; // Month is zero-based
+	let year = currentDate.getFullYear();
+	// Format the date as needed (example: DD/MM/YYYY)
+	let todayDate = year+'-'+month+'-'+day;
+	// write the file name
+	let filename = "projects_bulk_export_"+todayDate;
 
 	downloadButton.setAttribute("disabled", "disabled");
 	downloading_spinner.style.display = "inline-block";
@@ -276,7 +252,6 @@ function exportButton(event) {
 			selected_project_list.push(selectedProject[i].value);
 		}
 	}
-
 	fetch(export_url, {
 		method: "POST",
 		headers: {
@@ -284,26 +259,46 @@ function exportButton(event) {
 			"X-CSRFToken": csrftoken,
 		},
 		body: JSON.stringify(selected_project_list),
-	})
-		.then(async (response) => {
-			// getting filename
-			const contentDisposition = response.headers.get("Content-Disposition");
-			const filename = contentDisposition.split("=")[1].replace(/"/g, "");
-
-			const blob = await response.blob();
-			const url = window.URL.createObjectURL(blob);
-			const a = document.createElement("a");
-			a.href = url;
-			a.download = filename;
-			document.body.appendChild(a);
-			a.click();
+	}).then(response => {
+		console.log(response);
+		if(response.status === 200 && response.ok === true){
+		if(fileFormat === "csv" || fileFormat === 'json'){
+			return response.blob();
+		} else if(fileFormat === "xlsx"){
+			return response.json();
+		} else {
+			throw Error("Unsupported file format");
+		}
+	} else{
+		window.alert("You don’t have the necessary permissions to complete this action.");
+		throw "Permission Denied";
+	}
+		
+	}).then(data => {
+		if(fileFormat === "csv" || fileFormat === "json"){
+			const url = window.URL.createObjectURL(data);
+			const link = document.createElement('a');
+			link.href = url;
+			link.download = filename+"."+fileFormat;
+			document.body.appendChild(link);
+			link.click();
+			document.body.removeChild(link);
 			window.URL.revokeObjectURL(url);
-		})
-		.catch((error) => {
-			console.error("Error downloading:", error);
-		}).finally(()=>{
-			downloadButton.setAttribute("disabled", "false");
-			downloading_spinner.style.display = "none";
-			icon_downloading.style.display = "inline-block";
-		});
+		} else if(fileFormat === "xlsx"){
+			const link = document.createElement('a');
+			link.href = data.file_url; // Use the base64-encoded URL
+			link.download = data.file_name; // Set the filename for download
+			// Append the link to the body, click it to start download, and then remove it
+			document.body.appendChild(link);
+			link.click();
+			document.body.removeChild(link);
+		}
+	})
+	.catch((error) => {
+		console.error("Error downloading:", error);
+	}).finally(()=>{
+		downloadButton.setAttribute("disabled", "false");
+		downloading_spinner.style.display = "none";
+		icon_downloading.style.display = "inline-block";
+	});
 }

@@ -1,7 +1,11 @@
-{% load compress %}
 {% load static %}
+{% load humanize %}
 
 <div class="content-block bottom-border table-container">
+    <div class="progress bg-red h-0.5">
+        <div class="indeterminate bg-white"></div>
+    </div>
+
     {% comment %} Table Actions and filters {% endcomment %}
     <div class="page-top-panel bottom-border">
         <div class="actions-panel">
@@ -16,26 +20,8 @@
                 {% endfor %}
             </div>
         </div>
-
         <div class="actions-panel">
-
-            <a href="{% url 'create_report_activity_plan' project.pk monthly_report.id %}"
-               class="btn btn-red">Report New Activity</a>
-            <a class="btn btn-gray" href="{% url 'import-report-activities' monthly_report.pk %}">
-                Import Report Activities from CSV
-            </a>
-            <a hx-post="{% url 'copy_project_monthly_report' monthly_report.pk %}"
-               hx-trigger="click"
-               hx-swap="none"
-               hx-confirm="Are you sure you want to duplicate last month activities?"
-               data-tippy-content="Copy last month approved report"
-               class="btn btn-gray">
-                <img class='htmx-indicator'
-                     style="width: 1rem"
-                     src="{% static 'images/spinner.gif' %}" />
-                <span class="icon-copy-outline"></span>
-                Copy last month activities
-            </a>
+            <a class="btn btn-gray" href="{% url 'list_report_target_locations' project.id monthly_report.pk %}">All Report Locations </a>
             {% if plans_report_filter %}
                 {% include "components/_filter_drawer.html" with filter=plans_report_filter %}
             {% endif %}
@@ -47,21 +33,14 @@
             <table class="table all-projects-table">
                 <thead class="content-block">
                     <tr>
-                        <th>
-                            <strong class="table-title">Activity Domain</strong>
-                        </th>
-                        <th>
-                            <strong class="table-title">Activity Type</strong>
-                        </th>
-                        <th>
-                            <strong class="table-title">Indicator</strong>
-                        </th>
-                        <th>
-                            <strong>Target Locations</strong>
-                        </th>
-                        <th style="text-align:center">
-                            <strong>Report Actions</strong>
-                        </th>
+                        <th><strong class="table-title">Activity Domain</strong></th>
+                        <th><strong class="table-title">Activity Type</strong></th>
+                        <th><strong class="table-title">Indicator</strong></th>
+                        <th><strong class="table-title">Response Type</strong></th>
+                        <th><strong class="table-title">Beneficairy Status</strong></th>
+                        <th><strong class="table-title">Updated At</strong></th>
+                        <th><strong>Targeted Locations</strong></th>
+                        <th><strong>Actions</strong></th>
                     </tr>
                 </thead>
  
@@ -71,9 +50,16 @@
                         <tr>
                             <td>{{ report_plan.activity_plan.activity_domain }}</td>
                             <td>{{ report_plan.activity_plan.activity_type }}</td>
-                            <td>{{ report_plan.indicator }}</td>
+                            <td>{{ report_plan.activity_plan.indicator }}</td>
                             <td>
-                                <a href="{% url 'list_report_target_locations' project.pk monthly_report.id %}?activity_plan_report={{ report_plan.id }}">
+                                {% for type in report_plan.response_types.all %}
+                                    {{ type }}{% if not forloop.last %},{% endif %} 
+                                {% endfor %}
+                            </td>
+                            <td>{{ report_plan.get_beneficiary_status_display }}</td>
+                            <td>{{ report_plan.updated_at|naturalday }}</td>
+                            <td class="{% if report_plan.report_location_count == 0 %}text-red{% endif %}">
+                                <a href="{% url 'list_report_target_locations' project.id monthly_report.pk %}?activity_plan_report={{ report_plan.id }}">
                                     <svg data-slot="icon"
                                          width="14px"
                                          data-darkreader-inline-stroke=""
@@ -86,36 +72,41 @@
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M13.19 8.688a4.5 4.5 0 0 1 1.242 7.244l-4.5 4.5a4.5 4.5 0 0 1-6.364-6.364l1.757-1.757m13.35-.622 1.757-1.757a4.5 4.5 0 0 0-6.364-6.364l-4.5 4.5a4.5 4.5 0 0 0 1.242 7.244">
                                         </path>
                                     </svg>
-                                    Has {{ report_plan.report_target_location_count }} Target Location Reports
-                                </a>
+                                    Has {{report_plan.report_location_count}} Targeted Locations
+                                    <a/>
                             </td>
                             <td>
-                                <div class="table-flex-holder">
+                                 <div class="table-flex-holder">
                                     <ul class="table-options-buttons">
                                         <li>
-                                            <a href="{% url 'create_report_target_locations' project.id monthly_report.id report_plan.id %}"
-                                               class="btn btn-red">
-                                                <img src="{% static 'admin/img/icon-addlink.svg' %}" alt="add-btn-icon">
+                                            <a href="{% url 'create_report_target_location' report_plan.id %}"
+                                               class="btn btn-gray">
+                                                <svg style="" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4 text-red">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                                                </svg>
                                                 Location
                                             </a>
                                         </li>
                                         <li>
-                                            <a href="{% url 'update_report_activity_plans' project.id report_plan.monthly_report.id report_plan.id %}" data-tippy-content="Edit Report Activity Plan">
+                                            <a class="btn btn-gray" href="{% url 'update_report_activity_plans' project.id report_plan.monthly_report.id report_plan.id %}" data-tippy-content="Edit Report Activity Plan">
                                                 <span class="project-detail icon-pen"></span>
                                             </a>
                                         </li>
                                         <li>
-                                            <a hx-delete="{% url 'update_report_activity_plans' report_plan.id %}"
+                                            <a hx-delete="{% url 'delete_report_activity_plan' report_plan.id %}"
                                                hx-trigger="click"
                                                hx-indicator=".progress"
                                                hx-confirm="Do you want to delete `{{ report_plan }}` and the related Reporting Target Locations ?"
+                                               hx-swap="outerHTML swap:1s"
                                                hx-target="closest tr"
-                                               data-tippy-content="Delete Activity Plan Report">
+                                               data-tippy-content="Delete Activity Plan Report"
+                                               class="btn btn-gray"
+                                            >
                                                 <span class="project-detail icon-trashbin"></span>
                                             </a>
                                         </li>
                                     </ul>
-                                </div>
+                                </div> 
                             </td>
                         </tr>
                     {% endfor %}
@@ -125,11 +116,13 @@
     {% else %}
         <div class="view_nocontent">
             <div class="nocontent_help">
-                <h4>No Activity Plans Reports found. Let's create one!</h4>
+                <h4>No Report Activity Plans found. Let's create one!</h4>
             </div>
         </div>
     {% endif %}
 
     {% comment %} Pagination {% endcomment %}
-    {% include "components/_pagination.html" with object_list=object_list %}
+    <div class="border-t border-gray-bc">
+        {% include "components/_pagination.html" with object_list=object_list %}
+    </div>
 </div>

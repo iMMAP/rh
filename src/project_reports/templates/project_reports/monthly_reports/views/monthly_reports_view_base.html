@@ -1,145 +1,23 @@
 {% extends "project_reports/projects_index.html" %}
 
-{% load static %}
-{% load compress %}
-
 {% block head %}
-    <link rel="stylesheet"
-          href="https://cdn.jsdelivr.net/npm/sweetalert2@11.9.0/dist/sweetalert2.min.css">
 {% endblock head %}
 
 {% block title %}
-    Project Reports
+    {{ project.code }} Project Reports
 {% endblock title %}
 
 {% block project_body %}
-    <div class="content-block top-border">
-        <div class="breadcrumbs-nav-panel">
-            <div class="holder">
-                <ul class="breadcrumbs">
-                    <li>
-                        <a href="{% url 'landing' %}">Home</a>
-                    </li>
-                    <li>
-                        <a id="return-url"
-                           href="{% url 'projects-list' %}?state={{ project.state }}">
-                            {{ project.get_state_display }} Projects
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{% url 'projects-detail' project.id %}">{{ project.code }}</a>
-                    </li>
-                    <li class="current">Monthly Reports</li>
-                </ul>
-                <div class="actions-panel">
-                    <div class="filter-holder">
-                        <!-- <a href="#" class="btn btn-red filter-open">Filter</a> -->
-                        <form action="#" class="filter-form">
-                            <div class="filter-options">
-                                <div class="block-top">
-                                    <span class="title">Filter</span>
-                                    <a class="filter-close" href="#"></a>
-                                </div>
-                                <div class="block-body">
-                                    <div class="select-field">
-                                        <label>Region</label>
-                                        <select name="region" id="region" class="custom-select">
-                                            <option value="placeholder" disabled selected placeholder>Region</option>
-                                            <option value="option1">Option 1</option>
-                                            <option value="option2">Option 2</option>
-                                        </select>
-                                    </div>
-                                    <div class="select-field">
-                                        <label for="report-country">Country</label>
-                                        {{ report_filter.form.country }}
-                                    </div>
-                                    <div class="select-field">
-                                        <label>Province/ State</label>
-                                        {{ report_filter.form.province }}
-                                    </div>
-                                    <div class="select-field">
-                                        <label>District</label>
-                                        {{ report_filter.form.district }}
-                                    </div>
-                                    <div class="date-picker-field">
-                                        <div class="date start">
-                                            <input type="text"
-                                                   id="dateStart"
-                                                   name="Start date"
-                                                   placeholder="Start date"
-                                                   onfocus="(this.type='date')"
-                                                   onblur="(this.type='text')" />
-                                        </div>
-                                        <div class="date end">
-                                            <input type="text"
-                                                   id="dateEnd"
-                                                   name="End date"
-                                                   placeholder="End date"
-                                                   onfocus="(this.type='date')"
-                                                   onblur="(this.type='text')" />
-                                        </div>
-                                    </div>
-                                    <div class="select-field">
-                                        <label>Cluster/Sector</label>
-                                        {{ report_filter.form.clusters }}
-                                    </div>
-                                    <div class="select-field">
-                                        <label>Organization</label>
-                                        {{ report_filter.form.organization }}
-                                    </div>
-                                    <div class="select-field">
-                                        <label>Activity Domain</label>
-                                        {{ report_filter.form.activity_domains }}
-                                    </div>
-                                </div>
-                                <div class="block-footer">
-                                    <div class="btn-wrapper">
-                                        <button type="button" class="btn btn-gray-outline">Reset</button>
-                                        <button type="submit" class="btn btn-red">Apply</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
+    <div class="content-block">
+        <div class="activity-planning read-only">
+            <div class="flex items-center justify-between pb-2">
+                <div class="activity-title">
+                    <span>Project Report Periods</span>
                 </div>
+                <a href="{% url 'create_project_monthly_report' project=project.pk %}" class="btn btn-red add-btn">Add Report </a>
             </div>
         </div>
-        <div class="projects-options-panel projects-options-panel-small page-top-panel-reports">
-            <div class="holder tabs-nav-holder">
-                <ul class="tabs-nav">
-                    <li class="{% if request.GET.state == 'todo' or request.GET.state == 'pending' or request.GET.state == 'submit' or request.GET.state == 'reject' %}active{% endif %}">
-                        <a href="{{ request.path }}?state=todo&state=pending&state=submit&state=reject">
-                            To Do Monthly Reports ({{ project_reports_todo }})
-                        </a>
-                    </li>
-                    {% if project_report_complete %}
-                        <li class=" {% if request.GET.state == 'complete' %}active{% endif %}">
-                            <a href="{{ request.GET.url }}?state=complete">Completed Monthly Reports
-                                (
-                                {% if project_report_complete %}{{ project_report_complete }}{% endif %}
-                                )
-                            </a>
-                        </li>
-                    {% endif %}
-                    {% if project_report_archive %}
-                        <li class=" {% if request.GET.state == 'archive' %}active{% endif %}">
-                            <a href="{{ request.GET.url }}?state=archive">Archived Monthly Reports
-                                (
-                                {% if project_report_archive %}{{ project_report_archive }}{% endif %}
-                                )
-                            </a>
-                        </li>
-                    {% endif %}
-                </ul>
-            </div>
-        </div>
-
 
         {% include "project_reports/monthly_reports/views/_reports_table.html" %}
     </div>
-
 {% endblock project_body %}
-
-{% block scripts %}
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.9.0/dist/sweetalert2.all.min.js"></script>
-{% endblock scripts %}

@@ -129,8 +129,6 @@
                                 </div>
                             </div>
 
-                            
-
                             {% if target_location_form.nhs_code %}
                                 <div class="field-col">
                                     <div class="input-field is is-required">
@@ -147,14 +145,20 @@
                 <div class="row" id="">
                     <div class="col col-lg">
                         <div class="multiple-fields-row two-items">
-                            <div class="field-col input-check-holder">
-                                {{ target_location_form.facility_monitoring }}
-                                <label for="{{ target_location_form.facility_monitoring.id_for_label }}">
-                                    <span class="text">Facility Monitoring</span>
-                                </label>
-                                <div class="sign-up-field-error">{{ target_location_form.facility_monitoring.errors }}</div>
+
+                            <div class="field-col input-field input-check-holder flex gap-3">
+                                <div class="flex h-6 items-center">
+                                    {{ target_location_form.facility_monitoring }}
+                                </div>
+                                <div>
+                                    <label for="{{ target_location_form.facility_monitoring.id_for_label }}" class="font-medium text-gray-900">Facility Monitoring</label>
+                                    <p class="help-text">{{ target_location_form.facility_monitoring.help_text }}
+                                        Tick this if you want monitor a facility
+                                    </p>
+                                    <div class="sign-up-field-error">{{ target_location_form.facility_monitoring.errors }}</div>
+                                </div>
                             </div>
-                             
+
                             {% if target_location_form.instance.id %}
                                 <div class="field-col">
                                     <div class="select-field">

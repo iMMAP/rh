@@ -39,8 +39,10 @@ def list_report_target_locations(request, project, report, plan=None):
         queryset=TargetLocationReport.objects.filter(activity_plan_report__monthly_report=report)
         .select_related(
             "activity_plan_report",
+            "activity_plan_report__activity_plan", 
+            "target_location",
         )
-        .order_by("-id")
+        .order_by("-updated_at")
         .annotate(total_target_reached=Sum("disaggregationlocationreport__reached")),
         report=monthly_report_instance,
     )
@@ -62,22 +64,51 @@ def list_report_target_locations(request, project, report, plan=None):
 
 
 @login_required
-def create_report_target_location(request, plan):
-    """Create View"""
-    plan_report = get_object_or_404(ActivityPlanReport, pk=plan)
-    DisaggregationReportFormSet = inlineformset_factory(
-        parent_model=TargetLocationReport,
-        model=DisaggregationLocationReport,
-        form=DisaggregationLocationReportForm,
-        formset=BaseDisaggregationLocationReportFormSet,
-        extra=2,
-        can_delete=True,
+def hx_diaggregation_tabular_form(request):
+    target_location = None
+    report_disaggregation_formset = None
+
+    try:
+        target_location_id = request.POST.get("target_location", None)
+        target_location = TargetLocation.objects.get(pk=target_location_id)
+
+        DisaggregationReportFormSet = inlineformset_factory(
+            parent_model=TargetLocationReport,
+            model=DisaggregationLocationReport,
+            form=DisaggregationLocationReportForm,
+            formset=BaseDisaggregationLocationReportFormSet,
+            extra=2,
+            can_delete=True,
+        )
+
+        report_disaggregation_formset = DisaggregationReportFormSet(target_location=target_location)
+    except Exception:
+        pass
+
+    context = {"target_location": target_location, "report_disaggregation_formset": report_disaggregation_formset}
+
+    return render(
+        request, "project_reports/report_target_locations/partials/_disaggregation_tabular_form.html", context
     )
+
+
+@login_required
+def create_report_target_location(request, plan):
+    """Report for a location of an ActivityPlanReport"""
+    plan_report = get_object_or_404(ActivityPlanReport.objects.select_related("monthly_report"), pk=plan)
 
     if request.method == "POST":
         location_report_form = TargetLocationReportForm(request.POST, plan_report=plan_report)
+        DisaggregationReportFormSet = inlineformset_factory(
+            parent_model=TargetLocationReport,
+            model=DisaggregationLocationReport,
+            form=DisaggregationLocationReportForm,
+            formset=BaseDisaggregationLocationReportFormSet,
+            extra=2,
+            can_delete=True,
+        )
         report_disaggregation_formset = DisaggregationReportFormSet(
-            request.POST, instance=location_report_form.instance, plan_report=plan_report
+            request.POST, instance=location_report_form.instance
         )
 
         if location_report_form.is_valid() and report_disaggregation_formset.is_valid():
@@ -87,15 +118,18 @@ def create_report_target_location(request, plan):
 
             report_disaggregation_formset.instance = location_report
             report_disaggregation_formset.save()
+
             messages.success(
                 request,
-                mark_safe("The Report Target Location was added successfully."),
+                mark_safe(
+                    f'The Report Target Location "<a class="underline" href="{reverse("update_report_target_locations", args=[plan_report.monthly_report.project_id, plan_report.pk, location_report.pk])}">{location_report}</a>" was updated successfully.'
+                ),
             )
+
             if "_continue" in request.POST:
                 return redirect(
                     "update_report_target_locations",
                     project=plan_report.monthly_report.project.pk,
-                    report=plan_report.monthly_report.pk,
                     plan=plan_report.pk,
                     location=location_report.pk,
                 )
@@ -118,14 +152,11 @@ def create_report_target_location(request, plan):
             plan_report=plan_report,
         )
 
-        report_disaggregation_formset = DisaggregationReportFormSet(plan_report=plan_report)
-
     return render(
         request,
         "project_reports/report_target_locations/report_target_location_form.html",
         {
             "location_report_form": location_report_form,
-            "report_disaggregation_formset": report_disaggregation_formset,
             "report_plan": plan_report,
             "monthly_report": plan_report.monthly_report,
             "project": plan_report.monthly_report.project,
@@ -134,13 +165,13 @@ def create_report_target_location(request, plan):
 
 
 @login_required
-def update_report_target_locations(request, project, report, plan, location):
+def update_report_target_locations(request, project, plan, location):
     """Update View"""
-    monthly_report = get_object_or_404(ProjectMonthlyReport.objects.select_related("project"), pk=report)
-    plan_report = get_object_or_404(ActivityPlanReport, pk=plan)
+    plan_report = get_object_or_404(ActivityPlanReport.objects.select_related("monthly_report"), pk=plan)
+    monthly_report = plan_report.monthly_report
 
     # Get the existing location report to be updated
-    location_report = get_object_or_404(TargetLocationReport, pk=location)
+    location_report = get_object_or_404(TargetLocationReport.objects.select_related("target_location"), pk=location)
 
     DisaggregationReportFormSet = inlineformset_factory(
         parent_model=TargetLocationReport,
@@ -162,7 +193,10 @@ def update_report_target_locations(request, project, report, plan, location):
 
         # When using the formset, pass the optimized queryset
         report_disaggregation_formset = DisaggregationReportFormSet(
-            request.POST, queryset=disaggregation_reports, instance=location_report, plan_report=plan_report
+            request.POST,
+            queryset=disaggregation_reports,
+            instance=location_report,
+            target_location=location_report.target_location,
         )
         if location_report_form.is_valid() and report_disaggregation_formset.is_valid():
             location_report = location_report_form.save(commit=False)
@@ -174,14 +208,13 @@ def update_report_target_locations(request, project, report, plan, location):
             messages.success(
                 request,
                 mark_safe(
-                    f'The Report Target Location "<a class="underline" href="{reverse("update_report_target_locations", args=[project, report, plan, location])}">{location_report}</a>" was updated successfully.'
+                    f'The Report Target Location "<a class="underline" href="{reverse("update_report_target_locations", args=[project, plan, location])}">{location_report}</a>" was updated successfully.'
                 ),
             )
             if "_continue" in request.POST:
                 return redirect(
                     "update_report_target_locations",
                     project=monthly_report.project.pk,
-                    report=monthly_report.pk,
                     plan=plan_report.pk,
                     location=location_report.pk,
                 )
@@ -207,7 +240,7 @@ def update_report_target_locations(request, project, report, plan, location):
 
         # When using the formset, pass the optimized queryset
         report_disaggregation_formset = DisaggregationReportFormSet(
-            request.POST or None, instance=location_report, plan_report=plan_report, queryset=disaggregation_reports
+            instance=location_report, target_location=location_report.target_location, queryset=disaggregation_reports
         )
 
     return render(
@@ -240,21 +273,3 @@ def delete_location_report_view(request, location_report):
         return HttpResponseClientRedirect(url)
 
     return HttpResponse(status=200)
-
-
-@login_required
-def hx_target_location_info(request):
-    target_location = None
-    try:
-        target_location_id = request.POST.get("target_location", None)
-
-        if not target_location_id:
-            raise
-
-        target_location = TargetLocation.objects.get(pk=target_location_id)
-    except Exception:
-        target_location_id = None
-
-    context = {"target_location": target_location}
-
-    return render(request, "project_reports/report_target_locations/partials/_target_location_info.html", context)

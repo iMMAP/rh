@@ -169,6 +169,7 @@ def details_monthly_progress_view(request, project, report):
     activity_plan_report_list = (
         ActivityPlanReport.objects.filter(monthly_report=monthly_report)
         .select_related("activity_plan__activity_domain", "activity_plan__activity_type")
+        .prefetch_related("response_types")
         .order_by("-id")
         .annotate(report_location_count=Count("targetlocationreport"))
     )

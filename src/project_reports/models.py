@@ -100,7 +100,6 @@ class ActivityPlanReport(models.Model):
     )
 
     seasonal_retargeting = models.BooleanField(blank=True, null=True)
-    modality_retargeting = models.BooleanField(blank=True, null=True)
 
     beneficiary_status = models.CharField(
         max_length=25,

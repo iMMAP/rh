@@ -152,7 +152,6 @@ class ActivityPlanReportForm(forms.ModelForm):
 
         self.fields["implementing_partners"].queryset = organizations
         self.fields["seasonal_retargeting"].widget = forms.CheckboxInput()
-        self.fields["modality_retargeting"].widget = forms.CheckboxInput()
 
         self.fields["activity_plan"].widget = forms.Select(
             attrs={

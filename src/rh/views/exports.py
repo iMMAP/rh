@@ -240,6 +240,8 @@ def project_filter_export_view(request, projectId):
             {"header": "Activity description", "type": "string", "width": 40},
             {"header": "Package Type", "type": "string", "width": 20},
             {"header": "Unit Type", "type": "string", "width": 20},
+            {"header": "Units", "type": "string", "width": 20},
+            {"header": "No_of_Transfer", "type": "string", "width": 20},
             {"header": "Grant Type", "type": "string", "width": 20},
             {"header": "Transfer Category", "type": "string", "width": 20},
             {"header": "Currency", "type": "string", "width": 20},
@@ -365,15 +367,17 @@ def project_filter_export_view(request, projectId):
                     if "beneficiary_category" in selectedData and plan.beneficiary_category
                     else None,
                     plan.description if "description" in selectedData and plan.description else None,
-                    plan.package_type if "indicator" in selectedData and plan.package_type else None,
-                    plan.unit_type if "indicator" in selectedData and plan.unit_type else None,
-                    plan.grant_type if "indicator" in selectedData and plan.grant_type else None,
-                    plan.transfer_category if "indicator" in selectedData and plan.transfer_category else None,
-                    plan.currency if "indicator" in selectedData and plan.currency else None,
-                    plan.transfer_mechanism_type
+                    plan.package_type.name if "indicator" in selectedData and plan.package_type else None,
+                    plan.unit_type.name if "indicator" in selectedData and plan.unit_type else None,
+                    plan.units if "indicator" in selectedData and plan.units else None,
+                    plan.no_of_transfers if "indicator" in selectedData and plan.no_of_transfers else None,
+                    plan.grant_type.name if "indicator" in selectedData and plan.grant_type else None,
+                    plan.transfer_category.name if "indicator" in selectedData and plan.transfer_category else None,
+                    plan.currency.name if "indicator" in selectedData and plan.currency else None,
+                    plan.transfer_mechanism_type.name
                     if "indicator" in selectedData and plan.transfer_mechanism_type
                     else None,
-                    plan.implement_modility_type
+                    plan.implement_modility_type.name
                     if "indicator" in selectedData and plan.implement_modility_type
                     else None,
                     location.country.code if "admin0code" in selectedData and location.province else None,
@@ -428,7 +432,7 @@ def project_filter_export_view(request, projectId):
                     sheet.cell(row=row_idx, column=col_idx, value=value)
                 except Exception as e:
                     print("Error:", e)
-        print(rows)
+
         sheet.freeze_panes = sheet["A2"]
         excel_file = BytesIO()
         workbook.save(excel_file)

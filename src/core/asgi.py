@@ -8,8 +8,9 @@ https://docs.djangoproject.com/en/4.0/howto/deployment/asgi/
 """
 
 import os
-from django.core.asgi import get_asgi_application
+
 import environ
+from django.core.asgi import get_asgi_application
 
 environ.Env.read_env(os.path.join(os.path.dirname(os.path.dirname(__file__)), ".env"))
 

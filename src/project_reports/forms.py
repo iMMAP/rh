@@ -1,9 +1,9 @@
 from django import forms
+from django.forms import BaseInlineFormSet
 from django.forms.models import inlineformset_factory
 from django.shortcuts import get_object_or_404
-from django.forms import BaseInlineFormSet
-
-from rh.models import ActivityPlan, Organization, TargetLocation, Disaggregation
+from django.urls import reverse_lazy
+from rh.models import ActivityPlan, Disaggregation, Organization, TargetLocation
 
 from .models import (
     ActivityPlanReport,
@@ -11,8 +11,6 @@ from .models import (
     ProjectMonthlyReport,
     TargetLocationReport,
 )
-
-from django.urls import reverse_lazy
 
 
 class ProjectMonthlyReportForm(forms.ModelForm):
@@ -59,7 +57,9 @@ class TargetLocationReportForm(forms.ModelForm):
                 "hx-trigger": "change",
             }
         )
-        self.fields["target_location"].queryset = TargetLocation.objects.filter(activity_plan=plan_report.activity_plan)
+        self.fields["target_location"].queryset = TargetLocation.objects.filter(
+            activity_plan=plan_report.activity_plan, state="in-progress"
+        )
 
 
 TargetLocationReportFormSet = inlineformset_factory(
@@ -150,7 +150,6 @@ class ActivityPlanReportForm(forms.ModelForm):
 
         self.fields["implementing_partners"].queryset = organizations
         self.fields["seasonal_retargeting"].widget = forms.CheckboxInput()
-        self.fields["modality_retargeting"].widget = forms.CheckboxInput()
 
         self.fields["activity_plan"].widget = forms.Select(
             attrs={
@@ -162,7 +161,7 @@ class ActivityPlanReportForm(forms.ModelForm):
             }
         )
         self.fields["activity_plan"].queryset = ActivityPlan.objects.filter(
-            project=monthly_report_instance.project.pk
+            project=monthly_report_instance.project.pk, state="in-progress"
         ).select_related("activity_domain")
 
 

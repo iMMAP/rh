@@ -1,21 +1,21 @@
 import django_filters
 from django import forms
 from django.contrib.auth.models import User
+from django.db import models
 
 from .models import (
     ActivityDomain,
-    Cluster,
-    Donor,
-    Organization,
-    Project,
     ActivityPlan,
     ActivityType,
-    Indicator,
-    TargetLocation,
-    Location,
     BeneficiaryType,
+    Cluster,
+    Donor,
+    Indicator,
+    Location,
+    Organization,
+    Project,
+    TargetLocation,
 )
-from django.db import models
 
 
 def clusters(request):
@@ -101,7 +101,7 @@ class ActivityPlansFilter(django_filters.FilterSet):
 
     class Meta:
         model = ActivityPlan
-        fields = ["activity_domain", "activity_type", "indicator"]
+        fields = ["activity_domain", "activity_type", "indicator", "state"]
         # fields = {
         #     "activity_domain": ["contains"],
         #     "activity_type": ["contains"],

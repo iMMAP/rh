@@ -4,8 +4,8 @@ from .models import (
     ActivityPlanReport,
     DisaggregationLocationReport,
     ProjectMonthlyReport,
-    TargetLocationReport,
     ResponseType,
+    TargetLocationReport,
 )
 
 ##############################################

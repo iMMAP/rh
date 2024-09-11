@@ -1,44 +1,42 @@
+import csv
 from copy import copy
+
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
-from django.core.exceptions import PermissionDenied
+from django.core.exceptions import PermissionDenied, ValidationError
 from django.core.paginator import Paginator
+from django.db import transaction
 from django.db.models import Count, Q
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
+from django.utils.safestring import mark_safe
+from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.http import require_http_methods
-
+from django_htmx.http import HttpResponseClientRedirect
+from extra_settings.models import Setting
 
 from ..filters import ProjectsFilter
 from ..forms import ProjectForm
 from ..models import (
     ActivityPlan,
-    Project,
+    BeneficiaryType,
     Cluster,
-    TargetLocation,
+    Currency,
     Disaggregation,
     DisaggregationLocation,
-    Location,
-    BeneficiaryType,
-    Organization,
-    Currency,
-    UnitType,
     GrantType,
     ImplementationModalityType,
+    Location,
+    Organization,
+    PackageType,
+    Project,
+    TargetLocation,
     TransferCategory,
     TransferMechanismType,
-    PackageType,
+    UnitType,
 )
-
 from ..utils import has_permission
-from django.utils.safestring import mark_safe
-from extra_settings.models import Setting
-from django_htmx.http import HttpResponseClientRedirect
-import csv
-from django.core.exceptions import ValidationError
-from django.views.decorators.csrf import csrf_protect
-from django.db import transaction
 
 
 @login_required
@@ -486,7 +484,7 @@ def submit_project(request, pk):
 
     target_locations = TargetLocation.objects.filter(activity_plan__in=activity_plans)
 
-    target_locations.update(state="in-progres")
+    target_locations.update(state="in-progress")
 
     messages.success(request, "Project submited successfully!. You can start reporting now.")
 

@@ -143,7 +143,12 @@ urlpatterns = [
     ),
     path(
         "export/all/monthly_progress_reports",
-        export_views.ReportsExportView.as_view(),
+        export_views.export_all_monthly_reports_view,
         name="export_all_reports",
+    ),
+    path(
+        "project/monthly-report/export/<int:pk>",
+        export_views.export_monthly_report_view,
+        name="export_monthly_report",
     ),
 ]

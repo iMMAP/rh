@@ -1,5 +1,6 @@
 {% extends "project_reports/monthly_reports/forms/monthly_report_progress_form_base.html" %}
 {% load static %}
+
 {% block title %}
     {% if location_report_form.instance.id %}
         Update Report Target Location
@@ -7,6 +8,7 @@
         New Report Target Location
     {% endif %}
 {% endblock title %}
+
 {% block breadcrumb_li %}
     <li>
         <a href="{% url 'view_monthly_report' monthly_report.project.id  monthly_report.id %}">
@@ -19,6 +21,7 @@
         <li class="current">New Report Target Location</li>
     {% endif %}
 {% endblock breadcrumb_li %}
+
 {% block project_body %}
     <div class="content-block top-border">
         <div class="main-content">
@@ -96,18 +99,21 @@
                                     <span class="label">Target Location</span>
                                     <p class="help-text">
                                         {{ form.implementing_partners.help_text }}
-                                        </span> If you the don't see your desired location in the list, go to <a target="_blank"
-    href="{% url 'target-locations-create' report_plan.activity_plan.pk %}"
-    class="text-red underline">add target location</a> page to add new target location for this Activity Plan
+                                        </span> If you the don't see your desired location in the list, go to <a target="_blank" href="{% url 'target-locations-create' report_plan.activity_plan.pk %}" class="text-red underline">add target location</a> page to add new target location for this Activity Plan
                                     </p>
                                     {{ location_report_form.target_location }}
                                     <div class="sign-up-field-error">{{ location_report_form.target_location.errors }}</div>
                                 </div>
+
+                                {% comment %} TargetLocation info box {% endcomment %}
                                 <div id="target-location-info">
                                     {% if location_report %}
                                         {% include "project_reports/report_target_locations/partials/_target_location_info.html" with target_location=location_report.target_location %}
                                     {% endif %}
                                 </div>
+                                {% comment %} end of TargetLocation info box {% endcomment %}
+
+                                {% comment %} Tabular Disaggregation Table form {% endcomment %}
                                 <div class="disaggregation-block js-inline-admin-formset inline-group "
                                      id="{{ report_disaggregation_formset.prefix }}-group"
                                      data-inline-type="tabular"
@@ -157,6 +163,8 @@
                                         </fieldset>
                                     </div>
                                 </div>
+                                {% comment %} end of Tabular Disaggregation Table form {% endcomment %}
+
                                 <div class="plan-submit-holder">
                                     <div></div>
                                     <div>
@@ -185,6 +193,7 @@
         </div>
     </div>
 {% endblock project_body %}
+
 {% block scripts %}
     <script defer src="{% static 'js/utils/inlines.js' %}"></script>
     <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>

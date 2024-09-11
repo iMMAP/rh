@@ -1,9 +1,11 @@
-from django.shortcuts import render, get_object_or_404
-from .models import Section, Guide, Feedback
-from django.views.decorators.http import require_http_methods
-from django.http import JsonResponse
 import json
+
 from django.db.models import Prefetch
+from django.http import JsonResponse
+from django.shortcuts import get_object_or_404, render
+from django.views.decorators.http import require_http_methods
+
+from .models import Feedback, Guide, Section
 
 
 @require_http_methods(["POST"])

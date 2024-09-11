@@ -1,13 +1,12 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
-
+from django.http import JsonResponse
 from django.shortcuts import render
+from rh.models import TargetLocation
 
 from ..forms import (
     OrganizationForm,
 )
-from rh.models import TargetLocation
-from django.http import JsonResponse
 
 
 @login_required

@@ -1,19 +1,19 @@
 import calendar
-from datetime import datetime
 import csv
+from datetime import datetime
+
 import pandas as pd
-from django.contrib.auth.decorators import login_required
-from django.db import transaction
-from django.http import HttpResponseRedirect, JsonResponse
-from django.shortcuts import get_object_or_404, redirect, render
-from django.urls import reverse
-from django.utils import timezone
 from django.contrib import messages
-from django.urls import reverse_lazy
+from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
-from django.db.models import Count, Q, Prefetch
-
-
+from django.db import transaction
+from django.db.models import Count, Prefetch, Q
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
+from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse, reverse_lazy
+from django.utils import timezone
+from django_htmx.http import HttpResponseClientRedirect
+from extra_settings.models import Setting
 from rh.models import (
     ActivityDetail,
     ActivityDomain,
@@ -27,6 +27,7 @@ from rh.models import (
     Project,
 )
 
+from ..filters import ActivityPlanReportFilter, MonthlyReportsFilter
 from ..forms import (
     MonthlyReportFileUpload,
     ProjectMonthlyReportForm,
@@ -37,11 +38,6 @@ from ..models import (
     ProjectMonthlyReport,
     TargetLocationReport,
 )
-
-from ..filters import MonthlyReportsFilter, ActivityPlanReportFilter
-from extra_settings.models import Setting
-from django_htmx.http import HttpResponseClientRedirect
-from django.http import HttpResponse
 
 RECORDS_PER_PAGE = 10
 

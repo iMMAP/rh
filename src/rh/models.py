@@ -1,7 +1,6 @@
 from django.contrib.auth.models import User
+from django.core.validators import MaxValueValidator, MinLengthValidator, MinValueValidator
 from django.db import models
-from django.core.validators import MinLengthValidator, MaxValueValidator, MinValueValidator
-
 
 NAME_MAX_LENGTH = 200
 DESCRIPTION_MAX_LENGTH = 600

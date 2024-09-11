@@ -1,9 +1,9 @@
 from django import forms
+from django.forms import BaseInlineFormSet
 from django.forms.models import inlineformset_factory
 from django.shortcuts import get_object_or_404
-from django.forms import BaseInlineFormSet
-
-from rh.models import ActivityPlan, Organization, TargetLocation, Disaggregation
+from django.urls import reverse_lazy
+from rh.models import ActivityPlan, Disaggregation, Organization, TargetLocation
 
 from .models import (
     ActivityPlanReport,
@@ -11,8 +11,6 @@ from .models import (
     ProjectMonthlyReport,
     TargetLocationReport,
 )
-
-from django.urls import reverse_lazy
 
 
 class ProjectMonthlyReportForm(forms.ModelForm):

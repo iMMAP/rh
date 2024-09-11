@@ -1,5 +1,4 @@
 from django.db import models
-
 from rh.models import Cluster, Location
 
 NAME_MAX_LENGTH = 200

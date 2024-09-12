@@ -2,9 +2,8 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from rh.models import Organization, Project
 
-
 from .filters import MonthlyReportsFilter
-from .models import ProjectMonthlyReport, ClusterDashboardReport
+from .models import ClusterDashboardReport, ProjectMonthlyReport
 
 RECORDS_PER_PAGE = 5
 

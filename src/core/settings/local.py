@@ -53,7 +53,7 @@ DATABASES = {
     },
 }
 
-DB = env("DB", default="postgresql")
+DB = env("DB", default="sqlite")
 
 DATABASES["default"] = DATABASES[DB]
 

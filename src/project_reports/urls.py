@@ -3,10 +3,12 @@ from django.urls import path
 from . import dashboards as dashboard_views
 from . import exports as export_views
 from .views import (
+    cluster_powerbi_report as fetch_powerbi_report_view,
+)
+from .views import (
     monthly_reports as report_views,
 )
 from .views import (
-    cluster_powerbi_report as fetch_powerbi_report_view,
     report_activity_plans as plan_views,
 )
 from .views import (
@@ -151,5 +153,10 @@ urlpatterns = [
         "project/monthly-report/export/<int:pk>",
         export_views.export_monthly_report_view,
         name="export_monthly_report",
+    ),
+    path(
+        "cluster_powerbi_report/",
+        fetch_powerbi_report_view.fetch_cluster_report,
+        name="fetch_cluster_powerbi_report",
     ),
 ]

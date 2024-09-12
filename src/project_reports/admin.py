@@ -2,6 +2,7 @@ from django.contrib import admin
 
 from .models import (
     ActivityPlanReport,
+    ClusterDashboardReport,
     DisaggregationLocationReport,
     ProjectMonthlyReport,
     ResponseType,

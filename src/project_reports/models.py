@@ -2,8 +2,8 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from rh.models import (
     ActivityPlan,
-    Currency,
     Cluster,
+    Currency,
     Disaggregation,
     GrantType,
     ImplementationModalityType,

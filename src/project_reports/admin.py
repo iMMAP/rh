@@ -61,6 +61,7 @@ class ClusterDashboardReportAdmin(admin.ModelAdmin):
     list_display = (
         "cluster_name",
         "report_link",
+        "is_active",
     )
 
 

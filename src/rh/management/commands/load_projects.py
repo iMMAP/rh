@@ -125,6 +125,7 @@ class Command(BaseCommand):
         path = os.path.join(BASE_DIR.parent, "scripts/data/updated_nov_2023/health_plans.xlsx")
         df = pd.read_excel(path)
         df.fillna(False, inplace=True)
+        plans_exits = 0
         plans_created = 0
         plans = df.to_dict(orient="records")
         for index, plan in enumerate(plans):
@@ -135,17 +136,20 @@ class Command(BaseCommand):
             activity_domain_name = plan.get("activity_type_id", "")
             if activity_domain_name:
                 activity_domain_name.strip()
-            else:
-                print("NONE")
+            # else:
+            #     print("NONE")
             activity_domain = ActivityDomain.objects.filter(code=activity_domain_name).first()
+            if not activity_domain:
+                # print(f"activity_domain: {activity_domain_name}")
+                continue
             activity_type = ActivityType.objects.filter(code=plan.get("activity_description_id", "").strip()).first()
             if not activity_type:
-                print(plan.get("activity_description_id", ""))
+                # print(f"activity_description_id: {plan.get('activity_description_id', '')}")
                 continue
             activity_detail = ActivityDetail.objects.filter(code=plan.get("activity_type_id", "").strip()).first()
             indicator = Indicator.objects.filter(name=plan.get("indicator_id", "").strip()).first()
-            if not indicator:
-                print(plan)
+            # if not indicator:
+            #     print(plan)
             package_type = PackageType.objects.filter(name=plan.get("package_type_name", "")).first()
             unit_type = UnitType.objects.filter(name=plan.get("unit_type_name", "")).first()
             grant_type = GrantType.objects.filter(name=plan.get("grant_type_name", "")).first()
@@ -180,9 +184,22 @@ class Command(BaseCommand):
 
             if created:
                 plans_created += 1
-
+            else:
+                plans_exits += 1
+                # strd = f"""
+                # Project: {activity_plan.project.old_id}
+                # Activity Plan: {activity_plan}
+                # Activity Domain: {activity_plan.activity_domain.code if activity_plan.activity_domain else ""}
+                # Activity Type: {activity_plan.activity_type.code if activity_plan.activity_type else ""}
+                # Activity Detail: {activity_plan.activity_detail.code if activity_plan.activity_detail else ""}
+                # Indicator: {activity_plan.indicator.name if activity_plan.indicator else ""}
+                # Beneficiary: {activity_plan.beneficiary.code if activity_plan.beneficiary else ""}
+                # HRP Beneficiary: {activity_plan.hrp_beneficiary.code if activity_plan.hrp_beneficiary else ""}
+                # """
+                # print(f"{strd}")
             activity_plan.save()
         self.stdout.write(self.style.SUCCESS(f"{plans_created} Plans - created successfully!!"))
+        self.stdout.write(self.style.SUCCESS(f"{plans_exits} Plans - Already Exist!!"))
 
     def _load_projects(self):
         # Import the actvity_domain, activity_types, activity_details
@@ -273,12 +290,12 @@ class Command(BaseCommand):
 
     def _import_data(self):
         # Import Projects
-        # self.stdout.write(self.style.SUCCESS("Loading Projects!"))
-        # self._load_projects()
+        self.stdout.write(self.style.SUCCESS("Loading Projects!"))
+        self._load_projects()
         self.stdout.write(self.style.SUCCESS("Loading Plans!"))
         self._load_activity_plans()
-        # self.stdout.write(self.style.SUCCESS("Loading Locations!"))
-        # self._load_target_locations()
+        self.stdout.write(self.style.SUCCESS("Loading Locations!"))
+        self._load_target_locations()
         self.stdout.write(self.style.SUCCESS("ALL DONE!"))
 
     def handle(self, *args, **options):

@@ -90,6 +90,11 @@
     position: relative;
 }
 
+.size-2 {
+    width: 0.75rem;
+    height: 0.75rem;
+}
+
 .size-4 {
     width: 1rem;
     height: 1rem;
@@ -203,6 +208,10 @@
 
 
 //
+.bg-yellow {
+    background: #ffebb6;
+}
+
 .bg-white {
     background-color: $white;
 }
@@ -291,6 +300,10 @@
     background-color: $blue-3c;
 }
 
+.bg-green-light {
+    background: #b4eda0;
+}
+
 .bg-green {
     background-color: $green;
 }
@@ -356,6 +369,10 @@
 
 .pb-14 {
     padding-bottom: 3.5rem;
+}
+
+.pt-2 {
+    padding-top: 0.5rem;
 }
 
 .pb-2 {

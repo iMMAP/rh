@@ -1,7 +1,6 @@
 from django.contrib.auth.models import User
+from django.core.validators import MaxValueValidator, MinLengthValidator, MinValueValidator
 from django.db import models
-from django.core.validators import MinLengthValidator, MaxValueValidator, MinValueValidator
-
 
 NAME_MAX_LENGTH = 200
 DESCRIPTION_MAX_LENGTH = 600
@@ -509,6 +508,9 @@ class ActivityPlan(models.Model):
         ImplementationModalityType, on_delete=models.SET_NULL, null=True, blank=True
     )
 
+    def get_available_states(self):
+        return [state[0] for state in STATES]
+
     def __str__(self):
         return f"Activity Plan: {self.activity_domain} - {self.indicator}"
 
@@ -575,6 +577,9 @@ class TargetLocation(models.Model):
     updated_at = models.DateTimeField(auto_now=True, null=True)
 
     nhs_code = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
+
+    def get_available_states(self):
+        return [state[0] for state in STATES]
 
     def __str__(self):
         return f"Target Location: {self.province}, {self.district}"

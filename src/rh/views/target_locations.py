@@ -1,24 +1,41 @@
-from django.contrib.auth.decorators import login_required
-from django.views.decorators.http import require_http_methods
-from django.http import JsonResponse, HttpResponse
-from django.urls import reverse
-from django.shortcuts import get_object_or_404, render, redirect
-
-from ..forms import (
-    TargetLocationForm,
-    DisaggregationLocationForm,
-    BaseDisaggregationLocationFormSet,
-)
-from ..models import Project, TargetLocation, ActivityPlan, DisaggregationLocation
-
-from django.core.paginator import Paginator
-from django.forms import inlineformset_factory
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator
+from django.db.models import Sum
+from django.forms import inlineformset_factory
+from django.http import HttpResponse, JsonResponse
+from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse
 from django.utils.safestring import mark_safe
-from ..filters import TargetLocationFilter
+from django.views.decorators.http import require_http_methods
 from django_htmx.http import HttpResponseClientRedirect
 from extra_settings.models import Setting
-from django.db.models import Sum
+
+from ..filters import TargetLocationFilter
+from ..forms import (
+    BaseDisaggregationLocationFormSet,
+    DisaggregationLocationForm,
+    TargetLocationForm,
+)
+from ..models import ActivityPlan, DisaggregationLocation, Project, TargetLocation
+
+
+@require_http_methods(["POST"])
+def update_target_location_state(request, pk):
+    new_state = request.POST.get("state", None)
+
+    if new_state is None:
+        messages.error(request, "Invalid input, state is required!")
+        return HttpResponse(status=200)
+
+    tl = TargetLocation.objects.get(id=pk)
+    tl.state = new_state
+
+    tl.save()
+
+    messages.success(request, f"Target location state updated to '{new_state}' !")
+
+    return HttpResponse(200)
 
 
 @login_required

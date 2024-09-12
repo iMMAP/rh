@@ -2,7 +2,7 @@ import json
 
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from django.db.models import Prefetch
+from django.db.models import Count, Prefetch, Q
 from django.http import JsonResponse
 from django.shortcuts import render
 from project_reports.models import ProjectMonthlyReport as Report
@@ -15,13 +15,22 @@ RECORDS_PER_PAGE = 10
 def landing_page(request):
     if request.user.is_authenticated:
         user_org = request.user.profile.organization
-        active_projects = (
+        active_projects = Project.objects.filter(state="in-progress").filter(organization=user_org)
+
+        projects_counts = (
             Project.objects.filter(state="in-progress")
             .filter(organization=user_org)
-            .order_by("-projectmonthlyreport__updated_at")[:12]
+            .aggregate(
+                pending_reports_count=Count(
+                    "projectmonthlyreport", filter=Q(projectmonthlyreport__state="pending"), distinct=True
+                ),
+                implementing_partners_count=Count("implementing_partners", distinct=True),
+                activity_plans_count=Count("activityplan", distinct=True),
+                target_locations_count=Count("targetlocation__province", distinct=True),
+            )
         )
 
-        context = {"active_projects": active_projects}
+        context = {"active_projects": active_projects, "counts": projects_counts}
 
         return render(request, "home.html", context)
 
@@ -29,11 +38,7 @@ def landing_page(request):
     locations_count = Location.objects.all().count()
     reports_count = Report.objects.all().count()
 
-    context = {
-        "users": users_count,
-        "locations": locations_count,
-        "reports": reports_count,
-    }
+    context = {"users": users_count, "locations": locations_count, "reports": reports_count}
 
     return render(request, "landing.html", context)
 

@@ -1,9 +1,9 @@
 from django import forms
+from django.forms import BaseInlineFormSet
 from django.forms.models import inlineformset_factory
 from django.shortcuts import get_object_or_404
-from django.forms import BaseInlineFormSet
-
-from rh.models import ActivityPlan, Organization, TargetLocation, Disaggregation
+from django.urls import reverse_lazy
+from rh.models import ActivityPlan, Disaggregation, Organization, TargetLocation
 
 from .models import (
     ActivityPlanReport,
@@ -11,8 +11,6 @@ from .models import (
     ProjectMonthlyReport,
     TargetLocationReport,
 )
-
-from django.urls import reverse_lazy
 
 
 class ProjectMonthlyReportForm(forms.ModelForm):
@@ -53,13 +51,15 @@ class TargetLocationReportForm(forms.ModelForm):
         self.fields["target_location"].widget = forms.Select(
             attrs={
                 "class": "custom-select",
-                "hx-post": reverse_lazy("hx_target_location_info"),
+                "hx-post": reverse_lazy("hx_get_diaggregation_tabular_form"),
                 "hx-target": "#target-location-info",
                 "hx-indicator": ".progress",
                 "hx-trigger": "change",
             }
         )
-        self.fields["target_location"].queryset = TargetLocation.objects.filter(activity_plan=plan_report.activity_plan)
+        self.fields["target_location"].queryset = TargetLocation.objects.filter(
+            activity_plan=plan_report.activity_plan, state="in-progress"
+        )
 
 
 TargetLocationReportFormSet = inlineformset_factory(
@@ -73,11 +73,13 @@ TargetLocationReportFormSet = inlineformset_factory(
 
 class BaseDisaggregationLocationReportFormSet(BaseInlineFormSet):
     def __init__(self, *args, **kwargs):
-        self.plan_report = kwargs.pop("plan_report", None)
+        self.target_location = kwargs.pop("target_location", None)
+
         super().__init__(*args, **kwargs)
 
     def _construct_form(self, i, **kwargs):
-        kwargs["plan_report"] = self.plan_report
+        kwargs["target_location"] = self.target_location
+
         return super()._construct_form(i, **kwargs)
 
 
@@ -90,20 +92,22 @@ class DisaggregationLocationReportForm(forms.ModelForm):
         )
 
     def __init__(self, *args, **kwargs):
-        plan_report = kwargs.pop("plan_report", None)
+        target_location = kwargs.pop("target_location", None)
+
         super().__init__(*args, **kwargs)
 
         self.fields["disaggregation"].required = True
-        self.fields["disaggregation"].empty_value = "hell"
+        self.fields["disaggregation"].empty_value = "-----"
         self.fields["reached"].required = True
+        self.fields["reached"].widget.attrs["placeholder"] = "Enter target reached"
 
-        if plan_report:
-            self.fields["disaggregation"].queryset = self.fields["disaggregation"].queryset.filter(
-                indicators=plan_report.activity_plan.indicator
+        if target_location:
+            self.fields["disaggregation"].queryset = Disaggregation.objects.filter(
+                disaggregationlocation__target_location=target_location
             )
-            # keep only the initial
 
         if self.instance.pk:
+            # updating
             self.fields["disaggregation"].queryset = Disaggregation.objects.filter(
                 disaggregationlocationreport__target_location_report=self.instance.target_location_report,
                 disaggregationlocationreport__disaggregation=self.instance.disaggregation,
@@ -150,7 +154,6 @@ class ActivityPlanReportForm(forms.ModelForm):
 
         self.fields["implementing_partners"].queryset = organizations
         self.fields["seasonal_retargeting"].widget = forms.CheckboxInput()
-        self.fields["modality_retargeting"].widget = forms.CheckboxInput()
 
         self.fields["activity_plan"].widget = forms.Select(
             attrs={
@@ -162,7 +165,7 @@ class ActivityPlanReportForm(forms.ModelForm):
             }
         )
         self.fields["activity_plan"].queryset = ActivityPlan.objects.filter(
-            project=monthly_report_instance.project.pk
+            project=monthly_report_instance.project.pk, state="in-progress"
         ).select_related("activity_domain")
 
 

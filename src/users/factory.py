@@ -2,12 +2,12 @@ from random import randint
 
 import factory
 from django.contrib.auth.hashers import make_password
+from django.contrib.auth.models import User
 from factory.django import DjangoModelFactory
 from factory.faker import faker
+from rh.models import Cluster, Location, Organization
 
-from django.contrib.auth.models import User
 from .models import Profile
-from rh.models import Cluster, Organization, Location
 
 FAKE = faker.Faker()
 

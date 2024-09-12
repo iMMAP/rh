@@ -1,11 +1,10 @@
-from django.contrib.auth.decorators import login_required
-from django.shortcuts import get_object_or_404, redirect, render
-from django.urls import reverse
 from django.contrib import messages
-from django.urls import reverse_lazy
-from django.utils.safestring import mark_safe
+from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
-
+from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse, reverse_lazy
+from django.utils.safestring import mark_safe
+from django_htmx.http import HttpResponseClientRedirect
 from rh.models import ActivityPlan
 
 from ..forms import (
@@ -15,13 +14,13 @@ from ..models import (
     ActivityPlanReport,
     ProjectMonthlyReport,
 )
-from django_htmx.http import HttpResponseClientRedirect
 
 
 @login_required
 def create_report_activity_plan(request, project, report):
     """Create a new activity plan for a specific project"""
     report_instance = get_object_or_404(ProjectMonthlyReport.objects.select_related("project"), pk=report)
+
     if request.method == "POST":
         form = ActivityPlanReportForm(request.POST, monthly_report=report_instance)
         if form.is_valid():
@@ -33,7 +32,7 @@ def create_report_activity_plan(request, project, report):
             messages.success(
                 request,
                 mark_safe(
-                    f'The Activity Plan Report "<a class="underline" href="{reverse("update_report_activity_plans",  args=[report_instance.project, report, report_plan])}">{report_plan}</a>" was added successfully.',
+                    f'The Report Activity Plan "<a class="underline" href="{reverse("update_report_activity_plans", args=[report_instance.project.pk, report_plan.pk])}">{report_plan}</a>" was added successfully.',
                 ),
             )
             if "_save" in request.POST:
@@ -55,10 +54,10 @@ def create_report_activity_plan(request, project, report):
 
 
 @login_required
-def update_report_activity_plan(request, project, report, plan):
-    """Update an existing activity plan"""
-    report_instance = get_object_or_404(ProjectMonthlyReport.objects.select_related("project"), pk=report)
-    report_plan = get_object_or_404(ActivityPlanReport, pk=plan)
+def update_report_activity_plan(request, project, plan):
+    """Update an existing report activity plan"""
+    report_plan = get_object_or_404(ActivityPlanReport.objects.select_related("monthly_report"), pk=plan)
+    report_instance = report_plan.monthly_report
 
     if request.method == "POST":
         form = ActivityPlanReportForm(request.POST, instance=report_plan)
@@ -67,14 +66,13 @@ def update_report_activity_plan(request, project, report, plan):
             messages.success(
                 request,
                 mark_safe(
-                    f'The Report Activity Plan "<a class="underline" href="{reverse("update_report_activity_plans", args=[project, report, plan])}">{report_plan}</a>" was updated successfully.'
+                    f'The Report Activity Plan "<a class="underline" href="{reverse("update_report_activity_plans", args=[project, plan])}">{report_plan}</a>" was updated successfully.'
                 ),
             )
             if "_continue" in request.POST:
                 return redirect(
                     "update_report_activity_plans",
                     project=report_instance.project.pk,
-                    report=report_instance.pk,
                     plan=report_plan.pk,
                 )
             elif "_save" in request.POST:

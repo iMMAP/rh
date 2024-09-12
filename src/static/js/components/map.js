@@ -82,8 +82,8 @@ fetch(targetLocationUrl)
             }
 
             const template = `
-                <div class="location-item px-2 font-medium border border-gray-f5 py-2 cursor-pointer " data-tl-id="${loc.id}" data-lat="${lat}" data-long="${long}">
-                    <span class="flex-wrap">${location_name} <em>(${loc.district_code})</em></span>
+                <div class="location-item px-2 font-medium border border-gray-f5 py-2 cursor-pointer flex justify-between" data-tl-id="${loc.id}" data-lat="${lat}" data-long="${long}">
+                    <span class="flex-wrap">${loc.province_name}, ${location_name} <em>(${loc.district_code})</em></span>
                     <span class="rounded-full bg-gray-f5 px-2 py-1">${loc.location_count}</span>
                 </div>
             `;

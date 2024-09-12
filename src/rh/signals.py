@@ -1,8 +1,9 @@
+from django.contrib.auth.models import Group
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from django.contrib.auth.models import Group
-from .models import Cluster
 from users.utils import assign_default_permissions_to_group
+
+from .models import Cluster
 
 
 @receiver(post_save, sender=Cluster)

@@ -69,9 +69,9 @@
                                 <div class="input-check-holder">
                                     <input type="checkbox"
                                            id="table-head-check-01"
+                                           class="input"
                                            data-check-pattern="[name^='table-check']" />
                                     <label for="table-head-check-01">
-                                        <span class="input"></span>
                                     </label>
                                 </div>
                                 <strong class="table-title">Project title</strong>
@@ -120,11 +120,10 @@
                                     <div class="input-check-holder">
                                         <input type="checkbox"
                                                id="table-check-{{ project.pk }}"
-                                               class="project-checkbox"
+                                               class="project-checkbox input"
                                                value="{{ project.pk }}"
                                                name="table-check{{ project.pk }}" />
                                         <label for="table-check-{{ project.pk }}">
-                                            <span class="input"></span>
                                         </label>
                                     </div>
                                     ({{project.code}}) - {{ project.title|truncatechars:100 }}

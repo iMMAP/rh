@@ -43,35 +43,33 @@
             <div class="activity-planning create-activity">
                 <div id="activity-formset-form">
                     <div class="activity-planning read-only">
-                        <div class="activity-block-holder">
-                            <div class="top-activity-block">
-                                <span class="activity-title">
-                                    <span>
-                                        {% if report_activity_plan %}
-                                            Update Report Activity
-                                        {% else %}
-                                            Report Activity
-                                        {% endif %}
-                                    </span>
+                        <div class="top-activity-block">
+                            <span class="activity-title">
+                                <span>
                                     {% if report_activity_plan %}
-                                        <span class="btn btn-gray" style="float:right">
-                                            <a href="{% url 'list_report_target_locations' project.id monthly_report.pk %}?activity_plan_report={{ report_activity_plan.id }}"
-                                               class="btn btn-gray">
-                                                Report Target Location
-                                            </a>
-                                        </span>
+                                        Update Report Activity
+                                    {% else %}
+                                        New Report Activity
                                     {% endif %}
                                 </span>
-                                <br>
-                                <ul class="space-y-2 p-4">
-                                    <li>
-                                        <span class="icon-info mr-2"></span> Use this form to provide detailed information about the report activity for the above the monthly report.
-                                    </li>
-                                    <li>
-                                        <span class="icon-info mr-2"></span> If you the don't see your indicator in the list, go to <a target="_blank" href="{% url 'activity-plans-list' project.pk %}" class="text-red underline">activity plans</a> page to add new activity plans. 
-                                    </li>
-                                </ul>
-                            </div>
+                                {% if report_activity_plan %}
+                                    <span class="btn btn-gray" style="float:right">
+                                        <a href="{% url 'list_report_target_locations' project.id monthly_report.pk %}?activity_plan_report={{ report_activity_plan.id }}"
+                                            class="btn btn-gray">
+                                            Report Target Location
+                                        </a>
+                                    </span>
+                                {% endif %}
+                            </span>
+                            <br>
+                            <ul class="space-y-2 ">
+                                <li>
+                                    <span class="icon-info mr-2"></span> Use this form to provide detailed information about the report activity for the above the monthly report.
+                                </li>
+                                <li>
+                                    <span class="icon-info mr-2"></span> If you the don't see your indicator in the list, go to <a target="_blank" href="{% url 'activity-plans-list' project.pk %}" class="text-red underline">activity plans</a> page to add new activity plans. 
+                                </li>
+                            </ul>
                         </div>
                     </div>
                     <div class="activity_form">
@@ -95,7 +93,7 @@
                                             <div class="select-field">
                                                 <span class="label">Project Activity Plan</span>
                                                 <p class="help-text">{{ form.activity_plan.help_text }}
-                                                    <span class="icon-info mr-1 "></span> If you the don't see your indicator in the list, go to <a target="_blank" href="{% url 'activity-plans-list' project.pk %}" class="text-red underline">activity plans</a> page to add new activity plan. 
+                                                    <span class="icon-info mr-1 "></span>Only `In-progress` Activity plans are displayed. If you the don't see your indicator in the list, go to <a target="_blank" href="{% url 'activity-plans-list' project.pk %}" class="text-red underline">activity plans</a> page to add new activity plan or update existing one.
                                                 </p>
                                                 {{ form.activity_plan }}
                                                 <p class="sign-up-field-error">{{ form.activity_plan.errors }}</p>
@@ -128,7 +126,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        {% if report_activity_plan.indicator.enable_retargeting %}
+
                                             <div class="row">
                                                 <div class="col col-lg">
                                                     <div class="multiple-fields-row two-items">
@@ -136,24 +134,14 @@
                                                             <div class="input-check-holder">
                                                                 {{ form.seasonal_retargeting }}
                                                                 <label for="{{ form.seasonal_retargeting.id_for_label }}">
-                                                                    <span class="input"></span>
                                                                     <span class="text">Beneficiaries Retargeted due to seasonality</span>
-                                                                </label>
-                                                            </div>
-                                                        </div>
-                                                        <div class="field-col">
-                                                            <div class="input-check-holder">
-                                                                {{ form.modality_retargeting }}
-                                                                <label for="{{ form.modality_retargeting.id_for_label }}">
-                                                                    <span class="input"></span>
-                                                                    <span class="text">Beneficiaries Retargeted due to change in modality</span>
                                                                 </label>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        {% endif %}
+
                                         <div class="multiple-fields-row">
                                             <div class="field-col">
                                                 <div class="select-field">

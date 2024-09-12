@@ -2,14 +2,18 @@ from django.urls import path
 
 from . import dashboards as dashboard_views
 from . import exports as export_views
-from .views.views import (
-    import_report_activities,
-    export_report_activities_import_template,
+from .views import (
+    monthly_reports as report_views,
 )
 from .views import (
     report_activity_plans as plan_views,
+)
+from .views import (
     report_target_locations as location_views,
-    monthly_reports as report_views,
+)
+from .views.views import (
+    export_report_activities_import_template,
+    import_report_activities,
 )
 
 urlpatterns = [
@@ -82,7 +86,7 @@ urlpatterns = [
         name="create_report_activity_plan",
     ),
     path(
-        "project/<str:project>/monthly-progress/<str:report>/report-activity-plan/<str:plan>/update",
+        "project/<str:project>/report-activity-plan/<str:plan>/update",
         plan_views.update_report_activity_plan,
         name="update_report_activity_plans",
     ),
@@ -108,14 +112,14 @@ urlpatterns = [
         name="list_report_target_locations",
     ),
     path(
-        "project/<str:project>/monthly-progress/<str:report>/report_plan/<str:plan>/report-target-locations/<str:location>/update",
+        "project/<str:project>/report_plan/<str:plan>/report-target-locations/<str:location>/update",
         location_views.update_report_target_locations,
         name="update_report_target_locations",
     ),
     path(
         "hx/target-locations/info",
-        location_views.hx_target_location_info,
-        name="hx_target_location_info",
+        location_views.hx_diaggregation_tabular_form,
+        name="hx_get_diaggregation_tabular_form",
     ),
     path(
         "project/monthly-progress/location_report/delete/<str:location_report>",
@@ -139,7 +143,12 @@ urlpatterns = [
     ),
     path(
         "export/all/monthly_progress_reports",
-        export_views.ReportsExportView.as_view(),
+        export_views.export_all_monthly_reports_view,
         name="export_all_reports",
+    ),
+    path(
+        "project/monthly-report/export/<int:pk>",
+        export_views.export_monthly_report_view,
+        name="export_monthly_report",
     ),
 ]

@@ -59,7 +59,6 @@ function checkboxManager(checkboxes, condition){
 function checkboxCounter(){
 	const checkboxes = document.querySelectorAll(".input-check");
 	const checkedCounterElement = document.getElementById("selectedCount");
-	const uncheckedCounterElement = document.getElementById("notSelectedCount");
 	let checkedCounter = 0;
 	let uncheckedCounter = 0;
 	checkboxes.forEach(checkbox => {
@@ -70,7 +69,6 @@ function checkboxCounter(){
 		}
 	});
 	checkedCounterElement.textContent=checkedCounter;
-	uncheckedCounterElement.textContent=uncheckedCounter;
 }
 
 
@@ -142,7 +140,7 @@ $("#downloadFilterForm").click(function (e) {
 	let filename = "custom_project_export_"+todayDate+".csv";
 
 	// get the url
-	const routeUrl = $(this).find("a").data("url");
+	const routeUrl = $(this).data("url");
 	const file_format = $("input[type=radio]:checked").val();
 	if(file_format){
 		// create empty list
@@ -302,3 +300,46 @@ function exportButton(event) {
 		icon_downloading.style.display = "inline-block";
 	});
 }
+
+try{
+	// Export monthly report
+		// Export monthly report
+		document.querySelector('.export-monthly-report').addEventListener("click", (e) =>{
+			e.preventDefault();
+			// handle the spinner icon
+			const downloadIcon = document.querySelector(".icon-download");
+			const downloading = document.querySelector(".downloading");
+			const download_button = e.currentTarget;
+			download_button.setAttribute("disabled","disabled");
+			downloading.style.display="inline";
+			downloadIcon.style.display="none";
+			// get the filter criteria
+			let start_data = e.currentTarget.dataset.fieldFrom;
+			let end_data = e.currentTarget.dataset.fieldTo;
+			let export_url = e.currentTarget.dataset.requestUrl;
+	
+			const formData = new FormData();
+			formData.append("start_date", start_data);
+			formData.append("end_date", end_data);
+			formData.append("csrfmiddlewaretoken", csrftoken);
+			console.log(formData);
+			fetch(export_url, {
+				method: "POST",
+				body: formData,
+			}).then(response  =>response.json().then(response=>{
+				const link = document.createElement("a");
+				link.href = response.file_url;
+				link.download = response.file_name;
+				document.body.appendChild(link);
+				link.click();
+				document.body.removeChild(link);
+			}).catch(error=>{
+				console.log(error);
+			}).finally(()=>{
+				download_button.setAttribute("disabled","false");
+				downloading.style.display="none";
+				downloadIcon.style.display="inline";
+			}));
+			
+		});
+	}catch{}

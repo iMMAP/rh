@@ -4,7 +4,6 @@ from django.forms import modelformset_factory
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 
-
 from ..forms import (
     BudgetProgressForm,
 )

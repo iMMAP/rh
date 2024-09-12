@@ -46,7 +46,7 @@ def export_all_monthly_reports_view(request):
                     ),
                 )
             )
-            .filter(Q(project__clusters__in=user_clusters) & Q(state="complete"))
+            .filter(project__clusters__in=user_clusters, state="completed")
             .distinct()
         )
         workbook = Workbook()

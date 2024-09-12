@@ -9,23 +9,29 @@
             </svg>
         </a>
     </p>
-    <div class="multiple-fields-row two-items p-2">
+    <div class="multiple-fields-row four-items p-2">
         <div class="field-col">
             <div class="select-field">
-                <span class="label">Activity Domain</span>
+                <span >Activity Domain</span>
                 <span class="text-read-only" >{{ activity_plan.activity_domain.name }}</span>
             </div>
         </div>
         <div class="field-col">
             <div class="select-field">
-                <span class="label">Activity Type</span>
+                <span >Activity Type</span>
                 <span class="text-read-only">{{ activity_plan.activity_type.name }}</span>
             </div>
         </div>
         <div class="field-col">
             <div class="select-field">
-                <span class="label">Indicator</span>
+                <span >Indicator</span>
                 <span class="text-read-only">{{ activity_plan.indicator.name }}</span>
+            </div>
+        </div>
+        <div class="field-col">
+            <div class="select-field">
+                <span class="">HRP Beneficiary Type</span>
+                <span class="text-read-only">{{ activity_plan.hrp_beneficiary }}</span>
             </div>
         </div>
     </div>

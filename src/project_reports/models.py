@@ -2,12 +2,12 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from rh.models import (
     ActivityPlan,
+    Cluster,
     Currency,
     Disaggregation,
     GrantType,
     ImplementationModalityType,
     LocationType,
-    Organization,
     PackageType,
     Project,
     TargetLocation,
@@ -22,7 +22,10 @@ from rh.models import (
 
 
 class ResponseType(models.Model):
+    clusters = models.ManyToManyField(Cluster)
+
     name = models.CharField(max_length=200)
+    is_active = models.BooleanField(default=False)
 
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, null=True)
@@ -75,11 +78,7 @@ class ActivityPlanReport(models.Model):
     monthly_report = models.ForeignKey(ProjectMonthlyReport, on_delete=models.CASCADE)
     activity_plan = models.ForeignKey(ActivityPlan, on_delete=models.CASCADE)
 
-    implementing_partners = models.ManyToManyField(
-        Organization, related_name="reporting_implementing_partners", blank=True
-    )
-
-    response_types = models.ManyToManyField(ResponseType, blank=True)
+    response_types = models.ManyToManyField(ResponseType, blank=True, limit_choices_to={"is_active": True})
 
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, null=True)

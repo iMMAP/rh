@@ -60,7 +60,7 @@ def update_report_activity_plan(request, project, plan):
     report_instance = report_plan.monthly_report
 
     if request.method == "POST":
-        form = ActivityPlanReportForm(request.POST, instance=report_plan)
+        form = ActivityPlanReportForm(request.POST, instance=report_plan, monthly_report=report_instance)
         if form.is_valid():
             form.save()
             messages.success(
@@ -80,7 +80,7 @@ def update_report_activity_plan(request, project, plan):
         else:
             messages.error(request, "The form is invalid. Please check the fields and try again.")
     else:
-        form = ActivityPlanReportForm(instance=report_plan)
+        form = ActivityPlanReportForm(instance=report_plan, monthly_report=report_instance)
 
     context = {
         "form": form,

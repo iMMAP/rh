@@ -39,8 +39,9 @@
                     </li>
                     <li>
                         <a href="{% url 'download_project_monthly_report' monthly_report.pk %}?csrfmiddlewaretoken={{ csrf_token }}"
-                        
-                        class="btn btn-gray">
+                            class="btn btn-gray"
+                            onclick="return confirm('Are you sure you want to download last month activities?');"
+                        >
                             <img class='htmx-indicator'
                                 style="width: 1rem"
                                 src="{% static 'images/spinner.gif' %}" />
@@ -176,7 +177,12 @@
                 <div class="top-activity-block">
                     <span class="activity-title">
                         <span>Report Activity Plans</span>
-                        <a href="{% url 'create_report_activity_plan' project.pk monthly_report.id %}" class="btn btn-red" style="float:right">Report New Activity</a>
+                        <a href="{% url 'create_report_activity_plan' project.pk monthly_report.id %}" class="btn btn-red" style="float:right">
+                            <svg style="" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4 text-white">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                            </svg>
+                            Report New Activity
+                        </a>
                     </span>
                 </div>
             </div>

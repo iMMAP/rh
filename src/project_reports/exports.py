@@ -1,13 +1,15 @@
 import base64
 from io import BytesIO
+
+from django.db.models import Prefetch, Q
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from openpyxl import Workbook
 from openpyxl.styles import Font, NamedStyle
-from django.db.models import Q, Prefetch
 from rh.models import Project
-from .utils import write_project_report_sheet
+
 from .models import ActivityPlanReport, DisaggregationLocationReport, ProjectMonthlyReport, TargetLocationReport
+from .utils import write_project_report_sheet
 
 #############################################
 ############### Export Views #################

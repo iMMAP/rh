@@ -1,7 +1,8 @@
-from rh.models import Disaggregation
 import datetime
-from openpyxl.utils import get_column_letter
+
 from openpyxl.styles import Font, NamedStyle
+from openpyxl.utils import get_column_letter
+from rh.models import Disaggregation
 
 header_style = NamedStyle(name="header")
 header_style.font = Font(bold=True)

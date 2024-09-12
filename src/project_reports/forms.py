@@ -1,14 +1,14 @@
 from django import forms
 from django.forms import BaseInlineFormSet
 from django.forms.models import inlineformset_factory
-from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
-from rh.models import ActivityPlan, Disaggregation, Organization, TargetLocation
+from rh.models import ActivityPlan, Disaggregation, TargetLocation
 
 from .models import (
     ActivityPlanReport,
     DisaggregationLocationReport,
     ProjectMonthlyReport,
+    ResponseType,
     TargetLocationReport,
 )
 
@@ -122,7 +122,6 @@ class ActivityPlanReportForm(forms.ModelForm):
 
         widgets = {
             "response_types": forms.SelectMultiple(attrs={"class": "custom-select"}),
-            "implementing_partners": forms.SelectMultiple(attrs={"class": "custom-select"}),
             "beneficiary_status": forms.Select(attrs={"class": "custom-select"}),
             "package_type": forms.Select(attrs={"class": "custom-select"}),
             "unit_type": forms.Select(attrs={"class": "custom-select"}),
@@ -131,29 +130,17 @@ class ActivityPlanReportForm(forms.ModelForm):
             "currency": forms.Select(attrs={"class": "custom-select"}),
             "transfer_mechanism_type": forms.Select(attrs={"class": "custom-select"}),
             "implement_modility_type": forms.Select(attrs={"class": "custom-select"}),
+            "seasonal_retargeting": forms.CheckboxInput(),
         }
 
     def __init__(self, *args, **kwargs):
         monthly_report = kwargs.pop("monthly_report", None)
-        report_plan = kwargs.get("instance", None)
+
         super().__init__(*args, **kwargs)
 
-        # Retrieve the monthly_report_instance from initial data or instance
-        monthly_report_id = monthly_report.pk if monthly_report else report_plan.monthly_report.pk
-
-        monthly_report_instance = get_object_or_404(ProjectMonthlyReport, pk=monthly_report_id)
-
-        if monthly_report_instance:
-            project = monthly_report_instance.project
-            if project and project.implementing_partners.exists():
-                organizations = project.implementing_partners.all()
-            else:
-                organizations = Organization.objects.all().order_by("name")
-        else:
-            organizations = Organization.objects.all().order_by("name")
-
-        self.fields["implementing_partners"].queryset = organizations
-        self.fields["seasonal_retargeting"].widget = forms.CheckboxInput()
+        self.fields["response_types"].queryset = ResponseType.objects.filter(
+            clusters__in=monthly_report.project.clusters.values_list("id")
+        )
 
         self.fields["activity_plan"].widget = forms.Select(
             attrs={
@@ -165,7 +152,7 @@ class ActivityPlanReportForm(forms.ModelForm):
             }
         )
         self.fields["activity_plan"].queryset = ActivityPlan.objects.filter(
-            project=monthly_report_instance.project.pk, state="in-progress"
+            project=monthly_report.project.pk, state="in-progress"
         ).select_related("activity_domain")
 
 

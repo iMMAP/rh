@@ -127,6 +127,10 @@ class TargetLocationForm(forms.ModelForm):
             "activity_plan",
             "nhs_code",
         )
+        widgets = {
+            "facility_monitoring": forms.CheckboxInput(),
+            "implementing_partner": forms.Select(attrs={"class": "custom-select"}),
+        }
 
     def __init__(self, *args, **kwargs):
         user = kwargs.pop("user", None)
@@ -148,7 +152,6 @@ class TargetLocationForm(forms.ModelForm):
         self.fields["implementing_partner"].queryset = self.fields["implementing_partner"].queryset.filter(
             countries=user.profile.country
         )
-        self.fields["implementing_partner"].widget.attrs.update({"class": "custom-select"})
 
         self.fields["facility_site_type"].queryset = (
             self.fields["facility_site_type"]

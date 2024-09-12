@@ -274,7 +274,7 @@ class Command(BaseCommand):
                     project.user = user
                     project.organization = user.profile.organization
                 else:
-                    user = User.objects.get(username='admin')
+                    user = User.objects.get(username="admin")
                     project.user = user
                     project.organization = user.profile.organization
 

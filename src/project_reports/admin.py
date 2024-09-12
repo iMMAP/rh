@@ -8,12 +8,24 @@ from .models import (
     TargetLocationReport,
 )
 
+
 ##############################################
 ######### Reporting Model Admins ##########
 ##############################################
+class ResponseTypeAdmin(admin.ModelAdmin):
+    list_display = (
+        "name",
+        "show_clusters",
+    )
+    search_fields = ("name",)
+
+    def show_clusters(self, obj):
+        return ",\n".join([a.title for a in obj.clusters.all()])
+
+    show_clusters.short_description = "Clusters"
 
 
-admin.site.register(ResponseType)
+admin.site.register(ResponseType, ResponseTypeAdmin)
 
 
 class ProjectMonthlyReportAdmin(admin.ModelAdmin):

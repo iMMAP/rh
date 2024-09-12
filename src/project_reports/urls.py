@@ -7,6 +7,7 @@ from .views.views import (
     export_report_activities_import_template,
 )
 from .views import (
+    cluster_powerbi_report as fetch_powerbi_report_view,
     report_activity_plans as plan_views,
     report_target_locations as location_views,
     monthly_reports as report_views,
@@ -145,5 +146,10 @@ urlpatterns = [
         "export/all/monthly_progress_reports/",
         export_views.ReportsExportView.as_view(),
         name="export_all_reports",
+    ),
+    path(
+        "cluster_powerbi_report/",
+        fetch_powerbi_report_view.fetch_cluster_report,
+        name="fetch_cluster_powerbi_report",
     ),
 ]

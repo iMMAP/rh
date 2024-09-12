@@ -5,10 +5,11 @@ from ..models import (
     ClusterDashboardReport,
 )
 
+
 @require_POST
 @login_required
 def fetch_cluster_report(request):
-    cluster_code = request.POST.get('cluster_code')
+    cluster_code = request.POST.get("cluster_code")
     powerbi_report_url = None
     message = None
 
@@ -22,9 +23,6 @@ def fetch_cluster_report(request):
     else:
         message = "Invalid cluster selected..."
 
-    response_data = {
-        'powerbi_report_url': powerbi_report_url,
-        'message': message
-    }
+    response_data = {"powerbi_report_url": powerbi_report_url, "message": message}
 
     return JsonResponse(response_data)

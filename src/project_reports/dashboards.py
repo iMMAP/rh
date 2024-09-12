@@ -2,9 +2,6 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from rh.models import Organization, Project
 
-import json
-import os
-from django.conf import settings
 
 from .filters import MonthlyReportsFilter
 from .models import ProjectMonthlyReport, ClusterDashboardReport
@@ -36,7 +33,7 @@ def reports_dashboard_view(request):
         if not powerbi_report_url:
             message = "No report available for your cluster..."
     else:
-        selected_cluster = request.GET.get('cluster')
+        selected_cluster = request.GET.get("cluster")
         if not selected_cluster:
             message = "Please select a cluster to view the report..."
         else:

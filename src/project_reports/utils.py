@@ -30,7 +30,6 @@ def write_project_report_sheet(workbook, monthly_progress_report):
         {"header": "organization", "type": "string", "width": 40},
         {"header": "organization_type", "type": "string", "width": 40},
         {"header": "program_partner", "type": "string", "width": 40},
-        {"header": "implementing_partner", "type": "string", "width": 50},
         {"header": "project_hrp-code", "type": "string", "width": 50},
         {"header": "project_title", "type": "string", "width": 40},
         {"header": "project_start_date", "type": "date", "width": 20},
@@ -44,6 +43,7 @@ def write_project_report_sheet(workbook, monthly_progress_report):
         {"header": "report_month", "type": "string", "width": 20},
         {"header": "report_year", "type": "string", "width": 20},
         {"header": "report_period", "type": "string", "width": 20},
+        {"header": "implementing_partner", "type": "string", "width": 50},
         {"header": "admin0pcode", "type": "string", "width": 20},
         {"header": "admin0name", "type": "string", "width": 20},
         {"header": "region_name", "type": "string", "width": 20},
@@ -143,7 +143,6 @@ def write_project_report_sheet(workbook, monthly_progress_report):
                         if project_reports.project.user
                         else None,
                         ", ".join([partner.name for partner in project_reports.project.programme_partners.all()]),
-                        ", ".join([partner.name for partner in plan_report.implementing_partners.all()]),
                         project_reports.project.hrp_code if project_reports.project.hrp_code else None,
                         project_reports.project.title,
                         project_reports.project.start_date.astimezone(datetime.timezone.utc).replace(tzinfo=None),
@@ -161,6 +160,9 @@ def write_project_report_sheet(workbook, monthly_progress_report):
                         project_reports.from_date.strftime("%B"),
                         project_reports.from_date.strftime("%Y"),
                         project_reports.from_date.strftime("%Y-%m-%d"),
+                        location_report.target_location.implementing_partner.name
+                        if location_report.target_location.implementing_partner
+                        else None,
                         location_report.target_location.country.code
                         if location_report.target_location.province
                         else None,

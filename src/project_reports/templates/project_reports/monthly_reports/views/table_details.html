@@ -5,13 +5,13 @@
         <a class="table-flex-holder"
            href="{% url 'view_monthly_report' project=project.id report=report.id %}">
             {% with report_state=report.state %}<span class="indicator indicator-{{ report|custom_class }}"></span>{% endwith %}
-            {{ report.report_date | date:"F Y" }}
+            {{ report.from_date| date:"F Y" }}
         </a>
     </td>
 
-    <td class="progress-col" data-title="Progress Report">Monthly report for {{ report.report_date | date:"F Y" }}</td>
+    <td class="progress-col" data-title="Progress Report">Monthly report for {{ report.from_date| date:"F Y" }}</td>
 
-    <td class="date-col" data-title="Due date">{{ report.report_due_date | date:"d F Y" }}</td>
+    <td class="date-col" data-title="Due date">{{ report.to_date| date:"d F Y" }}</td>
 
     <td class="id-col" data-title="Locations">
         {% for plan_report in report.activityplanreport_set.all %}

@@ -1,25 +1,41 @@
-from django.contrib.auth.decorators import login_required
-from django.views.decorators.http import require_http_methods
-from django.http import JsonResponse, HttpResponse
-from django.urls import reverse
-from django.shortcuts import get_object_or_404, render, redirect
-
-from ..forms import (
-    TargetLocationForm,
-    DisaggregationLocationForm,
-    BaseDisaggregationLocationFormSet,
-)
-from ..models import Project, TargetLocation, ActivityPlan, DisaggregationLocation
-
-from .views import copy_target_location_disaggregation_locations
-from django.core.paginator import Paginator
-from django.forms import inlineformset_factory
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator
+from django.db.models import Sum
+from django.forms import inlineformset_factory
+from django.http import HttpResponse, JsonResponse
+from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse
 from django.utils.safestring import mark_safe
-from ..filters import TargetLocationFilter
+from django.views.decorators.http import require_http_methods
 from django_htmx.http import HttpResponseClientRedirect
 from extra_settings.models import Setting
-from django.db.models import Sum
+
+from ..filters import TargetLocationFilter
+from ..forms import (
+    BaseDisaggregationLocationFormSet,
+    DisaggregationLocationForm,
+    TargetLocationForm,
+)
+from ..models import ActivityPlan, DisaggregationLocation, Project, TargetLocation
+
+
+@require_http_methods(["POST"])
+def update_target_location_state(request, pk):
+    new_state = request.POST.get("state", None)
+
+    if new_state is None:
+        messages.error(request, "Invalid input, state is required!")
+        return HttpResponse(status=200)
+
+    tl = TargetLocation.objects.get(id=pk)
+    tl.state = new_state
+
+    tl.save()
+
+    messages.success(request, f"Target location state updated to '{new_state}' !")
+
+    return HttpResponse(200)
 
 
 @login_required
@@ -53,7 +69,7 @@ def update_target_location(request, pk):
             messages.success(
                 request,
                 mark_safe(
-                    f'The Target Location "<a href="{reverse("target-locations-update", args=[target_location.pk])}">{target_location}</a>" was changed successfully.'
+                    f'The Target Location "<a class="underline" href="{reverse("target-locations-update", args=[target_location.pk])}">{target_location}</a>" was changed successfully.'
                 ),
             )
             if "_continue" in request.POST:
@@ -115,7 +131,7 @@ def create_target_location(request, activity_plan):
             messages.success(
                 request,
                 mark_safe(
-                    f'The Target Location "<a href="{reverse("target-locations-update", args=[target_location.pk])}">{target_location}</a>" was added successfully.'
+                    f'The Target Location "<a class="underline" href="{reverse("target-locations-update", args=[target_location.pk])}">{target_location}</a>" was added successfully.'
                 ),
             )
             if "_continue" in request.POST:
@@ -189,7 +205,15 @@ def copy_target_location(request, project, location):
 
         # Iterate through disaggregation locations and copy them to the new location.
         for disaggregation_location in disaggregation_locations:
-            copy_target_location_disaggregation_locations(new_location, disaggregation_location)
+            new_disaggregation_location = get_object_or_404(DisaggregationLocation, pk=disaggregation_location.pk)
+            new_disaggregation_location.pk = None  # Generate a new primary key for the duplicated location.
+            new_disaggregation_location.save()  # Save the duplicated location to the database.
+
+            # Associate the duplicated disaggregation location with the new target location.
+            new_disaggregation_location.target_location = location
+
+            # Save the changes made to the duplicated disaggregation location.
+            new_disaggregation_location.save()
 
         new_location.project = project
         new_location.state = "draft"

@@ -18,9 +18,12 @@
                     <div class="activity-title">
                         <span>Project Activity Plans</span>
                     </div>
-                    <a class="btn btn-gray" href="{% url 'projects-import-activity-plans' project.pk %}">
-                        Import Activity Plans from CSV
-                    </a>
+                    <div class="space-x-2">
+                        <a class="btn btn-gray-outline" href="{% url 'projects-import-activity-plans' project.pk %}">
+                            Import Activity Plans from CSV
+                        </a>
+                        <a href="{% url 'activity-plans-create' project.id %}" class="btn btn-red">Add New Activity</a>
+                    </div>
                 </div>
                 <p class="">The table below displays all activities under your project</p>
             </div>
@@ -28,7 +31,7 @@
             {% include "rh/activity_plans/_activity_plan_table.html" with object_list=activity_plans %}
 
             <div class="p-10 text-center">
-                <a href="{% url 'project_submit' project.pk %}" class="btn btn-red">Submit Project</a>
+                <a href="{% url 'projects-submit' project.pk %}" class="btn btn-red">Submit Project</a>
             </div>
         </div>
     </div>

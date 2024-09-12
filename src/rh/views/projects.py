@@ -1,51 +1,42 @@
-import json
-from datetime import date
+import csv
+from copy import copy
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
-from django.core.exceptions import PermissionDenied
+from django.core.exceptions import PermissionDenied, ValidationError
 from django.core.paginator import Paginator
-from django.db.models import Count, Prefetch, Q
-from django.http import HttpResponse, JsonResponse
+from django.db import transaction
+from django.db.models import Count, Q
+from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
+from django.utils.safestring import mark_safe
+from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.http import require_http_methods
-from rh.resources import ProjectResource
+from django_htmx.http import HttpResponseClientRedirect
+from extra_settings.models import Setting
 
 from ..filters import ProjectsFilter
 from ..forms import ProjectForm
 from ..models import (
     ActivityPlan,
-    Project,
-    Cluster,
-    TargetLocation,
-    Disaggregation,
-    ActivityDomain,
-    Indicator,
-    ActivityType,
-    DisaggregationLocation,
-    Location,
     BeneficiaryType,
-    Organization,
+    Cluster,
     Currency,
-    UnitType,
+    Disaggregation,
+    DisaggregationLocation,
     GrantType,
     ImplementationModalityType,
+    Location,
+    Organization,
+    PackageType,
+    Project,
+    TargetLocation,
     TransferCategory,
     TransferMechanismType,
-    PackageType,
+    UnitType,
 )
-from django.contrib.auth.models import User
-from .views import (
-    copy_project_target_location,
-    copy_target_location_disaggregation_locations,
-)
-
 from ..utils import has_permission
-from django.utils.safestring import mark_safe
-from extra_settings.models import Setting
-from django_htmx.http import HttpResponseClientRedirect
-import csv
 
 
 @login_required
@@ -71,21 +62,25 @@ def import_activity_plans(request, pk):
         try:
             for row in reader:
                 try:
-                    activity_domain = ActivityDomain.objects.filter(name=row["activity_domain"]).first()
+                    activity_domain = project.activity_domains.filter(name=row["activity_domain"]).first()
                     if not activity_domain:
                         errors.append(
-                            f"Row {reader.line_num}: Activity domain '{row['activity_domain']}' does not exist."
+                            f"Row {reader.line_num}: Activity domain '{row['activity_domain']}' does not exist in your project plan."
                         )
                         continue
 
-                    activity_type = ActivityType.objects.filter(name=row["activity_type"]).first()
+                    activity_type = activity_domain.activitytype_set.filter(name=row["activity_type"]).first()
                     if not activity_type:
-                        errors.append(f"Row {reader.line_num}: Activity Type '{row['activity_type']}' does not exist.")
+                        errors.append(
+                            f"Row {reader.line_num}:Activity Domain {activity_domain.name} does not have Activity Type '{row['activity_type']}'"
+                        )
                         continue
 
-                    indicator = Indicator.objects.filter(name=row["indicator"]).first()
+                    indicator = activity_type.indicator_set.filter(name=row["indicator"]).first()
                     if not indicator:
-                        errors.append(f"Row {reader.line_num}: Indicator '{row['indicator']}' does not exist.")
+                        errors.append(
+                            f"Row {reader.line_num}: Activity Type {activity_type.name} does not have Indicator '{row['indicator']}'"
+                        )
                         continue
 
                     activity_plan_key = (row["activity_domain"], row["activity_type"], row["indicator"])
@@ -118,11 +113,11 @@ def import_activity_plans(request, pk):
 
                     target_location = TargetLocation(
                         activity_plan=activity_plan,
-                        country=Location.objects.get(code=row["country"]),
-                        province=Location.objects.get(code=row["province"]),
-                        district=Location.objects.get(code=row["district"]),
-                        zone=Location.objects.filter(code=row["zone"]).first(),
-                        implementing_partner=Organization.objects.filter(code=row["implementing_partner"]).first(),
+                        country=Location.objects.get(code=row["country_code"]),
+                        province=Location.objects.get(code=row["province_code"]),
+                        district=Location.objects.get(code=row["district_code"]),
+                        zone=Location.objects.filter(code=row["zone_code"]).first(),
+                        implementing_partner=Organization.objects.filter(code=row["implementing_partner_code"]).first(),
                         facility_name=row.get("facility_name") or None,
                         facility_id=row.get("facility_id") or None,
                         facility_lat=row.get("facility_lat") or None,
@@ -158,27 +153,56 @@ def import_activity_plans(request, pk):
 
 
 @login_required
+@csrf_protect
 def export_activity_plans_import_template(request, pk):
-    project = get_object_or_404(Project, pk=pk)
+    project = get_object_or_404(Project.objects.prefetch_related("clusters"), pk=pk)
 
     # Add column names for ActivityPlan and TargetLocation models
-    activity_plan_columns = [field.name for field in ActivityPlan._meta.get_fields() if field.concrete]
-    target_location_columns = [field.name for field in TargetLocation._meta.get_fields() if field.concrete]
+    all_columns = [
+        "activity_domain",
+        "activity_type",
+        "activity_detail",
+        "indicator",
+        "beneficiary",
+        "hrp_beneficiary",
+        "beneficiary_category",
+        "description",
+        "package_type",
+        "unit_type",
+        "units",
+        "no_of_transfers",
+        "grant_type",
+        "transfer_category",
+        "currency",
+        "transfer_mechanism_type",
+        "implement_modility_type",
+        "country_name",
+        "country_code",
+        "province_name",
+        "province_code",
+        "district_name",
+        "district_code",
+        "zone_name",
+        "zone_code",
+        "location_type",
+        "implementing_partner_code",
+        "facility_site_type",
+        "facility_monitoring",
+        "facility_name",
+        "facility_id",
+        "facility_lat",
+        "facility_long",
+        "nhs_code",
+    ]
 
     disaggregation_columns = list(
         Disaggregation.objects.filter(clusters__in=project.clusters.all()).distinct().values_list("name", flat=True)
     )
 
-    all_columns = activity_plan_columns + target_location_columns + disaggregation_columns
-
-    filtered_columns = [
-        col
-        for col in all_columns
-        if col not in ["id", "state", "updated_at", "created_at", "activity_plan", "disaggregations", "project"]
-    ]
+    filtered_columns = all_columns + disaggregation_columns
 
     response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = "attachment; filename=activity_plans_import_template.csv"
+    response["Content-Disposition"] = f"attachment; filename=project_{project.code}_activity_plans_import_template.csv"
 
     writer = csv.writer(response)
     writer.writerow(filtered_columns)
@@ -189,22 +213,19 @@ def export_activity_plans_import_template(request, pk):
 @login_required
 @permission_required("rh.view_project", raise_exception=True)
 def projects_detail(request, pk):
-    """View for viewing a project.
-    url: projects/<int:pk>/
+    """View a project details.
+    url: projects/<int:pk>
     """
     project = get_object_or_404(
-        Project.objects.select_related("organization").prefetch_related(
+        Project.objects.select_related("organization", "user")
+        .prefetch_related(
             "clusters",
-            "donors",
             "programme_partners",
             "implementing_partners",
-            Prefetch("user", queryset=User.objects.select_related("profile")),
-            Prefetch(
-                "activityplan_set",
-                ActivityPlan.objects.select_related("activity_domain", "indicator")
-                .prefetch_related("activity_type", "activity_detail")
-                .annotate(target_location_count=Count("targetlocation")),
-            ),
+        )
+        .annotate(
+            activity_plans_count=Count("activityplan", distinct=True),
+            target_locations_count=Count("activityplan__targetlocation", distinct=True),
         ),
         pk=pk,
     )
@@ -215,6 +236,7 @@ def projects_detail(request, pk):
     context = {
         "project": project,
     }
+
     return render(request, "rh/projects/views/project_view.html", context)
 
 
@@ -339,7 +361,7 @@ def org_projects_list(request):
         request=request,
         queryset=p_queryset.select_related("organization")
         .prefetch_related("clusters", "programme_partners", "implementing_partners")
-        .order_by("-id"),
+        .order_by("-updated_at"),
     )
 
     # Setup Pagination
@@ -351,9 +373,9 @@ def org_projects_list(request):
     p_projects.adjusted_elided_pages = p.get_elided_page_range(page)
 
     projects_counts = project_filter.qs.aggregate(
-        # draft_projects_count=Count("id", filter=Q(state="draft")),
-        # active_projects_count=Count("id", filter=Q(state="in-progress")),
-        pending_reports_count=Count("projectmonthlyreport", filter=Q(state="pending")),
+        pending_reports_count=Count(
+            "projectmonthlyreport", filter=Q(projectmonthlyreport__state="pending"), distinct=True
+        ),
         implementing_partners_count=Count("implementing_partners", distinct=True),
         activity_plans_count=Count("activityplan", distinct=True),
         target_locations_count=Count("targetlocation__province", distinct=True),
@@ -399,15 +421,17 @@ def create_project(request):
 def update_project(request, pk):
     """View for updating a project."""
 
-    project = get_object_or_404(Project, pk=pk)
+    project = get_object_or_404(Project.objects.select_related("user").prefetch_related("clusters"), pk=pk)
 
     if not has_permission(user=request.user, project=project):
         raise PermissionDenied
 
     if request.method == "POST":
         form = ProjectForm(request.POST, instance=project, user=request.user)
+
         if form.is_valid():
             project = form.save()
+
             return redirect("activity-plans-list", project=project.pk)
         else:
             messages.error(request, "The form is invalid. Please check the fields and try again.")
@@ -418,33 +442,29 @@ def update_project(request, pk):
         "form": form,
         "project": project,
         "project_planning": True,
-        "project_view": True,
-        "financial_view": False,
-        "reports_view": False,
     }
+
     return render(request, "rh/projects/forms/project_form.html", context)
 
 
 @login_required
 @permission_required("rh.submit_project", raise_exception=True)
 def submit_project(request, pk):
-    """Project Submission"""
-
     project = get_object_or_404(Project, pk=pk)
 
     if not has_permission(user=request.user, project=project):
         raise PermissionDenied
 
     activity_plans = project.activityplan_set.all()
+
     if not activity_plans.exists():
         messages.error(
             request,
             mark_safe(
-                f"The project must have at least one activity plan. Check project's <a href=`{reverse('activity-plans-list', args=[project.pk])}`>activity plans</a>'."
+                f"The project must have at least one activity plan and each Activity Plan must have one Target Location.Check project's `<a class='underline' href='{reverse('activity-plans-list', args=[project.pk])}'>Activity Plans</a>`"
             ),
         )
-        messages.error(request, "The project must have at least one activity plan.")
-        return redirect("activity-plans-list", project=project.pk)
+        return redirect("projects-detail", pk=project.pk)
 
     for plan in activity_plans:
         target_locations = plan.targetlocation_set.all()
@@ -452,102 +472,68 @@ def submit_project(request, pk):
             messages.error(
                 request,
                 mark_safe(
-                    f"Each activity plan must have at least one target location. Check project's `<a href='{reverse('target-locations-list', args=[project.pk])}'>target locations</a>`."
+                    f"Each activity plan must have at least one target location. Check project's `<a class='underline' href='{reverse('target-locations-list', args=[project.pk])}'>target locations</a>`."
                 ),
             )
-            # return redirect("target-locations-create", activity_plan=plan.pk)
-            return redirect("activity-plans-list", project=project.pk)
+            return redirect("projects-detail", pk=project.pk)
 
     project.state = "in-progress"
     project.save()
 
-    for plan in activity_plans:
-        target_locations = plan.targetlocation_set.all()
-        for target in target_locations:
-            target.state = "in-progress"
-            target.save()
+    activity_plans.update(state="in-progress")
 
-        plan.state = "in-progress"
-        plan.save()
+    target_locations = TargetLocation.objects.filter(activity_plan__in=activity_plans)
+
+    target_locations.update(state="in-progress")
+
+    messages.success(request, "Project submited successfully!. You can start reporting now.")
 
     return redirect("projects-detail", pk=project.pk)
 
 
 @login_required
 @permission_required("rh.archive_unarchive_project", raise_exception=True)
+@require_http_methods(["POST"])
 def archive_project(request, pk):
-    """Archiving Project"""
     project = get_object_or_404(Project, pk=pk)
-    if project:
-        activity_plans = project.activityplan_set.all()
+    state = "archived"
 
-        # Iterate through activity plans and archive them.
-        for plan in activity_plans:
-            target_locations = plan.targetlocation_set.all()
+    activity_plans = project.activityplan_set.all()
+    activity_plans.update(state=state)
 
-            # Iterate through target locations and archive them.
-            for location in target_locations:
-                disaggregation_locations = location.disaggregationlocation_set.all()
+    target_locations = TargetLocation.objects.filter(activity_plan__in=activity_plans)
+    target_locations.update(state=state)
 
-                # Iterate through disaggregation locations and archive.
-                for disaggregation_location in disaggregation_locations:
-                    disaggregation_location.save()
+    project.state = state
+    project.save()
 
-                location.state = "archived"
-                location.save()
+    messages.success(request, "Project its activities and target locations has been archived")
 
-            plan.state = "archived"
-            plan.save()
-
-        project.state = "archived"
-        project.save()
-
-    url = reverse(
-        "projects-list",
-    )
-
-    # Return the URL in a JSON response
-    response_data = {"redirect_url": url}
-    return JsonResponse(response_data)
-
-    # return JsonResponse({"success": True})
+    return HttpResponseClientRedirect(reverse("projects-detail", args=[project.id]))
 
 
 @login_required
 @permission_required("rh.archive_unarchive_project", raise_exception=True)
+@require_http_methods(["POST"])
 def unarchive_project(request, pk):
-    """Unarchiving Project"""
     project = get_object_or_404(Project, pk=pk)
-    if project:
-        activity_plans = project.activityplan_set.all()
+    state = "draft"
 
-        # Iterate through activity plans and archive them.
-        for plan in activity_plans:
-            target_locations = plan.targetlocation_set.all()
+    activity_plans = project.activityplan_set.all()
+    activity_plans.update(state=state)
 
-            # Iterate through target locations and archive them.
-            for location in target_locations:
-                disaggregation_locations = location.disaggregationlocation_set.all()
+    target_locations = TargetLocation.objects.filter(activity_plan__in=activity_plans)
+    target_locations.update(state=state)
 
-                # Iterate through disaggregation locations and archive.
-                for disaggregation_location in disaggregation_locations:
-                    disaggregation_location.save()
+    project.state = state
+    project.save()
 
-                location.state = "draft"
-                location.save()
-
-            plan.state = "draft"
-            plan.save()
-
-        project.state = "draft"
-        project.save()
-
-    url = reverse(
-        "projects-list",
+    messages.success(
+        request,
+        "Project its activities and target locations has been set to draft. submit the project again to start reporting",
     )
-    # Return the URL in a JSON response
-    response_data = {"redirect_url": url}
-    return JsonResponse(response_data)
+
+    return HttpResponseClientRedirect(reverse("projects-detail", args=[project.id]))
 
 
 @login_required
@@ -564,142 +550,84 @@ def delete_project(request, pk):
             return redirect("projects-list")
 
 
-def copy_project_activity_plan(project, plan):
-    """Copy Activity Plans"""
-    try:
-        # Duplicate the original activity plan by retrieving it with the provided primary key.
-        new_plan = get_object_or_404(ActivityPlan, pk=plan.pk)
-        new_plan.pk = None  # Generate a new primary key for the duplicated plan.
-        new_plan.save()  # Save the duplicated plan to the database.
-
-        # Associate the duplicated plan with the new project.
-        new_plan.project = project
-
-        # Set the plan as active and in a draft state to indicate it's a copy.
-        new_plan.state = "draft"
-
-        # Copy indicators from the original plan to the duplicated plan.
-        new_plan.indicator = plan.indicator
-
-        # Save the changes made to the duplicated plan.
-        new_plan.save()
-
-        # Return the duplicated plan.
-        return new_plan
-    except Exception as _:
-        # If an exception occurs, return False to indicate the copy operation was not successful.
-        return False
-
-
 @login_required
 @require_http_methods(["POST"])
 def copy_project(request, pk):
-    """Copying Project"""
+    """Copy Project its Activity Plans and Target Locations"""
     project = get_object_or_404(Project, pk=pk)
 
-    # Create a new project by duplicating the original project.
-    new_project = get_object_or_404(Project, pk=pk)
-    new_project.pk = None  # Generate a new primary key for the new project.
+    try:
+        with transaction.atomic():
+            new_project = Project.objects.get(pk=pk)
+            new_project.pk = None
+            new_project.title = f"DUPLICATED-{project.title}"
+            new_project.code = f"DUPLICATED-{project.code}"
+            new_project.state = "draft"
 
-    # Modify the title, code, and state of the new project to indicate it's a copy.
-    new_project.title = f"DUPLICATED-{project.title}"
-    new_project.code = f"DUPLICATED-{project.code}"  # Generate a new primary key for the new project.
-    new_project.state = "draft"
+            try:
+                new_project.full_clean()
+            except ValidationError as e:
+                messages.error(request, f"Error duplicating project: {e}")
+                return HttpResponse(401)
 
-    new_project.save()  # Save the new project to the database.
+            new_project.save()
 
-    # Copy related data from the original project to the new project.
-    new_project.clusters.set(project.clusters.all())
-    new_project.activity_domains.set(project.activity_domains.all())
-    new_project.donors.set(project.donors.all())
-    new_project.programme_partners.set(project.programme_partners.all())
-    new_project.implementing_partners.set(project.implementing_partners.all())
+            # Copy related data from the original project to the new project.
+            new_project.clusters.set(project.clusters.all())
+            new_project.activity_domains.set(project.activity_domains.all())
+            new_project.donors.set(project.donors.all())
+            new_project.programme_partners.set(project.programme_partners.all())
+            new_project.implementing_partners.set(project.implementing_partners.all())
 
-    # Check if the new project was successfully created.
-    if new_project:
-        # Get all activity plans associated with the original project.
-        activity_plans = project.activityplan_set.all()
+            # Copy ActivityPlan
+            original_activity_plans = project.activityplan_set.all()
+            new_activity_plans = []
+            for plan in original_activity_plans:
+                new_plan = copy(plan)
+                new_plan.pk = None
+                new_plan.project = new_project
 
-        # Iterate through each activity plan and copy it to the new project.
-        for plan in activity_plans:
-            new_plan = copy_project_activity_plan(new_project, plan)
-            target_locations = plan.targetlocation_set.all()
+                new_activity_plans.append(new_plan)
 
-            # Iterate through target locations and copy them to the new plan.
-            for location in target_locations:
-                new_location = copy_project_target_location(new_plan, location)
-                disaggregation_locations = location.disaggregationlocation_set.all()
+            new_activity_plans = ActivityPlan.objects.bulk_create(new_activity_plans)
 
-                # Iterate through disaggregation locations and copy them to the new location.
-                for disaggregation_location in disaggregation_locations:
-                    copy_target_location_disaggregation_locations(new_location, disaggregation_location)
+            activity_plan_mapping = {}
+            for old_plan, new_plan in zip(original_activity_plans, new_activity_plans):
+                activity_plan_mapping[old_plan.pk] = new_plan.pk
 
-    # Save the changes made to the new project.
-    new_project.save()
+            # Copy TargetLocation
+            original_target_locations = list(TargetLocation.objects.filter(activity_plan__project=project))
+            new_target_locations = []
+            for location in original_target_locations:
+                new_location = copy(location)
+                new_location.pk = None
+                new_location.project = new_project
+                new_location.activity_plan_id = activity_plan_mapping[location.activity_plan_id]
+
+                new_target_locations.append(new_location)
+
+            new_target_locations = TargetLocation.objects.bulk_create(new_target_locations)
+
+            target_location_mapping = {}
+            for old, new in zip(original_target_locations, new_target_locations):
+                target_location_mapping[old.id] = new.id
+
+            # Copy DisaggregationLocation
+            original_disagg_locations = DisaggregationLocation.objects.filter(
+                target_location__in=original_target_locations
+            )
+            new_disagg_locations = []
+            for disagg_location in original_disagg_locations:
+                new_disagg_location = copy(disagg_location)
+                new_disagg_location.pk = None
+                new_disagg_location.target_location_id = target_location_mapping[disagg_location.target_location_id]
+
+                new_disagg_locations.append(new_disagg_location)
+
+            DisaggregationLocation.objects.bulk_create(new_disagg_locations)
+    except Exception as e:
+        messages.error(request, f"Error duplicating project : {str(e)}")
+        return HttpResponse(500)
 
     messages.success(request, "Project its Activity Plans and Target Locations duplicated successfully!")
     return HttpResponseClientRedirect(reverse("projects-detail", args=[new_project.id]))
-
-
-@login_required
-@require_http_methods(["POST"])
-@permission_required("rh.export_clusters_projects", raise_exception=True)
-def export_cluster_projects(request, format):
-    """Export your all of your org projects and its activities
-    url: /projects/bulk_export/<format>/cluster
-    name: export-clusters-projects
-    """
-    selected_projects_id = json.loads(request.body)
-
-    projects = Project.objects.filter(clusters__in=request.user.profile.clusters.all())
-
-    if selected_projects_id:
-        projects = projects.filter(id__in=selected_projects_id)
-
-    dataset = ProjectResource().export(projects)
-
-    if format == "xls":
-        ds = dataset.xls
-    elif format == "csv":
-        ds = dataset.csv
-    else:
-        ds = dataset.json
-
-    today_date = date.today()
-    file_name = f"projects_{today_date}"
-    response = HttpResponse(ds, content_type=f"{format}")
-    response["Content-Disposition"] = f"attachment; filename={file_name}.{format}"
-
-    return response
-
-
-@login_required
-@require_http_methods(["POST"])
-@permission_required("rh.export_clusters_projects", raise_exception=True)
-def export_org_projects(request, format):
-    """Export your all of your org projects and its activities
-    url: /projects/bulk_export/<format>/org
-    name: export-org-projects
-    """
-    selected_projects_id = json.loads(request.body)
-
-    projects = Project.objects.filter(organization=request.user.profile.organization)
-
-    if selected_projects_id:
-        projects = projects.filter(id__in=selected_projects_id)
-
-    dataset = ProjectResource().export(projects)
-
-    if format == "xls":
-        ds = dataset.xls
-    elif format == "csv":
-        ds = dataset.csv
-    else:
-        ds = dataset.json
-
-    today_date = date.today()
-    file_name = f"projects_{today_date}"
-    response = HttpResponse(ds, content_type=f"{format}")
-    response["Content-Disposition"] = f"attachment; filename={file_name}.{format}"
-
-    return response

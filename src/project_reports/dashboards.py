@@ -15,8 +15,9 @@ def reports_dashboard_view(request):
     # Get filter parameters from the request
     clusters = request.GET.getlist("project__clusters")
     implementing_partners = request.GET.getlist("project__implementing_partners")
-    start_date = request.GET.get("report_date_min", None)  # 'date_0' for start date
-    end_date = request.GET.get("report_date_max", None)  # 'date_1' for end date
+    start_date = request.GET.get("from_date_min", None)  # 'date_0' for start date
+    end_date = request.GET.get("to_date_max", None)  # 'date_1' for end date
+
     # Get User Clusters
     user_clusters = request.user.profile.clusters.all()
     user_clusters_list = list(request.user.profile.clusters.all())
@@ -59,9 +60,9 @@ def reports_dashboard_view(request):
 
     # Filter by date range
     if start_date:
-        queryset = queryset.filter(report_date__gte=start_date)
+        queryset = queryset.filter(from_date__gte=start_date)
     if end_date:
-        queryset = queryset.filter(report_date__lte=end_date)
+        queryset = queryset.filter(to_date__lte=end_date)
 
     reports_total = queryset.count()
     reports_todo = queryset.filter(state="todo").count()

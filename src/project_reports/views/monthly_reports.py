@@ -1,19 +1,19 @@
 import calendar
-from datetime import datetime, timedelta
+import csv
+from datetime import datetime
 
 import pandas as pd
-from django.contrib.auth.decorators import login_required
-from django.db import transaction
-from django.http import JsonResponse
-from django.shortcuts import get_object_or_404, redirect, render
-from django.urls import reverse
-from django.utils import timezone
 from django.contrib import messages
-from django.http import HttpResponseRedirect
-from django.urls import reverse_lazy
+from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
+from django.db import transaction
 from django.db.models import Count, Prefetch, Q
-
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
+from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse, reverse_lazy
+from django.utils import timezone
+from django_htmx.http import HttpResponseClientRedirect
+from extra_settings.models import Setting
 from rh.models import (
     ActivityDetail,
     ActivityDomain,
@@ -27,6 +27,7 @@ from rh.models import (
     Project,
 )
 
+from ..filters import ActivityPlanReportFilter, MonthlyReportsFilter
 from ..forms import (
     MonthlyReportFileUpload,
     ProjectMonthlyReportForm,
@@ -38,28 +39,20 @@ from ..models import (
     TargetLocationReport,
 )
 
-from ..filters import MonthlyReportsFilter
-
 RECORDS_PER_PAGE = 10
-
-
-class HTTPResponseHXRedirect(HttpResponseRedirect):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self["HX-Redirect"] = self["Location"]
-
-    status_code = 200
 
 
 @login_required
 def index_project_report_view(request, project):
     """Project Monthly Report View"""
 
-    project = get_object_or_404(Project.objects.filter(pk=project).order_by("-id"), pk=project)
+    project = get_object_or_404(Project, pk=project)
 
     # Setup Filter
     reports_filter = MonthlyReportsFilter(
-        request.GET, request=request, queryset=ProjectMonthlyReport.objects.filter(project=project).order_by("-id")
+        request.GET,
+        request=request,
+        queryset=ProjectMonthlyReport.objects.filter(project=project).order_by("-from_date"),
     )
 
     # Setup Pagination
@@ -71,9 +64,8 @@ def index_project_report_view(request, project):
 
     reports = ProjectMonthlyReport.objects.filter(project=project).aggregate(
         project_reports_todo_count=Count("id", filter=Q(state__in=ProjectMonthlyReport.REPORT_STATES)),
-        project_report_complete_count=Count("id", filter=Q(state="complete"), is_active=True),
-        project_report_archive_count=Count("id", filter=Q(state="archive", is_active=False)),
-        project_reports_count=Count("id", filter=Q(is_active=True)),
+        project_report_complete_count=Count("id", filter=Q(state="complete")),
+        project_report_archive_count=Count("id", filter=Q(state="archive")),
     )
 
     context = {
@@ -82,11 +74,8 @@ def index_project_report_view(request, project):
         "project_reports_todo": reports["project_reports_todo_count"],
         "project_report_complete": reports["project_report_complete_count"],
         "project_report_archive": reports["project_report_archive_count"],
-        "project_report_count": reports["project_reports_count"],
         "reports_filter": reports_filter,
-        "project_view": False,
-        "financial_view": False,
-        "reports_view": True,
+        "report_states": ProjectMonthlyReport.REPORT_STATES,
     }
 
     return render(request, "project_reports/monthly_reports/views/monthly_reports_view_base.html", context)
@@ -116,7 +105,6 @@ def create_project_monthly_report_view(request, project):
             if form.is_valid():
                 report = form.save(commit=False)
                 report.project = project
-                report.is_active = True
                 report.state = "pending"
                 report.save()
 
@@ -130,10 +118,8 @@ def create_project_monthly_report_view(request, project):
         context = {
             "project": project,
             "report_form": form,
-            "report_view": True,
-            "report_activities": False,
-            "report_locations": False,
         }
+
         return render(request, "project_reports/monthly_reports/forms/monthly_report_form.html", context)
 
     messages.error(request, "Your project is not ready for reporting! Please submit your project first.")
@@ -154,13 +140,11 @@ def update_project_monthly_report_view(request, project, report):
         form = ProjectMonthlyReportForm(request.POST, instance=report)
         if form.is_valid():
             report = form.save()
+
             report.project_id = project
             report.save()
-            return redirect(
-                "list_report_activity_plans",
-                project=project,
-                report=report.pk,
-            )
+
+            return redirect("view_monthly_report", project=project, report=report.pk)
     else:
         form = ProjectMonthlyReportForm(instance=report)
 
@@ -180,28 +164,32 @@ def update_project_monthly_report_view(request, project, report):
 def details_monthly_progress_view(request, project, report):
     """Project Monthly Report Read View"""
     project = get_object_or_404(Project, pk=project)
+    monthly_report = get_object_or_404(ProjectMonthlyReport, pk=report)
 
-    monthly_report = get_object_or_404(
-        ProjectMonthlyReport.objects.prefetch_related(
-            Prefetch(
-                "activityplanreport_set",
-                ActivityPlanReport.objects.select_related(
-                    "activity_plan__activity_domain", "activity_plan__activity_type", "indicator"
-                ).annotate(report_target_location_count=Count("targetlocationreport")),
-            ),
-        ),
-        pk=report,
+    activity_plan_report_list = (
+        ActivityPlanReport.objects.filter(monthly_report=monthly_report)
+        .select_related("activity_plan__activity_domain", "activity_plan__activity_type")
+        .prefetch_related("response_types")
+        .order_by("-id")
+        .annotate(report_location_count=Count("targetlocationreport"))
     )
 
-    activity_reports = monthly_report.activityplanreport_set.all()
+    ap_report_filter = ActivityPlanReportFilter(
+        request.GET, queryset=activity_plan_report_list, monthly_report=monthly_report
+    )
+
+    RECORDS_PER_PAGE = Setting.get("RECORDS_PER_PAGE", default=10)
+    per_page = request.GET.get("per_page", RECORDS_PER_PAGE)
+    p = Paginator(ap_report_filter.qs, per_page=per_page)
+    page = request.GET.get("page", 1)
+    p_ap_plan_report_list = p.get_page(page)
+    p_ap_plan_report_list.adjusted_elided_pages = p.get_elided_page_range(page)
 
     context = {
         "project": project,
         "monthly_report": monthly_report,
-        "activity_reports": activity_reports,
-        "report_view": True,
-        "report_activities": False,
-        "report_locations": False,
+        "p_ap_plan_report_list": p_ap_plan_report_list,
+        "ap_report_filter": ap_report_filter,
     }
 
     return render(request, "project_reports/monthly_reports/views/monthly_report_view.html", context)
@@ -211,64 +199,72 @@ def details_monthly_progress_view(request, project, report):
 def copy_project_monthly_report_view(request, report):
     """Copy report view"""
     monthly_report = get_object_or_404(ProjectMonthlyReport, pk=report)
-
-    # Calculate the first day of the current month
-    today = datetime.now()
-    first_day_of_current_month = today.replace(day=1)
-
-    # Calculate the first day of the last month
-    first_day_of_last_month = (first_day_of_current_month - timedelta(days=1)).replace(day=1)
+    # Filter the reports for the last month and find the latest submitted report
+    # last_month_report = ProjectMonthlyReport.objects.filter(project=monthly_report.project, state="completed").latest(
+    #     "approved_on"
+    # )
 
     last_month_report = None
 
-    # Filter the reports for the last month and find the latest submitted report
-    last_month_reports = ProjectMonthlyReport.objects.filter(
-        project=monthly_report.project.pk,
-        report_date__gte=first_day_of_last_month,
-        report_date__lt=first_day_of_current_month,
-        state="complete",  # Filter by the "Submitted" state
-        approved_on__isnull=False,  # Ensure the report has a submission date
-    )
-    if last_month_reports:
-        last_month_report = last_month_reports.latest("approved_on")
+    try:
+        last_month_report = (
+            ProjectMonthlyReport.objects.select_related("project")
+            .prefetch_related(
+                Prefetch(
+                    "activityplanreport_set",
+                    queryset=ActivityPlanReport.objects.prefetch_related(
+                        Prefetch(
+                            "targetlocationreport_set",
+                            queryset=TargetLocationReport.objects.prefetch_related(
+                                Prefetch(
+                                    "disaggregationlocationreport_set",
+                                    DisaggregationLocationReport.objects.select_related("disaggregation"),
+                                )
+                            ),
+                        )
+                    ),
+                )
+            )
+            .filter(project=monthly_report.project, state="completed")
+            .latest("approved_on")
+        )
+    except Exception:
+        messages.error(request, "At least one last month approved report is required.")
+        return HttpResponse(200)
+
+    print(f"monthly_report_current:{monthly_report} ----- last_month_report: {last_month_report}")
 
     # Check if the new monthly report was successfully created.
-    if monthly_report and last_month_report:
-        # Get all activity plans reports associated with the current monthly report.
-        activity_plan_reports = last_month_report.activityplanreport_set.all()
+    # Get all activity plans reports associated with the current monthly report.
+    activity_plan_reports = last_month_report.activityplanreport_set.all()
 
-        # delete existing records
-        monthly_report.activityplanreport_set.all().delete()
+    # delete existing records
+    monthly_report.activityplanreport_set.all().delete()
 
-        # Iterate through each activity plan  report and copy it to the new monthly report.
-        for plan_report in activity_plan_reports:
-            new_plan_report = copy_monthly_report_activity_plan(monthly_report, plan_report)
-            location_reports = plan_report.targetlocationreport_set.all()
+    # Iterate through each activity plan  report and copy it to the new monthly report.
+    for plan_report in activity_plan_reports:
+        new_plan_report = copy_monthly_report_activity_plan(monthly_report, plan_report)
+        location_reports = plan_report.targetlocationreport_set.all()
 
-            # Iterate through target locations reports and copy them to the new plan report.
-            for location_report in location_reports:
-                new_location_report = copy_target_location_report(new_plan_report, location_report)
-                disaggregation_location_reports = location_report.disaggregationlocationreport_set.all()
+        # Iterate through target locations reports and copy them to the new plan report.
+        for location_report in location_reports:
+            new_location_report = copy_target_location_report(new_plan_report, location_report)
+            disaggregation_location_reports = location_report.disaggregationlocationreport_set.all()
 
-                # Iterate through disaggregation locations reports and copy them to the new location report.
-                for disaggregation_location_report in disaggregation_location_reports:
-                    copy_disaggregation_location_reports(new_location_report, disaggregation_location_report)
-        messages.success(request, "Report activities copied successfully.")
-        url = reverse_lazy(
-            "list_report_activity_plans", kwargs={"project": monthly_report.project.pk, "report": monthly_report.pk}
-        )
+            # Iterate through disaggregation locations reports and copy them to the new location report.
+            for disaggregation_location_report in disaggregation_location_reports:
+                copy_disaggregation_location_reports(new_location_report, disaggregation_location_report)
 
-    else:
-        messages.error(request, "At least one last month approved report is required.")
-        url = reverse_lazy(
-            "view_monthly_report", kwargs={"project": monthly_report.project.pk, "report": monthly_report.pk}
-        )
+    messages.success(request, "Report activities copied successfully.")
+    url = reverse_lazy(
+        "view_monthly_report", kwargs={"project": monthly_report.project.pk, "report": monthly_report.pk}
+    )
 
     # Save the changes made to the new monthly report.
     monthly_report.state = "todo"
     monthly_report.save()
 
-    return HTTPResponseHXRedirect(redirect_to=url)
+    return HttpResponseClientRedirect(url)
 
 
 def copy_monthly_report_activity_plan(monthly_report, plan_report):
@@ -276,20 +272,13 @@ def copy_monthly_report_activity_plan(monthly_report, plan_report):
     try:
         # Duplicate the original activity plan report by retrieving it with the provided primary key.
         new_plan_report = get_object_or_404(ActivityPlanReport, pk=plan_report.pk)
+        response_types = new_plan_report.response_types.all()
         new_plan_report.pk = None  # Generate a new primary key for the duplicated plan report.
-        new_plan_report.save()  # Save the duplicated plan report to the database.
-
-        # Associate the duplicated plan report with the new monthly report.
         new_plan_report.monthly_report = monthly_report
 
-        # Set the plan report as active
-        new_plan_report.is_active = True
-
-        # Copy indicator from the current plan report to the duplicated plan report.
-        new_plan_report.indicator = plan_report.indicator
-
-        # Save the changes made to the duplicated plan report.
         new_plan_report.save()
+
+        new_plan_report.response_types.set(response_types)
 
         # Return the duplicated plan report.
         return new_plan_report
@@ -345,67 +334,74 @@ def copy_disaggregation_location_reports(location_report, disaggregation_locatio
 
 @login_required
 def delete_project_monthly_report_view(request, report):
-    """Delete View for Project Reports"""
     monthly_report = get_object_or_404(ProjectMonthlyReport, pk=report)
-    # TODO: Check access rights before deleting
-    if monthly_report:
-        monthly_report.delete()
-    url = reverse_lazy("project_reports_home", kwargs={"project": monthly_report.project.pk})
-    url_with_params = f"{url}?state=todo&state=pending&state=submit&state=reject"
 
-    return HTTPResponseHXRedirect(redirect_to=url_with_params)
+    # TODO: Check access rights before deleting
+    monthly_report.delete()
+
+    messages.success(request, "The reporting period and its dependencies has been deleted")
+
+    if request.headers.get("Hx-Trigger", "") == "delete-btn":
+        url = reverse_lazy("project_reports_home", kwargs={"project": monthly_report.project.pk})
+
+        return HttpResponseClientRedirect(url)
+
+    return HttpResponse(status=200)
 
 
 @login_required
 def archive_project_monthly_report_view(request, report):
-    """Archive View for Project Reports"""
     monthly_report = get_object_or_404(ProjectMonthlyReport, pk=report)
-    if monthly_report:
-        monthly_report.state = "archive"
-        monthly_report.is_active = False
-        monthly_report.save()
-    url = reverse_lazy("project_reports_home", kwargs={"project": monthly_report.project.pk})
-    url_with_params = f"{url}?state=todo&state=pending&state=submit&state=reject"
 
-    return HTTPResponseHXRedirect(redirect_to=url_with_params)
+    if monthly_report:
+        monthly_report.state = "archived"
+        monthly_report.save()
+
+    url = reverse_lazy("project_reports_home", kwargs={"project": monthly_report.project.pk})
+
+    return HttpResponseClientRedirect(url)
 
 
 @login_required
 def unarchive_project_monthly_report_view(request, report):
     """Unarchive View for Project Reports"""
     monthly_report = get_object_or_404(ProjectMonthlyReport, pk=report)
-    if monthly_report:
-        monthly_report.is_active = True
-        monthly_report.state = "todo"
-        monthly_report.save()
-    url = reverse_lazy("project_reports_home", kwargs={"project": monthly_report.project.pk})
-    url_with_params = f"{url}?state=todo&state=pending&state=submit&state=reject"
 
-    return HTTPResponseHXRedirect(redirect_to=url_with_params)
+    monthly_report.is_active = True
+    monthly_report.state = "todo"
+    monthly_report.save()
+
+    url = reverse_lazy("project_reports_home", kwargs={"project": monthly_report.project.pk})
+
+    return HttpResponseClientRedirect(url)
 
 
 @login_required
 def submit_monthly_report_view(request, report):
     monthly_report = get_object_or_404(ProjectMonthlyReport, pk=report)
+
     # TODO: Handle with access rights and groups
-    monthly_report.state = "complete"
+    monthly_report.state = "completed"
     monthly_report.submitted_on = timezone.now()
     monthly_report.approved_on = timezone.now()
+
     monthly_report.save()
+
     messages.success(request, "Report Submitted and Approved!")
 
     # Return the URL in a JSON response
     url = reverse_lazy(
         "view_monthly_report", kwargs={"project": monthly_report.project.pk, "report": monthly_report.pk}
     )
-    return HTTPResponseHXRedirect(redirect_to=url)
+
+    return HttpResponseClientRedirect(url)
 
 
 @login_required
 def approve_monthly_report_view(request, report):
     monthly_report = get_object_or_404(ProjectMonthlyReport, pk=report)
     # TODO: Handle with access rights and groups
-    monthly_report.state = "complete"
+    monthly_report.state = "completed"
     monthly_report.approved_on = timezone.now()
     monthly_report.save()
     # Generate the URL using reverse
@@ -430,7 +426,7 @@ def reject_monthly_report_view(request, report):
         message = request.GET.get("message")
 
     # TODO: Handle with access rights and groups
-    monthly_report.state = "reject"
+    monthly_report.state = "rejected"
     monthly_report.rejected_on = timezone.now()
     monthly_report.comments = message
 
@@ -653,3 +649,171 @@ def import_monthly_reports(request, report):
             # Return the URL in a JSON response
             response_data = {"success": success, "redirect_url": url, "message": message}
             return JsonResponse(response_data)
+
+
+# download last month activity report
+def download_project_monthly_report_view(request, report):
+    monthly_report = get_object_or_404(ProjectMonthlyReport, pk=report)
+
+    # Filter the reports for the last month and find the latest submitted report
+    # last_month_report = ProjectMonthlyReport.objects.filter(project=monthly_report.project, state="completed").latest(
+    #     "approved_on"
+    # )
+    last_month_report = None
+    # error handling
+    try:
+        last_month_report = (
+            ProjectMonthlyReport.objects.select_related("project")
+            .prefetch_related(
+                Prefetch(
+                    "activityplanreport_set",
+                    queryset=ActivityPlanReport.objects.prefetch_related(
+                        Prefetch(
+                            "targetlocationreport_set",
+                            queryset=TargetLocationReport.objects.prefetch_related(
+                                Prefetch(
+                                    "disaggregationlocationreport_set",
+                                    DisaggregationLocationReport.objects.select_related("disaggregation"),
+                                )
+                            ),
+                        )
+                    ),
+                )
+            )
+            .filter(project=monthly_report.project, state="completed")
+            .latest("approved_on")
+        )
+    except Exception:
+        url = reverse_lazy(
+            "view_monthly_report", kwargs={"project": monthly_report.project.pk, "report": monthly_report.pk}
+        )
+        messages.error(request, "At least one last month approved report is required.")
+        return HttpResponseRedirect(url)
+
+    # define csv
+    response = HttpResponse(content_type="text/csv")
+    response["Content-Disposition"] = "attachment; filename=last_month_activity_report.csv"
+    writer = csv.writer(response)
+    columns = [
+        "project_code",
+        "indicator",
+        "activity_domain",
+        "activity_type",
+        "response_types",
+        "implementing_partners",
+        "package_type",
+        "unit_type",
+        "units",
+        "no_of_transfers",
+        "grant_type",
+        "transfer_category",
+        "currency",
+        "transfer_mechanism_type",
+        "implement_modility_type",
+        "beneficiary_status",
+        "admin0name",
+        "admin0pcode",
+        "admin1pcode",
+        "admin1name",
+        "admin2pcode",
+        "admin2name",
+        "zone",
+        "location_type",
+        "facility_site_type",
+        "facility_monitoring",
+        "facility_id",
+        "facility_name",
+        "facility_lat",
+        "facility_long",
+    ]
+    disaggregation_cols = []
+    disaggregation_list = []
+    plan_reports = last_month_report.activityplanreport_set.all()
+    for plan_report in plan_reports:
+        location_reports = plan_report.targetlocationreport_set.all()
+        for location_report in location_reports:
+            disaggregations = location_report.disaggregationlocationreport_set.all()
+            for disaggregation in disaggregations:
+                if disaggregation.disaggregation.name not in disaggregation_list:
+                    disaggregation_list.append(disaggregation.disaggregation.name)
+                    disaggregation_cols.append(disaggregation.disaggregation.name)
+                else:
+                    continue
+
+            if disaggregations:
+                for disaggregation_col in disaggregation_cols:
+                    columns.append(disaggregation_col)
+    # write the column header to the csv file
+
+    writer.writerow(columns)
+
+    # retrieving the rows from the queryset
+
+    plan_reports = last_month_report.activityplanreport_set.all()
+    for plan_report in plan_reports:
+        location_reports = plan_report.targetlocationreport_set.all()
+        for location_report in location_reports:
+            # Create a dictionary to hold disaggregation data
+            disaggregation_data = {}
+            row = [
+                last_month_report.project.code if last_month_report.project.code else None,
+                plan_report.activity_plan.indicator.name if plan_report.activity_plan.indicator else None,
+                plan_report.activity_plan.activity_domain.name if plan_report.activity_plan.activity_domain else None,
+                plan_report.activity_plan.activity_type.name if plan_report.activity_plan.activity_type else None,
+                ", ".join([responseType.name for responseType in plan_report.response_types.all() if responseType]),
+                ", ".join(
+                    [
+                        implementing_partner.code
+                        for implementing_partner in plan_report.implementing_partners.all()
+                        if implementing_partner
+                    ]
+                ),
+                plan_report.activity_plan.package_type,
+                plan_report.activity_plan.unit_type,
+                plan_report.activity_plan.units,
+                plan_report.activity_plan.no_of_transfers,
+                plan_report.activity_plan.grant_type,
+                plan_report.activity_plan.transfer_category,
+                plan_report.activity_plan.currency,
+                plan_report.activity_plan.transfer_mechanism_type,
+                plan_report.activity_plan.implement_modility_type,
+                plan_report.get_beneficiary_status_display(),
+                # write target location
+                location_report.target_location.country.name,
+                location_report.target_location.country.code,
+                location_report.target_location.province.code,
+                location_report.target_location.province.name,
+                location_report.target_location.district.code,
+                location_report.target_location.district.name,
+                location_report.target_location.zone,
+                location_report.target_location.location_type,
+                location_report.target_location.facility_site_type,
+                location_report.target_location.facility_monitoring,
+                location_report.target_location.facility_id,
+                location_report.target_location.facility_name,
+                location_report.target_location.facility_lat,
+                location_report.target_location.facility_long,
+            ]
+            disaggregation_locations = location_report.disaggregationlocationreport_set.all()
+            disaggregation_location_list = {
+                disaggregation_location.disaggregation.name: str(disaggregation_location.reached)
+                for disaggregation_location in disaggregation_locations
+            }
+
+            # Update disaggregation_data with values from disaggregation_location_list
+            for disaggregation_entry in disaggregation_list:
+                if disaggregation_entry not in disaggregation_location_list:
+                    disaggregation_data[disaggregation_entry] = None
+
+            disaggregation_location_list.update(disaggregation_data)
+
+            # Append disaggregation values to the row in the order of columns
+            for header in columns:
+                if header in disaggregation_location_list:
+                    row.append(disaggregation_location_list[header])
+
+            # Add row to the list of rows
+
+            writer.writerow(row)
+
+    return response

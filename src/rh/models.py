@@ -1,8 +1,6 @@
 from django.contrib.auth.models import User
+from django.core.validators import MaxValueValidator, MinLengthValidator, MinValueValidator
 from django.db import models
-from smart_selects.db_fields import ChainedForeignKey
-from django.core.validators import MinLengthValidator, MaxValueValidator, MinValueValidator
-
 
 NAME_MAX_LENGTH = 200
 DESCRIPTION_MAX_LENGTH = 600
@@ -62,10 +60,6 @@ class Cluster(models.Model):
     code = models.SlugField(max_length=NAME_MAX_LENGTH, unique=True)
     title = models.CharField(max_length=NAME_MAX_LENGTH)
     ocha_code = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
-    has_nhs_code = models.BooleanField(default=False, null=True)
-
-    def check_nhs_code(self):
-        return self.has_nhs_code
 
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, null=True)
@@ -162,27 +156,6 @@ class Donor(models.Model):
     class Meta:
         verbose_name = "Donor"
         verbose_name_plural = "Donors"
-
-
-class StrategicObjective(models.Model):
-    """Objectives"""
-
-    strategic_objective_name = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
-    strategic_objective_description = models.CharField(max_length=DESCRIPTION_MAX_LENGTH, blank=True, null=True)
-    output_objective_name = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
-    sector_objective_name = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
-    sector_objective_description = models.CharField(max_length=DESCRIPTION_MAX_LENGTH, blank=True, null=True)
-    denominator = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
-
-    created_at = models.DateTimeField(auto_now_add=True, null=True)
-    updated_at = models.DateTimeField(auto_now=True, null=True)
-
-    def __str__(self):
-        return self.strategic_objective_name
-
-    class Meta:
-        verbose_name = "Objective"
-        verbose_name_plural = "Objectives"
 
 
 class Currency(models.Model):
@@ -339,7 +312,6 @@ class ActivityDomain(models.Model):
 
 class ActivityType(models.Model):
     activity_domain = models.ForeignKey(ActivityDomain, on_delete=models.SET_NULL, blank=True, null=True)
-    objective = models.ForeignKey(StrategicObjective, on_delete=models.SET_NULL, blank=True, null=True)
 
     name = models.CharField(max_length=DESCRIPTION_MAX_LENGTH)
     code = models.SlugField(max_length=DESCRIPTION_MAX_LENGTH, unique=True)
@@ -491,34 +463,10 @@ class ActivityPlan(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     state = models.CharField(max_length=15, choices=STATES, null=True, default="draft")
 
-    activity_domain = models.ForeignKey(ActivityDomain, on_delete=models.SET_NULL, null=True)
-    activity_type = ChainedForeignKey(
-        ActivityType,
-        chained_field="activity_domain",
-        chained_model_field="activity_domain",
-        show_all=False,
-        auto_choose=True,
-        null=True,
-        sort=True,
-    )
-    activity_detail = ChainedForeignKey(
-        ActivityDetail,
-        chained_field="activity_type",
-        chained_model_field="activity_type",
-        show_all=False,
-        auto_choose=True,
-        blank=True,
-        null=True,
-        sort=True,
-    )
-    indicator = ChainedForeignKey(
-        Indicator,
-        chained_field="activity_type",
-        chained_model_field="activity_types",
-        show_all=False,
-        auto_choose=True,
-        sort=True,
-    )
+    activity_domain = models.ForeignKey(ActivityDomain, on_delete=models.DO_NOTHING)
+    activity_type = models.ForeignKey(ActivityType, on_delete=models.DO_NOTHING)
+    activity_detail = models.ForeignKey(ActivityDetail, on_delete=models.DO_NOTHING, null=True, blank=True)
+    indicator = models.ForeignKey(Indicator, on_delete=models.DO_NOTHING)
 
     beneficiary = models.ForeignKey(
         BeneficiaryType,
@@ -540,8 +488,6 @@ class ActivityPlan(models.Model):
         max_length=15, choices=CATEGORY_TYPES, default="non-disabled", null=True, blank=True
     )
 
-    total_target = models.IntegerField(default=0, blank=True, null=True)
-    total_set_target = models.IntegerField(default=0, blank=True, null=True)
     description = models.TextField(blank=True, null=True)
     # old_id = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
 
@@ -561,6 +507,9 @@ class ActivityPlan(models.Model):
     implement_modility_type = models.ForeignKey(
         ImplementationModalityType, on_delete=models.SET_NULL, null=True, blank=True
     )
+
+    def get_available_states(self):
+        return [state[0] for state in STATES]
 
     def __str__(self):
         return f"Activity Plan: {self.activity_domain} - {self.indicator}"
@@ -589,11 +538,25 @@ class TargetLocation(models.Model):
     country = models.ForeignKey(
         Location, related_name="target_country", on_delete=models.SET_NULL, null=True, limit_choices_to={"level": 0}
     )
-    province = models.ForeignKey(Location, related_name="target_province", on_delete=models.SET_NULL, null=True)
-    district = models.ForeignKey(
-        Location, related_name="target_district", on_delete=models.SET_NULL, null=True, blank=True
+    province = models.ForeignKey(
+        Location, related_name="target_province", on_delete=models.SET_NULL, null=True, limit_choices_to={"level": 1}
     )
-    zone = models.ForeignKey(Location, related_name="target_zones", on_delete=models.SET_NULL, null=True, blank=True)
+    district = models.ForeignKey(
+        Location,
+        related_name="target_district",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        limit_choices_to={"level": 2},
+    )
+    zone = models.ForeignKey(
+        Location,
+        related_name="target_zones",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        limit_choices_to={"level": 3},
+    )
     location_type = models.ForeignKey(LocationType, on_delete=models.SET_NULL, null=True, blank=True)
 
     implementing_partner = models.ForeignKey(Organization, on_delete=models.SET_NULL, null=True, blank=True)
@@ -614,6 +577,9 @@ class TargetLocation(models.Model):
     updated_at = models.DateTimeField(auto_now=True, null=True)
 
     nhs_code = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
+
+    def get_available_states(self):
+        return [state[0] for state in STATES]
 
     def __str__(self):
         return f"Target Location: {self.province}, {self.district}"

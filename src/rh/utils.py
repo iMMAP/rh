@@ -1,5 +1,9 @@
+import json
+from datetime import datetime
+
 from django.contrib.auth.models import User
-from rh.models import Project
+
+from rh.models import Project, TargetLocation
 
 
 def is_cluster_lead(user: User, clusters: list) -> bool:
@@ -29,3 +33,24 @@ def has_permission(user: User, project: Project = None, clusters: list = [], per
             return False
 
     return True
+
+
+class DateTimeEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, datetime):
+            return obj.isoformat()
+        return super().default(obj)
+
+
+def update_project_plan_state(project: Project, state: str):
+    """Updates the states of a project its activity plans and target locations
+    state: should be from rh.models.STATES
+    """
+    activity_plans = project.activityplan_set.all()
+    activity_plans.update(state=state)
+
+    target_locations = TargetLocation.objects.filter(activity_plan__in=activity_plans)
+    target_locations.update(state=state)
+
+    project.state = state
+    project.save()

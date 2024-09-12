@@ -1,0 +1,69 @@
+{% extends "_base.html" %}
+
+{% load static %}
+{% load vite %}
+
+{% block title %}
+    Profile: {{ user.username }}
+{% endblock title %}
+
+{% block content %}
+    <div class="container">
+        <div class="profile-info-holder">
+            <div class="profile-info-block">
+                <h1>{{ user.profile.name }}</h1>
+                <strong class="user-position">{{ user.profile.position }}</strong>
+                <address>
+                    <span class="text-read-only m2m-badges">
+                        <span>Clusters</span>
+                        {% for cluster in user.profile.clusters.all %}
+                            <span class="border border-gray-d1 rounded-full px-4 py-1 bg-gray-f5">{{ cluster.title }}</span>
+                        {% endfor %}
+                    </span>
+
+                    {{ user.profile.country }}
+                    <br />
+                    <a href="mailto:{{ user.email }}">{{ user.email }}</a>
+                    <br />
+                    {% if user.profile.phone %}
+                        <a href="tel:{{ user.profile.phone }}">{{ user.profile.phone }}</a>
+                    {% endif %}
+                </address>
+            </div>
+            <div class="profile-info-block">
+                <div class="subtitle-block">
+                    <strong class="subtitle">Contact information</strong>
+                    <!--<button class="edit-btn" type="button"><span class="icon-pen"></span></button>-->
+                </div>
+                <ul class="user-profile-contacts">
+                    <li>
+                        <strong class="title">Phone</strong>
+                        <a href="tel:{{ user.profile.phone }}">{{ user.profile.phone }}</a>
+                    </li>
+                    <li>
+                        <strong class="title">Whatsapp</strong>
+                        {{ user.profile.whatsapp }}
+                    </li>
+                    {% if user.profile.skype %}
+                    <li>
+                        <strong class="title">Skype ID</strong>
+                        <a href="skype:{{ user.profile.skype }}?userinfo">{{ user.profile.skype }}</a>
+                    </li>
+                    {% endif %}
+                    <li>
+                        <strong class="title">Email</strong>
+                        <a href="mailto:{{ user.email }}">{{ user.email }}</a>
+                    </li>
+                    <li>
+                        <strong class="title">Cluster Contact</strong>
+                        {% if user.profile.is_cluster_contact %}
+                            Yes
+                        {% else %}
+                            No
+                        {% endif %}
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

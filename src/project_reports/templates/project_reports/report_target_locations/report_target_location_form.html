@@ -1,0 +1,171 @@
+{% extends "project_reports/monthly_reports/forms/monthly_report_progress_form_base.html" %}
+{% load static %}
+
+{% block title %}
+    {% if location_report_form.instance.id %}
+        Update Report Target Location
+    {% else %}
+        New Report Target Location
+    {% endif %}
+{% endblock title %}
+
+{% block breadcrumb_li %}
+    <li>
+        <a href="{% url 'view_monthly_report' monthly_report.project.id  monthly_report.id %}">
+            {{ monthly_report.from_date| date:"F Y" }}
+        </a>
+    </li>
+    {% if location_report_form.instance.id %}
+        <li class="current">Update Report Target Location</li>
+    {% else %}
+        <li class="current">New Report Target Location</li>
+    {% endif %}
+{% endblock breadcrumb_li %}
+
+{% block project_body %}
+    <div class="content-block top-border">
+        <div class="main-content">
+            <div class="activity-planning create-activity">
+                <div id="activity-formset-form">
+                    <div class="activity-block-holder">
+                        <div class="top-activity-block">
+                            <span class="activity-title">
+                                <span>
+                                    {% if location_report %}
+                                        Update Report Target Location
+                                    {% else %}
+                                        New Report Target Location
+                                    {% endif %}
+                                </span>
+                            </span>
+                            <br>
+                            <ul class="space-y-2">
+                                <li>
+                                    <span class="icon-info mr-2"></span>
+                                    Use this form to provide detailed information about the report target location for the above report activity plan,
+                                    including the country, province or state, and other relevant details.
+                                </li>
+                                <li> <span class="icon-info mr-2"></span>
+                                    Also specify the number of people you have reached with your activity in the selected report location from the Disaggregation section.
+                                </li>
+                                <li> <span class="icon-info mr-2"></span> Required fields are marked with * </li>
+                                <li><span class="icon-info mr-2"></span>If you the don't see your location in the list, go to <a target="_blank" class="underline" href="{% url 'target-locations-list' project.pk %}">Target Locations</a> page to add new target location.</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="target-location-form">
+                        <form action="" method="post" class="form-container" id="location-form">
+                            <div class="progress bg-red h-0.5">
+                                <div class="indeterminate bg-white"></div>
+                            </div>
+                            <div class="flex items-center justify-between border-b border-red-b5 p-4 bg-gray-f5">
+                                <span class="title font-bold text-red-a5">Targeted Location</span>
+                            </div>
+                            {% csrf_token %}
+                            {% if location_report_form.non_field_errors %}
+                                <tr class="row-form-errors">
+                                    <td colspan="4">{{ location_report_form.non_field_errors }}</td>
+                                </tr>
+                            {% endif %}
+                            {% if location_report_form.errors %}
+                                <tr class="row-form-errors">
+                                    <td colspan="4">{{ location_report_form.errors }}</td>
+                                </tr>
+                            {% endif %}
+                            {% comment %} info {% endcomment %}
+                            <div class="p-4 flex justify-between items-center text-xs">
+                                <div>
+                                    <span class="text-gray-7d">Activity Plan Domain</span>
+                                    <div class="input-holder">
+                                        <span class="text-read-only">{{ report_plan.activity_plan.activity_domain }}</span>
+                                    </div>
+                                </div>
+                                <div>
+                                    <span class="">Activity Plan Type</span>
+                                    <div class="input-holder">
+                                        <span class="text-read-only">{{ report_plan.activity_plan.activity_type }}</span>
+                                    </div>
+                                </div>
+                                <div>
+                                    <span class="">Activity Plan Indicator</span>
+                                    <div class="input-holder">
+                                        <span class="text-read-only">{{ report_plan.activity_plan.indicator }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            {% comment %} info {% endcomment %}
+                            <div class="form-wrapper p-4">
+                                <div class="select-field">
+                                    <span class="label">Target Location</span>
+                                    <p class="help-text">
+                                        {{ location_report_form.target_location.help_text }}
+                                        </span> If you the don't see your desired location in the list, go to <a target="_blank" href="{% url 'target-locations-create' report_plan.activity_plan.pk %}" class="text-red underline">add target location</a> page to add new target location for this Activity Plan
+                                    </p>
+                                    {{ location_report_form.target_location }}
+                                    <div class="sign-up-field-error">{{ location_report_form.target_location.errors }}</div>
+                                </div>
+
+                                {% comment %} the TL info and Tabular Disaggregation Here {% endcomment %}
+                                <div id="target-location-info">
+                                    {% if location_report %}
+                                        {% include "project_reports/report_target_locations/partials/_disaggregation_tabular_form.html" with target_location=location_report.target_location %}
+                                    {% endif %}
+                                </div>
+                                {% comment %} end of TargetLocation info box {% endcomment %}
+                             
+                                <div class="plan-submit-holder">
+                                    <div></div>
+                                    <div>
+                                        {% if location_report_form.initial %}
+                                            <a id="delete-btn"
+                                               hx-delete="{% url 'delete_location_report' location_report_form.instance.id %}"
+                                               hx-target="closest form"
+                                               hx-trigger="click"
+                                               hx-indicator=".progress"
+                                               hx-swap="outerHTML swap:1s"
+                                               hx-confirm="Do you want to delete `{{ location_report_form.initial.id }}` and its disaggregations?"
+                                               data-tippy-content="Delete Activity Plan"
+                                               class="cursor-pointer btn btn-gray">
+                                                <span class="project-detail icon-trashbin"></span>
+                                                Delete
+                                            </a>
+                                        {% endif %}
+                                        <input type="submit" name="_save" class="btn btn-red" value="Save">
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock project_body %}
+
+{% block scripts %}
+    <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+    <script>
+     document.addEventListener('DOMContentLoaded', function() {
+      const formElement = $('#location-form');
+      let facilityDetails = formElement.find(`#facility_details`);
+      let facilityMonitoring = formElement.find(`#id_facility_monitoring`);
+      if (!facilityMonitoring.is(':checked')) {
+       facilityDetails.hide();
+      } else {
+       facilityDetails.hide();
+      }
+     });
+
+    document.querySelectorAll('.custom-select').forEach((select) => {
+      const choice = new Choices(select, {
+       searchEnabled: true,
+       itemSelectText: '',
+       removeItemButton: true,
+       classNames: {
+        listDropdown: 'choices__list--dropdown',
+       },
+       shouldSort: false,
+      });
+    });
+    </script>
+{% endblock scripts %}

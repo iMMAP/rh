@@ -1,4 +1,3 @@
-{% load compress %}
 {% load static %}
 
 <div class="content-block bottom-border table-container">
@@ -19,7 +18,9 @@
         <!-- filter applied end -->
  
         <div class="actions-panel">
-            {% include "components/_filter_drawer.html" with filter=project_filter %}
+            {% if project_filter %}
+                {% include "components/_filter_drawer.html" with filter=project_filter %}
+            {% endif %}
             <div class="export-formats-holder">
                 <span class="btn btn-gray export-open">
                     <span class="btn-text">Export</span>
@@ -35,17 +36,20 @@
                     <div class="format-list">
                         <div class="export-link-holder"
                              onclick="exportButton(event)"
-                             data-export-url="{% url 'export-org-projects' 'csv' %}">
+                             data-export-url="{% url 'export_project_excel' 'csv' %}"
+                             data-export-format="csv">
                             <span class="export-link cursor-pointer">CSV</span>
                         </div>
                         <div class="export-link-holder"
                              onclick="exportButton(event)"
-                             data-export-url="{% url 'export-org-projects' 'xls' %}">
+                             data-export-url="{% url 'export_project_excel' 'xls' %}"
+                             data-export-format="xlsx">
                             <span class="export-link cursor-pointer">Excel</span>
                         </div>
                         <div class="export-link-holder"
                              onclick="exportButton(event)"
-                             data-export-url="{% url 'export-org-projects' 'json' %}">
+                             data-export-url="{% url 'export_project_excel' 'json' %}"
+                             data-export-format="json">
                             <span class="export-link cursor-pointer">JSON</span>
                         </div>
                     </div>
@@ -65,9 +69,9 @@
                                 <div class="input-check-holder">
                                     <input type="checkbox"
                                            id="table-head-check-01"
+                                           class="input"
                                            data-check-pattern="[name^='table-check']" />
                                     <label for="table-head-check-01">
-                                        <span class="input"></span>
                                     </label>
                                 </div>
                                 <strong class="table-title">Project title</strong>
@@ -116,11 +120,10 @@
                                     <div class="input-check-holder">
                                         <input type="checkbox"
                                                id="table-check-{{ project.pk }}"
-                                               class="project-checkbox"
+                                               class="project-checkbox input"
                                                value="{{ project.pk }}"
                                                name="table-check{{ project.pk }}" />
                                         <label for="table-check-{{ project.pk }}">
-                                            <span class="input"></span>
                                         </label>
                                     </div>
                                     ({{project.code}}) - {{ project.title|truncatechars:100 }}
@@ -163,61 +166,6 @@
                                             <a href="{% if project %}{% url 'project_reports_home' project.pk %}{% else %}#{% endif %}"
                                                class="btn btn-gray">Report</a>
                                         </li>
-
-                                        {% if perms.rh.copy_project %}
-                                            <li>
-                                                <button>
-                                                    <a hx-post="{% url 'copy_project' project.pk %}"
-                                                    hx-indicator=".progress"
-                                                    hx-confirm="Do you want to duplicate Project: `{{ project }}` and its Activities and Target Locations ?"
-                                                    hx-swap="none"
-                                                    data-tippy-content="Duplicate Project and its Activities"
-                                                    >
-                                                        <span class="project-detail icon-copy"></span>
-                                                    </a>
-                                                </button>
-                                            </li>
-                                        {% endif %}
-
-                                        {% if perms.rh.archive_unarchive_project %}
-                                            <li>
-                                                <button class="button-archive-unarchive">
-                                                    {% if project.state != 'in-progress' %}
-                                                        <a href="#"
-                                                           data-url="{% url 'archive_project' project.pk %}"
-                                                           data-type="archive"
-                                                           data-name="project"
-                                                           data-tippy-content="Archive Project"
-                                                           class="show-sw-action-popup">
-                                                            <svg xmlns="http://www.w3.org/2000/svg"
-                                                                 class="archive-icon"
-                                                                 width="16"
-                                                                 height="16"
-                                                                 viewBox="0 0 24 24">
-                                                                <path fill="currentColor" d="M3 3h18v4H3V3m1 18V8h16v13H4m10-7v-3h-4v3H7l5 5l5-5h-3Z" />
-                                                            </svg>
-                                                        </a>
-                                                    {% else %}
-                                                        <a href="#"
-                                                           data-url="{% url 'unarchive_project' project.pk %}"
-                                                           data-type="unarchive"
-                                                           data-name="project"
-                                                           class="show-sw-action-popup">
-                                                            <svg xmlns="http://www.w3.org/2000/svg"
-                                                                 width="16"
-                                                                 height="16"
-                                                                 viewBox="0 0 36 36">
-                                                                <path fill="currentColor" d="M18 21a3 3 0 0 1-2.22-1H5v12a2 2 0 0 0 2 2h22a2 2 0 0 0 2-2V20H20.21A3 3 0 0 1 18 21Zm4 3a1 1 0 0 1-1 1h-6a1 1 0 0 1 0-2h6a1 1 0 0 1 1 1Z" class="clr-i-solid clr-i-solid-path-1" />
-                                                                <path fill="currentColor" d="M15 12H5.5A1.5 1.5 0 0 0 4 13.5V18h11Z" class="clr-i-solid clr-i-solid-path-2" />
-                                                                <path fill="currentColor" d="M30.5 12H21v6h11v-4.5a1.5 1.5 0 0 0-1.5-1.5Z" class="clr-i-solid clr-i-solid-path-3" />
-                                                                <path fill="currentColor" d="m13 9.55l4-3.95V18a1 1 0 1 0 2 0V5.6l4 3.95a1 1 0 1 0 1.41-1.42L18 1.78l-6.39 6.35A1 1 0 0 0 13 9.55Z" class="clr-i-solid clr-i-solid-path-4" />
-                                                                <path fill="none" d="M0 0h36v36H0z" />
-                                                            </svg>
-                                                        </a>
-                                                    {% endif %}
-                                                </button>
-                                            </li>
-                                        {% endif %}
                                     </ul>
                                 </div>
                             </td>
@@ -241,6 +189,4 @@
     {% include "components/_pagination.html" with object_list=projects %}
 </div>
 
-{% compress js inline %}
-    <script src="{% static 'js/components/initCheckAllCheckboxes.js' %}"></script>
-{% endcompress %}
+<script src="{% static 'js/components/initCheckAllCheckboxes.js' %}"></script>

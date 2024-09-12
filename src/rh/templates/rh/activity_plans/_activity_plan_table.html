@@ -23,8 +23,6 @@
             {% if activity_plans_filter %}
                 {% include "components/_filter_drawer.html" with filter=activity_plans_filter %}
             {% endif %}
-            <a href="{% url 'activity-plans-create' project.id %}"
-               class="btn btn-red">Add New Activity</a>
         </div>
     </div>
     {% comment %} Table {% endcomment %}
@@ -48,6 +46,9 @@
                         <th>
                             <strong>Target Locations</strong>
                         </th>
+                        <th>
+                            <strong>State</strong>
+                        </th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -59,22 +60,42 @@
                             <td>{{ row.activity_type }}</td>
                             <td>{{ row.indicator }}</td>
                             <td>{{ row.hrp_beneficiary.name }}</td>
-                            <td>
-                                <a href="{% url 'target-locations-list' project.pk %}?activity_plan={{ row.id }}">
-                                    <svg data-slot="icon"
-                                         width="14px"
-                                         data-darkreader-inline-stroke=""
-                                         fill="none"
-                                         stroke-width="1.5"
-                                         stroke="currentColor"
-                                         viewBox="0 0 24 24"
-                                         xmlns="http://www.w3.org/2000/svg"
-                                         aria-hidden="true">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M13.19 8.688a4.5 4.5 0 0 1 1.242 7.244l-4.5 4.5a4.5 4.5 0 0 1-6.364-6.364l1.757-1.757m13.35-.622 1.757-1.757a4.5 4.5 0 0 0-6.364-6.364l-4.5 4.5a4.5 4.5 0 0 0 1.242 7.244">
-                                        </path>
+                            <td class="{% if row.target_location_count == 0 %}text-red{% endif %}">
+                                <a href="{% url 'target-locations-list' project.pk %}?activity_plan={{ row.id }}" >
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
                                     </svg>
                                     Has {{ row.target_location_count }} Target Locations
                                 </a>
+                            </td>
+                             <td class="flex items-center gap-2">
+                                <span class="h-4 w-4 rounded-full
+                                        {% if row.state == 'draft' %}bg-yellow{% endif %}
+                                        {% if row.state == 'in-progress' %}bg-green-light{% endif %}
+                                        {% if row.state == 'archived' %}bg-gray{% endif %}
+                                        {% if row.state == 'completed' %}bg-gray-d1{% endif %}
+                                    "
+                                >
+                                </span>
+                                <select 
+                                    hx-post="{% url 'activity-plans-update-state' row.id %}" 
+                                    hx-trigger="change" 
+                                    hx-swap="none"
+                                    hx-indicator=".progress"
+                                    name="state"
+                                    class=""
+                                    style="width: unset;padding:1px 6px;height:36px;appearance:auto;"
+                                >
+                                    {% for state in row.get_available_states %}
+                                        <option 
+                                            value="{{ state }}" 
+                                            {% if state == row.state %}selected{% endif %}
+                                        >
+                                            {{state}}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                                
                             </td>
                             <td>
                                 <div class="table-flex-holder">
@@ -91,7 +112,7 @@
                                             </a>
                                         </li>
                                         <li>
-                                            <a href="{% url 'activity-plans-update' row.id %}" data-tippy-content="Edit Activity Plan">
+                                            <a class="btn btn-gray" href="{% url 'activity-plans-update' row.id %}" data-tippy-content="Edit Activity Plan">
                                                 <span class="project-detail icon-pen"></span>
                                             </a>
                                         </li>
@@ -109,9 +130,11 @@
                                                 <a hx-delete="{% url 'activity-plans-delete' row.id %}"
                                                    hx-trigger="click"
                                                    hx-indicator=".progress"
+                                                   hx-swap="outerHTML swap:1s"
                                                    hx-confirm="Do you want to delete `{{ row }}` and its Target Locations ?"
                                                    hx-target="closest tr"
-                                                   data-tippy-content="Delete Activity Plan">
+                                                   data-tippy-content="Delete Activity Plan"
+                                                >
                                                     <span class="project-detail icon-trashbin"></span>
                                                 </a>
                                             </button>

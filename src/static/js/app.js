@@ -7,7 +7,6 @@ import initOpenClose from "./components/initOpenClose.js";
 import initFixedHeader from "./components/initFixedHeader";
 import initPopups from "./components/initPopups";
 import initTooltip from "./components/initTooltip";
-import initSWPopup from './utils/sweatalertPopups';
 
 ready(() => {
   window.ResizeObserver = ResizeObserver;
@@ -18,5 +17,4 @@ ready(() => {
   initFixedHeader();
   initPopups();
   initTooltip();
-  initSWPopup();
 });

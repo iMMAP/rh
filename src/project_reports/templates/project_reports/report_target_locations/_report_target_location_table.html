@@ -1,4 +1,3 @@
-{% load compress %}
 {% load static %}
 
 <div class="content-block bottom-border table-container">
@@ -24,7 +23,7 @@
                 {% include "components/_filter_drawer.html" with filter=location_report_filter %}
             {% endif %}
             {% if report_plan %}
-                <a href="{% url 'create_report_target_locations' project.id report_plan.monthly_report.id report_plan.id %}"
+                <a href="{% url 'create_report_target_location' report_plan.id %}"
                    class="btn btn-red">Add Report Target Location</a>
             {% endif %}
         </div>
@@ -42,7 +41,7 @@
                             <strong class="table-title">Location</strong>
                         </th>
                         <th>
-                            <strong class="table-title">Disaggregations</strong>
+                            <strong class="table-title">Total Reached</strong>
                         </th>
                         <th>
                             <strong>Actions</strong>
@@ -56,12 +55,11 @@
                         <tr>
                             <td>{{ row.activity_plan_report }}</td>
                             <td>
-                                {% if row.zone.value %}{{ row.zone }},{% endif %}
-                                {{ row.district }}, {{ row.province }}, {{ row.country }}
+                               {{ row.target_location }} 
                             </td>
-                            <td>{{ row.report_disaggregation_locations_count }}</td>
+                            <td>{{ row.total_target_reached }}</td>
                             <td>
-                                <a href="{% url 'update_report_target_locations' project.id report.id row.activity_plan_report.id row.id %}"
+                                <a href="{% url 'update_report_target_locations' project.id row.activity_plan_report.id row.id %}"
                                    class="btn btn-gray">Edit</a>
                                 <a hx-post="{% url 'delete_location_report' row.id %}"
                                    hx-trigger="click"

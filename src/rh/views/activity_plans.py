@@ -1,31 +1,44 @@
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.views.decorators.http import require_POST, require_http_methods
+from django.core.paginator import Paginator
+from django.db.models import Count
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
-
-from ..forms import (
-    ProjectIndicatorTypeForm,
-    ActivityPlanForm,
-)
-
-from ..models import (
-    ActivityPlan,
-    Project,
-    Indicator,
-    TargetLocation,
-    DisaggregationLocation,
-)
-from django.core.paginator import Paginator
-from django.db.models import Count
-from django.contrib import messages
 from django.utils.safestring import mark_safe
+from django.views.decorators.http import require_http_methods, require_POST
+from django_htmx.http import HttpResponseClientRedirect
+from extra_settings.models import Setting
 
 from ..filters import ActivityPlansFilter
-from django_htmx.http import HttpResponseClientRedirect
+from ..forms import (
+    ActivityPlanForm,
+    ProjectIndicatorTypeForm,
+)
+from ..models import (
+    ActivityPlan,
+    DisaggregationLocation,
+    Indicator,
+    Project,
+    TargetLocation,
+)
 
 
-from extra_settings.models import Setting
+@require_http_methods(["POST"])
+def update_activity_plan_state(request, pk):
+    new_state = request.POST.get("state", None)
+    if new_state is None:
+        messages.error(request, "Invalid input, state is required!")
+        return HttpResponse(status=200)
+
+    activity_plan = ActivityPlan.objects.get(id=pk)
+    activity_plan.state = new_state
+
+    activity_plan.save()
+
+    messages.success(request, f"Activity Plan state updated to '{new_state}' !")
+
+    return HttpResponse(200)
 
 
 @login_required
@@ -40,7 +53,7 @@ def update_activity_plan(request, pk):
             messages.success(
                 request,
                 mark_safe(
-                    f'The Activity Plan "<a href="{reverse("activity-plans-update", args=[activity_plan.pk])}">{activity_plan}</a>" was changed successfully.'
+                    f'The Activity Plan "<a class="underline" href="{reverse("activity-plans-update", args=[activity_plan.pk])}">{activity_plan}</a>" was changed successfully.'
                 ),
             )
             if "_continue" in request.POST:
@@ -76,7 +89,7 @@ def create_activity_plan(request, project):
             messages.success(
                 request,
                 mark_safe(
-                    f'The Activity Plan "<a href="{reverse("activity-plans-update", args=[activity_plan.pk])}">{activity_plan}</a>" was added successfully.',
+                    f'The Activity Plan "<a class="underline" href="{reverse("activity-plans-update", args=[activity_plan.pk])}">{activity_plan}</a>" was added successfully.',
                 ),
             )
             if "_save" in request.POST:
@@ -154,7 +167,7 @@ def list_activity_plans(request, project):
         queryset=ActivityPlan.objects.filter(project=project)
         .select_related("activity_domain", "activity_type", "indicator", "hrp_beneficiary")
         .annotate(target_location_count=Count("targetlocation"))
-        .order_by("-id"),
+        .order_by("-updated_at"),
         project=project,
     )
 

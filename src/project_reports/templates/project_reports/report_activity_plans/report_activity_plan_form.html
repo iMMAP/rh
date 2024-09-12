@@ -1,0 +1,295 @@
+{% extends "project_reports/monthly_reports/forms/monthly_report_progress_form_base.html" %}
+
+{% load static %}
+
+{% block title %}
+    {{ monthly_report.from_date| date:"F Y" }}  Report Activities
+{% endblock title %}
+
+{% block breadcrumb_li %}
+    <li>
+        {% if monthly_report %}
+            <a href="{% url 'view_monthly_report' monthly_report.project.id  monthly_report.id %}">
+                {{ monthly_report.from_date| date:"F Y" }}
+            </a>
+        {% else %}
+            New Progress Report
+        {% endif %}
+    </li>
+    {% if form.instance.id %}
+        <li class="current">Update Report Activity</li>
+    {% else %}
+        <li class="current">New Report Activity</li>
+    {% endif %}
+{% endblock breadcrumb_li %}
+
+{% block project_body %}
+    <div class="content-block top-border">
+        <div class="flex flex-col gap-2 pt-3">
+            <div>
+                <span>Project</span>
+                <div class="input-holder">
+                    <span class="text-read-only">{{ project.code }} - {{ project.title }}</span>
+                </div>
+            </div>
+            <div>
+                <span>Monthly Report</span>
+                <div class="input-holder">
+                    <span class="text-read-only">{{ monthly_report.from_date| date:"F Y" }}</span>
+                </div>
+            </div>
+        </div>
+        <div class="main-content">
+            <div class="activity-planning create-activity">
+                <div id="activity-formset-form">
+                    <div class="activity-planning read-only">
+                        <div class="top-activity-block">
+                            <span class="activity-title">
+                                <span>
+                                    {% if report_activity_plan %}
+                                        Update Report Activity
+                                    {% else %}
+                                        New Report Activity
+                                    {% endif %}
+                                </span>
+                                {% if report_activity_plan %}
+                                    <span class="btn btn-gray" style="float:right">
+                                        <a href="{% url 'list_report_target_locations' project.id monthly_report.pk %}?activity_plan_report={{ report_activity_plan.id }}"
+                                            class="btn btn-gray">
+                                            Report Target Location
+                                        </a>
+                                    </span>
+                                {% endif %}
+                            </span>
+                            <br>
+                            <ul class="space-y-2 ">
+                                <li>
+                                    <span class="icon-info mr-2"></span> Use this form to provide detailed information about the report activity for the above the monthly report.
+                                </li>
+                                <li>
+                                    <span class="icon-info mr-2"></span> If you the don't see your indicator in the list, go to <a target="_blank" href="{% url 'activity-plans-list' project.pk %}" class="text-red underline">activity plans</a> page to add new activity plans. 
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="activity_form">
+                        <div class="progress bg-red h-0.5">
+                            <div class="indeterminate bg-white"></div>
+                        </div>
+                        <form method="post" class="" id="report-plan-form">
+                            {% csrf_token %}
+                            <div class="project-activity-block" data-form-id="{{ form.prefix }}">
+                                <div class="inner-holder unset-before">
+                                    <div class="project-activity-accordion-slide"
+                                         id="{{ form.prefix }}-details">
+                                        <!-- ERRORS SECTION STARTS -->
+                                        {% if form.errors %}
+                                            <div class="message-container">
+                                                {% for error in form.non_field_errors %}<div class="message-danger-alert">{{ error }}</div>{% endfor %}
+                                            </div>
+                                        {% endif %}
+                                        <!-- ERRORS SECTION ENDS -->
+                                        <div class="row">
+                                            <div class="select-field">
+                                                <span class="label">Project Activity Plan</span>
+                                                <p class="help-text">{{ form.activity_plan.help_text }}
+                                                    <span class="icon-info mr-1 "></span>Only `In-progress` Activity plans are displayed. If you the don't see your indicator in the list, go to <a target="_blank" href="{% url 'activity-plans-list' project.pk %}" class="text-red underline">activity plans</a> page to add new activity plan or update existing one.
+                                                </p>
+                                                {{ form.activity_plan }}
+                                                <p class="sign-up-field-error">{{ form.activity_plan.errors }}</p>
+                                            </div>
+                                            <div id="activity-plan-info" class="mb-3">
+                                                {% if report_activity_plan %}
+                                                    {% include "project_reports/report_activity_plans/partials/activity_plan_info.html" with activity_plan=report_activity_plan.activity_plan %}
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col">
+                                                <div class="multiple-fields-row two-items">
+                                                    <div class="field-col">
+                                                        <div class="select-field">
+                                                            <label for="{{ form.response_types.id_for_label }}">Response Types</label>
+                                                            <p class="help-text">{{ form.response_types.help_text }}</p>
+                                                            {{ form.response_types }}
+                                                            <p class="sign-up-field-error">{{ form.response_types.errors }}</p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="field-col">
+                                                        <div class="select-field">
+                                                            <label for="{{ form.implementing_partners.id_for_label }}">Implementing Partners</label>
+                                                            <p class="help-text">{{ form.implementing_partners.help_text }}</p>
+                                                            {{ form.implementing_partners }}
+                                                            <p class="sign-up-field-error">{{ form.implementing_partners.errors }}</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                            <div class="row">
+                                                <div class="col col-lg">
+                                                    <div class="multiple-fields-row two-items">
+                                                        <div class="field-col">
+                                                            <div class="input-check-holder">
+                                                                {{ form.seasonal_retargeting }}
+                                                                <label for="{{ form.seasonal_retargeting.id_for_label }}">
+                                                                    <span class="text">Beneficiaries Retargeted due to seasonality</span>
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        <div class="multiple-fields-row">
+                                            <div class="field-col">
+                                                <div class="select-field">
+                                                    <label>{{ form.beneficiary_status.label }}
+                                                        [Read the description]
+                                                        <div class="implement-info">
+                                                            <i class="icon-info"></i>
+                                                            <span class="implement-text">Select 'New Beneficiary' if this activity for this project has not 
+                                                                been previously reported for the selected target location. 
+                                                                Select 'Existing Beneficiary' if the activity has already been reported for this target location.</span>
+                                                        </div>
+                                                    </label>
+                                                    {{ form.beneficiary_status }}
+                                                    <p class="sign-up-field-error">{{ form.beneficiary_status.errors }}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- Indicator types start to diaplay -->
+                                        <div id="{{ form.prefix }}-indicator-types">
+                                            <div class="row">
+                                                <div class="multiple-fields-row">
+                                                    {% if report_activity_plan.indicator.package_type %}
+                                                        <div class="field-col">
+                                                            <div class="select-field">
+                                                                <label>{{ form.package_type.label }}</label>
+                                                                {{ form.package_type }}
+                                                                <small class="sign-up-field-error">{{ form.package_type.errors }}</small>
+                                                            </div>
+                                                        </div>
+                                                    {% endif %}
+                                                    {% if report_activity_plan.indicator.grant_type %}
+                                                        <div class="field-col">
+                                                            <div class="select-field">
+                                                                <label>{{ form.grant_type.label }}</label>
+                                                                {{ form.grant_type }}
+                                                                <small class="sign-up-field-error">{{ form.grant_type.errors }}</small>
+                                                            </div>
+                                                        </div>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col col-lg">
+                                                    <div class="multiple-fields-row three-items">
+                                                        {% if report_activity_plan.indicator.unit_type %}
+                                                            <div class="field-col">
+                                                                <div class="select-field">
+                                                                    <label>{{ form.unit_type.label }}</label>
+                                                                    {{ form.unit_type }}
+                                                                    <small class="sign-up-field-error">{{ form.unit_type.errors }}</small>
+                                                                </div>
+                                                            </div>
+                                                        {% endif %}
+                                                        {% if report_activity_plan.indicator.units %}
+                                                            <div class="field-col" style="margin-bottom: 7px;">
+                                                                <div class="select-field">
+                                                                    <label>{{ form.units.label }}</label>
+                                                                    {{ form.units }}
+                                                                    <small class="sign-up-field-error">{{ form.units.errors }}</small>
+                                                                </div>
+                                                            </div>
+                                                        {% endif %}
+                                                        {% if report_activity_plan.indicator.no_of_transfers %}
+                                                            <div class="field-col" style="margin-bottom: 7px;">
+                                                                <div class="select-field">
+                                                                    <label>{{ form.no_of_transfers.label }}</label>
+                                                                    {{ form.no_of_transfers }}
+                                                                    <small class="sign-up-field-error">{{ form.no_of_transfers.errors }}</small>
+                                                                </div>
+                                                            </div>
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="multiple-fields-row">
+                                                    {% if report_activity_plan.indicator.implement_modility_type %}
+                                                        <div class="field-col">
+                                                            <div class="select-field">
+                                                                <label>{{ form.implement_modility_type.label }}</label>
+                                                                {{ form.implement_modility_type }}
+                                                                <small class="sign-up-field-error">{{ form.implement_modility_type.errors }}</small>
+                                                            </div>
+                                                        </div>
+                                                    {% endif %}
+                                                    {% if report_activity_plan.indicator.transfer_mechanism_type %}
+                                                        <div class="field-col">
+                                                            <div class="select-field">
+                                                                <label>{{ form.transfer_mechanism_type.label }}</label>
+                                                                {{ form.transfer_mechanism_type }}
+                                                                <small class="sign-up-field-error">{{ form.transfer_mechanism_type.errors }}</small>
+                                                            </div>
+                                                        </div>
+                                                    {% endif %}
+                                                    {% if report_activity_plan.indicator.transfer_category or form.initial.indicator.transfer_category %}
+                                                        <div class="field-col">
+                                                            <div class="select-field">
+                                                                <label>{{ form.transfer_category.label }}</label>
+                                                                {{ form.transfer_category }}
+                                                                <small class="sign-up-field-error">{{ form.transfer_category.errors }}</small>
+                                                            </div>
+                                                        </div>
+                                                    {% endif %}
+                                                    {% if report_activity_plan.indicator.currency or form.initial.indicator.currency %}
+                                                        <div class="field-col">
+                                                            <div class="select-field">
+                                                                <label>{{ form.currency.label }}</label>
+                                                                {{ form.currency }}
+                                                                <small class="sign-up-field-error">{{ form.currency.errors }}</small>
+                                                            </div>
+                                                        </div>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="plan-submit-holder">
+                                <div></div>
+                                <div>
+                                    <input type="submit"
+                                           name="_continue"
+                                           class="btn btn-gray"
+                                           value="Save and continue editing">
+                                    <input type="submit" name="_save" class="btn btn-red" value="Save">
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock project_body %}
+{% block scripts %}
+    <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+    <script>
+        document.querySelectorAll('.custom-select').forEach((select) => {
+            const choice = new Choices(select, {
+                searchEnabled: true,
+                itemSelectText: '',
+                removeItemButton: true,
+                classNames: {
+                    listDropdown: 'choices__list--dropdown',
+                },
+                shouldSort: false,
+            });
+        });
+    </script>
+{% endblock scripts %}

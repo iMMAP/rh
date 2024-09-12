@@ -1,21 +1,21 @@
+import django_filters
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
-from django.http import HttpResponse
-from django.shortcuts import redirect, render, get_object_or_404
-from django.template import loader
 from django.contrib.auth.models import User
+from django.core.exceptions import PermissionDenied
+from django.core.paginator import Paginator
+from django.db.models import Count, Q
+from django.http import HttpResponse
+from django.shortcuts import get_object_or_404, redirect, render
+from django.template import loader
 from django.views.decorators.http import require_http_methods
+from extra_settings.models import Setting
 
 from ..forms import (
     ProfileUpdateForm,
     UserUpdateForm,
 )
-from django.core.paginator import Paginator
-import django_filters
-from django.db.models import Count, Q
-from django.core.exceptions import PermissionDenied
 from ..utils import has_permission
-from extra_settings.models import Setting
 
 
 class UsersFilter(django_filters.FilterSet):
@@ -143,3 +143,16 @@ def profile(request):
         "p_form": p_form,
     }
     return HttpResponse(template.render(context, request))
+
+
+@login_required
+@permission_required("users.change_profile", raise_exception=True)
+def profile_show(request, username):
+    user = get_object_or_404(User, username=username)
+
+    if not has_permission(user=request.user, user_obj=user):
+        raise PermissionDenied
+
+    context = {"user": user}
+
+    return render(request, "users/profile_show.html", context)

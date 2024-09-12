@@ -1,15 +1,13 @@
 import base64
 from io import BytesIO
-
 from django.http import JsonResponse
-from django.views import View
+from django.shortcuts import get_object_or_404
 from openpyxl import Workbook
 from openpyxl.styles import Font, NamedStyle
-from openpyxl.utils import get_column_letter
-
-from rh.models import Disaggregation
-
-from .models import ProjectMonthlyReport
+from django.db.models import Q, Prefetch
+from rh.models import Project
+from .utils import write_project_report_sheet
+from .models import ActivityPlanReport, DisaggregationLocationReport, ProjectMonthlyReport, TargetLocationReport
 
 #############################################
 ############### Export Views #################
@@ -20,30 +18,92 @@ header_style = NamedStyle(name="header")
 header_style.font = Font(bold=True)
 
 
-class ReportsExportView(View):
-    """Report Export"""
+# export all projects monlthly report
+def export_all_monthly_reports_view(request):
+    try:
+        # Get User Clusters
+        user_clusters = request.user.profile.clusters.all()
 
-    def post(self, request):
-        """
-        Handle POST request to export project data to Excel.
+        # Filter Queryset
+        # project_reports = ProjectMonthlyReport.objects.filter(project__clusters__in=user_clusters).distinct()
+        project_reports = (
+            ProjectMonthlyReport.objects.select_related("project")
+            .prefetch_related(
+                Prefetch(
+                    "activityplanreport_set",
+                    queryset=ActivityPlanReport.objects.prefetch_related(
+                        Prefetch(
+                            "targetlocationreport_set",
+                            queryset=TargetLocationReport.objects.prefetch_related(
+                                Prefetch(
+                                    "disaggregationlocationreport_set",
+                                    DisaggregationLocationReport.objects.select_related("disaggregation"),
+                                )
+                            ),
+                        )
+                    ),
+                )
+            )
+            .filter(Q(project__clusters__in=user_clusters) & Q(state="complete"))
+            .distinct()
+        )
+        workbook = Workbook()
+        # write the data into excel sheet
+        write_project_report_sheet(workbook, project_reports)
+        excel_file = BytesIO()
+        workbook.save(excel_file)
+        excel_file.seek(0)
 
-        Args:
-            request (HttpRequest): The HTTP request object.
+        response = {
+            "file_url": "data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,"
+            + base64.b64encode(excel_file.read()).decode("utf-8"),
+            "file_name": "all_monthly_reports.xlsx",
+        }
 
-        Returns:
-            JsonResponse: The JSON response containing the file URL and name, or an error message.
-        """
+        return JsonResponse(response)
+    except Exception as e:
+        response = {"error": str(e)}
+        return JsonResponse(response, status=500)
+
+
+# export monthly report for single project
+def export_monthly_report_view(request, pk):
+    if request.method == "POST":
+        start_date = request.POST.get("start_date")
+        end_date = request.POST.get("end_date")
+        # set the query
+        project = get_object_or_404(Project, pk=pk)
+        monthly_progress_report = (
+            ProjectMonthlyReport.objects.select_related("project")
+            .prefetch_related(
+                Prefetch(
+                    "activityplanreport_set",
+                    queryset=ActivityPlanReport.objects.prefetch_related(
+                        Prefetch(
+                            "targetlocationreport_set",
+                            queryset=TargetLocationReport.objects.prefetch_related(
+                                Prefetch(
+                                    "disaggregationlocationreport_set",
+                                    DisaggregationLocationReport.objects.select_related("disaggregation"),
+                                )
+                            ),
+                        )
+                    ),
+                )
+            )
+            .filter(project=project, state="completed")
+        )
         try:
-            # Get User Clusters
-            user_clusters = request.user.profile.clusters.all()
+            monthly_progress_report = monthly_progress_report.filter(
+                Q(from_date__gte=start_date) & Q(to_date__lte=end_date)
+            )
+        except Exception:
+            print("No filter applied.")
 
-            # Filter Queryset
-            project_reports = ProjectMonthlyReport.objects.filter(project__clusters__in=user_clusters).distinct()
-
+        try:
             workbook = Workbook()
-
-            self.write_project_report_sheet(workbook, project_reports)
-
+            # write the data into excel sheet
+            write_project_report_sheet(workbook, monthly_progress_report)
             excel_file = BytesIO()
             workbook.save(excel_file)
             excel_file.seek(0)
@@ -51,204 +111,10 @@ class ReportsExportView(View):
             response = {
                 "file_url": "data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,"
                 + base64.b64encode(excel_file.read()).decode("utf-8"),
-                "file_name": "all_monthly_reports.xlsx",
+                "file_name": f"{project.title}_monthly_reports.xlsx",
             }
 
             return JsonResponse(response)
         except Exception as e:
             response = {"error": str(e)}
             return JsonResponse(response, status=500)
-
-    def write_project_report_sheet(self, workbook, project_reports):
-        """
-        Write the project monthly report sheet to the workbook.
-
-        Args:
-            workbook (Workbook): The Excel workbook object.
-            project_report (Project): The project_report object.
-        """
-        sheet = workbook.active
-        sheet.title = "Monthly Report"
-
-        # Define column headers and types
-        columns = [
-            {"header": "Report", "type": "string", "width": 20},
-            {"header": "Report Status", "type": "string", "width": 20},
-            {"header": "Report Month", "type": "string", "width": 20},
-            {"header": "Report Year", "type": "string", "width": 20},
-            {"header": "Report Period", "type": "string", "width": 20},
-            {"header": "Project Code", "type": "string", "width": 20},
-            {"header": "Project Title", "type": "string", "width": 40},
-            {"header": "Project Budget", "type": "string", "width": 20},
-            {"header": "Project Currency", "type": "string", "width": 20},
-            {"header": "Project HRP Code", "type": "string", "width": 40},
-            {"header": "Project Start Date", "type": "string", "width": 20},
-            {"header": "Project End Date", "type": "string", "width": 20},
-            {"header": "Cluster", "type": "string", "width": 20},
-            {"header": "Focal Person Name", "type": "string", "width": 20},
-            {"header": "Focal Person Phone", "type": "string", "width": 20},
-            {"header": "Focal Person Email", "type": "string", "width": 40},
-            {"header": "Implementing Partners", "type": "string", "width": 50},
-            {"header": "Donors", "type": "string", "width": 40},
-            {"header": "Beneficiary", "type": "string", "width": 20},
-            {"header": "Beneficiary Category", "type": "string", "width": 20},
-            {"header": "Response Types", "type": "string", "width": 20},
-            {"header": "Activity Domain", "type": "string", "width": 60},
-            {"header": "Activity Type", "type": "string", "width": 60},
-            # {"header": "Activity Detail", "type": "string", "width": 40},
-            {"header": "Indicator", "type": "string", "width": 60},
-            {"header": "admin1pcode", "type": "string", "width": 20},
-            {"header": "admin1name", "type": "string", "width": 20},
-            {"header": "region name", "type": "string", "width": 20},
-            {"header": "admin2pcode", "type": "string", "width": 20},
-            {"header": "admin2name", "type": "string", "width": 20},
-            {"header": "Facility Site Type", "type": "string", "width": 20},
-            {"header": "Facility Site Name", "type": "string", "width": 20},
-            {"header": "Facility Site ID", "type": "string", "width": 20},
-            # {"header": "Zone", "type": "string", "width": 20},
-            {"header": "Location Type", "type": "string", "width": 20},
-        ]
-
-        disaggregation_cols = []
-        disaggregations = Disaggregation.objects.all()
-        disaggregation_list = []
-
-        for disaggregation in disaggregations:
-            if disaggregation.name not in disaggregation_list:
-                disaggregation_list.append(disaggregation.name)
-                disaggregation_cols.append({"header": disaggregation.name, "type": "string", "width": 20})
-            else:
-                continue
-
-        if disaggregations:
-            for disaggregation_col in disaggregation_cols:
-                columns.append(disaggregation_col)
-
-        self.write_sheet_columns(sheet, columns)
-        self.write_project_report_data_rows(sheet, project_reports, columns, disaggregation_list)
-
-    def write_sheet_columns(self, sheet, columns):
-        """
-        Write column headers and formatting for a sheet.
-
-        Args:
-            sheet (Worksheet): The worksheet object.
-            columns (list): List of dictionaries containing column header, type, and width information.
-        """
-        for idx, column in enumerate(columns, start=1):
-            cell = sheet.cell(row=1, column=idx, value=column["header"])
-            cell.style = header_style
-
-            column_letter = get_column_letter(idx)
-            if column["type"] == "number":
-                sheet.column_dimensions[column_letter].number_format = "General"
-            elif column["type"] == "date":
-                sheet.column_dimensions[column_letter].number_format = "mm-dd-yyyy"
-
-            sheet.column_dimensions[column_letter].width = column["width"]
-
-    def write_project_report_data_rows(self, sheet, project_reports, columns, disaggregation_list):
-        """
-        Write project data rows to the sheet.
-
-        Args:
-            sheet (Worksheet): The worksheet object.
-            project_reports (Project Report): The project_reports objects.
-        """
-        rows = []
-
-        try:
-            for report in project_reports:
-                plan_reports = report.activityplanreport_set.all()
-                for plan_report in plan_reports:
-                    location_reports = plan_report.targetlocationreport_set.all()
-                    for location_report in location_reports:
-                        # Create a dictionary to hold disaggregation data
-                        disaggregation_data = {}
-                        row = [
-                            report.__str__(),
-                            report.get_state_display(),
-                            report.report_date.strftime("%B"),
-                            report.report_date.strftime("%Y"),
-                            report.report_date.strftime("%Y-%m-%d"),
-                            report.project.code,
-                            report.project.title,
-                            report.project.budget,
-                            report.project.budget_currency.name if report.project.budget_currency else None,
-                            report.project.hrp_code,
-                            report.project.start_date.strftime("%Y-%m-%d"),
-                            report.project.end_date.strftime("%Y-%m-%d"),
-                            ", ".join(str(cluster.title) for cluster in report.project.clusters.all())
-                            if report.project.clusters
-                            else None,
-                            report.project.user.profile.name
-                            if report.project.user and report.project.user.profile
-                            else None,
-                            report.project.user.profile.phone
-                            if report.project.user and report.project.user.profile
-                            else None,
-                            report.project.user.email if report.project.user else None,
-                            ", ".join(str(partner.name) for partner in report.project.implementing_partners.all())
-                            if report.project.implementing_partners
-                            else None,
-                            ", ".join(str(donor.name) for donor in report.project.donors.all())
-                            if report.project.donors
-                            else None,
-                            plan_report.activity_plan.beneficiary.name
-                            if plan_report.activity_plan.beneficiary
-                            else None,
-                            plan_report.activity_plan.get_beneficiary_category_display(),
-                            ", ".join(str(report_type.name) for report_type in plan_report.report_types.all())
-                            if plan_report.report_types
-                            else None,
-                            plan_report.activity_plan.activity_domain.name,
-                            plan_report.activity_plan.activity_type.name,
-                            # plan_report.activity_plan.activity_detail.name if plan_report.activity_plan.activity_detail else None,
-                            plan_report.activity_plan.indicator.name if plan_report.activity_plan.indicator else None,
-                            location_report.province.code if location_report.province else None,
-                            location_report.province.name if location_report.province else None,
-                            location_report.province.region_name if location_report.province else None,
-                            location_report.district.code if location_report.district else None,
-                            location_report.district.name if location_report.district else None,
-                            location_report.facility_site_type.name if location_report.facility_site_type else None,
-                            location_report.facility_name,
-                            location_report.facility_id,
-                            # location_report.zone.name if location_report.zone else None,
-                            location_report.location_type.name if location_report.location_type else None,
-                        ]
-
-                        # Iterate through disaggregation locations and get disaggregation values
-                        disaggregation_locations = location_report.disaggregationlocationreport_set.all()
-                        disaggregation_location_list = {
-                            disaggregation_location.disaggregation.name: disaggregation_location.target
-                            for disaggregation_location in disaggregation_locations
-                        }
-
-                        # Update disaggregation_data with values from disaggregation_location_list
-                        for disaggregation_entry in disaggregation_list:
-                            if disaggregation_entry not in disaggregation_location_list:
-                                disaggregation_data[disaggregation_entry] = None
-
-                        disaggregation_location_list.update(disaggregation_data)
-
-                        # Append disaggregation values to the row in the order of columns
-                        for column in columns:
-                            header = column["header"]
-                            if header in disaggregation_location_list:
-                                row.append(disaggregation_location_list[header])
-
-                        # Add row to the list of rows
-                        rows.append(row)
-
-            for row_idx, row in enumerate(rows, start=2):
-                for col_idx, value in enumerate(row, start=1):
-                    try:
-                        sheet.cell(row=row_idx, column=col_idx, value=value)
-                    except Exception as e:
-                        print("Error:", e)
-
-            # Correct syntax to freeze panes
-            sheet.freeze_panes = "A2"
-
-        except Exception as e:
-            print("Error:", e)

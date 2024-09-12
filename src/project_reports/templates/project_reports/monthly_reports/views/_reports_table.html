@@ -1,4 +1,3 @@
-{% load compress %}
 {% load static %}
 
 <div class="content-block bottom-border table-container">
@@ -6,56 +5,43 @@
     <div class="page-top-panel bottom-border">
         <!-- filter applied  -->
         <div class="filter-container" id="filter-container">
-            {% for field in reports_filter.form %}
-                {% if forloop.first %}<span>Applied Filters:</span>{% endif %}
-                {% if field.value and field.name != 'state' %}
+            <ul class="flex gap-2 items-center">
+                <span>Applied Filters:</span>
 
-                    <span class="filter-item title" id="title">{{ field.name }}</span>
-                    {% if forloop.last %}<span class="close-alert-message">x</span>{% endif %}
-                {% endif %}
-            {% endfor %}
+                <li class="rounded-full px-2 border border-gray-d1 py-1 {% if not request.GET.state %}bg-red text-white {% endif %}">
+                    <a href="{{ request.path }}">All</a>
+                </li>
+
+                {% for state in report_states %}
+                    <li class="px-2 border border-gray-d1 rounded-full py-1 bg-gray-fa {% if request.GET.state == state.0 %}bg-red text-white{% endif %}">
+                        <a href="{{ request.GET.url }}?state={{state.0}}">{{state.1}}</a>
+                    </li>
+                {% endfor %}
+
+                {% for field in reports_filter.form %}
+                    {% if field.value and field.name != 'state' %}
+                        <li class="filter-item title" id="title">{{ field.name }} - {{field.value}}</li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
         </div>
         <!-- filter applied end -->
 
         <div class="actions-panel">
-            <div>
-                <a href="{% url 'create_project_monthly_report' project=project.pk %}"
-                   class="btn btn-red add-btn">Add Monthly
-                    Report
-                </a>
-            </div>
+            <a href="#" 
+            class="btn btn-gray export-monthly-report"
+            data-request-url='{% url "export_monthly_report" project.pk%}'
+            data-field-from="{{reports_filter.form.from_date.value}}" 
+            data-field-to="{{reports_filter.form.to_date.value}}"
+            >Export 
+            <span class="icon-download"></span>
+            <!-- spinner start-->
+            <img class="downloading"
+            style="width: 1.2rem"
+            src="{% static 'images/spinner.gif' %}" />
+            <!-- spinner end -->
+            </a>
             {% include "components/_filter_drawer.html" with filter=reports_filter %}
-            <div class="export-formats-holder">
-                <span class="btn btn-gray export-open">
-                    <span class="btn-text">Export</span>
-                    <!-- spinner start-->
-                    <img class='downloading'
-                         style="width: 1.2rem"
-                         src="{% static 'images/spinner.gif' %}" />
-                    <!-- spinner end -->
-                    <span class="icon-download"></span>
-                </span>
-                <div class="export-formats">
-                    <span class="title">File format</span>
-                    <div class="format-list">
-                        <div class="export-link-holder"
-                             onclick="exportButton(event)"
-                             data-export-url="{% url 'export-org-projects' 'csv' %}">
-                            <span class="export-link cursor-pointer">CSV</span>
-                        </div>
-                        <div class="export-link-holder"
-                             onclick="exportButton(event)"
-                             data-export-url="{% url 'export-org-projects' 'xls' %}">
-                            <span class="export-link cursor-pointer">Excel</span>
-                        </div>
-                        <div class="export-link-holder"
-                             onclick="exportButton(event)"
-                             data-export-url="{% url 'export-org-projects' 'json' %}">
-                            <span class="export-link cursor-pointer">JSON</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
 
@@ -66,66 +52,20 @@
                 <thead class="content-block ">
                     <tr>
                         <th>
-                            <div class="table-flex-holder">
-                                <div class="input-check-holder">
-                                    <input type="checkbox"
-                                           id="table-head-check-01"
-                                           data-check-pattern="[name^='table-check']" />
-                                    <label for="table-head-check-01">
-                                        <span class="input"></span>
-                                    </label>
-                                </div>
-                                <strong class="table-title">Month</strong>
-                                <div class="table-sort-buttons">
-                                    <button type="button">
-                                        <span class="icon-chevron-up"></span>
-                                    </button>
-                                    <button type="button">
-                                        <span class="icon-chevron-down"></span>
-                                    </button>
-                                </div>
-                            </div>
+                            <strong class="table-title">Month</strong>
+                        </th>
+                       
+                        <th>
+                            <strong class="table-title">To</strong>
                         </th>
                         <th>
-                            <div class="table-flex-holder">
-                                <strong class="table-title">Progress Report</strong>
-                                <div class="table-sort-buttons">
-                                    <button type="button">
-                                        <span class="icon-chevron-up"></span>
-                                    </button>
-                                    <button type="button">
-                                        <span class="icon-chevron-down"></span>
-                                    </button>
-                                </div>
-                            </div>
+                            <strong class="table-title">Notes</strong>
                         </th>
                         <th>
-                            <div class="table-flex-holder">
-                                <strong class="table-title">Due date</strong>
-                                <div class="table-sort-buttons">
-                                    <button type="button">
-                                        <span class="icon-chevron-up"></span>
-                                    </button>
-                                    <button type="button">
-                                        <span class="icon-chevron-down"></span>
-                                    </button>
-                                </div>
-                            </div>
+                            <strong class="table-title">Status</strong>
                         </th>
                         <th>
-                            <div class="table-flex-holder">
-                                <strong class="table-title">Notes</strong>
-                            </div>
-                        </th>
-                        <th>
-                            <div class="table-flex-holder">
-                                <strong class="table-title">Status</strong>
-                            </div>
-                        </th>
-                        <th>
-                            <div class="table-flex-holder">
-                                <strong class="table-title">Actions</strong>
-                            </div>
+                            <strong class="table-title">Actions</strong>
                         </th>
                     </tr>
                 </thead>
@@ -137,90 +77,75 @@
                             <td>
                                 <a class="table-flex-holder"
                                    href="{% url 'view_monthly_report' project=project.id report=project_report.id %}">
-                                    <div class="input-check-holder">
-                                        <input type="checkbox"
-                                               id="table-check-{{ project.pk }}"
-                                               class="project-checkbox"
-                                               value="{{ project_report.pk }}"
-                                               name="table-check{{ project_report.pk }}" />
-                                        <label for="table-check-{{ project_report.pk }}">
-                                            <span class="input"></span>
-                                        </label>
-                                    </div>
-                                    {{ project_report.report_date | date:"F Y" }}
+                                    {{ project_report.from_date| date:"F Y" }}
                                 </a>
                             </td>
-                            <td data-title="Progress Report">Monthly report for {{ project_report.report_date | date:"F Y" }}</td>
-                            <td data-title="Due date">{{ project_report.report_due_date | date:"d F Y" }}</td>
-
+                            <td data-title="To">{{ project_report.to_date| date:"d F Y" }}</td>
                             <td data-title="Notes">{{ project_report.description }}</td>
-
-                            <td data-title="Due date">
+                            <td data-title="state">
                                 <span class="{{ project_report.state }}">{{ project_report.get_state_display }}</span>
                             </td>
                             <td>
                                 <div class="table-flex-holder">
                                     <ul class="table-options-buttons ">
                                         <li>
-                                            <a href="{% url 'update_project_monthly_report' project=project.id report=project_report.id %}" data-tippy-content="Edit Monthly Report">
-                                                <span class="project-detail icon-pen"></span>
+                                            <a href="{% url 'update_project_monthly_report' project=project.id report=project_report.pk %}"
+                                               data-tippy-content="Edit report date and due date">
+                                               <span class="icon icon-pen"></span>
                                             </a>
                                         </li>
 
                                         <li>
-                                            <a href="#"
-                                               data-url="{% url 'export_project_excel' project.pk %}"
-                                               class="text-decoration-none"
-                                               title="Export Excel"
-                                               data-tippy-content="Export Excel">
-                                                <span class="project-detail icon-download"></span>
-                                            </a>
+                                            <button class="button-archive-unarchive">
+                                                {% if project_report.is_active %}
+                                                    <a hx-post="{% url 'archive_project_monthly_report' project_report.pk %}"
+                                                       hx-trigger="click"
+                                                       hx-swap="none"
+                                                       hx-confirm="Are you sure you want to archive this report?"
+                                                       data-tippy-content="Archive report">
+                                                        <svg xmlns="http://www.w3.org/2000/svg"
+                                                             class="archive-icon"
+                                                             width="16"
+                                                             height="16"
+                                                             viewBox="0 0 24 24">
+                                                            <path fill="currentColor" d="M3 3h18v4H3V3m1 18V8h16v13H4m10-7v-3h-4v3H7l5 5l5-5h-3Z" />
+                                                        </svg>
+                                                    </a>
+
+                                                {% else %}
+                                                    <a hx-post="{% url 'unarchive_project_monthly_report' project_report.pk %}"
+                                                       hx-trigger="click"
+                                                       hx-swap="none"
+                                                       hx-confirm="Are you sure you want to unarchive this report?"
+                                                       data-tippy-content="Unarchive report">
+                                                        <svg xmlns="http://www.w3.org/2000/svg"
+                                                             width="16"
+                                                             height="16"
+                                                             viewBox="0 0 36 36">
+                                                            <path fill="currentColor" d="M18 21a3 3 0 0 1-2.22-1H5v12a2 2 0 0 0 2 2h22a2 2 0 0 0 2-2V20H20.21A3 3 0 0 1 18 21Zm4 3a1 1 0 0 1-1 1h-6a1 1 0 0 1 0-2h6a1 1 0 0 1 1 1Z" class="clr-i-solid clr-i-solid-path-1" />
+                                                            <path fill="currentColor" d="M15 12H5.5A1.5 1.5 0 0 0 4 13.5V18h11Z" class="clr-i-solid clr-i-solid-path-2" />
+                                                            <path fill="currentColor" d="M30.5 12H21v6h11v-4.5a1.5 1.5 0 0 0-1.5-1.5Z" class="clr-i-solid clr-i-solid-path-3" />
+                                                            <path fill="currentColor" d="m13 9.55l4-3.95V18a1 1 0 1 0 2 0V5.6l4 3.95a1 1 0 1 0 1.41-1.42L18 1.78l-6.39 6.35A1 1 0 0 0 13 9.55Z" class="clr-i-solid clr-i-solid-path-4" />
+                                                            <path fill="none" d="M0 0h36v36H0z" />
+                                                        </svg>
+                                                    </a>
+
+                                                {% endif %}
+                                            </button>
                                         </li>
 
                                         <li>
-                                            {% if project_report.is_active %}
-                                                <a hx-post="{% url 'archive_project_monthly_report' project_report.pk %}"
+                                            <button>
+                                                <a hx-delete="{% url 'delete_project_monthly_report' project_report.pk %}"
                                                    hx-trigger="click"
-                                                   hx-swap="none"
-                                                   hx-confirm="Are you sure you want to archive this report?"
-                                                   data-tippy-content="Archive report">
-                                                    <svg xmlns="http://www.w3.org/2000/svg"
-                                                         class="archive-icon"
-                                                         width="16"
-                                                         height="16"
-                                                         viewBox="0 0 24 24">
-                                                        <path fill="currentColor" d="M3 3h18v4H3V3m1 18V8h16v13H4m10-7v-3h-4v3H7l5 5l5-5h-3Z" />
-                                                    </svg>
+                                                    hx-indicator=".progress"
+                                                    hx-swap="outerHTML swap:1s"
+                                                    hx-target="closest tr"
+                                                   hx-confirm="Are you sure you want to delete this report?"
+                                                   data-tippy-content="Delete report">
+                                                    <span class="project-detail icon-trashbin"></span>
                                                 </a>
-
-                                            {% else %}
-                                                <a hx-post="{% url 'unarchive_project_monthly_report' project_report.pk %}"
-                                                   hx-trigger="click"
-                                                   hx-swap="none"
-                                                   hx-confirm="Are you sure you want to unarchive this report?"
-                                                   data-tippy-content="Unarchive report">
-                                                    <svg xmlns="http://www.w3.org/2000/svg"
-                                                         width="16"
-                                                         height="16"
-                                                         viewBox="0 0 36 36">
-                                                        <path fill="currentColor" d="M18 21a3 3 0 0 1-2.22-1H5v12a2 2 0 0 0 2 2h22a2 2 0 0 0 2-2V20H20.21A3 3 0 0 1 18 21Zm4 3a1 1 0 0 1-1 1h-6a1 1 0 0 1 0-2h6a1 1 0 0 1 1 1Z" class="clr-i-solid clr-i-solid-path-1" />
-                                                        <path fill="currentColor" d="M15 12H5.5A1.5 1.5 0 0 0 4 13.5V18h11Z" class="clr-i-solid clr-i-solid-path-2" />
-                                                        <path fill="currentColor" d="M30.5 12H21v6h11v-4.5a1.5 1.5 0 0 0-1.5-1.5Z" class="clr-i-solid clr-i-solid-path-3" />
-                                                        <path fill="currentColor" d="m13 9.55l4-3.95V18a1 1 0 1 0 2 0V5.6l4 3.95a1 1 0 1 0 1.41-1.42L18 1.78l-6.39 6.35A1 1 0 0 0 13 9.55Z" class="clr-i-solid clr-i-solid-path-4" />
-                                                        <path fill="none" d="M0 0h36v36H0z" />
-                                                    </svg>
-                                                </a>
-                                            {% endif %}
-                                        </li>
-
-                                        <li>
-                                            <a hx-post="{% url 'delete_project_monthly_report' project_report.pk %}"
-                                               hx-trigger="click"
-                                               hx-swap="none"
-                                               hx-confirm="Are you sure you want to delete this report?"
-                                               data-tippy-content="Delete report">
-                                                <span class="project-detail icon-trashbin"></span>
-                                            </a>
+                                            </button>
                                         </li>
                                     </ul>
                                 </div>
@@ -230,23 +155,16 @@
                 </tbody>
             </table>
         </div>
-
     {% else %}
         <div class="view_nocontent">
             <div class="nocontent_help">
-                <h4>No projects found. Let's create one!</h4>
-                <p>
-                    Click on <a class="btn-red" href="{% url 'projects-create' %}">Add New Project</a> and start planning your new project.
-                </p>
+                <h4>No reports found for this project. Let's create one!</h4>
             </div>
         </div>
     {% endif %}
 
     {% comment %} Pagination {% endcomment %}
-    {% include "components/_pagination.html" with object_list=projects %}
-
+    <div class="border-t border-gray-bc">
+        {% include "components/_pagination.html" with object_list=project_reports %}
+    </div>
 </div>
-
-{% compress js inline %}
-    <script src="{% static 'js/components/initCheckAllCheckboxes.js' %}"></script>
-{% endcompress %}

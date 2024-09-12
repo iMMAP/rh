@@ -1,3 +1,8 @@
+.PHONY: help
+help:
+	@echo "Available commands:"
+	@grep -E '^\.\PHONY: ' $(MAKEFILE_LIST) | sed 's/\.PHONY: //; s/^/  /'
+
 .PHONY: install
 install:
 	poetry install
@@ -10,6 +15,7 @@ install-no-dev:
 lint:
 	ruff check --output-format=github ./src
 	ruff format ./src
+	ruff check --select I --fix
 
 .PHONY: migrate
 migrate:

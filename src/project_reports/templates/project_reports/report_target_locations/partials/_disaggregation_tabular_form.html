@@ -1,0 +1,121 @@
+{% load static %}
+
+{% if target_location %}
+<div class="bg-gray-f5 border border-gray-e6 mb-2">
+    <p class="p-2 text-gray-53 font-semibold border-b border-gray-e6 flex items-center gap-2">
+        <span> Target Location Info </span>
+        <a class="" href="{% url 'target-locations-update' target_location.id %}" target="_blank">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
+            </svg>
+        </a>
+    </p>
+    <div class="p-2 multiple-fields-row four-items ">
+        <div class="field-col">
+            <div class="select-field ">
+                <label for="{{ target_location.country.id_for_label }}">Country: </label>
+                {{ target_location.country }}
+            </div>
+        </div>
+
+        {% if target_location.province %}
+        <div class="field-col">
+            <div class="select-field ">
+                <label for="{{ target_locations.province.id_for_label }}">Province / State: </label>
+                <span>{{ target_location.province }}</span>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if target_location.district %}
+        <div class="field-col">
+            <div class="input-field">
+                <label for="{{ target_locations.district.id_for_label }}">District: </label>
+                <span>{{ target_location.district }}</span>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if target_location.district.classification %}
+        <div class="field-col">
+            <div class="input-field">
+                <label for="{{ target_locations.zone.id_for_label }}">Classification</label>
+                <span>{{ target_location.district.classification }}</span>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if target_location.zone %}
+        <div class="field-col">
+            <div class="input-field">
+                <label for="{{ target_locations.zone.id_for_label }}">Ward / Zone: </label>
+                <span>{{ target_location.zone }}</span>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if target_location.implementing_partner %}
+        <div class="field-col">
+            <div class="input-field">
+                <label for="implementing_partner">Implementing Partner</label>
+                <span>{{ target_location.implementing_partner }}</span>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+{% comment %} Tabular Disaggregation Table form {% endcomment %}
+<div class="disaggregation-block js-inline-admin-formset inline-group "
+        id="{{ report_disaggregation_formset.prefix }}-group"
+        data-inline-type="tabular"
+        data-inline-formset='{"name":"#{{ report_disaggregation_formset.prefix }}","options":{"prefix":"{{ report_disaggregation_formset.prefix }}","addText":"Add another","deleteText":"Delete"}}'>
+    <div class="tabular inline-related">
+        <p class="pb-4">
+            The Disaggregation list is selected from the Indicator of your Activity plan. If there is someting missing, please contact your cluster.
+        </p>
+        {{ report_disaggregation_formset.management_form }}
+        <input type="hidden" name="prefix" value="{{ prefix }}">
+        <fieldset class="table-wrapper-scrollable">
+            <table class="table border border-solid border-gray-d1 rounded">
+                <thead class="content-block bg-gray-f3">
+                    <tr class="divide-x">
+                        {% for field in report_disaggregation_formset.form.fields %}
+                            <th class="border-r border-gray-e6 column-{{ field.name }}{% if field.required %} required{% endif %}{% if field.widget.is_hidden %} hidden{% endif %}">
+                                {{ field|capfirst }}
+                            </th>
+                        {% endfor %}
+                        {% if report_disaggregation_formset.can_delete %}<th>Delete?</th>{% endif %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for form in report_disaggregation_formset %}
+                        {% if form.non_field_errors %}
+                            <tr class="row-form-errors">
+                                <td colspan="4">{{ form.non_field_errors }}</td>
+                            </tr>
+                        {% endif %}
+                        <tr class="form-row {% if forloop.last %}empty-form{% endif %} {% if form.instance.pk %}has_original{% endif %}"
+                            id="{{ report_disaggregation_formset.prefix }}-{% if forloop.last %}empty{% else %}{{ forloop.counter0 }}{% endif %}">
+                            {% for field in form %}
+                                {% if field.name != "DELETE" %}
+                                    <td class="{% if field.name %}field-{{ field.name }}{% endif %}{% if field.is_hidden %} hidden{% endif %} ">
+                                        {{ field }}
+                                        {{ field.errors }}
+                                    </td>
+                                {% endif %}
+                            {% endfor %}
+                            <td class="delete">
+                                {% if form.instance.pk %}{{ form.DELETE }}{% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </fieldset>
+    </div>
+</div>
+<script defer src="{% static 'js/utils/inlines.js' %}"></script>
+{% comment %} end of Tabular Disaggregation Table form {% endcomment %}
+{% endif %}
+

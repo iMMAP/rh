@@ -561,7 +561,7 @@ class TargetLocation(models.Model):
 
     # Facility Monitoring
     facility_site_type = models.ForeignKey(FacilitySiteType, on_delete=models.SET_NULL, null=True, blank=True)
-    facility_monitoring = models.BooleanField(default=False)
+    facility_monitoring = models.BooleanField(default=False, null=True, blank=True)
     facility_name = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
     facility_id = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
     facility_lat = models.FloatField(null=True, blank=True)

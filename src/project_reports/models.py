@@ -155,6 +155,7 @@ class DisaggregationLocationReport(models.Model):
 class ClusterDashboardReport(models.Model):
     cluster = models.ForeignKey(Cluster, on_delete=models.CASCADE, null=True, blank=True)
 
+    is_active = models.BooleanField()
     report_link = models.CharField(
         max_length=200,
         blank=True,

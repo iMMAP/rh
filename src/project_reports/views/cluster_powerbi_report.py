@@ -17,7 +17,7 @@ def fetch_cluster_report(request):
     if cluster_code:
         cluster = request.user.profile.clusters.filter(code=cluster_code).first()
         if cluster:
-            report = ClusterDashboardReport.objects.filter(cluster=cluster).first()
+            report = ClusterDashboardReport.objects.filter(cluster=cluster,is_active=True).first()
             powerbi_report_url = report.report_link if report else None
         if not powerbi_report_url:
             message = "No report available for the selected cluster..."

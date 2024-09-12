@@ -105,7 +105,7 @@
                                             </div>
                                         </div>
                                         <div class="row">
-                                            <div class="col">
+                                            <div class="col col-lg">
                                                 <div class="multiple-fields-row two-items">
                                                     <div class="field-col">
                                                         <div class="select-field">
@@ -115,50 +115,42 @@
                                                             <p class="sign-up-field-error">{{ form.response_types.errors }}</p>
                                                         </div>
                                                     </div>
+
                                                     <div class="field-col">
                                                         <div class="select-field">
-                                                            <label for="{{ form.implementing_partners.id_for_label }}">Implementing Partners</label>
-                                                            <p class="help-text">{{ form.implementing_partners.help_text }}</p>
-                                                            {{ form.implementing_partners }}
-                                                            <p class="sign-up-field-error">{{ form.implementing_partners.errors }}</p>
+                                                            <label>{{ form.beneficiary_status.label }}
+                                                                [Read the description]
+                                                                <div class="implement-info">
+                                                                    <i class="icon-info"></i>
+                                                                    <span class="implement-text">Select 'New Beneficiary' if this activity for this project has not 
+                                                                        been previously reported for the selected target location. 
+                                                                        Select 'Existing Beneficiary' if the activity has already been reported for this target location.</span>
+                                                                </div>
+                                                            </label>
+                                                            {{ form.beneficiary_status }}
+                                                            <p class="sign-up-field-error">{{ form.beneficiary_status.errors }}</p>
+                                                        </div>
+                                                    </div>
+                                                 
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col col-lg">
+                                                <div class="multiple-fields-row two-items">
+                                                    <div class="field-col">
+                                                        <div class="input-check-holder">
+                                                            {{ form.seasonal_retargeting }}
+                                                            <label for="{{ form.seasonal_retargeting.id_for_label }}">
+                                                                <span class="text">Beneficiaries Retargeted due to seasonality</span>
+                                                            </label>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
 
-                                            <div class="row">
-                                                <div class="col col-lg">
-                                                    <div class="multiple-fields-row two-items">
-                                                        <div class="field-col">
-                                                            <div class="input-check-holder">
-                                                                {{ form.seasonal_retargeting }}
-                                                                <label for="{{ form.seasonal_retargeting.id_for_label }}">
-                                                                    <span class="text">Beneficiaries Retargeted due to seasonality</span>
-                                                                </label>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                        <div class="multiple-fields-row">
-                                            <div class="field-col">
-                                                <div class="select-field">
-                                                    <label>{{ form.beneficiary_status.label }}
-                                                        [Read the description]
-                                                        <div class="implement-info">
-                                                            <i class="icon-info"></i>
-                                                            <span class="implement-text">Select 'New Beneficiary' if this activity for this project has not 
-                                                                been previously reported for the selected target location. 
-                                                                Select 'Existing Beneficiary' if the activity has already been reported for this target location.</span>
-                                                        </div>
-                                                    </label>
-                                                    {{ form.beneficiary_status }}
-                                                    <p class="sign-up-field-error">{{ form.beneficiary_status.errors }}</p>
-                                                </div>
-                                            </div>
-                                        </div>
                                         <!-- Indicator types start to diaplay -->
                                         <div id="{{ form.prefix }}-indicator-types">
                                             <div class="row">

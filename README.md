@@ -46,6 +46,12 @@ install Poetry with:
 pip install poetry
 ```
 
+#### Create env file 
+Create `.env` file by copying the sample file and update the values.
+```shell
+cp .env.sample .env
+```
+
 #### Install the dependencies
 Make sure to 'make' installed for your machine.
 

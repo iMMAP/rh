@@ -161,7 +161,6 @@ EMAIL_USE_SSL = env("EMAIL_USE_SSL", default=False)
 EMAIL_USE_TLS = env("EMAIL_USE_TLS", default=True)
 
 
-
 TESTING = "test" in sys.argv
 
 EXTRA_SETTINGS_DEFAULTS = [

@@ -7,6 +7,7 @@ from rh.models import (
     Disaggregation,
     GrantType,
     ImplementationModalityType,
+    Indicator,
     LocationType,
     PackageType,
     Project,
@@ -73,15 +74,11 @@ class ProjectMonthlyReport(models.Model):
 
 
 class ActivityPlanReport(models.Model):
-    """Activity Plans model"""
-
     monthly_report = models.ForeignKey(ProjectMonthlyReport, on_delete=models.CASCADE)
     activity_plan = models.ForeignKey(ActivityPlan, on_delete=models.CASCADE)
 
     response_types = models.ManyToManyField(ResponseType, blank=True, limit_choices_to={"is_active": True})
-
-    created_at = models.DateTimeField(auto_now_add=True, null=True)
-    updated_at = models.DateTimeField(auto_now=True, null=True)
+    prev_targeted_by = models.ForeignKey(Indicator, null=True, blank=True, on_delete=models.SET_NULL)
 
     package_type = models.ForeignKey(PackageType, on_delete=models.SET_NULL, null=True, blank=True)
     unit_type = models.ForeignKey(UnitType, on_delete=models.SET_NULL, null=True, blank=True)
@@ -108,6 +105,9 @@ class ActivityPlanReport(models.Model):
         null=True,
         blank=True,
     )
+
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
 
     def __str__(self):
         return f"Activity Plan: {self.activity_plan.activity_domain} - {self.activity_plan.indicator}"

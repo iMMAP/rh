@@ -3,7 +3,7 @@ from django.shortcuts import render
 from rh.models import Organization, Project
 
 from .filters import MonthlyReportsFilter
-from .models import ProjectMonthlyReport
+from .models import ClusterDashboardReport, ProjectMonthlyReport
 
 RECORDS_PER_PAGE = 5
 
@@ -19,6 +19,30 @@ def reports_dashboard_view(request):
 
     # Get User Clusters
     user_clusters = request.user.profile.clusters.all()
+    user_clusters_list = list(request.user.profile.clusters.all())
+
+    selected_cluster = None
+    powerbi_report_url = None
+    message = None
+
+    if len(user_clusters_list) == 1:
+        cluster = user_clusters_list[0]
+        powerbi_reports = ClusterDashboardReport.objects.filter(cluster=cluster).first()
+        powerbi_report_url = powerbi_reports.report_link if powerbi_reports else None
+        selected_cluster = cluster.code
+        if not powerbi_report_url:
+            message = "No report available for your cluster..."
+    else:
+        selected_cluster = request.GET.get("cluster")
+        if not selected_cluster:
+            message = "Please select a cluster to view the report..."
+        else:
+            cluster = user_clusters.filter(code=selected_cluster).first()
+            if cluster:
+                report = ClusterDashboardReport.objects.filter(cluster=cluster).first()
+                powerbi_report_url = report.report_link if report else None
+            if not powerbi_report_url:
+                message = "No report available for the selected cluster..."
 
     # Filter Queryset
     queryset = ProjectMonthlyReport.objects.filter(project__clusters__in=user_clusters).distinct()
@@ -67,6 +91,10 @@ def reports_dashboard_view(request):
         "reports_todo": reports_todo,
         "reports_pending": reports_pending,
         "reports_complete": reports_complete,
+        "user_clusters_list": user_clusters_list,
+        "powerbi_report_url": powerbi_report_url,
+        "selected_cluster": selected_cluster,
+        "message": message,
     }
 
     return render(request, "project_reports/dashboards/reports_dashboard.html", context)

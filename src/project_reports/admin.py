@@ -2,6 +2,7 @@ from django.contrib import admin
 
 from .models import (
     ActivityPlanReport,
+    ClusterDashboardReport,
     DisaggregationLocationReport,
     ProjectMonthlyReport,
     ResponseType,
@@ -66,3 +67,14 @@ class DisaggregationLocationReportAdmin(admin.ModelAdmin):
 
 
 admin.site.register(DisaggregationLocationReport, DisaggregationLocationReportAdmin)
+
+
+class ClusterDashboardReportAdmin(admin.ModelAdmin):
+    list_display = (
+        "cluster_name",
+        "report_link",
+        "is_active",
+    )
+
+
+admin.site.register(ClusterDashboardReport, ClusterDashboardReportAdmin)

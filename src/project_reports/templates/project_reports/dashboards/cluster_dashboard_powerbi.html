@@ -1,0 +1,79 @@
+{% load static %}
+
+{% block content %}
+
+    <div class="container">
+        <section class="info-section">
+            <div class="dahsboard-section-heading section-heading-wide">
+                <div class="title">
+                    <div>
+                        <h2>Cluster Dashboard</h2>
+                    </div>
+                    <div class="actions-panel">
+                        <div class="edit-cluster-dashboard">
+                                {% csrf_token %}
+                                {% if user_clusters_list|length > 1 %}
+                                    <select id="cluster-select" name="cluster" style="font-weight: bold;">
+                                        <option selected disabled>Select Cluster Report...</option>
+                                        {% for cluster in user_clusters_list %}
+                                            <option value="{{ cluster.code }}" {% if cluster.code == selected_cluster %}selected{% endif %}>
+                                                {{ cluster.title }}
+                                            </option>
+                                        {% endfor %}
+                                    </select>
+                                {% elif user_clusters_list|length == 1 %}
+                                    <span>{{ user_clusters_list.0.title }}</span>
+                                {% else %}
+                                    <p>You are not associated with any clusters.</p>
+                                {% endif %}
+                        </div>
+                    </div>
+                </div> 
+        
+                <div id="powerbi-report-container">
+                    {% if powerbi_report_url %}
+                        <iframe width="600" height="800" src="{{ powerbi_report_url }}" frameborder="0" allowFullScreen="true"></iframe>
+                    {% else %}
+                        <p>{{ message }}</p>
+                    {% endif %}
+                </div>
+            </div>
+        </section>
+    </div>
+
+{% endblock content %}
+
+{% block scripts %}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const clusterSelect = document.getElementById('cluster-select');
+            const reportContainer = document.getElementById('powerbi-report-container');
+        
+            if (clusterSelect) {
+                clusterSelect.addEventListener('change', function() {
+                    const clusterCode = clusterSelect.value;
+        
+                    fetch('{% url "fetch_cluster_powerbi_report" %}', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                            'X-CSRFToken': '{{ csrf_token }}'
+                        },
+                        body: new URLSearchParams({
+                            'cluster_code': clusterCode
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.powerbi_report_url) {
+                            reportContainer.innerHTML = `<iframe width="600" height="800" src="${data.powerbi_report_url}" frameborder="0" allowFullScreen="true"></iframe>`;
+                        } else {
+                            reportContainer.innerHTML = `<p>${data.message}</p>`;
+                        }
+                    })
+                    .catch(error => console.error('Error fetching report:', error));
+                });
+            }
+        });
+    </script>
+{% endblock scripts %}

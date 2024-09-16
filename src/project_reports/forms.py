@@ -2,7 +2,7 @@ from django import forms
 from django.forms import BaseInlineFormSet
 from django.forms.models import inlineformset_factory
 from django.urls import reverse_lazy
-from rh.models import ActivityPlan, Disaggregation, TargetLocation
+from rh.models import ActivityPlan, Disaggregation, Indicator, TargetLocation
 
 from .models import (
     ActivityPlanReport,
@@ -139,7 +139,8 @@ class ActivityPlanReportForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
 
         self.fields["response_types"].queryset = ResponseType.objects.filter(
-            clusters__in=monthly_report.project.clusters.values_list("id")
+            clusters__in=monthly_report.project.clusters.values_list("id"),
+            is_active=True,
         )
 
         self.fields["activity_plan"].widget = forms.Select(
@@ -154,6 +155,10 @@ class ActivityPlanReportForm(forms.ModelForm):
         self.fields["activity_plan"].queryset = ActivityPlan.objects.filter(
             project=monthly_report.project.pk, state="in-progress"
         ).select_related("activity_domain")
+
+        self.fields["prev_targeted_by"].queryset = Indicator.objects.filter(
+            activity_types__activityplan__project=monthly_report.project
+        )
 
 
 class RejectMonthlyReportForm(forms.Form):

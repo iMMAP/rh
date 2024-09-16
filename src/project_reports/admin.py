@@ -15,6 +15,7 @@ from .models import (
 class ResponseTypeAdmin(admin.ModelAdmin):
     list_display = (
         "name",
+        "is_active",
         "show_clusters",
     )
     search_fields = ("name",)

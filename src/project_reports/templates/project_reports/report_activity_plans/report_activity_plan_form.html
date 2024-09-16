@@ -139,6 +139,13 @@
                                         <div class="row">
                                             <div class="col col-lg">
                                                 <div class="multiple-fields-row two-items">
+                                                    <div class="field-col {% if not form.prev_targeted_by.value %}hidden{% endif %}" id="{{ form.prev_targeted_by.id_for_label }}-field">
+                                                        <div class="select-field">
+                                                            <label for="{{ form.prev_targeted_by.id_for_label }}">Previously Targeted By</label>
+                                                            {{form.prev_targeted_by}}
+                                                            <p class="sign-up-field-error">{{ form.prev_targeted_by.errors }}</p>
+                                                        </div>
+                                                    </div>
                                                     <div class="field-col">
                                                         <div class="input-check-holder">
                                                             {{ form.seasonal_retargeting }}
@@ -272,8 +279,9 @@
 {% block scripts %}
     <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
     <script>
+        let benefStatusChoice
         document.querySelectorAll('.custom-select').forEach((select) => {
-            const choice = new Choices(select, {
+            const config ={
                 searchEnabled: true,
                 itemSelectText: '',
                 removeItemButton: true,
@@ -281,7 +289,29 @@
                     listDropdown: 'choices__list--dropdown',
                 },
                 shouldSort: false,
-            });
+            } 
+
+            if(select.id = "{{ form.beneficiary_status.id_for_label }}"){
+                benefStatusChoice = new Choices(select,config)
+                return
+            }
+
+            const choice = new Choices(select, config);
+        });
+
+        benefStatusChoice.passedElement.element.addEventListener("change",(e)=>{
+            const prevTargetedBySelect = document.querySelector("#{{form.prev_targeted_by.id_for_label}}-field")
+
+            if(e.target.value === "new_beneficiary"){
+                // display the prev_targeted_by indicator select dropdown
+                prevTargetedBySelect.classList.remove("hidden")
+                return
+            }
+
+            prevTargetedBySelect.classList.add("hidden")
+            
+            const selectField = document.querySelector("#{{form.prev_targeted_by.id_for_label}}")
+            selectField.value= ""
         });
     </script>
 {% endblock scripts %}

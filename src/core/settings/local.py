@@ -82,3 +82,10 @@ DJANGO_VITE_PLUGIN = {
     "STATIC_LOOKUP": False,
     # "SERVER": {"HOST": "0.0.0.0"},
 }
+
+####################
+# DB Backup Settings
+####################
+DBBACKUP_STORAGE = "django.core.files.storage.FileSystemStorage"
+DBBACKUP_SEND_EMAIL = False
+DBBACKUP_STORAGE_OPTIONS = {"location": os.path.join(BASE_DIR.parent, "db-backups")}

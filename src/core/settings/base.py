@@ -161,26 +161,8 @@ EMAIL_USE_SSL = env("EMAIL_USE_SSL", default=False)
 EMAIL_USE_TLS = env("EMAIL_USE_TLS", default=True)
 
 
-####################
-# DB Backup Settings
-####################
-
-# Backup to the local filesystem
-# DBBACKUP_STORAGE = 'django.core.files.storage.FileSystemStorage'
-# DBBACKUP_STORAGE_OPTIONS = {'location': os.path.join(BASE_DIR.parent, "db-backups")}
-
-# Backup to DropBox
-DBBACKUP_STORAGE = "storages.backends.dropbox.DropBoxStorage"
-DBBACKUP_SEND_EMAIL = False
-DBBACKUP_STORAGE_OPTIONS = {
-    "oauth2_access_token": env("DROPBOX_ACCESS_TOKEN", default=""),
-    "oauth2_refresh_token": env("DROPBOX_REFRESH_TOKEN", default=""),
-    "app_key": env("DROPBOX_APP_KEY", default=""),
-    "app_secret": env("DROPBOX_APP_SECRET", default=""),
-}
 
 TESTING = "test" in sys.argv
-
 
 EXTRA_SETTINGS_DEFAULTS = [
     {

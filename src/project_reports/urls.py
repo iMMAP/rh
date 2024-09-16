@@ -19,22 +19,22 @@ from .views.views import (
 urlpatterns = [
     # Monthly Report URLS
     path(
-        "project/<str:project>/reports",
+        "projects/<int:project>/reports",
         report_views.index_project_report_view,
         name="project_reports_home",
     ),
     path(
-        "project/<str:project>/monthly-progress/<str:report>/view",
+        "projects/<int:project>/monthly-progress/<str:report>/view",
         report_views.details_monthly_progress_view,
         name="view_monthly_report",
     ),
     path(
-        "project/<str:project>/monthly-progress/create",
+        "projects/<int:project>/monthly-progress/create",
         report_views.create_project_monthly_report_view,
         name="create_project_monthly_report",
     ),
     path(
-        "project/<str:project>/monthly-progress/<str:report>/update",
+        "projects/<int:project>/monthly-progress/<str:report>/update",
         report_views.update_project_monthly_report_view,
         name="update_project_monthly_report",
     ),
@@ -81,12 +81,12 @@ urlpatterns = [
     ),
     # Activity Plan Report URLS
     path(
-        "project/<str:project>/monthly-progress/<str:report>/create",
+        "projects/<int:project>/monthly-progress/<str:report>/create",
         plan_views.create_report_activity_plan,
         name="create_report_activity_plan",
     ),
     path(
-        "project/<str:project>/report-activity-plan/<str:plan>/update",
+        "projects/<int:project>/report-activity-plan/<str:plan>/update",
         plan_views.update_report_activity_plan,
         name="update_report_activity_plans",
     ),
@@ -107,12 +107,12 @@ urlpatterns = [
         name="create_report_target_location",
     ),
     path(
-        "project/<str:project>/monthly-progress/<str:report>/report-target-locations",
+        "projects/<int:project>/monthly-progress/<str:report>/report-target-locations",
         location_views.list_report_target_locations,
         name="list_report_target_locations",
     ),
     path(
-        "project/<str:project>/report_plan/<str:plan>/report-target-locations/<str:location>/update",
+        "projects/<int:project>/report_plan/<str:plan>/report-target-locations/<str:location>/update",
         location_views.update_report_target_locations,
         name="update_report_target_locations",
     ),

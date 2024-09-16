@@ -22,7 +22,9 @@
                     <div class="activity-title">
                         <span>Import Report Activities and Locations</span>
                     </div>
-                    <a href="{% url 'export_monthly_report_template' monthly_report.pk %}" class="btn btn-gray">Download Template</a>
+                    <div>
+                        <a href="{% url 'export_monthly_report_template' monthly_report.pk %}" class="btn btn-gray">Download Template</a>
+                    </div>
                 </div>
 
                 <p class="pb-2">Import Report Activities and Locations from a CSV file</p>
@@ -30,6 +32,12 @@
                 <ul class="space-y-2 p-4 border border-gray-e6 rounded">
                     <li> <span class="icon-info mr-2"></span>
                         Download the import template from the `Download Template` button.
+                    </li>
+                    <li> <span class="icon-info mr-2"></span>
+                        Download the mapping table of 
+                        <a class="underline" href="/media/documents/Clusters-Activity-domains-activity-types-and-Indicators.xlsx"> Cluster Activity Plans and Indicators</a>, and the 
+                        <a class="underline" href="/media/documents/AFG-Admins-one-and-two-Pcode-and-Name.xlsx">Names and Pcodes of Locations</a> 
+                        for your reference.
                     </li>
                     <li> <span class="icon-info mr-2"></span>
                         Leave the columns that are irrelevant to your project empty.

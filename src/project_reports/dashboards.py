@@ -42,7 +42,7 @@ def reports_dashboard_view(request):
     reports_total = queryset.count()
     reports_todo = queryset.filter(state="todo").count()
     reports_pending = queryset.filter(state="pending").count()
-    reports_complete = queryset.filter(state="complete").count()
+    reports_complete = queryset.filter(state="completed").count()
 
     # Initialize filter form with filter parameters and queryset
     reports_filter = MonthlyReportsFilter(

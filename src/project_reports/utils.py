@@ -124,11 +124,13 @@ def write_project_report_sheet(workbook, monthly_progress_report):
                     # Create a dictionary to hold disaggregation data
                     disaggregation_data = {}
                     row = [
-                        project_reports.project.code,
+                        project_reports.project.code if project_reports.project.code else None,
                         project_reports.__str__(),
                         ", ".join(
-                            [cluster.code for cluster in plan_report.activity_plan.activity_domain.clusters.all()]
-                        ),
+                            [str(cluster.code) for cluster in plan_report.activity_plan.activity_domain.clusters.all()]
+                        )
+                        if project_reports.project.clusters
+                        else None,
                         project_reports.project.user.profile.name
                         if project_reports.project.user and project_reports.project.user.profile
                         else None,
@@ -142,24 +144,34 @@ def write_project_report_sheet(workbook, monthly_progress_report):
                         project_reports.project.user.profile.organization.type
                         if project_reports.project.user
                         else None,
-                        ", ".join([partner.name for partner in project_reports.project.programme_partners.all()]),
+                        ", ".join([partner.name for partner in project_reports.project.programme_partners.all()])
+                        if project_reports.project.programme_partners
+                        else None,
                         project_reports.project.hrp_code if project_reports.project.hrp_code else None,
-                        project_reports.project.title,
-                        project_reports.project.start_date.astimezone(datetime.timezone.utc).replace(tzinfo=None),
-                        project_reports.project.end_date.astimezone(datetime.timezone.utc).replace(tzinfo=None),
-                        project_reports.project.state,
-                        ", ".join([response_type.name for response_type in plan_report.response_types.all()]),
+                        project_reports.project.title if project_reports.project.title else None,
+                        project_reports.project.start_date.astimezone(datetime.timezone.utc).replace(tzinfo=None)
+                        if project_reports.project.start_date
+                        else None,
+                        project_reports.project.end_date.astimezone(datetime.timezone.utc).replace(tzinfo=None)
+                        if project_reports.project.end_date
+                        else None,
+                        project_reports.project.state if project_reports.project.state else None,
+                        ", ".join(
+                            [response_type.name for response_type in plan_report.response_types.all() if response_type]
+                        )
+                        if plan_report.response_types
+                        else None,
                         ", ".join(str(donor.name) for donor in project_reports.project.donors.all())
                         if project_reports.project.donors
                         else None,
-                        project_reports.project.budget,
+                        project_reports.project.budget if project_reports.project.budget else None,
                         project_reports.project.budget_currency.name
                         if project_reports.project.budget_currency
                         else None,
-                        project_reports.from_date.month,
-                        project_reports.from_date.strftime("%B"),
-                        project_reports.from_date.strftime("%Y"),
-                        project_reports.from_date.strftime("%Y-%m-%d"),
+                        project_reports.from_date.month if project_reports.from_date else None,
+                        project_reports.from_date.strftime("%B") if project_reports.from_date else None,
+                        project_reports.from_date.strftime("%Y") if project_reports.from_date else None,
+                        project_reports.from_date.strftime("%Y-%m-%d") if project_reports.from_date else None,
                         location_report.target_location.implementing_partner.name
                         if location_report.target_location.implementing_partner
                         else None,
@@ -214,11 +226,21 @@ def write_project_report_sheet(workbook, monthly_progress_report):
                         plan_report.activity_plan.hrp_beneficiary.name
                         if plan_report.activity_plan.hrp_beneficiary
                         else None,
-                        plan_report.activity_plan.get_beneficiary_category_display(),
-                        plan_report.activity_plan.activity_domain.code,
-                        plan_report.activity_plan.activity_domain.name,
-                        plan_report.activity_plan.activity_type.code,
-                        plan_report.activity_plan.activity_type.name,
+                        plan_report.activity_plan.get_beneficiary_category_display()
+                        if plan_report.activity_plan.get_beneficiary_category_display()
+                        else None,
+                        plan_report.activity_plan.activity_domain.code
+                        if plan_report.activity_plan.activity_domain
+                        else None,
+                        plan_report.activity_plan.activity_domain.name
+                        if plan_report.activity_plan.activity_domain
+                        else None,
+                        plan_report.activity_plan.activity_type.code
+                        if plan_report.activity_plan.activity_type
+                        else None,
+                        plan_report.activity_plan.activity_type.name
+                        if plan_report.activity_plan.activity_type
+                        else None,
                         plan_report.activity_plan.activity_detail.code
                         if plan_report.activity_plan.activity_detail
                         else None,
@@ -226,7 +248,9 @@ def write_project_report_sheet(workbook, monthly_progress_report):
                         if plan_report.activity_plan.activity_detail
                         else None,
                         plan_report.activity_plan.indicator.name if plan_report.activity_plan.indicator else None,
-                        plan_report.get_beneficiary_status_display(),
+                        plan_report.get_beneficiary_status_display()
+                        if plan_report.get_beneficiary_status_display()
+                        else None,
                         "Yes" if plan_report.seasonal_retargeting else "No",
                         plan_report.units if plan_report.units else None,
                         plan_report.unit_type.name if plan_report.unit_type else None,

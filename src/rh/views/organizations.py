@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
+from django.core.cache import cache
 from django.http import JsonResponse
 from django.shortcuts import render
 from rh.models import TargetLocation
@@ -11,11 +12,15 @@ from ..forms import (
 
 @login_required
 def target_locations(request, org_pk):
-    target_locations = (
-        TargetLocation.objects.select_related("project", "district", "province")
-        .filter(project__organization_id=org_pk, project__state="in-progress")
-        .order_by("province__name")
-    )
+    target_locations = cache.get(f"{org_pk}-target_locations")
+
+    if not target_locations:
+        target_locations = (
+            TargetLocation.objects.select_related("project", "district", "province")
+            .filter(project__organization_id=org_pk, project__state="in-progress")
+            .order_by("province__name")
+        )
+        cache.set(f"{org_pk}-target_locations", target_locations, timeout=86400)  # Set timeout to 1 day (86400 seconds)
 
     districts_grouped = {}
 

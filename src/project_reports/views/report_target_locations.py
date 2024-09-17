@@ -29,7 +29,6 @@ from ..models import (
 
 @login_required
 def list_report_target_locations(request, project, report, plan=None):
-    """Create View"""
     project = get_object_or_404(Project, pk=project)
     monthly_report_instance = get_object_or_404(ProjectMonthlyReport, pk=report)
 

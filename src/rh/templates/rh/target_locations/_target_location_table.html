@@ -95,6 +95,12 @@
                                     name="state"
                                     class=""
                                     style="width: unset;padding:1px 6px;height:36px;appearance:auto;"
+                                    hx-on::after-request="
+                                        const selectedClass = this.value;
+                                        const previousElement = this.previousElementSibling;
+                                        previousElement.classList.remove('draft', 'in-progress', 'archived','completed'); // remove other classes
+                                        previousElement.classList.add(selectedClass); // add selected class
+                                    "
                                 >
                                     {% for state in row.get_available_states %}
                                         <option 

@@ -21,18 +21,25 @@ class ProjectMonthlyReportForm(forms.ModelForm):
             "from_date": forms.widgets.DateInput(
                 attrs={
                     "type": "date",
-                    "onfocus": "(this.type='date')",
-                    "onblur": "(this.type='text')",
                 }
             ),
             "to_date": forms.widgets.DateInput(
                 attrs={
                     "type": "date",
-                    "onfocus": "(this.type='date')",
-                    "onblur": "(this.type='text')",
                 }
             ),
         }
+
+    def clean(self):
+        cleaned_data = super().clean()
+        from_date = cleaned_data.get("from_date")
+        to_date = cleaned_data.get("to_date")
+
+        if from_date and to_date:
+            if from_date.month != to_date.month:
+                self.add_error('from_date', "From date and to date must be in the same month.")
+            if from_date > to_date:
+                self.add_error('to_date', "To date must be later than from date.")
 
 
 class TargetLocationReportForm(forms.ModelForm):

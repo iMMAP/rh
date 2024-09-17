@@ -39,8 +39,8 @@ crontab -e
 ```
 Add the below line save, command runs daily at 2:00 AM
 ```shell
-0 2 * * * cd /home/ubuntu/rh && poetry run python src/manage.py dbbackup
-0 2 * * * cd /home/ubuntu/rh && poetry run python src/manage.py mediabackup
+0 2 * * * cd /home/ubuntu/rh && poetry run python src/manage.py dbbackup --database=default --settings=core.settings.production
+0 2 * * * cd /home/ubuntu/rh && poetry run python src/manage.py mediabackup --database=default --settings=core.settings.production
 ```
 
 ### Restore DB Backup

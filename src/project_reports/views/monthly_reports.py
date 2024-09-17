@@ -83,51 +83,53 @@ def index_project_report_view(request, project):
 
 @login_required
 def create_project_monthly_report_view(request, project):
-    """View for creating a project."""
     project = get_object_or_404(Project, pk=project)
 
-    if project.state == "in-progress":
-        # Get the current date
-        current_date = datetime.now()
+    if project.state != "in-progress":
+        messages.error(request, "Your project is not ready for reporting! Please submit your project first.")
 
-        # Calculate the last day of the current month
-        last_day = calendar.monthrange(current_date.year, current_date.month)[1]
-
-        # Create a new date representing the end of the current month
-        end_of_month = datetime(current_date.year, current_date.month, last_day)
-
-        form = ProjectMonthlyReportForm(
-            request.POST or None,
-            initial={"report_due_date": end_of_month, "project": project},
+        return redirect(
+            "project_reports_home",
+            project=project.pk,
         )
 
-        if request.method == "POST":
-            if form.is_valid():
-                report = form.save(commit=False)
-                report.project = project
-                report.state = "pending"
-                report.save()
+    # Get the current date
+    current_date = datetime.now()
 
-                # return redirect("create_report_activity_plan", report=report.pk, project=project.pk)
-                return redirect(
-                    "view_monthly_report",
-                    project=project.pk,
-                    report=report.pk,
-                )
+    # Calculate the last day of the current month
+    last_day = calendar.monthrange(current_date.year, current_date.month)[1]
 
-        context = {
-            "project": project,
-            "report_form": form,
-        }
+    # Create a new date representing the end of the current month
+    end_of_month = datetime(current_date.year, current_date.month, last_day)
 
-        return render(request, "project_reports/monthly_reports/forms/monthly_report_form.html", context)
-
-    messages.error(request, "Your project is not ready for reporting! Please submit your project first.")
-
-    return redirect(
-        "project_reports_home",
-        project=project.pk,
+    form = ProjectMonthlyReportForm(
+        request.POST or None,
+        initial={"to_date": end_of_month, "project": project},
     )
+
+    if request.method == "POST":
+        if form.is_valid():
+            report = form.save(commit=False)
+            report.project = project
+            report.state = "pending"
+            report.save()
+
+            messages.success(request,"Monthly report period created successfully. You can add reports activities from the below table.")
+
+            return redirect(
+                "view_monthly_report",
+                project=project.pk,
+                report=report.pk,
+            )
+        else:
+            messages.error(request, "Something went wrong! please check the below form for errors")
+
+    context = {
+        "project": project,
+        "report_form": form,
+    }
+
+    return render(request, "project_reports/monthly_reports/forms/monthly_report_form.html", context)
 
 
 @login_required

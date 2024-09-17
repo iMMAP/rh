@@ -47,9 +47,9 @@
                             <span class="activity-title">
                                 <span>
                                     {% if report_activity_plan %}
-                                        Update Report Activity
+                                        Update Report Activity of {{ monthly_report.from_date| date:"F Y" }}
                                     {% else %}
-                                        New Report Activity
+                                        New Report Activity for {{ monthly_report.from_date| date:"F Y" }}
                                     {% endif %}
                                 </span>
                                 {% if report_activity_plan %}

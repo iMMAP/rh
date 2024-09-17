@@ -1,10 +1,12 @@
+import csv
+
 from django import forms
 from django.contrib import admin
 from django.contrib.admin.widgets import FilteredSelectMultiple
 from django.db.models import Count
+from django.http import HttpResponse
 from django.urls import reverse
 from django.utils.html import format_html
-from import_export.admin import ImportExportActionModelAdmin
 
 from .models import (
     ActivityDetail,
@@ -99,10 +101,33 @@ class LocationAdmin(admin.ModelAdmin):
 admin.site.register(Location, LocationAdmin)
 
 
+@admin.action(description="Export as CSV")
+def export_as_csv(self, request, queryset):
+    meta = self.model._meta
+    field_names = [field.name for field in meta.fields] + ["countries", "clusters"]
+
+    response = HttpResponse(content_type="text/csv")
+    response["Content-Disposition"] = "attachment; filename={}.csv".format(meta)
+    writer = csv.writer(response)
+
+    writer.writerow(field_names)
+    for obj in queryset:
+        writer.writerow(
+            [getattr(obj, field) for field in field_names[:-2]]  # Existing fields
+            + [
+                ", ".join([country.name for country in obj.countries.all()]),  # Countries
+                ", ".join([cluster.title for cluster in obj.clusters.all()]),
+            ]
+        )  # Clusters
+
+    return response
+
+
 class OrganizationAdmin(admin.ModelAdmin):
     list_display = ("name", "code", "type", "countries_count", "clusters_count")
     search_fields = ("name", "code")
     list_filter = ("type",)
+    actions = [export_as_csv]
 
     filter_horizontal = (
         "countries",
@@ -157,7 +182,7 @@ class BeneficiaryTypeAdmin(admin.ModelAdmin):
 admin.site.register(BeneficiaryType, BeneficiaryTypeAdmin)
 
 
-class DisaggregationAdmin(ImportExportActionModelAdmin, admin.ModelAdmin):
+class DisaggregationAdmin(admin.ModelAdmin):
     list_display = ("name", "indicators_count", "clusters_count")
     search_fields = (
         "code",

@@ -33,7 +33,6 @@ INSTALLED_APPS = [
     # Installed packages apps
     "django_filters",
     "django_vite_plugin",
-    "import_export",
     "django_htmx",
     "guardian",
     "dbbackup",

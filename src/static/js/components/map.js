@@ -104,8 +104,8 @@ fetch(targetLocationUrl)
 
 
 function clickOnItem() {
-  const locationItems = document.querySelectorAll(".location-item");
-  locationItems.forEach((item) => {
+    const locationItems = document.querySelectorAll(".location-item");
+  for(const item of locationItems){
     item.addEventListener("click", (e) => {
         fk = e.target.closest(".location-item")
         const id = fk.dataset.tlId;
@@ -120,11 +120,11 @@ function clickOnItem() {
         });
 
     });
-  });
+  }
 }
 
 // obtaining coordinates after clicking on the map
-map.on("click", function (e) {
+map.on("click", (e) => {
   const markerPlace = document.querySelector(".marker-position");
   markerPlace.textContent = `Lat: ${e.latlng.lat} | Lng:${e.latlng.lng}`;
 });
@@ -137,8 +137,7 @@ const sidebar = document.querySelector(".sidebar");
 const buttonClose = document.querySelector(".close-button");
 const visulaMapContainer = document.querySelector(".visual-map-section");
 
-
-menuItems.forEach((item) => {
+for (const item of menuItems) {
   item.addEventListener("click", (e) => {
     const target = e.target;
 
@@ -154,8 +153,7 @@ menuItems.forEach((item) => {
     // add active class to menu item
     addRemoveActiveItem(target, "active-item");
   });
-});
-
+}
 // close sidebar when click on close button
 buttonClose.addEventListener("click", () => {
   closeSidebar();
@@ -177,7 +175,7 @@ function showContent(dataContent) {
 
 // --------------------------------------------------
 // close when click esc
-document.addEventListener("keydown", function (event) {
+document.addEventListener("keydown", (event) => {
   if (event.key === "Escape") {
     closeSidebar();
   }

@@ -139,6 +139,10 @@ def login_view(request):
         if user is not None:
             if user.is_active:
                 login(request, user)
+                if user.last_login:
+                    messages.success(request, f"Welcome back {user}")
+                else:
+                    messages.success(request, f"Welcome {user} ! You've successfully logged in.")
                 if "next" in request.POST:
                     return redirect(request.POST.get("next"))
                 return redirect("landing")

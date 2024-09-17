@@ -37,9 +37,9 @@ class ProjectMonthlyReportForm(forms.ModelForm):
 
         if from_date and to_date:
             if from_date.month != to_date.month:
-                self.add_error('from_date', "From date and to date must be in the same month.")
+                self.add_error("from_date", "From date and to date must be in the same month.")
             if from_date > to_date:
-                self.add_error('to_date', "To date must be later than from date.")
+                self.add_error("to_date", "To date must be later than from date.")
 
 
 class TargetLocationReportForm(forms.ModelForm):

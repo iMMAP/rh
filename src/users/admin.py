@@ -1,6 +1,9 @@
+import csv
+
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User
+from django.http import HttpResponse
 from django.urls import reverse
 from django.utils.html import format_html
 
@@ -26,13 +29,28 @@ def make_inactive(modeladmin, request, queryset):
     queryset.update(is_active=False)
 
 
+def export_as_csv(self, request, queryset):
+    meta = self.model._meta
+    field_names = [field.name for field in meta.fields]
+
+    response = HttpResponse(content_type="text/csv")
+    response["Content-Disposition"] = "attachment; filename={}.csv".format(meta)
+    writer = csv.writer(response)
+
+    writer.writerow(field_names)
+    for obj in queryset:
+        writer.writerow([getattr(obj, field) for field in field_names])
+
+    return response
+
+
 class UserAdminCustom(UserAdmin):
     list_display = ("email", "username", "name", "organization", "is_active", "user_groups", "last_login")
     list_select_related = ["profile__organization"]
     date_hierarchy = "last_login"
 
     inlines = (ProfileInline,)
-    actions = [make_active, make_inactive]
+    actions = [make_active, make_inactive, export_as_csv]
 
     def user_groups(self, obj):
         return ", ".join([g.name for g in obj.groups.all()])

@@ -114,7 +114,10 @@ def create_project_monthly_report_view(request, project):
             report.state = "pending"
             report.save()
 
-            messages.success(request,"Monthly report period created successfully. You can add reports activities from the below table.")
+            messages.success(
+                request,
+                "Monthly report period created successfully. You can add reports activities from the below table.",
+            )
 
             return redirect(
                 "view_monthly_report",

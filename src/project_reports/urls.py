@@ -102,6 +102,11 @@ urlpatterns = [
     ),
     # Location Report URLS
     path(
+        "report-target-locations/get-target-and-reached",
+        location_views.get_target_and_reached_of_disaggregationlocation,
+        name="get_target_and_reached_of_disaggregationlocation",
+    ),
+    path(
         "report-target-locations/activity-plan-report/<int:plan>/create",
         location_views.create_report_target_location,
         name="create_report_target_location",

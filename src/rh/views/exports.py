@@ -11,6 +11,7 @@ from openpyxl.styles import Font, NamedStyle
 from openpyxl.utils import get_column_letter
 from rh.utils import DateTimeEncoder
 
+from ..filters import ProjectsFilter
 from ..models import ActivityPlan, Disaggregation, DisaggregationLocation, Project, TargetLocation
 
 #############################################
@@ -47,7 +48,11 @@ def project_export_excel_view(request, format):
             ),
         ),
     )
-    #
+    # filter integration
+    if request.GET:
+        project_filter = ProjectsFilter(request.GET, queryset=projects)
+        if project_filter.qs.exists():
+            projects = project_filter.qs
     # check the user permission
     if user.has_perm("rh.view_cluster_projects") or user.has_perm("rh.add_organization"):
         projects = projects.filter(organization=user_org)

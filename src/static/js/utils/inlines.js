@@ -90,7 +90,7 @@ const formset = (elements, opts) => {
 			for(const opt of selectedOptions){
 				if (newRowSelect) {
 					const optionToRemove = Array.from(newRowSelect.options).find(option => option.value === opt.value);
-					if (optionToRemove) {
+					if (optionToRemove && optionToRemove.value !== "" ) {
 						optionToRemove.remove();
 					}
 				}

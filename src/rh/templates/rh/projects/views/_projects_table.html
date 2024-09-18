@@ -36,19 +36,19 @@
                     <div class="format-list">
                         <div class="export-link-holder"
                              onclick="exportButton(event)"
-                             data-export-url="{% url 'export_project_excel' 'csv' %}"
+                             data-export-url="{% url 'export_project_excel' 'csv' %}?{{request.GET.urlencode}}"
                              data-export-format="csv">
                             <span class="export-link cursor-pointer">CSV</span>
                         </div>
                         <div class="export-link-holder"
                              onclick="exportButton(event)"
-                             data-export-url="{% url 'export_project_excel' 'xls' %}"
+                             data-export-url="{% url 'export_project_excel' 'xls' %}?{{request.GET.urlencode}}"
                              data-export-format="xlsx">
                             <span class="export-link cursor-pointer">Excel</span>
                         </div>
                         <div class="export-link-holder"
                              onclick="exportButton(event)"
-                             data-export-url="{% url 'export_project_excel' 'json' %}"
+                             data-export-url="{% url 'export_project_excel' 'json' %}?{{request.GET.urlencode}}"
                              data-export-format="json">
                             <span class="export-link cursor-pointer">JSON</span>
                         </div>

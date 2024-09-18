@@ -109,7 +109,6 @@ class DisaggregationLocationReportForm(forms.ModelForm):
                 "onchange": "getTarget(event)",
                 "onload": "getTarget(event)",
                 "data-url": reverse_lazy("get_target_and_reached_of_disaggregationlocation"),
-                "hx-target": ".field-reached input",
             }
         )
         self.fields["disaggregation"].empty_value = "-----"

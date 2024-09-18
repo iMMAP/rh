@@ -82,7 +82,14 @@
                     <tr class="divide-x">
                         {% for field in report_disaggregation_formset.form.fields %}
                             <th class="border-r border-gray-e6 column-{{ field.name }}{% if field.required %} required{% endif %}{% if field.widget.is_hidden %} hidden{% endif %}">
-                                {{ field|capfirst }}
+                                {% if field == 'disaggregation' %}
+                                    <p class="flex gap-2">
+                                        {{ field|capfirst }}
+                                        <img id="spinner" class="size-4" style="display: none;" src="{% static 'images/spinner.gif' %}" />
+                                    </p>
+                                {% else %}
+                                    {{ field|capfirst }}
+                                {% endif %}
                             </th>
                         {% endfor %}
                         {% if report_disaggregation_formset.can_delete %}<th>Delete?</th>{% endif %}
@@ -102,7 +109,7 @@
                                     <td class="{% if field.name %}field-{{ field.name }}{% endif %}{% if field.is_hidden %} hidden{% endif %} ">
                                         {{ field }}
                                         {{ field.errors }}
-                                        <p class="help-text" style="color:coral">{{ field.help_text }}</p>
+                                        <p class="help-text" style="color:coral">{{ field.help_text }}</p> 
                                     </td>
                                 {% endif %}
                             {% endfor %}
@@ -121,6 +128,9 @@
         const targetReachedInput = e.target.closest("tr").querySelector(".field-reached input");
         const url = e.target.getAttribute("data-url");
 
+        const spinner = document.querySelector("#spinner")
+        spinner.style.display = "block";
+
         fetch(url, {
             method: 'POST',
             headers: {
@@ -138,13 +148,16 @@
             const helpTextSibling = targetReachedInput.nextElementSibling;
 
             if (helpTextSibling && helpTextSibling.classList.contains("help-text")) {
-                helpTextSibling.textContent = `Total target: ${data.target}, Previous month's reach: ${data.reached}. Then you can only add upto ${data.target - data.reached} beneficiary.`;
+                helpTextSibling.textContent = `Total target: ${data.target}, Previous months reach: ${data.reached}. Then you can only add upto ${data.target - data.reached} beneficiary.`;
             }
 
         })
         .catch((error) => {
             console.error('Error:', error);
+        }).finally(()=>{
+            spinner.style.display = "none";
         });
+
     }
 </script>
 <script defer src="{% static 'js/utils/inlines.js' %}"></script>

@@ -11,7 +11,39 @@
 //--------------------------------
 //Random added style start
 //----------------------------------
+.tooltip{
+  position: relative;
+}
+.tooltip .tooltip-text{
+  visibility: hidden;
+  position: absolute;
+  top: -180%;
+  left: auto;
+  right: auto;
+  background-color: #636161;
+  color: white;
+  font-size: 12px;
+  text-align: center;
+  padding: 5px;
+  width: 200px;
+  border-radius: 5px;
+  z-index: 100;
 
+}
+.tooltip .tooltip-text::after{
+  content: "";
+  position: absolute;
+  top: 110%;
+  right: 50%;
+  margin-top: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #636161 transparent  transparent transparent  ;
+
+}
+.tooltip:hover .tooltip-text{
+  visibility: visible;
+}
 .filter-container{
   display:  flex;
   gap: 3px;

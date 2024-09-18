@@ -69,4 +69,9 @@ urlpatterns = [
         auth_views.activate_account,
         name="activate_account",
     ),
+    path(
+        "export/org/users",
+        users_views.export_organization_users,
+        name="export_org_users",
+    ),
 ]

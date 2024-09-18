@@ -104,6 +104,14 @@ class DisaggregationLocationReportForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
 
         self.fields["disaggregation"].required = True
+        self.fields["disaggregation"].widget = forms.Select(
+            attrs={
+                "onchange": "getTarget(event)",
+                "onload": "getTarget(event)",
+                "data-url": reverse_lazy("get_target_and_reached_of_disaggregationlocation"),
+                "hx-target": ".field-reached input",
+            }
+        )
         self.fields["disaggregation"].empty_value = "-----"
         self.fields["reached"].required = True
         self.fields["reached"].widget.attrs["placeholder"] = "Enter target reached"
@@ -119,6 +127,13 @@ class DisaggregationLocationReportForm(forms.ModelForm):
                 disaggregationlocationreport__target_location_report=self.instance.target_location_report,
                 disaggregationlocationreport__disaggregation=self.instance.disaggregation,
             )
+            # self.fields["reached"].widget.attrs["max"] = (
+            #     DisaggregationLocation.objects.filter(
+            #         disaggregation=self.instance.disaggregation, target_location=target_location
+            #     )
+            #     .first()
+            #     .target
+            # )
 
 
 class ActivityPlanReportForm(forms.ModelForm):

@@ -52,32 +52,20 @@
                     {% for row in object_list %}
                         <tr>
                             <td>
-                                <a href="{% url 'activity-plans-update' row.activity_plan.pk %}">
-                                    <svg data-slot="icon"
-                                         width="18px"
-                                         data-darkreader-inline-stroke=""
-                                         fill="none"
-                                         stroke-width="1.5"
-                                         stroke="currentColor"
-                                         viewBox="0 0 24 24"
-                                         xmlns="http://www.w3.org/2000/svg"
-                                         aria-hidden="true">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M13.19 8.688a4.5 4.5 0 0 1 1.242 7.244l-4.5 4.5a4.5 4.5 0 0 1-6.364-6.364l1.757-1.757m13.35-.622 1.757-1.757a4.5 4.5 0 0 0-6.364-6.364l-4.5 4.5a4.5 4.5 0 0 0 1.242 7.244">
-                                        </path>
+                                {{ row.activity_plan }}
+                                <a target="_blank" href="{% url 'activity-plans-update' row.activity_plan.pk %}" class="ml-2">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
                                     </svg>
                                 </a>
-                                {{ row.activity_plan }}
                             </td>
                             <td>
                                 {% if row.zone %}{{ row.zone }},{% endif %}
                                 {% if row.district %}{{ row.district }},{% endif %}
                                 {% if row.province %}{{ row.province }},{% endif %}
                                 {% if row.country %}{{ row.country }}{% endif %}
- 
                             </td>
-                            <td>
-                                {{ row.total_target|intcomma }}
-                            </td>
+                            <td> {{ row.total_target|intcomma }} </td>
                              <td class="flex items-center gap-2">
                                 <span class="h-4 w-4 rounded-full
                                         {% if row.state == 'draft' %}bg-yellow{% endif %}

@@ -1,14 +1,17 @@
+import json
+
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.db.models import Sum
 from django.forms import inlineformset_factory
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse, reverse_lazy
 from django.utils.safestring import mark_safe
 from django_htmx.http import HttpResponseClientRedirect
 from rh.models import (
+    DisaggregationLocation,
     Project,
     TargetLocation,
 )
@@ -25,6 +28,26 @@ from ..models import (
     ProjectMonthlyReport,
     TargetLocationReport,
 )
+
+
+@login_required
+def get_target_and_reached_of_disaggregationlocation(request):
+    data = json.loads(request.body)
+    target_location_id = data.get("target_location_id")
+    disaggregation_id = data.get("disaggregation_id")
+
+    if not target_location_id or not disaggregation_id:
+        return JsonResponse({"error": "Both target_location_id and disaggregation_id are required."}, status=400)
+
+    dis_loc = DisaggregationLocation.objects.filter(
+        disaggregation_id=disaggregation_id, target_location_id=target_location_id
+    ).first()
+
+    total_reached = DisaggregationLocationReport.objects.filter(
+        target_location_report__target_location_id=target_location_id, disaggregation_id=disaggregation_id
+    ).aggregate(total_reached=Sum("reached"))["total_reached"]
+
+    return JsonResponse({"target": dis_loc.target, "reached": total_reached})
 
 
 @login_required
@@ -151,16 +174,14 @@ def create_report_target_location(request, plan):
             plan_report=plan_report,
         )
 
-    return render(
-        request,
-        "project_reports/report_target_locations/report_target_location_form.html",
-        {
-            "location_report_form": location_report_form,
-            "report_plan": plan_report,
-            "monthly_report": plan_report.monthly_report,
-            "project": plan_report.monthly_report.project,
-        },
-    )
+    context = {
+        "location_report_form": location_report_form,
+        "report_plan": plan_report,
+        "monthly_report": plan_report.monthly_report,
+        "project": plan_report.monthly_report.project,
+    }
+
+    return render(request, "project_reports/report_target_locations/report_target_location_form.html", context)
 
 
 @login_required

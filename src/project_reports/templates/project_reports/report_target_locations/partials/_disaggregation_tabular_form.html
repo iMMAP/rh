@@ -102,6 +102,7 @@
                                     <td class="{% if field.name %}field-{{ field.name }}{% endif %}{% if field.is_hidden %} hidden{% endif %} ">
                                         {{ field }}
                                         {{ field.errors }}
+                                        <p class="help-text" style="color:coral">{{ field.help_text }}</p>
                                     </td>
                                 {% endif %}
                             {% endfor %}
@@ -115,6 +116,37 @@
         </fieldset>
     </div>
 </div>
+<script>
+    function getTarget(e){
+        const targetReachedInput = e.target.closest("tr").querySelector(".field-reached input");
+        const url = e.target.getAttribute("data-url");
+
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+			    "X-CSRFToken": csrftoken,
+            },
+            body: JSON.stringify({
+                target_location_id: {{target_location.id}},
+                disaggregation_id: parseInt(e.target.value) 
+            }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            targetReachedInput.setAttribute("max", data.target - data.reached);
+            const helpTextSibling = targetReachedInput.nextElementSibling;
+
+            if (helpTextSibling && helpTextSibling.classList.contains("help-text")) {
+                helpTextSibling.textContent = `Total target: ${data.target}, Previous month's reach: ${data.reached}. Then you can only add upto ${data.target - data.reached} beneficiary.`;
+            }
+
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+        });
+    }
+</script>
 <script defer src="{% static 'js/utils/inlines.js' %}"></script>
 {% comment %} end of Tabular Disaggregation Table form {% endcomment %}
 {% endif %}

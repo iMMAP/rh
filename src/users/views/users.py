@@ -1,3 +1,5 @@
+from datetime import date
+
 import django_filters
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
@@ -10,12 +12,13 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.template import loader
 from django.views.decorators.http import require_http_methods
 from extra_settings.models import Setting
+from openpyxl import Workbook
 
 from ..forms import (
     ProfileUpdateForm,
     UserUpdateForm,
 )
-from ..utils import has_permission
+from ..utils import has_permission, write_users_sheet
 
 
 class UsersFilter(django_filters.FilterSet):
@@ -156,3 +159,43 @@ def profile_show(request, username):
     context = {"user": user}
 
     return render(request, "users/profile_show.html", context)
+
+
+# Export Organization Users
+@login_required
+@require_http_methods(["GET"])
+@permission_required("users.view_org_users", raise_exception=True)
+def export_organization_users(request):
+    # filter_list = json.loads(request.body)
+    user_org = request.user.profile.organization
+    try:
+        # get the filtered queryset
+        users_list = (
+            User.objects.filter(profile__organization=user_org, is_active=True)
+            .select_related("profile")
+            .order_by("-id")
+        )
+        if request.GET:
+            users_filter = UsersFilter(
+                request.GET,
+                queryset=users_list,
+            )
+            if users_filter.qs.exists():
+                users_list = users_filter.qs
+
+        # define the excel workbook
+        workbook = Workbook()
+        write_users_sheet(workbook, users_list)
+
+        # get today date
+        today = date.today()
+        response = HttpResponse(content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+        response["Content-Disposition"] = f'attachment; filename="{user_org}_users_{today}.xlsx"'
+
+        # Save the workbook to the response
+        workbook.save(response)
+
+        return response
+    except Exception as e:
+        response = {"error": str(e)}
+        return HttpResponse(response, status=500)

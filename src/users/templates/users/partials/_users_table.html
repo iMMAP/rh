@@ -9,7 +9,8 @@
                 {% if forloop.first %}<span>Applied Filters:</span>{% endif %}
                 {% if field.value and field.name != 'state' %}
  
-                    <span class="filter-item title" id="title">{{ field.name }}</span>
+                    <span class="filter-item title" 
+                    id="title">{{ field.name }}</span>
                     {% if forloop.last %}<span class="close-alert-message">x</span>{% endif %}
                 {% endif %}
  
@@ -18,6 +19,12 @@
         <!-- filter applied end -->
  
         <div class="actions-panel">
+            <a 
+            href="{% url 'export_org_users' %}?{{request.GET.urlencode}}" 
+            class="btn btn-gray tooltip">
+                Export <span class="icon-download"></span>
+                <span class="tooltip-text">Export Active Users of Your Organization</span>
+            </a>
             {% if users_filter %}
                 {% include "components/_filter_drawer.html" with filter=users_filter %}
             {% endif %}

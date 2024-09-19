@@ -229,8 +229,13 @@ def copy_target_location(request, project, location):
 @login_required
 @require_http_methods(["DELETE"])
 def delete_target_location(request, pk):
-    """Delete the target location"""
     target_location = get_object_or_404(TargetLocation, pk=pk)
+
+    if target_location.targetlocationreport_set.exists():
+        messages.error(
+            request, "Cannot delete target location with existing reports. Instead change the status to Archived."
+        )
+        return HttpResponse(status=400)
 
     target_location.delete()
 

@@ -110,6 +110,13 @@ def delete_activity_plan(request, pk):
     """Delete the specific activity plan"""
     activity_plan = get_object_or_404(ActivityPlan, pk=pk)
 
+    if activity_plan.activityplanreport_set.exists():
+        # TODO: handle this better in the frontend
+        messages.error(
+            request, "Cannot delete activity plan with existing reports. Instead change the status to Archived."
+        )
+        return HttpResponse(status=200)
+
     activity_plan.delete()
 
     messages.success(request, "Activity plan and its target locations has been delete.")

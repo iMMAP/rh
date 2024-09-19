@@ -14,7 +14,12 @@
                 <div class="activity-title">
                     <span>Project Report Periods</span>
                 </div>
-                <a href="{% url 'create_project_monthly_report' project=project.pk %}" class="btn btn-red add-btn">Add Report </a>
+                <a href="{% url 'create_project_monthly_report' project=project.pk %}" class="btn btn-red add-btn">
+                    <svg style="" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4 text-white">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                    </svg>
+                    Add Report 
+                </a>
             </div>
         </div>
 

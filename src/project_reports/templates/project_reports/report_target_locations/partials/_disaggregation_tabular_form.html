@@ -148,7 +148,7 @@
             const helpTextSibling = targetReachedInput.nextElementSibling;
 
             if (helpTextSibling && helpTextSibling.classList.contains("help-text")) {
-                helpTextSibling.textContent = `Total target: ${data.target}, Previous months reach: ${data.reached}. Then you can only add upto ${data.target - data.reached} beneficiary.`;
+                helpTextSibling.textContent = `Total target: ${data.target}, Previous months reach: ${data.reached || 0}. Then you can only add upto ${data.target - data.reached} beneficiary.`;
             }
 
         })

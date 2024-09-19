@@ -8,62 +8,101 @@
 {% endblock title %}
 
 {% block content %}
-    <div class="container">
-        <div class="profile-info-holder">
-            <div class="profile-info-block">
-                <h1>{{ user.profile.name }}</h1>
-                <strong class="user-position">{{ user.profile.position }}</strong>
-                <address>
+<div class="container">
+    <h1 class="font-bold leading-7 text-gray-900">User Information</h1>
+    <div class="mt-6 border-t border-gray-e6">
+        <dl class="divide-y divide-gray-100">
+                <div class="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                <dt class="text-sm font-medium leading-6 text-gray-900">Full Name</dt>
+                <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+                    {{ user.profile.name }}
+                </dd>
+            </div>
+
+            <div class="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                <dt class="text-sm font-medium leading-6 text-gray-900">Email</dt>
+                <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0 js-copy-field">
+                    {{ user.email }}
+                </dd>
+            </div>
+            
+            <div class="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                <dt class="text-sm font-medium leading-6 text-gray-900">Position</dt>
+                <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+                    {{ user.profile.position }}
+                </dd>
+            </div>
+            <div class="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                <dt class="text-sm font-medium leading-6 text-gray-900">Country</dt>
+                <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+                    {{ user.profile.country}}
+                </dd>
+            </div>
+
+            <div class="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                <dt class="text-sm font-medium leading-6 text-gray-900">Organization</dt>
+                <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
                     <span class="text-read-only m2m-badges">
-                        <span>Clusters</span>
+                        <span class="border border-gray-d1 rounded-full px-4 py-1 bg-gray-f5">{{user.profile.organization}}</span>
+                    </span>
+                </dd>
+            </div>
+
+            <div class="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                <dt class="text-sm font-medium leading-6 text-gray-900">Clusters</dt>
+                <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+                    <span class="text-read-only m2m-badges">
                         {% for cluster in user.profile.clusters.all %}
                             <span class="border border-gray-d1 rounded-full px-4 py-1 bg-gray-f5">{{ cluster.title }}</span>
                         {% endfor %}
                     </span>
-
-                    {{ user.profile.country }}
-                    <br />
-                    <a href="mailto:{{ user.email }}">{{ user.email }}</a>
-                    <br />
-                    {% if user.profile.phone %}
-                        <a href="tel:{{ user.profile.phone }}">{{ user.profile.phone }}</a>
-                    {% endif %}
-                </address>
+                </dd>
             </div>
-            <div class="profile-info-block">
-                <div class="subtitle-block">
-                    <strong class="subtitle">Contact information</strong>
-                    <!--<button class="edit-btn" type="button"><span class="icon-pen"></span></button>-->
-                </div>
-                <ul class="user-profile-contacts">
-                    <li>
-                        <strong class="title">Phone</strong>
-                        <a href="tel:{{ user.profile.phone }}">{{ user.profile.phone }}</a>
-                    </li>
-                    <li>
-                        <strong class="title">Whatsapp</strong>
-                        {{ user.profile.whatsapp }}
-                    </li>
-                    {% if user.profile.skype %}
-                    <li>
-                        <strong class="title">Skype ID</strong>
-                        <a href="skype:{{ user.profile.skype }}?userinfo">{{ user.profile.skype }}</a>
-                    </li>
-                    {% endif %}
-                    <li>
-                        <strong class="title">Email</strong>
-                        <a href="mailto:{{ user.email }}">{{ user.email }}</a>
-                    </li>
-                    <li>
-                        <strong class="title">Cluster Contact</strong>
-                        {% if user.profile.is_cluster_contact %}
-                            Yes
-                        {% else %}
-                            No
+        
+            <div class="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                <dt class="text-sm font-medium leading-6 text-gray-900">Other</dt>
+                <dd class="mt-2 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
+                    <div class="flex gap-4">
+                        <div class="input-field read-only">
+                            <span class="label">Cluster Contact</span>
+                            <div class="input-holder">
+                                {% if project.is_cluster_contact %}
+                                    Yes
+                                {% else %}
+                                    No
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% if user.profile.skype %}
+                        <div class="input-field read-only">
+                            <span class="label">Skype</span>
+                            <div class="input-holder">
+                                <a href="skype:{{ user.profile.skype }}?userinfo">{{ user.profile.skype }}</a>  
+                            </div>
+                        </div>
                         {% endif %}
-                    </li>
-                </ul>
+
+                        {% if user.profile.phone %}
+                        <div class="input-field read-only">
+                            <span class="label">Phone</span>
+                            <div class="input-holder">
+                                {{user.profile.phone}}
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        {% if user.profile.whatsup %}
+                        <div class="input-field read-only">
+                            <span class="label">Phone</span>
+                            <div class="input-holder">
+                                {{user.profile.whatsup }}
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                </dd>
             </div>
-        </div>
+        </dl>
     </div>
+</div>
 {% endblock content %}

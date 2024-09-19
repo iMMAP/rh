@@ -45,7 +45,7 @@ def org_users_list(request):
     users_filter = UsersFilter(
         request.GET,
         request=request,
-        queryset=User.objects.filter(profile__organization=user_org).select_related("profile").order_by("-id"),
+        queryset=User.objects.filter(profile__organization=user_org).select_related("profile").order_by("-last_login"),
     )
 
     RECORDS_PER_PAGE = Setting.get("RECORDS_PER_PAGE", default=10)

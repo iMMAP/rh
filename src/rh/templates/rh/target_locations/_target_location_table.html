@@ -117,6 +117,7 @@
                                                     hx-confirm="Do you want to delete `{{ row }}` and its dependencies ? WARNING: All reports associated with this Target Location will be deleted!!"
                                                     hx-target="closest tr"
                                                     data-tippy-content="Delete Target Location"
+                                                    hx-on:htmx:after-request="if(!event.detail.successful){ alert('Cant delete TargetLocation. it already has a report.'); }"
                                                 >
                                                     <span class="project-detail icon-trashbin"></span>
                                                 </a>

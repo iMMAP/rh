@@ -395,9 +395,11 @@ def project_filter_export_view(request, projectId):
                     location.district.code if "admin2code" in selectedData and location.district else None,
                     location.district.name if "admin2name" in selectedData and location.district else None,
                     location.nhs_code if "nhs_code" in selectedData and location.nhs_code else None,
-                    location.location_type if "admin1code" in selectedData and location.location_type else None,
+                    location.district.classification
+                    if "admin1code" in selectedData and location.district.classification
+                    else None,
                     location.zone.name if location.zone and "admin1code" in selectedData else None,
-                    location.facility_site_type
+                    location.facility_site_type.name
                     if "facility_site_type" in selectedData and location.facility_site_type
                     else None,
                     "Yes" if "facility_monitoring" in selectedData and location.facility_monitoring else None,

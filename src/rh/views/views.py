@@ -1,11 +1,10 @@
 import json
 
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import User
-from django.db.models import Count, Prefetch, Q
+from django.db.models import Count, Prefetch
 from django.http import JsonResponse
 from django.shortcuts import render
-from project_reports.models import ProjectMonthlyReport as Report
+from project_reports.models import ProjectMonthlyReport
 
 from ..models import ActivityDomain, ActivityType, Cluster, Indicator, Location, Project
 
@@ -17,28 +16,31 @@ def landing_page(request):
         user_org = request.user.profile.organization
         active_projects = Project.objects.filter(state="in-progress").filter(organization=user_org)
 
+        pending_reports = (
+            ProjectMonthlyReport.objects.filter(
+                state="pending", project__organization=user_org, project__state="in-progress"
+            )
+            .select_related("project")
+            .distinct()
+        )
+
         projects_counts = (
             Project.objects.filter(state="in-progress")
             .filter(organization=user_org)
             .aggregate(
-                pending_reports_count=Count(
-                    "projectmonthlyreport", filter=Q(projectmonthlyreport__state="pending"), distinct=True
-                ),
                 implementing_partners_count=Count("implementing_partners", distinct=True),
                 activity_plans_count=Count("activityplan", distinct=True),
                 target_locations_count=Count("targetlocation__province", distinct=True),
             )
         )
 
-        context = {"active_projects": active_projects, "counts": projects_counts}
+        projects_counts["pending_reports_count"] = pending_reports.count()
+
+        context = {"active_projects": active_projects, "counts": projects_counts, "pending_reports": pending_reports}
 
         return render(request, "home.html", context)
 
-    users_count = User.objects.all().count()
-    locations_count = Location.objects.all().count()
-    reports_count = Report.objects.all().count()
-
-    context = {"users": users_count, "locations": locations_count, "reports": reports_count}
+    context = {"users": 0, "locations": 0, "reports": 0}
 
     return render(request, "landing.html", context)
 

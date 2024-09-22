@@ -1,18 +1,15 @@
 {% extends "_base.html" %}
-
 {% load static %}
 {% load humanize %}
-
 {% block title %}
     ReportHub - Home
 {% endblock title %}
-
 {% block head %}
-<link rel="stylesheet"
-      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
-      crossorigin="" />
-<style>
+    <link rel="stylesheet"
+          href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+          integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+          crossorigin="" />
+    <style>
     .marker-position {
         position: absolute;
         right: 0px;
@@ -42,6 +39,30 @@
 
     .leaflet-container a.leaflet-popup-close-button{
         right:12px;
+    }
+
+    .scrollbar-thin-rounded {
+        scrollbar-width: thin;
+        -ms-overflow-style: none; /* Internet Explorer and Edge */
+        overflow-y: auto; /* Firefox */
+    }
+
+    .scrollbar-thin-rounded::-webkit-scrollbar {
+        width: 12px; /* For Chrome, Safari, and Opera */
+    }
+
+    .scrollbar-thin-rounded::-webkit-scrollbar-track {
+        background: #f1f1f1; /* Track */
+        border-radius: 10px; /* Rounded */
+    }
+
+    .scrollbar-thin-rounded::-webkit-scrollbar-thumb {
+        background: #888; /* Handle */
+        border-radius: 10px; /* Rounded */
+    }
+
+    .scrollbar-thin-rounded::-webkit-scrollbar-thumb:hover {
+        background: #555; /* Handle on hover */
     }
 
     .location-select-wrapper{
@@ -283,41 +304,80 @@
     display: block;
   }
   {% comment %}  {% endcomment %}
-</style>
+    </style>
 {% endblock head %}
-
 {% block content %}
     <section class="visual-map-section main-map active-sidebar">
         <div class="container space-y-4">
             <div class="top-panel">
-                <span class="locations">{{ request.user.profile.organization }}'s Active Locations</span>
+                <span class="locations">{{ request.user.profile.organization }}'s Home</span>
                 <div class="actions-panel"></div>
             </div>
             <p class="flex items-center gap-2">
                 <span class="icon-info"></span>
                 The below map marks the active location in your project. you can see the details by clicking the marker.
             </p>
-
             <div class="overall-info-holder inline-style pb-4">
-              <div class="overall-info-block">
-                  <span class="title">Activity Plans</span>
-                  <span class="text">{{counts.activity_plans_count|intcomma}}</span>
-              </div>
-              <div class="overall-info-block">
-                  <span class="title">Targeted Provinces</span>
-                  <span class="text">{{counts.target_locations_count|intcomma}}</span>
-              </div>
-              <div class="overall-info-block">
-                  <span class="title">Implementing Partners</span>
-                  <span class="text">{{counts.implementing_partners_count|intcomma}}</span>
-              </div>
-              <div class="overall-info-block">
-                  <span class="title">Pending Reports</span>
-                  <span class="text">{{counts.pending_reports_count|intcomma}}</span>
-              </div>
-          </div>
+                <div class="overall-info-block">
+                    <span class="title">Activity Plans</span>
+                    <span class="text">{{ counts.activity_plans_count|intcomma }}</span>
+                </div>
+                <div class="overall-info-block">
+                    <span class="title">Targeted Provinces</span>
+                    <span class="text">{{ counts.target_locations_count|intcomma }}</span>
+                </div>
+                <div class="overall-info-block">
+                    <span class="title">Implementing Partners</span>
+                    <span class="text">{{ counts.implementing_partners_count|intcomma }}</span>
+                </div>
+                <div class="overall-info-block">
+                    <span class="title">Pending Reports</span>
+                    <span class="text">{{ counts.pending_reports_count|intcomma }}</span>
+                </div>
+            </div>
 
-            <section class="relative">
+            <div class="flex sm:flex-row flex-col justify-between gap-3 pb-2">
+              <div class="w-full ">
+                <h2 class="pb-2 text-gray">Active Projects</h2>
+                <div class="rounded overflow-auto scrollbar-thin-rounded border border-gray-d1 bg-gray-fa p-2 h-96 divide-y" >
+                    {% for project in active_projects %}
+                        <div class="flex justify-between items-center p-2 ">
+                            <div>
+                                <p class="pb-1 text-xs">
+                                    Code: {{ project.code }}<span class="text-xs ml-2">End Date: {{ project.end_date|date:"d/m/Y" }}</span>
+                                </p>
+                                <a class="" href="{% url 'projects-detail' project.id %}">
+                                    <span class="font-medium">{{ project.title }}</span>
+                                </a>
+                            </div>
+                            <div class="">
+                                <a href="{% url 'project_reports_home' project.pk %}"
+                                  class="px-2 py-1 bg-gray-d1 text-xs rounded">Reports</a>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+              </div>
+              {% comment %} list of pending reports {% endcomment %}
+              <div class="w-full ">
+                <h2 class="pb-2 text-gray">Pending Reports</h2>
+                <div class="rounded overflow-auto scrollbar-thin-rounded border border-gray-d1 bg-gray-fa p-2 h-96 divide-y">
+                  {% for report in pending_reports %}
+                    <div class="flex justify-between items-center p-2 divide-y">
+                        <a class="" href="{% url 'view_monthly_report' report.project.id report.id %}">
+                          <span class="font-medium"> <strong>{{report}}</strong> for project <strong>{{report.project.code}}</strong></span>
+                        </a>
+                        <div class="{{report.state}}">
+                          {{report.get_state_display}}
+                        </div> 
+                    </div>
+                  {% endfor %}
+                </div>
+              </div>
+
+            </div>
+
+            <section class="relative border border-gray-d1 rounded">
                 <div class="marker-position">Click on map to get coords</div>
                 <svg xmlns="http://www.w3.org/2000/svg" style="display: none">
                     <symbol id="icon-arrow-left" viewBox="0 0 24 24">
@@ -331,46 +391,30 @@
                     </symbol>
                 </svg>
                 {% comment %} sidebar {% endcomment %}
-                <div class="sidebar">
+                <div class="sidebar rounded">
                     <button aria-label="close sidebar" type="button" class="close-button">
                         <svg>
                             <use xlink:href="#icon-clear" />
                         </svg>
                     </button>
-                    <ul class="sidebar-menu border-r border-gray-d1">
-                        <li class="menu-item active-item " data-item="projects">
+                    <ul class="sidebar-menu border-r border-gray-d1 rounded">
+                        <li class="menu-item active-item " data-item="locations">
                             <svg>
                                 <use xlink:href="#icon-menu"></use>
                             </svg>
                         </li>
-                        <li class="menu-item" data-item="locations">
-                            <svg xmlns="http://www.w3.org/2000/svg"
-                                 viewBox="0 0 24 24"
-                                 fill="currentColor"
-                                 class="size-6">
-                                <path fill-rule="evenodd" d="m11.54 22.351.07.04.028.016a.76.76 0 0 0 .723 0l.028-.015.071-.041a16.975 16.975 0 0 0 1.144-.742 19.58 19.58 0 0 0 2.683-2.282c1.944-1.99 3.963-4.98 3.963-8.827a8.25 8.25 0 0 0-16.5 0c0 3.846 2.02 6.837 3.963 8.827a19.58 19.58 0 0 0 2.682 2.282 16.975 16.975 0 0 0 1.145.742ZM12 13.5a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" clip-rule="evenodd" />
-                            </svg>
+                        <li class="menu-item" data-item="projects">
+                            
                         </li>
                     </ul>
-                    <div class="sidebar-content">
-                        <div class="item-content active-content" id="projects">
+                    <div class="sidebar-content rounded">
+                        <div class="item-content " id="projects">
                             <h2 class="px-2">Recent Projects</h2>
                             <div class="content">
-                                {% for project in active_projects %}
-                                    <div class="p-2 border-b border-gray-d1">
-                                        <p class="pb-1 text-xs">Code: {{ project.code }}</p>
-                                        <a class="" href="{% url 'projects-detail' project.id %}">
-                                            <span class="font-medium">{{ project.title }}</span>
-                                        </a>
-                                        <div class="flex justify-between items-center pt-2">
-                                            <span class="block text-xs text-muted-foreground">End Date: {{ project.end_date }}</span>
-                                            <a href="{% url 'project_reports_home' project.pk %}" class="px-2 py-1 bg-gray-d1 text-xs rounded">Reports</a>
-                                        </div>
-                                    </div>
-                                {% endfor %}
+                                
                             </div>
                         </div>
-                        <div class="item-content" id="locations">
+                        <div class="item-content active-content" id="locations">
                             <h2 class="px-2">Locations</h2>
                             <div class="content location-select">{% comment %} location inserted from map.js {% endcomment %}</div>
                         </div>
@@ -390,10 +434,9 @@
         </div>
     </section>
 {% endblock content %}
-
 {% block scripts %}
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-          integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
-          crossorigin=""></script>
-  <script src="{% static 'js/components/map.js' %}"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+            crossorigin=""></script>
+    <script src="{% static 'js/components/map.js' %}"></script>
 {% endblock scripts %}

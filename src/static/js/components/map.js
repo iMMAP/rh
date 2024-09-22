@@ -1,19 +1,19 @@
 let userLoc = L.latLng(0, 0); // Default coordinates
 
-navigator.geolocation.getCurrentPosition(function(position) {
+navigator.geolocation.getCurrentPosition((position) => {
     userLoc = L.latLng(position.coords.latitude, position.coords.longitude);
-}, function() {
+}, () => {
     console.log("Unable to get location");
 });
 
 // config map
-let config = {
+const config = {
   minZoom: 3,
   maxZoom: 18,
   zoomControl: false, // zoom control off
 };
 // magnification with which the map will start
-const zoom = 6;
+const zoom = 4;
 
 const map = L.map('map',config).setView(userLoc, zoom,{
     animate:true,
@@ -193,9 +193,12 @@ document.addEventListener("keydown", (event) => {
 
 function closeSidebar() {
   visulaMapContainer.classList.remove("active-sidebar");
+
   const element = document.querySelector(".active-item");
   const activeContent = document.querySelector(".active-content");
+
   if (!element) return;
+
   element.classList.remove("active-item");
   activeContent.classList.remove("active-content");
 }

@@ -385,6 +385,21 @@ def unarchive_project_monthly_report_view(request, report):
 def submit_monthly_report_view(request, report):
     monthly_report = get_object_or_404(ProjectMonthlyReport, pk=report)
 
+    report_activity_plans = monthly_report.activityplanreport_set.all()
+
+    if not report_activity_plans.exists():
+        messages.error(
+            request,
+            "The project must have at least one activity plan report and each Activity Plan Report must have one Target Location Report.",
+        )
+        return HttpResponse(200)
+
+    for plan in report_activity_plans:
+        target_locations = plan.targetlocationreport_set.all()
+        if not target_locations.exists():
+            messages.error(request, "Each activity plan report must have at least one target location report.")
+            return HttpResponse(200)
+
     # TODO: Handle with access rights and groups
     monthly_report.state = "completed"
     monthly_report.submitted_on = timezone.now()
@@ -394,7 +409,6 @@ def submit_monthly_report_view(request, report):
 
     messages.success(request, "Report Submitted and Approved!")
 
-    # Return the URL in a JSON response
     url = reverse_lazy(
         "view_monthly_report", kwargs={"project": monthly_report.project.pk, "report": monthly_report.pk}
     )

@@ -1,0 +1,64 @@
+{% extends "_base.html" %}
+
+{% load static %}
+{% load vite %}
+
+{% block title %}
+    {{ org.name }}
+{% endblock title %}
+
+{% block content %}
+<div class="container">
+    <h1 class="font-bold leading-7 text-gray-900">{{org.name}} Info</h1>
+    <form action="" method="post">
+        {% csrf_token %}
+        {{form.errors}}
+        <div class="mt-6 border-t border-gray-e6">
+            <dl class="divide-y divide-gray-100">
+                <div class="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                    <dt class="text-sm font-medium leading-6 text-gray-900">Name</dt>
+                    <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+                        {{ form.instance.name}}
+                    </dd>
+                </div>
+
+                <div class="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                    <dt class="text-sm font-medium leading-6 text-gray-900">Code</dt>
+                    <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0 js-copy-field">
+                        {{ form.instance.code}}
+                    </dd>
+                </div>
+
+                <div class="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                    <dt class="text-sm font-medium leading-6 text-gray-900">Type</dt>
+                    <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0 js-copy-field">
+                        {{ form.instance.type}}
+                    </dd>
+                </div>
+
+                <div class="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                    <dt class="text-sm font-medium leading-6 text-gray-900">Countries</dt>
+                    <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+                        {{form.countries}}
+                    </dd>
+                </div>
+
+                <div class="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                    <dt class="text-sm font-medium leading-6 text-gray-900">Clusters</dt>
+                    <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+                        {{form.clusters}}
+                    </dd>
+                </div>
+
+                <div class="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                    <dt class="text-sm font-medium leading-6 text-gray-900">Actions</dt>
+                    <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+                        <button type="submit" class="btn btn-red">Save</button>
+                    </dd>
+                </div>
+
+            </dl>
+        </div>
+    </form>
+</div>
+{% endblock content %}

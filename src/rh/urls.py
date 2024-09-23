@@ -29,6 +29,7 @@ urlpatterns = [
     path("", landing_page, name="landing"),
     # Organization CRUD
     path("organizations/create", organizations.organization_register, name="organizations-create"),
+    path("organizations/<str:code>", organizations.show, name="organizations-show"),
     path(
         "organizations/<int:org_pk>/target-locations",
         organizations.target_locations,

@@ -341,6 +341,21 @@ class BudgetProgressForm(forms.ModelForm):
             )
 
 
+class UpdateOrganizationForm(forms.ModelForm):
+    """/organizations/<code>"""
+
+    class Meta:
+        model = Organization
+        fields = (
+            "countries",
+            "clusters",
+        )
+        widgets = {
+            "clusters": forms.CheckboxSelectMultiple(),
+            "countries": forms.CheckboxSelectMultiple(),
+        }
+
+
 class OrganizationForm(forms.ModelForm):
     """Organization Registeration Form"""
 

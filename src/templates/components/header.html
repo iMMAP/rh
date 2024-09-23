@@ -74,6 +74,11 @@
                                         <a class="inner-nav-link" href="{% url 'users-organization' %}">Members</a>
                                     </li>
                                 {% endif %}
+                                {% if perms.organization.change %}
+                                <li class="inner-nav-item">
+                                    <a class="inner-nav-link" href="{% url 'organizations-show' request.user.profile.organization.code %}">My Organization</a>
+                                </li>
+                                {% endif %}
                             </ul>
                         </div>
                     </li>

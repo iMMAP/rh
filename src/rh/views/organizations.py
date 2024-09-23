@@ -1,13 +1,39 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
 from django.core.cache import cache
+from django.core.exceptions import PermissionDenied
 from django.http import JsonResponse
-from django.shortcuts import render
-from rh.models import TargetLocation
+from django.shortcuts import get_object_or_404, render
+from rh.models import Organization, TargetLocation
+from rh.utils import is_cluster_lead
 
 from ..forms import (
     OrganizationForm,
+    UpdateOrganizationForm,
 )
+
+
+@login_required
+def show(request, code):
+    org = get_object_or_404(Organization, code=code)
+
+    if not org.code == request.user.profile.organization.code and not is_cluster_lead(
+        request.user, org.clusters.values_list("code", flat=True)
+    ):
+        raise PermissionDenied
+
+    org_form = UpdateOrganizationForm(request.POST or None, instance=org)
+
+    if request.method == "POST":
+        if org_form.is_valid():
+            org_form.save()
+            messages.success(request, "Organization updated successfully!")
+        else:
+            messages.error(request, "Somthing went wrong please check the below errors !")
+
+    context = {"org": org, "form": org_form}
+
+    return render(request, "rh/org_show.html", context)
 
 
 @login_required

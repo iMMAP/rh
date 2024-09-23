@@ -337,29 +337,37 @@
             </div>
 
             <div class="flex sm:flex-row flex-col justify-between gap-3 pb-2">
-              <div class="w-full ">
+              <div class="w-full">
                 <h2 class="pb-2 text-gray">Active Projects</h2>
-                <div class="rounded overflow-auto scrollbar-thin-rounded border border-gray-d1 bg-gray-fa p-2 h-96 divide-y" >
-                    {% for project in active_projects %}
-                        <div class="flex justify-between items-center p-2 ">
-                            <div>
-                                <p class="pb-1 text-xs">
-                                    Code: {{ project.code }}<span class="text-xs ml-2">End Date: {{ project.end_date|date:"d/m/Y" }}</span>
-                                </p>
-                                <a class="" href="{% url 'projects-detail' project.id %}">
-                                    <span class="font-medium">{{ project.title }}</span>
-                                </a>
-                            </div>
-                            <div class="">
-                                <a href="{% url 'project_reports_home' project.pk %}"
-                                  class="px-2 py-1 bg-gray-d1 text-xs rounded">Reports</a>
-                            </div>
-                        </div>
-                    {% endfor %}
+                <div class="rounded scrollbar-thin-rounded bg-gray-fa p-2 h-96 border border-gray-d1" >
+                  <table class="overflow-auto">
+                    <thead>
+                      <tr>
+                        <th class="h-12 px-2 text-left "> Title </th>
+                        <th class="h-12 px-2 text-left "> End Date </th>
+                        <th class="h-12 px-2 text-left "> Action </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for project in active_projects %}
+                      <tr>
+                        <td class="p-2">
+                            <a class="font-medium" href="{% url 'projects-detail' project.id %}">
+                              {{project.title}} ({{project.code}})
+                            </a>
+                        </td>
+                        <td class="p-2">{{ project.end_date|date:"d/m/Y" }}</td>
+                        <td class="p-2">
+                          <a href="{% url 'project_reports_home' project.pk %}" class="px-2 py-1 bg-gray-d1 text-xs rounded">Reports</a> 
+                        </td>
+                      </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
                 </div>
               </div>
               {% comment %} list of pending reports {% endcomment %}
-              <div class="w-full ">
+              <div class="w-full">
                 <h2 class="pb-2 text-gray">Pending Reports</h2>
                 <div class="rounded overflow-auto scrollbar-thin-rounded border border-gray-d1 bg-gray-fa p-2 h-96 divide-y">
                   {% for report in pending_reports %}
@@ -374,7 +382,6 @@
                   {% endfor %}
                 </div>
               </div>
-
             </div>
 
             <section class="relative border border-gray-d1 rounded">

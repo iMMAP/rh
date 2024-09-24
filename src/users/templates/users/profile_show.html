@@ -1,11 +1,17 @@
 {% extends "_base.html" %}
 
 {% load static %}
-{% load vite %}
 
 {% block title %}
     Profile: {{ user.username }}
 {% endblock title %}
+
+
+{% block breadcrumb_li %}
+  <li class=""><a href="{% url 'organizations-show' user.profile.organization.code %}">{{user.profile.organization.code}}</a></li>
+  <li class=""><a href="{% url 'users-organization' %}">Members</a></li>
+  <li class="current">{{user.username}}</a></li>
+{% endblock %}
 
 {% block content %}
 <div class="container">
@@ -56,6 +62,18 @@
                             <span class="border border-gray-d1 rounded-full px-4 py-1 bg-gray-f5">{{ cluster.title }}</span>
                         {% endfor %}
                     </span>
+                </dd>
+            </div>
+
+
+            <div class="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                <dt class="text-sm font-medium leading-6 text-gray-900">State</dt>
+                <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+                    {% if user.is_active %}
+                        <span class="in-progress">Active</span>
+                    {% else %} 
+                       <span class="draft">Deactive</span> 
+                    {% endif %}
                 </dd>
             </div>
         

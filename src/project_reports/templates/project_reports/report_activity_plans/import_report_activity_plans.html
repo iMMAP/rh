@@ -1,4 +1,4 @@
-{% extends "project_reports/monthly_reports/forms/monthly_report_progress_form_base.html" %}
+{% extends "_base.html" %}
 {% load static %}
 
 {% block title %}
@@ -6,6 +6,9 @@
 {% endblock title %}
 
 {% block breadcrumb_li %}
+<li> <a href="{% url 'projects-list' %}?state={{ project.state }}"> {{ project.get_state_display }} Projects </a> </li>
+<li> <a href="{% url 'projects-detail' project.id %}">{{ project.code }}</a> </li>
+<li> <a href="{% url 'project_reports_home' project=project.id %}">Project Reports</a> </li>
     <li>
         <a href="{% url 'view_monthly_report' monthly_report.project.id  monthly_report.id %}">
             {{ monthly_report.from_date| date:"F Y" }}
@@ -14,7 +17,8 @@
     <li class="current">Import Reports</li>
 {% endblock breadcrumb_li %}
 
-{% block project_body %}
+{% block content %}
+<div class="container">
     <div class="main-content">
         <div class="activity-planning create-activity">
             <div class="activity-planning read-only">
@@ -98,5 +102,6 @@
             </div>
         </div>
     </div>
-{% endblock project_body %}
+</div>
+{% endblock content %}
 

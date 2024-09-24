@@ -1,4 +1,4 @@
-{% extends "project_reports/monthly_reports/forms/monthly_report_progress_form_base.html" %}
+{% extends "_base.html" %}
 {% load static %}
 
 {% block title %}
@@ -10,6 +10,9 @@
 {% endblock title %}
 
 {% block breadcrumb_li %}
+<li> <a href="{% url 'projects-list' %}?state={{ project.state }}"> {{ project.get_state_display }} Projects </a> </li>
+<li> <a href="{% url 'projects-detail' project.id %}">{{ project.code }}</a> </li>
+<li> <a href="{% url 'project_reports_home' project=project.id %}">Project Reports</a> </li>
     {% if monthly_report %}
         <li class="current">Update Report Period</li>
     {% else %}
@@ -17,7 +20,8 @@
     {% endif %}
 {% endblock breadcrumb_li %}
 
-{% block project_body %}
+{% block content %}
+<div class="container">
     <div class="content-block top-border">
         <div class="main-content">
             <div class="project-plan create-plan">
@@ -82,4 +86,5 @@
             </div>
         </div>
     </div>
-{% endblock project_body %}
+</div>
+{% endblock content %}

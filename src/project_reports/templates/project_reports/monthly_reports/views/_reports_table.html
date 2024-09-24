@@ -58,9 +58,7 @@
                         <th>
                             <strong class="table-title">To</strong>
                         </th>
-                        <th>
-                            <strong class="table-title">Notes</strong>
-                        </th>
+                      
                         <th>
                             <strong class="table-title">Status</strong>
                         </th>
@@ -81,7 +79,6 @@
                                 </a>
                             </td>
                             <td data-title="To">{{ project_report.to_date| date:"d F Y" }}</td>
-                            <td data-title="Notes">{{ project_report.description }}</td>
                             <td data-title="state">
                                 <span class="{{ project_report.state }}">{{ project_report.get_state_display }}</span>
                             </td>

@@ -6,25 +6,16 @@
     Delete Confirmation: {{ project.title }}
 {% endblock title %}
 
+{% block breadcrumb_li %}
+<li><a id="return-url" href="{% url 'projects-list' %}?state={{ project.state }}"> {{ project.get_state_display }} Projects </a> </li>
+<li> 
+    <a href="{% url 'projects-detail' project.id %}"> {{ project.code }} </a>
+</li>
+<li class="current">Delete Confirmation</li>
+{% endblock %}
+
 {% block content %}
     <div class="container">
-        <div class="breadcrumbs-nav-panel">
-            <div class="holder">
-                <ul class="breadcrumbs">
-                    <li>
-                        <a href="{% url 'landing' %}">Home</a>
-                    </li>
-                    <li>
-                        <a id="return-url"
-                           href="{{ request.GET.url }}?state={{ project.state }}">
-                           {{ project.get_state_display }} Projects
-                        </a>
-                    </li>
-                    <li class="current">{{ project.code }}</li>
-                </ul>
-            </div>
-        </div>
-
         <div class="project-options-panel">
             <div class="top-block">
                 <ul >

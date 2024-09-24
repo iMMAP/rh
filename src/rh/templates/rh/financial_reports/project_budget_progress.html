@@ -2,50 +2,37 @@
 
 {% load static %}
 
-{% block title %}
-    Financial Report
-{% endblock title %}
+{% block title %} Financial Report {% endblock title %}
+
+{% block breadcrumb_li %}
+<li> <a href="{% url 'projects-list' %}?state={{ project.state }}"> {{ project.get_state_display }} Projects </a> </li>
+{% if project %}
+    <li>
+        <a href="{% if project %}{% url 'projects-detail' project.pk %}{% else %}{% url 'projects-create' %}{% endif %}">
+            {{ project.code }}
+        </a>
+    </li>
+{% endif %}
+<li class="current">Financial Reports</li>
+{% endblock %}
 
 {% block content %}
     <div class="container">
-        <div class="breadcrumbs-nav-panel">
+        <div class="page-navigation-panel">
             <div class="holder">
-                <ul class="breadcrumbs">
-                    <li>
-                        <a href="{% url 'landing' %}">Home</a>
-                    </li>
-                    <li>
-                        <a id="return-url"
-                           href="{% url 'projects-list' %}?state={{ project.state }}">
-                            {{ project.get_state_display }} Projects
-                        </a>
-                    </li>
-                    {% if project %}
-                        <li>
-                            <a href="{% if project %}{% url 'projects-detail' project.pk %}{% else %}{% url 'projects-create' %}{% endif %}">
-                                {{ project.code }}
-                            </a>
+                <div class="tabs-nav-holder">
+                    <ul class="tabs-nav">
+                        <li class="{% if project_view %}active{% endif %}">
+                            <a href="{% if project %}{% url 'projects-detail' project.pk %}{% else %}{% url 'projects-create' %}{% endif %}">Project
+                            planning</a>
                         </li>
-                        <li class="current">Financial Reports</li>
-                    {% endif %}
-                </ul>
-            </div>
-            <div class="page-navigation-panel">
-                <div class="holder">
-                    <div class="tabs-nav-holder">
-                        <ul class="tabs-nav">
-                            <li class="{% if project_view %}active{% endif %}">
-                                <a href="{% if project %}{% url 'projects-detail' project.pk %}{% else %}{% url 'projects-create' %}{% endif %}">Project
-                                planning</a>
-                            </li>
-                            <li class="{% if financial_view %}active{% endif %}">
-                                <a href="{% if project %}{% url 'create_project_budget_progress' project.pk %}{% else %}#{% endif %}">Financial Reports</a>
-                            </li>
-                            <li class="{% if reports_view %}active{% endif %}">
-                                <a href="{% if project %}{% url 'project_reports_home' project.pk %}{% else %}#{% endif %}">Project Reports</a>
-                            </li>
-                        </ul>
-                    </div>
+                        <li class="{% if financial_view %}active{% endif %}">
+                            <a href="{% if project %}{% url 'create_project_budget_progress' project.pk %}{% else %}#{% endif %}">Financial Reports</a>
+                        </li>
+                        <li class="{% if reports_view %}active{% endif %}">
+                            <a href="{% if project %}{% url 'project_reports_home' project.pk %}{% else %}#{% endif %}">Project Reports</a>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>

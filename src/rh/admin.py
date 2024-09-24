@@ -45,9 +45,25 @@ admin.site.register(GrantType)
 admin.site.register(UnitType)
 
 
+def export_as_csv(self, request, queryset):
+    meta = self.model._meta
+    field_names = [field.name for field in meta.fields]
+
+    response = HttpResponse(content_type="text/csv")
+    response["Content-Disposition"] = "attachment; filename={}.csv".format(meta)
+    writer = csv.writer(response)
+
+    writer.writerow(field_names)
+    for obj in queryset:
+        writer.writerow([getattr(obj, field) for field in field_names])
+
+    return response
+
+
 class FacilitySiteTypeAdmin(admin.ModelAdmin):
     list_display = ("name", "cluster")
     list_filter = ("cluster",)
+    actions = [export_as_csv]
 
 
 admin.site.register(FacilitySiteType, FacilitySiteTypeAdmin)
@@ -102,7 +118,7 @@ admin.site.register(Location, LocationAdmin)
 
 
 @admin.action(description="Export as CSV")
-def export_as_csv(self, request, queryset):
+def org_export_as_csv(self, request, queryset):
     meta = self.model._meta
     field_names = [field.name for field in meta.fields] + ["countries", "clusters"]
 
@@ -127,7 +143,7 @@ class OrganizationAdmin(admin.ModelAdmin):
     list_display = ("name", "code", "type", "countries_count", "clusters_count")
     search_fields = ("name", "code")
     list_filter = ("type",)
-    actions = [export_as_csv]
+    actions = [org_export_as_csv]
 
     filter_horizontal = (
         "countries",
@@ -154,6 +170,7 @@ class DonorAdmin(admin.ModelAdmin):
         "countries",
         "clusters",
     )
+    actions = [export_as_csv]
 
     def countries_count(self, obj):
         return obj.countries.count()
@@ -173,6 +190,7 @@ class BeneficiaryTypeAdmin(admin.ModelAdmin):
         "clusters",
     )
     filter_horizontal = ("clusters",)
+    actions = [export_as_csv]
 
     def Clusters(self, obj):
         clusters = obj.clusters.all()
@@ -191,6 +209,7 @@ class DisaggregationAdmin(admin.ModelAdmin):
     form = DisseggregationModelAdminForm
     # list_filter = ('cluster', 'country')
     filter_horizontal = ("clusters",)
+    actions = [export_as_csv]
 
     def indicators_count(self, obj):
         return obj.indicators.count()

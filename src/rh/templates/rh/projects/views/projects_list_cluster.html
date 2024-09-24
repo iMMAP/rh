@@ -6,6 +6,11 @@
     Projects - Clusters
 {% endblock title %}
 
+
+{% block breadcrumb_li %}
+  <li class="current">Cluster projects</a>
+{% endblock %}
+
 {% block content %}
     <div class="container">
         <div class="projects-options-panel">
@@ -17,7 +22,7 @@
                     </li>
                 </ul>
             </div>
-            <p class="bg-gray-fa p-4 border border-gray-e6 rounded flex items-center gap-2">
+            <p class="py-4 flex items-center gap-2">
                 <span class="icon-info"></span>
                 The below table displays the projects according to their status (Active, Draft, Completed, etc).
             </p>

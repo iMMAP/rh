@@ -125,4 +125,4 @@ def hx_activity_plan_info(request):
 
     context = {"activity_plan": activity_plan}
 
-    return render(request, "project_reports/report_activity_plans/partials/activity_plan_info.html", context)
+    return render(request, "project_reports/report_activity_plans/partials/_activity_plan_info.html", context)

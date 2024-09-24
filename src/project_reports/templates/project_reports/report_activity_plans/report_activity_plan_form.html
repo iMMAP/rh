@@ -1,4 +1,4 @@
-{% extends "project_reports/monthly_reports/forms/monthly_report_progress_form_base.html" %}
+{% extends "_base.html" %}
 
 {% load static %}
 
@@ -7,6 +7,9 @@
 {% endblock title %}
 
 {% block breadcrumb_li %}
+<li> <a href="{% url 'projects-list' %}?state={{ project.state }}"> {{ project.get_state_display }} Projects </a> </li>
+<li> <a href="{% url 'projects-detail' project.id %}">{{ project.code }}</a> </li>
+<li> <a href="{% url 'project_reports_home' project=project.id %}">Project Reports</a> </li>
     <li>
         {% if monthly_report %}
             <a href="{% url 'view_monthly_report' monthly_report.project.id  monthly_report.id %}">
@@ -23,7 +26,8 @@
     {% endif %}
 {% endblock breadcrumb_li %}
 
-{% block project_body %}
+{% block content %}
+<div class="container">
     <div class="content-block top-border">
         <div class="flex flex-col gap-2 pt-3">
             <div>
@@ -100,7 +104,7 @@
                                             </div>
                                             <div id="activity-plan-info" class="mb-3">
                                                 {% if report_activity_plan %}
-                                                    {% include "project_reports/report_activity_plans/partials/activity_plan_info.html" with activity_plan=report_activity_plan.activity_plan %}
+                                                    {% include "project_reports/report_activity_plans/partials/_activity_plan_info.html" with activity_plan=report_activity_plan.activity_plan %}
                                                 {% endif %}
                                             </div>
                                         </div>
@@ -275,7 +279,9 @@
             </div>
         </div>
     </div>
-{% endblock project_body %}
+</div>
+{% endblock content %}
+
 {% block scripts %}
     <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
     <script>

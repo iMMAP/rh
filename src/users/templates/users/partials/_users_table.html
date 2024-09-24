@@ -19,9 +19,7 @@
         <!-- filter applied end -->
  
         <div class="actions-panel">
-            <a 
-            href="{% url 'export_org_users' %}?{{request.GET.urlencode}}" 
-            class="btn btn-gray tooltip">
+            <a href="{% url 'export_org_users' %}?{{request.GET.urlencode}}" class="btn btn-gray tooltip" onclick="return confirm('Are you sure you want to export active users of your organization?')">
                 Export <span class="icon-download"></span>
                 <span class="tooltip-text">Export Active Users of Your Organization</span>
             </a>

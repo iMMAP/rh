@@ -45,6 +45,21 @@
                 <main id="main" class="main relative">
                     {% include "components/messages.html" %}
                     <div class="base-section">
+                        {% comment %} breadcrumb {% endcomment %}
+                        {% if user.is_authenticated %}
+                        <div class="container">
+                            <div class="breadcrumbs-nav-panel">
+                                <div class="holder">
+                                    <ul class="breadcrumbs">
+                                        <li> <a href="{% url 'landing' %}">Home</a> </li> 
+                                        {% block breadcrumb_li %}{% endblock breadcrumb_li %}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+                        {% comment %} endbreadcrumb {% endcomment %}
+
                         {% block content %}
                         {% endblock content %}
                     </div>

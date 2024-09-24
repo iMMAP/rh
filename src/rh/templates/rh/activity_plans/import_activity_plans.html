@@ -6,6 +6,7 @@
 {% endblock title %}
 
 {% block breadcrumb_li %}
+    {{block.super}}
     <li>
         <a href="{% url 'activity-plans-list' project.id %}">Activity Plans</a>
     </li>

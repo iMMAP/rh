@@ -1,9 +1,12 @@
 {% extends "_base.html" %}
+
 {% load static %}
 {% load humanize %}
+
 {% block title %}
     ReportHub - Home
 {% endblock title %}
+
 {% block head %}
     <link rel="stylesheet"
           href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
@@ -306,6 +309,15 @@
   {% comment %}  {% endcomment %}
     </style>
 {% endblock head %}
+
+{% block breadcrumb_li %}
+  <li class="current">
+    <a href="{% url 'organizations-show' request.user.profile.organization.code %}">
+      {{request.user.profile.organization.code}}
+    </a>
+  </li> 
+{% endblock %}
+
 {% block content %}
     <section class="visual-map-section main-map active-sidebar">
         <div class="container space-y-4">

@@ -12,6 +12,7 @@
 {% endblock title %}
 
 {% block breadcrumb_li %}
+    {{block.super}}
 <li>
     <a href="{% url 'activity-plans-update' activity_plan.id %}">{{activity_plan}}</a>
 </li>

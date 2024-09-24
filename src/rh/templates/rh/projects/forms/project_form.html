@@ -12,6 +12,7 @@
 {% endblock title %}
 
 {% block breadcrumb_li %}
+    {{block.super}}
     {% if form.instance.id %}
         <li class="current">Update Project</li> 
     {% else %}

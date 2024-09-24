@@ -5,28 +5,21 @@
 {% block title %}
     Project: {{ project.title }}
 {% endblock title %}
+
+{% block breadcrumb_li %}
+<li>
+    <a id="return-url"
+        href="{% url 'projects-list' %}?state={{ project.state }}">
+        {{ project.get_state_display }} Projects
+    </a>
+</li>
+<li class="current">{{ project.code }}</li>
+{% endblock %}
+
+
 {% block content %}
     <div class="container">
-        <div class="breadcrumbs-nav-panel">
-            <div class="holder">
-                <ul class="breadcrumbs">
-                    <li>
-                        <a href="{% url 'landing' %}">Home</a>
-                    </li>
-                    {% if project %}
-                        <li>
-                            <a id="return-url"
-                               href="{% url 'projects-list' %}?state={{ project.state }}">
-                                {{ project.get_state_display }} Projects
-                            </a>
-                        </li>
-                        <li class="current">{{ project.code }}</li>
-                    {% else %}
-                        <li class="current">New Project</li>
-                    {% endif %}
-                </ul>
-            </div>
-        </div>
+      
         <div class="page-navigation-panel">
             <div class="holder">
                 <div class="tabs-nav-holder">
@@ -43,7 +36,7 @@
                     </ul>
                 </div>
             </div>
-        </div/bud>
+        </div>
         {% comment %} Project Details Here {% endcomment %}
         <section class="space-y-4">
             <h2 class="">{{ project.title }}</h2>

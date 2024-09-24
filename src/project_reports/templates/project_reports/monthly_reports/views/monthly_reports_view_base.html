@@ -1,4 +1,6 @@
-{% extends "project_reports/projects_index.html" %}
+{% extends "_base.html" %}
+
+{% load static %}
 
 {% block head %}
 {% endblock head %}
@@ -7,7 +9,32 @@
     {{ project.code }} Project Reports
 {% endblock title %}
 
-{% block project_body %}
+{% block breadcrumb_li %}
+<li> <a href="{% url 'projects-list' %}?state={{ project.state }}"> {{ project.get_state_display }} Projects </a> </li>
+<li> <a href="{% url 'projects-detail' project.id %}">{{ project.code }}</a> </li>
+<li class="current">Project Reports</li>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="page-navigation-panel">
+        <div class="holder">
+            <div class="tabs-nav-holder">
+                <ul class="tabs-nav">
+                    <li class="{% if request.resolver_match.url_name == 'projects-detail' %} active {% endif %}">
+                        <a href="{% if project %}{% url 'projects-detail' project.pk %}{% else %}{% url 'projects-create' %}{% endif %}">Project
+                        planning</a>
+                    </li>
+                    <li class="">
+                        <a href="{% if project %}{% url 'create_project_budget_progress' project.pk %}{% else %}#{% endif %}">Financial Reports</a>
+                    </li>
+                    <li class="{% if request.resolver_match.url_name == 'project_reports_home' %} active {% endif %}">
+                        <a href="{% if project %}{% url 'project_reports_home' project.pk %}{% else %}#{% endif %}">Project Reports</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
     <div class="content-block">
         <div class="activity-planning read-only">
             <div class="flex items-center justify-between pb-2">
@@ -25,4 +52,9 @@
 
         {% include "project_reports/monthly_reports/views/_reports_table.html" %}
     </div>
-{% endblock project_body %}
+</div>
+{% endblock content %}
+
+{% comment %} {% block scripts %}
+    <script type="module" src="{% static 'js/utils/exportSW.js' %}"></script>
+{% endblock scripts %} {% endcomment %}

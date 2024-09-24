@@ -173,17 +173,19 @@ class ActivityPlanReportForm(forms.ModelForm):
                 "hx-trigger": "change",
             }
         )
-        self.fields["activity_plan"].queryset = ActivityPlan.objects.filter(
-            project=monthly_report.project.pk, state="in-progress"
-        ).select_related("activity_domain")
+
+        if self.instance.pk:
+            self.fields["activity_plan"].queryset = ActivityPlan.objects.filter(
+                pk=self.instance.activity_plan.pk
+            ).select_related("activity_domain")
+        else:
+            self.fields["activity_plan"].queryset = ActivityPlan.objects.filter(
+                project=monthly_report.project.pk, state="in-progress"
+            ).select_related("activity_domain")
 
         self.fields["prev_targeted_by"].queryset = Indicator.objects.filter(
             activity_types__activityplan__project=monthly_report.project
         )
-
-
-class RejectMonthlyReportForm(forms.Form):
-    rejection_reason = forms.CharField(widget=forms.Textarea)
 
 
 class MonthlyReportFileUpload(forms.Form):

@@ -22,7 +22,7 @@ def landing_page(request):
             ProjectMonthlyReport.objects.filter(
                 state="pending", project__organization=user_org, project__state="in-progress"
             )
-            .select_related("project","project__user")
+            .select_related("project", "project__user")
             .distinct()
         )
 

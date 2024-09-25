@@ -65,7 +65,6 @@
                 </dd>
             </div>
 
-
             <div class="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
                 <dt class="text-sm font-medium leading-6 text-gray-900">State</dt>
                 <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
@@ -74,6 +73,19 @@
                     {% else %} 
                        <span class="draft">Deactive</span> 
                     {% endif %}
+                </dd>
+            </div>
+
+            <div class="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                <dt class="text-sm font-medium leading-6 text-gray-900">Last Login</dt>
+                <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+                    {{user.last_login}}
+                </dd>
+            </div>
+            <div class="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                <dt class="text-sm font-medium leading-6 text-gray-900">Date Joined</dt>
+                <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+                    {{user.date_joined}}
                 </dd>
             </div>
         
@@ -118,6 +130,29 @@
                         </div>
                         {% endif %}
                     </div>
+                </dd>
+            </div>
+
+            <div class="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                <dt class="text-sm font-medium leading-6 text-gray-900">Actions</dt>
+                <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+                    <button id="dectivate-button-{{ user.id }}"
+                            class="btn btn-gray"
+                            hx-delete="{% url 'toggle-status' user.id %}"
+                            hx-swap="none"
+                            hx-disable-element="#dectivate-button-{{ user.id }}"
+                            hx-ext="disable-element">
+                        {% if user.is_active %}
+                            <span class="project-detail icon-trashbin"></span> Deactivate
+                        {% else %}
+                            Activate
+                        {% endif %}
+                        <img class="htmx-indicator"
+                                id="spinner"
+                                alt="spinner"
+                                style="width: 1.2rem"
+                                src="{% static 'images/spinner.gif' %}" />
+                    </button>
                 </dd>
             </div>
         </dl>

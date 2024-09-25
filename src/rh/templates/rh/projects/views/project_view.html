@@ -41,7 +41,7 @@
         <section class="space-y-4">
             <h2 class="">{{ project.title }}</h2>
             <div>
-                <div class="flex items-center justify-between py-2 border-t border-b border-gray-d1">
+                <div class="flex flex-col sm:flex-row gap-2 justify-between items-center py-2 border-t border-b border-gray-d1">
                     <p class="flex items-center gap-2">
                         <svg fill="none"
                              viewBox="0 0 24 24"
@@ -78,13 +78,13 @@
                         <span class="{{ project.state }}">{{ project.get_state_display }}</span>
                     </p>
                 </div>
-                <div class="flex items-center justify-between py-2 border-b border-gray-d1 gap-3">
+                <div class="flex flex-col sm:flex-row items-center justify-between py-2 border-b border-gray-d1 gap-3">
                     <div class="flex gap-2 text-gray-7d">
                         <span class="">Created At: {{ project.created_at|naturalday }}</span>
                         <span class="">|</span>
                         <span class="">Updated At: {{ project.updated_at|naturalday }}</span>
                     </div>
-                    <div class="flex items-center gap-2">
+                    <div class="flex flex-col sm:flex-row items-center gap-2">
                         <a href="{% url 'activity-plans-list' project.pk %}"
                            class="btn btn-gray"><span class="bg-gray-6b text-white rounded-full px-1">{{ project.activity_plans_count }}</span> Activity Plans  </a>
                         <a href="{% url 'target-locations-list' project.pk %}"
@@ -177,7 +177,7 @@
                          style="background-color:#4CAF50"
                          id="projectProgressBar"></div>
                 </div>
-                <div class="flex items-center justify-between gap-2 px-4 py-4 ">
+                <div class="flex flex-col sm:flex-row items-center justify-between gap-2 px-4 py-4 ">
                     <p class="flex items-center gap-2">
                         <svg fill="none"
                              viewBox="0 0 24 24"
@@ -229,7 +229,7 @@
                 </script>
             </div>
             <h4>Budget Info</h4>
-            <div class="flex items-center justify-between gap-4 py-4 bg-gray-fa rounded px-4 py-4">
+            <div class="flex flex-col sm:flex-row items-center justify-between gap-4 py-4 bg-gray-fa rounded px-4 py-4">
                 <div class="flex flex-col items-center justify-center space-y-2">
                     <svg xmlns="http://www.w3.org/2000/svg"
                          fill="none"

@@ -320,17 +320,17 @@
 
 {% block content %}
     <section class="visual-map-section main-map active-sidebar">
-        <div class="container space-y-4">
-            <div class="top-panel">
+        <div class="container ">
+            <div class="top-panel pb-2">
                 <span class="locations">{{ request.user.profile.organization }}'s Home</span>
                 <div class="actions-panel"></div>
             </div>
-            <p class="flex items-center gap-2">
+            <p class="flex items-center gap-2 pb-3">
                 <span class="icon-info"></span>
                 The below map marks the active location in your project. you can see the details by clicking the marker.
             </p>
             <div class="flex flex-col gap-8 w-full">
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 overall-info-holder inline-style">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 ">
                     <div class="rounded-lg shadow-sm p-6 border border-gray-d1">
                         <div class="flex items-center justify-between">
                             <div class="flex items-center gap-4">

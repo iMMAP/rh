@@ -14,13 +14,15 @@ RECORDS_PER_PAGE = 10
 def landing_page(request):
     if request.user.is_authenticated:
         user_org = request.user.profile.organization
-        active_projects = Project.objects.filter(state="in-progress").filter(organization=user_org)
+        active_projects = (
+            Project.objects.filter(state="in-progress").filter(organization=user_org).order_by("-updated_at")[:8]
+        )
 
         pending_reports = (
             ProjectMonthlyReport.objects.filter(
                 state="pending", project__organization=user_org, project__state="in-progress"
             )
-            .select_related("project")
+            .select_related("project","project__user")
             .distinct()
         )
 

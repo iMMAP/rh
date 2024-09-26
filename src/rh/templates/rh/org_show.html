@@ -8,8 +8,8 @@
 {% endblock title %}
 
 {% block breadcrumb_li %}
-  <li class="">{{form.instance.code}}</a>
-  <li class="current">info</a>
+<li class=""><a href="{% url 'organizations-show' form.instance.code %}">{{form.instance.code}}</a></li>
+<li class="current">info</a>
 {% endblock %}
 
 {% block content %}

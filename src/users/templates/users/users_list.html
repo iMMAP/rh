@@ -7,7 +7,7 @@
 {% endblock title %}
 
 {% block breadcrumb_li %}
-  <li class="">{{user.profile.organization.code}}</a>
+  <li class=""><a href="{% url 'organizations-show' user.profile.organization.code %}">{{user.profile.organization.code}}</a></li>
   <li class="current">Members</a>
 {% endblock %}
 

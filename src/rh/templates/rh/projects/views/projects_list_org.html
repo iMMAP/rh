@@ -22,7 +22,12 @@
                 </div>
                 <ul class="buttons-list-inline">
                     <li>
-                        <a href="{% url 'projects-create' %}" class="btn btn-red add-btn">Create New Project</a>
+                        <a href="{% url 'projects-create' %}" class="btn btn-gray-outline">
+                             <svg style="" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                            </svg>
+                            Create New Project
+                        </a>
                     </li>
                 </ul>
             </div>
@@ -30,25 +35,6 @@
                 <span class="icon-info"></span>
                 The below table displays the projects according to their status (Active, Draft, Completed, etc).
             </p>
-        </div>
-
-        <div class="overall-info-holder inline-style pb-4">
-            <div class="overall-info-block">
-                <span class="title">Activity Plans</span>
-                <span class="text">{{counts.activity_plans_count|intcomma}}</span>
-            </div>
-            <div class="overall-info-block">
-                <span class="title">Targeted Provinces</span>
-                <span class="text">{{counts.target_locations_count|intcomma}}</span>
-            </div>
-            <div class="overall-info-block">
-                <span class="title">Implementing Partners</span>
-                <span class="text">{{counts.implementing_partners_count|intcomma}}</span>
-            </div>
-            <div class="overall-info-block">
-                <span class="title">Pending Reports</span>
-                <span class="text">{{counts.pending_reports_count|intcomma}}</span>
-            </div>
         </div>
 
         <div class="tabs-nav-holder">

@@ -161,7 +161,5 @@
     {% endif %}
 
     {% comment %} Pagination {% endcomment %}
-    <div class="border-t border-gray-bc">
-        {% include "components/_pagination.html" with object_list=project_reports %}
-    </div>
+    {% include "components/_pagination.html" with object_list=project_reports %}
 </div>

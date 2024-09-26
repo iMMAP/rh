@@ -1,20 +1,23 @@
-import '../plugins/mobileNavPlugin';
-
 // mobile menu init
 export default function initMobileNav() {
-  window.ResponsiveHelper.addRange({
-    '..1023': {
-      on: () => {
-        jQuery('body').mobileNav({
-          menuActiveClass: 'nav-active',
-          menuOpener: '.mobile-menu-opener',
-          hideOnClickOutside: true,
-          menuDrop: '.mobile-menu-holder',
-        });
-      },
-      off: () => {
-        jQuery('body').mobileNav('destroy');
-      },
-    },
-  });
+	const menuOpener = document.querySelector(".mobile-menu-opener");
+	const menuHolder = document.querySelector(".mobile-menu-holder");
+	const body = document.body;
+
+	const toggleMenu = () => {
+		body.classList.toggle("nav-active");
+	};
+
+	const hideMenu = (e) => {
+		if (!menuHolder.contains(e.target) && !menuOpener.contains(e.target)) {
+			body.classList.remove("nav-active");
+		}
+	};
+
+	menuOpener.addEventListener("click", (e) => {
+		e.preventDefault();
+		toggleMenu();
+	});
+
+	document.addEventListener("click", hideMenu);
 }

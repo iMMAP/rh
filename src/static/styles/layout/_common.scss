@@ -876,33 +876,29 @@ a.text-decoration-none{
   padding: 0px 12px 0px 12px;
   text-overflow: ellipsis;
   line-height: 1.25rem;
-  color: #595959;
   word-break: break-word;
 }
 
 .completed {
   @extend .c-pill;
   border: 1px solid rgb(68, 117, 203);
-  background-color: rgb(68, 117, 203,0.8);
-  color: #ffffff
+  background-color: rgb(68, 117, 203,0.3);
+  color:rgb(68, 117, 203);
 }
 
-.archived {
-  @extend .c-pill;
-  border: 1px solid rgb(203, 68, 74);
-  background-color: rgb(203, 68, 74,0.8);
-}
 
 .pending {
   @extend .c-pill;
-  border: 1px solid #6BC167;
-  background-color: rgb(235, 206, 88);
+  border: 1px solid rgb(190, 169, 81);
+  background-color: rgb(235, 206, 88,0.5);
+  color: rgb(153, 135, 65);
 }
 
 .in-progress {
   @extend .c-pill;
-  border: 1px solid #6BC167;
-  background: #b4eda0;
+  border: 1px solid #5daa59;
+  background: hsl(104, 68%, 78%,0.5);
+  color: #5daa59;
 }
 
 .draft, .todo {
@@ -918,9 +914,9 @@ a.text-decoration-none{
 }
 .archived {
   @extend .c-pill;
-  border: 1px solid black;
-  background: gray;
-  color: white;
+  border: 1px solid rgb(100, 100, 100);
+  background: rgb(128, 128, 128,0.3);
+  color: rgb(100, 100, 100);
 }
 
 .unset-before::before {

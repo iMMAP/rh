@@ -19,8 +19,7 @@
 
 {% block content %}
     <div class="container">
-      
-        <div class="page-navigation-panel">
+        <div class="page-navigation-panel mb-4">
             <div class="holder">
                 <div class="tabs-nav-holder">
                     <ul class="tabs-nav">
@@ -39,7 +38,7 @@
         </div>
         {% comment %} Project Details Here {% endcomment %}
         <section class="space-y-4">
-            <h2 class="">{{ project.title }}</h2>
+            <h2 class="mb-2">{{ project.title }}</h2>
             <div>
                 <div class="flex flex-col sm:flex-row gap-2 justify-between items-center py-2 border-t border-b border-gray-d1">
                     <p class="flex items-center gap-2">
@@ -78,12 +77,13 @@
                         <span class="{{ project.state }}">{{ project.get_state_display }}</span>
                     </p>
                 </div>
-                <div class="flex flex-col sm:flex-row items-center justify-between py-2 border-b border-gray-d1 gap-3">
-                    <div class="flex gap-2 text-gray-7d">
+                <div class="flex flex-col sm:flex-row items-center justify-between py-2 gap-3">
+                    <div></div>
+                    {% comment %} <div class="flex gap-2 text-gray-7d">
                         <span class="">Created At: {{ project.created_at|naturalday }}</span>
                         <span class="">|</span>
                         <span class="">Updated At: {{ project.updated_at|naturalday }}</span>
-                    </div>
+                    </div> {% endcomment %}
                     <div class="flex flex-col sm:flex-row items-center gap-2">
                         <a href="{% url 'activity-plans-list' project.pk %}"
                            class="btn btn-gray"><span class="bg-gray-6b text-white rounded-full px-1">{{ project.activity_plans_count }}</span> Activity Plans  </a>

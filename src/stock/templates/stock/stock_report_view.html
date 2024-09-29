@@ -165,19 +165,5 @@
     </div>
 {% endblock content %}
 
-{% comment %} This can be put in a base template {% endcomment %}
 {% block scripts %}
-    <script src="{% static 'js/plugins/accordionPlugin.js' %}"></script>
-    <script>
-        jQuery('.stock-accordion').slideAccordion({
-            opener: '.stock-accordion-opener',
-            slider: '.stock-accordion-slide',
-            animSpeed: 300,
-            activeClass: 'stock-accordion-active',
-            scrollToActiveItem: {
-                enable: true,
-                extraOffset: 0,
-            },
-        });
-    </script>
 {% endblock scripts %}

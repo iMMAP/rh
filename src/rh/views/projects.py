@@ -372,18 +372,8 @@ def org_projects_list(request):
     p_projects = p.get_page(page)
     p_projects.adjusted_elided_pages = p.get_elided_page_range(page)
 
-    projects_counts = project_filter.qs.aggregate(
-        pending_reports_count=Count(
-            "projectmonthlyreport", filter=Q(projectmonthlyreport__state="pending"), distinct=True
-        ),
-        implementing_partners_count=Count("implementing_partners", distinct=True),
-        activity_plans_count=Count("activityplan", distinct=True),
-        target_locations_count=Count("targetlocation__province", distinct=True),
-    )
-
     context = {
         "projects": p_projects,
-        "counts": projects_counts,
         "project_filter": project_filter,
     }
 

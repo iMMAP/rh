@@ -7,10 +7,8 @@ from django.core.management.base import BaseCommand
 from django.db import connection
 from django.db.models import Q
 from django.utils import timezone
-from numpy.lib.index_tricks import ogrid
 
 from rh.models import (
-    # TargetLocation,
     ActivityDetail,
     ActivityDomain,
     ActivityPlan,

@@ -88,20 +88,20 @@ body.filter-active {
   position: relative;
   z-index: 2;
 
-  &:after {
-    @include transition(opacity visibility);
+  // &:after {
+  //   @include transition(opacity visibility);
 
-    content: '';
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background: rgba($gray-35, 0.35);
-    opacity: 0;
-    visibility: hidden;
-    z-index: -1;
-  }
+  //   content: '';
+  //   position: fixed;
+  //   top: 0;
+  //   left: 0;
+  //   width: 100vw;
+  //   height: 100vh;
+  //   background: rgba($gray-35, 0.35);
+  //   opacity: 0;
+  //   visibility: hidden;
+  //   z-index: -1;
+  // }
 
   &.filter-active {
     z-index: 9999;

@@ -151,7 +151,7 @@
     <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
     <script>
      document.addEventListener('DOMContentLoaded', function() {
-      const formElement = $('#location-form');
+      const formElement = document.querySelector('#location-form');
       let facilityDetails = formElement.find(`#facility_details`);
       let facilityMonitoring = formElement.find(`#id_facility_monitoring`);
       if (!facilityMonitoring.is(':checked')) {

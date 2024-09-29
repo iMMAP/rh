@@ -1117,3 +1117,11 @@ a.text-decoration-none{
 .errorlist{
   color: $red-a5 !important;
 }
+
+
+.js-slide-hidden {
+  position:absolute !important;
+  left: -9999px !important;
+  top: -9999px !important;
+  display: block !important;
+}

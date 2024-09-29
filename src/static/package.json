@@ -17,7 +17,6 @@
     "@sentry/browser": "^8.16.0",
     "include-media": "^2.0.0",
     "normalize.css": "^8.0.1",
-    "resize-observer-polyfill": "^1.5.1",
     "tippy.js": "^6.3.7"
   }
 }

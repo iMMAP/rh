@@ -845,8 +845,17 @@ svg.project-view-icon,
 svg.project-view.archive-icon {
   color: #6d6e71;
   margin-left: 3px;
+  
+ 
 }
+.archive-icon-design{
+  padding: 0px;
+  margin: 0px;
+  color: #acacac;
+  background-color: transparent;
+  cursor: default;
 
+}
 .table-options-buttons button.button-archive-unarchive{
   margin-top: 3px;
 }

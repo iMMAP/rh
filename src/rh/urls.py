@@ -50,17 +50,17 @@ urlpatterns = [
     path("projects/clusters/<str:cluster>", projects.cluster_projects_list, name="cluster-projects-list"),
     path("projects/create", projects.create_project, name="projects-create"),
     path(
-        "projects/<str:pk>",
+        "projects/<int:pk>",
         projects.projects_detail,
         name="projects-detail",
     ),
     path(
-        "projects/<str:pk>/update",
+        "projects/<int:pk>/update",
         projects.update_project,
         name="projects-update",
     ),
     path(
-        "projects/<str:pk>/delete",
+        "projects/<int:pk>/delete",
         projects.delete_project,
         name="projects-delete",
     ),
@@ -174,7 +174,7 @@ urlpatterns = [
         name="copy_budget",
     ),
     path(
-        "projects/budget_progress/<str:pk>/delete",
+        "projects/budget_progress/<int:pk>/delete",
         budget_progress.delete_budget_progress,
         name="delete_budget",
     ),

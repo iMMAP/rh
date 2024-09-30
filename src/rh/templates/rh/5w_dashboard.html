@@ -2,6 +2,7 @@
 
 {% load static %}
 {% load template_tags %}
+{% load humanize %}
 
 {% block title %}
     {{ org.name }} 5W Dashboard
@@ -17,30 +18,29 @@
 
 {% block content %}
     <div class="container">
-        <div class="top-panel pb-2 flex flex-col items-center justify-between gap-2 sm:flex-row">
-            <h2 class="locations">{{ request.user.profile.organization }}'s 5W Dashboard</h2>
+        <div class="top-panel pb-2 pt-4 flex flex-col items-center justify-between gap-2 sm:flex-row">
+            <h2 class="locations text-red-be">{{ request.user.profile.organization }}'s 5W Dashboard</h2>
             <div class="actions-panel">
                 <button class="export-button btn btn-red"
                     data-url="{% url 'export_all_reports' %}"
                     class="btn btn-red project-detail"
                     title="Export Reports"
                 >
-                        <span class="btn-text">Export Reports</span>
-                        <span class="icon-download"></span>
+                    <span class="btn-text">Export Reports</span>
+                    <span class="icon-download"></span>
                 </button>
             </div>
         </div>
         <p class="flex items-center gap-2 pb-3">
-            <span class="icon-info"></span>
             <span class="text-sm text-gray-700">Organization 5w dashboard.</span>
         </p>
         {% comment %}  {% endcomment %}
-        <section class="space-y-4">
+        <section class="space-y-4 pt-2">
             {% comment %} filter {% endcomment %}
             <form method="GET" class="py-4 border border-gray-d1 p-4 rounded-lg">
                 {% csrf_token %}
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <h4 class="pb-1 border-b border-gray-f5">Filter</h4>
+                    <h4 class="pb-1 border-b border-gray-f5 ">Filter</h4>
                     <div class="flex items-center gap-2">
                         <div class="inline-flex justify-center rounded-md text-sm font-medium flex-col items-start w-full h-auto">
                             <label class="font-semibold uppercase text-gray" for="from">From</label>
@@ -79,7 +79,7 @@
                             </div>
                             <div>
                                 <p class="text-sm text-muted-foreground">People Reached</p>
-                                <p class="text-2xl font-bold">{{ counts.people_reached }}</p>
+                                <p class="text-2xl font-bold">{{ counts.people_reached|intcomma }}</p>
                             </div>
                         </div>
                     </div>
@@ -98,7 +98,7 @@
                             </div>
                             <div>
                                 <p class="text-sm text-muted-foreground">Indicators</p>
-                                <p class="text-2xl font-bold">{{ counts.report_indicators_count }}</p>
+                                <p class="text-2xl font-bold">{{ counts.report_indicators_count|intcomma }}</p>
                             </div>
                         </div>
                     </div>
@@ -118,7 +118,7 @@
                             </div>
                             <div>
                                 <p class="text-sm text-muted-foreground">Targeted Province</p>
-                                <p class="text-2xl font-bold">{{ counts.report_target_location_province_count }}</p>
+                                <p class="text-2xl font-bold">{{ counts.report_target_location_province_count|intcomma }}</p>
                             </div>
                         </div>
                     </div>
@@ -137,7 +137,7 @@
                             </div>
                             <div>
                                 <p class="text-sm text-muted-foreground">Implementing Partners</p>
-                                <p class="text-2xl font-bold">{{ counts.report_implementing_partners_count }}</p>
+                                <p class="text-2xl font-bold">{{ counts.report_implementing_partners_count|intcomma }}</p>
                             </div>
                         </div>
                     </div>
@@ -157,7 +157,7 @@
                 {% comment %} People reached by activities {% endcomment %}
                 <div class="col-span-2 rounded-lg shadow-sm p-6 border border-gray-d1">
                     <div class="flex items-center justify-between pb-4 border-b border-gray-e6">
-                        <h3 class="text-lg font-medium">People reached by activities</h3>
+                        <h3 class="text-lg font-medium ">People reached by activities</h3>
                     </div>
                     <div class="mt-4">
                         <div class="relative w-full overflow-auto">
@@ -173,7 +173,7 @@
                                         <tr class="border border-gray-e6 hover:bg-muted/50 ">
                                             <td class="py-3 align-middle">{{ disaggregation_name }}</td>
                                             {% for domain in activity_domains %}
-                                                <td class="py-3 align-middle ">{{ data|get_item:domain|default:0 }}</td>
+                                                <td class="py-3 align-middle ">{{ data|get_item:domain|default:0|intcomma }}</td>
                                             {% endfor %}
                                         </tr>
                                     {% endfor %}
@@ -185,7 +185,7 @@
                 {% comment %} line graph {% endcomment %}
                 <div class="col-span-2 rounded-lg shadow-sm p-6 border border-gray-d1">
                     <div class="pb-4 border-b border-gray-e6">
-                        <h3 class="text-lg font-medium pb-2">People Reached Monthly Trend</h3>
+                        <h3 class="text-lg font-medium pb-2 ">People Reached Monthly Trend</h3>
                         <p class="text-sm">
                             Only report with status of 'submited' or 'completed' and with beneificiary status of 'New beneificiary' between the selected date range are counted.
                         </p>

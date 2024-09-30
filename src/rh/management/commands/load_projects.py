@@ -7,6 +7,7 @@ from django.core.management.base import BaseCommand
 from django.db import connection
 from django.db.models import Q
 from django.utils import timezone
+from users.models import Profile
 
 from rh.models import (
     ActivityDetail,
@@ -14,13 +15,13 @@ from rh.models import (
     ActivityPlan,
     ActivityType,
     BeneficiaryType,
-    Location,
     Cluster,
     Currency,
     Donor,
     GrantType,
     ImplementationModalityType,
     Indicator,
+    Location,
     Organization,
     PackageType,
     Project,
@@ -28,7 +29,6 @@ from rh.models import (
     TransferMechanismType,
     UnitType,
 )
-from users.models import Profile
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent.parent
 
@@ -174,7 +174,9 @@ class Command(BaseCommand):
                     indicator_id=indicator.id,
                     beneficiary_id=beneficiary.id if beneficiary else None,
                     hrp_beneficiary_id=hrp_beneficiary.id if hrp_beneficiary else None,
-                    beneficiary_category=plan.get("beneficiary_category_id", "").lower() if plan.get("beneficiary_category_id", "") else "",
+                    beneficiary_category=plan.get("beneficiary_category_id", "").lower()
+                    if plan.get("beneficiary_category_id", "")
+                    else "",
                     # total_set_target=plan.get("total_beneficiaries", 0),
                     package_type_id=package_type.id if package_type else None,
                     unit_type_id=unit_type.id if unit_type else None,
@@ -242,7 +244,7 @@ class Command(BaseCommand):
                 old_id=project_vals.get("_id", "test"),
             )
 
-            cluster_ids = project_vals.get("cluster_id").split(',')
+            cluster_ids = project_vals.get("cluster_id").split(",")
 
             # Set ManyToMany field values and related field values
             if created:
@@ -287,7 +289,9 @@ class Command(BaseCommand):
                     user = users.first()
                 else:
                     # If user does not exist, create a new one
-                    user = User.objects.create_user(username=username, email=email, first_name=name, password="asd54321")
+                    user = User.objects.create_user(
+                        username=username, email=email, first_name=name, password="asd54321"
+                    )
                     country = Location.objects.filter(code="AF")
 
                     # Retrieve or create the organization based on the provided code
@@ -297,11 +301,7 @@ class Command(BaseCommand):
                         org_obj.countries.set(country)
 
                     # Create user profile
-                    profile = Profile.objects.create(
-                        user=user,
-                        organization=org_obj,
-                        country=country.first()
-                    )
+                    profile = Profile.objects.create(user=user, organization=org_obj, country=country.first())
                     # Set many-to-many relationship for clusters
                     profile.clusters.set(cluster)
 

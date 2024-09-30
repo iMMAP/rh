@@ -27,7 +27,6 @@ def dashboard_5w(request, code):
         raise PermissionDenied
 
     user_org = request.user.profile.organization
-
     from_date = request.GET.get("from", datetime.date(datetime.datetime.now().year, 1, 1))
     to_date = request.GET.get("to", datetime.datetime.now().date())
 

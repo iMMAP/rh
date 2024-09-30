@@ -1,6 +1,5 @@
 from django.urls import path
 
-from . import dashboards as dashboard_views
 from . import exports as export_views
 from .views import (
     monthly_reports as report_views,
@@ -139,12 +138,6 @@ urlpatterns = [
     ),
     path(
         "monthly_progress/import-report-activities/<str:pk>", import_report_activities, name="import-report-activities"
-    ),
-    # Dashboard Paths
-    path(
-        "projects/monthly-reports/dashboard",
-        dashboard_views.reports_dashboard_view,
-        name="view_my_dashboard",
     ),
     path(
         "export/all/monthly_progress_reports",

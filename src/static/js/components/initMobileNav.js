@@ -9,12 +9,12 @@ export default function initMobileNav() {
 	};
 
 	const hideMenu = (e) => {
-		if (!menuHolder.contains(e.target) && !menuOpener.contains(e.target)) {
+		if (!menuHolder?.contains(e.target) && !menuOpener?.contains(e.target)) {
 			body.classList.remove("nav-active");
 		}
 	};
 
-	menuOpener.addEventListener("click", (e) => {
+	menuOpener?.addEventListener("click", (e) => {
 		e.preventDefault();
 		toggleMenu();
 	});

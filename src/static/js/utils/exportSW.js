@@ -10,7 +10,7 @@ try {
 	const activity_checkbox = document.querySelectorAll(".activity-check");
 	const location_checkbox = document.querySelectorAll(".targetlocation-check");
 	all_checks.forEach((checkElement) => {
-		checkElement.addEventListener("click", (e) => {
+		checkElement?.addEventListener("click", (e) => {
 			let checkElementId = e.target.id;
 			let checkbox_array = new Array();
 			let condition = true;
@@ -66,7 +66,7 @@ function checkboxCounter() {
 }
 
 //Reset the checkbox
-document.querySelector("#resetFilterButton").addEventListener("click", () => {
+document.querySelector("#resetFilterButton")?.addEventListener("click", () => {
 	const checkboxes = document.querySelectorAll("input[type=checkbox]:checked");
 	const countSpan = document.querySelector("#selectedCount");
 	checkboxes.forEach((checkbox) => {
@@ -83,7 +83,7 @@ document.querySelector(".export-button")?.addEventListener("click",(event) => {
 	event.preventDefault();
 	event.stopPropagation();
 	// Get the export URL from the button's data-url attribute
-	const exportUrl = this.querySelector("a").getAttribute("data-url");
+	const exportUrl = event.target.closest("a").getAttribute("data-url");
 
 	// Send an AJAX request to the export URL
 	fetch(exportUrl, {
@@ -116,7 +116,7 @@ document.querySelector(".export-button")?.addEventListener("click",(event) => {
 // filter the project field and download start
 document
 	.querySelector("#downloadFilterForm")
-	.addEventListener("click", function (e) {
+	?.addEventListener("click", function (e) {
 		e.preventDefault();
 		e.stopPropagation();
 
@@ -296,7 +296,7 @@ try {
 	// Export monthly report
 	document
 		.querySelector(".export-monthly-report")
-		.addEventListener("click", (e) => {
+		?.addEventListener("click", (e) => {
 			e.preventDefault();
 			// handle the spinner icon
 			const downloadIcon = document.querySelector(".icon-download");

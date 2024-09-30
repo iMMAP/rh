@@ -130,7 +130,7 @@ document
 		const routeUrl = this.dataset.url;
 		const fileFormat = document.querySelector(
 			"input[type=radio]:checked",
-		).value;
+		)?.value;
 
 		if (fileFormat) {
 			const selectedFieldList = {};

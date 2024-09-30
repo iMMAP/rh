@@ -258,7 +258,7 @@ class ActivityPlanForm(forms.ModelForm):
             # if an activity_domain is deleted from project.activity_domains but it has reports for that activity in the past
             # this will handle it
             initial_queryset = self.fields["activity_domain"].queryset.filter(id=self.initial["activity_domain"])
-            self.fields["activity_domain"].queryset = project.activity_domains.all().union(initial_queryset)
+            self.fields["activity_domain"].queryset = project.activity_domains.all() | initial_queryset
 
         project_clusters = project.clusters.all()
         self.fields["beneficiary"].queryset = (

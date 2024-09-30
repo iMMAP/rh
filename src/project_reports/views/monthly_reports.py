@@ -342,16 +342,18 @@ def delete_project_monthly_report_view(request, report):
     monthly_report = get_object_or_404(ProjectMonthlyReport, pk=report)
 
     # TODO: Check access rights before deleting
-    monthly_report.delete()
-
-    messages.success(request, "The reporting period and its dependencies has been deleted")
-
+    status_code = None
+    if monthly_report.state != "archived":
+        monthly_report.delete()
+        messages.success(request, "The reporting period and its dependencies has been deleted")
+        status_code = 200
+    elif monthly_report.state == "archived":
+        messages.error(request, "The archived report cannot be deleted.")
+        status_code = 500
     if request.headers.get("Hx-Trigger", "") == "delete-btn":
         url = reverse_lazy("project_reports_home", kwargs={"project": monthly_report.project.pk})
-
         return HttpResponseClientRedirect(url)
-
-    return HttpResponse(status=200)
+    return HttpResponse(status=status_code)
 
 
 @login_required

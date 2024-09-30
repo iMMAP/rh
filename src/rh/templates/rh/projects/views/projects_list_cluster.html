@@ -17,13 +17,12 @@
             <div class="holder">
                 <h2>{{ request.resolver_match.kwargs.cluster|upper }} Cluster projects</h2>
                 <ul class="buttons-list-inline">
-                    <li>
+                    {% comment %} <li>
                         <a href="{% url 'projects-create' %}" class="btn btn-red add-btn">New Project</a>
-                    </li>
+                    </li> {% endcomment %}
                 </ul>
             </div>
             <p class="py-4 flex items-center gap-2">
-                <span class="icon-info"></span>
                 The below table displays the projects according to their status (Active, Draft, Completed, etc).
             </p>
         </div>

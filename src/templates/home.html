@@ -321,12 +321,11 @@
 {% block content %}
     <section class="visual-map-section main-map active-sidebar">
         <div class="container">
-            <div class="top-panel pb-2">
-                <span class="locations">{{ request.user.profile.organization }}'s Home</span>
+            <div class="pb-2">
+                <h1 class="locations text-red-be">{{ request.user.profile.organization }}'s Home</h1>
                 <div class="actions-panel"></div>
             </div>
-            <p class="flex items-center gap-2 pb-3">
-                <span class="icon-info"></span>
+            <p class="flex items-center gap-2 pb-4">
                 <span class="text-sm text-gray-700">
                     This page provides an overview of your organization's current projects, pending reports, and a visual map of your activities.
                 </span>
@@ -453,6 +452,8 @@
                     <div class="rounded-lg shadow-sm p-6 border border-gray-d1">
                         <div class="flex items-center justify-between pb-4 border-b border-gray-e6">
                             <h3 class="text-lg font-medium">Pending Reports</h3>
+                             <a href="{% url 'organizations-5w' user.profile.organization %}"
+                               class="btn btn-gray-outline">5W Dashboard</a>
                         </div>
                         <div class="mt-4">
                             <div class="relative w-full overflow-auto">

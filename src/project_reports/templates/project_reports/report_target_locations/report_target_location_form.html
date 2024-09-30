@@ -152,8 +152,8 @@
     <script>
      document.addEventListener('DOMContentLoaded', function() {
       const formElement = document.querySelector('#location-form');
-      let facilityDetails = formElement.find(`#facility_details`);
-      let facilityMonitoring = formElement.find(`#id_facility_monitoring`);
+      let facilityDetails = document.querySelector(`#facility_details`);
+      let facilityMonitoring = document.querySelector(`#id_facility_monitoring`);
       if (!facilityMonitoring.is(':checked')) {
        facilityDetails.hide();
       } else {

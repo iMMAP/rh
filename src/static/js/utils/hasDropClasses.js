@@ -1,12 +1,12 @@
 // add classes if item has dropdown
 export default function initDropDownClasses() {
-	jQuery('.main-nav li').each(function() {
-		const item = jQuery(this);
-		const drop = item.find('ul');
-		const link = item.find('a').eq(0);
-		if (drop.length) {
-			item.addClass('has-drop-down js-main-nav-openclose');
-			if (link.length) link.addClass('openclose-opener');
+	document.querySelectorAll('.main-nav li').forEach((item) => {
+		const drop = item.querySelector('ul');
+		const link = item.querySelector('a');
+
+		if (drop) {
+			item.classList.add('has-drop-down', 'js-main-nav-openclose');
+			if (link) link.classList.add('openclose-opener');
 		}
 	});
 }

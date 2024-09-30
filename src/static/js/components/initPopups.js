@@ -29,13 +29,13 @@ export default function initPopups() {
       }
     };
 
-    btnOpen.addEventListener('click', (e) => {
+    btnOpen?.addEventListener('click', (e) => {
       e.preventDefault();
       holder.classList.contains(options.openClass) ? hidePopup() : showPopup();
     });
 
     if(btnClose){
-    btnClose.addEventListener('click', (e) => {
+    btnClose?.addEventListener('click', (e) => {
       e.preventDefault();
       hidePopup();
     });

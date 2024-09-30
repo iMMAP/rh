@@ -61,13 +61,66 @@ def dashboard_5w(request, code):
         )
     )
 
+    counts["people_reached"] = sum(report["total_people_reached"] for report in people_reached_data)
+
     labels = [report["from_date"].strftime("%b") for report in people_reached_data]
     data = [
         report["total_people_reached"] if report["total_people_reached"] is not None else 0
         for report in people_reached_data
     ]
 
-    context = {"org": org, "counts": counts, "people_reached_labels": labels, "people_reached_data": data}
+    # people reached by activities
+    activity_domains = (
+        ProjectMonthlyReport.objects.filter(
+            project__organization=user_org,
+            state__in=["in-progress", "completed"],
+            from_date__lte=to_date,
+            to_date__gte=from_date,
+            activityplanreport__beneficiary_status="new_beneficiary",
+        )
+        .values_list("activityplanreport__activity_plan__activity_domain__name", flat=True)
+        .distinct()
+    )
+
+    reach_by_activity = (
+        ProjectMonthlyReport.objects.filter(
+            project__organization=user_org,
+            state__in=["submited", "completed"],
+            from_date__lte=to_date,
+            to_date__gte=from_date,
+            activityplanreport__beneficiary_status="new_beneficiary",
+        )
+        .values(
+            "activityplanreport__targetlocationreport__disaggregationlocationreport__disaggregation__name",
+            "activityplanreport__activity_plan__activity_domain__name",
+        )
+        .annotate(
+            total_people_reached=Sum("activityplanreport__targetlocationreport__disaggregationlocationreport__reached"),
+        )
+    )
+
+    # Organize data into a dictionary
+    data_dict = {}
+    for entry in reach_by_activity:
+        disaggregation_name = entry[
+            "activityplanreport__targetlocationreport__disaggregationlocationreport__disaggregation__name"
+        ]
+        activity_domain = entry["activityplanreport__activity_plan__activity_domain__name"]
+        total_reached = entry["total_people_reached"]
+
+        if disaggregation_name not in data_dict:
+            data_dict[disaggregation_name] = {}
+
+        data_dict[disaggregation_name][activity_domain] = total_reached
+
+    context = {
+        "org": org,
+        "counts": counts,
+        "people_reached_labels": labels,
+        "people_reached_data": data,
+        "activity_domains": activity_domains,
+        "reach_by_activity": data_dict,
+    }
 
     return render(request, "rh/5w_dashboard.html", context)
 

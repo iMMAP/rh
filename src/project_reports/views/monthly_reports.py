@@ -106,24 +106,44 @@ def create_project_monthly_report_view(request, project):
         request.POST or None,
         initial={"to_date": end_of_month, "project": project},
     )
-
+    project_start_date = (project.start_date).date()
+    project_end_date = (project.end_date).date()
     if request.method == "POST":
         if form.is_valid():
-            report = form.save(commit=False)
-            report.project = project
-            report.state = "pending"
-            report.save()
+            report_from_date = form.cleaned_data["from_date"]
+            report_to_date = form.cleaned_data["to_date"]
+            # check the date validation
+            if (
+                report_from_date < project_start_date
+                or report_from_date > project_end_date
+                or (report_to_date < project_start_date or report_to_date > project_start_date)
+            ):
+                # update the form error list
+                if report_from_date < project_start_date:
+                    form.add_error("from_date", f"Must not precede the project start date {project_start_date}")
+                if report_from_date > project_end_date:
+                    form.add_error("from_date", f"Must not exceed the project end date {project_end_date}")
+                if report_to_date < project_start_date:
+                    form.add_error("to_date", f"Must not precede the project start date {project_start_date}")
+                if report_to_date > project_start_date:
+                    form.add_error("to_date", f"Must not exceed the project end date {project_end_date}")
+                messages.error(request, "Something went wrong! please check the below form for errors.")
+            else:
+                report = form.save(commit=False)
+                report.project = project
+                report.state = "pending"
+                report.save()
 
-            messages.success(
-                request,
-                "Monthly report period created successfully. You can add reports activities from the below table.",
-            )
+                messages.success(
+                    request,
+                    "Monthly report period created successfully. You can add reports activities from the below table.",
+                )
 
-            return redirect(
-                "view_monthly_report",
-                project=project.pk,
-                report=report.pk,
-            )
+                return redirect(
+                    "view_monthly_report",
+                    project=project.pk,
+                    report=report.pk,
+                )
         else:
             messages.error(request, "Something went wrong! please check the below form for errors")
 

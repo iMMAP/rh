@@ -181,11 +181,11 @@ hr{
 .hidden{
   display: none;
 }
-.sign-up-field-error{
+.errorlist li{
   color:$red-be;
-  font-weight: 400;
   font-size: small;
-  padding-top: 4px;
+  height: 0px;
+  font-weight: 400;
 }
 ul{
   list-style-type: none;

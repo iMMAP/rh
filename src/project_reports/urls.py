@@ -140,9 +140,9 @@ urlpatterns = [
         "monthly_progress/import-report-activities/<str:pk>", import_report_activities, name="import-report-activities"
     ),
     path(
-        "export/all/monthly_progress_reports",
-        export_views.export_all_monthly_reports_view,
-        name="export_all_reports",
+        "monthly-reports/organization/<str:code>/export",
+        export_views.org_5w_dashboard_export,
+        name="export-org-5w-dashboard",
     ),
     path(
         "project/monthly-report/export/<int:pk>",

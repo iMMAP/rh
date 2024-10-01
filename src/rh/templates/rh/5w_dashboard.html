@@ -22,8 +22,7 @@
             <h2 class="locations text-red-be">{{ request.user.profile.organization }}'s 5W Dashboard</h2>
             <div class="actions-panel">
                 <button class="export-button btn btn-red"
-                    data-url="{% url 'export_all_reports' %}"
-                    class="btn btn-red project-detail"
+                    data-url="{% url 'export-org-5w-dashboard' user.profile.organization.code %}"
                     title="Export Reports"
                 >
                     <span class="btn-text">Export Reports</span>
@@ -37,7 +36,7 @@
         {% comment %}  {% endcomment %}
         <section class="space-y-4 pt-2">
             {% comment %} filter {% endcomment %}
-            <form method="GET" class="py-4 border border-gray-d1 p-4 rounded-lg">
+            <form id="5w-filter-form" method="GET" class="py-4 border border-gray-d1 p-4 rounded-lg">
                 {% csrf_token %}
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <h4 class="pb-1 border-b border-gray-f5 ">Filter</h4>
@@ -56,8 +55,8 @@
                         </div>
                     </div>
                     <div class="flex items-center justify-end gap-2">
-                        <a class="btn btn-gray-outline"
-                            href="{% url 'organizations-5w' user.profile.organization.code %}">Reset</a>
+                       
+                        <a class="btn btn-gray-outline" href="{% url 'organizations-5w' user.profile.organization.code %}">Reset</a>
                         <button type="submit" class="btn btn-red">Filter</button>
                     </div>
                 </div>
@@ -236,6 +235,15 @@
 	// Get the export URL from the button's data-url attribute
 	const exportUrl = event.target.closest("button").getAttribute("data-url");
 
+	// Get the form data
+	const formData = new FormData(document.getElementById('5w-filter-form'));
+
+	// Convert the form data to JSON
+	const jsonData = JSON.stringify(Object.fromEntries(formData));
+
+	// Include the JSON data in the fetch body
+	const requestBody = JSON.stringify({...JSON.parse(jsonData) });
+
 	// Send an AJAX request to the export URL
 	fetch(exportUrl, {
 		method: "POST",
@@ -243,7 +251,7 @@
 			"Content-Type": "application/json",
 			"X-CSRFToken": csrftoken,
 		},
-		body: JSON.stringify({ csrfmiddlewaretoken: csrftoken }),
+		body: requestBody,
 	})
 	.then(response => response.json())
 	.then(response => {

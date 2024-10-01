@@ -1,6 +1,10 @@
+from typing import Mapping
 from django import forms
+from django.core.files.base import File
+from django.db.models.base import Model
 from django.forms import BaseInlineFormSet
 from django.forms.models import inlineformset_factory
+from django.forms.utils import ErrorList
 from django.urls import reverse_lazy
 from rh.models import ActivityPlan, Disaggregation, Indicator, TargetLocation
 
@@ -30,16 +34,32 @@ class ProjectMonthlyReportForm(forms.ModelForm):
             ),
         }
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.initial = kwargs.get("initial", None)
+
     def clean(self):
         cleaned_data = super().clean()
         from_date = cleaned_data.get("from_date")
         to_date = cleaned_data.get("to_date")
+
+        start_date = (self.initial["project"].start_date).date()
+        end_date = (self.initial["project"].end_date).date()
 
         if from_date and to_date:
             if from_date.month != to_date.month:
                 self.add_error("from_date", "From date and to date must be in the same month.")
             if from_date > to_date:
                 self.add_error("to_date", "To date must be later than from date.")
+
+            if from_date < start_date:
+                self.add_error("from_date", f"Must not precede the project start date {start_date}")
+            if from_date > end_date:
+                self.add_error("from_date", f"Must not exceed the project end date {end_date}")
+            if to_date < start_date:
+                self.add_error("to_date", f"Must not precede the project start date {start_date}")
+            if to_date > end_date:
+                self.add_error("to_date", f"Must not exceed the project end date {end_date}")
         return cleaned_data
 
 

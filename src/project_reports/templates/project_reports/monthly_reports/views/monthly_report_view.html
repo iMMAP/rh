@@ -66,7 +66,7 @@
                         </a>
                     </li>
 
-                    {% if monthly_report.is_active %}
+                    {% if monthly_report.state == "completed" %}
                         <li>
                             <a hx-post="{% url 'archive_project_monthly_report' monthly_report.pk %}"
                                hx-trigger="click"
@@ -84,7 +84,7 @@
                                 </svg>
                             </a>
                         </li>
-                    {% else %}
+                    {% elif monthly_report.state == "archived" %}
                         <li>
                             <a hx-post="{% url 'unarchive_project_monthly_report' monthly_report.pk %}"
                                hx-trigger="click"

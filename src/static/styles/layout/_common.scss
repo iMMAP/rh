@@ -181,11 +181,11 @@ hr{
 .hidden{
   display: none;
 }
-.sign-up-field-error{
+.errorlist li{
   color:$red-be;
-  font-weight: 400;
   font-size: small;
-  padding-top: 4px;
+  height: 0px;
+  font-weight: 400;
 }
 ul{
   list-style-type: none;
@@ -845,8 +845,17 @@ svg.project-view-icon,
 svg.project-view.archive-icon {
   color: #6d6e71;
   margin-left: 3px;
+  
+ 
 }
+.archive-icon-design{
+  padding: 0px;
+  margin: 0px;
+  color: #acacac;
+  background-color: transparent;
+  cursor: default;
 
+}
 .table-options-buttons button.button-archive-unarchive{
   margin-top: 3px;
 }

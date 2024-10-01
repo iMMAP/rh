@@ -1,5 +1,7 @@
 from django.urls import path
 
+from project_reports.views import dashboards
+
 from . import exports as export_views
 from .views import (
     monthly_reports as report_views,
@@ -16,6 +18,8 @@ from .views.views import (
 )
 
 urlpatterns = [
+    path("organizations/<str:code>/5w", dashboards.org_5w_dashboard, name="organizations-5w"),
+    path("clusters/<str:cluster>/5w", dashboards.cluster_5w_dashboard, name="clusters-5w"),
     # Monthly Report URLS
     path(
         "projects/<int:project>/reports",
@@ -143,6 +147,11 @@ urlpatterns = [
         "monthly-reports/organization/<str:code>/export",
         export_views.org_5w_dashboard_export,
         name="export-org-5w-dashboard",
+    ),
+    path(
+        "monthly-reports/cluster/<str:code>/export",
+        export_views.cluster_5w_dashboard_export,
+        name="export-cluster-5w-dashboard",
     ),
     path(
         "project/monthly-report/export/<int:pk>",

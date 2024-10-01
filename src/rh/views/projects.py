@@ -538,6 +538,12 @@ def delete_project(request, pk):
             project.delete()
             messages.success(request, "Project deleted successfully")
             return redirect("projects-list")
+        else:
+            messages.error(
+                request,
+                "The archived project cannot be deleted.",
+            )
+            return redirect("projects-delete", pk)
 
 
 @login_required

@@ -94,7 +94,7 @@
 
                                         <li>
                                             <button class="button-archive-unarchive">
-                                                {% if project_report.is_active %}
+                                                {% if project_report.state == "completed" %}
                                                     <a hx-post="{% url 'archive_project_monthly_report' project_report.pk %}"
                                                        hx-trigger="click"
                                                        hx-swap="none"
@@ -109,7 +109,7 @@
                                                         </svg>
                                                     </a>
 
-                                                {% else %}
+                                                {% elif project_report.state == "archived" %}
                                                     <a hx-post="{% url 'unarchive_project_monthly_report' project_report.pk %}"
                                                        hx-trigger="click"
                                                        hx-swap="none"
@@ -126,6 +126,16 @@
                                                             <path fill="none" d="M0 0h36v36H0z" />
                                                         </svg>
                                                     </a>
+                                                {% else %}
+                                                <a>
+                                                 <svg xmlns="http://www.w3.org/2000/svg" 
+                                                      class="archive-icon-design"
+                                                      width="17"
+                                                      height="16"
+                                                      viewBox="0 0 22 22">
+                                                     <path fill="currentColor" d="M3 3h18v4H3V3m1 18V8h16v13H4m10-7v-3h-4v3H7l5 5l5-5h-3Z" />
+                                                 </svg>
+                                             </a>
 
                                                 {% endif %}
                                             </button>

@@ -106,7 +106,6 @@ def create_project_monthly_report_view(request, project):
         request.POST or None,
         initial={"to_date": end_of_month, "project": project},
     )
-
     if request.method == "POST":
         if form.is_valid():
             report = form.save(commit=False)
@@ -140,23 +139,24 @@ def update_project_monthly_report_view(request, project, report):
     """View for updating a project."""
 
     report = get_object_or_404(ProjectMonthlyReport, pk=report)
-
+    projectt = report.project
     if request.method == "POST":
         form = ProjectMonthlyReportForm(request.POST, instance=report)
+        projectt = report.project
         if form.is_valid():
-            report = form.save()
-
+            report = form.save(commit=False)
             report.project_id = project
             report.save()
-
             return redirect("view_monthly_report", project=project, report=report.pk)
+        else:
+            messages.error(request, "Something went wrong. Please fix the below errors.")
     else:
         form = ProjectMonthlyReportForm(instance=report)
 
     context = {
         "form": form,
         "monthly_report": report,
-        "project": report.project,
+        "project": projectt,
         "report_form": form,
         "report_view": True,
         "report_activities": False,
@@ -342,16 +342,18 @@ def delete_project_monthly_report_view(request, report):
     monthly_report = get_object_or_404(ProjectMonthlyReport, pk=report)
 
     # TODO: Check access rights before deleting
-    monthly_report.delete()
-
-    messages.success(request, "The reporting period and its dependencies has been deleted")
-
+    status_code = None
+    if monthly_report.state != "archived":
+        monthly_report.delete()
+        messages.success(request, "The reporting period and its dependencies has been deleted")
+        status_code = 200
+    elif monthly_report.state == "archived":
+        messages.error(request, "The archived report cannot be deleted.")
+        status_code = 500
     if request.headers.get("Hx-Trigger", "") == "delete-btn":
         url = reverse_lazy("project_reports_home", kwargs={"project": monthly_report.project.pk})
-
         return HttpResponseClientRedirect(url)
-
-    return HttpResponse(status=200)
+    return HttpResponse(status=status_code)
 
 
 @login_required

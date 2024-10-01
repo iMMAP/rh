@@ -30,7 +30,6 @@ urlpatterns = [
     # Organization CRUD
     path("organizations/create", organizations.organization_register, name="organizations-create"),
     path("organizations/<str:code>", organizations.show, name="organizations-show"),
-    path("organizations/<str:code>/5w", organizations.dashboard_5w, name="organizations-5w"),
     path(
         "organizations/<int:org_pk>/target-locations",
         organizations.target_locations,

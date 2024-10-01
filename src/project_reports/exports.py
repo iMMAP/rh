@@ -10,7 +10,7 @@ from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from openpyxl import Workbook
 from openpyxl.styles import Font, NamedStyle
-from rh.models import Organization, Project
+from rh.models import Cluster, Organization, Project
 from rh.utils import is_cluster_lead
 
 from .models import ActivityPlanReport, DisaggregationLocationReport, ProjectMonthlyReport, TargetLocationReport
@@ -23,6 +23,76 @@ from .utils import write_project_report_sheet
 # Define the header style
 header_style = NamedStyle(name="header")
 header_style.font = Font(bold=True)
+
+
+@login_required
+def cluster_5w_dashboard_export(request, code):
+    cluster = get_object_or_404(Cluster, code=code)
+
+    body = json.loads(request.body)
+
+    from_date = body.get("from")
+    if not from_date:
+        from_date = datetime.date(datetime.datetime.now().year, 1, 1)
+
+    to_date = body.get("to")
+    if not to_date:
+        to_date = datetime.datetime.now().date()
+
+    if not is_cluster_lead(
+        user=request.user,
+        clusters=[
+            cluster.code,
+        ],
+    ):
+        raise PermissionDenied
+
+    try:
+        project_reports = (
+            ProjectMonthlyReport.objects.select_related("project")
+            .prefetch_related(
+                Prefetch(
+                    "activityplanreport_set",
+                    queryset=ActivityPlanReport.objects.prefetch_related(
+                        Prefetch(
+                            "targetlocationreport_set",
+                            queryset=TargetLocationReport.objects.prefetch_related(
+                                Prefetch(
+                                    "disaggregationlocationreport_set",
+                                    DisaggregationLocationReport.objects.select_related("disaggregation"),
+                                )
+                            ),
+                        )
+                    ),
+                )
+            )
+            .filter(
+                project__clusters__in=[
+                    cluster,
+                ],
+                state__in=["submited", "completed"],
+                from_date__lte=to_date,
+                to_date__gte=from_date,
+            )
+            .distinct()
+        )
+        workbook = Workbook()
+        # write the data into excel sheet
+        write_project_report_sheet(workbook, project_reports)
+        excel_file = BytesIO()
+        workbook.save(excel_file)
+        excel_file.seek(0)
+
+        response = {
+            "file_url": "data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,"
+            + base64.b64encode(excel_file.read()).decode("utf-8"),
+            "file_name": f"5w-data-{cluster.code}-{from_date}-to-{to_date}.xlsx",
+        }
+
+        return JsonResponse(response)
+    except Exception as e:
+        response = {"error": str(e)}
+        return JsonResponse(response, status=500)
 
 
 @login_required

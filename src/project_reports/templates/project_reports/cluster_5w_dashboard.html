@@ -5,24 +5,20 @@
 {% load humanize %}
 
 {% block title %}
-    {{ org.name }} 5W Dashboard
+    {{ request.resolver_match.kwargs.cluster|capfirst }} 5W Dashboard
 {% endblock title %}
 
 {% block breadcrumb_li %}
-    <li class="">
-        <a href="{% url 'organizations-show' org.code %}">{{ org.code }}</a>
-    </li>
-    <li class="current">
-    5W Dashboard</a>
+    <li class="current">{{ request.resolver_match.kwargs.cluster|capfirst }} 5W Dashboard</a>
 {% endblock %}
 
 {% block content %}
     <div class="container">
         <div class="top-panel pb-2 pt-4 flex flex-col items-center justify-between gap-2 sm:flex-row">
-            <h2 class="locations text-red-be">{{ request.user.profile.organization }}'s 5W Dashboard</h2>
+            <h2 class="locations text-red-be">{{ request.resolver_match.kwargs.cluster|capfirst }} 5W Dashboard</h2>
             <div class="actions-panel">
                 <button class="export-button btn btn-red"
-                    data-url="{% url 'export-org-5w-dashboard' user.profile.organization.code %}"
+                    data-url="{% url 'export-cluster-5w-dashboard' request.resolver_match.kwargs.cluster %}"
                     title="Export Reports"
                 >
                     <span class="btn-text">Export Reports</span>
@@ -31,15 +27,14 @@
             </div>
         </div>
         <p class="flex items-center gap-2 pb-3">
-            <span class="text-sm text-gray-700">Organization 5w dashboard.</span>
+            <span class="text-sm text-gray-700">Cluster 5w dashboard.</span>
         </p>
         {% comment %}  {% endcomment %}
         <section class="space-y-4 pt-2">
             {% comment %} filter {% endcomment %}
-            <form id="5w-filter-form" method="GET" class="py-4 border border-gray-d1 p-4 rounded-lg">
+            <form id="5w-filter-form" method="GET" class="py-4 bg-gray-fa border border-gray-d1 p-4 rounded-lg">
                 {% csrf_token %}
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <h4 class="pb-1 border-b border-gray-f5 ">Filter</h4>
                     <div class="flex items-center gap-2">
                         <div class="inline-flex justify-center rounded-md text-sm font-medium flex-col items-start w-full h-auto">
                             <label class="font-semibold uppercase text-gray" for="from">From</label>

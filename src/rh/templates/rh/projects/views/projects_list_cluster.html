@@ -15,11 +15,13 @@
     <div class="container">
         <div class="projects-options-panel">
             <div class="holder">
-                <h2>{{ request.resolver_match.kwargs.cluster|upper }} Cluster projects</h2>
+                <h2>{{ request.resolver_match.kwargs.cluster|capfirst }} Cluster projects</h2>
                 <ul class="buttons-list-inline">
-                    {% comment %} <li>
-                        <a href="{% url 'projects-create' %}" class="btn btn-red add-btn">New Project</a>
-                    </li> {% endcomment %}
+                    <li>
+                        {% if request.resolver_match.kwargs.cluster %}
+                            <a class="btn btn-red" href="{% url 'clusters-5w' request.resolver_match.kwargs.cluster %}">{{ request.resolver_match.kwargs.cluster|capfirst }} 5W Dashboard</a>
+                        {% endif %}
+                    </li> 
                 </ul>
             </div>
             <p class="py-4 flex items-center gap-2">

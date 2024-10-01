@@ -116,7 +116,7 @@ def create_project_monthly_report_view(request, project):
             if (
                 report_from_date < project_start_date
                 or report_from_date > project_end_date
-                or (report_to_date < project_start_date or report_to_date > project_start_date)
+                or (report_to_date < project_start_date or report_to_date > project_end_date)
             ):
                 # update the form error list
                 if report_from_date < project_start_date:
@@ -125,7 +125,7 @@ def create_project_monthly_report_view(request, project):
                     form.add_error("from_date", f"Must not exceed the project end date {project_end_date}")
                 if report_to_date < project_start_date:
                     form.add_error("to_date", f"Must not precede the project start date {project_start_date}")
-                if report_to_date > project_start_date:
+                if report_to_date > project_end_date:
                     form.add_error("to_date", f"Must not exceed the project end date {project_end_date}")
                 messages.error(request, "Something went wrong! please check the below form for errors.")
             else:
@@ -160,23 +160,24 @@ def update_project_monthly_report_view(request, project, report):
     """View for updating a project."""
 
     report = get_object_or_404(ProjectMonthlyReport, pk=report)
-
+    projectt = report.project
     if request.method == "POST":
         form = ProjectMonthlyReportForm(request.POST, instance=report)
+        projectt = report.project
         if form.is_valid():
-            report = form.save()
-
+            report = form.save(commit=False)
             report.project_id = project
             report.save()
-
             return redirect("view_monthly_report", project=project, report=report.pk)
+        else:
+            messages.error(request, "Something went wrong. Please fix the below errors.")
     else:
         form = ProjectMonthlyReportForm(instance=report)
 
     context = {
         "form": form,
         "monthly_report": report,
-        "project": report.project,
+        "project": projectt,
         "report_form": form,
         "report_view": True,
         "report_activities": False,

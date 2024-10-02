@@ -59,13 +59,6 @@
                                     <option {% if cluster.code == request.GET.cluster %}selected{% endif %} value="{{cluster.code}}">{{cluster.title}}</option>
                                 {% endfor %}
                             </select>
-                            {% comment %} <input
-                                type="text"
-                                placeholder="Enter a cluster code..."
-                                id="cluster"
-                                name="cluster"
-                                value="{{request.GET.cluster}}"
-                            /> {% endcomment %}
                         </div>
                     </div>
                     <div class="flex items-center justify-end gap-2"> 

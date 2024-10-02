@@ -1,12 +1,14 @@
 from django import forms
 from django.forms import BaseInlineFormSet
 from django.forms.models import inlineformset_factory
+from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
 from rh.models import ActivityPlan, Disaggregation, Indicator, TargetLocation
 
 from .models import (
     ActivityPlanReport,
     DisaggregationLocationReport,
+    Project,
     ProjectMonthlyReport,
     ResponseType,
     TargetLocationReport,
@@ -32,30 +34,32 @@ class ProjectMonthlyReportForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.initial = kwargs.get("initial", None)
+        if kwargs.get("initial", None):
+            self.initial = kwargs.get("initial", None)
 
     def clean(self):
         cleaned_data = super().clean()
         from_date = cleaned_data.get("from_date")
         to_date = cleaned_data.get("to_date")
-
-        start_date = (self.initial["project"].start_date).date()
-        end_date = (self.initial["project"].end_date).date()
-
+        obj = self.initial.get("project")
+        if isinstance(obj, int):
+            project = get_object_or_404(Project, pk=obj)
+        else:
+            project = obj
         if from_date and to_date:
             if from_date.month != to_date.month:
                 self.add_error("from_date", "From date and to date must be in the same month.")
             if from_date > to_date:
                 self.add_error("to_date", "To date must be later than from date.")
 
-            if from_date < start_date:
-                self.add_error("from_date", f"Must not precede the project start date {start_date}")
-            if from_date > end_date:
-                self.add_error("from_date", f"Must not exceed the project end date {end_date}")
-            if to_date < start_date:
-                self.add_error("to_date", f"Must not precede the project start date {start_date}")
-            if to_date > end_date:
-                self.add_error("to_date", f"Must not exceed the project end date {end_date}")
+            if from_date < (project.start_date.date()):
+                self.add_error("from_date", f"It must not precede the project start date {(project.start_date).date()}")
+            if from_date > (project.end_date.date()):
+                self.add_error("from_date", f"It must not exceed the project end date {(project.end_date).date()}")
+            if to_date < (project.start_date.date()):
+                self.add_error("to_date", f"It must not precede the project start date {(project.start_date).date()}")
+            if to_date > (project.end_date.date()):
+                self.add_error("to_date", f"It must not exceed the project end date {(project.end_date).date()}")
         return cleaned_data
 
 

@@ -80,6 +80,7 @@
                                             <span class="icon-copy"></span>
                                             <span class="btn-text">Duplicate</span>
                                         </button>
+                                        {% if form.instance.pk %}
                                         <button href="#"
                                                 data-url="{% url 'delete_budget' form.instance.pk %}"
                                                 data-return-url="{% url 'create_project_budget_progress' project=project.pk %}"
@@ -89,6 +90,7 @@
                                             <span class="icon-trashbin"></span>
                                             <span class="btn-text">Delete</span>
                                         </button>
+                                        {% endif %}
                                         <button type="submit"
                                                 class="btn btn-red save"
                                                 value="true"

@@ -27,8 +27,8 @@ def project_export_excel_view(request, format):
     selected_projects_id = json.loads(request.body)
     user = request.user
     user_org = user.profile.organization
-
-    projects = Project.objects.select_related("organization", "budget_currency", "user").prefetch_related(
+    project_state = ["in-progress", "completed", "archived"]
+    project_queryset = Project.objects.select_related("organization", "budget_currency", "user").prefetch_related(
         "implementing_partners",
         "programme_partners",
         "donors",
@@ -48,25 +48,30 @@ def project_export_excel_view(request, format):
             ),
         ),
     )
-    # filter integration
-    if request.GET:
-        project_filter = ProjectsFilter(request.GET, queryset=projects)
-        if project_filter.qs.exists():
-            projects = project_filter.qs
+
     # check the user permission
     if user.has_perm("rh.view_cluster_projects") or user.has_perm("rh.add_organization"):
-        projects = projects.filter(organization=user_org)
+        projects = project_queryset.filter(organization=user_org)
     elif (
         user.has_perm("rh.view_org_projects")
         or user.has_perm("rh.add_project")
         or user.has_perm("users.view_org_users")
     ):
-        projects = projects.filter(organization=user_org)
+        projects = project_queryset.filter(organization=user_org)
     else:
         return HttpResponseForbidden("Permission Denied !")
 
     if selected_projects_id:
         projects = projects.filter(id__in=selected_projects_id)
+
+    # filter integration
+    if request.GET:
+        project_filter = ProjectsFilter(request.GET, request=request, queryset=projects)
+        if project_filter.qs.exists():
+            projects = project_filter.qs
+        else:
+            projects = project_filter.qs
+    projects = projects.filter(state__in=project_state)
 
     try:
         # selectedData = json.loads(request.POST.get("exportData"))

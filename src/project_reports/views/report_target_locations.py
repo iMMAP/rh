@@ -33,6 +33,7 @@ from ..models import (
 @login_required
 def get_target_and_reached_of_disaggregationlocation(request):
     data = json.loads(request.body)
+
     target_location_id = data.get("target_location_id")
     disaggregation_id = data.get("disaggregation_id")
 
@@ -65,7 +66,10 @@ def list_report_target_locations(request, project, report, plan=None):
             "target_location",
         )
         .order_by("-updated_at")
-        .annotate(total_target_reached=Sum("disaggregationlocationreport__reached")),
+        .annotate(
+            total_target_reached=Sum("disaggregationlocationreport__reached", distinct=True),
+            total_target=Sum("target_location__disaggregationlocation__target"),
+        ),
         report=monthly_report_instance,
     )
 

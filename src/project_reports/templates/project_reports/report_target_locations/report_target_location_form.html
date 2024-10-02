@@ -148,19 +148,8 @@
 {% endblock content %}
 
 {% block scripts %}
-    <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
-    <script>
-     document.addEventListener('DOMContentLoaded', function() {
-      const formElement = document.querySelector('#location-form');
-      let facilityDetails = document.querySelector(`#facility_details`);
-      let facilityMonitoring = document.querySelector(`#id_facility_monitoring`);
-      if (!facilityMonitoring.is(':checked')) {
-       facilityDetails.hide();
-      } else {
-       facilityDetails.hide();
-      }
-     });
-
+<script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+<script>
     document.querySelectorAll('.custom-select').forEach((select) => {
       const choice = new Choices(select, {
        searchEnabled: true,
@@ -172,5 +161,5 @@
        shouldSort: false,
       });
     });
-    </script>
+</script>
 {% endblock scripts %}

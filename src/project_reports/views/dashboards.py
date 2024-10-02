@@ -22,17 +22,27 @@ def cluster_5w_dashboard(request, cluster):
     ):
         raise PermissionDenied
 
-    from_date = request.GET.get("from", datetime.date(datetime.datetime.now().year, 1, 1))
-    to_date = request.GET.get("to", datetime.datetime.now().date())
+    from_date = request.GET.get("from")
+    if not from_date:
+        from_date = datetime.date(datetime.datetime.now().year, 1, 1)
 
-    counts = ProjectMonthlyReport.objects.filter(
-        project__clusters__in=[
-            cluster,
-        ],
-        state__in=["submited", "completed"],
-        from_date__lte=to_date,
-        to_date__gte=from_date,
-    ).aggregate(
+    to_date = request.GET.get("to")
+    if not to_date:
+        to_date = datetime.datetime.now().date()
+
+    organization = request.GET.get("organization", None)
+
+    filter_params = {
+        "project__clusters__in": [cluster],
+        "state__in": ["submited", "completed"],
+        "from_date__lte": to_date,
+        "to_date__gte": from_date,
+    }
+
+    if organization is not None:
+        filter_params["project__organization__code"] = organization
+
+    counts = ProjectMonthlyReport.objects.filter(**filter_params).aggregate(
         report_indicators_count=Count("activityplanreport__activity_plan__indicator", distinct=True),
         report_implementing_partners_count=Count(
             "activityplanreport__targetlocationreport__target_location__implementing_partner", distinct=True
@@ -43,13 +53,7 @@ def cluster_5w_dashboard(request, cluster):
     )
 
     people_reached_data = (
-        ProjectMonthlyReport.objects.filter(
-            project__clusters__in=[cluster],
-            state__in=["submited", "completed"],
-            from_date__lte=to_date,
-            to_date__gte=from_date,
-            activityplanreport__beneficiary_status="new_beneficiary",
-        )
+        ProjectMonthlyReport.objects.filter(**filter_params, activityplanreport__beneficiary_status="new_beneficiary")
         .order_by("from_date")
         .values("from_date")
         .annotate(
@@ -67,29 +71,13 @@ def cluster_5w_dashboard(request, cluster):
 
     # people reached by activities
     activity_domains = (
-        ProjectMonthlyReport.objects.filter(
-            project__clusters__in=[
-                cluster,
-            ],
-            state__in=["in-progress", "completed"],
-            from_date__lte=to_date,
-            to_date__gte=from_date,
-            activityplanreport__beneficiary_status="new_beneficiary",
-        )
+        ProjectMonthlyReport.objects.filter(**filter_params, activityplanreport__beneficiary_status="new_beneficiary")
         .values_list("activityplanreport__activity_plan__activity_domain__name", flat=True)
         .distinct()
     )
 
     reach_by_activity = (
-        ProjectMonthlyReport.objects.filter(
-            project__clusters__in=[
-                cluster,
-            ],
-            state__in=["submited", "completed"],
-            from_date__lte=to_date,
-            to_date__gte=from_date,
-            activityplanreport__beneficiary_status="new_beneficiary",
-        )
+        ProjectMonthlyReport.objects.filter(**filter_params, activityplanreport__beneficiary_status="new_beneficiary")
         .values(
             "activityplanreport__targetlocationreport__disaggregationlocationreport__disaggregation__name",
             "activityplanreport__activity_plan__activity_domain__name",

@@ -9,7 +9,12 @@
 {% endblock title %}
 
 {% block breadcrumb_li %}
-    <li class="current">{{ request.resolver_match.kwargs.cluster|capfirst }} 5W Dashboard</a>
+    <li class="">
+        <a href="{% url 'cluster-projects-list' cluster.code %}">
+            {{ request.resolver_match.kwargs.cluster|capfirst }} projects 
+        </a>
+    </li>
+    <li class="current">{{ request.resolver_match.kwargs.cluster|capfirst }} 5W Dashboard</li>
 {% endblock %}
 
 {% block content %}
@@ -38,7 +43,7 @@
                     <div class="flex items-center gap-2">
                         <div class="inline-flex justify-center rounded-md text-sm font-medium flex-col items-start w-full h-auto">
                             <label class="font-semibold uppercase text-gray" for="from">From</label>
-                            <input required
+                            <input 
                                    type="date"
                                    name="from"
                                    value="{{ request.GET.from }}"
@@ -46,12 +51,33 @@
                         </div>
                         <div class="inline-flex justify-center rounded-md text-sm font-medium flex-col items-start w-full h-auto">
                             <label class="font-semibold text-gray uppercase text-[0.65rem]" for="to">To</label>
-                            <input required type="date" name="to" value="{{ request.GET.to }}" id="to">
+                            <input type="date" name="to" value="{{ request.GET.to }}" id="to">
+                        </div>
+                        <div class="inline-flex justify-center rounded-md text-sm font-medium flex-col items-start w-full h-auto">
+                            <label class="font-semibold uppercase text-gray" for="organization">Organization</label>
+                            <script>
+                                function checkUserKeydown(event) {
+                                    return event instanceof KeyboardEvent
+                                }
+                            </script>
+                            <input
+                                placeholder="Enter the organization code..."
+                                id="organization"
+                                name="organization"
+                                list="orgList"
+                                hx-get="{% url 'organizations-search' %}"
+                                hx-target="#orgList"
+                                value="{{request.GET.organization}}"
+                                hx-trigger="keyup[checkUserKeydown.call(this, event)] changed delay:500ms"
+                            />
+                            <datalist id="orgList" style="">
+                                {% comment %} data from the htmx {% endcomment %}
+                            </datalist>
                         </div>
                     </div>
+                   
                     <div class="flex items-center justify-end gap-2">
-                       
-                        <a class="btn btn-gray-outline" href="{% url 'organizations-5w' user.profile.organization.code %}">Reset</a>
+                        <a class="btn btn-gray-outline" href="{% url 'clusters-5w' request.resolver_match.kwargs.cluster %}">Reset</a>
                         <button type="submit" class="btn btn-red">Filter</button>
                     </div>
                 </div>
@@ -194,37 +220,37 @@
 {% endblock content %}
 
 {% block scripts %}
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
-            crossorigin=""></script>
-    <script>
-  const ctx = document.getElementById('myChart').getContext("2d");
-  new Chart(ctx, {
-    type: 'line',
-    data: {
-      labels: {{people_reached_labels|safe}},
-      datasets: [{
-        label: 'People Reached',
-        data: {{people_reached_data|safe}},
-        borderWidth: 1
-      }]
-    },
-    options: {
-        maintainAspectRatio: false,
-        responsive: true,
-        height: 300,
-        scales: {
-            y: {
-            beginAtZero: true
-            }
-         }
-    }
-  });
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+        crossorigin=""></script>
+<script>
 
+const ctx = document.getElementById('myChart').getContext("2d");
+new Chart(ctx, {
+type: 'line',
+data: {
+    labels: {{people_reached_labels|safe}},
+    datasets: [{
+    label: 'People Reached',
+    data: {{people_reached_data|safe}},
+    borderWidth: 1
+    }]
+},
+options: {
+    maintainAspectRatio: false,
+    responsive: true,
+    height: 300,
+    scales: {
+        y: {
+        beginAtZero: true
+        }
+        }
+}
+});
 
-  {% comment %} export {% endcomment %}
-  document.querySelector(".export-button")?.addEventListener("click",(event) => {
+{% comment %} export {% endcomment %}
+document.querySelector(".export-button")?.addEventListener("click",(event) => {
 	event.preventDefault();
 	event.stopPropagation();
 	// Get the export URL from the button's data-url attribute
@@ -266,7 +292,6 @@
 		}
 	});
 });
-    </script>
 
-    
+</script>
 {% endblock scripts %}

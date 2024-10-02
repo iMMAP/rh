@@ -144,7 +144,7 @@
         })
         .then(response => response.json())
         .then(data => {
-            targetReachedInput.setAttribute("max", data.target - data.reached);
+            // targetReachedInput.setAttribute("max", data.target - data.reached);
             const helpTextSibling = targetReachedInput.nextElementSibling;
 
             if (helpTextSibling && helpTextSibling.classList.contains("help-text")) {

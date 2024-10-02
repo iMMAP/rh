@@ -53,15 +53,24 @@
                                 <div class="date start">
                                     <label for="{{ report_form.from_date.id_for_label }}">Reporting Date from</label>
                                     <div class="date-picker-field start-date">{{ report_form.from_date}}</div>
-                                    {{ report_form.from_date.errors }}
+                                    <div class="errorlist">
+                                    {% for error in report_form.from_date.errors %}
+                                        {{error}}
+                                    {% endfor %}
+                                    </div>
                                 </div>
-                                
                             </div>
                             <div class="field-col">
                                 <div class="date end">
                                     <label for="{{ report_form.to_date.id_for_label }}">to</label>
                                     <div class="date-picker-field end-date">{{ report_form.to_date}}</div>
-                                    {{ report_form.to_date.errors }}
+                                    <div class="errorlist">
+                                        {% for error in report_form.to_date.errors %}
+                                        {{error}}
+                                        {% endfor %}
+                                    </div>
+                                    
+                                    
                                 </div>
                             </div>
                         </div>

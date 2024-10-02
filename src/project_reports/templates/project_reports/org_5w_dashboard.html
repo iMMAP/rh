@@ -37,24 +37,38 @@
         <section class="space-y-4 pt-2">
             {% comment %} filter {% endcomment %}
             <form id="5w-filter-form" method="GET" class="py-4 bg-gray-fa border border-gray-d1 p-4 rounded-lg">
-                {% csrf_token %}
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div class="flex items-center gap-2">
                         <div class="inline-flex justify-center rounded-md text-sm font-medium flex-col items-start w-full h-auto">
                             <label class="font-semibold uppercase text-gray" for="from">From</label>
-                            <input required
-                                   type="date"
-                                   name="from"
-                                   value="{{ request.GET.from }}"
-                                   id="from">
+                            <input 
+                                type="date"
+                                name="from"
+                                value="{{ request.GET.from }}"
+                                id="from">
                         </div>
                         <div class="inline-flex justify-center rounded-md text-sm font-medium flex-col items-start w-full h-auto">
                             <label class="font-semibold text-gray uppercase text-[0.65rem]" for="to">To</label>
-                            <input required type="date" name="to" value="{{ request.GET.to }}" id="to">
+                            <input type="date" name="to" value="{{ request.GET.to }}" id="to">
+                        </div>
+                        <div class="inline-flex justify-center rounded-md text-sm font-medium flex-col items-start w-full h-auto">
+                            <label class="font-semibold uppercase text-gray" for="cluster">Cluster</label>
+                            <select name="cluster" id="cluster" placeholder="Select a cluster...">
+                                    <option value="" default>Select a cluster</option>
+                                {% for cluster in clusters %}
+                                    <option {% if cluster.code == request.GET.cluster %}selected{% endif %} value="{{cluster.code}}">{{cluster.title}}</option>
+                                {% endfor %}
+                            </select>
+                            {% comment %} <input
+                                type="text"
+                                placeholder="Enter a cluster code..."
+                                id="cluster"
+                                name="cluster"
+                                value="{{request.GET.cluster}}"
+                            /> {% endcomment %}
                         </div>
                     </div>
-                    <div class="flex items-center justify-end gap-2">
-                       
+                    <div class="flex items-center justify-end gap-2"> 
                         <a class="btn btn-gray-outline" href="{% url 'organizations-5w' user.profile.organization.code %}">Reset</a>
                         <button type="submit" class="btn btn-red">Filter</button>
                     </div>

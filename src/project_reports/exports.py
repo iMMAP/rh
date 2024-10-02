@@ -103,6 +103,11 @@ def cluster_5w_dashboard_export(request, code):
 def org_5w_dashboard_export(request, code):
     org = get_object_or_404(Organization, code=code)
 
+    if not org.code == request.user.profile.organization.code and not is_cluster_lead(
+        request.user, org.clusters.values_list("code", flat=True)
+    ):
+        raise PermissionDenied
+
     body = json.loads(request.body)
 
     from_date = body.get("from")
@@ -113,10 +118,18 @@ def org_5w_dashboard_export(request, code):
     if not to_date:
         to_date = datetime.datetime.now().date()
 
-    if not org.code == request.user.profile.organization.code and not is_cluster_lead(
-        request.user, org.clusters.values_list("code", flat=True)
-    ):
-        raise PermissionDenied
+    filter_params = {
+        "project__organization": org,
+        "state__in": ["submited", "completed"],
+        "from_date__lte": to_date,
+        "to_date__gte": from_date,
+    }
+
+    cluster_code = body.get("cluster")
+    if cluster_code:
+        filter_params["project__clusters__code__in"] = [
+            cluster_code,
+        ]
 
     try:
         project_reports = (
@@ -137,12 +150,7 @@ def org_5w_dashboard_export(request, code):
                     ),
                 )
             )
-            .filter(
-                project__organization=org,
-                state__in=["submited", "completed"],
-                from_date__lte=to_date,
-                to_date__gte=from_date,
-            )
+            .filter(**filter_params)
             .distinct()
         )
         workbook = Workbook()

@@ -28,6 +28,7 @@ from .views.views import (
 urlpatterns = [
     path("", landing_page, name="landing"),
     # Organization CRUD
+    path("organizations/search", organizations.search, name="organizations-search"),
     path("organizations/create", organizations.organization_register, name="organizations-create"),
     path("organizations/<str:code>", organizations.show, name="organizations-show"),
     path(

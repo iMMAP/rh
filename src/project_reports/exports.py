@@ -39,6 +39,17 @@ def cluster_5w_dashboard_export(request, code):
     if not to_date:
         to_date = datetime.datetime.now().date()
 
+    filter_params = {
+        "project__clusters__in": [cluster],
+        "state__in": ["submited", "completed"],
+        "from_date__lte": to_date,
+        "to_date__gte": from_date,
+    }
+
+    organization_code = body.get("organization")
+    if organization_code is not None:
+        filter_params["project__organization__code"] = organization_code
+
     if not is_cluster_lead(
         user=request.user,
         clusters=[
@@ -66,14 +77,7 @@ def cluster_5w_dashboard_export(request, code):
                     ),
                 )
             )
-            .filter(
-                project__clusters__in=[
-                    cluster,
-                ],
-                state__in=["submited", "completed"],
-                from_date__lte=to_date,
-                to_date__gte=from_date,
-            )
+            .filter(**filter_params)
             .distinct()
         )
         workbook = Workbook()

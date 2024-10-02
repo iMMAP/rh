@@ -14,6 +14,27 @@ from ..forms import (
 
 
 @login_required
+def search(request):
+    """
+    Search org for 5w filter. org is filtered by user's country.
+    Route: /organizations/search?organization=[str]
+    """
+    organization = request.GET.get("organization")
+
+    if organization:
+        organizations = Organization.objects.filter(
+            code__icontains=organization,
+            countries__in=[
+                request.user.profile.country,
+            ],
+        ).order_by("name")
+    else:
+        organizations = Organization.objects.none()
+
+    return render(request, "rh/_org_select_options.html", {"options": organizations})
+
+
+@login_required
 def show(request, code):
     org = get_object_or_404(Organization, code=code)
 

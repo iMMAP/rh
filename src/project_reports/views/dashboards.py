@@ -1,6 +1,7 @@
 import datetime
 
 from django.contrib.auth.decorators import login_required
+from django.core.cache import cache
 from django.core.exceptions import PermissionDenied
 from django.db.models import Count, Sum
 from django.shortcuts import get_object_or_404, render
@@ -39,7 +40,7 @@ def cluster_5w_dashboard(request, cluster):
         "to_date__gte": from_date,
     }
 
-    if organization is not None:
+    if organization:
         filter_params["project__organization__code"] = organization
 
     counts = ProjectMonthlyReport.objects.filter(**filter_params).aggregate(
@@ -123,15 +124,28 @@ def org_5w_dashboard(request, code):
         raise PermissionDenied
 
     user_org = request.user.profile.organization
-    from_date = request.GET.get("from", datetime.date(datetime.datetime.now().year, 1, 1))
-    to_date = request.GET.get("to", datetime.datetime.now().date())
 
-    counts = ProjectMonthlyReport.objects.filter(
-        project__organization=user_org,
-        state__in=["submited", "completed"],
-        from_date__lte=to_date,
-        to_date__gte=from_date,
-    ).aggregate(
+    from_date = request.GET.get("from")
+    if not from_date:
+        from_date = datetime.date(datetime.datetime.now().year, 1, 1)
+
+    to_date = request.GET.get("to")
+    if not to_date:
+        to_date = datetime.datetime.now().date()
+
+    cluster_code = request.GET.get("cluster")
+
+    filter_params = {
+        "project__organization": user_org,
+        "state__in": ["submited", "completed"],
+        "from_date__lte": to_date,
+        "to_date__gte": from_date,
+    }
+
+    if cluster_code:
+        filter_params["project__clusters__code__in"] = [cluster_code]
+
+    counts = ProjectMonthlyReport.objects.filter(**filter_params).aggregate(
         report_indicators_count=Count("activityplanreport__activity_plan__indicator", distinct=True),
         report_implementing_partners_count=Count(
             "activityplanreport__targetlocationreport__target_location__implementing_partner", distinct=True
@@ -143,10 +157,7 @@ def org_5w_dashboard(request, code):
 
     people_reached_data = (
         ProjectMonthlyReport.objects.filter(
-            project__organization=user_org,
-            state__in=["submited", "completed"],
-            from_date__lte=to_date,
-            to_date__gte=from_date,
+            **filter_params,
             activityplanreport__beneficiary_status="new_beneficiary",
         )
         .order_by("from_date")
@@ -167,10 +178,7 @@ def org_5w_dashboard(request, code):
     # people reached by activities
     activity_domains = (
         ProjectMonthlyReport.objects.filter(
-            project__organization=user_org,
-            state__in=["in-progress", "completed"],
-            from_date__lte=to_date,
-            to_date__gte=from_date,
+            **filter_params,
             activityplanreport__beneficiary_status="new_beneficiary",
         )
         .values_list("activityplanreport__activity_plan__activity_domain__name", flat=True)
@@ -179,10 +187,7 @@ def org_5w_dashboard(request, code):
 
     reach_by_activity = (
         ProjectMonthlyReport.objects.filter(
-            project__organization=user_org,
-            state__in=["submited", "completed"],
-            from_date__lte=to_date,
-            to_date__gte=from_date,
+            **filter_params,
             activityplanreport__beneficiary_status="new_beneficiary",
         )
         .values(
@@ -208,6 +213,11 @@ def org_5w_dashboard(request, code):
 
         data_dict[disaggregation_name][activity_domain] = total_reached
 
+    clusters = cache.get("clusters")
+    if clusters is None:
+        clusters = Cluster.objects.all()
+        cache.set("clusters", clusters, 60 * 60 * 24)  # cache for 1 day
+
     context = {
         "org": org,
         "counts": counts,
@@ -215,6 +225,7 @@ def org_5w_dashboard(request, code):
         "people_reached_data": data,
         "activity_domains": activity_domains,
         "reach_by_activity": data_dict,
+        "clusters": clusters,
     }
 
     return render(request, "project_reports/org_5w_dashboard.html", context)

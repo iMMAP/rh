@@ -782,13 +782,7 @@ def download_project_monthly_report_view(request, report):
                 plan_report.activity_plan.activity_domain.name if plan_report.activity_plan.activity_domain else None,
                 plan_report.activity_plan.activity_type.name if plan_report.activity_plan.activity_type else None,
                 ", ".join([responseType.name for responseType in plan_report.response_types.all() if responseType]),
-                ", ".join(
-                    [
-                        implementing_partner.code
-                        for implementing_partner in plan_report.implementing_partners.all()
-                        if implementing_partner
-                    ]
-                ),
+                location_report.target_location.implementing_partner.name if location_report.target_location.implementing_partner else None,
                 plan_report.activity_plan.package_type,
                 plan_report.activity_plan.unit_type,
                 plan_report.activity_plan.units,

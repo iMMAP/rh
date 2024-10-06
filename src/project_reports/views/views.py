@@ -1,11 +1,13 @@
 import csv
-
+from io import BytesIO
+import pandas as pd
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.views.decorators.http import require_http_methods
+from openpyxl import Workbook
 from rh.models import (
     ActivityDomain,
     ActivityPlan,
@@ -33,6 +35,7 @@ from ..models import (
     ResponseType,
     TargetLocationReport,
 )
+from ..utils import write_import_report_template_sheet
 
 RECORDS_PER_PAGE = 10
 
@@ -40,56 +43,30 @@ RECORDS_PER_PAGE = 10
 @login_required
 def export_report_activities_import_template(request, report):
     monthly_report = get_object_or_404(ProjectMonthlyReport, pk=report)
-    columns = [
-        "project_code",
-        "indicator",
-        "activity_domain",
-        "activity_type",
-        "response_types",
-        "implementing_partners",
-        "package_type",
-        "unit_type",
-        "units",
-        "no_of_transfers",
-        "grant_type",
-        "transfer_category",
-        "currency",
-        "transfer_mechanism_type",
-        "implement_modility_type",
-        "beneficiary_status",
-        "admin0name",
-        "admin0pcode",
-        "admin1pcode",
-        "admin1name",
-        "admin2pcode",
-        "admin2name",
-        "zone",
-        "location_type",
-        "facility_site_type",
-        "facility_monitoring",
-        "facility_id",
-        "facility_name",
-        "facility_lat",
-        "facility_long",
-    ]
 
-    disaggregation_columns = list(
-        Disaggregation.objects.filter(clusters__in=monthly_report.project.clusters.all())
-        .distinct()
-        .values_list("name", flat=True)
-    )
-
-    all_columns = columns + disaggregation_columns
-
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = "attachment; filename=activity_plans_import_template.csv"
-
-    writer = csv.writer(response)
-    writer.writerow(all_columns)
-
+    workbook = Workbook()
+    write_import_report_template_sheet(workbook, monthly_report)
+    excel_file = BytesIO()
+    workbook.save(excel_file)
+    excel_file.seek(0)
+    # Convert to CSV file 
+    # convert_xlsx_to_csv(excel_file)
+    response = HttpResponse(content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+    response["Content-Disposition"] = 'attachment; filename="activity_plans_import_template.xlsx"'
+    # Save the workbook to the response
+    workbook.save(response)
     return response
 
-
+def convert_xlsx_to_csv(excel_file):
+    # csv file
+    df = pd.read_excel(excel_file,engine='openpyxl')
+    csv_buffer = BytesIO()
+    df.to_csv(csv_buffer, index=False)
+    csv_buffer.seek(0)
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition']='attachment; filename="template_file.csv"'
+    response.write(csv_buffer.getvalue())
+    return response
 @login_required
 @require_http_methods(["GET", "POST"])
 def import_report_activities(request, pk):

@@ -2,7 +2,10 @@ import datetime
 
 from openpyxl.styles import Font, NamedStyle
 from openpyxl.utils import get_column_letter
-from rh.models import Disaggregation
+from openpyxl.worksheet.datavalidation import DataValidation
+from rh.models import Disaggregation, FacilitySiteType
+
+from project_reports.models import ResponseType
 
 header_style = NamedStyle(name="header")
 header_style.font = Font(bold=True)
@@ -299,3 +302,102 @@ def write_project_report_sheet(workbook, monthly_progress_report):
         sheet.freeze_panes = "A2"
     except Exception as e:
         print("Error:", e)
+
+
+def write_import_report_template_sheet(workbook, monthly_report):
+    sheet = workbook.active
+    sheet.title = "Import Template"
+    columns = [
+        {"header": "project_code", "type": "string", "width": 20},
+        {"header": "indicator", "type": "string", "width": 80},
+        {"header": "activity_domain", "type": "string", "width": 80},
+        {"header": "activity_type", "type": "string", "width": 80},
+        {"header": "response_types", "type": "string", "width": 20},
+        {"header": "implementing_partners", "type": "string", "width": 20},
+        {"header": "package_type", "type": "string", "width": 20},
+        {"header": "unit_type", "type": "string", "width": 20},
+        {"header": "units", "type": "string", "width": 20},
+        {"header": "no_of_transfers", "type": "string", "width": 20},
+        {"header": "grant_type", "type": "string", "width": 20},
+        {"header": "transfer_category", "type": "string", "width": 20},
+        {"header": "currency", "type": "string", "width": 20},
+        {"header": "transfer_mechanism_type", "type": "string", "width": 20},
+        {"header": "implement_modility_type", "type": "string", "width": 20},
+        {"header": "beneficiary_status", "type": "string", "width": 20},
+        {"header": "admin0name", "type": "string", "width": 20},
+        {"header": "admin0pcode", "type": "string", "width": 20},
+        {"header": "admin1pcode", "type": "string", "width": 20},
+        {"header": "admin1name", "type": "string", "width": 20},
+        {"header": "admin2pcode", "type": "string", "width": 20},
+        {"header": "admin2name", "type": "string", "width": 20},
+        {"header": "zone", "type": "string", "width": 20},
+        {"header": "location_type", "type": "string", "width": 20},
+        {"header": "facility_site_type", "type": "string", "width": 20},
+        {"header": "facility_monitoring", "type": "string", "width": 20},
+        {"header": "facility_id", "type": "string", "width": 20},
+        {"header": "facility_name", "type": "string", "width": 20},
+        {"header": "facility_lat", "type": "string", "width": 20},
+        {"header": "facility_long", "type": "string", "width": 20},
+    ]
+
+    disaggregation_cols = []
+    disaggregations = Disaggregation.objects.filter(clusters__in=monthly_report.project.clusters.all()).distinct()
+    for disaggregation in disaggregations:
+        disaggregation_cols.append({"header": disaggregation.name, "type": "string", "width": 20})
+
+    columns = columns + disaggregation_cols
+    # write column headers in excel sheet
+    for idx, column in enumerate(columns, start=1):
+        cell = sheet.cell(row=1, column=idx, value=column["header"])
+        cell.style = header_style
+
+    column_letter = get_column_letter(idx)
+    if column["type"] == "number":
+        sheet.column_dimensions[column_letter].number_format = "General"
+    elif column["type"] == "date":
+        sheet.column_dimensions[column_letter].number_format = "mm-dd-yyyy"
+
+    sheet.column_dimensions[column_letter].width = column["width"]
+    # write the rows with report data
+    container_dictionary = {
+        "indicatorList": ["B"],
+        "activityDomainList": ["C"],
+        "activityTypeList": ["D"],
+        "admin0nameList": ["Q"],
+        "admin0pcodeList": ["R"],
+        "admin1pcodeList": ["S"],
+        "admin1nameList": ["T"],
+        "admin2pcodeList": ["U"],
+        "admin2nameList": ["V"],
+        "facilitySiteTypeList": ["Y"],
+        "reponseTypeList": ["E"],
+    }
+    project = monthly_report.project
+    facility = list(FacilitySiteType.objects.values_list("name", flat=True))
+    responseType = list(ResponseType.objects.values_list("name", flat=True))
+    num_rows = 2
+    project_code = project.code
+    for plan in project.activityplan_set.all():
+        container_dictionary["indicatorList"].append(plan.indicator.name)
+        container_dictionary["activityDomainList"].append(plan.activity_domain.name)
+        container_dictionary["activityTypeList"].append(plan.activity_type.name)
+
+        for location in plan.targetlocation_set.all():
+            container_dictionary["admin0pcodeList"].append(location.country.code)
+            container_dictionary["admin0nameList"].append(location.country.name)
+            container_dictionary["admin1nameList"].append(location.province.name)
+            container_dictionary["admin1pcodeList"].append(location.province.code)
+            container_dictionary["admin2pcodeList"].append(location.district.code)
+            container_dictionary["admin2nameList"].append(location.district.name)
+            num_rows += 1
+    container_dictionary["facilitySiteTypeList"].extend(facility)
+    container_dictionary["reponseTypeList"].extend(responseType)
+    sheet["A2"] = project_code
+    print(num_rows)
+    for key, value in container_dictionary.items():
+        dv = DataValidation(type="list", formula1='"{}"'.format(",".join(list(container_dictionary[key][1:]))))
+        sheet.add_data_validation(dv)
+        for row in range(2, num_rows):
+            cell = sheet[f"{value[0]}{row}"]
+            sheet.add_data_validation(dv)
+            dv.add(cell)

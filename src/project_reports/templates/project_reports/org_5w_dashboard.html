@@ -27,6 +27,11 @@
                 >
                     <span class="btn-text">Export Reports</span>
                     <span class="icon-download"></span>
+                    <!-- spinner start-->
+                    <img class="downloading"
+                         style="width: 1.2rem"
+                         src="{% static 'images/spinner.gif' %}" />
+                    <!-- spinner end -->
                 </button>
             </div>
         </div>
@@ -196,7 +201,7 @@
                         </p>
                     </div>
                     <div class="mt-4">
-                        <canvas id="myChart"></canvas>
+                        <canvas id="myChart" style="max-width: 100%;"></canvas>
                     </div>
                 </div>
             </div>
@@ -218,6 +223,12 @@
       datasets: [{
         label: 'People Reached',
         data: {{people_reached_data|safe}},
+        borderColor:"#a52824",
+        backgroundColor:"rgba(255,0,0, 0.1)",
+        pointBackgroundColor:"#a52824",
+        fill: true,
+        
+        tension: 0.4,
         borderWidth: 1
       }]
     },
@@ -249,7 +260,10 @@
 
 	// Include the JSON data in the fetch body
 	const requestBody = JSON.stringify({...JSON.parse(jsonData) });
-
+    document.querySelector(".icon-download").style.display='none';
+    document.querySelector(".downloading").style.display="block";
+    document.querySelector('.export-button').setAttribute("disabled", "true");
+    console.log((event.loaded / event.total) * 100);
 	// Send an AJAX request to the export URL
 	fetch(exportUrl, {
 		method: "POST",
@@ -275,7 +289,11 @@
 		} else {
 			console.log(`Error: ${error.message}`);
 		}
-	});
+	}).finally(() => {
+        document.querySelector('.export-button').setAttribute("disabled", "false");
+        document.querySelector(".downloading").style.display = "none";
+        document.querySelector(".icon-download").style.display = "inline";
+    });
 });
     </script>
 

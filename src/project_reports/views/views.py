@@ -1,6 +1,6 @@
 import csv
 from io import BytesIO
-
+import pandas as pd
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
@@ -49,16 +49,24 @@ def export_report_activities_import_template(request, report):
     excel_file = BytesIO()
     workbook.save(excel_file)
     excel_file.seek(0)
-
+    # Convert to CSV file 
+    # convert_xlsx_to_csv(excel_file)
     response = HttpResponse(content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
     response["Content-Disposition"] = 'attachment; filename="activity_plans_import_template.xlsx"'
-
     # Save the workbook to the response
     workbook.save(response)
-
     return response
 
-
+def convert_xlsx_to_csv(excel_file):
+    # csv file
+    df = pd.read_excel(excel_file,engine='openpyxl')
+    csv_buffer = BytesIO()
+    df.to_csv(csv_buffer, index=False)
+    csv_buffer.seek(0)
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition']='attachment; filename="template_file.csv"'
+    response.write(csv_buffer.getvalue())
+    return response
 @login_required
 @require_http_methods(["GET", "POST"])
 def import_report_activities(request, pk):

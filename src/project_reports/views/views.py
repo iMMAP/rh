@@ -1,11 +1,9 @@
 import csv
-import base64
-import datetime
-import json
 from io import BytesIO
+
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.views.decorators.http import require_http_methods
@@ -38,6 +36,7 @@ from ..models import (
     TargetLocationReport,
 )
 from ..utils import write_import_report_template_sheet
+
 RECORDS_PER_PAGE = 10
 
 
@@ -46,19 +45,18 @@ def export_report_activities_import_template(request, report):
     monthly_report = get_object_or_404(ProjectMonthlyReport, pk=report)
 
     workbook = Workbook()
-    write_import_report_template_sheet(workbook,monthly_report)
+    write_import_report_template_sheet(workbook, monthly_report)
     excel_file = BytesIO()
     workbook.save(excel_file)
     excel_file.seek(0)
 
-    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-    response['Content-Disposition'] = 'attachment; filename="activity_plans_import_template.xlsx"'
+    response = HttpResponse(content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+    response["Content-Disposition"] = 'attachment; filename="activity_plans_import_template.xlsx"'
 
     # Save the workbook to the response
     workbook.save(response)
 
     return response
-  
 
 
 @login_required

@@ -2,9 +2,10 @@ import datetime
 
 from openpyxl.styles import Font, NamedStyle
 from openpyxl.utils import get_column_letter
-from project_reports.models import ResponseType
-from rh.models import Disaggregation, FacilitySiteType
 from openpyxl.worksheet.datavalidation import DataValidation
+from rh.models import Disaggregation, FacilitySiteType
+
+from project_reports.models import ResponseType
 
 header_style = NamedStyle(name="header")
 header_style.font = Font(bold=True)
@@ -302,6 +303,7 @@ def write_project_report_sheet(workbook, monthly_progress_report):
     except Exception as e:
         print("Error:", e)
 
+
 def write_import_report_template_sheet(workbook, monthly_report):
     sheet = workbook.active
     sheet.title = "Import Template"
@@ -342,10 +344,9 @@ def write_import_report_template_sheet(workbook, monthly_report):
     disaggregations = Disaggregation.objects.filter(clusters__in=monthly_report.project.clusters.all()).distinct()
     for disaggregation in disaggregations:
         disaggregation_cols.append({"header": disaggregation.name, "type": "string", "width": 20})
-      
 
     columns = columns + disaggregation_cols
-   # write column headers in excel sheet
+    # write column headers in excel sheet
     for idx, column in enumerate(columns, start=1):
         cell = sheet.cell(row=1, column=idx, value=column["header"])
         cell.style = header_style
@@ -359,56 +360,44 @@ def write_import_report_template_sheet(workbook, monthly_report):
     sheet.column_dimensions[column_letter].width = column["width"]
     # write the rows with report data
     container_dictionary = {
-        'indicatorList':['B'],
-        'activityDomainList':['C'],
-        'activityTypeList':['D'],
-        'admin0nameList':['Q'],
-        'admin0pcodeList':['R'],
-        'admin1pcodeList':['S'],
-        'admin1nameList':['T'],
-        'admin2pcodeList':['U'],
-        'admin2nameList':['V'],
-        'facilitySiteTypeList':['Y'],
-        'reponseTypeList':['E'],
+        "indicatorList": ["B"],
+        "activityDomainList": ["C"],
+        "activityTypeList": ["D"],
+        "admin0nameList": ["Q"],
+        "admin0pcodeList": ["R"],
+        "admin1pcodeList": ["S"],
+        "admin1nameList": ["T"],
+        "admin2pcodeList": ["U"],
+        "admin2nameList": ["V"],
+        "facilitySiteTypeList": ["Y"],
+        "reponseTypeList": ["E"],
     }
     project = monthly_report.project
-    facility = list(FacilitySiteType.objects.values_list('name',flat=True))
-    responseType = list(ResponseType.objects.values_list('name',flat=True))
+    facility = list(FacilitySiteType.objects.values_list("name", flat=True))
+    responseType = list(ResponseType.objects.values_list("name", flat=True))
     num_rows = 2
     project_code = project.code
     for plan in project.activityplan_set.all():
-        container_dictionary['indicatorList'].append(plan.indicator.name)
-        container_dictionary['activityDomainList'].append(plan.activity_domain.name)
-        container_dictionary['activityTypeList'].append(plan.activity_type.name)
-        
+        container_dictionary["indicatorList"].append(plan.indicator.name)
+        container_dictionary["activityDomainList"].append(plan.activity_domain.name)
+        container_dictionary["activityTypeList"].append(plan.activity_type.name)
+
         for location in plan.targetlocation_set.all():
             container_dictionary["admin0pcodeList"].append(location.country.code)
             container_dictionary["admin0nameList"].append(location.country.name)
             container_dictionary["admin1nameList"].append(location.province.name)
             container_dictionary["admin1pcodeList"].append(location.province.code)
             container_dictionary["admin2pcodeList"].append(location.district.code)
-            container_dictionary["admin2nameList"].append(location.district.name)   
+            container_dictionary["admin2nameList"].append(location.district.name)
             num_rows += 1
     container_dictionary["facilitySiteTypeList"].extend(facility)
     container_dictionary["reponseTypeList"].extend(responseType)
-    sheet['A2'] = project_code
+    sheet["A2"] = project_code
     print(num_rows)
-    for key,value in container_dictionary.items():
-        dv = DataValidation(type="list",formula1='"{}"'.format(','.join(list(container_dictionary[key][1:]))))
+    for key, value in container_dictionary.items():
+        dv = DataValidation(type="list", formula1='"{}"'.format(",".join(list(container_dictionary[key][1:]))))
         sheet.add_data_validation(dv)
         for row in range(2, num_rows):
-            cell = sheet[f'{value[0]}{row}']
+            cell = sheet[f"{value[0]}{row}"]
             sheet.add_data_validation(dv)
             dv.add(cell)
-           
-       
-
-    
-        
-    
-
-    
-    
-
-    
-    

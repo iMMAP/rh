@@ -23,6 +23,8 @@ def cluster_5w_dashboard(request, cluster):
     ):
         raise PermissionDenied
 
+    user_country = request.user.profile.country
+
     from_date = request.GET.get("from")
     if not from_date:
         from_date = datetime.date(datetime.datetime.now().year, 1, 1)
@@ -38,6 +40,7 @@ def cluster_5w_dashboard(request, cluster):
         "state__in": ["submited", "completed"],
         "from_date__lte": to_date,
         "to_date__gte": from_date,
+        "project__user__profile__country": user_country,
     }
 
     if organization:

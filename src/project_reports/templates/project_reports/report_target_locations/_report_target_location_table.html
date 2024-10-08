@@ -1,5 +1,6 @@
 {% load static %}
 {% load template_tags %}
+{% load humanize %}
 
 <div class="content-block bottom-border table-container">
     {% comment %} Table Actions and filters {% endcomment %}
@@ -61,10 +62,10 @@
                             <td>
                                {{ row.target_location }} 
                             </td>
-                            <td>{{ row.total_target_reached }}</td>
+                            <td>{{ row.total_target_reached|intcomma }}</td>
                              <td>
                                 {% if row.total_target_reached|subtract:row.total_target >= 0 %}
-                                    <span class="text-red"> {{ row.total_target_reached|subtract:row.total_target }} </span>
+                                    <span class="text-red"> {{ row.total_target_reached|subtract:row.total_target|intcomma }} </span>
                                 {% else %}
                                     <span> 0 </span>
                                 {% endif %}

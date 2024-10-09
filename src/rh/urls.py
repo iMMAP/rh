@@ -65,6 +65,11 @@ urlpatterns = [
         name="projects-delete",
     ),
     path(
+        "projects/<int:pk>/complete",
+        projects.complete_project,
+        name="complete_project",
+    ),
+    path(
         "projects/project-plan/<int:pk>/archive",
         projects.archive_project,
         name="archive_project",

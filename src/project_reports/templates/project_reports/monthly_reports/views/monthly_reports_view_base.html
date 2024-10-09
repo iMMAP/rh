@@ -51,6 +51,26 @@
         </div>
 
         {% include "project_reports/monthly_reports/views/_reports_table.html" %}
+
+        {% comment %}  {% endcomment %}
+        <br/>
+        {% if project.state != 'completed' %}
+       <div class="monthly-progress-submit-holder text-center">
+            <a hx-post="{% url 'complete_project' project.id %}"
+                hx-trigger="click"
+                hx-swap="none"
+                hx-confirm="Are you sure you want to complete and close the project?"
+                data-tippy-content="Mark project as completed"
+                class="btn btn-red">
+                <img class='htmx-indicator'
+                        style="width: 1rem"
+                        src="{% static 'images/spinner.gif' %}" />
+                Complete and Close Project 
+            </a>
+        </div>
+        {% endif %}
+        {% comment %}  {% endcomment %}
+
     </div>
 </div>
 {% endblock content %}

@@ -627,3 +627,25 @@ def copy_project(request, pk):
 
     messages.success(request, "Project its Activity Plans and Target Locations duplicated successfully!")
     return HttpResponseClientRedirect(reverse("projects-detail", args=[new_project.id]))
+
+
+@login_required
+@require_http_methods(["POST"])
+def complete_project(request, pk):
+    project = get_object_or_404(Project.objects.select_related("user"), pk=pk)
+    state = "completed"
+
+    if project.state == state:
+        messages.success(request, "Project has been marked as completed")
+        return HttpResponseClientRedirect(reverse("projects-detail", args=[project.id]))
+
+    # if has_permission(user=request.user,project=project):
+    #     messages.error(request,"You do not have permission to mark the project as complete.")
+    #     raise PermissionDenied
+
+    project.state = state
+    project.save()
+
+    messages.success(request, "Project has been marked as completed")
+
+    return HttpResponseClientRedirect(reverse("projects-detail", args=[project.id]))

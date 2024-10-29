@@ -15,6 +15,7 @@ from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.http import require_http_methods
 from django_htmx.http import HttpResponseClientRedirect
 from extra_settings.models import Setting
+from project_reports.models import ProjectMonthlyReport
 
 from ..filters import ProjectsFilter
 from ..forms import ProjectForm
@@ -634,18 +635,24 @@ def copy_project(request, pk):
 def complete_project(request, pk):
     project = get_object_or_404(Project.objects.select_related("user"), pk=pk)
     state = "completed"
+    pending_reports = ProjectMonthlyReport.objects.filter(project=pk, state="pending")
+    if pending_reports:
+        messages.warning(
+            request, "The project cannot be completed due to pending reports. Please submit all reports before closing."
+        )
+        return HttpResponseClientRedirect(reverse("project_reports_home", args=[project.id]))
+    else:
+        if project.state == state:
+            messages.success(request, "Project has been marked as completed")
+            return HttpResponseClientRedirect(reverse("projects-detail", args=[project.id]))
 
-    if project.state == state:
+        # if has_permission(user=request.user,project=project):
+        #     messages.error(request,"You do not have permission to mark the project as complete.")
+        #     raise PermissionDenied
+
+        project.state = state
+        project.save()
+
         messages.success(request, "Project has been marked as completed")
+
         return HttpResponseClientRedirect(reverse("projects-detail", args=[project.id]))
-
-    # if has_permission(user=request.user,project=project):
-    #     messages.error(request,"You do not have permission to mark the project as complete.")
-    #     raise PermissionDenied
-
-    project.state = state
-    project.save()
-
-    messages.success(request, "Project has been marked as completed")
-
-    return HttpResponseClientRedirect(reverse("projects-detail", args=[project.id]))

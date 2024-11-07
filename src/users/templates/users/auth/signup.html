@@ -29,15 +29,19 @@
                 {% csrf_token %}
                 <div class="form-holder">
                     {% for field in u_form %}
+                        {% if field.name != 'usable_password' %}
                         <div class="input-field is-required">
                             {{ field.label_tag }}
+                            <p class="help-text">{{ field.help_text }}</p>
                             <div class="input-holder">{{ field }}</div>
                             <div class="sign-up-field-error">{{ field.errors }}</div>
                         </div>
+                        {% endif %}
                     {% endfor %}
                     {% for field in p_form %}
                         <div class="input-field is-required">
                             {{ field.label_tag }}
+                            <p class="help-text">{{ field.help_text }}</p>
                             {{ field }}
                             <span class="sign-up-field-error">{{ field.errors }}</span>
                         </div>

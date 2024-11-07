@@ -423,6 +423,7 @@
                         </div>
                         <div class="mt-4">
                             <div class="relative w-full ">
+                                {% if not active_projects %}
                                 <table class="w-full caption-bottom overflow-auto text-sm">
                                     <thead class="">
                                         <tr class="hover:bg-muted/50 ">
@@ -446,6 +447,9 @@
                                         {% endfor %}
                                     </tbody>
                                 </table>
+                                {% else %}
+                                    <p class="text-center">No data yet!</p>
+                                {% endif %}
                             </div>
                         </div>
                     </div>
@@ -457,6 +461,7 @@
                         </div>
                         <div class="mt-4">
                             <div class="relative w-full overflow-auto">
+                                {% if pending_reports|length != 0 %}
                                 <table class="w-full caption-bottom text-sm">
                                     <thead class="">
                                         <tr class="border-b border-gray-e6 hover:bg-muted/50 ">
@@ -488,6 +493,9 @@
                                         {% endfor %}
                                     </tbody>
                                 </table>
+                                {% else %}
+                                    <p class="text-center">No data yet!</p>
+                                {% endif %}
                             </div>
                         </div>
                     </div>

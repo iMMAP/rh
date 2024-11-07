@@ -171,6 +171,7 @@
                     </div>
                     <div class="mt-4">
                         <div class="relative w-full overflow-auto">
+                            {% if activity_domains|length != 0 %}
                             <table class="w-full caption-bottom text-sm">
                                 <thead class="">
                                     <tr class="border-b border-gray-e6 hover:bg-muted/50 ">
@@ -189,6 +190,9 @@
                                     {% endfor %}
                                 </tbody>
                             </table>
+                            {% else %}
+                                <p class="text-center">No data yet!</p>
+                            {% endif %}
                         </div>
                     </div>
                 </div>

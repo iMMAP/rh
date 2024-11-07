@@ -19,7 +19,6 @@ class UserRegisterForm(UserCreationForm):
             "password1",
             "password2",
         ]
-
     def clean_username(self):
         """check if username already exists"""
         username = self.cleaned_data.get("username")
@@ -44,6 +43,10 @@ class ProfileCreateForm(forms.ModelForm):
         model = Profile
         fields = ["position", "organization", "clusters", "country"]
         labels = {"clusters": "Clusters / Sectors"}
+        help_texts = {
+            "organization": "If your organization is not listed, please contact us",
+            "clusters": "Select clusters that you will be responsible for",
+        }
 
         widgets = {
             "clusters": forms.SelectMultiple(attrs={"class": "custom-select"}),

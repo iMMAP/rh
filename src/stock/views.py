@@ -58,7 +58,7 @@ def stock_index_view(request):
 def create_warehouse_location(request):
     user_org = request.user.profile.organization
     if request.method == "POST":
-        form = WarehouseForm(request.POST)
+        form = WarehouseForm(request.POST, user=request.user)
         if form.is_valid():
             warehoues = form.save(commit=False)
             warehoues.organization = user_org
@@ -77,7 +77,7 @@ def create_warehouse_location(request):
         else:
             messages.error(request, "Something went wrong. Please fix the below error.")
     else:
-        form = WarehouseForm()
+        form = WarehouseForm(user=request.user)
     context = {"organization": user_org, "form": form}
     return render(request, "stock/create_warehouse_location_form.html", context)
 
@@ -87,7 +87,11 @@ def update_warehouse_location(request, pk):
     warehouse_location = get_object_or_404(Warehouse, pk=pk)
     user_org = request.user.profile.organization
     if request.method == "POST":
-        form = WarehouseForm(request.POST, instance=warehouse_location)
+        form = WarehouseForm(
+            request.POST, 
+            instance=warehouse_location,
+            user=request.user
+            )
         if form.is_valid():
             location = form.save(commit=False)
             location.organization = user_org
@@ -102,7 +106,10 @@ def update_warehouse_location(request, pk):
         else:
             messages.error(request, "Something went wrong. Please fix the below error.")
     else:
-        form = WarehouseForm(instance=warehouse_location)
+        form = WarehouseForm(
+            instance=warehouse_location,
+            user=request.user
+            )
     context = {"form": form, "warhouse": warehouse_location, "organization": user_org}
     return render(request, "stock/create_warehouse_location_form.html", context)
 
@@ -129,7 +136,11 @@ def delete_warehouse_location(request, pk):
         return HttpResponse(status=200)
     warehouse.delete()
     messages.success(request, "Warehouse location has been delete.")
-    return HttpResponse(status=200)
+    if request.headers.get("Hx-Trigger", "") == "delete-btn":
+        url = reverse_lazy("stocks", kwargs={})
+        return HttpResponseClientRedirect(url)
+    else:
+        return HttpResponse(status=200)
 
 
 @login_required
@@ -156,7 +167,28 @@ def stock_report_period_list(request, pk):
         # "submitted_stock_reports": submitted_stock_reports,
     }
     return render(request, "stock/all_stock_report.html", context)
+# Stock monthly Report
+@login_required
+def stock_details_view(request, pk):
+    monthly_reports = get_object_or_404(StockMonthlyReport, pk=pk)
+    ap_filter = StockReportFilter(
+        request.GET,
+        queryset=StockReport.objects.filter(monthly_report=monthly_reports).order_by("-updated_at"),
+    )
+    RECORDS_PER_PAGE = Setting.get("RECORDS_PER_PAGE", default=10)
 
+    per_page = request.GET.get("per_page", RECORDS_PER_PAGE)
+    paginator = Paginator(ap_filter.qs, per_page=per_page)  # Show 10 activity plans per page
+    page = request.GET.get("page", 1)
+    stock_report_details = paginator.get_page(page)
+    stock_report_details.adjusted_elided_pages = paginator.get_elided_page_range(page)
+    context = {
+        "stock_report": monthly_reports,
+        "stock_report_details": stock_report_details,
+        "stock_filter": ap_filter,
+        "report_states": StockReport.STATUS_TYPES,
+    }
+    return render(request, "stock/stock_details_view.html", context)
 
 @login_required
 def create_stock_report_period(request, warehouse):
@@ -171,14 +203,14 @@ def create_stock_report_period(request, warehouse):
     end_of_month = datetime(current_date.year, current_date.month, last_day)
     form = StockMonthlyReportForm(
         request.POST or None,
-        initial={"to_date": end_of_month},
+        initial={"due_date": end_of_month},
     )
     if request.method == "POST":
         if form.is_valid():
             monthly_report = form.save(commit=False)
             monthly_report.warehouse_location = warehouse
             monthly_report.save()
-            return redirect("stock-report-create", pk=monthly_report.id)
+            return redirect("stock-details-view", pk=monthly_report.id)
         else:
             messages.error(request, "something went wrong. Please fix the below errors.")
 
@@ -199,7 +231,11 @@ def update_stock_report_period(request, report):
 
     # Create a new date representing the end of the current month
     end_of_month = datetime(current_date.year, current_date.month, last_day)
-    form = StockMonthlyReportForm(request.POST or None, initial={"to_date": end_of_month}, instance=monthly_report)
+    form = StockMonthlyReportForm(
+        request.POST or None, 
+        initial={"due_date": end_of_month}, 
+        instance=monthly_report
+        )
 
     if request.method == "POST":
         if form.is_valid():
@@ -225,28 +261,7 @@ def delete_stock_report_period(request, pk):
     return HttpResponse(status=200)
 
 
-# Stock monthly Report
-@login_required
-def stock_details_view(request, pk):
-    monthly_reports = get_object_or_404(StockMonthlyReport, pk=pk)
-    ap_filter = StockReportFilter(
-        request.GET,
-        queryset=StockReport.objects.filter(monthly_report=monthly_reports).order_by("-updated_at"),
-    )
-    RECORDS_PER_PAGE = Setting.get("RECORDS_PER_PAGE", default=10)
 
-    per_page = request.GET.get("per_page", RECORDS_PER_PAGE)
-    paginator = Paginator(ap_filter.qs, per_page=per_page)  # Show 10 activity plans per page
-    page = request.GET.get("page", 1)
-    stock_report_details = paginator.get_page(page)
-    stock_report_details.adjusted_elided_pages = paginator.get_elided_page_range(page)
-    context = {
-        "stock_report": monthly_reports,
-        "stock_report_details": stock_report_details,
-        "stock_filter": ap_filter,
-        "report_states": StockReport.STATUS_TYPES,
-    }
-    return render(request, "stock/stock_details_view.html", context)
 
 
 @login_required
@@ -293,9 +308,8 @@ def copy_stock_monthly_report(request, pk):
 def update_stock_monthly_report(request, pk):
     stock_report = get_object_or_404(StockReport, pk=pk)
     monthly_report = stock_report.monthly_report
-    print(stock_report.stock_type)
     if request.method == "POST":
-        form = StockReportForm(request.POST, instance=stock_report)
+        form = StockReportForm(request.POST, instance=stock_report,user=request.user)
         if form.is_valid():
             form.save()
             messages.success(request, "Report has been updated. ")
@@ -303,7 +317,7 @@ def update_stock_monthly_report(request, pk):
         else:
             messages.error(request, "Something went wrong. Please fix the below errors.")
     else:
-        form = StockReportForm(instance=stock_report)
+        form = StockReportForm(instance=stock_report,user=request.user)
     context = {"form": form, "monthly_report": monthly_report}
     return render(request, "stock/stock_report_form.html", context)
 

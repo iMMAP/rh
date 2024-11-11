@@ -1,10 +1,25 @@
 from django.db import models
-from rh.models import Cluster, Location
+from rh.models import Cluster, Location, Organization, Project
+from users.models import User
 
 NAME_MAX_LENGTH = 200
 
 
-class WarehouseLocation(models.Model):
+class Warehouse(models.Model):
+    """Relationships"""
+
+    organization = models.ForeignKey(
+        Organization,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+    )
+    user = models.ForeignKey(
+        User,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+    )
     province = models.ForeignKey(
         Location,
         related_name="province",
@@ -61,7 +76,30 @@ class StockUnit(models.Model):
         verbose_name_plural = "Stock Units"
 
 
-class StockLocationDetails(models.Model):
+class StockMonthlyReport(models.Model):
+    warehouse_location = models.ForeignKey(Warehouse, on_delete=models.SET_NULL, null=True, blank=True)
+    STOCK_State = (
+        ("todo", "To Do"),
+        ("draft", "Draft"),
+        ("submitted", "Submitted"),
+    )
+    state = models.CharField(max_length=10, choices=STOCK_State, default="todo")
+    from_date = models.DateTimeField(blank=True, null=True)
+    due_date = models.DateTimeField(blank=True, null=True)
+    submitted_at = models.DateTimeField(blank=True, null=True)
+    note = models.TextField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
+
+    def __str__(self):
+        return self.created_at.strftime("%B, %Y")
+
+    class Meta:
+        verbose_name = "Stock Report"
+        verbose_name_plural = "Stock Reports"
+
+
+class StockReport(models.Model):
     PURPOSE_TYPES = [
         ("Prepositioned", "Prepositioned"),
         ("Operational", "Operational"),
@@ -76,11 +114,12 @@ class StockLocationDetails(models.Model):
         ("Available", "Available"),
         ("Reserved", "Reserved"),
     ]
-    warehouse_location = models.ForeignKey(WarehouseLocation, on_delete=models.CASCADE, null=True, blank=True)
+    monthly_report = models.ForeignKey(StockMonthlyReport, on_delete=models.CASCADE)
+    project = models.ForeignKey(Project, on_delete=models.SET_NULL, null=True, blank=True)
     cluster = models.ForeignKey(Cluster, on_delete=models.SET_NULL, null=True, blank=True)
     stock_purpose = models.CharField(max_length=255, choices=PURPOSE_TYPES, default="", null=True, blank=True)
     targeted_groups = models.CharField(max_length=255, choices=TARGET_GROUP_TYPES, default="", null=True, blank=True)
-    stock_type = models.ForeignKey(StockItemsType, on_delete=models.SET_NULL, null=True, blank=True)
+    stock_item_type = models.ForeignKey(StockItemsType, on_delete=models.SET_NULL, null=True, blank=True)
     status = models.CharField(max_length=255, choices=STATUS_TYPES, default="", null=True, blank=True)
     stock_unit = models.ForeignKey(
         StockUnit,
@@ -98,32 +137,6 @@ class StockLocationDetails(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, null=True)
 
-    def __str__(self):
-        return f"{self.warehouse_location} Stock Details"
-
     class Meta:
         verbose_name = "Stock Item"
         verbose_name_plural = "Stock Item"
-
-
-class StockReports(models.Model):
-    stock_location_details = models.ManyToManyField(StockLocationDetails)
-    STOCK_State = (
-        ("todo", "To Do"),
-        ("submitted", "Submitted"),
-    )
-    state = models.CharField(max_length=10, choices=STOCK_State, default="todo")
-    created_at = models.DateTimeField(blank=True, null=True)
-    updated_at = models.DateTimeField(auto_now=True, blank=True, null=True)
-    due_date = models.DateTimeField(blank=True, null=True)
-    submitted_at = models.DateTimeField(blank=True, null=True)
-    note = models.TextField(blank=True, null=True)
-    created_at = models.DateTimeField(auto_now_add=True, null=True)
-    updated_at = models.DateTimeField(auto_now=True, null=True)
-
-    def __str__(self):
-        return self.created_at.strftime("%B, %Y")
-
-    class Meta:
-        verbose_name = "Stock Report"
-        verbose_name_plural = "Stock Reports"

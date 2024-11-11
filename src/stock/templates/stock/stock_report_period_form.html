@@ -1,0 +1,97 @@
+{% extends "_base.html" %}
+{% load static %}
+
+{% block title %}
+    {% if monthly_report %}
+        Update Monthly Report
+    {% else %}
+        Create Monthly Report
+    {% endif %}
+{% endblock title %}
+
+{% block breadcrumb_li %}
+    <li><a href="{% url 'stocks' %}">{{warehouse.organization}} Warehouse</a></li>
+    <li><a href="{% url 'stock-report-period' warehouse.id %}">Report period</a></li>
+    {% if monthly_report %}
+        <li class="current">Update Report Period</li>
+    {% else %}
+        <li class="current">Create Report Period</li>
+    {% endif %}
+{% endblock breadcrumb_li %}
+
+{% block content %}
+<div class="container">
+    <div class="content-block top-border">
+        <div class="main-content">
+            <div class="project-plan create-plan">
+                <div class="activity-planning read-only">
+                    <div class="activity-block-holder">
+                        <div class="top-activity-block">
+                            <span class="activity-title">
+                                <span>
+                                    {% if monthly_report %}
+                                        Update Monthly Progress Report
+                                    {% else %}
+                                        Create Monthly Progress Report
+                                    {% endif %}
+                                </span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <!-- {{report_form}} -->
+                <form method="post"
+                    class="form-container"
+                    enctype="multipart/form-data"
+                    id="activity-formset-form"
+                >
+                    {% csrf_token %}
+                    <div class="inner-holder">
+                        <div class="monthly-reporting multiple-fields-row two-items">
+                            <div class="field-col">
+                                <div class="date start">
+                                    <label for="{{ form.from_date.id_for_label }}">Reporting Date from</label>
+                                    <div class="date-picker-field start-date">{{ form.from_date}}</div>
+                                    <div class="errorlist">
+                                    {% for error in form.from_date.errors %}
+                                        {{error}}
+                                    {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="field-col">
+                                <div class="date end">
+                                    <label for="{{ form.to_date.id_for_label }}">to</label>
+                                    <div class="date-picker-field end-date">{{ form.due_date}}</div>
+                                    <div class="errorlist">
+                                        {% for error in form.due_date.errors %}
+                                        {{error}}
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="monthly-reporting">
+                            <div class="row">
+                                <div class="col">
+                                    <div class="input-field">
+                                        <label for="{{ form.note.id_for_label }}">
+                                            Description &amp;
+                                            Objectives
+                                        </label>
+                                        <div class="input-holder">{{ form.note }}</div>
+                                        <span class="sign-up-field-error">{{ form.note.errors }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="monthly-progress-submit-holder text-right">
+                            <button type="submit" class="btn btn-red">Save and Next</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

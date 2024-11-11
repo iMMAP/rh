@@ -3,10 +3,10 @@ from rh.models import Location
 
 from .models import (
     StockItemsType,
-    StockLocationDetails,
-    StockReports,
+    StockMonthlyReport,
+    StockReport,
     StockUnit,
-    WarehouseLocation,
+    Warehouse,
 )
 
 # Register your models here.
@@ -69,14 +69,14 @@ class WarehouseLocationAdmin(admin.ModelAdmin):
         return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
 
-admin.site.register(WarehouseLocation, WarehouseLocationAdmin)
+admin.site.register(Warehouse, WarehouseLocationAdmin)
 
 ##############################################
 ###### Warehouse Location Model Admin ########
 ##############################################
 # class StockLocationDetailsAdmin(admin.ModelAdmin):
 #     readonly_fields = ['created_at']
-admin.site.register(StockLocationDetails)
+admin.site.register(StockReport)
 
 # class StockReportsAdmin(admin.ModelAdmin):
-admin.site.register(StockReports)
+admin.site.register(StockMonthlyReport)

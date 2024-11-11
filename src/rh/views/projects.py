@@ -463,7 +463,7 @@ def submit_project(request, pk):
             messages.error(
                 request,
                 mark_safe(
-                    f"Each activity plan must have at least one target location. Check project's `<a class='underline' href='{reverse('target-locations-list', args=[project.pk])}'>target locations</a>`."
+                    f"Each activity plan must have at least one target location. Check project's `<a class='underline' href='{reverse('activity-plans-list', args=[project.pk])}'>Activity Plans</a>`."
                 ),
             )
             return redirect("projects-detail", pk=project.pk)

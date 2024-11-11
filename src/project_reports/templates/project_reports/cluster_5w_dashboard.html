@@ -69,7 +69,7 @@
                                 value="{{request.GET.organization}}"
                                 hx-trigger="keyup[checkUserKeydown.call(this, event)] changed delay:500ms"
                             />
-                            <datalist id="orgList" style="">
+                            <datalist id="orgList">
                                 {% comment %} data from the htmx {% endcomment %}
                             </datalist>
                         </div>
@@ -186,6 +186,7 @@
                                     <tr class="border-b border-gray-e6 hover:bg-muted/50 ">
                                         <th class="h-12 text-left align-middle font-bold">Gender/Age</th>
                                         {% for domain in activity_domains %}<th class="h-12 text-left align-middle font-medium ">{{ domain }}</th>{% endfor %}
+                                        <th class="h-12 text-left align-middle font-bold">Total</th>
                                     </tr>
                                 </thead>
                                 <tbody class="">
@@ -195,6 +196,7 @@
                                             {% for domain in activity_domains %}
                                                 <td class="py-3 align-middle ">{{ data|get_item:domain|default:0|intcomma }}</td>
                                             {% endfor %}
+                                            <td class="py-3 align-middle">{{data.total|intcomma}}</td>
                                         </tr>
                                     {% endfor %}
                                 </tbody>
@@ -237,6 +239,12 @@ data: {
     datasets: [{
     label: 'People Reached',
     data: {{people_reached_data|safe}},
+    borderColor:"#a52824",
+    backgroundColor:"rgba(255,0,0, 0.1)",
+    pointBackgroundColor:"#a52824",
+    fill: true,
+    
+    tension: 0.4,
     borderWidth: 1
     }]
 },

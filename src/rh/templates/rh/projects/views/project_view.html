@@ -59,9 +59,11 @@
                              class="size-6">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
                         </svg>
-                        <a href="{% url 'profiles-show' project.user.username %}">
-                            {{ project.user.get_full_name }} ({{ project.user.username }})
-                        </a>
+                        {% if project.user %}
+                            <a href="{% url 'profiles-show' project.user.username %}">
+                                {{ project.user.get_full_name }} ({{ project.user.username }})
+                            </a>
+                        {% endif %}
                     </p>
                     <p class="flex items-center gap-2">
                         <svg width="800px"

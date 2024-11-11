@@ -2,268 +2,58 @@
 
 {% load static %}
 
+{% block head %}
+{% endblock head %}
+
 {% block title %}
-    Stocks Reports
+    Warehouse Name
 {% endblock title %}
 
+{% block breadcrumb_li %}
+<li ><a href="{% url 'stocks' %}">{{warehouse.name}}</a></li>
+<li class="current">Report Periods</li>
+{% endblock %}
+
 {% block content %}
-    <div class="base-section" style="padding-bottom: 20px;">
-        <div class="container">
-            <div class="page-navigation-panel">
-                <div class="holder">
-                    <div class="tabs-nav-holder">
-                        <ul class="tabs-nav">
-                            <li>
-                                <a href="{% url 'stocks' %}">warehouse locations</a>
-                            </li>
-                            <li class="active">
-                                <a href="{% url 'all_stock_report' 'todo' %}">Stock report</a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            <div class="projects-options-panel projects-options-panel-small with-border">
-                <div class="holder">
-                    <div class="actions-panel">
-                        <div class="filter-holder">
-                            <a href="#" class="btn btn-red filter-open">Filter</a>
-                            <form action="#" class="filter-form">
-                                <div class="filter-options">
-                                    <div class="block-top">
-                                        <span class="title">Filter</span>
-                                        <a class="filter-close" href="#"></a>
-                                    </div>
-                                    <div class="block-body">
-                                        <div class="select-field">
-                                            <label>Region</label>
-                                            <select name="region" id="region" class="custom-select">
-                                                <option value="placeholder" disabled selected>Region</option>
-                                                <option value="option1">Option 1</option>
-                                                <option value="option2">Option 2</option>
-                                            </select>
-                                        </div>
-                                        <div class="select-field">
-                                            <label>Country</label>
-                                            <select name="country" id="country" class="custom-select">
-                                                <option value="placeholder" disabled selected>Country</option>
-                                                <option value="option1">Option 1</option>
-                                                <option value="option2">Option 2</option>
-                                            </select>
-                                        </div>
-                                        <div class="select-field">
-                                            <label>Province/ State</label>
-                                            <select name="state" id="state" class="custom-select">
-                                                <option value="placeholder" disabled selected>Province/ State</option>
-                                                <option value="option1">Option 1</option>
-                                                <option value="option2">Option 2</option>
-                                            </select>
-                                        </div>
-                                        <div class="select-field">
-                                            <label>District</label>
-                                            <select name="district" id="district" class="custom-select">
-                                                <option value="placeholder" disabled selected>District</option>
-                                                <option value="option1">Option 1</option>
-                                                <option value="option2">Option 2</option>
-                                            </select>
-                                        </div>
-                                        <div class="date-picker-field">
-                                            <div class="date start">
-                                                <input type="text"
-                                                       id="dateStart"
-                                                       name="Start date"
-                                                       placeholder="Start date"
-                                                       onfocus="(this.type='date')"
-                                                       onblur="(this.type='text')" />
-                                            </div>
-                                            <div class="date end">
-                                                <input type="text"
-                                                       id="dateEnd"
-                                                       name="End date"
-                                                       placeholder="End date"
-                                                       onfocus="(this.type='date')"
-                                                       onblur="(this.type='text')" />
-                                            </div>
-                                        </div>
-                                        <div class="select-field">
-                                            <label>Cluster/Sector</label>
-                                            <select name="cluster" id="cluster" class="custom-select">
-                                                <option value="placeholder" disabled selected>Cluster/Sector</option>
-                                                <option value="option1">Option 1</option>
-                                                <option value="option2">Option 2</option>
-                                            </select>
-                                        </div>
-                                        <div class="select-field">
-                                            <label>Organization</label>
-                                            <select name="organisation" id="organisation" class="custom-select">
-                                                <option value="placeholder" disabled selected>Organization</option>
-                                                <option value="option1">Option 1</option>
-                                                <option value="option2">Option 2</option>
-                                            </select>
-                                        </div>
-                                        <div class="select-field">
-                                            <label>Activity Domain</label>
-                                            <select name="domain" id="domain" class="custom-select">
-                                                <option value="placeholder" disabled selected>Activity Domain</option>
-                                                <option value="option1">Option 1</option>
-                                                <option value="option2">Option 2</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="block-footer">
-                                        <div class="btn-wrapper">
-                                            <button type="button" class="btn btn-gray-outline">Reset</button>
-                                            <button type="submit" class="btn btn-red">Apply</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-
-                        <div class="export-formats-holder">
-                            <a href="#" class="btn btn-gray export-open">
-                                <span class="btn-text">Export</span>
-                                <span class="icon-download"></span>
-                            </a>
-                            <div class="export-formats">
-                                <span class="title">File format</span>
-                                <ul class="formats-list">
-
-                                    <li>
-                                        <div class="input-check-holder">
-                                            <input type="radio" id="radio2" name="exportFormat" />
-                                            <label for="radio2">
-                                                <span class="text">CVS</span>
-                                            </label>
-                                        </div>
-                                    </li>
-
-                                    <li>
-                                        <div class="input-check-holder">
-                                            <input type="radio" id="radio4" name="exportFormat" />
-                                            <label for="radio4">
-                                                <span class="text">PDF</span>
-                                            </label>
-                                        </div>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+<div class="container">
+    <div class="page-navigation-panel">
+        <div class="holder">
+            <div class="tabs-nav-holder">
+                <ul class="tabs-nav">
+                    <li class="">
+                        <a href="{% url 'stocks' %}">
+                           Warehouses
+                        </a>
+                    </li>
+                    <li class="active">
+                        <a href="">
+                            Stock Reports
+                        </a>
+                    </li>
+                </ul>
             </div>
         </div>
     </div>
-    <div class="container ">
-        <div class="page-navigation-panel bottom-border">
-            <div class="holder">
-                <div class="tabs-nav-holder">
-                    <ul class="tabs-nav">
-                        {% if flag == 'todo' %}
-                        <li class="active">
-                        {% else %}
-                            <li>
-                            {% endif %}
-                            <strong><a href="{% url 'all_stock_report' 'todo' %}">Stock Reports Todo</a></strong>
-                            </li>
-                        </li>
-                        {% if flag == 'submitted' %}
-                        <li class="active">
-                        {% else %}
-                            <li>
-                            {% endif %}
-                            <strong><a href="{% url 'all_stock_report' 'submitted' %}">Stock Reports Completed</a></strong>
-                        </li>
-                        </li>
-                    </ul>
+    <div class="content-block">
+        <div class="activity-planning read-only">
+            <div class="flex items-center justify-between pb-2">
+                <div class="activity-title">
+                    <span>Stock Report Periods</span>
                 </div>
+                <a href="{% url 'create-report-period' warehouse.id %}" class="btn btn-red add-btn">
+                    <svg  viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4 text-white">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                    </svg>
+                    Add Report 
+                </a>
             </div>
         </div>
-        <div class="content-block bottom-border table-container" id="stock_reports_todo">
-            <table class="table responsive-table report-table">
-                <thead>
-                    <tr>
-                        <th class="month-col">
-                            <strong class="table-title">Month</strong>
-                        </th>
-
-                        <th class="progress-col">
-                            <strong class="table-title">Srock Progress Report</strong>
-                        </th>
-
-                        <th class="date-col">
-                            {% if flag == "todo" %}
-                                <strong class="table-title">Due Date</strong>
-                            {% else %}
-                                <strong class="table-title">Completed Date</strong>
-                            {% endif %}
-                        </th>
-
-                        <th class="month-col">
-                            <strong class="table-title">Status</strong>
-                        </th>
-
-                        <th class="month-col">
-                            <strong class="table-title">Actions</strong>
-                        </th>
-                    </tr>
-                </thead>
-                {% if stock_reports %}
-                    <tbody>
-                        {% for report in stock_reports %}
-                            <tr>
-                                <td class="month-col" data-title="Month">
-                                    <a href="{% url 'stock_report' report.id %}">
-                                        <div class="table-flex-holder">{{ report.created_at|date:"F, Y" }}</div>
-                                    </a>
-                                </td>
-                                <td class="progress-col" data-title="Progress Report">
-                                    Monthly progress for {{ report.created_at|date:"F, Y" }} {% now "r" as todays_date %}
-                                </td>
-
-                                <td class="date-col" data-title="Due date">{{ report.due_date|date:"d F, Y" }}</td>
-
-                                <td class="date-col" data-title="Status">
-                                    {% if report.state == 'submitted' %}
-                                        submitted
-                                    {% else %}
-                                        Pending
-                                    {% endif %}
-                                </td>
-
-                                <td>
-                                    <div class="table-flex-holder">
-                                        <ul class="table-options-buttons">
-                                            <li>
-                                                <a href="{% url 'stock_report' report.id %}" data-tippy-content="Edit Monthly Stock Report">
-                                                    <span class="project-detail icon-pen"></span>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <form method="post" action="{% url 'delete_stock_report' report.id %}">
-                                                    {% csrf_token %}
-                                                    <button type="submit" data-tippy-content="Delete Stock Report">
-                                                        <span class="project-detail icon-trashbin"></span>
-                                                    </button>
-                                                </form>
-                                            </li>
-                                            
-
-                               
-                                        </ul>
-                                    </div>
-
-                                </td>
-                            </tr>
-
-                        {% endfor %}
-                    </tbody>
-                {% endif %}
-            </table>
-        </div>  
+        {% include "stock/_report_period_table.html" with object_list=stock_reports %}
+        
     </div>
+</div>
 {% endblock content %}
 
-{% block scripts %}
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.9.0/dist/sweetalert2.all.min.js"></script>
-{% endblock scripts %}
+{% comment %} {% block scripts %}
+    <script type="module" src="{% static 'js/utils/exportSW.js' %}"></script>
+{% endblock scripts %} {% endcomment %}

@@ -423,7 +423,7 @@
                         </div>
                         <div class="mt-4">
                             <div class="relative w-full ">
-                                {% if not active_projects %}
+                                {% if active_projects|length != 0 %}
                                 <table class="w-full caption-bottom overflow-auto text-sm">
                                     <thead class="">
                                         <tr class="hover:bg-muted/50 ">

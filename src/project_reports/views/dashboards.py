@@ -104,7 +104,11 @@ def cluster_5w_dashboard(request, cluster):
             data_dict[disaggregation_name] = {}
 
         data_dict[disaggregation_name][activity_domain] = total_reached
-
+    
+    for category, total_reached in data_dict.items():
+        sum_disaggregation = sum(total_reached.values())
+        data_dict[category]['total']=sum_disaggregation
+        
     context = {
         "cluster": cluster,
         "counts": counts,
@@ -204,6 +208,7 @@ def org_5w_dashboard(request, code):
 
     # Organize data into a dictionary
     data_dict = {}
+
     for entry in reach_by_activity:
         disaggregation_name = entry[
             "activityplanreport__targetlocationreport__disaggregationlocationreport__disaggregation__name"
@@ -215,12 +220,16 @@ def org_5w_dashboard(request, code):
             data_dict[disaggregation_name] = {}
 
         data_dict[disaggregation_name][activity_domain] = total_reached
+      
+    for category, total_reached in data_dict.items():
+        sum_disaggregation = sum(total_reached.values())
+        data_dict[category]['total']=sum_disaggregation
 
     clusters = cache.get("clusters")
     if clusters is None:
         clusters = Cluster.objects.all()
         cache.set("clusters", clusters, 60 * 60 * 24)  # cache for 1 day
-
+    
     context = {
         "org": org,
         "counts": counts,

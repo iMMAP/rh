@@ -9,27 +9,13 @@
         <div class="actions-panel">
             <!-- filter applied  -->
             <div class="filter-container" id="filter-container">
-                <ul class="flex gap-2 items-center">
-                    <span>Applied Filters:</span>
-    
-                    <li class="rounded-full px-2 border border-gray-d1 py-1 {% if not request.GET.state %}bg-red text-white {% endif %}">
-                        <a href="{{ request.path }}">All</a>
-                    </li>
-    
-                    {% for state in report_states %}
-                        <li class="px-2 border border-gray-d1 rounded-full py-1 bg-gray-fa {% if request.GET.state == state.0 %}bg-red text-white{% endif %}">
-                            <a href="{{ request.GET.url }}?state={{state.0}}">{{state.1}}</a>
-                        </li>
-                    {% endfor %}
-    
-                    {% for field in stock_filter.form %}
+                {% for field in stock_filter.form %}
+                    {% if forloop.first %}<span>Applied Filters:</span>{% endif %}
                     {% if field.value %}
                         <span class="filter-item title" id="title">{{ field.label }}</span>
                         {% if forloop.last %}<span class="close-alert-message">x</span>{% endif %}
                     {% endif %}
                 {% endfor %}
-                </ul>
-                
             </div>
             <!-- filter applied end -->
         </div>
@@ -46,37 +32,16 @@
                 <thead class="content-block ">
                     <tr>
                         <th>
-                            <strong class="table-title">Cluster</strong>
+                            <strong class="table-title">Warehouse Name</strong>
                         </th>
                         <th>
-                            <strong class="table-title">Stock Purpose</strong>
+                            <strong class="table-title">Province</strong>
                         </th>
                         <th>
-                            <strong class="table-title">Targeted Groups</strong>
-                        </th>
-                        <th>
-                            <strong class="table-title">Stock Type</strong>
-                        </th>
-                        <th>
-                            <strong class="table-title">Stock Unit</strong>
-                        </th>
-                        <th>
-                            <strong class="table-title">No.In Stock</strong>
-                        </th>
-                        <th>
-                            <strong class="table-title">No.In Pipline</strong>
+                            <strong class="table-title">District</strong>
                         </th>
                         <th>
                             <strong class="table-title">Beneficiary Coverage</strong>
-                        </th>
-                        <th>
-                            <strong class="table-title">No.Of Units Required</strong>
-                        </th>
-                        <th>
-                            <strong class="table-title">No.Of Peope assisted</strong>
-                        </th>
-                        <th>
-                            <strong class="table-title">Stock Status</strong>
                         </th>
                         <th>Actions</th>
                     </tr>
@@ -85,27 +50,31 @@
                     <!--Include The Projects Details Here -->
                     {% for row in object_list %}
                     <tr>
-                            <td>{{ row.cluster }}</td>
-                            <td>{{ row.stock_purpose }}</td>
-                            <td>{{ row.targeted_groups }}</td>
-                            <td>{{row.stock_type}}</td>
-                            <td>{{row.stock_unit}}</td>
-                            <td>{{row.qty_in_stock}}</td>
-                            <td>{{row.qty_in_pipeline}}</td>
-                            <td>{{row.beneficiary_coverage}}</td>
-                            <td>{{row.unit_required}}</td>
-                            <td>{{row.people_to_assisted}}</td>
-                            <td>{{row.status}}</td>
+                            <td>{{ row.name }}</td>
+                            <td>{{ row.province }}</td>
+                            <td>{{ row.district }}</td>
+                            <td>
+                                {% if row.total_beneficiary %}
+                                {{row.total_beneficiary}}
+                                {% else %}
+                                Not Submitted
+                                {% endif %}
+                            </td>
                             <td>
                                 <div class="table-flex-holder">
                                     <ul class="table-options-buttons ">
+                                       <li>
+                                        <a class="btn btn-gray" href="{% url 'stock-report-period' row.id %}" data-tippy-content="Report">
+                                            Report
+                                        </a>    
+                                       </li>
                                         <li>
-                                            <a class="" href="{% url 'update-stock-monthly-report' row.id %}" data-tippy-content="Edit">
+                                            <a class="" href="{% url 'update-warehouse-location' row.id %}" data-tippy-content="Edit">
                                                 <span class="icon-pen"></span>
                                             </a>
                                         </li>
                                         <li>
-                                            <form action="{% url 'copy-stock-monthly-report' row.id %}" method="post">
+                                            <form action="{% url 'copy-warehouse-location' row.id %}" method="post">
                                                 {% csrf_token %}
                                                 <button type="submit" class="btn-gray" data-tippy-content="Duplicate">
                                                     <span class="icon-copy" 
@@ -116,11 +85,11 @@
                                         </li>
                                         <li>
                                             <button>
-                                                <a hx-delete="{% url 'delete-record-stock-report' row.id %}"
+                                                <a hx-delete="{% url 'delete-warehouse-location' row.id %}"
                                                    hx-trigger="click"
                                                    hx-indicator=".progress"
                                                    hx-swap="outerHTML swap:1s"
-                                                   hx-confirm="Do you want to delete this report ?"
+                                                   hx-confirm="Do you want to delete `{{ row }}` ?"
                                                    hx-target="closest tr"
                                                    data-tippy-content="Delete"
                                                 >
@@ -139,7 +108,7 @@
     {% else %}
         <div class="view_nocontent">
             <div class="nocontent_help">
-                <h4>No Stock Report found. Let's create one!</h4>
+                <h4>No Activity Plans found. Let's create one!</h4>
             </div>
         </div>
     {% endif %}

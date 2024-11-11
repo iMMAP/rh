@@ -888,7 +888,7 @@ a.text-decoration-none{
   word-break: break-word;
 }
 
-.completed {
+.completed, .submitted {
   @extend .c-pill;
   border: 1px solid rgb(68, 117, 203);
   background-color: rgb(68, 117, 203,0.3);
@@ -903,14 +903,14 @@ a.text-decoration-none{
   color: rgb(153, 135, 65);
 }
 
-.in-progress {
+.in-progress, .todo{
   @extend .c-pill;
   border: 1px solid #5daa59;
   background: hsl(104, 68%, 78%,0.5);
   color: #5daa59;
 }
 
-.draft, .todo {
+.draft{
   @extend .c-pill;
   border: 1px solid #ffc400;
   background: #ffebb6;

@@ -23,8 +23,7 @@
             <div class="actions-panel">
                 <button class="export-button btn btn-red"
                     data-url="{% url 'export-org-5w-dashboard' user.profile.organization.code %}"
-                    title="Export Reports"
-                >
+                    title="Export Reports">
                     <span class="btn-text">Export Reports</span>
                     <span class="icon-download"></span>
                     <!-- spinner start-->
@@ -266,7 +265,8 @@
 	const requestBody = JSON.stringify({...JSON.parse(jsonData) });
     document.querySelector(".icon-download").style.display='none';
     document.querySelector(".downloading").style.display="block";
-    document.querySelector('.export-button').setAttribute("disabled", "true");
+    const exportButton = document.querySelector('.export-button');
+    exportButton.disabled = true;
     console.log((event.loaded / event.total) * 100);
 	// Send an AJAX request to the export URL
 	fetch(exportUrl, {
@@ -294,7 +294,7 @@
 			console.log(`Error: ${error.message}`);
 		}
 	}).finally(() => {
-        document.querySelector('.export-button').setAttribute("disabled", "false");
+        exportButton.disabled = false;
         document.querySelector(".downloading").style.display = "none";
         document.querySelector(".icon-download").style.display = "inline";
     });

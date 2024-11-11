@@ -1,0 +1,128 @@
+{% extends "_base.html" %}
+{% load static %}
+{% block breadcrumb_li %}
+<li><a href="{% url 'stocks' %}">{{stock_report.warehouse_location.name}}</a></li>
+<li><a href="{% url 'stock-report-period' stock_report.warehouse_location.id %}">{{stock_report.from_date|date:"F Y"}}</a></li>
+<li class="current">Stock Report</li>
+{% endblock %}
+{% block content %}
+<div class="container">
+    <div class="content-block top-border">
+        <div class="project-title">
+            <div class="holder">
+                <strong class="h5">{{ stock_report.from_date| date:"F Y" }}</strong>
+              
+                <ul class="buttons-list-inline">
+                    <li>
+                        <a hx-post="{% url 'monthly-stock-report-delete' stock_report.id %}"
+                           hx-trigger="click"
+                           id="delete-btn"
+                           hx-swap="none"
+                           hx-confirm="Are you sure you want to delete this report?"
+                           data-tippy-content="Delete report"
+                           class="btn btn-gray">
+                            <span class="btn-text">Delete</span>
+                            <span class="project-detail icon-trashbin"></span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'stock-report-period-update' stock_report.id %}"
+                           class="btn btn-gray">
+                           Edit Report Period
+                            <span class="icon-pen"></span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <br />
+        <div class="project-monthly_report read-only">
+            <div class="row">
+                <div class="col">
+                    <div class="multiple-fields-row two-items">
+                        <div class="field-col">
+                            <div class="input-field">
+                                <label>Report From</label>
+                                <span class="text-read-only">{{ stock_report.from_date }}</span>
+                            </div>
+                        </div>
+                        <div class="field-col">
+                            <div class="input-field">
+                                <label>Report To</label>
+                                <span class="text-read-only">{{ stock_report.due_date}}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="multiple-fields-row two-items">
+                        {% if stock_report.submitted_on %}
+                            <div class="field-col">
+                                <div class="input-field">
+                                    <label>Submitted On</label>
+                                    <span class="text-read-only">{{ stock_report.submitted_on }}</span>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="multiple-fields-row two-items">
+                        <div class="field-col">
+                            <div class="input-field">
+                                <label>Report Status</label>
+                                <span class="text-read-only">
+                                    <span class="{{ stock_report.state }}">{{ stock_report.get_state_display }}</span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="activity-planning read-only">
+            <div class="activity-block-holder">
+                <div class="top-activity-block">
+                    <span class="activity-title">
+                        <span>Stock Reporting</span>
+                        <a href="{% url 'stock-report-create' stock_report.id %}" class="btn btn-red" style="float:right">
+                            <svg viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4 text-white">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                            </svg>
+                            Report New Stock
+                        </a>
+                    </span>
+                </div>
+            </div>
+        </div>
+        {% include "stock/stock_report_view.html" with object_list=stock_report_details  %}
+        <br />
+        <div class="monthly-reporting">
+            <div class="row">
+                <div class="col">
+                    <div class="input-field">
+                        <label>Description &amp; Objectives</label>
+                        <span class="text-read-only">{{ stock_report.description }}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="monthly-progress-submit-holder text-center">
+                {% if stock_report.state in "draft,todo,rejected" %}
+                    <a hx-post="{% url 'submit-stock-monthly-report' stock_report.id %}"
+                       hx-trigger="click"
+                       hx-swap="none"
+                       hx-confirm="Are you sure you want to submit report?"
+                       data-tippy-content="Submit report"
+                       class="btn btn-red">
+                        <img class='htmx-indicator'
+                             style="width: 1rem"
+                             src="{% static 'images/spinner.gif' %}" />
+                        Submit Monthly Report
+                    </a>
+                {% elif stock_report.state == "submitted" %}
+                    <button class="btn btn-gray" disabled>
+                        <span class="btn-text">Report submitted</span>
+                    </button>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

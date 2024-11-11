@@ -1,0 +1,145 @@
+{% extends "_base.html" %}
+
+{% load static %}
+
+{% block title %}
+    Stocks
+{% endblock title %}
+{% block breadcrumb_li %}
+    {{block.super}}
+    <li><a href="{% url 'stocks' %}">{{organization}} Warehouse Lists</a></li>
+    {% if form.instance.id %}
+        <li class="current">Updated WarehouseLocation</li> 
+    {% else %}
+        <li class="current">Create WarehouseLocation</li> 
+    {% endif %}
+{% endblock breadcrumb_li %}
+{% block content %}
+    <div class="base-section">
+        <div class="container">
+            <div class="page-navigation-panel">
+                <div class="holder">
+                    <div class="tabs-nav-holder">
+                        <ul class="tabs-nav">
+                            <li class="active">
+                                <a href="{% url 'stocks' %}">warehouse locations</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="activity-planning read-only">
+                <div class="flex items-center justify-between pb-2">
+                    <div class="activity-title">
+                        {% if form.instance.id %}
+                        <span>Update Warehouse Location</span>
+                        {% else %}
+                        <span>Create Warehouse Location</span>
+                        {% endif %}
+                    </div>
+                </div>
+                <br>
+                    <ul class="space-y-2">
+                        <li>
+                            <span class="icon-info mr-2"></span>
+                             Use this form to provide detialed information about your organization Warehouse Location.
+                        </li>
+                        <li>
+                            <span class="icon-info mr-2"></span>
+                            The detailed information is taken from your location. If something is missing plase update your infromation or contact the administrator.
+                        </li>
+                        <li><span class="icon-info mr-2"></span> Required fields are marked with * </li>
+                    </ul>
+            </div>
+            <!-- create warehouse form -->
+            <form method="post" class="form-container">
+                <div class="progress bg-red h-0.5">
+                    <div class="indeterminate bg-white"></div>
+                </div>
+                {% csrf_token %}
+                <div class="inner-holder">
+                    <div class="row">
+                        <div class="col">
+                            <div class="multiple-fields-row three-items">
+                                <div class="field-col">
+                                    <div class="select-field is-required">
+                                        <label for="{{ form.province.id_for_label }}">Province</label>
+                                        <p class="help-text">{{ form.province.help_text }}</p>
+                                        <select required
+                                                name="{{ form.province.name }}"
+                                                id="{{ form.province.id_for_label }}"
+                                                class="form-control"
+                                                hx-get="{% url 'get-locations-details' %}"
+                                                hx-trigger="change"
+                                                hx-target="#{{ form.district.id_for_label }}"
+                                                hx-swap="innerHTML"
+                                                hx-indicator=".progress">
+                                            {% for province in form.province %}{{ province }}{% endfor %}
+                                        </select>
+                                        <div class="sign-up-field-error">{{ form.province.errors }}</div>
+                                    </div>
+                                </div>
+                                <div class="field-col">
+                                    <div class="select-field is-required">
+                                        <label for="{{ form.district.id_for_label }}">District</label>
+                                        <p class="help-text">{{ form.district.help_text }}</p>
+                                        <select required
+                                                name="{{ form.district.name }}"
+                                                id="{{ form.district.id_for_label }}"
+                                                class="form-control"
+                                                hx-swap="innerHTML"
+                                                hx-indicator=".progress">
+                                            {% for dstrct in form.district %}{{ dstrct }}{% endfor %}
+                                        </select>
+                                        <div class="sign-up-field-error">{{ form.district.errors }}</div>
+                                    </div>
+                                </div>
+                                <div class="field-col">
+                                    <div class="input-field">
+                                        <label for="{{ form.name.id_for_label }}">Name</label>
+                                        <div class="input-holder">{{ form.name }}</div>
+                                        <div class="sign-up-field-error">{{ form.name.errors }}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="plan-submit-holder">
+                        {% if form.initial %}
+                            <a id="delete-btn"
+                               hx-delete="{% url 'delete-warehouse-location' form.instance.id %}"
+                               hx-trigger="click"
+                               hx-indicator=".progress"
+                               hx-confirm="Do you want to delete `{{ form.instance.name }}` warehouse ?"
+                               data-tippy-content="Delete Activity Plan"
+                               class="cursor-pointer btn btn-gray">
+                                <span class="project-detail icon-trashbin"></span>
+                                Delete
+                            </a>
+                        {% else %}
+                            <a href="#"></a>
+                        {% endif %}
+                        <div>
+                            {% if form.initial %}
+                            <input type="submit" name="_save" class="btn btn-red" value="Update">
+                            {% else %}
+                            <input type="submit"
+                                   name="_addanother"
+                                   class="btn btn-gray"
+                                   value="Save and add another activity">
+                            <input type="submit" name="_save" class="btn btn-red" value="Save">
+                            {% endif %}
+                            
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+          
+        </div>
+    </div> 
+{% endblock content %}
+
+{% block scripts %}
+
+{% endblock scripts %}

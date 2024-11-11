@@ -1,0 +1,7 @@
+
+    <optgroup>
+      {% for stock_item_type in stock_types %}
+      <option value="{{stock_item_type.id}}">{{stock_item_type.name}}</option>
+      {% endfor %}
+    </optgroup>
+

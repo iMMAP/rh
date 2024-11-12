@@ -243,8 +243,8 @@
                     </svg>
                     <span class="text-sm text-muted-foreground">Donors</span>
                     <span class="font-medium">
-                        {% for implementing_partner in project.implementing_partners.all %}
-                            {{ implementing_partner.code }}
+                        {% for donor in project.donors.all %}
+                            {{ donor.name }}
                             {% if not forloop.last %},{% endif %}
                         {% endfor %}
                     </span>

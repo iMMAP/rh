@@ -41,6 +41,7 @@ def cluster_5w_dashboard(request, cluster):
         "from_date__lte": to_date,
         "to_date__gte": from_date,
         "project__user__profile__country": user_country,
+        "activityplanreport__activity_plan__activity_domain__clusters__in": [cluster],
     }
 
     if organization:

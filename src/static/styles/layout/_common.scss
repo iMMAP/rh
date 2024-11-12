@@ -198,6 +198,21 @@ ul{
   font-weight: 500;
   padding: 0px 15px 10px;
 }
+.unable-content{
+  text-align: center;
+  margin-bottom: 1rem;
+  color: rgba(0,0,0, 0.3);
+}
+.unable-content > *{
+  display: block;
+}
+.unable-content .heading{
+  font-weight: bold;
+}
+.unable-content .sub-heading{
+  color: rgba(0,0,0, 0.4);
+  font-weight: 500;
+}
 .export-formats .title{
   padding:  8px 15px 0px;
 }
@@ -209,6 +224,7 @@ ul{
 .export-link-holder{
   padding: 8px 6px;
   transition: all 0.5s ease;
+  display: block;
 }
 .export-link-holder:hover{
   background-color: rgb(253, 207, 207);

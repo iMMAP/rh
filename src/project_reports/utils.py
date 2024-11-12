@@ -99,6 +99,9 @@ def write_project_report_sheet(workbook, monthly_progress_report):
         else:
             continue
 
+    disaggregation_list.append("total")
+    disaggregation_cols.append({"header": "total", "type": "string", "width": 20})
+
     if disaggregations:
         for disaggregation_col in disaggregation_cols:
             columns.append(disaggregation_col)
@@ -274,7 +277,10 @@ def write_project_report_sheet(workbook, monthly_progress_report):
                         disaggregation_location.disaggregation.name: disaggregation_location.reached
                         for disaggregation_location in disaggregation_locations
                     }
-
+                    total_disaggregation = 0
+                    for value in disaggregation_location_list.values():
+                        total_disaggregation += value
+                    disaggregation_location_list["total"] = total_disaggregation
                     # Update disaggregation_data with values from disaggregation_location_list
                     for disaggregation_entry in disaggregation_list:
                         if disaggregation_entry not in disaggregation_location_list:

@@ -205,10 +205,10 @@ urlpatterns = [
         export_views.project_export_excel_view,
         name="export_project_excel",
     ),
-    # Filter Export
+    # single project export
     path(
-        "project/export/<int:projectId>",
-        export_views.project_filter_export_view,
-        name="export_project_filter",
+        "project/export/<str:pk>/<str:format>",
+        export_views.single_project_export,
+        name="single-project-export",
     ),
 ]

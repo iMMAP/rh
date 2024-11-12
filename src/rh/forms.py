@@ -136,7 +136,9 @@ class TargetLocationForm(forms.ModelForm):
         user = kwargs.pop("user", None)
         activity_plan = kwargs.pop("activity_plan", None)
         super().__init__(*args, **kwargs)
-
+        implementing_partners_list = []
+        for partner in activity_plan.project.implementing_partners.all():
+            implementing_partners_list.append(partner.id)
         self.fields["country"].disabled = True
         self.fields["country"].initial = user.profile.country
         self.fields["country"].required = True  # Ensure the field is required
@@ -150,7 +152,7 @@ class TargetLocationForm(forms.ModelForm):
         self.fields["zone"].queryset = Location.objects.none()
 
         self.fields["implementing_partner"].queryset = self.fields["implementing_partner"].queryset.filter(
-            countries=user.profile.country
+            countries=user.profile.country, id__in=implementing_partners_list
         )
 
         self.fields["facility_site_type"].queryset = (

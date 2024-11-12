@@ -152,7 +152,7 @@ class TargetLocationForm(forms.ModelForm):
         self.fields["zone"].queryset = Location.objects.none()
 
         self.fields["implementing_partner"].queryset = self.fields["implementing_partner"].queryset.filter(
-            countries=user.profile.country, id__in=implementing_partners_list
+            id__in=implementing_partners_list
         )
 
         self.fields["facility_site_type"].queryset = (

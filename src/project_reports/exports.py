@@ -39,15 +39,18 @@ def cluster_5w_dashboard_export(request, code):
     if not to_date:
         to_date = datetime.datetime.now().date()
 
+    user_country = request.user.profile.country
+
     filter_params = {
         "project__clusters__in": [cluster],
         "state__in": ["submited", "completed"],
         "from_date__lte": to_date,
         "to_date__gte": from_date,
+        "project__user__profile__country": user_country,
     }
 
     organization_code = body.get("organization")
-    if organization_code is not None:
+    if organization_code:
         filter_params["project__organization__code"] = organization_code
 
     if not is_cluster_lead(
@@ -80,6 +83,7 @@ def cluster_5w_dashboard_export(request, code):
             .filter(**filter_params)
             .distinct()
         )
+
         workbook = Workbook()
         # write the data into excel sheet
         write_project_report_sheet(workbook, project_reports)

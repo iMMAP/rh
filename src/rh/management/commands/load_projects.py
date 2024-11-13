@@ -8,7 +8,6 @@ from django.db import connection
 from django.db.models import Q
 from django.utils import timezone
 from users.models import Profile
-from django.shortcuts import get_object_or_404
 
 from rh.models import (
     ActivityDetail,

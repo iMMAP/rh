@@ -135,7 +135,7 @@ class TargetLocationForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         user = kwargs.pop("user", None)
         activity_plan = kwargs.pop("activity_plan", None)
-        
+
         super().__init__(*args, **kwargs)
         self.fields["country"].disabled = True
         self.fields["country"].initial = user.profile.country
@@ -149,9 +149,8 @@ class TargetLocationForm(forms.ModelForm):
 
         self.fields["zone"].queryset = Location.objects.none()
 
-        self.fields["implementing_partner"].queryset = self.fields["implementing_partner"].queryset.filter(
-            id__in=activity_plan.project.implementing_partners.all()
-        )
+        self.fields["implementing_partner"].queryset = activity_plan.project.implementing_partners.all()
+    
 
         self.fields["facility_site_type"].queryset = (
             self.fields["facility_site_type"]

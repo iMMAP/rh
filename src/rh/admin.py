@@ -297,6 +297,7 @@ class ProjectAdmin(admin.ModelAdmin):
         "state",
     )
     search_fields = (
+        "old_id",
         "title",
         "code",
         "clusters__title",

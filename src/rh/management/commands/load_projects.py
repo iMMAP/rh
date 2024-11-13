@@ -8,6 +8,7 @@ from django.db import connection
 from django.db.models import Q
 from django.utils import timezone
 from users.models import Profile
+from django.shortcuts import get_object_or_404
 
 from rh.models import (
     ActivityDetail,
@@ -328,5 +329,33 @@ class Command(BaseCommand):
         self._load_target_locations()
         self.stdout.write(self.style.SUCCESS("ALL DONE!"))
 
+    def _update_projects(self):
+        # Import the actvity_domain, activity_types, activity_details
+        path = os.path.join(BASE_DIR.parent, "scripts/data/updated_nov_2023/projects.xlsx")
+        df = pd.read_excel(path)
+        df.fillna(False, inplace=True)
+
+        projects = df.to_dict(orient="records")
+        projects_updated = 0
+        for index, project_vals in enumerate(projects):
+            try:
+                project = Project.objects.filter(old_id=project_vals.get("_id", "test"))
+                if project.exists():
+                    cluster_ids = project_vals.get("cluster_id").split(",")
+                    cluster = Cluster.objects.filter(code__in=cluster_ids)
+                    project[0].clusters.set(cluster)
+                    project[0].save()
+                    projects_updated += 1
+            except Exception as e:
+                print(e, index)
+
+        self.stdout.write(self.style.SUCCESS(f"{projects_updated} Projects - updated successfully"))
+
+    def _update_data(self):
+        # Update Projects
+        self.stdout.write(self.style.SUCCESS("Updating Projects!"))
+        self._update_projects()
+
     def handle(self, *args, **options):
-        self._import_data()
+        # self._import_data()
+        self._update_data()

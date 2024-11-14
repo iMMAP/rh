@@ -22,12 +22,27 @@
         <div class="top-panel pb-2 pt-4 flex flex-col items-center justify-between gap-2 sm:flex-row">
             <h2 class="locations text-red-be">{{ request.resolver_match.kwargs.cluster|capfirst }} 5W Dashboard</h2>
             <div class="actions-panel">
+                <button class="export-button btn btn-gray"
+                    data-url="{% url 'cluster-5w-stock-report-export' request.resolver_match.kwargs.cluster %}"
+                    title="{{request.resolver_match.kwargs.cluster }}_5w_stock_reports_">
+                    <span class="btn-text">Export Stocks Reports</span>
+                    <span class="icon-download"></span>
+                    <!-- spinner start-->
+                    <img class="downloading"
+                         style="width: 1.2rem"
+                         src="{% static 'images/spinner.gif' %}" />
+                    <!-- spinner end -->
+                </button>
                 <button class="export-button btn btn-red"
                     data-url="{% url 'export-cluster-5w-dashboard' request.resolver_match.kwargs.cluster %}"
-                    title="Export Reports"
-                >
-                    <span class="btn-text">Export Reports</span>
+                    title="{{request.resolver_match.kwargs.cluster }}_5w_projects_reports_">
+                    <span class="btn-text">Export Projects Reports</span>
                     <span class="icon-download"></span>
+                    <!-- spinner start-->
+                    <img class="downloading"
+                         style="width: 1.2rem"
+                         src="{% static 'images/spinner.gif' %}" />
+                    <!-- spinner end -->
                 </button>
             </div>
         </div>
@@ -261,11 +276,19 @@ options: {
 });
 
 {% comment %} export {% endcomment %}
-document.querySelector(".export-button")?.addEventListener("click",(event) => {
+document.querySelectorAll(".export-button")?.forEach(button => {
+    button.addEventListener("click", (event) => {
 	event.preventDefault();
 	event.stopPropagation();
-	// Get the export URL from the button's data-url attribute
-	const exportUrl = event.target.closest("button").getAttribute("data-url");
+
+    const exportUrl = button.getAttribute("data-url");
+    const iconDownload = button.querySelector(".icon-download");
+    const iconSpinner = button.querySelector(".downloading");
+    // extract the file name
+    let name = button.getAttribute("title");
+    const today = new Date()
+    const formatDate = today.toISOString().split('T')[0];
+    let file_name = name+formatDate;
 
 	// Get the form data
 	const formData = new FormData(document.getElementById('5w-filter-form'));
@@ -275,7 +298,10 @@ document.querySelector(".export-button")?.addEventListener("click",(event) => {
 
 	// Include the JSON data in the fetch body
 	const requestBody = JSON.stringify({...JSON.parse(jsonData) });
-
+    iconDownload.style.display='none';
+    iconSpinner.style.display="block";
+    button.disabled = true;
+    console.log((event.loaded / event.total) * 100);
 	// Send an AJAX request to the export URL
 	fetch(exportUrl, {
 		method: "POST",
@@ -285,24 +311,31 @@ document.querySelector(".export-button")?.addEventListener("click",(event) => {
 		},
 		body: requestBody,
 	})
-	.then(response => response.json())
-	.then(response => {
-		// Create a temporary download link and click it to trigger the file download
-		const link = document.createElement("a");
-		link.href = response.file_url;
-		link.download = response.file_name;
-		document.body.appendChild(link);
-		link.click();
-		document.body.removeChild(link);
+	.then(response =>  {
+        return response.blob();
 	})
+    .then(blob =>{
+        const link = document.createElement("a");
+        const url = URL.createObjectURL(blob);
+        link.href = url;
+        link.download = file_name+".csv";
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+    })
 	.catch((error) => {
 		if (error.status === 400) {
 			console.log("Error: No records selected for export");
 		} else {
 			console.log(`Error: ${error.message}`);
 		}
-	});
-});
+	}).finally(() => {
+        button.disabled = false;
+        iconSpinner.style.display = "none";
+        iconDownload.style.display = "inline";
+    });
+})});
 
 </script>
 {% endblock scripts %}

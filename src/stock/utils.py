@@ -5,6 +5,7 @@ def write_csv_columns_and_rows(all_monthly_report, response):
     writer = csv.writer(response)
     columns = [
         "project",
+        "cluster",
         "stock_item_type",
         "stock_purpose",
         "stock_unit",
@@ -41,6 +42,7 @@ def write_csv_columns_and_rows(all_monthly_report, response):
         for report in stock_reports:
             row = [
                 report.project.code if report.project else None,
+                report.cluster if report.cluster else None,
                 report.stock_item_type if report.stock_item_type else None,
                 report.stock_purpose if report.stock_purpose else None,
                 report.stock_unit if report.stock_unit else None,

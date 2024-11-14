@@ -14,11 +14,11 @@ class WarehouseForm(forms.ModelForm):
         # exclude = ['id']
 
     def __init__(self, *args, **kwargs):
-        user = kwargs.pop('user',None)
+        user = kwargs.pop("user", None)
         super().__init__(*args, **kwargs)
 
         self.fields["province"].required = True
-        self.fields["province"].queryset = self.fields["province"].queryset.filter(level=1,parent=user.profile.country)
+        self.fields["province"].queryset = self.fields["province"].queryset.filter(level=1, parent=user.profile.country)
 
         self.fields["district"].queryset = Location.objects.filter(level=2)
         self.fields["district"].required = True

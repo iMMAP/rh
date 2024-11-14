@@ -87,11 +87,7 @@ def update_warehouse_location(request, pk):
     warehouse_location = get_object_or_404(Warehouse, pk=pk)
     user_org = request.user.profile.organization
     if request.method == "POST":
-        form = WarehouseForm(
-            request.POST, 
-            instance=warehouse_location,
-            user=request.user
-            )
+        form = WarehouseForm(request.POST, instance=warehouse_location, user=request.user)
         if form.is_valid():
             location = form.save(commit=False)
             location.organization = user_org
@@ -106,10 +102,7 @@ def update_warehouse_location(request, pk):
         else:
             messages.error(request, "Something went wrong. Please fix the below error.")
     else:
-        form = WarehouseForm(
-            instance=warehouse_location,
-            user=request.user
-            )
+        form = WarehouseForm(instance=warehouse_location, user=request.user)
     context = {"form": form, "warhouse": warehouse_location, "organization": user_org}
     return render(request, "stock/create_warehouse_location_form.html", context)
 
@@ -167,6 +160,8 @@ def stock_report_period_list(request, pk):
         # "submitted_stock_reports": submitted_stock_reports,
     }
     return render(request, "stock/all_stock_report.html", context)
+
+
 # Stock monthly Report
 @login_required
 def stock_details_view(request, pk):
@@ -189,6 +184,7 @@ def stock_details_view(request, pk):
         "report_states": StockReport.STATUS_TYPES,
     }
     return render(request, "stock/stock_details_view.html", context)
+
 
 @login_required
 def create_stock_report_period(request, warehouse):
@@ -231,11 +227,7 @@ def update_stock_report_period(request, report):
 
     # Create a new date representing the end of the current month
     end_of_month = datetime(current_date.year, current_date.month, last_day)
-    form = StockMonthlyReportForm(
-        request.POST or None, 
-        initial={"due_date": end_of_month}, 
-        instance=monthly_report
-        )
+    form = StockMonthlyReportForm(request.POST or None, initial={"due_date": end_of_month}, instance=monthly_report)
 
     if request.method == "POST":
         if form.is_valid():
@@ -259,9 +251,6 @@ def delete_stock_report_period(request, pk):
     monthly_report.delete()
     messages.success(request, f"{monthly_report} Report has been deleted.")
     return HttpResponse(status=200)
-
-
-
 
 
 @login_required
@@ -309,7 +298,7 @@ def update_stock_monthly_report(request, pk):
     stock_report = get_object_or_404(StockReport, pk=pk)
     monthly_report = stock_report.monthly_report
     if request.method == "POST":
-        form = StockReportForm(request.POST, instance=stock_report,user=request.user)
+        form = StockReportForm(request.POST, instance=stock_report, user=request.user)
         if form.is_valid():
             form.save()
             messages.success(request, "Report has been updated. ")
@@ -317,7 +306,7 @@ def update_stock_monthly_report(request, pk):
         else:
             messages.error(request, "Something went wrong. Please fix the below errors.")
     else:
-        form = StockReportForm(instance=stock_report,user=request.user)
+        form = StockReportForm(instance=stock_report, user=request.user)
     context = {"form": form, "monthly_report": monthly_report}
     return render(request, "stock/stock_report_form.html", context)
 

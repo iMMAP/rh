@@ -1,3 +1,4 @@
+import csv
 import datetime
 
 from openpyxl.styles import Font, NamedStyle
@@ -11,82 +12,72 @@ header_style = NamedStyle(name="header")
 header_style.font = Font(bold=True)
 
 
-def write_project_report_sheet(workbook, monthly_progress_report):
-    """
-    Write the project monthly report sheet to the workbook.
-
-    Args:
-        workbook (Workbook): The Excel workbook object.
-        project_report (Project): The project_report object.
-    """
-    sheet = workbook.active
-    sheet.title = "Monthly Report"
-
-    # Define column headers and types
+def write_projects_reports_to_csv(monthly_progress_report, response):
+    writer = csv.writer(response)
     columns = [
-        {"header": "project_code", "type": "string", "width": 20},
-        {"header": "report_id", "type": "string", "width": 20},
-        {"header": "cluster_name", "type": "string", "width": 20},
-        {"header": "focal_person_ame", "type": "string", "width": 20},
-        {"header": "focal_person_phone", "type": "string", "width": 20},
-        {"header": "focal_person_email", "type": "string", "width": 40},
-        {"header": "organization", "type": "string", "width": 40},
-        {"header": "organization_type", "type": "string", "width": 40},
-        {"header": "program_partner", "type": "string", "width": 40},
-        {"header": "project_hrp-code", "type": "string", "width": 50},
-        {"header": "project_title", "type": "string", "width": 40},
-        {"header": "project_start_date", "type": "date", "width": 20},
-        {"header": "project_end_date", "type": "date", "width": 20},
-        {"header": "project_status", "type": "string", "width": 20},
-        {"header": "response_types", "type": "string", "width": 20},
-        {"header": "project_donor", "type": "string", "width": 20},
-        {"header": "project_budget", "type": "string", "width": 20},
-        {"header": "project_budget_currency", "type": "string", "width": 20},
-        {"header": "report_month_number", "type": "string", "width": 20},
-        {"header": "report_month", "type": "string", "width": 20},
-        {"header": "report_year", "type": "string", "width": 20},
-        {"header": "report_period", "type": "string", "width": 20},
-        {"header": "implementing_partner", "type": "string", "width": 50},
-        {"header": "admin0pcode", "type": "string", "width": 20},
-        {"header": "admin0name", "type": "string", "width": 20},
-        {"header": "region_name", "type": "string", "width": 20},
-        {"header": "admin1pcode", "type": "string", "width": 20},
-        {"header": "admin1name", "type": "string", "width": 20},
-        {"header": "admin2pcode", "type": "string", "width": 20},
-        {"header": "admin2name", "type": "string", "width": 20},
-        {"header": "site_lat", "type": "string", "width": 20},
-        {"header": "site_long", "type": "string", "width": 20},
-        {"header": "facility_monitoring", "type": "string", "width": 20},
-        {"header": "facility_site_type", "type": "string", "width": 20},
-        {"header": "facility_site_name", "type": "string", "width": 20},
-        {"header": "facility_site_id", "type": "string", "width": 20},
-        {"header": "facility_site_lat", "type": "string", "width": 20},
-        {"header": "facility_site_long", "type": "string", "width": 20},
-        {"header": "non-hrp_beneficiary_code", "type": "string", "width": 60},
-        {"header": "non-hrp_beneficiary_name", "type": "string", "width": 60},
-        {"header": "hrp_beneficiary_code", "type": "string", "width": 60},
-        {"header": "hrp_beneficiary_name", "type": "string", "width": 60},
-        {"header": "beneficiary_category", "type": "string", "width": 20},
-        {"header": "activity_domain_code", "type": "string", "width": 60},
-        {"header": "activity_domain_name", "type": "string", "width": 60},
-        {"header": "activity_type_code", "type": "string", "width": 60},
-        {"header": "activity_type_name", "type": "string", "width": 60},
-        {"header": "activity_detail_code", "type": "string", "width": 60},
-        {"header": "activity_detail_name", "type": "string", "width": 60},
-        {"header": "indicator_name", "type": "string", "width": 60},
-        {"header": "beneficiary_status", "type": "string", "width": 40},
-        {"header": "beneficiaries_retargeted", "type": "string", "width": 40},
-        {"header": "units", "type": "string", "width": 20},
-        {"header": "unit_type_name", "type": "string", "width": 20},
-        {"header": "transfer_type_value", "type": "string", "width": 20},
-        {"header": "implementation_modality_type_name", "type": "string", "width": 20},
-        {"header": "transfer_mechanism_type_name", "type": "string", "width": 20},
-        {"header": "package_type_name", "type": "string", "width": 20},
-        {"header": "transfer_category_name", "type": "string", "width": 20},
-        {"header": "grant_type", "type": "string", "width": 20},
-        {"header": "currency", "type": "string", "width": 20},
-        {"header": "updated_at", "type": "string", "width": 20},
-        {"header": "created_at", "type": "string", "width": 20},
+        "project_code",
+        "report_id",
+        "cluster_name",
+        "focal_person_ame",
+        "focal_person_phone",
+        "focal_person_email",
+        "organization",
+        "organization_type",
+        "program_partner",
+        "project_hrp-code",
+        "project_title",
+        "project_start_date",
+        "project_end_date",
+        "project_status",
+        "response_types",
+        "project_donor",
+        "project_budget",
+        "project_budget_currency",
+        "report_month_number",
+        "report_month",
+        "report_year",
+        "report_period",
+        "implementing_partner",
+        "admin0pcode",
+        "admin0name",
+        "region_name",
+        "admin1pcode",
+        "admin1name",
+        "admin2pcode",
+        "admin2name",
+        "site_lat",
+        "site_long",
+        "facility_monitoring",
+        "facility_site_type",
+        "facility_site_name",
+        "facility_site_id",
+        "facility_site_lat",
+        "facility_site_long",
+        "non-hrp_beneficiary_code",
+        "non-hrp_beneficiary_name",
+        "hrp_beneficiary_code",
+        "hrp_beneficiary_name",
+        "beneficiary_category",
+        "activity_domain_code",
+        "activity_domain_name",
+        "activity_type_code",
+        "activity_type_name",
+        "activity_detail_code",
+        "activity_detail_name",
+        "indicator_name",
+        "beneficiary_status",
+        "beneficiaries_retargeted",
+        "units",
+        "unit_type_name",
+        "transfer_type_value",
+        "implementation_modality_type_name",
+        "transfer_mechanism_type_name",
+        "package_type_name",
+        "transfer_category_name",
+        "grant_type",
+        "currency",
+        "updated_at",
+        "created_at",
     ]
     disaggregation_cols = []
     disaggregations = Disaggregation.objects.all()
@@ -95,31 +86,19 @@ def write_project_report_sheet(workbook, monthly_progress_report):
     for disaggregation in disaggregations:
         if disaggregation.name not in disaggregation_list:
             disaggregation_list.append(disaggregation.name)
-            disaggregation_cols.append({"header": disaggregation.name, "type": "string", "width": 20})
+            disaggregation_cols.append(disaggregation.name)
         else:
             continue
 
     disaggregation_list.append("total")
-    disaggregation_cols.append({"header": "total", "type": "string", "width": 20})
+    disaggregation_cols.append("total")
 
     if disaggregations:
         for disaggregation_col in disaggregation_cols:
             columns.append(disaggregation_col)
-    # write column headers in excel sheet
-    for idx, column in enumerate(columns, start=1):
-        cell = sheet.cell(row=1, column=idx, value=column["header"])
-        cell.style = header_style
 
-    column_letter = get_column_letter(idx)
-    if column["type"] == "number":
-        sheet.column_dimensions[column_letter].number_format = "General"
-    elif column["type"] == "date":
-        sheet.column_dimensions[column_letter].number_format = "mm-dd-yyyy"
-
-    sheet.column_dimensions[column_letter].width = column["width"]
-    # write the rows with report data
-
-    rows = []
+    # write csv columns
+    writer.writerow(columns)
 
     try:
         for project_reports in monthly_progress_report:
@@ -289,23 +268,12 @@ def write_project_report_sheet(workbook, monthly_progress_report):
                     disaggregation_location_list.update(disaggregation_data)
 
                     # Append disaggregation values to the row in the order of columns
-                    for column in columns:
-                        header = column["header"]
-                        if header in disaggregation_location_list:
-                            row.append(disaggregation_location_list[header])
+                    for column_name in columns:
+                        if column_name in disaggregation_location_list:
+                            row.append(disaggregation_location_list[column_name])
 
-                    # Add row to the list of rows
-                    rows.append(row)
+                    writer.writerow(row)
 
-            for row_idx, row in enumerate(rows, start=2):
-                for col_idx, value in enumerate(row, start=1):
-                    try:
-                        sheet.cell(row=row_idx, column=col_idx, value=value)
-                    except Exception as e:
-                        print("Error:", e)
-
-        # Correct syntax to freeze panes
-        sheet.freeze_panes = "A2"
     except Exception as e:
         print("Error:", e)
 

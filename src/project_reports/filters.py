@@ -14,6 +14,15 @@ class MonthlyReportsFilter(django_filters.FilterSet):
     # Define the DateFromToRangeFilter with initial value of current month
     # current_month = datetime.date.today().replace(day=1)
     # from_date = django_filters.DateFromToRangeFilter(widget=RangeWidget(attrs={"type": "date"}))
+    from_date = django_filters.DateFilter(
+        widget=forms.DateInput(
+            attrs={
+                "type": "date",
+            }
+        )
+    )
+    to_date = django_filters.DateFilter(widget=forms.DateInput(attrs={"type": "date"}))
+
     class Meta:
         model = ProjectMonthlyReport
         fields = ["from_date", "to_date", "state"]

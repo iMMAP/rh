@@ -154,8 +154,18 @@ urlpatterns = [
         name="export-cluster-5w-dashboard",
     ),
     path(
+        "stock-reports/cluster/<str:code>/export",
+        export_views.cluster_5w_stock_report_export,
+        name="cluster-5w-stock-report-export",
+    ),
+    path(
         "project/monthly-report/export/<int:pk>",
         export_views.export_monthly_report_view,
         name="export_monthly_report",
+    ),
+    path(
+        "stock/report/organization/<str:code>/export",
+        export_views.export_org_stock_monthly_report,
+        name="export-org-5w-stock-reports",
     ),
 ]

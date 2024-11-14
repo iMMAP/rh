@@ -4,6 +4,7 @@ import logging
 from .base import *
 
 APP_ENV = env("APP_ENV", default="local")
+ALLOWED_HOSTS = ["*"]
 
 if not TESTING:
     INSTALLED_APPS = [

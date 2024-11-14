@@ -3,7 +3,7 @@ import json
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
-from django.db.models import Sum
+from django.db.models import F, Q, Sum
 from django.forms import inlineformset_factory
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
@@ -67,11 +67,17 @@ def list_report_target_locations(request, project, report, plan=None):
         )
         .order_by("-updated_at")
         .annotate(
-            total_target_reached=Sum("disaggregationlocationreport__reached", distinct=True),
-            total_target=Sum("target_location__disaggregationlocation__target"),
+            total_target_reached=Sum(
+                "disaggregationlocationreport__reached",
+                filter=Q(
+                    disaggregationlocationreport__target_location_report__target_location_id=F("target_location_id")
+                ),
+            )
         ),
         report=monthly_report_instance,
     )
+
+    # Get the target location total_target here
 
     per_page = request.GET.get("per_page", 10)
     paginator = Paginator(tl_filter.qs, per_page=per_page)

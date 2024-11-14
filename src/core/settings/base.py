@@ -18,8 +18,6 @@ DJANGO_SETTINGS_MODULE = env("DJANGO_SETTINGS_MODULE", default="core.settings.lo
 DEBUG = env("DEBUG", default=True)
 APP_NAME = env("APP_NAME", default="ReportHub")
 
-ALLOWED_HOSTS = ["*"]
-
 # Application definition
 INSTALLED_APPS = [
     # Default django apps

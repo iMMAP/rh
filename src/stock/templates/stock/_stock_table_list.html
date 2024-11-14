@@ -1,5 +1,5 @@
 {% load static %}
-
+{% load humanize %}
 <div class="content-block bottom-border table-container">
     <div class="progress bg-red h-0.5">
         <div class="indeterminate bg-white"></div>
@@ -55,7 +55,7 @@
                             <td>{{ row.district }}</td>
                             <td>
                                 {% if row.total_beneficiary %}
-                                {{row.total_beneficiary}}
+                                {{row.total_beneficiary|intcomma}}
                                 {% else %}
                                 Not Submitted
                                 {% endif %}

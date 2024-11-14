@@ -46,6 +46,15 @@ class StockReportFilter(django_filters.FilterSet):
 
 
 class StockMonthlyReportFilter(django_filters.FilterSet):
+    from_date = django_filters.DateFilter(
+        widget=forms.DateInput(
+            attrs={
+                "type": "date",
+            }
+        )
+    )
+    due_date = django_filters.DateFilter(widget=forms.DateInput(attrs={"type": "date"}))
+
     class Meta:
         model = StockMonthlyReport
         fields = ["from_date", "due_date", "state"]

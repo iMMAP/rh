@@ -28,11 +28,8 @@
         <!-- filter applied end -->
 
         <div class="actions-panel">
-            <a href="#" 
-            class="btn btn-gray export-monthly-report"
-            data-request-url='{% url "export_monthly_report" project.pk%}'
-            data-field-from="{{reports_filter.form.from_date.value}}" 
-            data-field-to="{{reports_filter.form.to_date.value}}"
+            <a href="{% url 'export_monthly_report' project.pk%}?{{request.GET.urlencode}}" 
+            class="btn btn-gray"
             >Export 
             <span class="icon-download"></span>
             <!-- spinner start-->

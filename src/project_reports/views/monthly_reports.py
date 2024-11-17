@@ -763,7 +763,8 @@ def download_project_monthly_report_view(request, report):
 
             if disaggregations:
                 for disaggregation_col in disaggregation_cols:
-                    columns.append(disaggregation_col)
+                    if disaggregation_col not in columns:
+                        columns.append(disaggregation_col)
     # write the column header to the csv file
 
     writer.writerow(columns)

@@ -1,7 +1,7 @@
 from datetime import date
 
-from django import forms
 import django_filters
+from django import forms
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.models import User
@@ -14,7 +14,6 @@ from django.template import loader
 from django.views.decorators.http import require_http_methods
 from extra_settings.models import Setting
 from openpyxl import Workbook
-
 from rh.models import Cluster
 
 from ..forms import (
@@ -26,14 +25,10 @@ from ..utils import has_permission, write_users_sheet
 
 class UsersFilter(django_filters.FilterSet):
     clusters = django_filters.ModelMultipleChoiceFilter(
-        field_name='profile__clusters',
+        field_name="profile__clusters",
         label="Clusters",
-        queryset=Cluster.objects.all(), 
-        widget=forms.SelectMultiple(
-            attrs={
-                "class": "input-select"
-                }
-            )
+        queryset=Cluster.objects.all(),
+        widget=forms.SelectMultiple(attrs={"class": "input-select"}),
     )
     last_login = django_filters.DateRangeFilter(field_name="last_login")
     date_joined = django_filters.DateRangeFilter(field_name="date_joined")
@@ -41,9 +36,7 @@ class UsersFilter(django_filters.FilterSet):
     class Meta:
         model = User
         # fields = "__all__"
-        fields = ["username", "email", "first_name", "last_name","clusters", "is_active"]
-
-        
+        fields = ["username", "email", "first_name", "last_name", "clusters", "is_active"]
 
 
 #############################################

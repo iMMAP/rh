@@ -1,0 +1,89 @@
+{% extends "email_templates/email_base.html" %}
+
+{% block email-title %}
+   Email Notification
+{% endblock email-title %}
+
+{% block email-body %}
+    <tr>
+        <td style="padding:0 0 21px;
+                   font:12px/14px Arial, Helvetica, sans-serif;
+                   color:#6d6e71;
+                   letter-spacing:-0.12px">
+           
+            <b style="color:#9a332b">Hi {{admin.first_name}} {{admin.last_name}}</b>
+            A new user has created an account in ReportHub using the organization 
+            <b>{{admin.profile.organization.name}}</b> for the first time.
+            The details are provided below:
+        </td>
+    </tr>
+    <tr>
+        <td style="padding:0 0 21px;
+        font:12px/14px Arial, Helvetica, sans-serif;
+        color:#6d6e71;
+        letter-spacing:-0.12px">
+            <div style="display: grid;grid-template-columns: 50% 50%;">
+                <div style="border-bottom:1px solid #ECECEC ; width: 60%;padding:5px 0px 0px 0px ">
+                    <strong>Full Name</strong><br>
+                    <p style="padding: 3px 0px;font-size: 11px;">{{user.first_name}} {{user.last_name}}</p>
+                </div>
+                <div style="border-bottom:1px solid #ECECEC ; width: 60%;padding:5px 0px 0px 0px ">
+                    <strong>Email</strong><br>
+                    <p style="padding: 3px 0px;font-size: 11px;">{{user.email}}</p>
+                </div>
+                <div style="border-bottom:1px solid #ECECEC ; width: 60%;padding:5px 0px 0px 0px ">
+                    <strong>Position</strong><br>
+                    <p style="padding: 3px 0px;font-size: 11px;">{{user.profile.position}}</p>
+                </div>
+                <div style="border-bottom:1px solid #ECECEC ; width: 60%;padding:5px 0px 0px 0px ">
+                    <strong>Clusters/Sectors</strong><br>
+                    <p style="padding: 3px 0px;font-size: 11px;">
+                        {% for clstr in user.profile.clusters.all %}
+                        {{clstr.code }},
+                        {% endfor %}
+                    </p>
+                </div>
+                <div style="border-bottom:1px solid #ECECEC ; width: 50%;padding:5px 0px 0px 0px ">
+                    <strong>Country</strong><br>
+                    <p style="padding: 3px 0px;font-size: 11px;">{{user.profile.country}}</p>
+                </div>
+                <div style="border-bottom:1px solid #ECECEC ; width: 50%;padding:5px 0px 0px 0px ">
+                    <strong>Date Joined</strong><br>
+                    <p style="padding: 3px 0px;font-size: 11px;">{{user.date_joined}}</p>
+                </div>
+            </div>
+            <p style="margin-top: 30px;">If you do not recognize this user as a member of <b>{{admin.profile.organization.code}}</b>, 
+                please disable them from the User Profile Page or simply click the button below to take action.
+            </p>
+        </td>
+    </tr>
+    <tr>
+        <td style="padding:0 0 21px;
+            font:12px/14px Arial, Helvetica, sans-serif;
+            color:#6d6e71;
+            letter-spacing:-0.12px">
+            
+        </td>
+    </tr>
+
+    <tr>
+        <td style="padding:0 0 17px;">
+            <table align="right" cellpadding="0" cellspacing="0">
+                <tr>
+                    <td class="active-t btn-01"
+                        align="center"
+                        style="background:#9a332b;
+                               mso-padding-alt:4px 30px;
+                               font:700 13px/16px Arial, Helvetica, sans-serif;
+                               color:#fff">
+                        <a style="color:#fff;
+                                  text-decoration:none;
+                                  display:block;
+                                  padding:4px 30px"
+                           href="{{ protocol }}://{{ domain }}{% url 'profiles-show' username %}">Go to Profile</a>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+{% endblock email-body %}

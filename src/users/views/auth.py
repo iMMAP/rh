@@ -98,6 +98,7 @@ def register_view(request):
                 user.groups.add(Group.objects.get(name="ORG_USER"))
 
                 messages.success(request, f"Account created successfully for {username}.")
+                send_account_notification_email(request, user)
                 return redirect("login")
             else:
                 # If production mode send a verification email to the user for account activation
@@ -111,13 +112,9 @@ def register_view(request):
                 p_form.save_m2m()
 
                 user.groups.add(Group.objects.get(name="ORG_USER"))
-
+                send_account_notification_email(request, user)
                 return send_account_activation_email(request, user, email)
-        # else:
-        #     for error in list(u_form.errors.values()):
-        #         messages.error(request, error)
-        #     for error in list(p_form.errors.values()):
-        #         messages.error(request, error)
+
     else:
         u_form = UserRegisterForm()
         p_form = ProfileCreateForm()
@@ -167,3 +164,30 @@ def logout_view(request):
     messages.info(request, f"{request.user} logged out.")
     logout(request)
     return redirect("/login")
+
+
+def send_account_notification_email(request, user):
+    """Email notification for new user registration"""
+    # get organization admins
+    user_org = user.profile.organization
+    User = get_user_model()
+    org_admin_group = Group.objects.get(name="ORG_LEAD")
+    org_admins = User.objects.filter(groups=org_admin_group, profile__organization=user_org)
+
+    current_site = get_current_site(request)
+    mail_subject = "New User Registeration "
+    for admin in org_admins:
+        message = loader.render_to_string(
+            "users/emails/notification_email_template.html",
+            {
+                "user": user,
+                "domain": current_site.domain,
+                "username": user.username,
+                "protocol": "https" if request.is_secure() else "http",
+                "admin": admin,
+            },
+        )
+        email = EmailMultiAlternatives(mail_subject, "Testing", to=[admin.email])
+        email.attach_alternative(message, "text/html")
+        email.send()
+    return

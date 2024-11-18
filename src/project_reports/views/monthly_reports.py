@@ -266,7 +266,7 @@ def copy_project_monthly_report_view(request, report):
     )
 
     # Save the changes made to the new monthly report.
-    monthly_report.state = "todo"
+    monthly_report.state = "pending"
     monthly_report.save()
 
     return HttpResponseClientRedirect(url)

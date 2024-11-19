@@ -123,17 +123,20 @@ def delete_warehouse_location(request, pk):
     monthly_report = StockMonthlyReport.objects.filter(warehouse_location=warehouse).prefetch_related(
         Prefetch("stockreport_set", queryset=StockReport.objects.all())
     )
-    if monthly_report.exists():
+
+    if not monthly_report.exists():
         # TODO: handle this better in the frontend
-        messages.error(request, "Cannot delete warehouse location with existing reports.")
-        return HttpResponse(status=200)
-    warehouse.delete()
-    messages.success(request, "Warehouse location has been delete.")
-    if request.headers.get("Hx-Trigger", "") == "delete-btn":
-        url = reverse_lazy("stocks", kwargs={})
-        return HttpResponseClientRedirect(url)
+        warehouse.delete()
+        messages.success(request, "Warehouse location has been delete.")
+        if request.headers.get("Hx-Trigger", "") == "delete-btn":
+            url = reverse_lazy("stocks", kwargs={})
+            return HttpResponseClientRedirect(url)
+        else:
+            return HttpResponse(status=200)
     else:
-        return HttpResponse(status=200)
+        url = reverse_lazy("stocks", kwargs={})
+        messages.error(request, "Cannot delete warehouse with existance reports.")
+        return HttpResponseClientRedirect(url)
 
 
 @login_required
@@ -245,12 +248,14 @@ def update_stock_report_period(request, report):
 @login_required
 def delete_stock_report_period(request, pk):
     monthly_report = get_object_or_404(StockMonthlyReport, pk=pk)
-    if monthly_report.stockreport_set.exists():
-        messages.error(request, "Unable to delete: A report has been submitted for this period")
+    if not monthly_report.stockreport_set.exists():
+        monthly_report.delete()
+        messages.success(request, f"{monthly_report} Report has been deleted.")
         return HttpResponse(status=200)
-    monthly_report.delete()
-    messages.success(request, f"{monthly_report} Report has been deleted.")
-    return HttpResponse(status=200)
+    else:
+        url = reverse_lazy("stock-report-period", kwargs={"pk": monthly_report.warehouse_location.id})
+        messages.error(request, f"Cannot delete {monthly_report} report period due to existing associated reports.")
+        return HttpResponseClientRedirect(url)
 
 
 @login_required
@@ -328,6 +333,7 @@ def delete_stock_monthly_report(request, pk):
     monthly_report = get_object_or_404(StockMonthlyReport, pk=pk)
     monthly_stock_reports = StockReport.objects.filter(monthly_report=monthly_report)
     if monthly_stock_reports:
+        monthly_stock_reports.delete()
         monthly_report.state = "todo"
         monthly_report.save()
         messages.success(request, f"{monthly_report} monthly reports has been deleted.")

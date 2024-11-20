@@ -330,7 +330,4 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         self._import_data()
-<<<<<<< Updated upstream
-=======
         # self._update_data()
->>>>>>> Stashed changes

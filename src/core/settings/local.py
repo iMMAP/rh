@@ -90,3 +90,15 @@ DJANGO_VITE_PLUGIN = {
 DBBACKUP_STORAGE = "django.core.files.storage.FileSystemStorage"
 DBBACKUP_SEND_EMAIL = False
 DBBACKUP_STORAGE_OPTIONS = {"location": os.path.join(BASE_DIR.parent, "db-backups")}
+
+
+# Can use MailTrap SMTP Setup for now (dev and staging only).
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+
+EMAIL_HOST = env("EMAIL_HOST", default="smtp.mailtrap.io")
+EMAIL_PORT = env("EMAIL_PORT", default=587)  # 2525
+EMAIL_HOST_USER = env("EMAIL_HOST_USER", default="reporthub@immap.org")
+EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD", default="")
+DEFAULT_FROM_EMAIL = env("DEFAULT_FROM_EMAIL", default="reporthub@immap.org")
+EMAIL_USE_SSL = env("EMAIL_USE_SSL", default=False)
+EMAIL_USE_TLS = env("EMAIL_USE_TLS", default=True)

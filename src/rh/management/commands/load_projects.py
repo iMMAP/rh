@@ -63,7 +63,7 @@ class Command(BaseCommand):
         #         if created:
         #             locations_created += 1
 
-        path = os.path.join(BASE_DIR.parent, "scripts/data/updated_nov_2023/protection_locations.xlsx")
+        path = os.path.join(BASE_DIR.parent, "scripts/data/updated_nov_2023/esnfi_locations.xlsx")
         df = pd.read_excel(path)
         df.fillna(False, inplace=True)
         locations = df.to_dict(orient="records")
@@ -122,7 +122,7 @@ class Command(BaseCommand):
 
     def _load_activity_plans(self):
         # Import the actvity_domain, activity_types, activity_details
-        path = os.path.join(BASE_DIR.parent, "scripts/data/updated_nov_2023/protection_plans.xlsx")
+        path = os.path.join(BASE_DIR.parent, "scripts/data/updated_nov_2023/esnfi_plans.xlsx")
         df = pd.read_excel(path)
         df.fillna(False, inplace=True)
         plans_exits = 0
@@ -208,7 +208,7 @@ class Command(BaseCommand):
 
     def _load_projects(self):
         # Import the actvity_domain, activity_types, activity_details
-        path = os.path.join(BASE_DIR.parent, "scripts/data/updated_nov_2023/protection_projects.xlsx")
+        path = os.path.join(BASE_DIR.parent, "scripts/data/updated_nov_2023/esnfi_projects.xlsx")
         df = pd.read_excel(path)
         df.fillna(False, inplace=True)
 
@@ -330,3 +330,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         self._import_data()
+<<<<<<< Updated upstream
+=======
+        # self._update_data()
+>>>>>>> Stashed changes

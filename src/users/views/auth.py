@@ -74,7 +74,9 @@ def register_view(request):
             # send activation email
             send_account_activation_email(request, user)
 
-            return redirect(to="password_reset_done")
+            messages.success(request,"Activation link sent to your email address")
+
+            return redirect(to="login")
     else:
         u_form = UserRegisterForm()
         p_form = ProfileCreateForm()

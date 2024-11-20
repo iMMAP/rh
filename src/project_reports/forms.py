@@ -69,7 +69,12 @@ class TargetLocationReportForm(forms.ModelForm):
         fields = "__all__"
         exclude = ("activity_plan_report",)
         widgets = {
-            "facility_site_type": forms.Select(attrs={"class": "custom-select"}),
+            "beneficiary_status": forms.RadioSelect(
+                choices={
+                    "new_beneficiary": "New Beneficiary",
+                    "existing_beneficiaries": "Existing Beneficiaries",
+                },
+            ),
         }
 
     def __init__(self, *args, **kwargs):

@@ -143,7 +143,7 @@
                     <div class="sign-up-field-error">{{ form.indicator.errors }}</div>
                 </div>
 
-                <div class="multiple-fields-row three-items">
+                <div class="multiple-fields-row two-items ">
                     <div class="field-col w-full">
                         <div class="select-field">
                             <label for="{{ form.beneficiary.id_for_label }}">Beneficiary</label>
@@ -159,15 +159,6 @@
                             <p class="help-text">{{ form.hrp_beneficiary.help_text }}</p>
                             {{ form.hrp_beneficiary }}
                             <div class="sign-up-field-error">{{ form.hrp_beneficiary.errors }}</div>
-                        </div>
-                    </div>
-
-                    <div class="field-col w-full">
-                        <div class="select-field">
-                            <label for="{{ form.beneficiary_category.id_for_label }}">Beneficiary Category</label>
-                            <p class="help-text">{{ form.beneficiary_category.help_text }}</p>
-                            {{ form.beneficiary_category }}
-                            <div class="sign-up-field-error">{{ form.beneficiary_category.errors }}</div>
                         </div>
                     </div>
                 </div>

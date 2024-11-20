@@ -122,6 +122,8 @@ class TargetLocationReport(models.Model):
     target_location = models.ForeignKey(TargetLocation, on_delete=models.CASCADE)
     location_type = models.ForeignKey(LocationType, on_delete=models.SET_NULL, null=True, blank=True)
 
+    beneficiary_status = models.CharField(max_length=25)
+
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, null=True)
 

@@ -87,7 +87,7 @@
                                     <div class="project-activity-accordion-slide"
                                          id="{{ form.prefix }}-details">
                                         <!-- ERRORS SECTION STARTS -->
-                                        {% if form.errors %}
+                                        {% if form.non_field_errors %}
                                             <div class="message-container">
                                                 {% for error in form.non_field_errors %}<div class="message-danger-alert">{{ error }}</div>{% endfor %}
                                             </div>

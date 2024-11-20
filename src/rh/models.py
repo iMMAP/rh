@@ -453,13 +453,6 @@ class Project(models.Model):
 
 
 class ActivityPlan(models.Model):
-    """Activity Plans model"""
-
-    CATEGORY_TYPES = [
-        ("disabled", "Persons with Disabilities"),
-        ("non-disabled", "Non-Disabled"),
-    ]
-
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     state = models.CharField(max_length=15, choices=STATES, null=True, default="draft")
 
@@ -484,10 +477,6 @@ class ActivityPlan(models.Model):
         blank=True,
         limit_choices_to={"type": "hrp"},
     )
-    beneficiary_category = models.CharField(
-        max_length=15, choices=CATEGORY_TYPES, default="non-disabled", null=True, blank=True
-    )
-
     description = models.TextField(blank=True, null=True)
     # old_id = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
 

@@ -61,7 +61,7 @@ urlpatterns = [
         name="password_reset_complete",
     ),
     path(
-        "activate/<uidb64>/<token>",
+        "activate/<uidb64>/<token>/",
         auth_views.activate_account,
         name="activate_account",
     ),

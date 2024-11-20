@@ -36,7 +36,7 @@ def activate_account(request, uidb64, token):
         return redirect("login")
 
     if not activation_token_generator.check_token(user, token):
-        messages.error(request, "Activation link is invalid! - hello")
+        messages.error(request, "Activation link is invalid! -")
         return redirect("login")
 
     user.is_active = True
@@ -74,7 +74,7 @@ def register_view(request):
             # send activation email
             send_account_activation_email(request, user)
 
-            messages.success(request,"Activation link sent to your email address")
+            messages.success(request, "Activation link sent to your email address")
 
             return redirect(to="login")
     else:

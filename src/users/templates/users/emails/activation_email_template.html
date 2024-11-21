@@ -11,15 +11,15 @@
                    color:#6d6e71;
                    letter-spacing:-0.12px">
             Hi {{ user.get_full_name }},
-            Please click the below button to complete your registration or copy the link below to your browser.
-        </td>
+            Please click the below button to complete your registration or copy the link below to your browser.  </td>
     </tr>
     <tr>
         <td style="padding:0 0 21px;
             font:12px/14px Arial, Helvetica, sans-serif;
             color:#6d6e71;
-            letter-spacing:-0.12px">
-            https://{{ domain }}{% url 'activate_account' uidb64=uid token=token %}?
+            letter-spacing:-0.12px"
+        >
+            <pre><code> https://{{ domain }}{% url 'activate_account' uidb64=uid token=token %}?  </code></pre>
         </td>
     </tr>
 

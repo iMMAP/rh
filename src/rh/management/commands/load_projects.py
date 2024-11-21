@@ -37,38 +37,13 @@ class Command(BaseCommand):
     help = "Import Projects"
 
     def _load_target_locations(self):
-        # Import the actvity_domain, activity_types, activity_details
-        # path = os.path.join(BASE_DIR.parent, "scripts/data/updated_nov_2023/fsac_locations.xlsx")
-        # df = pd.read_excel(path)
-        # df.fillna(False, inplace=True)
-        # locations_created = 0
-        # locations = df.to_dict(orient="records")
-        # for index, location in enumerate(locations):
-        #     project = Project.objects.filter(old_id=location.get("project_id", "")).first()
-        #     country = Location.objects.filter(code="AF").first()
-        #     province = Location.objects.filter(code=location.get("admin1pcode", "").strip()).first()
-        #     district = Location.objects.filter(code=location.get("admin2pcode", "").strip()).first()
-        #     activity_plans = project.activityplan_set.all()
-        #     for activity_plan in activity_plans:
-        #         target_location, created = TargetLocation.objects.get_or_create(
-        #             project_id=project.id,
-        #             state="in-progress",
-        #             activity_plan_id=activity_plan.id,
-        #             country_id=country.id,
-        #             province_id=province.id,
-        #             district_id=district.id,
-        #         )
-        #         target_location.save()
-        #
-        #         if created:
-        #             locations_created += 1
-
         path = os.path.join(BASE_DIR.parent, "scripts/data/updated_nov_2023/esnfi_locations.xlsx")
         df = pd.read_excel(path)
         df.fillna(False, inplace=True)
         locations = df.to_dict(orient="records")
 
         locations_created = 0
+        locations_exists = 0
         with connection.cursor() as cursor:
             for location in locations:
                 project_id = location.get("project_id", "")
@@ -117,8 +92,11 @@ class Command(BaseCommand):
                                 [project_id, "in-progress", activity_plan_id, country_id, province_id, district_id],
                             )
                             locations_created += 1
+                        else:
+                            locations_exists += 1
 
         self.stdout.write(self.style.SUCCESS(f"{locations_created} Target Locations - created successfully!!!"))
+        self.stdout.write(self.style.SUCCESS(f"{locations_exists} Target Locations - Already Exists!!!"))
 
     def _load_activity_plans(self):
         # Import the actvity_domain, activity_types, activity_details
@@ -174,9 +152,9 @@ class Command(BaseCommand):
                     indicator_id=indicator.id,
                     beneficiary_id=beneficiary.id if beneficiary else None,
                     hrp_beneficiary_id=hrp_beneficiary.id if hrp_beneficiary else None,
-                    beneficiary_category=plan.get("beneficiary_category_id", "").lower()
-                    if plan.get("beneficiary_category_id", "")
-                    else "",
+                    # beneficiary_category=plan.get("beneficiary_category_id", "").lower()
+                    # if plan.get("beneficiary_category_id", "")
+                    # else "",
                     # total_set_target=plan.get("total_beneficiaries", 0),
                     package_type_id=package_type.id if package_type else None,
                     unit_type_id=unit_type.id if unit_type else None,

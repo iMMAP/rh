@@ -18,37 +18,26 @@ from ..forms import (
 )
 from ..tokens import activation_token_generator
 
-
-#############################################
-########### Authentication Views #############
-#############################################
 def activate_account(request, uidb64, token):
     """Activate User account"""
     try:
         uid = force_str(urlsafe_base64_decode(uidb64))
         user = User.objects.get(pk=uid)
+
+        if user is not None and activation_token_generator.check_token(user, token):  
+            user.profile.email_verified_at = datetime.now()
+            user.profile.save()
+
+            messages.success(request, "Thank you for your email confirmation, you can login now into your account.")
+
+            return redirect("login")
+        else:
+            messages.error(request,"Invalid link")
+            return redirect("login")
+
     except Exception as e:
         messages.error(request, f"{e} - Something went wrong!")
         return redirect("login")
-
-    if not user:
-        messages.error(request, "Activation link is invalid!")
-        return redirect("login")
-
-    if not activation_token_generator.check_token(user, token):
-        messages.error(request, "Activation link is invalid! -")
-        return redirect("login")
-
-    user.is_active = True
-    user.save()
-
-    user.profile.email_verified_at = datetime.now()
-    user.profile.save()
-
-    messages.success(request, "Thank you for your email confirmation, you can login now into your account.")
-
-    return redirect("login")
-
 
 @unauthenticated_user
 def register_view(request):

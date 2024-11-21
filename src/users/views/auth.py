@@ -18,26 +18,31 @@ from ..forms import (
 )
 from ..tokens import activation_token_generator
 
+
 def activate_account(request, uidb64, token):
     """Activate User account"""
     try:
         uid = force_str(urlsafe_base64_decode(uidb64))
         user = User.objects.get(pk=uid)
 
-        if user is not None and activation_token_generator.check_token(user, token):  
+        if user is not None and activation_token_generator.check_token(user, token):
             user.profile.email_verified_at = datetime.now()
             user.profile.save()
 
-            messages.success(request, "Thank you for your email confirmation, you can login now into your account.")
+            messages.info(
+                request,
+                "Your email has been confirmed, Please contact your organization admin to activate your account.",
+            )
 
             return redirect("login")
         else:
-            messages.error(request,"Invalid link")
+            messages.error(request, "Invalid link")
             return redirect("login")
 
     except Exception as e:
         messages.error(request, f"{e} - Something went wrong!")
         return redirect("login")
+
 
 @unauthenticated_user
 def register_view(request):
@@ -65,7 +70,9 @@ def register_view(request):
 
             messages.success(request, "Activation link sent to your email address")
 
-            return redirect(to="login")
+            template = loader.get_template("users/auth/activation_email_done.html")
+            context = {"user": user}
+            return HttpResponse(template.render(context, request))
     else:
         u_form = UserRegisterForm()
         p_form = ProfileCreateForm()
@@ -125,7 +132,7 @@ def login_view(request):
                         "Your account is not verified. We have sent you an email with instructions to verify your account.",
                     )
                 else:
-                    messages.error(request, "This account is deactivated. Please contact support.")
+                    messages.error(request, "This account is not active. Please contact your organization admin.")
         else:
             messages.error(request, "Enter correct email or password.")
     context = {}

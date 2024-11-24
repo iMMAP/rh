@@ -81,7 +81,7 @@
                                         <div class="multiple-fields-row two-items">
                                             <div class="field-col input-field input-check-holder flex gap-3">
                                                 <div class="flex h-6 items-center">
-                                                    <input type="checkbox" name="id_is_project_stock" id="id_is_project_stock">
+                                                    <input type="checkbox" name="id_is_project_stock" {% if form.instance.project %} checked {% endif %} id="id_is_project_stock">
                                                 </div>
                                                 <div for="id_is_project_stock">
                                                     <label for="id_is_project_stock" class="font-medium text-gray-900">Is this a project stock report ?</label>
@@ -89,7 +89,7 @@
                                                 </div>
                                             </div>
                                             <div class="field-col">
-                                                <div class="select-field is-required" id="is-project-report" style="display: none;">
+                                                <div class="select-field is-required" id="is-project-report" {% if not form.instance.project %} style="display: none;"{% else %} style="display: block;" {%endif%}>
                                                     <label for="{{form.project.id_for_label}}">Projects</label>
                                                     {{ form.project }}
                                                     <div class="sign-up-field-error">{{form.project.errors}}</div>
@@ -118,8 +118,8 @@
                                                     <select name="{{ form.stock_item_type.name }}"
                                                             id="{{ form.stock_item_type.id_for_label }}"
                                                             required
-                                                            hx-swap="innerHTML"  >
-                                                            {% for stockType in form.stock_item_type %}{{ stockType.name }}{% endfor %}
+                                                            hx-swap="innerHTML">
+                                                            {% for stockType in form.stock_item_type %}{{ stockType }}{% endfor %}
                                                     </select>
                                                     <div class="sign-up-field-error">{{ form.stock_item_type.errors }}</div>
                                                 </div>
@@ -229,7 +229,8 @@
 
 {% block scripts %}
 <script>
-    document.querySelector("input[type='checkbox']").addEventListener('change',(event)=>{
+ 
+        document.querySelector("input[type='checkbox']").addEventListener('change',(event)=>{
         const projectField = document.getElementById("is-project-report");
         const projectInputField = document.getElementById("id_project");
             const inputCheckbox = event.currentTarget;
@@ -241,5 +242,6 @@
                 projectInputField.removeAttribute("required");
             }
         });
+   
 </script>
 {% endblock scripts %}

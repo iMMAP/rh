@@ -34,7 +34,7 @@ class StockReportForm(forms.ModelForm):
         user = kwargs.pop("user", None)
         super().__init__(*args, **kwargs)
 
-        self.fields["project"].queryset = Project.objects.filter(user=user)
+        self.fields["project"].queryset = Project.objects.filter(organization=user.profile.organization)
         self.fields["cluster"].required = True
         self.fields["cluster"].queryset = self.fields["cluster"].queryset.all()
 

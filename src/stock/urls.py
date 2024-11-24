@@ -87,4 +87,9 @@ urlpatterns = [
         user_views.export_stock_monthly_report,
         name="stock-monthly-report-export",
     ),
+    path(
+        "stock/monthly-report/view/<str:report>",
+        user_views.report_details_view,
+        name="report-details-view",
+    ),
 ]

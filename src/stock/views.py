@@ -73,7 +73,7 @@ def create_warehouse_location(request):
             if "_save" in request.POST:
                 return redirect("stocks")
             elif "_addanother" in request.POST:
-                return redirect("warehouse-location-create")
+                return redirect("create-warehouse-location")
         else:
             messages.error(request, "Something went wrong. Please fix the below error.")
     else:
@@ -370,3 +370,10 @@ def export_stock_monthly_report(request, warehouse):
     response["Content-Disposition"] = f"attachment; filename={warehouse_location.name}_stock_report_{filename}.csv"
     write_csv_columns_and_rows(all_monthly_report, response)
     return response
+
+
+def report_details_view(request, report):
+    stock_report = get_object_or_404(StockReport, pk=report)
+    monthly_report = stock_report.monthly_report
+    context = {"stock_report": stock_report, "monthly_report": monthly_report}
+    return render(request, "stock/report_details_view.html", context)

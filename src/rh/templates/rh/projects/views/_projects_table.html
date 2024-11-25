@@ -37,19 +37,23 @@
                         <div class="export-link-holder"
                              onclick="exportButton(event)"
                              data-export-url="{% url 'export_project_excel' 'csv' %}?{{request.GET.urlencode}}"
-                             data-export-format="csv">
+                             data-export-format="csv"
+                             data-org-code="{% if request.resolver_match.kwargs.cluster %}{{request.resolver_match.kwargs.cluster}}_related{% else %}{{request.user.profile.organization}}{%endif%}">
                             <span class="export-link cursor-pointer">CSV</span>
                         </div>
                         <div class="export-link-holder"
                              onclick="exportButton(event)"
                              data-export-url="{% url 'export_project_excel' 'xls' %}?{{request.GET.urlencode}}"
-                             data-export-format="xlsx">
+                             data-export-format="xlsx"
+                             data-org-code="{% if request.resolver_match.kwargs.cluster %}{{request.resolver_match.kwargs.cluster}}_related{% else %}{{request.user.profile.organization}}{%endif%}">
                             <span class="export-link cursor-pointer">Excel</span>
                         </div>
                         <div class="export-link-holder"
                              onclick="exportButton(event)"
                              data-export-url="{% url 'export_project_excel' 'json' %}?{{request.GET.urlencode}}"
-                             data-export-format="json">
+                             data-export-format="json"
+                             data-org-code="{% if request.resolver_match.kwargs.cluster %}{{request.resolver_match.kwargs.cluster}}_related{% else %}{{request.user.profile.organization}}{%endif%}">
+
                             <span class="export-link cursor-pointer">JSON</span>
                         </div>
                     </div>

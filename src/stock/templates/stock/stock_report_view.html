@@ -1,5 +1,5 @@
 {% load static %}
-
+{% load humanize %}
 <div class="content-block bottom-border table-container">
     <div class="progress bg-red h-0.5">
         <div class="indeterminate bg-white"></div>
@@ -46,31 +46,20 @@
                 <thead class="content-block ">
                     <tr>
                         <th>
+                            <strong class="table-title">Project</strong>
+                        </th>
+                        <th>
                             <strong class="table-title">Cluster</strong>
+                        </th>
+                        <th>
+                            <strong class="table-title">Stock Item Type</strong>
                         </th>
                         <th>
                             <strong class="table-title">Stock Purpose</strong>
                         </th>
+                        
                         <th>
                             <strong class="table-title">Targeted Groups</strong>
-                        </th>
-                        <th>
-                            <strong class="table-title">Stock Type</strong>
-                        </th>
-                        <th>
-                            <strong class="table-title">Stock Unit</strong>
-                        </th>
-                        <th>
-                            <strong class="table-title">No.In Stock</strong>
-                        </th>
-                        <th>
-                            <strong class="table-title">No.In Pipline</strong>
-                        </th>
-                        <th>
-                            <strong class="table-title">Beneficiary Coverage</strong>
-                        </th>
-                        <th>
-                            <strong class="table-title">No.Of Units Required</strong>
                         </th>
                         <th>
                             <strong class="table-title">No.Of Peope assisted</strong>
@@ -82,56 +71,62 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <!--Include The Projects Details Here -->
                     {% for row in object_list %}
                     <tr>
-                            <td>{{ row.cluster }}</td>
-                            <td>{{ row.stock_purpose }}</td>
-                            <td>{{ row.targeted_groups }}</td>
-                            <td>{{row.stock_type}}</td>
-                            <td>{{row.stock_unit}}</td>
-                            <td>{{row.qty_in_stock}}</td>
-                            <td>{{row.qty_in_pipeline}}</td>
-                            <td>{{row.beneficiary_coverage}}</td>
-                            <td>{{row.unit_required}}</td>
-                            <td>{{row.people_to_assisted}}</td>
-                            <td>{{row.status}}</td>
-                            <td>
-                                <div class="table-flex-holder">
-                                    <ul class="table-options-buttons ">
-                                        <li>
-                                            <a class="" href="{% url 'update-stock-monthly-report' row.id %}" data-tippy-content="Edit">
-                                                <span class="icon-pen"></span>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <form action="{% url 'copy-stock-monthly-report' row.id %}" method="post">
-                                                {% csrf_token %}
-                                                <button type="submit" class="btn-gray" data-tippy-content="Duplicate">
-                                                    <span class="icon-copy" 
-                                                    onmouseenter="this.style.color='#a52824'" 
-                                                    onmouseleave="this.style.color='gray'"></span>
-                                                </button>
-                                            </form>
-                                        </li>
-                                        <li>
-                                            <button>
-                                                <a hx-delete="{% url 'delete-record-stock-report' row.id %}"
-                                                   hx-trigger="click"
-                                                   hx-indicator=".progress"
-                                                   hx-swap="outerHTML swap:1s"
-                                                   hx-confirm="Do you want to delete this report ?"
-                                                   hx-target="closest tr"
-                                                   data-tippy-content="Delete"
-                                                >
-                                                    <span class="project-detail icon-trashbin"></span>
-                                                </a>
+                        <td>{{row.project.code}}</td>
+                        <td style="text-transform: uppercase;">{{ row.cluster.code }}</td>
+                        <td>{{row.stock_item_type}}</td>
+                        <td>{{ row.stock_purpose }}</td>
+                        <td>{{ row.targeted_groups }}</td>
+                        <td>{{row.people_to_assisted|intcomma}}</td> 
+                        <td>
+                            <span class="{{row.status}}">{{row.status}}</span>
+                        </td>
+                        <td>
+                            <div class="table-flex-holder">
+                                <ul class="table-options-buttons ">
+                                    <li>
+                                        <a href="{% url 'report-details-view' row.pk %}"data-tippy-content="View">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
+                                            </svg>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="" href="{% url 'update-stock-monthly-report' row.id %}" data-tippy-content="Edit">
+                                            <span class="icon-pen"></span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <form action="{% url 'copy-stock-monthly-report' row.id %}" method="post">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn-gray" data-tippy-content="Duplicate">
+                                                <span class="icon-copy" 
+                                                onmouseenter="this.style.color='#a52824'" 
+                                                onmouseleave="this.style.color='gray'"></span>
                                             </button>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </td>
-                        </tr>
+                                        </form>
+                                    </li>
+                                    <li>
+                                        <button>
+                                            <a hx-delete="{% url 'delete-record-stock-report' row.id %}"
+                                                hx-trigger="click"
+                                                id="delete-btn"
+                                                hx-indicator=".progress"
+                                                hx-swap="outerHTML swap:1s"
+                                                hx-confirm="Do you want to delete this report ?"
+                                                hx-target="closest tr"
+                                                data-tippy-content="Delete"
+                                            >
+                                                <span class="project-detail icon-trashbin"></span>
+                                            </a>
+                                        </button>
+                                    </li>
+                                </ul>
+                            </div>
+                        </td>
+                        
+                    </tr>
                     {% endfor %}
                 </tbody>
             </table>

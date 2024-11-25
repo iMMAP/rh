@@ -97,7 +97,6 @@ def project_export_excel_view(request, format):
             {"header": "Organization", "type": "string", "width": 40},
             {"header": "Organization Type", "type": "string", "width": 40},
             {"header": "Status", "type": "string", "width": 10},
-            {"header": "Project Description", "type": "string", "width": 50},
             {"header": "Cluster", "type": "string", "width": 50},
             {"header": "HRP project", "type": "string", "width": 50},
             {"header": "Project HRP Code", "type": "string", "width": 20},
@@ -111,6 +110,7 @@ def project_export_excel_view(request, format):
             {"header": "Implementing Partners", "type": "string", "width": 30},
             {"header": "Programme Partners", "type": "string", "width": 30},
             {"header": "Activity Domain", "type": "string", "width": 50},
+            {"header": "Description & Objective", "type": "string", "width": 50},
         ]
         for idx, column in enumerate(columns, start=1):
             cell = sheet.cell(row=1, column=idx, value=column["header"])
@@ -137,8 +137,8 @@ def project_export_excel_view(request, format):
             row = [
                 project.title,
                 project.code,
-                project.user.username,
-                project.user.email,
+                project.user.username if project.user else None,
+                project.user.email if project.user else None,
                 project.user.profile.organization.code
                 if project.user and project.user.profile and project.user.profile.organization
                 else None,
@@ -146,7 +146,6 @@ def project_export_excel_view(request, format):
                 if project.user and project.user.profile and project.user.profile.organization
                 else None,
                 project.state,
-                project.description if project.description else None,
                 ", ".join([clusters.code for clusters in project.clusters.all()]),
                 "yes" if project.is_hrp_project == 1 else None,
                 project.hrp_code if project.hrp_code else None,
@@ -156,10 +155,17 @@ def project_export_excel_view(request, format):
                 project.budget_received if project.budget_received else None,
                 project.budget_gap if project.budget_gap else None,
                 project.budget_currency.name if project.budget_currency else None,
-                ", ".join([donor.name for donor in project.donors.all()]),
-                ", ".join([implementing_partner.code for implementing_partner in project.implementing_partners.all()]),
-                ", ".join([programme_partner.code for programme_partner in project.programme_partners.all()]),
-                ", ".join([activity_domain.name for activity_domain in project.activity_domains.all()]),
+                ", ".join([donor.name for donor in project.donors.all()]) if project.donors else None,
+                ", ".join([implementing_partner.code for implementing_partner in project.implementing_partners.all()])
+                if project.implementing_partners
+                else None,
+                ", ".join([programme_partner.code for programme_partner in project.programme_partners.all()])
+                if project.programme_partners
+                else None,
+                ", ".join([activity_domain.name for activity_domain in project.activity_domains.all()])
+                if project.activity_domains
+                else None,
+                project.description if project.description else None,
             ]
 
             # Add row to the list of rows
@@ -186,7 +192,7 @@ def project_export_excel_view(request, format):
             response = {
                 "file_url": "data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,"
                 + base64.b64encode(excel_file.read()).decode("utf-8"),
-                "file_name": f"project_bulk_export_{today_date}.xlsx",
+                "file_name": f"{request.user.profile.organization}_projects_extracted_on_{today_date}.xlsx",
             }
             return JsonResponse(response)
         elif format == "csv":
@@ -214,7 +220,7 @@ def single_project_export(request, pk, format):
         today_date = datetime.date.today()
         # set response object for csv
         response = HttpResponse(content_type="text/csv")
-        response["Content-Disposition"] = f'attachment; filename="project_{today_date}.csv"'
+        response["Content-Disposition"] = f'attachment; filename="project_extracted_on_{today_date}.csv"'
         writer = csv.writer(response)
         # defining columns
         columns = [
@@ -244,7 +250,6 @@ def single_project_export(request, pk, format):
             {"header": "Indicators", "type": "string", "width": 40},
             {"header": "Beneficiary", "type": "string", "width": 40},
             {"header": "HRP Beneficiary", "type": "string", "width": 40},
-            {"header": "Beneficiary category", "type": "string", "width": 40},
             {"header": "Activity description", "type": "string", "width": 40},
             {"header": "Package Type", "type": "string", "width": 20},
             {"header": "Unit Type", "type": "string", "width": 20},
@@ -320,8 +325,8 @@ def single_project_export(request, pk, format):
                 row = [
                     project.title,
                     project.code,
-                    project.user.username,
-                    project.user.email,
+                    project.user.username if project.user else None,
+                    project.user.email if project.user else None,
                     project.user.profile.organization.code
                     if project.user and project.user.profile and project.user.profile.organization
                     else None,
@@ -342,21 +347,15 @@ def single_project_export(request, pk, format):
                     project.budget_received if project.budget_received else None,
                     project.budget_gap if project.budget_gap else None,
                     project.budget_currency.name if project.budget_currency else None,
-                    ", ".join([donor.name for donor in project.donors.all() if project.donors]),
+                    ", ".join([donor.name for donor in project.donors.all()]) if project.donors else None,
                     ", ".join(
-                        [
-                            implementing_partner.code
-                            for implementing_partner in project.implementing_partners.all()
-                            if project.implementing_partners
-                        ]
-                    ),
-                    ", ".join(
-                        [
-                            programme_partner.code
-                            for programme_partner in project.programme_partners.all()
-                            if project.programme_partners
-                        ]
-                    ),
+                        [implementing_partner.code for implementing_partner in project.implementing_partners.all()]
+                    )
+                    if project.implementing_partners
+                    else None,
+                    ", ".join([programme_partner.code for programme_partner in project.programme_partners.all()])
+                    if project.programme_partners
+                    else None,
                     project.state if project.state else None,
                     plan.activity_domain.name if plan.activity_domain else None,
                     plan.activity_type.name if plan.activity_type else None,
@@ -364,7 +363,6 @@ def single_project_export(request, pk, format):
                     plan.indicator.name if plan.indicator else None,
                     plan.beneficiary.name if plan.beneficiary else None,
                     plan.hrp_beneficiary.name if plan.hrp_beneficiary else None,
-                    plan.beneficiary_category if plan.beneficiary_category else None,
                     plan.description if plan.description else None,
                     plan.package_type.name if plan.package_type else None,
                     plan.unit_type.name if plan.unit_type else None,
@@ -440,13 +438,13 @@ def single_project_export(request, pk, format):
             response = HttpResponse(
                 excel_file, content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
             )
-            response["Content-Disposition"] = f'attachment; filename="project_export_{today_date}.xlsx"'
+            response["Content-Disposition"] = f'attachment; filename="project_extracted_on_{today_date}.xlsx"'
             return response
         elif format == "json":
             # serialize the none serialze data and create dump data
             json_data = json.dumps(rows, cls=DateTimeEncoder, indent=4)
             response = HttpResponse(json_data, content_type="application/json")
-            response["Content-Disposition"] = f'attachment; filename="project_export_{today_date}.json"'
+            response["Content-Disposition"] = f'attachment; filename="project_extracted_on_{today_date}.json"'
             return response
         elif format == "csv":
             return response

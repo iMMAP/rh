@@ -272,7 +272,7 @@ def create_stock_monthly_report(request, pk):
             messages.success(
                 request,
                 mark_safe(
-                    f"{stock_report} was added successfully.",
+                    " Report was added successfully.",
                 ),
             )
             if "_save" in request.POST:

@@ -28,7 +28,7 @@ class StockReportFilter(django_filters.FilterSet):
         queryset=Cluster.objects.all(),
         widget=forms.SelectMultiple(attrs={"class": "custom-select"}),
     )
-    stock_type = django_filters.ModelMultipleChoiceFilter(
+    stock_item_type = django_filters.ModelMultipleChoiceFilter(
         queryset=StockItemsType.objects.all(),
         widget=forms.SelectMultiple(attrs={"class": "custom-select"}),
     )
@@ -39,7 +39,7 @@ class StockReportFilter(django_filters.FilterSet):
 
     class Meta:
         model = StockReport
-        fields = ["cluster", "stock_type", "stock_unit", "stock_purpose", "status"]
+        fields = ["cluster", "stock_item_type", "stock_unit", "stock_purpose", "status"]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

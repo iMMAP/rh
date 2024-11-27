@@ -33,6 +33,8 @@ docker-compose -f docker-compose.dev.yml run --rm npm make npm-build
 #### Create a virtualenv 
 ```shell
 virtualenv .venv
+# OR
+python -m venv .venv
 ```
 
 ### Activate virtualenv

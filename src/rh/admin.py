@@ -284,6 +284,19 @@ admin.site.register(ActivityDetail, ActivityDetailAdmin)
 #############################################
 ####### Project Planning Model Admins #######
 #############################################
+def export_as_csv(self, request, queryset):
+    meta = self.model._meta
+    field_names = [field.name for field in meta.fields]
+
+    response = HttpResponse(content_type="text/csv")
+    response["Content-Disposition"] = "attachment; filename={}.csv".format(meta)
+    writer = csv.writer(response)
+
+    writer.writerow(field_names)
+    for obj in queryset:
+        writer.writerow([getattr(obj, field) for field in field_names])
+
+    return response
 
 
 class ProjectAdmin(admin.ModelAdmin):
@@ -306,6 +319,7 @@ class ProjectAdmin(admin.ModelAdmin):
     )
     list_filter = ("state", "clusters")
     raw_id_fields = ["organization", "user"]
+    actions = [export_as_csv]
 
     def show_clusters(self, obj):
         return ",\n".join([a.title for a in obj.clusters.all()])

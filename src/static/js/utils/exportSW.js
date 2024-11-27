@@ -65,11 +65,12 @@ function exportButton(event) {
 	event.preventDefault();
 	// getting export url
 	const export_url = event.currentTarget.dataset.exportUrl;
+	
 	const fileFormat = event.currentTarget.dataset.exportFormat;
 	const downloadButton = document.querySelector(".export-open");
 	const downloading_spinner = document.querySelector(".downloading");
 	const icon_downloading = document.querySelector(".icon-download");
-
+	const user_org = event.currentTarget.dataset.orgCode;
 	// create filename
 	const currentDate = new Date();
 	// Extract date components
@@ -79,8 +80,8 @@ function exportButton(event) {
 	// Format the date as needed (example: DD/MM/YYYY)
 	const todayDate = `${year}-${month}-${day}`;
 	// write the file name
-	const filename = `projects_bulk_export_${todayDate}`;
-
+	const filename = `${user_org}_projects_extracted_on_${todayDate}`;
+	
 	downloadButton.setAttribute("disabled", "disabled");
 	downloading_spinner.style.display = "inline-block";
 	icon_downloading.style.display = "none";

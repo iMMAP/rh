@@ -107,8 +107,9 @@ def cluster_5w_dashboard(request, cluster):
         data_dict[disaggregation_name][activity_domain] = total_reached
 
     for category, total_reached in data_dict.items():
-        sum_disaggregation = sum(total_reached.values())
-        data_dict[category]["total"] = sum_disaggregation
+        if total_reached and all(value is not None for value in total_reached.values()):
+            sum_disaggregation = sum(value for value in total_reached.values() if value is not None)
+            data_dict[category]["total"] = sum_disaggregation
 
     context = {
         "cluster": cluster,
@@ -223,8 +224,9 @@ def org_5w_dashboard(request, code):
         data_dict[disaggregation_name][activity_domain] = total_reached
 
     for category, total_reached in data_dict.items():
-        sum_disaggregation = sum(total_reached.values())
-        data_dict[category]["total"] = sum_disaggregation
+        if total_reached and all(value is not None for value in total_reached.values()):
+            sum_disaggregation = sum(value for value in total_reached.values() if value is not None)
+            data_dict[category]["total"] = sum_disaggregation
 
     clusters = cache.get("clusters")
     if clusters is None:

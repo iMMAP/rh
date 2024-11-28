@@ -46,122 +46,130 @@
             </div>
             <div class="target-location">
                 <form method="post" enctype="multipart/form-data">
-                    {{ formset.management_form }}
                     {% csrf_token %}
-                    {% for form in formset reversed %}
-                        {{ form.id }}
-                        {{ form.save }}
-                        <input type="hidden"
-                               name="country"
-                               id="country_id"
-                               value="{{ user.profile.country.pk }}">
-                        <input type="hidden" name="project" id="project_id" value="{{ project.pk }}">
-                        <div class="project-activity-block project-activity-accordion"
-                             data-form-id="{{ form.prefix }}">
-                            <div class="inner-holder location-inner-holder unset-before cursor-pointer">
-                                <div class="block-top project-activity-accordion-opener">
-                                    <span class="title">
-                                        {% if not form.id.value %}
-                                            <span>Add Budget Progress</span>
-                                            <br>
-                                        {% else %}
-                                            {{ form.instance.title }}
-                                        {% endif %}
-                                    </span>
+                    <input type="hidden"
+                            name="country"
+                            id="country_id"
+                            value="{{ user.profile.country.pk }}">
+                    <input type="hidden" name="project" id="project_id" value="{{ project.pk }}">
+                    <div class="project-activity-block project-activity-accordion" id="details-{{form.instance.pk}}"
+                            data-form-id="{{ form.prefix }}">
+                    
+                        <div class="inner-holder location-inner-holder unset-before cursor-pointer">
+                            <div class="block-top project-activity-accordion-opener">
+                                <span class="title">
+                                    {% if not form.instance.pk %}
+                                        <span>Add Budget Progress</span>
+                                        <br>
+                                    {% else %}
+                                        Update Budget Progress
+                                    {% endif %}
+                                </span>
+                            </div>
+                            <div class="block-location-activity">
+                                <div id="{{ form.prefix }}-actions">
+                                    <button type="submit"
+                                            class="btn btn-red save"
+                                            value="true"
+                                            name="{{ form.prefix }}-save">
+                                            {% if form.instance.pk %}
+                                            <span class="icon-pen"></span>
+                                            Update
+                                            {% else %}
+                                            Save
+                                            {% endif %}
+                                    </button>
                                 </div>
-                                <div class="block-location-activity">
-                                    <div id="{{ form.prefix }}-actions">
-                                        <button href="#"
-                                                data-url="{% url 'copy_budget' project=project.pk budget=form.instance.pk %}"
-                                                data-return-url="{% url 'create_project_budget_progress' project=project.pk %}"
-                                                data-type="copy"
-                                                data-project=""
-                                                class="btn btn-gray-outline show_confirm">
-                                            <span class="icon-copy"></span>
-                                            <span class="btn-text">Duplicate</span>
-                                        </button>
-                                        {% if form.instance.pk %}
-                                        <button href="#"
-                                                data-url="{% url 'delete_budget' form.instance.pk %}"
-                                                data-return-url="{% url 'create_project_budget_progress' project=project.pk %}"
-                                                data-type="delete"
-                                                data-project=""
-                                                class="btn btn-gray-outline show_confirm">
-                                            <span class="icon-trashbin"></span>
-                                            <span class="btn-text">Delete</span>
-                                        </button>
-                                        {% endif %}
-                                        <button type="submit"
-                                                class="btn btn-red save"
-                                                value="true"
-                                                name="{{ form.prefix }}-save">Save</button>
+                            </div>
+                            <div class="project-activity-accordion-slide"
+                                    id="{{ form.prefix }}-details">
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="multiple-fields-row three-items">
+                                            <div class="field-col">
+                                                <div class="select-field">
+                                                    <label>Donor</label>
+                                                    {{ form.donor }}
+                                                    <p class="sign-up-field-error">{{form.donor.errors}}</p>
+                                                </div>
+                                            </div>
+                                            <div class="field-col">
+                                                <div class="input-field">
+                                                    <label>Activity Domain</label>
+                                                    {{ form.activity_domains }}
+                                                    <p class="sign-up-field-error">{{form.activity_domains.errors}}</p>
+                                                </div>
+                                            </div>
+                                            <div class="field-col">
+                                                <div class="input-field">
+                                                    <label>Grant ID</label>
+                                                    {{ form.grant }}
+                                                    <p class="sign-up-field-error">{{form.grant.errors}}</p>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="project-activity-accordion-slide"
-                                     id="{{ form.prefix }}-details">
-                                    <div class="row">
-                                        <div class="col">
-                                            <div class="multiple-fields-row three-items">
-                                                <div class="field-col">
-                                                    <div class="select-field">
-                                                        <label>Donor</label>
-                                                        {{ form.donor }}
-                                                    </div>
+                                    <div class="col">
+                                        <div class="multiple-fields-row three-items">
+                                            <div class="field-col">
+                                                <div class="select-field">
+                                                    <label>Amount</label>
+                                                    {{ form.amount_recieved }}
+                                                    <p class="sign-up-field-error">{{form.amount_recieved.errors}}</p>
                                                 </div>
-                                                <div class="field-col">
-                                                    <div class="input-field">
-                                                        <label>Activity Domain</label>
-                                                        {{ form.activity_domain }}
-                                                    </div>
+                                            </div>
+                                            <div class="field-col">
+                                                <div class="input-field">
+                                                    <label>Currency</label>
+                                                    {{ form.budget_currency }}
+                                                    <p class="sign-up-field-error">{{form.budget_currency.errors}}</p>
                                                 </div>
-                                                <div class="field-col">
-                                                    <div class="input-field">
-                                                        <label>Grant ID</label>
-                                                        {{ form.grant }}
+                                            </div>
+                                            <div class="field-col">
+                                                <div class="report-date-picker-field">
+                                                    <div class="date start">
+                                                        <label for="{{ form.received_date.id_for_label }}">Received Date</label>
+                                                        {{ form.received_date }}
+                                                        <p class="sign-up-field-error">{{form.received_datey.errors}}</p>
+
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col">
-                                            <div class="multiple-fields-row three-items">
-                                                <div class="field-col">
-                                                    <div class="select-field">
-                                                        <label>Amount</label>
-                                                        {{ form.amount_recieved }}
-                                                    </div>
-                                                </div>
-                                                <div class="field-col">
-                                                    <div class="input-field">
-                                                        <label>Currency</label>
-                                                        {{ form.budget_currency }}
-                                                    </div>
-                                                </div>
-                                                <div class="field-col">
-                                                    <div class="report-date-picker-field">
-                                                        <div class="date start">
-                                                            <label for="{{ form.received_date.id_for_label }}">Received Date</label>
-                                                            {{ form.received_date }}
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col">
-                                            <div class="input-field is-required">
-                                                <label for="prDecs">Notes</label>
-                                                <div class="input-holder">{{ form.description }}</div>
-                                            </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="input-field is-required">
+                                            <label for="prDecs">Notes</label>
+                                            <div class="input-holder">{{ form.description }}</div>
+
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    {% endfor %}
+                    </div>
                 </form>
             </div>
+            {% if not form.instance.pk %}
+            {% include "rh/financial_reports/_budget_progress_table.html" %}
+            {% endif %}
         </div>
     </div>
 {% endblock content %}
 
 {% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+    <script>
+        document.querySelectorAll('.custom-select').forEach((select) => {
+            const choice = new Choices(select, {
+                searchEnabled: true,
+                itemSelectText: '',
+                removeItemButton: true,
+                classNames: {
+                    listDropdown: 'choices__list--dropdown',
+                },
+                shouldSort: false,
+            });
+        })
+    </script>
 {% endblock scripts %}

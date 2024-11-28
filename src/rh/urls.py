@@ -174,9 +174,14 @@ urlpatterns = [
         name="create_project_budget_progress",
     ),
     path(
-        "projects/<int:project>/budget_progress/<str:budget>/copy",
+        "projects/<int:project>/budget_progress/<int:pk>/update",
+        budget_progress.update_budget_progress,
+        name="update-budget-progress",
+    ),
+    path(
+        "projects/budget_progress/<int:project>/<int:budget>/copy",
         budget_progress.copy_budget_progress,
-        name="copy_budget",
+        name="copy-budget-progress",
     ),
     path(
         "projects/budget_progress/<int:pk>/delete",

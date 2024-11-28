@@ -621,7 +621,7 @@ class BudgetProgress(models.Model):
     project = models.ForeignKey(Project, on_delete=models.SET_NULL, null=True, blank=True)
     donor = models.ForeignKey(Donor, on_delete=models.SET_NULL, null=True, blank=True)
     title = models.CharField(max_length=NAME_MAX_LENGTH, null=True, blank=True)
-    activity_domain = models.ForeignKey(ActivityDomain, on_delete=models.SET_NULL, null=True, blank=True)
+    activity_domains = models.ManyToManyField(ActivityDomain)
     grant = models.CharField(max_length=NAME_MAX_LENGTH, null=True, blank=True)
     amount_recieved = models.IntegerField(default=0, blank=True, null=True)
     budget_currency = models.ForeignKey(Currency, on_delete=models.SET_NULL, null=True, blank=True)
@@ -637,8 +637,9 @@ class BudgetProgress(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, null=True)
 
-    def __str__(self):
-        return f"{self.donor}, {self.activity_domain}"
+    # def __str__(self):
+    #     activity_domain_names =f"{', '.join([str(ad) for ad in self.activity_domains.all()])}"
+    #     return f"{self.donor}, {activity_domain_names}"
 
     class Meta:
         verbose_name = "Budget Progress"

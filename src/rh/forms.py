@@ -297,6 +297,11 @@ class BudgetProgressForm(forms.ModelForm):
         model = BudgetProgress
         fields = "__all__"
         widgets = {
+            "activity_domains": forms.SelectMultiple(
+                attrs={
+                    "class": "custom-select",
+                }
+            ),
             "country": forms.widgets.HiddenInput(),
             "received_date": forms.widgets.DateInput(
                 attrs={
@@ -308,8 +313,8 @@ class BudgetProgressForm(forms.ModelForm):
         }
 
     def __init__(self, *args, project, **kwargs):
+        self.project = project
         super().__init__(*args, **kwargs)
-
         activity_domains = project.activity_domains.all()
         budget_currency = project.budget_currency
 
@@ -318,12 +323,12 @@ class BudgetProgressForm(forms.ModelForm):
         donors = project.donors.all()
         donor_ids = list(donors.values_list("pk", flat=True))
 
-        self.fields["save"] = forms.BooleanField(
-            required=False,
-            initial=False,
-            widget=forms.HiddenInput(attrs={"name": self.prefix + "-save"}),
-        )
-        self.fields["activity_domain"].queryset = self.fields["activity_domain"].queryset.filter(
+        # self.fields["save"] = forms.BooleanField(
+        #     required=False,
+        #     initial=False,
+        #     widget=forms.HiddenInput(attrs={"name": self.prefix + "-save"}),
+        # )
+        self.fields["activity_domains"].queryset = self.fields["activity_domains"].queryset.filter(
             pk__in=activity_domains
         )
         self.fields["donor"].queryset = self.fields["donor"].queryset.filter(pk__in=donor_ids)
@@ -331,6 +336,14 @@ class BudgetProgressForm(forms.ModelForm):
             self.fields["budget_currency"].queryset = self.fields["budget_currency"].queryset.filter(
                 pk=budget_currency.pk
             )
+
+    # def clean(self):
+    #     cleaned_data = super().clean()
+    #     received_budget = cleaned_data.get("amount_recieved")
+
+    #     if received_budget > self.project.budget:
+    #         self.add_error("amount_recieved","The recieved amount cannot be greater than project budget.")
+    #     return cleaned_data
 
 
 class UpdateOrganizationForm(forms.ModelForm):

@@ -1,0 +1,246 @@
+{% load static %}
+{% load humanize %}
+<div class="activity-planning read-only" id="dashboard-details">
+    <div class="activity-block-holder">
+        <div class="top-activity-block">
+            <span class="activity-title">
+                <span>
+                    Project Financial Reports
+                </span>
+            </span>
+            <p class="mt-2">
+                <span class="icon-info mr-1"></span>
+                Below are the details of the selected stock report.
+            </p>
+        </div>
+    </div>
+</div>
+<!-- table section -->
+<div class="content-block bottom-border table-container">
+    <div class="progress bg-red h-0.5">
+        <div class="indeterminate bg-white"></div>
+    </div>
+    {% comment %} Table Actions and filters {% endcomment %}
+    <p class="py-3"></p>
+    {% comment %} Table {% endcomment %}
+    {% if budget_progress %}
+        <div class="table-wrapper-scrollable">
+            <table class="table all-projects-table">
+                <thead class="content-block">
+                    <tr>
+                        <th>
+                            <strong class="table-title">Title</strong>
+                        </th>
+                        <th>
+                            <strong class="table-title">Grant ID</strong>
+                        </th>
+                        <th>
+                            <strong class="table-title">Received Amount</strong>
+                        </th>
+                        
+                        <th>
+                            <strong class="table-title">Budget Currency</strong>
+                        </th>
+                        <th>
+                            <strong class="table-title">Received Date</strong>
+                        </th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                
+                <tbody>
+                    {% for row in budget_progress %}
+                    <tr>
+                        <td>{{row.title}}</td>
+                        <td>{{row.grant}}</td>
+                        <td>{{ row.amount_recieved|intcomma}}</td>
+                        <td>{{ row.budget_currency }}</td>
+                        <td>{{row.received_date}}</td> 
+                        <td>
+                            <div class="table-flex-holder">
+                                <ul class="table-options-buttons ">
+                                    <li>
+                                        <a class="" href="{% url 'update-budget-progress' row.project.id row.id %}" data-tippy-content="Edit">
+                                            <span class="icon-pen"></span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <form action="{% url 'copy-budget-progress' row.project.id row.id %}" method="post">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn-gray" data-tippy-content="Duplicate">
+                                                <span class="icon-copy" 
+                                                onmouseenter="this.style.color='#a52824'" 
+                                                onmouseleave="this.style.color='gray'"></span>
+                                            </button>
+                                        </form>
+                                    </li>
+                                    <li>
+                                        <button>
+                                            <a hx-delete="{% url 'delete_budget' row.id %}"
+                                                hx-trigger="click"
+                                                id="delete-btn"
+                                                hx-indicator=".progress"
+                                                hx-swap="outerHTML swap:1s"
+                                                hx-confirm="Do you want to delete this report ?"
+                                                hx-target="closest tr"
+                                                data-tippy-content="Delete">
+                                                <span class="project-detail icon-trashbin"></span>
+                                            </a>
+                                        </button>
+                                    </li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+                
+            </table>
+        </div>
+        {% else %}
+        <div class="view_nocontent">
+            <div class="nocontent_help">
+                <h4>No Financial Report found. Let's create one!</h4>
+            </div>
+        </div>
+    {% endif %}
+    <!-- {% comment %} Pagination {% endcomment %}
+    {% include "components/_pagination.html" with object_list=object_list %} -->
+   <div class="pagination-holder border-t border-gray-d1">
+    <p class="p-2"></p>
+   </div>
+</div>
+<!-- chart seciton -->
+ <div class="multiple-fields-row two-items gap-4 justify-between">
+    <div class="border border-gray-d1 rounded my-3">
+        <canvas id="donor-chart" style="width:100%;max-width:650px;padding: 5px;"></canvas>
+        
+    </div>
+    <div class="border border-gray-d1 rounded my-3">
+        <canvas id="activity-chart" style="width:100%;max-width:650px;padding: 5px;"></canvas>
+        <div id="label-container"></div>
+    </div>
+ </div>
+ <div class="plan-submit-holder bg-gray-f5 my-4 py-4 border border-gray-d1 px-2 rounded ">
+    <div>
+        <span class="my-0 py-0 mr-3 ml-3">
+            <strong>Project Budget</strong>
+            <span class="title mx-2">{{project.budget|intcomma}} <b>{{project.budget_currency}}</b></span>
+        </span> <strong class="text-red">|</strong>
+        <span class="my-0 py-0 mr-3 ml-3">
+            <strong>Project Budget Received</strong>
+            <span class="title mx-2">{{project.budget_received|intcomma}} <b>{{project.budget_currency}}</b></span>
+        </span>
+    </div>
+    <div>
+        <span class="my-0 py-0 mr-3 ml-3">
+            <strong>Project Budget Gap</strong>
+            <span class="title mx-2">{{project.budget_gap|intcomma}} <b>{{project.budget_currency}}</b></span>
+        </span>
+    </div>
+</div>
+ {% block scripts %}
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+ <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+            crossorigin=""></script>
+    
+ <script>
+    var donorNames = {{donor_names|safe}};
+    var donorFunds = {{donor_funds|safe}}
+    var yValues = [55, 49, 44, 24, 15];
+    var barColors = [
+      "#be2126",
+      "#BE9D27",
+      "#6d6e71",
+      "#193661",
+      "#29B29C",
+      
+    ];
+    var donor = document.getElementById("donor-chart");
+    var activity = document.getElementById("activity-chart");
+    new Chart(activity, {
+      type: "doughnut",
+      data: {
+        labels: {{activity_names|safe}},
+        datasets: [{
+          backgroundColor: barColors,
+          data: {{activity_funds|safe}}
+        }]
+      },
+      options: {
+        responsive: true,
+        title: {
+          display: true,
+          text: "Activity Domains Budget Allocation"
+        },
+        plugins:{
+        tooltip: {
+                callbacks: {
+                    label: function(tooltipItem) {
+                        // Customize tooltip to show data more clearly
+                        return tooltipItem.label + ': ' + tooltipItem.raw.toLocaleString();
+                    }
+                }
+            }
+        },
+        legend:{
+            display: true,  // Display the legend
+            position: 'bottom',
+            align: 'start',  // Position the legend at the bottom
+            marginTop:15,
+            labels: {
+                boxWidth: 20,  // Set the width of the color box in the legend
+                padding: 15     // Set padding between items in the legend
+            }
+        }
+      }
+    });
+   
+    // donor chart
+    new Chart(donor, {
+      type: "doughnut",
+      data: {
+        labels: donorNames,
+        datasets: [{
+          backgroundColor: barColors,
+          data: donorFunds,
+        }]
+      },
+      options: {
+        title: {
+          display: true,
+          text: "Financial Support from Donors"
+        },
+        plugins:{
+        tooltip: {
+                callbacks: {
+                    label: function(tooltipItem) {
+                        // Customize tooltip to show data more clearly
+                        return tooltipItem.label + ': ' + tooltipItem.raw.toLocaleString();
+                    }
+                }
+            }
+        },
+        legend:{
+            display: true,  // Display the legend
+            position: 'bottom', 
+            align: 'start', // Position the legend at the bottom
+            labels: {
+                boxWidth: 20,  // Set the width of the color box in the legend
+                padding: 15    // Set padding between items in the legend
+            }
+        }
+      }
+    });
+    
+    document.body.addEventListener('htmx:afterRequest', function(event) {
+        // Check if the request was successful and is a delete request
+        if (event.detail.xhr.status === 200 && event.detail.requestConfig.verb === 'delete') {
+            // Refresh the page after a successful delete request
+            window.location.reload();
+        }
+    });
+ 
+    </script>
+ {% endblock scripts %}

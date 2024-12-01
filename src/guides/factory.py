@@ -1,6 +1,5 @@
 import factory
 from factory.django import DjangoModelFactory
-
 from users.factory import UserFactory
 
 from .models import Feedback, Guide, Section

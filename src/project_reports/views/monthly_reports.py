@@ -14,7 +14,6 @@ from django.urls import reverse, reverse_lazy
 from django.utils import timezone
 from django_htmx.http import HttpResponseClientRedirect
 from extra_settings.models import Setting
-
 from rh.models import (
     ActivityDetail,
     ActivityDomain,

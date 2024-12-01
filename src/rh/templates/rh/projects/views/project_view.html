@@ -38,49 +38,11 @@
         </div>
         {% comment %} Project Details Here {% endcomment %}
         <section class="space-y-4">
-            <h2 class="mb-2">{{ project.title }}</h2>
-            <div>
-                <div class="flex flex-col sm:flex-row gap-2 justify-between items-center py-2 border-t border-b border-gray-d1">
-                    <p class="flex items-center gap-2">
-                        <svg fill="none"
-                             viewBox="0 0 24 24"
-                             stroke-width="1.5"
-                             stroke="currentColor"
-                             class="size-6">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 21h16.5M4.5 3h15M5.25 3v18m13.5-18v18M9 6.75h1.5m-1.5 3h1.5m-1.5 3h1.5m3-6H15m-1.5 3H15m-1.5 3H15M9 21v-3.375c0-.621.504-1.125 1.125-1.125h3.75c.621 0 1.125.504 1.125 1.125V21" />
-                        </svg>
-                        {{ project.organization.name }} ({{ project.organization.code }})
-                    </p>
-                    <p class="flex items-center gap-2">
-                        <svg fill="none"
-                             viewBox="0 0 24 24"
-                             stroke-width="1.5"
-                             stroke="currentColor"
-                             class="size-6">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
-                        </svg>
-                        {% if project.user %}
-                            <a href="{% url 'profiles-show' project.user.username %}">
-                                {{ project.user.get_full_name }} ({{ project.user.username }})
-                            </a>
-                        {% endif %}
-                    </p>
-                    <p class="flex items-center gap-2">
-                        <svg width="800px"
-                             height="800px"
-                             viewBox="0 0 24 24"
-                             fill="none"
-                             xmlns="http://www.w3.org/2000/svg"
-                             class="size-6">
-                            <path opacity="0.4" d="M2.44922 14.9702C3.51922 18.4102 6.39923 21.0602 9.97923 21.7902" stroke="#292D32" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
-                            <path d="M2.05078 10.98C2.56078 5.93 6.82078 2 12.0008 2C17.1808 2 21.4408 5.94 21.9508 10.98" stroke="#292D32" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
-                            <path d="M14.0098 21.8C17.5798 21.07 20.4498 18.45 21.5398 15.02" stroke="#292D32" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
-                        </svg>
-                        <span class="{{ project.state }}">{{ project.get_state_display }}</span>
-                    </p>
-                </div>
-                <div class="flex flex-col sm:flex-row items-center justify-between py-2 gap-3">
-                    <div></div>
+            {% comment %}  {% endcomment %}
+                 <div class="flex flex-col sm:flex-row items-center justify-between py-2 gap-3">
+                    <div>
+                        <h2 class="text-red font-semibold leading-7 text-gray-900">Project Information</h2>
+                    </div>
                     {% comment %} <div class="flex gap-2 text-gray-7d">
                         <span class="">Created At: {{ project.created_at|naturalday }}</span>
                         <span class="">|</span>
@@ -133,12 +95,61 @@
                         <a href="{% url 'projects-update' project.pk %}" class="btn btn-red">Edit</a>
                     </div>
                 </div>
-            </div>
-            {% comment %}  {% endcomment %}
-            <div>
-                <h4 class="text-base font-semibold leading-7 text-gray-900">Project Information</h4>
+                {% comment %}  {% endcomment %}
                 <div class="mt-6 border-t border-gray-e6">
                     <dl class="divide-y divide-gray-100">
+                        <div class="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                            <dt class="text-sm font-medium leading-6 text-gray-900">Title</dt>
+                            <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+                                {{ project.title}}
+                            </dd>
+                        </div>
+
+                        <div class="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                            <dt class="text-sm font-medium leading-6 text-gray-900">Info</dt>
+                            <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+                                 <div class="flex flex-col sm:flex-row gap-2 justify-between items-center">
+                    <p class="flex items-center gap-2">
+                        <svg fill="none"
+                             viewBox="0 0 24 24"
+                             stroke-width="1.5"
+                             stroke="currentColor"
+                             class="size-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 21h16.5M4.5 3h15M5.25 3v18m13.5-18v18M9 6.75h1.5m-1.5 3h1.5m-1.5 3h1.5m3-6H15m-1.5 3H15m-1.5 3H15M9 21v-3.375c0-.621.504-1.125 1.125-1.125h3.75c.621 0 1.125.504 1.125 1.125V21" />
+                        </svg>
+                        {{ project.organization.name }} ({{ project.organization.code }})
+                    </p>
+                    <p class="flex items-center gap-2">
+                        <svg fill="none"
+                             viewBox="0 0 24 24"
+                             stroke-width="1.5"
+                             stroke="currentColor"
+                             class="size-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+                        </svg>
+                        {% if project.user %}
+                            <a href="{% url 'profiles-show' project.user.username %}">
+                                {{ project.user.get_full_name }} ({{ project.user.username }})
+                            </a>
+                        {% endif %}
+                    </p>
+                    <p class="flex items-center gap-2">
+                        <svg width="800px"
+                             height="800px"
+                             viewBox="0 0 24 24"
+                             fill="none"
+                             xmlns="http://www.w3.org/2000/svg"
+                             class="size-6">
+                            <path opacity="0.4" d="M2.44922 14.9702C3.51922 18.4102 6.39923 21.0602 9.97923 21.7902" stroke="#292D32" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
+                            <path d="M2.05078 10.98C2.56078 5.93 6.82078 2 12.0008 2C17.1808 2 21.4408 5.94 21.9508 10.98" stroke="#292D32" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
+                            <path d="M14.0098 21.8C17.5798 21.07 20.4498 18.45 21.5398 15.02" stroke="#292D32" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                        <span class="{{ project.state }}">{{ project.get_state_display }}</span>
+                    </p>
+                </div>
+                            </dd>
+                        </div>
+
                         <div class="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
                             <dt class="text-sm font-medium leading-6 text-gray-900">Description</dt>
                             <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
@@ -208,7 +219,6 @@
                         </div>
                     </dl>
                 </div>
-            </div>
             {% comment %} Project timeline {% endcomment %}
             <h4>Timeline</h4>
             <div class="bg-gray-fa ">

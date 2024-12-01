@@ -5,7 +5,6 @@ from django.core.exceptions import PermissionDenied
 from django.db.models import Count, Prefetch
 from django.http import JsonResponse
 from django.shortcuts import render
-
 from project_reports.models import ProjectMonthlyReport
 
 from ..models import ActivityDomain, ActivityType, Cluster, Indicator, Location, Project

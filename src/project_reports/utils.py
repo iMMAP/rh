@@ -4,9 +4,9 @@ import datetime
 from openpyxl.styles import Font, NamedStyle
 from openpyxl.utils import get_column_letter
 from openpyxl.worksheet.datavalidation import DataValidation
-from rh.models import Disaggregation, FacilitySiteType
 
 from project_reports.models import ResponseType
+from rh.models import Disaggregation, FacilitySiteType
 
 header_style = NamedStyle(name="header")
 header_style.font = Font(bold=True)

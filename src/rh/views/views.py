@@ -1,14 +1,60 @@
 import json
 
 from django.contrib.auth.decorators import login_required
+from django.core.exceptions import PermissionDenied
 from django.db.models import Count, Prefetch
 from django.http import JsonResponse
 from django.shortcuts import render
+
 from project_reports.models import ProjectMonthlyReport
 
 from ..models import ActivityDomain, ActivityType, Cluster, Indicator, Location, Project
+from ..utils import has_permission
 
 RECORDS_PER_PAGE = 10
+
+
+def cluster_home(request, cluster: str):
+    """Home page and overview of project's for a specified {cluster}
+    url: /clusters/{cluster_code}
+    """
+
+    # check if req.user is in the {cluster}_CLUSTER_LEADS group
+    if not has_permission(request.user, clusters=[cluster]):
+        raise PermissionDenied
+
+    cluster = Cluster.objects.get(code=cluster)
+
+    active_projects = (
+        Project.objects.filter(state="in-progress").filter(clusters__in=[cluster]).order_by("-updated_at")[:8]
+    )
+
+    pending_reports_qs = ProjectMonthlyReport.objects.filter(
+        state="pending", project__clusters__in=[cluster], project__state="in-progress"
+    )
+
+    projects_qs = Project.objects.filter(state="in-progress", clusters__in=[cluster])
+    counts = {
+        "implementing_partners_count": projects_qs.aggregate(
+            implementing_partners_count=Count("implementing_partners", distinct=True)
+        )["implementing_partners_count"],
+        "activity_plans_count": projects_qs.aggregate(activity_plans_count=Count("activityplan", distinct=True))[
+            "activity_plans_count"
+        ],
+        "target_locations_count": projects_qs.aggregate(
+            target_locations_count=Count("targetlocation__district", distinct=True)
+        )["target_locations_count"],
+    }
+
+    counts["pending_reports_count"] = pending_reports_qs.count()
+
+    context = {
+        "active_projects": active_projects,
+        "counts": counts,
+        "pending_reports": pending_reports_qs.select_related("project", "project__user").distinct()[:8],
+    }
+
+    return render(request, "rh/cluster_home.html", context)
 
 
 def landing_page(request):

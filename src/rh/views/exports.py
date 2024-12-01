@@ -10,6 +10,7 @@ from django.shortcuts import get_object_or_404
 from openpyxl import Workbook
 from openpyxl.styles import Font, NamedStyle
 from openpyxl.utils import get_column_letter
+
 from rh.utils import DateTimeEncoder
 
 from ..filters import ProjectsFilter

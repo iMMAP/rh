@@ -4,6 +4,7 @@ import factory
 import pytz
 from factory.django import DjangoModelFactory
 from factory.faker import faker
+
 from users.factory import UserFactory
 
 from .models import (

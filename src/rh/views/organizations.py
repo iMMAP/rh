@@ -4,6 +4,7 @@ from django.core.cache import cache
 from django.core.exceptions import PermissionDenied
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, render
+
 from rh.models import Organization, TargetLocation
 from rh.utils import is_cluster_lead
 

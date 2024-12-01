@@ -381,15 +381,22 @@ class BudgetProgressAdmin(admin.ModelAdmin):
         "project",
         "donor",
         "title",
-        "activity_domain",
+        "get_activity_domains",
         "grant",
         "amount_recieved",
         "budget_currency",
         "received_date",
         "country",
     )
-    search_fields = ("project", "donor", "activity_domain", "country")
+    search_fields = ("project", "donor", "activity_domains", "country")
     list_filter = ("project",)
+
+    # get activity domains for display list
+    # Custom method to display the activity domains in the list
+    def get_activity_domains(self, obj):
+        return ", ".join([str(domain) for domain in obj.activity_domains.all()])
+
+    get_activity_domains.short_description = "Activity Domains"
 
 
 admin.site.register(BudgetProgress, BudgetProgressAdmin)

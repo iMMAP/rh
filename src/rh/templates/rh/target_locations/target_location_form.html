@@ -284,7 +284,7 @@
                 <div class="plan-submit-holder">
                     {% if target_location_form.initial %}
                         <a id="delete-btn"
-                           hx-post="{% url 'target-locations-delete' target_location_form.initial.id %}"
+                           hx-delete="{% url 'target-locations-delete' target_location_form.initial.id %}"
                            hx-trigger="click"
                            hx-indicator=".progress"
                            hx-confirm="Do you want to delete Target Locations ?"

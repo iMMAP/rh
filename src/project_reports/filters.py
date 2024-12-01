@@ -1,6 +1,5 @@
 import django_filters
 from django import forms
-
 from rh.models import (
     ActivityDomain,
     ActivityType,

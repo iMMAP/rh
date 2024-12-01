@@ -7,12 +7,12 @@ from django.db.models import Prefetch
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from openpyxl.styles import Font, NamedStyle
-
-from project_reports.filters import MonthlyReportsFilter
 from rh.models import Cluster, Organization, Project
 from rh.utils import is_cluster_lead
 from stock.models import StockMonthlyReport, StockReport
 from stock.utils import write_csv_columns_and_rows
+
+from project_reports.filters import MonthlyReportsFilter
 
 from .models import ActivityPlanReport, DisaggregationLocationReport, ProjectMonthlyReport, TargetLocationReport
 from .utils import write_projects_reports_to_csv

@@ -111,14 +111,16 @@
    </div>
 </div>
 <!-- chart seciton -->
- <div class="multiple-fields-row two-items gap-4 justify-between">
-    <div class="border border-gray-d1 rounded my-3">
-        <canvas id="donor-chart" style="width:100%;max-width:650px;padding: 5px;"></canvas>
-        
+ <div class="multiple-fields-row two-items ">
+    <div class="field-col">
+        <div class="border border-gray-d1 rounded my-3 mx-1">
+            <canvas id="donor-chart"></canvas>
+        </div>
     </div>
-    <div class="border border-gray-d1 rounded my-3">
-        <canvas id="activity-chart" style="width:100%;max-width:650px;padding: 5px;"></canvas>
-        <div id="label-container"></div>
+    <div class="field-col">
+        <div class="border border-gray-d1 rounded my-3 mx-1">
+            <canvas id="activity-chart"></canvas>
+        </div>
     </div>
  </div>
  <div class="plan-submit-holder bg-gray-f5 my-4 py-4 border border-gray-d1 px-2 rounded ">
@@ -128,14 +130,18 @@
             <span class="title mx-2">{{project.budget|intcomma}} <b>{{project.budget_currency}}</b></span>
         </span> <strong class="text-red">|</strong>
         <span class="my-0 py-0 mr-3 ml-3">
-            <strong>Project Budget Received</strong>
-            <span class="title mx-2">{{project.budget_received|intcomma}} <b>{{project.budget_currency}}</b></span>
+            <strong>Total Budget Reported</strong>
+            <span class="title mx-2">{{calc.total_budget|intcomma}} <b>{{project.budget_currency}}</b></span>
         </span>
     </div>
     <div>
         <span class="my-0 py-0 mr-3 ml-3">
-            <strong>Project Budget Gap</strong>
-            <span class="title mx-2">{{project.budget_gap|intcomma}} <b>{{project.budget_currency}}</b></span>
+            <strong>Reported Budget Gap</strong>
+            <span class="title mx-2 text-red">{{calc.budget_gap|intcomma}} <b>{{project.budget_currency}}</b></span>
+        </span><strong class="text-red">|</strong>
+        <span class="my-0 py-0 mr-3 ml-3">
+            <strong>Reported Budget Extension</strong>
+            <span class="title mx-2 text-green">{{calc.extended_budget|intcomma}} <b>{{project.budget_currency}}</b></span>
         </span>
     </div>
 </div>
@@ -151,10 +157,14 @@
     var yValues = [55, 49, 44, 24, 15];
     var barColors = [
       "#be2126",
+      "#29B29C",
+      "#49352E",
+      "#E84E15",
       "#BE9D27",
       "#6d6e71",
       "#193661",
-      "#29B29C",
+      "#0D7260",
+      
       
     ];
     var donor = document.getElementById("donor-chart");

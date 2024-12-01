@@ -235,7 +235,7 @@ def delete_target_location(request, pk):
         messages.error(
             request, "Cannot delete target location with existing reports. Instead change the status to Archived."
         )
-        return HttpResponse(status=400)
+        return HttpResponse(status=200)
 
     target_location.delete()
 

@@ -17,6 +17,7 @@ from .views import (
     target_locations as target_locations,
 )
 from .views.views import (
+    cluster_home,
     get_activity_domain_types,
     get_activity_type_indicators,
     get_locations_details,
@@ -48,6 +49,8 @@ urlpatterns = [
     ),
     path("projects/clusters", projects.users_clusters_projects_list, name="user-clusters-projects-list"),
     path("projects/clusters/<str:cluster>", projects.cluster_projects_list, name="cluster-projects-list"),
+    # cluster
+    path("clusters/<str:cluster>", cluster_home, name="clusters-home"),
     path("projects/create", projects.create_project, name="projects-create"),
     path(
         "projects/<int:pk>",

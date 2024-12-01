@@ -12,7 +12,7 @@
 
 {% block breadcrumb_li %}
     <li class="current">
-        {{ request.resolver_match.kwargs.cluster|capfirst }}'s Home
+        {{ request.resolver_match.kwargs.cluster|upper }}'s Home
     </li>
 {% endblock %}
 
@@ -22,16 +22,16 @@
             {% comment %}  {% endcomment %}
             <div class="projects-options-panel">
                 <div class="holder">
-                    <h1 class="locations text-red-be"> {{ request.resolver_match.kwargs.cluster|capfirst }}'s Home </h1>
+                    <h1 class="locations text-red-be"> {{ request.resolver_match.kwargs.cluster|upper }}'s Home </h1>
                     <ul class="buttons-list-inline">
                         <li>
                             {% if request.resolver_match.kwargs.cluster %}
-                                <a href="{% url 'cluster-projects-list' request.resolver_match.kwargs.cluster %}" class="btn btn-gray-outline" >Projects</a>
+                                <a href="{% url 'cluster-projects-list' request.resolver_match.kwargs.cluster %}" class="btn btn-gray-outline" >Cluster Projects</a>
                             {% endif %}
                         </li>
                          <li> 
                             {% if request.resolver_match.kwargs.cluster %}
-                                <a class="btn btn-red" href="{% url 'clusters-5w' request.resolver_match.kwargs.cluster %}">{{ request.resolver_match.kwargs.cluster|capfirst }} 5W Dashboard</a>
+                                <a class="btn btn-red" href="{% url 'clusters-5w' request.resolver_match.kwargs.cluster %}">{{ request.resolver_match.kwargs.cluster|upper }} 5W Dashboard</a>
                             {% endif %}
                         </li> 
                     </ul>

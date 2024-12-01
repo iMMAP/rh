@@ -1,5 +1,4 @@
 from django import forms
-
 from rh.models import Location, Project
 
 from .models import StockItemsType, StockMonthlyReport, StockReport, Warehouse

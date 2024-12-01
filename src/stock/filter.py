@@ -1,7 +1,7 @@
 import django_filters
 from django import forms
-
 from rh.models import Cluster, Location
+
 from stock.models import StockItemsType, StockMonthlyReport, StockReport, StockUnit, Warehouse
 
 

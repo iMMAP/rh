@@ -3,7 +3,7 @@
 {% load static %}
 
 {% block title %}
-    Projects - Clusters
+    {{request.resolver_match.kwargs.cluster|upper}} Projects - Clusters
 {% endblock title %}
 
 
@@ -15,11 +15,11 @@
     <div class="container">
         <div class="projects-options-panel">
             <div class="holder">
-                <h2>{{ request.resolver_match.kwargs.cluster|capfirst }} Cluster projects</h2>
+                <h2 class="text-red-be">{{ request.resolver_match.kwargs.cluster|upper}} Cluster projects</h2>
                 <ul class="buttons-list-inline">
                     <li>
                         {% if request.resolver_match.kwargs.cluster %}
-                            <a class="btn btn-red" href="{% url 'clusters-5w' request.resolver_match.kwargs.cluster %}">{{ request.resolver_match.kwargs.cluster|capfirst }} 5W Dashboard</a>
+                            <a class="btn btn-red" href="{% url 'clusters-5w' request.resolver_match.kwargs.cluster %}">{{ request.resolver_match.kwargs.cluster|upper }} 5W Dashboard</a>
                         {% endif %}
                     </li> 
                 </ul>

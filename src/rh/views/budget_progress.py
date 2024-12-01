@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.db.models import Sum
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 
@@ -44,7 +45,13 @@ def create_project_budget_progress_view(request, project):
     else:
         form = BudgetProgressForm(project=project)
 
-    # progress = list(budget_progress.values_list("pk", flat=True))
+    total_budget = financial_report.aggregate(total_budget=Sum("amount_recieved"))["total_budget"]
+    calc = {
+        "extended_budget": max(int(total_budget) - int(project.budget), 0),
+        "budget_gap": max(int(project.budget) - int(total_budget), 0),
+        "total_budget": total_budget,
+    }
+
     donor_names = []
     donor_funds = []
     activity_funds = []
@@ -73,6 +80,7 @@ def create_project_budget_progress_view(request, project):
     context = {
         "project": project,
         "budget_progress": financial_report,
+        "calc": calc,
         "form": form,
         "donor_names": list(donor_names),
         "donor_funds": list(donor_funds),

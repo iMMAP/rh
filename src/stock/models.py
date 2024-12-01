@@ -1,4 +1,5 @@
 from django.db import models
+
 from rh.models import Cluster, Location, Organization, Project
 from users.models import User
 

@@ -178,7 +178,7 @@ def profile_show(request, username):
     if not has_permission(user=request.user, user_obj=user):
         raise PermissionDenied
 
-    context = {"user": user}
+    context = {"profile_user": user}
 
     return render(request, "users/profile_show.html", context)
 

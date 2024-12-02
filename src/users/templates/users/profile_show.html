@@ -3,45 +3,45 @@
 {% load static %}
 
 {% block title %}
-    Profile: {{ user.username }}
+    Profile: {{ profile_user.username }}
 {% endblock title %}
 
 
 {% block breadcrumb_li %}
-  <li class=""><a href="{% url 'organizations-show' user.profile.organization.code %}">{{user.profile.organization.code}}</a></li>
+  <li class=""><a href="{% url 'organizations-show' profile_user.profile.organization.code %}">{{profile_user.profile.organization.code}}</a></li>
   <li class=""><a href="{% url 'users-organization' %}">Members</a></li>
-  <li class="current">{{user.username}}</a></li>
+  <li class="current">{{profile_user.username}}</a></li>
 {% endblock %}
 
 {% block content %}
 <div class="container">
-    <h1 class="font-bold leading-7 text-gray-900">User Information</h1>
+    <h1 class="font-bold leading-7 text-red-be">User Information</h1>
     <div class="mt-6 border-t border-gray-e6">
         <dl class="divide-y divide-gray-100">
                 <div class="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
                 <dt class="text-sm font-medium leading-6 text-gray-900">Full Name</dt>
                 <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
-                    {{ user.profile.name }}
+                    {{ profile_user.profile.name }}
                 </dd>
             </div>
 
             <div class="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
                 <dt class="text-sm font-medium leading-6 text-gray-900">Email</dt>
                 <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0 js-copy-field">
-                    {{ user.email }}
+                    {{ profile_user.email }}
                 </dd>
             </div>
             
             <div class="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
                 <dt class="text-sm font-medium leading-6 text-gray-900">Position</dt>
                 <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
-                    {{ user.profile.position }}
+                    {{ profile_user.profile.position }}
                 </dd>
             </div>
             <div class="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
                 <dt class="text-sm font-medium leading-6 text-gray-900">Country</dt>
                 <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
-                    {{ user.profile.country}}
+                    {{ profile_user.profile.country}}
                 </dd>
             </div>
 
@@ -49,7 +49,7 @@
                 <dt class="text-sm font-medium leading-6 text-gray-900">Organization</dt>
                 <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
                     <span class="text-read-only m2m-badges">
-                        <span class="border border-gray-d1 rounded-full px-4 py-1 bg-gray-f5">{{user.profile.organization}}</span>
+                        <span class="border border-gray-d1 rounded-full px-4 py-1 bg-gray-f5">{{profile_user.profile.organization}}</span>
                     </span>
                 </dd>
             </div>
@@ -58,7 +58,7 @@
                 <dt class="text-sm font-medium leading-6 text-gray-900">Clusters</dt>
                 <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
                     <span class="text-read-only m2m-badges">
-                        {% for cluster in user.profile.clusters.all %}
+                        {% for cluster in profile_user.profile.clusters.all %}
                             <span class="border border-gray-d1 rounded-full px-4 py-1 bg-gray-f5">{{ cluster.title }}</span>
                         {% endfor %}
                     </span>
@@ -68,7 +68,7 @@
             <div class="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
                 <dt class="text-sm font-medium leading-6 text-gray-900">State</dt>
                 <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
-                    {% if user.is_active %}
+                    {% if profile_user.is_active %}
                         <span class="in-progress">Active</span>
                     {% else %} 
                        <span class="draft">Deactive</span> 
@@ -79,13 +79,13 @@
             <div class="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
                 <dt class="text-sm font-medium leading-6 text-gray-900">Last Login</dt>
                 <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
-                    {{user.last_login}}
+                    {{profile_user.last_login}}
                 </dd>
             </div>
             <div class="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
                 <dt class="text-sm font-medium leading-6 text-gray-900">Date Joined</dt>
                 <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
-                    {{user.date_joined}}
+                    {{profile_user.date_joined}}
                 </dd>
             </div>
         
@@ -103,29 +103,29 @@
                                 {% endif %}
                             </div>
                         </div>
-                        {% if user.profile.skype %}
+                        {% if profile_user.profile.skype %}
                         <div class="input-field read-only">
                             <span class="label">Skype</span>
                             <div class="input-holder">
-                                <a href="skype:{{ user.profile.skype }}?userinfo">{{ user.profile.skype }}</a>  
+                                <a href="skype:{{ profile_user.profile.skype }}?userinfo">{{ profile_user.profile.skype }}</a>  
                             </div>
                         </div>
                         {% endif %}
 
-                        {% if user.profile.phone %}
+                        {% if profile_user.profile.phone %}
                         <div class="input-field read-only">
                             <span class="label">Phone</span>
                             <div class="input-holder">
-                                {{user.profile.phone}}
+                                {{profile_user.profile.phone}}
                             </div>
                         </div>
                         {% endif %}
 
-                        {% if user.profile.whatsup %}
+                        {% if profile_user.profile.whatsup %}
                         <div class="input-field read-only">
                             <span class="label">Phone</span>
                             <div class="input-holder">
-                                {{user.profile.whatsup }}
+                                {{profile_user.profile.whatsup }}
                             </div>
                         </div>
                         {% endif %}
@@ -137,13 +137,13 @@
                 <dt class="text-sm font-medium leading-6 text-gray-900">Actions</dt>
                 <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
                 {% if perms.rh.activate_deactivate_user %}
-                    <button id="dectivate-button-{{ user.id }}"
+                    <button id="dectivate-button-{{ profile_user.id }}"
                             class="btn btn-gray"
-                            hx-delete="{% url 'toggle-status' user.id %}"
+                            hx-delete="{% url 'toggle-status' profile_user.id %}"
                             hx-swap="none"
-                            hx-disable-element="#dectivate-button-{{ user.id }}"
+                            hx-disable-element="#dectivate-button-{{ profile_user.id }}"
                             hx-ext="disable-element">
-                        {% if user.is_active %}
+                        {% if profile_user.is_active %}
                             <span class="project-detail icon-trashbin"></span> Deactivate
                         {% else %}
                             Activate

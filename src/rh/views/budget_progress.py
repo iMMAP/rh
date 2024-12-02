@@ -45,10 +45,10 @@ def create_project_budget_progress_view(request, project):
     else:
         form = BudgetProgressForm(project=project)
 
-    total_budget = financial_report.aggregate(total_budget=Sum("amount_recieved"))["total_budget"]
+    total_budget = financial_report.aggregate(total_budget=Sum("amount_recieved", default=0))["total_budget"]
     calc = {
-        "extended_budget": max(int(total_budget) - int(project.budget), 0),
-        "budget_gap": max(int(project.budget) - int(total_budget), 0),
+        "extended_budget": max(total_budget - project.budget, 0),
+        "budget_gap": max(project.budget - total_budget, 0),
         "total_budget": total_budget,
     }
 

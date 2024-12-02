@@ -2,6 +2,7 @@ from datetime import date
 
 import django_filters
 from django import forms
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.models import User
@@ -100,9 +101,22 @@ def toggle_status(request, user_id):
         user.save()
         messages.success(request, f"{user.username} is activated.")
 
-    context = {"user": user}
+        # Notify the user
+        subject = "Account Status Update"
+        message = f"Your account status has been updated. You are now {'active' if user.is_active else 'inactive'}."
+        html_message = loader.render_to_string(
+            template_name="users/emails/account_status.html",
+            context={"user": user, "subject": subject, "domain": request.get_host()},
+        )
 
-    return render(request, "users/partials/user_tr.html", context)
+        user.email_user(
+            subject,
+            message,
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            html_message=html_message,
+        )
+
+    return render(request, "users/partials/user_tr.html", context={"user": user})
 
 
 #############################################

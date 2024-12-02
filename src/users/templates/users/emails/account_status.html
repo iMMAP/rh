@@ -1,0 +1,40 @@
+{% extends "email_templates/email_base.html" %}
+
+{% block email-title %}
+   {{subject}}
+{% endblock email-title %}
+
+{% block email-body %}
+    <tr>
+        <td style="padding:0 0 21px;
+                   font:12px/14px Arial, Helvetica, sans-serif;
+                   color:#6d6e71;
+                   letter-spacing:-0.12px">
+            Hello {{ user.get_full_name }},
+            Your account status has been updated. You are now {% if user.is_active %} active. {% else %} deativated. {% endif %}
+        </td>
+    </tr>
+    <tr>
+        <td style="padding:0 0 17px;">
+            <table align="right" cellpadding="0" cellspacing="0">
+                <tr>
+                    <td class="active-t btn-01"
+                        align="center"
+                        style="background:#9a332b;
+                               mso-padding-alt:4px 30px;
+                               font:700 13px/16px Arial, Helvetica, sans-serif;
+                               color:#fff">
+                        <a style="color:#fff;
+                                text-decoration:none;
+                                display:block;
+                                padding:4px 30px"
+                                href="{{domain}}/{% url 'login' %}"
+                           >
+                          Login to Your Account 
+                        </a>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+{% endblock email-body %}

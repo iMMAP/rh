@@ -6,32 +6,15 @@ Documentation: [Technical Documentation](https://immap.github.io/rh/)
 
 
 ## Setup the project locally
-
-### Using Docker
-#### Build the containers
+### Clone the repo
 ```shell
-make run-dependencies
+git clone https://github.com/iMMAP/rh.git
 ```
-
-#### Run Command in the containers
-```shell
-# Django app
-docker-compose -f docker-compose.dev.yml run --rm django make serve
-docker-compose -f docker-compose.dev.yml run --rm django make migrate
-docker-compose -f docker-compose.dev.yml run --rm django make migrations
-
-# Vite app on the static
-docker-compose -f docker-compose.dev.yml run --rm npm make vite-host
-docker-compose -f docker-compose.dev.yml run --rm --service-ports make vite-host
-#
-docker-compose -f docker-compose.dev.yml run --rm npm make npm-install
-docker-compose -f docker-compose.dev.yml run --rm npm make npm-build
-```
-
-### No Docker
 
 #### Create a virtualenv 
 ```shell
+cd rh
+
 virtualenv .venv
 # OR
 python -m venv .venv
@@ -55,7 +38,7 @@ cp .env.sample .env
 ```
 
 #### Install the dependencies
-Make sure to 'make' installed for your machine.
+Make sure 'make' is installed for your machine.
 
 ```shell
 make install # to install python package
@@ -85,3 +68,28 @@ make vite
 ```shell
 make lint
 ```
+
+### Using Docker
+#### Build the containers
+```shell
+make run-dependencies
+```
+
+### Management
+[Management](https://immap.github.io/rh/Models/management)
+
+#### Run Command in the containers
+```shell
+# Django app
+docker-compose -f docker-compose.dev.yml run --rm django make serve
+docker-compose -f docker-compose.dev.yml run --rm django make migrate
+docker-compose -f docker-compose.dev.yml run --rm django make migrations
+
+# Vite app on the static
+docker-compose -f docker-compose.dev.yml run --rm npm make vite-host
+docker-compose -f docker-compose.dev.yml run --rm --service-ports make vite-host
+#
+docker-compose -f docker-compose.dev.yml run --rm npm make npm-install
+docker-compose -f docker-compose.dev.yml run --rm npm make npm-build
+```
+

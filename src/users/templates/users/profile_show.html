@@ -136,6 +136,7 @@
             <div class="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
                 <dt class="text-sm font-medium leading-6 text-gray-900">Actions</dt>
                 <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+                {% if perms.rh.activate_deactivate_user %}
                     <button id="dectivate-button-{{ user.id }}"
                             class="btn btn-gray"
                             hx-delete="{% url 'toggle-status' user.id %}"
@@ -153,6 +154,7 @@
                                 style="width: 1.2rem"
                                 src="{% static 'images/spinner.gif' %}" />
                     </button>
+                {% endif %}
                 </dd>
             </div>
         </dl>

@@ -1,0 +1,50 @@
+{% extends "_base.html" %}
+
+{% load static %}
+
+{% block title %}
+    {{request.resolver_match.kwargs.cluster|upper}} Reports
+{% endblock title %}
+
+
+{% block breadcrumb_li %}
+  <li class="current">Cluster projects reports</a>
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="projects-options-panel">
+            <div class="holder">
+                <h2 class="text-red-be">{{ request.resolver_match.kwargs.cluster|upper}} Cluster projects reports</h2>
+                <ul class="buttons-list-inline">
+                    <li>
+                        {% if request.resolver_match.kwargs.cluster %}
+                            <a class="btn btn-red" href="{% url 'clusters-5w' request.resolver_match.kwargs.cluster %}">{{ request.resolver_match.kwargs.cluster|upper }} 5W Dashboard</a>
+                        {% endif %}
+                    </li> 
+                </ul>
+            </div>
+            <p class="py-4 flex items-center gap-2">
+                The below table displays the projects according to their status (Active, Draft, Completed, etc).
+            </p>
+        </div>
+
+        <div class="tabs-nav-holder">
+            <ul class="tabs-nav">
+                <li class=" {% if request.GET.state == 'pending' %}active{% endif %}">
+                    <a href="{{ request.GET.url }}?state=pending">Pending </a>
+                </li>
+                <li class=" {% if request.GET.state == 'completed' %}active{% endif %}">
+                    <a href="{{ request.GET.url }}?state=completed">Completed
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        {% include "rh/clusters/_reports_table.html" %}
+    </div>
+{% endblock content %}
+
+{% block scripts %}
+    <script src="{% static 'js/utils/exportSW.js' %}"></script>
+{% endblock scripts %}

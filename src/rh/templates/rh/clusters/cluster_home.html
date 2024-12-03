@@ -167,8 +167,7 @@
                     <div class="rounded-lg shadow-sm p-6 border border-gray-d1">
                         <div class="flex items-center justify-between pb-4 border-b border-gray-e6">
                             <h3 class="text-lg font-medium">Pending Reports</h3>
-                             {% comment %} <a href="{% url 'organizations-5w' user.profile.organization %}" class="btn btn-gray-outline"> all pending reports {% endcomment %}
-                            </a>
+                            <a href="{% url 'clusters-reports' request.resolver_match.kwargs.cluster %}?state=pending" class="btn btn-gray-outline">View All</a>
                         </div>
                         <div class="mt-4">
                             <div class="relative w-full overflow-auto">
@@ -176,27 +175,27 @@
                                 <table class="w-full caption-bottom text-sm">
                                     <thead class="">
                                         <tr class="border-b border-gray-e6 hover:bg-muted/50 font-bold">
-                                            <th class="h-12 text-left align-middle ">Report</th>
                                             <th class="h-12 text-left align-middle ">Project</th>
                                             <th class="h-12 text-left align-middle ">Focal Point</th>
+                                            <th class="h-12 text-left align-middle ">Report</th>
                                             <th class="h-12 text-left align-middle ">Status</th>
                                         </tr>
                                     </thead>
                                     <tbody class="">
                                         {% for report in pending_reports %}
                                             <tr class="border-b border-gray-e6 hover:bg-muted/50 ">
-                                                <td class="py-3 align-middle  font-medium">
-                                                    <a class=""
-                                                       href="{% url 'view_monthly_report' report.project.id report.id %}">
-                                                        {{ report }}
-                                                    </td>
-                                                </a>
                                                 <td class="py-3 align-middle ">
                                                     <a href="{% url 'projects-detail' report.project.id %}">{{ report.project.code }}</a>
                                                 </td>
                                                 <td class="py-3 align-middle ">
                                                     <a href="{% url 'profiles-show' report.project.user.username %}"> {{ report.project.user }} </a>
                                                 </td>
+                                                <td class="py-3 align-middle  font-medium">
+                                                    <a class=""
+                                                       href="{% url 'view_monthly_report' report.project.id report.id %}">
+                                                        {{ report }}
+                                                    </td>
+                                                </a>
                                                 <td class="py-3 align-middle ">
                                                     <div class="{{ report.state }}">{{ report.get_state_display }}</div>
                                                 </td>

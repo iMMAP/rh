@@ -4,6 +4,21 @@ from django.contrib.auth.models import Group, User
 from openpyxl.styles import Font, NamedStyle
 from openpyxl.utils import get_column_letter
 
+
+def is_cluster_lead_of(user: User, cluster_code: str) -> bool:
+    return user.groups.filter(name__in=f"{cluster_code.upper()}_CLUSTER_LEADS").exists()
+
+
+def is_cluster_lead(user: User, clusters: list) -> bool:
+    cluster_lead_groups = [f"{cluster.upper()}_CLUSTER_LEADS" for cluster in clusters]
+
+    # user should be at least lead of one of the clusters
+    if not user.groups.filter(name__in=cluster_lead_groups).exists():
+        return False
+
+    return True
+
+
 # define header style
 header_style = NamedStyle(name="header")
 header_style.font = Font(bold=True)

@@ -3,7 +3,6 @@ from datetime import datetime
 from django.contrib import messages
 from django.contrib.auth import authenticate, get_user_model, login, logout
 from django.contrib.auth.models import Group, User
-from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import EmailMultiAlternatives, send_mail
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
@@ -85,14 +84,13 @@ def register_view(request):
 
 
 def send_account_activation_email(request, user):
-    current_site = get_current_site(request)
     mail_subject = "Email Activation link"
 
     context = {
         "user": user,
-        "domain": current_site.domain,
         "uid": urlsafe_base64_encode(force_bytes(user.pk)),
         "token": activation_token_generator.make_token(user),
+        "domain": f"{request.scheme}://{request.get_host()}",
     }
 
     message = loader.render_to_string(template_name="users/emails/activation_email_template.html", context=context)
@@ -154,17 +152,15 @@ def send_account_notification_email(request, user):
     org_admin_group = Group.objects.get(name="ORG_LEAD")
     org_admins = User.objects.filter(groups=org_admin_group, profile__organization=user_org)
 
-    current_site = get_current_site(request)
     mail_subject = "New User Registeration "
     for admin in org_admins:
         message = loader.render_to_string(
             "users/emails/notification_email_template.html",
             {
                 "user": user,
-                "domain": current_site.domain,
                 "username": user.username,
-                "protocol": "https" if request.is_secure() else "http",
                 "admin": admin,
+                "domain": f"{request.scheme}://{request.get_host()}",
             },
         )
         email = EmailMultiAlternatives(mail_subject, "Testing", to=[admin.email])

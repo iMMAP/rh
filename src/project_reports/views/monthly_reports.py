@@ -3,13 +3,16 @@ import csv
 from datetime import datetime
 
 import pandas as pd
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.core.exceptions import PermissionDenied
 from django.core.paginator import Paginator
 from django.db import transaction
 from django.db.models import Count, Prefetch, Q
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
+from django.template import loader
 from django.urls import reverse, reverse_lazy
 from django.utils import timezone
 from django_htmx.http import HttpResponseClientRedirect
@@ -26,6 +29,7 @@ from rh.models import (
     LocationType,
     Project,
 )
+from users.utils import is_cluster_lead
 
 from ..filters import ActivityPlanReportFilter, MonthlyReportsFilter
 from ..forms import (
@@ -40,6 +44,39 @@ from ..models import (
 )
 
 RECORDS_PER_PAGE = 10
+
+
+def notify_focal_point(request, report_id: int):
+    report = get_object_or_404(ProjectMonthlyReport.objects.select_related("project"), pk=report_id)
+    project_clusters = report.project.clusters.values_list("code", flat=True)
+    admin_user = request.user
+    focal_point = report.project.user
+
+    # user should be at least admin of one of the project clusters
+    if not is_cluster_lead(user=request.user, clusters=project_clusters):
+        return PermissionDenied
+
+    # notify the project.user
+    html_message = loader.render_to_string(
+        template_name="rh/emails/pending_report.html",
+        context={
+            "report": report,
+            "admin_user": admin_user,
+            "focal_point": focal_point,
+            "domain": f"{request.scheme}://{request.get_host()}",
+        },
+    )
+
+    focal_point.email_user(
+        subject="Pending Report Notification",
+        message=html_message,
+        from_email=settings.DEFAULT_FROM_EMAIL,
+        html_message=html_message,
+    )
+
+    messages.success(request, "User has been notified")
+
+    return HttpResponse(200)
 
 
 @login_required

@@ -109,7 +109,11 @@ def toggle_status(request, user_id):
         message = f"Your account status has been updated. You are now {'active' if user.is_active else 'inactive'}."
         html_message = loader.render_to_string(
             template_name="users/emails/account_status.html",
-            context={"user": user, "subject": subject, "domain": request.get_host()},
+            context={
+                "user": user,
+                "subject": subject,
+                "domain": f"{request.scheme}://{request.get_host()}",
+            },
         )
 
         user.email_user(

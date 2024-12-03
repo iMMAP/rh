@@ -6,7 +6,7 @@ from django.core.exceptions import PermissionDenied
 from django.db.models import Count, Sum
 from django.shortcuts import get_object_or_404, render
 from rh.models import Cluster, Organization
-from rh.utils import is_cluster_lead
+from users.utils import is_cluster_lead
 
 from project_reports.models import ProjectMonthlyReport
 

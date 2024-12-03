@@ -45,7 +45,16 @@ def export_as_csv(self, request, queryset):
 
 
 class UserAdminCustom(UserAdmin):
-    list_display = ("email", "username", "name", "organization", "is_active", "user_groups", "last_login","date_joined")
+    list_display = (
+        "email",
+        "username",
+        "name",
+        "organization",
+        "is_active",
+        "user_groups",
+        "last_login",
+        "date_joined",
+    )
     list_select_related = ["profile__organization"]
     date_hierarchy = "last_login"
 

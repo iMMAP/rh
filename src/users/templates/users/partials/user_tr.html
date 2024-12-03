@@ -2,8 +2,15 @@
 {% load humanize %}
 
 <tr id="user-{{ user.id }}">
+    <td style="">
+        {% for group in user.groups.all %}
+            {% if group.name == "ORG_LEAD" %}
+                <span class="completed">Admin</span>
+            {% endif %}
+        {% endfor %}
+    </td>
     <td>
-        <a href="{% url 'profiles-show' user.username %}">
+       <a href="{% url 'profiles-show' user.username %}">
             {{ user.first_name }} {{ user.last_name }} <em>({{ user.username }})</em>
         </a>
     </td>
@@ -30,7 +37,7 @@
                     <li>
                         <button id="dectivate-button-{{ user.id }}"
                                 class="btn btn-gray"
-                                hx-delete="{% url 'toggle-status' user.id %}"
+                                hx-put="{% url 'users-toggle-status' user.id %}"
                                 hx-swap="outerHTML"
                                 hx-target="#user-{{ user.id }}"
                                 hx-disable-element="#dectivate-button-{{ user.id }}"
@@ -47,6 +54,20 @@
                                  src="{% static 'images/spinner.gif' %}" />
                         </button>
                     </li>
+                {% endif %}
+                {% if perms.rh.activate_deactivate_user %}
+                <li>
+                    <button 
+                        class="btn btn-gray"
+                        hx-post="{% url 'users-make-admin' user.id %}"
+                        hx-swap="outerHTML"
+                        hx-target="#user-{{ user.id }}"
+                        hx-disable-element="#dectivate-button-{{ user.id }}"
+                        hx-ext="disable-element"
+                    >
+                        Make Admin
+                    </button>
+                </li>
                 {% endif %}
             </ul>
         </div>

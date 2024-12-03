@@ -5,7 +5,7 @@ from django import forms
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
-from django.contrib.auth.models import User
+from django.contrib.auth.models import Group, User
 from django.core.exceptions import PermissionDenied
 from django.core.paginator import Paginator
 from django.db.models import Count, Q
@@ -54,7 +54,10 @@ def org_users_list(request):
     users_filter = UsersFilter(
         request.GET,
         request=request,
-        queryset=User.objects.filter(profile__organization=user_org).select_related("profile").order_by("-last_login"),
+        queryset=User.objects.filter(profile__organization=user_org)
+        .select_related("profile")
+        .prefetch_related("groups")
+        .order_by("-last_login"),
     )
 
     RECORDS_PER_PAGE = Setting.get("RECORDS_PER_PAGE", default=10)
@@ -82,7 +85,7 @@ def org_users_list(request):
 
 
 @login_required
-@require_http_methods(["DELETE"])
+@require_http_methods(["PUT"])
 @permission_required("rh.activate_deactivate_user", raise_exception=True)
 def toggle_status(request, user_id):
     user = get_object_or_404(User, pk=user_id)
@@ -115,6 +118,29 @@ def toggle_status(request, user_id):
             from_email=settings.DEFAULT_FROM_EMAIL,
             html_message=html_message,
         )
+
+    return render(request, "users/partials/user_tr.html", context={"user": user})
+
+
+@login_required
+@require_http_methods(["POST"])
+@permission_required("rh.activate_deactivate_user", raise_exception=True)
+def make_admin(request, user_id):
+    user = get_object_or_404(User, pk=user_id)
+    admin_user = request.user
+
+    # authorize the request.user
+    # only users of the same organization
+    if user.profile.organization != admin_user.profile.organization:
+        messages.error(request, "You do not have permission")
+        return PermissionDenied
+
+    # add org lead group to user groups
+    user.groups.add(Group.objects.get(name="ORG_LEAD"))
+
+    # TODO: notify the user that they are admin
+
+    messages.success(request, f"{user.username} is admin now.")
 
     return render(request, "users/partials/user_tr.html", context={"user": user})
 

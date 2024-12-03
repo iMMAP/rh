@@ -36,7 +36,7 @@ class ProjectForm(forms.ModelForm):
             "implementing_partners": "The partner who takes the project and implement the project in the field.",
             "programme_partners": "The partner who is leading and administrating the project.",
             "clusters": "Clusters that your project covers. The list is taken from your profile, if something is missing please update your profile.",
-            "donors": "Please contact us if your project donor is not in the list",
+            "donors": "Donors are displayed by theirs names. search by full name if not found,Please contact us if your project donor is not in the list",
         }
 
         widgets = {

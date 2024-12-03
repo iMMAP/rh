@@ -94,7 +94,6 @@ def import_activity_plans(request, pk):
                             indicator=indicator,
                             beneficiary=BeneficiaryType.objects.filter(name=row["beneficiary"]).first(),
                             hrp_beneficiary=BeneficiaryType.objects.filter(name=row["hrp_beneficiary"]).first(),
-                          
                             package_type=PackageType.objects.filter(name=row["package_type"]).first(),
                             unit_type=UnitType.objects.filter(name=row["unit_type"]).first(),
                             grant_type=GrantType.objects.filter(name=row["grant_type"]).first(),

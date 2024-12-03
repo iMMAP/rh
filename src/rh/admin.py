@@ -161,7 +161,7 @@ admin.site.register(Organization, OrganizationAdmin)
 
 
 class DonorAdmin(admin.ModelAdmin):
-    list_display = ("name", "countries_count", "clusters_count")
+    list_display = ("code", "name", "countries_count", "clusters_count")
     search_fields = (
         "code",
         "name",

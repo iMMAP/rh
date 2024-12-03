@@ -2,16 +2,9 @@ import json
 from datetime import datetime
 
 from django.contrib.auth.models import User
+from users.utils import is_cluster_lead
 
 from rh.models import Project, TargetLocation
-
-
-def is_cluster_lead(user: User, clusters: list) -> bool:
-    cluster_lead_groups = [f"{cluster.upper()}_CLUSTER_LEADS" for cluster in clusters]
-    if not user.groups.filter(name__in=cluster_lead_groups).exists():
-        return False
-
-    return True
 
 
 def has_permission(user: User, project: Project = None, clusters: list = [], permission: str = ""):

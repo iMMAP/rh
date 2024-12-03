@@ -8,9 +8,9 @@ from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from openpyxl.styles import Font, NamedStyle
 from rh.models import Cluster, Organization, Project
-from rh.utils import is_cluster_lead
 from stock.models import StockMonthlyReport, StockReport
 from stock.utils import write_csv_columns_and_rows
+from users.utils import is_cluster_lead
 
 from project_reports.filters import MonthlyReportsFilter
 

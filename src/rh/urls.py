@@ -6,7 +6,12 @@ from .views import (
 from .views import (
     budget_progress as budget_progress,
 )
-from .views import exports as export_views
+from .views import (
+    clusters as clusters_views,
+)
+from .views import (
+    exports as export_views,
+)
 from .views import (
     organizations as organizations,
 )
@@ -17,7 +22,6 @@ from .views import (
     target_locations as target_locations,
 )
 from .views.views import (
-    cluster_home,
     get_activity_domain_types,
     get_activity_type_indicators,
     get_locations_details,
@@ -50,7 +54,9 @@ urlpatterns = [
     path("projects/clusters", projects.users_clusters_projects_list, name="user-clusters-projects-list"),
     path("projects/clusters/<str:cluster>", projects.cluster_projects_list, name="cluster-projects-list"),
     # cluster
-    path("clusters/<str:cluster>", cluster_home, name="clusters-home"),
+    path("clusters/<str:cluster>", clusters_views.cluster_home, name="clusters-home"),
+    path("clusters/<str:cluster>/reports", clusters_views.pending_reports, name="clusters-reports"),
+    #
     path("projects/create", projects.create_project, name="projects-create"),
     path(
         "projects/<int:pk>",

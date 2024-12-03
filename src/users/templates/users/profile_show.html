@@ -139,7 +139,7 @@
                 {% if perms.rh.activate_deactivate_user %}
                     <button id="dectivate-button-{{ profile_user.id }}"
                             class="btn btn-gray"
-                            hx-delete="{% url 'toggle-status' profile_user.id %}"
+                            hx-delete="{% url 'users-toggle-status' profile_user.id %}"
                             hx-swap="none"
                             hx-disable-element="#dectivate-button-{{ profile_user.id }}"
                             hx-ext="disable-element">

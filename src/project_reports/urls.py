@@ -22,6 +22,11 @@ urlpatterns = [
     path("clusters/<str:cluster>/5w", dashboards.cluster_5w_dashboard, name="clusters-5w"),
     # Monthly Report URLS
     path(
+        "monthly-reports/<int:report_id>/notify-focal-point",
+        report_views.notify_focal_point,
+        name="reports-notify-focal-point",
+    ),
+    path(
         "projects/<int:project>/reports",
         report_views.index_project_report_view,
         name="project_reports_home",

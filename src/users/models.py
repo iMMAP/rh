@@ -40,4 +40,5 @@ class Profile(models.Model):
         verbose_name_plural = "User Profiles"
         permissions = [
             ("view_org_users", "View users of your organization"),
+            ("make_admin", "Make a user organization admin"),
         ]

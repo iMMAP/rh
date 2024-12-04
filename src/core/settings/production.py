@@ -7,6 +7,16 @@ APP_ENV = env("APP_ENV", default="production")
 # env.list() splits comma-separated string into a list
 ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=["dev.reporthub.immap.org", "www.dev.reporthub.immap.org"])
 
+# HSTS settings
+SECURE_HSTS_SECONDS = env("SECURE_HSTS_SECONDS", default=31536000)
+SECURE_HSTS_PRELOAD =  env("SECURE_HSTS_PRELOAD", default=True)
+SECURE_HSTS_INCLUDE_SUBDOMAINS = env("SECURE_HSTS_INCLUDE_SUBDOMAINS", default=True)
+
+# COOKIES
+SESSION_COOKIE_SECURE= env("SESSION_COOKIE_SECURE", default=True)
+CSRF_COOKIE_SECURE = env("CSRF_COOKIE_SECURE", default=True)
+SECURE_SSL_REDIRECT = env("SECURE_SSL_REDIRECT", default=True)
+
 SENTRY_DSN = env("SENTRY_DSN", default="")
 
 if APP_ENV == "production":

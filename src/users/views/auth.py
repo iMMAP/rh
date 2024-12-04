@@ -120,7 +120,7 @@ def login_view(request):
                     messages.success(request, f"Welcome {user} ! You've successfully logged in.")
                 if "next" in request.POST:
                     return redirect(request.POST.get("next"))
-                return redirect("landing")
+                return redirect("home")
             else:
                 if not user.profile.email_verified_at:
                     # User is not verified, send them another verification email

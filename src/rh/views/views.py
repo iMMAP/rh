@@ -5,43 +5,47 @@ from django.db.models import Count, Prefetch
 from django.http import JsonResponse
 from django.shortcuts import render
 from project_reports.models import ProjectMonthlyReport
+from users.decorators import unauthenticated_user
 
 from ..models import ActivityDomain, ActivityType, Cluster, Indicator, Location, Project
 
 RECORDS_PER_PAGE = 10
 
 
+@login_required
+def home(request):
+    user_org = request.user.profile.organization
+    active_projects = (
+        Project.objects.filter(state="in-progress").filter(organization=user_org).order_by("-updated_at")[:8]
+    )
+
+    pending_reports = (
+        ProjectMonthlyReport.objects.filter(
+            state="pending", project__organization=user_org, project__state="in-progress"
+        )
+        .select_related("project", "project__user")
+        .distinct()
+    )
+
+    projects_counts = (
+        Project.objects.filter(state="in-progress")
+        .filter(organization=user_org)
+        .aggregate(
+            implementing_partners_count=Count("implementing_partners", distinct=True),
+            activity_plans_count=Count("activityplan", distinct=True),
+            target_locations_count=Count("targetlocation__province", distinct=True),
+        )
+    )
+
+    projects_counts["pending_reports_count"] = pending_reports.count()
+
+    context = {"active_projects": active_projects, "counts": projects_counts, "pending_reports": pending_reports}
+
+    return render(request, "home.html", context)
+
+
+@unauthenticated_user
 def landing_page(request):
-    if request.user.is_authenticated:
-        user_org = request.user.profile.organization
-        active_projects = (
-            Project.objects.filter(state="in-progress").filter(organization=user_org).order_by("-updated_at")[:8]
-        )
-
-        pending_reports = (
-            ProjectMonthlyReport.objects.filter(
-                state="pending", project__organization=user_org, project__state="in-progress"
-            )
-            .select_related("project", "project__user")
-            .distinct()
-        )
-
-        projects_counts = (
-            Project.objects.filter(state="in-progress")
-            .filter(organization=user_org)
-            .aggregate(
-                implementing_partners_count=Count("implementing_partners", distinct=True),
-                activity_plans_count=Count("activityplan", distinct=True),
-                target_locations_count=Count("targetlocation__province", distinct=True),
-            )
-        )
-
-        projects_counts["pending_reports_count"] = pending_reports.count()
-
-        context = {"active_projects": active_projects, "counts": projects_counts, "pending_reports": pending_reports}
-
-        return render(request, "home.html", context)
-
     context = {"users": 0, "locations": 0, "reports": 0}
 
     return render(request, "landing.html", context)

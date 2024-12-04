@@ -1,15 +1,17 @@
 # ruff: noqa
-import sentry_sdk
-
 from .base import *
 
 APP_ENV = env("APP_ENV", default="production")
 
-ALLOWED_HOSTS = ["localhost", "127.0.0.1", "dev.reporthub.immap.org"]
+# ALLOWED_HOSTS=reporthub.immap.org,www.reporthub.immap.org
+# env.list() splits comma-separated string into a list
+ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=["dev.reporthub.immap.org", "www.dev.reporthub.immap.org"])
 
 SENTRY_DSN = env("SENTRY_DSN", default="")
 
 if APP_ENV == "production":
+    import sentry_sdk
+
     sentry_sdk.init(
         dsn=SENTRY_DSN,
         # Set traces_sample_rate to 1.0 to capture 100%

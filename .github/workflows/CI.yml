@@ -50,6 +50,7 @@ jobs:
             git pull origin main
             git stash pop
             poetry install --without dev 
+            make clear_cache
             make migrate
             make npm-install
             make collectstatic

@@ -440,7 +440,7 @@
                                                 </td>
                                                 <td class="py-3 align-middle">{{ project.end_date|date:"d/m/Y" }}</td>
                                                 <td class="py-3 align-middle text-right">
-                                                    <a href="{% url 'project_reports_home' project.pk %}"
+                                                    <a href="{% url 'project_reports_home' project.id %}"
                                                        class="font-medium border border-gray-d1 px-2 rounded">Reports</a>
                                                 </td>
                                             </tr>
@@ -476,18 +476,18 @@
                                             <tr class="border-b border-gray-e6 hover:bg-muted/50 ">
                                                 <td class="py-3 align-middle  font-medium">
                                                     <a class=""
-                                                       href="{% url 'view_monthly_report' report.project.id report.id %}">
-                                                        {{ report }}
+                                                       href="{% url 'view_monthly_report' report.project_id report.id %}">
+                                                        {{ report.from_date|date:"F Y" }}
                                                     </td>
                                                 </a>
                                                 <td class="py-3 align-middle ">
-                                                    <a href="{% url 'projects-detail' report.project.id %}">{{ report.project.code }}</a>
+                                                    <a href="{% url 'projects-detail' report.project_id %}">{{ report.project__code }}</a>
                                                 </td>
                                                 <td class="py-3 align-middle ">
-                                                    <a href="{% url 'profiles-show' report.project.user.username %}"> {{ report.project.user }} </a>
+                                                    <a href="{% url 'profiles-show' report.project__user__username %}"> {{ report.project__user__username }} </a>
                                                 </td>
                                                 <td class="py-3 align-middle ">
-                                                    <div class="{{ report.state }}">{{ report.get_state_display }}</div>
+                                                    <div class="{{ report.state }}">{{ report.state}}</div>
                                                 </td>
                                             </tr>
                                         {% endfor %}

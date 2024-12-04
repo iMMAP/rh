@@ -25,6 +25,7 @@ from .views.views import (
     get_activity_domain_types,
     get_activity_type_indicators,
     get_locations_details,
+    home,
     landing_page,
     load_activity_domains,
     load_facility_sites,
@@ -32,6 +33,7 @@ from .views.views import (
 
 urlpatterns = [
     path("", landing_page, name="landing"),
+    path("home", home, name="home"),
     # Organization CRUD
     path("organizations/search", organizations.search, name="organizations-search"),
     path("organizations/create", organizations.organization_register, name="organizations-create"),

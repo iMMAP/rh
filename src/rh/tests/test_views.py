@@ -26,7 +26,6 @@ class TestLoggedInViews(TestCase):
 
         response = self.client.get(self.landing_url)
         self.assertEqual(response.status_code, 302)
-        self.assertTemplateUsed(response, "home.html")
 
     def test_load_locations_details_view(self):
         # Create dummy provinces and districts

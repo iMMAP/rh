@@ -1,5 +1,6 @@
 {% load static %}
 {% load vite %}
+{% load cache %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -41,7 +42,10 @@
     <body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
         <div class="wrapper" id="wrapper">
             <div class="wrapper-inner">
-                {% include "components/header.html" %}
+                {% cache 3600 header request.user.username %}
+                    {% include "components/header.html" %}
+                {% endcache %}
+
                 <main id="main" class="main relative">
                     {% include "components/messages.html" %}
                     <div class="base-section">
@@ -64,7 +68,10 @@
                         {% endblock content %}
                     </div>
                 </main>
-                {% include "components/footer.html" %}
+
+                {% cache 21600 footer %}
+                    {% include "components/footer.html" %}
+                {% endcache %}
             </div>
         </div>
 

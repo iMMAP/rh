@@ -414,3 +414,45 @@ class ProjectIndicatorTypeForm(forms.ModelForm):
             "project",
             "indicator",
         )
+
+
+class DonorForm(forms.ModelForm):
+    class Meta:
+        model = Donor
+        fields = "__all__"
+        exclude = ("old_id",)
+        labels = {"clusters": "Clusters / Sectors", "name": "Donor Name", "code": "Donor Acronyme"}
+        widgets = {
+            "clusters": forms.SelectMultiple(attrs={"class": "custom-select"}),
+            "countries": forms.SelectMultiple(attrs={"class": "custom-select"}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop("user", None)
+        super().__init__(*args, **kwargs)
+
+        if user:
+            user_groups = user.groups.filter(name__endswith="_CLUSTER_LEADS")
+            cluster_ids = [group.name.split("_")[0].lower() for group in user_groups]
+            self.fields["clusters"].queryset = Cluster.objects.filter(code__in=cluster_ids)
+        else:
+            self.fields["clusters"].queryset = []
+
+        if user and hasattr(user, "profile") and user.profile.country:
+            self.fields["countries"].initial = user.profile.country
+
+    def clean_name(self):
+        """check if donor name already exits"""
+        name = self.cleaned_data.get("name")
+        org_name = Donor.objects.filter(name__iexact=name)
+        if org_name.exists():
+            raise forms.ValidationError(f"{name} already exists...!")
+        return name
+
+    def clean_code(self):
+        """check if donor code exists"""
+        code = self.cleaned_data.get("code")
+        org_code = Donor.objects.filter(code__iexact=code)
+        if org_code.exists():
+            raise forms.ValidationError(f"{code} aleady exists...!")
+        return code

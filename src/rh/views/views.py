@@ -1,41 +1,56 @@
 import json
 
 from django.contrib.auth.decorators import login_required
+from django.core.cache import cache
 from django.db.models import Count, Prefetch
 from django.http import JsonResponse
 from django.shortcuts import render
+from django.views.decorators.cache import cache_page
 from project_reports.models import ProjectMonthlyReport
 from users.decorators import unauthenticated_user
 
 from ..models import ActivityDomain, ActivityType, Cluster, Indicator, Location, Project
 
-RECORDS_PER_PAGE = 10
-
 
 @login_required
 def home(request):
     user_org = request.user.profile.organization
-    active_projects = (
-        Project.objects.filter(state="in-progress").filter(organization=user_org).order_by("-updated_at")[:8]
-    )
+
+    active_p_cache_key = f"home_active_p_{user_org.code}"
+    active_projects = cache.get(active_p_cache_key)
+    if active_projects is None:
+        active_projects = (
+            Project.objects.filter(state="in-progress")
+            .filter(organization=user_org)
+            .values("id", "title", "code", "end_date")
+            .order_by("-updated_at")[:8]
+        )
+        cache.set(active_p_cache_key, active_projects, timeout=60 * 60)  # Cache for 1 hour
 
     pending_reports = (
         ProjectMonthlyReport.objects.filter(
             state="pending", project__organization=user_org, project__state="in-progress"
         )
         .select_related("project", "project__user")
+        .values(
+            "id", "state", "from_date", "project_id", "project__code", "project__user__id", "project__user__username"
+        )
         .distinct()
     )
 
-    projects_counts = (
-        Project.objects.filter(state="in-progress")
-        .filter(organization=user_org)
-        .aggregate(
-            implementing_partners_count=Count("implementing_partners", distinct=True),
-            activity_plans_count=Count("activityplan", distinct=True),
-            target_locations_count=Count("targetlocation__province", distinct=True),
+    counts_cache_key = f"home_projects_counts_{user_org.code}"
+    projects_counts = cache.get(counts_cache_key)
+    if projects_counts is None:
+        projects_counts = (
+            Project.objects.filter(state="in-progress")
+            .filter(organization=user_org)
+            .aggregate(
+                implementing_partners_count=Count("implementing_partners", distinct=True),
+                activity_plans_count=Count("activityplan", distinct=True),
+                target_locations_count=Count("targetlocation__province", distinct=True),
+            )
         )
-    )
+        cache.set(counts_cache_key, projects_counts, timeout=60 * 60)  # Cache for 1 hour
 
     projects_counts["pending_reports_count"] = pending_reports.count()
 
@@ -45,6 +60,7 @@ def home(request):
 
 
 @unauthenticated_user
+@cache_page(60 * 60 * 4)  # 4 hour
 def landing_page(request):
     context = {"users": 0, "locations": 0, "reports": 0}
 

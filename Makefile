@@ -97,3 +97,7 @@ shell_plus:
 .PHONY: dbbackup
 dbbackup:
 	poetry run python src/manage.py dbbackup
+
+.PHONY: clear_cache 
+clear_cache:
+	poetry run python src/manage.py clear_cache

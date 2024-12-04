@@ -9,11 +9,11 @@ ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=["dev.reporthub.immap.org", "w
 
 # HSTS settings
 SECURE_HSTS_SECONDS = env("SECURE_HSTS_SECONDS", default=31536000)
-SECURE_HSTS_PRELOAD =  env("SECURE_HSTS_PRELOAD", default=True)
+SECURE_HSTS_PRELOAD = env("SECURE_HSTS_PRELOAD", default=True)
 SECURE_HSTS_INCLUDE_SUBDOMAINS = env("SECURE_HSTS_INCLUDE_SUBDOMAINS", default=True)
 
 # COOKIES
-SESSION_COOKIE_SECURE= env("SESSION_COOKIE_SECURE", default=True)
+SESSION_COOKIE_SECURE = env("SESSION_COOKIE_SECURE", default=True)
 CSRF_COOKIE_SECURE = env("CSRF_COOKIE_SECURE", default=True)
 SECURE_SSL_REDIRECT = env("SECURE_SSL_REDIRECT", default=True)
 
@@ -109,3 +109,11 @@ EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD", default="")
 DEFAULT_FROM_EMAIL = env("DEFAULT_FROM_EMAIL", default="reporthub@immap.org")
 EMAIL_USE_SSL = env("EMAIL_USE_SSL", default=False)
 EMAIL_USE_TLS = env("EMAIL_USE_TLS", default=True)
+
+# Cache
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.filebased.FileBasedCache",
+        "LOCATION": "/var/tmp/django_cache",
+    }
+}

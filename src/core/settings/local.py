@@ -105,3 +105,10 @@ EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD", default="")
 DEFAULT_FROM_EMAIL = env("DEFAULT_FROM_EMAIL", default="reporthub@immap.org")
 EMAIL_USE_SSL = env("EMAIL_USE_SSL", default=False)
 EMAIL_USE_TLS = env("EMAIL_USE_TLS", default=True)
+
+# CACHE
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.dummy.DummyCache",
+    }
+}

@@ -37,6 +37,11 @@ urlpatterns = [
     # Organization CRUD
     path("organizations/search", organizations.search, name="organizations-search"),
     path("organizations/create", organizations.organization_register, name="organizations-create"),
+    path(
+        "donor/register",
+        organizations.donor_register,
+        name="donor-register",
+    ),
     path("organizations/<str:code>", organizations.show, name="organizations-show"),
     path(
         "organizations/<int:org_pk>/target-locations",

@@ -4,7 +4,10 @@ import logging
 from .base import *
 
 APP_ENV = env("APP_ENV", default="local")
-ALLOWED_HOSTS = ["*"]
+
+# ALLOWED_HOSTS=reporthub.immap.org,www.reporthub.immap.org
+# env.list() splits comma-separated string into a list
+ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=["*"])
 
 if not TESTING:
     INSTALLED_APPS = [

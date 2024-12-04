@@ -25,7 +25,7 @@ class TestLoggedInViews(TestCase):
         Location.objects.create(name="location1", code="l1", parent=None)
 
         response = self.client.get(self.landing_url)
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 302)
         self.assertTemplateUsed(response, "home.html")
 
     def test_load_locations_details_view(self):

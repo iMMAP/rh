@@ -8,6 +8,7 @@ from rh.models import Organization, TargetLocation
 from users.utils import is_cluster_lead
 
 from ..forms import (
+    DonorForm,
     OrganizationForm,
     UpdateOrganizationForm,
 )
@@ -119,7 +120,7 @@ def organization_register(request):
             organization = org_form.save()
 
             if organization:
-                messages.success(request, f"{org_code} is registered successfully !")
+                messages.success(request, f"{org_code} has been registered successfully !")
             else:
                 messages.error(request, "Something went wrong ! please try again ")
     else:
@@ -128,3 +129,19 @@ def organization_register(request):
     context = {"form": org_form}
 
     return render(request, "rh/organization_form.html", context)
+
+
+def donor_register(request):
+    if request.method == "POST":
+        form = DonorForm(request.POST, user=request.user)
+        if form.is_valid():
+            code = form.cleaned_data.get("code")
+            donor_code = code.upper()
+            form.save()
+            messages.success(request, f"{donor_code} has been registered successfully.")
+        else:
+            messages.error(request, "Something went wrong. Please fix the below errors.")
+    else:
+        form = DonorForm(user=request.user)
+    context = {"form": form}
+    return render(request, "rh/donor_form.html", context)

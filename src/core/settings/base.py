@@ -216,3 +216,12 @@ MDEDITOR_CONFIGS = {
         "language": "en",  # zh / en / es
     }
 }
+
+
+# CACHE
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.filebased.FileBasedCache",
+        "LOCATION": "/var/tmp/django_cache",
+    }
+}

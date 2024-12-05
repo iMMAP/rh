@@ -4,7 +4,17 @@ import datetime
 from openpyxl.styles import Font, NamedStyle
 from openpyxl.utils import get_column_letter
 from openpyxl.worksheet.datavalidation import DataValidation
-from rh.models import Disaggregation, FacilitySiteType
+from rh.models import (
+    Currency,
+    Disaggregation,
+    FacilitySiteType,
+    GrantType,
+    ImplementationModalityType,
+    PackageType,
+    TransferCategory,
+    TransferMechanismType,
+    UnitType,
+)
 
 from project_reports.models import ResponseType
 
@@ -346,10 +356,25 @@ def write_import_report_template_sheet(workbook, monthly_report):
         "facilitySiteTypeList": ["Y"],
         "reponseTypeList": ["E"],
         "implementing_partner_list": ["F"],
+        "package_type": ["G"],
+        "unit_type": ["H"],
+        "grant_type": ["K"],
+        "im_modility_type": ["O"],
+        "transfer_mc_type": ["N"],
+        "transfer_category": ["L"],
+        "currency": ["M"],
     }
     project = monthly_report.project
     project_partners_list = list(project.implementing_partners.values_list("code", flat=True))
-
+    container_dictionary["package_type"].extend(list(PackageType.objects.values_list("name", flat=True)))
+    container_dictionary["unit_type"].extend(list(UnitType.objects.values_list("name", flat=True)))
+    container_dictionary["grant_type"].extend(list(GrantType.objects.values_list("name", flat=True)))
+    container_dictionary["im_modility_type"].extend(
+        list(ImplementationModalityType.objects.values_list("name", flat=True))
+    )
+    container_dictionary["transfer_mc_type"].extend(list(TransferMechanismType.objects.values_list("name", flat=True)))
+    container_dictionary["transfer_category"].extend(list(TransferCategory.objects.values_list("name", flat=True)))
+    container_dictionary["currency"].extend(list(Currency.objects.values_list("name", flat=True)))
     facility = list(FacilitySiteType.objects.values_list("name", flat=True))
     responseType = list(ResponseType.objects.values_list("name", flat=True))
     num_rows = 2

@@ -42,7 +42,7 @@
     <body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
         <div class="wrapper" id="wrapper">
             <div class="wrapper-inner">
-                {% cache 3600 header request.user.username %}
+                {% cache 3600 header request.session.session_key %}
                     {% include "components/header.html" %}
                 {% endcache %}
 

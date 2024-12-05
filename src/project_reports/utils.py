@@ -396,7 +396,6 @@ def write_import_report_template_sheet(workbook, monthly_report):
     container_dictionary["reponseTypeList"].extend(responseType)
     container_dictionary["implementing_partner_list"].extend(project_partners_list)
     sheet["A2"] = project_code
-    print(num_rows)
     for key, value in container_dictionary.items():
         dv = DataValidation(type="list", formula1='"{}"'.format(",".join(list(container_dictionary[key][1:]))))
         sheet.add_data_validation(dv)

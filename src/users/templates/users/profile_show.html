@@ -137,11 +137,11 @@
                 <dt class="text-sm font-medium leading-6 text-gray-900">Actions</dt>
                 <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
                 {% if perms.rh.activate_deactivate_user %}
-                    <button id="dectivate-button-{{ profile_user.id }}"
+                    <button id="in-detail-page"
                             class="btn btn-gray"
-                            hx-delete="{% url 'users-toggle-status' profile_user.id %}"
+                            hx-patch="{% url 'users-toggle-status' profile_user.id %}"
                             hx-swap="none"
-                            hx-disable-element="#dectivate-button-{{ profile_user.id }}"
+                            hx-disable-element="in-detail-page"
                             hx-ext="disable-element">
                         {% if profile_user.is_active %}
                             <span class="project-detail icon-trashbin"></span> Deactivate

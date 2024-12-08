@@ -37,7 +37,7 @@
                     <li>
                         <button id="dectivate-button-{{ user.id }}"
                                 class="btn btn-gray"
-                                hx-put="{% url 'users-toggle-status' user.id %}"
+                                hx-patch="{% url 'users-toggle-status' user.id %}"
                                 hx-swap="outerHTML"
                                 hx-target="#user-{{ user.id }}"
                                 hx-disable-element="#dectivate-button-{{ user.id }}"

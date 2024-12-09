@@ -23,7 +23,7 @@
                     <div class="activity-title">
                         <span>Import Project Activity Plans and Target Locations</span>
                     </div>
-                    <a href="{% url 'projects-ap-import-template' project.pk %}?csrfmiddlewaretoken={{ csrf_token }}" class="btn btn-grey">Download template</a>
+                    <a href="{% url 'projects-ap-import-template' project.pk %}?csrfmiddlewaretoken={{ csrf_token }}"  class="btn btn-grey" onclick="return confirm('Download template?');">Download template</a>
                 </div>
 
                 <p class="pb-2">Import Activity Plans and Target Locations from a CSV file</p>

@@ -209,8 +209,6 @@ class ActivityPlanReportForm(forms.ModelForm):
                 project=monthly_report.project.pk, state="in-progress"
             ).select_related("activity_domain")
 
-      
-
 
 class MonthlyReportFileUpload(forms.Form):
     """

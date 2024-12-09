@@ -47,6 +47,7 @@ IMPORT_ERRORS = {
     "location_missing": "Row {line}: {level} '{code}' does not exist. Check the {level} code.",
 }
 
+
 def _preload_project_data(project):
     return {
         "activity_domains": {ad.name: ad for ad in project.activity_domains.all()},
@@ -63,11 +64,13 @@ def _preload_project_data(project):
         "disaggregations": {d.name: d for d in Disaggregation.objects.all()},
     }
 
+
 def _validate_and_get_object(queryset, filter_key, filter_value, error_message, errors, line_num):
     obj = queryset.filter(**{filter_key: filter_value}).first()
     if not obj:
         errors.append(error_message.format(line=line_num, value=filter_value))
     return obj
+
 
 def _validate_activity_data(row, project_data, project, errors, line_num):
     activity_domain = project_data["activity_domains"].get(row["activity_domain"])
@@ -77,28 +80,37 @@ def _validate_activity_data(row, project_data, project, errors, line_num):
 
     activity_type = activity_domain.activitytype_set.filter(name=row["activity_type"]).first()
     if not activity_type:
-        errors.append(IMPORT_ERRORS["activity_type_missing"].format(line=line_num, domain=activity_domain.name, value=row["activity_type"]))
+        errors.append(
+            IMPORT_ERRORS["activity_type_missing"].format(
+                line=line_num, domain=activity_domain.name, value=row["activity_type"]
+            )
+        )
         return None, None, None
 
     indicator = activity_type.indicator_set.filter(name=row["indicator"]).first()
     if not indicator:
-        errors.append(IMPORT_ERRORS["indicator_missing"].format(line=line_num, type=activity_type.name, value=row["indicator"]))
+        errors.append(
+            IMPORT_ERRORS["indicator_missing"].format(line=line_num, type=activity_type.name, value=row["indicator"])
+        )
         return None, None, None
 
     return activity_domain, activity_type, indicator
 
+
 def _validate_location_hierarchy(row, project_data, errors, line_num):
     country = project_data["locations"].get(row["admin0pcode"])
     if not country or country.level != 0:
-        errors.append(
-            IMPORT_ERRORS["location_missing"].format(line=line_num, level="Country", code=row["admin0pcode"])
-        )
+        errors.append(IMPORT_ERRORS["location_missing"].format(line=line_num, level="Country", code=row["admin0pcode"]))
         return None, None, None, None
 
     province = None
     if row.get("admin1pcode"):
         province = next(
-            (loc for loc in project_data["locations"].values() if loc.parent == country and loc.code == row["admin1pcode"] and loc.level == 1),
+            (
+                loc
+                for loc in project_data["locations"].values()
+                if loc.parent == country and loc.code == row["admin1pcode"] and loc.level == 1
+            ),
             None,
         )
         if not province:
@@ -110,7 +122,11 @@ def _validate_location_hierarchy(row, project_data, errors, line_num):
     district = None
     if row.get("admin2pcode"):
         district = next(
-            (loc for loc in project_data["locations"].values() if loc.parent == province and loc.code == row["admin2pcode"] and loc.level == 2),
+            (
+                loc
+                for loc in project_data["locations"].values()
+                if loc.parent == province and loc.code == row["admin2pcode"] and loc.level == 2
+            ),
             None,
         )
         if not district:
@@ -122,7 +138,11 @@ def _validate_location_hierarchy(row, project_data, errors, line_num):
     zone = None
     if row.get("admin3pcode"):
         zone = next(
-            (loc for loc in project_data["locations"].values() if loc.parent == district and loc.code == row["admin3pcode"] and loc.level == 3),
+            (
+                loc
+                for loc in project_data["locations"].values()
+                if loc.parent == district and loc.code == row["admin3pcode"] and loc.level == 3
+            ),
             None,
         )
         if not zone:
@@ -185,7 +205,7 @@ def import_activity_plans(request, pk):
                     activity_plans[activity_plan_key] = activity_plan
                 else:
                     activity_plan = activity_plans[activity_plan_key]
-                    
+
                 # Validate locations
                 country, province, district, zone = _validate_location_hierarchy(row, project_data, errors, line_num)
                 if not country or not province or not district:

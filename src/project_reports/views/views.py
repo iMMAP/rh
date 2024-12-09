@@ -214,28 +214,28 @@ def import_report_activities(request, pk):
                     else:
                         activity_plan_report = report_activities[activity_plan_key]
 
-                    country = Location.objects.get(code=row["admin0pcode"], level=0)
+                    country = Location.objects.filter(code=row["admin0pcode"], level=0).first()
                     if not country:
                         errors.append(
                             f"Row {reader.line_num}: admin0/country `{row['admin0pcode']}` does not exist check admin0pcode again."
                         )
                         continue
 
-                    province = country.children.filter(code=row["admin1pcode"], level=1).first()
+                    province = Location.objects.filter(parent=country, code=row["admin1pcode"], level=1).first()
                     if not activity_type:
                         errors.append(
-                            f"Row {reader.line_num}:Province {row['admin1pcode']} does not exists or country/admin0 `{country}` does not have admin1/province `{row['admin1pcode']}` check admin1code again"
+                            f"Row {reader.line_num}:Province {row['admin1pcode']} does not exists or country/admin0 `{country}` does not have admin1/province `{row['admin1code']}` check admin1code again"
                         )
                         continue
 
-                    district = province.children.filter(code=row["admin2pcode"], level=2)
+                    district = Location.objects.filter(parent=province, code=row["admin2pcode"], level=2).first()
                     if not indicator:
                         errors.append(
                             f"Row {reader.line_num}:district {row['admin2pcode']} does not exists or province/admin1 `{province}` does not have admin2/district`{row['admin2pcode']}` check admin2pcode again"
                         )
                         continue
 
-                    zone = district.children.filter(code=row["admin3code"], level=3).first()
+                    zone = Location.objects.filter(parent=district, code=row["admin3pcode"], level=3).first()
 
                     project_target_location = TargetLocation.objects.filter(
                         project_id=activity_plan_report.activity_plan.project.id,

@@ -298,7 +298,9 @@ def import_report_activities(request, pk):
 
                 TargetLocationReport.objects.bulk_create(report_target_locations)
                 DisaggregationLocationReport.objects.bulk_create(disaggregation_locations)
+
                 messages.success(request, f"[{len(activities)}] Activities imported successfully.")
+
                 return redirect("view_monthly_report", project=monthly_report.project.pk, report=monthly_report.pk)
         except Exception as e:
             errors.append(f"Someting went wrong please check your data : {e}")
@@ -309,4 +311,5 @@ def import_report_activities(request, pk):
         "monthly_report": monthly_report,
         "errors": errors,
     }
+
     return render(request, "project_reports/report_activity_plans/import_report_activity_plans.html", context)

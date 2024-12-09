@@ -39,138 +39,193 @@ from ..models import (
 )
 from ..utils import has_permission
 
+IMPORT_ERRORS = {
+    "no_file": "No file provided for import.",
+    "activity_domain_missing": "Row {line}: Activity domain '{value}' does not exist in the project plan.",
+    "activity_type_missing": "Row {line}: Activity Domain {domain} does not have Activity Type '{value}'",
+    "indicator_missing": "Row {line}: Activity Type {type} does not have Indicator '{value}'",
+    "location_missing": "Row {line}: {level} '{code}' does not exist. Check the {level} code.",
+}
 
-@login_required
-@require_http_methods(["GET", "POST"])
+def _preload_project_data(project):
+    return {
+        "activity_domains": {ad.name: ad for ad in project.activity_domains.all()},
+        "beneficiaries": {b.name: b for b in BeneficiaryType.objects.all()},
+        "package_types": {pt.name: pt for pt in PackageType.objects.all()},
+        "unit_types": {ut.name: ut for ut in UnitType.objects.all()},
+        "grant_types": {gt.name: gt for gt in GrantType.objects.all()},
+        "transfer_categories": {tc.name: tc for tc in TransferCategory.objects.all()},
+        "currencies": {c.name: c for c in Currency.objects.all()},
+        "transfer_mechanisms": {tm.name: tm for tm in TransferMechanismType.objects.all()},
+        "implementation_modalities": {im.name: im for im in ImplementationModalityType.objects.all()},
+        "locations": {loc.code: loc for loc in Location.objects.select_related("parent")},
+        "organizations": {org.code: org for org in Organization.objects.all()},
+        "disaggregations": {d.name: d for d in Disaggregation.objects.all()},
+    }
+
+def _validate_and_get_object(queryset, filter_key, filter_value, error_message, errors, line_num):
+    obj = queryset.filter(**{filter_key: filter_value}).first()
+    if not obj:
+        errors.append(error_message.format(line=line_num, value=filter_value))
+    return obj
+
+def _validate_activity_data(row, project_data, project, errors, line_num):
+    activity_domain = project_data["activity_domains"].get(row["activity_domain"])
+    if not activity_domain:
+        errors.append(IMPORT_ERRORS["activity_domain_missing"].format(line=line_num, value=row["activity_domain"]))
+        return None, None, None
+
+    activity_type = activity_domain.activitytype_set.filter(name=row["activity_type"]).first()
+    if not activity_type:
+        errors.append(IMPORT_ERRORS["activity_type_missing"].format(line=line_num, domain=activity_domain.name, value=row["activity_type"]))
+        return None, None, None
+
+    indicator = activity_type.indicator_set.filter(name=row["indicator"]).first()
+    if not indicator:
+        errors.append(IMPORT_ERRORS["indicator_missing"].format(line=line_num, type=activity_type.name, value=row["indicator"]))
+        return None, None, None
+
+    return activity_domain, activity_type, indicator
+
+def _validate_location_hierarchy(row, project_data, errors, line_num):
+    country = project_data["locations"].get(row["admin0pcode"])
+    if not country or country.level != 0:
+        errors.append(
+            IMPORT_ERRORS["location_missing"].format(line=line_num, level="Country", code=row["admin0pcode"])
+        )
+        return None, None, None, None
+
+    province = None
+    if row.get("admin1pcode"):
+        province = next(
+            (loc for loc in project_data["locations"].values() if loc.parent == country and loc.code == row["admin1pcode"] and loc.level == 1),
+            None,
+        )
+        if not province:
+            errors.append(
+                IMPORT_ERRORS["location_missing"].format(line=line_num, level="Province", code=row["admin1pcode"])
+            )
+            return country, None, None, None
+
+    district = None
+    if row.get("admin2pcode"):
+        district = next(
+            (loc for loc in project_data["locations"].values() if loc.parent == province and loc.code == row["admin2pcode"] and loc.level == 2),
+            None,
+        )
+        if not district:
+            errors.append(
+                IMPORT_ERRORS["location_missing"].format(line=line_num, level="District", code=row["admin2pcode"])
+            )
+            return country, province, None, None
+
+    zone = None
+    if row.get("admin3pcode"):
+        zone = next(
+            (loc for loc in project_data["locations"].values() if loc.parent == district and loc.code == row["admin3pcode"] and loc.level == 3),
+            None,
+        )
+        if not zone:
+            errors.append(
+                IMPORT_ERRORS["location_missing"].format(line=line_num, level="Zone", code=row["admin3pcode"])
+            )
+
+    return country, province, district, zone
+
+
 def import_activity_plans(request, pk):
     project = get_object_or_404(Project, pk=pk)
     errors = []
 
     if request.method == "POST":
         file = request.FILES.get("file")
-
-        if file is None:
-            messages.error(request, "No file provided for import.")
+        if not file:
+            messages.error(request, IMPORT_ERRORS["no_file"])
             return redirect(reverse("projects-ap-import-template", kwargs={"pk": project.pk}))
 
         decoded_file = file.read().decode("utf-8").splitlines()
         reader = csv.DictReader(decoded_file)
 
+        # Prelooad some data to avoid calling DB in the Loop
+        project_data = _preload_project_data(project)
+
         activity_plans = {}
         target_locations = []
         disaggregation_locations = []
 
-        try:
-            for row in reader:
-                try:
-                    activity_domain = project.activity_domains.filter(name=row["activity_domain"]).first()
-                    if not activity_domain:
-                        errors.append(
-                            f"Row {reader.line_num}: Activity domain '{row['activity_domain']}' does not exist in your project plan."
-                        )
-                        continue
+        # Header row is line 1
+        for line_num, row in enumerate(reader, start=2):
+            try:
+                activity_domain, activity_type, indicator = _validate_activity_data(
+                    row, project_data, project, errors, line_num
+                )
+                if not activity_domain:
+                    continue
 
-                    activity_type = activity_domain.activitytype_set.filter(name=row["activity_type"]).first()
-                    if not activity_type:
-                        errors.append(
-                            f"Row {reader.line_num}:Activity Domain {activity_domain.name} does not have Activity Type '{row['activity_type']}'"
-                        )
-                        continue
-
-                    indicator = activity_type.indicator_set.filter(name=row["indicator"]).first()
-                    if not indicator:
-                        errors.append(
-                            f"Row {reader.line_num}: Activity Type {activity_type.name} does not have Indicator '{row['indicator']}'"
-                        )
-                        continue
-
-                    activity_plan_key = (row["activity_domain"], row["activity_type"], row["indicator"])
-
-                    if activity_plan_key not in activity_plans:
-                        activity_plan = ActivityPlan(
-                            project=project,
-                            activity_domain=activity_domain,
-                            activity_type=activity_type,
-                            indicator=indicator,
-                            beneficiary=BeneficiaryType.objects.filter(name=row["beneficiary"]).first(),
-                            hrp_beneficiary=BeneficiaryType.objects.filter(name=row["hrp_beneficiary"]).first(),
-                            package_type=PackageType.objects.filter(name=row["package_type"]).first(),
-                            unit_type=UnitType.objects.filter(name=row["unit_type"]).first(),
-                            grant_type=GrantType.objects.filter(name=row["grant_type"]).first(),
-                            transfer_category=TransferCategory.objects.filter(name=row["transfer_category"]).first(),
-                            currency=Currency.objects.filter(name=row["currency"]).first(),
-                            transfer_mechanism_type=TransferMechanismType.objects.filter(
-                                name=row["transfer_mechanism_type"]
-                            ).first(),
-                            implement_modility_type=ImplementationModalityType.objects.filter(
-                                name=row["implement_modility_type"]
-                            ).first(),
-                            description=row.get("description", None),
-                        )
-                        activity_plans[activity_plan_key] = activity_plan
-                    else:
-                        activity_plan = activity_plans[activity_plan_key]
-
-                    country = Location.objects.filter(code=row["admin0pcode"], level=0).first()
-                    if not country:
-                        errors.append(
-                            f"Row {reader.line_num}: admin0/country `{row['admin0pcode']}` does not exist check admin0pcode again."
-                        )
-                        continue
-
-                    province = Location.objects.filter(parent=country, code=row["admin1pcode"], level=1).first()
-                    if not activity_type:
-                        errors.append(
-                            f"Row {reader.line_num}:Province {row['admin1pcode']} does not exists or country/admin0 `{country}` does not have admin1/province `{row['admin1code']}` check admin1code again"
-                        )
-                        continue
-
-                    district = Location.objects.filter(parent=province, code=row["admin2pcode"], level=2).first()
-                    if not indicator:
-                        errors.append(
-                            f"Row {reader.line_num}:district {row['admin2pcode']} does not exists or province/admin1 `{province}` does not have admin2/district`{row['admin2pcode']}` check admin2pcode again"
-                        )
-                        continue
-
-                    zone = Location.objects.filter(parent=district, code=row["admin3pcode"], level=3).first()
-
-                    target_location = TargetLocation(
-                        activity_plan=activity_plan,
-                        country=country,
-                        province=province,
-                        district=district,
-                        zone=zone,
-                        implementing_partner=Organization.objects.filter(code=row["implementing_partner_code"]).first(),
-                        facility_name=row.get("facility_name") or None,
-                        facility_id=row.get("facility_id") or None,
-                        facility_lat=row.get("facility_lat") or None,
-                        facility_long=row.get("facility_long") or None,
-                        nhs_code=row.get("nhs_code", None),
+                activity_plan_key = (row["activity_domain"], row["activity_type"], row["indicator"])
+                if activity_plan_key not in activity_plans:
+                    activity_plan = ActivityPlan(
+                        project=project,
+                        activity_domain=activity_domain,
+                        activity_type=activity_type,
+                        indicator=indicator,
+                        beneficiary=project_data["beneficiaries"].get(row["beneficiary"]),
+                        hrp_beneficiary=project_data["beneficiaries"].get(row["hrp_beneficiary"]),
+                        package_type=project_data["package_types"].get(row["package_type"]),
+                        unit_type=project_data["unit_types"].get(row["unit_type"]),
+                        grant_type=project_data["grant_types"].get(row["grant_type"]),
+                        transfer_category=project_data["transfer_categories"].get(row["transfer_category"]),
+                        currency=project_data["currencies"].get(row["currency"]),
+                        transfer_mechanism_type=project_data["transfer_mechanisms"].get(row["transfer_mechanism_type"]),
+                        implement_modility_type=project_data["implementation_modalities"].get(
+                            row["implement_modility_type"]
+                        ),
+                        description=row.get("description", None),
                     )
-                    target_locations.append(target_location)
+                    activity_plans[activity_plan_key] = activity_plan
+                else:
+                    activity_plan = activity_plans[activity_plan_key]
+                    
+                # Validate locations
+                country, province, district, zone = _validate_location_hierarchy(row, project_data, errors, line_num)
+                if not country or not province or not district:
+                    continue
 
-                    all_disaggs = Disaggregation.objects.all()
-                    for disag in all_disaggs:
-                        if row.get(disag.name):
-                            disaggregation_location = DisaggregationLocation(
-                                target_location=target_location,
-                                disaggregation=disag,
-                                target=row.get(disag.name),
-                            )
-                            disaggregation_locations.append(disaggregation_location)
-                except Exception as e:
-                    errors.append(f"Error on row {reader.line_num}: {e}")
+                target_location = TargetLocation(
+                    activity_plan=activity_plan,
+                    country=country,
+                    province=province,
+                    district=district,
+                    zone=zone,
+                    implementing_partner=project_data["organizations"].get(row["implementing_partner_code"]),
+                    facility_name=row.get("facility_name") or None,
+                    facility_id=row.get("facility_id") or None,
+                    facility_lat=row.get("facility_lat") or None,
+                    facility_long=row.get("facility_long") or None,
+                    nhs_code=row.get("nhs_code") or None,
+                )
+                target_locations.append(target_location)
 
-            if len(errors) > 0:
-                messages.error(request, "Failed to import the Activities! Please check the errors below and try again.")
-            else:
+                for disaggregation_name, disaggregation in project_data["disaggregations"].items():
+                    if row.get(disaggregation_name):
+                        disaggregation_location = DisaggregationLocation(
+                            target_location=target_location,
+                            disaggregation=disaggregation,
+                            target=row[disaggregation_name],
+                        )
+                        disaggregation_locations.append(disaggregation_location)
+            except Exception as e:
+                errors.append(f"Error on row {line_num}: {e}")
+
+        if errors:
+            messages.error(request, "Failed to import the Activities! Please check the errors below and try again.")
+        else:
+            with transaction.atomic():
                 ActivityPlan.objects.bulk_create(activity_plans.values())
                 TargetLocation.objects.bulk_create(target_locations)
                 DisaggregationLocation.objects.bulk_create(disaggregation_locations)
-                messages.success(request, "Activities imported successfully.")
-        except Exception as e:
-            errors.append(f"Someting went wrong please check your data : {e}")
-            messages.error(request, "An error occurred during the import process.")
+
+            messages.success(request, "Activities imported successfully.")
 
     return render(request, "rh/activity_plans/import_activity_plans.html", {"project": project, "errors": errors})
 

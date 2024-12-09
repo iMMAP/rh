@@ -50,7 +50,7 @@ class ActivityPlanReportFilter(django_filters.FilterSet):
 
     class Meta:
         model = ActivityPlanReport
-        fields = ["activity_domain", "activity_type", "indicator", "response_types", "beneficiary_status"]
+        fields = ["activity_domain", "activity_type", "indicator", "response_types"]
 
     def __init__(self, data=None, *args, **kwargs):
         report = kwargs.pop("monthly_report", None)

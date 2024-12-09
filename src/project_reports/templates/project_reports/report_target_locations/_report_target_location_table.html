@@ -42,6 +42,7 @@
                         <th>
                             <strong class="table-title">Location</strong>
                         </th>
+                        <th><strong class="table-title">Beneficiary Status</strong></th>
                         <th>
                             <strong class="table-title">Total Reached</strong>
                         </th>
@@ -64,19 +65,18 @@
                                     </svg>
                                 </a>
                             </td>
+                            <td>{{ row.get_beneficiary_status_display }}</td>
                             <td>{{ row.total_target_reached|intcomma }}</td>
                             <td>
-                                <a href="{% url 'update_report_target_locations' project.id row.activity_plan_report.id row.id %}"
-                                   class="btn btn-gray">Edit</a>
+                                <a href="{% url 'update_report_target_locations' project.id row.activity_plan_report.id row.id %}" class="btn btn-gray">Edit</a>
                                 <a hx-post="{% url 'delete_location_report' row.id %}"
                                    hx-trigger="click"
                                    hx-confirm="Do you want to delete `{{ row }}` and its related Disaggregations ?"
                                    hx-target="closest tr"
                                    data-tippy-content="Delete Report Location"
-                                   class="btn btn-gray">
-                                    <img class='htmx-indicator'
-                                         style="width: 1rem"
-                                         src="{% static 'images/spinner.gif' %}" />
+                                   class="btn btn-gray"
+                                >
+                                    <img class='htmx-indicator' style="width: 1rem" src="{% static 'images/spinner.gif' %}" />
                                     Delete
                                 </a>
                             </td>

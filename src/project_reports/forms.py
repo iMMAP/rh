@@ -69,12 +69,8 @@ class TargetLocationReportForm(forms.ModelForm):
         fields = "__all__"
         exclude = ("activity_plan_report",)
         widgets = {
-            "beneficiary_status": forms.RadioSelect(
-                choices={
-                    "new_beneficiary": "New Beneficiary",
-                    "existing_beneficiaries": "Existing Beneficiaries",
-                },
-            ),
+            "beneficiary_status": forms.Select(attrs={"class": "custom-select"}),
+            "seasonal_retargeting": forms.CheckboxInput(),
         }
 
     def __init__(self, *args, **kwargs):
@@ -92,6 +88,10 @@ class TargetLocationReportForm(forms.ModelForm):
         )
         self.fields["target_location"].queryset = TargetLocation.objects.filter(
             activity_plan=plan_report.activity_plan, state="in-progress"
+        )
+
+        self.fields["prev_targeted_by"].queryset = Indicator.objects.filter(
+            activity_types__activityplan__project=plan_report.monthly_report.project
         )
 
 
@@ -209,9 +209,7 @@ class ActivityPlanReportForm(forms.ModelForm):
                 project=monthly_report.project.pk, state="in-progress"
             ).select_related("activity_domain")
 
-        self.fields["prev_targeted_by"].queryset = Indicator.objects.filter(
-            activity_types__activityplan__project=monthly_report.project
-        )
+      
 
 
 class MonthlyReportFileUpload(forms.Form):

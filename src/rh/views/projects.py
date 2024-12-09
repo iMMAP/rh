@@ -111,12 +111,35 @@ def import_activity_plans(request, pk):
                     else:
                         activity_plan = activity_plans[activity_plan_key]
 
+                    country = (Location.objects.get(code=row["admin0code"], level=0),)
+                    if not country:
+                        errors.append(
+                            f"Row {reader.line_num}: admin0/country `{row['admin0code']}` does not exist check admin0code again."
+                        )
+                        continue
+
+                    province = country.children.filter(code=row["admin1code"], level=1).first()
+                    if not activity_type:
+                        errors.append(
+                            f"Row {reader.line_num}:Province {row['admin1code']} does not exists or country/admin0 `{country}` does not have admin1/province `{row['admin1code']}` check admin1code again"
+                        )
+                        continue
+
+                    district = province.children.filter(code=row["admin2code"], level=2)
+                    if not indicator:
+                        errors.append(
+                            f"Row {reader.line_num}:district {row['admin2code']} does not exists or province/admin1 `{province}` does not have admin2/district`{row['admin2code']}` check admin2code again"
+                        )
+                        continue
+
+                    zone = district.children.filter(code=row["admin3code"], level=3).first()
+
                     target_location = TargetLocation(
                         activity_plan=activity_plan,
-                        country=Location.objects.get(code=row["country_code"]),
-                        province=Location.objects.get(code=row["province_code"]),
-                        district=Location.objects.get(code=row["district_code"]),
-                        zone=Location.objects.filter(code=row["zone_code"]).first(),
+                        country=country,
+                        province=province,
+                        district=district,
+                        zone=zone,
                         implementing_partner=Organization.objects.filter(code=row["implementing_partner_code"]).first(),
                         facility_name=row.get("facility_name") or None,
                         facility_id=row.get("facility_id") or None,
@@ -176,14 +199,14 @@ def export_activity_plans_import_template(request, pk):
         "currency",
         "transfer_mechanism_type",
         "implement_modility_type",
-        "country_name",
-        "country_code",
-        "province_name",
-        "province_code",
-        "district_name",
-        "district_code",
-        "zone_name",
-        "zone_code",
+        "admin0name",
+        "admin0pcode",
+        "admin1name",
+        "admin1pcode",
+        "admin2name",
+        "admin2pcode",
+        "admin2name",
+        "admin2pcode",
         "location_type",
         "implementing_partner_code",
         "facility_site_type",
@@ -206,7 +229,7 @@ def export_activity_plans_import_template(request, pk):
 
     writer = csv.writer(response)
     writer.writerow(filtered_columns)
-    
+
     # Add the project code by default(This value will not impact the import function. it is just for users reference)
     writer.writerow([project.code])
 

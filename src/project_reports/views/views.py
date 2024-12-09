@@ -12,13 +12,10 @@ from openpyxl import Workbook
 from rh.models import (
     ActivityDomain,
     ActivityPlan,
-    ActivityType,
-    BeneficiaryType,
     Currency,
     Disaggregation,
     GrantType,
     ImplementationModalityType,
-    Indicator,
     Location,
     LocationType,
     Organization,
@@ -108,15 +105,18 @@ def import_report_activities(request, pk):
                         )
                         continue
 
-                    activity_type = ActivityType.objects.filter(name=row["activity_type"]).first()
+                    activity_type = activity_domain.activitytype_set.filter(name=row["activity_type"]).first()
                     if not activity_type:
-                        errors.append(f"Row {reader.line_num}: Activity Type '{row['activity_type']}' does not exist.")
+                        errors.append(
+                            f"Row {reader.line_num}: Activity Type '{row['activity_type']}' does not exist or Activity Domain `{activity_domain.name}` does not have Activity Type '{row['activity_type']}'"
+                        )
                         continue
 
-                    indicator = Indicator.objects.filter(name=row["indicator"]).first()
-
+                    indicator = activity_type.indicator_set.filter(name=row["indicator"]).first()
                     if not indicator:
-                        errors.append(f"Row {reader.line_num}: Indicator '{row['indicator']}' does not exist.")
+                        errors.append(
+                            f"Row {reader.line_num}: Indicator '{row['indicator']}' does not exist or Activity Type {activity_type.name} does not have Indicator '{row['indicator']}'"
+                        )
                         continue
 
                     # Define the mappings for fields to their corresponding model and field names
@@ -127,8 +127,6 @@ def import_report_activities(request, pk):
                         "transfer_category": TransferCategory,
                         "transfer_mechanism_type": TransferMechanismType,
                         "implement_modility_type": ImplementationModalityType,
-                        "beneficiary_type_id": BeneficiaryType,
-                        "hrp_beneficiary_type_id": BeneficiaryType,
                     }
 
                     mapped_data = {}
@@ -166,7 +164,7 @@ def import_report_activities(request, pk):
 
                     if beneficiary_status is None:
                         errors.append(
-                            f"Row {reader.line_num}: Invalid beneficiary status '{row.get('beneficiary_status', '')}'"
+                            f"Row {reader.line_num}: Invalid beneficiary status '{row.get('beneficiary_status', '')}'. check the spelling"
                         )
 
                     # Handle implementing partners
@@ -210,25 +208,50 @@ def import_report_activities(request, pk):
                             currency=Currency.objects.filter(name=row["currency"]).first(),
                             transfer_mechanism_type=transfer_mechanism_type,
                             implement_modility_type=implement_modility_type,
-                            beneficiary_status=beneficiary_status,
                         )
                         report_activities[activity_plan_key] = activity_plan_report
                         activity_plan_reports_list.append(activity_plan_report)
                     else:
                         activity_plan_report = report_activities[activity_plan_key]
 
+                    country = Location.objects.get(code=row["admin0pcode"], level=0)
+                    if not country:
+                        errors.append(
+                            f"Row {reader.line_num}: admin0/country `{row['admin0pcode']}` does not exist check admin0pcode again."
+                        )
+                        continue
+
+                    province = country.children.filter(code=row["admin1pcode"], level=1).first()
+                    if not activity_type:
+                        errors.append(
+                            f"Row {reader.line_num}:Province {row['admin1pcode']} does not exists or country/admin0 `{country}` does not have admin1/province `{row['admin1pcode']}` check admin1code again"
+                        )
+                        continue
+
+                    district = province.children.filter(code=row["admin2pcode"], level=2)
+                    if not indicator:
+                        errors.append(
+                            f"Row {reader.line_num}:district {row['admin2pcode']} does not exists or province/admin1 `{province}` does not have admin2/district`{row['admin2pcode']}` check admin2pcode again"
+                        )
+                        continue
+
+                    zone = district.children.filter(code=row["admin3code"], level=3).first()
+
                     project_target_location = TargetLocation.objects.filter(
-                        project=activity_plan_report.activity_plan.project.id,
-                        activity_plan=activity_plan_report.activity_plan.id,
-                        country_id=Location.objects.get(code=row["admin0pcode"]),
-                        province_id=Location.objects.get(code=row["admin1pcode"]),
-                        district_id=Location.objects.get(code=row["admin2pcode"]),
+                        project_id=activity_plan_report.activity_plan.project.id,
+                        activity_plan_id=activity_plan_report.activity_plan.id,
+                        country=country,
+                        province=province,
+                        district=district,
+                        zone=zone,
                     ).first()
 
                     target_location = TargetLocationReport(
                         activity_plan_report=activity_plan_report,
                         target_location=project_target_location,
-                        location_type=location_type or None,
+                        location_type=location_type,
+                        beneficiary_status=beneficiary_status,
+                        # add previously_targeted_by and seasonal_retargeting fields
                     )
                     report_target_locations.append(target_location)
 
@@ -280,14 +303,10 @@ def import_report_activities(request, pk):
         except Exception as e:
             errors.append(f"Someting went wrong please check your data : {e}")
             messages.error(request, "An error occurred during the import process.")
+
     context = {
         "project": monthly_report.project,
         "monthly_report": monthly_report,
-        "report_plans": None,
-        "plans_report_filter": None,
-        "report_view": False,
-        "report_activities": True,
-        "report_locations": False,
         "errors": errors,
     }
     return render(request, "project_reports/report_activity_plans/import_report_activity_plans.html", context)

@@ -84,7 +84,7 @@ def register_view(request):
 
 
 def send_account_activation_email(request, user):
-    mail_subject = "Email Activation link"
+    mail_subject = "Email Verification link"
 
     context = {
         "user": user,

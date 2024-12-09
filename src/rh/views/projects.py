@@ -159,6 +159,7 @@ def export_activity_plans_import_template(request, pk):
 
     # Add column names for ActivityPlan and TargetLocation models
     all_columns = [
+        "project_code",
         "activity_domain",
         "activity_type",
         "activity_detail",
@@ -205,6 +206,9 @@ def export_activity_plans_import_template(request, pk):
 
     writer = csv.writer(response)
     writer.writerow(filtered_columns)
+    
+    # Add the project code by default(This value will not impact the import function. it is just for users reference)
+    writer.writerow([project.code])
 
     return response
 
@@ -384,24 +388,27 @@ def org_projects_list(request):
 def create_project(request):
     if request.method == "POST":
         form = ProjectForm(request.POST, user=request.user)
+
         if form.is_valid():
             project = form.save(commit=False)
             project.organization = request.user.profile.organization
+
             project.save()
             form.save_m2m()
+
+            messages.success(request, f"Project with code `{project.code}` create successfully")
+
             return redirect("activity-plans-create", project=project.pk)
-        # Form is not valid
-        messages.error(request, "Something went wrong. Please fix the errors below.")
+        else:
+            # Form is not valid
+            messages.error(request, "Something went wrong. Please fix the errors below.")
     else:
         form = ProjectForm(user=request.user)
 
     context = {
         "form": form,
-        "project_planning": True,
-        "project_view": True,
-        "financial_view": False,
-        "reports_view": False,
     }
+
     return render(request, "rh/projects/forms/project_form.html", context)
 
 

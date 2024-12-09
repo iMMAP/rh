@@ -620,18 +620,14 @@ class DisaggregationLocation(models.Model):
 class BudgetProgress(models.Model):
     project = models.ForeignKey(Project, on_delete=models.SET_NULL, null=True, blank=True)
     donor = models.ForeignKey(Donor, on_delete=models.SET_NULL, null=True, blank=True)
-    title = models.CharField(max_length=NAME_MAX_LENGTH, null=True, blank=True)
-    activity_domains = models.ManyToManyField(ActivityDomain)
-    grant = models.CharField(max_length=NAME_MAX_LENGTH, null=True, blank=True)
-    amount_recieved = models.IntegerField(default=0, blank=True, null=True)
     budget_currency = models.ForeignKey(Currency, on_delete=models.SET_NULL, null=True, blank=True)
+    country = models.ForeignKey( Location, blank=True, null=True, on_delete=models.SET_NULL)
+    activity_domains = models.ManyToManyField(ActivityDomain)
+
+    title = models.CharField(max_length=NAME_MAX_LENGTH, null=True, blank=True)
+    grant = models.CharField(max_length=NAME_MAX_LENGTH, null=True, blank=True)
     received_date = models.DateField(blank=True, null=True)
-    country = models.ForeignKey(
-        Location,
-        blank=True,
-        null=True,
-        on_delete=models.SET_NULL,
-    )
+    amount_recieved = models.IntegerField(default=0, blank=True, null=True)
     description = models.TextField(blank=True, null=True)
 
     created_at = models.DateTimeField(auto_now_add=True, null=True)

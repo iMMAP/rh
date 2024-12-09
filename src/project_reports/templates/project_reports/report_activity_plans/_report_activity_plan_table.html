@@ -37,7 +37,6 @@
                         <th><strong class="table-title">Activity Type</strong></th>
                         <th><strong class="table-title">Indicator</strong></th>
                         <th><strong class="table-title">Response Type</strong></th>
-                        <th><strong class="table-title">Beneficairy Status</strong></th>
                         <th><strong class="table-title">Updated At</strong></th>
                         <th><strong>Targeted Locations</strong></th>
                         <th><strong>Actions</strong></th>
@@ -56,7 +55,6 @@
                                     {{ type }}{% if not forloop.last %},{% endif %} 
                                 {% endfor %}
                             </td>
-                            <td>{{ report_plan.get_beneficiary_status_display }}</td>
                             <td>{{ report_plan.updated_at|naturalday }}</td>
                             <td class="{% if report_plan.report_location_count == 0 %}text-red{% endif %}">
                                 <a href="{% url 'list_report_target_locations' project.id monthly_report.pk %}?activity_plan_report={{ report_plan.id }}">

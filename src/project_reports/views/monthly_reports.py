@@ -274,7 +274,6 @@ def copy_project_monthly_report_view(request, report):
         messages.error(request, "At least one last month approved report is required.")
         return HttpResponse(200)
 
-    print(f"monthly_report_current:{monthly_report} ----- last_month_report: {last_month_report}")
 
     # Check if the new monthly report was successfully created.
     # Get all activity plans reports associated with the current monthly report.
@@ -340,6 +339,7 @@ def copy_target_location_report(plan_report, location_report):
 
         # Associate the duplicated location with the new activity plan report.
         new_location_report.activity_plan_report = plan_report
+        new_location_report.beneficiary_status = "existing_beneficiaries"
 
         new_location_report.save()
 

@@ -109,11 +109,42 @@
                                     <div class="sign-up-field-error">{{ location_report_form.target_location.errors }}</div>
                                 </div>
 
-                                <div class="select-field">
-                                    <span class="label">Beneficiary Status</span>
-                                    <p class="help-text"> {{ location_report_form.beneficiary_status.help_text }} </p>
-                                    {{ location_report_form.beneficiary_status}}
-                                    <div class="sign-up-field-error">{{ location_report_form.beneficiary_status.errors }}</div>
+                                <div class="field-col">
+                                    <div class="select-field">
+                                        <label>{{ location_report_form.beneficiary_status.label }}
+                                            [Read the description]
+                                            <div class="implement-info">
+                                                <i class="icon-info"></i>
+                                                <span class="implement-text">Select 'New Beneficiary' if this activity for this project has not 
+                                                    been previously reported for the selected target location. 
+                                                    Select 'Existing Beneficiary' if the activity has already been reported for this target location.</span>
+                                            </div>
+                                        </label>
+                                        {{ location_report_form.beneficiary_status }}
+                                        <p class="sign-up-field-error">{{ location_report_form.beneficiary_status.errors }}</p>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col col-lg">
+                                        <div class="multiple-fields-row two-items">
+                                            <div class="field-col {% if not location_report_form.prev_targeted_by.value %}hidden{% endif %}" id="{{ location_report_form.prev_targeted_by.id_for_label }}-field">
+                                                <div class="select-field">
+                                                    <label for="{{ location_report_form.prev_targeted_by.id_for_label }}">Previously Targeted By</label>
+                                                    {{location_report_form.prev_targeted_by}}
+                                                    <p class="sign-up-field-error">{{ location_report_form.prev_targeted_by.errors }}</p>
+                                                </div>
+                                            </div>
+                                            <div class="field-col">
+                                                <div class="input-check-holder">
+                                                    {{ location_report_form.seasonal_retargeting }}
+                                                    <label for="{{ location_report_form.seasonal_retargeting.id_for_label }}">
+                                                        <span class="text">Beneficiaries Retargeted due to seasonality</span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
 
                                 {% comment %} the TL info and Tabular Disaggregation Here {% endcomment %}
@@ -157,16 +188,39 @@
 {% block scripts %}
 <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
 <script>
+    let benefStatusChoice
     document.querySelectorAll('.custom-select').forEach((select) => {
-      const choice = new Choices(select, {
-       searchEnabled: true,
-       itemSelectText: '',
-       removeItemButton: true,
-       classNames: {
-        listDropdown: 'choices__list--dropdown',
-       },
-       shouldSort: false,
-      });
+        const config ={
+            searchEnabled: true,
+            itemSelectText: '',
+            removeItemButton: true,
+            classNames: {
+                listDropdown: 'choices__list--dropdown',
+            },
+            shouldSort: false,
+        } 
+
+        if(select.id = "{{ location_report_form.beneficiary_status.id_for_label }}"){
+            benefStatusChoice = new Choices(select,config)
+            return
+        }
+
+        const choice = new Choices(select, config);
+    });
+
+    benefStatusChoice.passedElement.element.addEventListener("change",(e)=>{
+        const prevTargetedBySelect = document.querySelector("#{{location_report_form.prev_targeted_by.id_for_label}}-field")
+
+        if(e.target.value === "new_beneficiary"){
+            // display the prev_targeted_by indicator select dropdown
+            prevTargetedBySelect.classList.remove("hidden")
+            return
+        }
+
+        prevTargetedBySelect.classList.add("hidden")
+        
+        const selectField = document.querySelector("#{{location_report_form.prev_targeted_by.id_for_label}}")
+        selectField.value= ""
     });
 </script>
 {% endblock scripts %}

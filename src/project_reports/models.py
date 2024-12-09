@@ -78,7 +78,6 @@ class ActivityPlanReport(models.Model):
     activity_plan = models.ForeignKey(ActivityPlan, on_delete=models.CASCADE)
 
     response_types = models.ManyToManyField(ResponseType, blank=True, limit_choices_to={"is_active": True})
-    prev_targeted_by = models.ForeignKey(Indicator, null=True, blank=True, on_delete=models.SET_NULL)
 
     package_type = models.ForeignKey(PackageType, on_delete=models.SET_NULL, null=True, blank=True)
     unit_type = models.ForeignKey(UnitType, on_delete=models.SET_NULL, null=True, blank=True)
@@ -92,18 +91,6 @@ class ActivityPlanReport(models.Model):
     transfer_mechanism_type = models.ForeignKey(TransferMechanismType, on_delete=models.SET_NULL, null=True, blank=True)
     implement_modility_type = models.ForeignKey(
         ImplementationModalityType, on_delete=models.SET_NULL, null=True, blank=True
-    )
-
-    seasonal_retargeting = models.BooleanField(blank=True, null=True)
-
-    beneficiary_status = models.CharField(
-        max_length=25,
-        choices=[
-            ("new_beneficiary", "New Beneficiary"),
-            ("existing_beneficiaries", "Existing Beneficiaries"),
-        ],
-        null=True,
-        blank=True,
     )
 
     created_at = models.DateTimeField(auto_now_add=True, null=True)
@@ -122,7 +109,17 @@ class TargetLocationReport(models.Model):
     target_location = models.ForeignKey(TargetLocation, on_delete=models.CASCADE)
     location_type = models.ForeignKey(LocationType, on_delete=models.SET_NULL, null=True, blank=True)
 
-    beneficiary_status = models.CharField(max_length=25)
+    prev_targeted_by = models.ForeignKey(Indicator, null=True, blank=True, on_delete=models.SET_NULL)
+    seasonal_retargeting = models.BooleanField(blank=True, null=True)
+    beneficiary_status = models.CharField(
+        max_length=25,
+        choices=[
+            ("new_beneficiary", "New Beneficiary"),
+            ("existing_beneficiaries", "Existing Beneficiaries"),
+        ],
+        null=True,
+        blank=True,
+    )
 
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, null=True)

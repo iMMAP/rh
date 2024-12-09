@@ -47,7 +47,7 @@ def export_as_csv(self, request, queryset):
 class UserAdminCustom(UserAdmin):
     list_display = (
         "email",
-        "username", 
+        "username",
         "name",
         "organization",
         "is_active",
@@ -70,8 +70,13 @@ class UserAdminCustom(UserAdmin):
 
     def name(self, obj):
         url = reverse("admin:users_profile_change", args=[obj.profile.id])
-        rh_url = reverse('profiles-show',args=[obj.username])
-        return format_html("{} <em>(<a href='{}'>Profile</a></em>) (<em> <a target='_blank' href='{}'> RH-Profile </a></em>)", obj.get_full_name(), url,rh_url)
+        rh_url = reverse("profiles-show", args=[obj.username])
+        return format_html(
+            "{} <em>(<a href='{}'>Profile</a></em>) (<em> <a target='_blank' href='{}'> RH-Profile </a></em>)",
+            obj.get_full_name(),
+            url,
+            rh_url,
+        )
 
 
 admin.site.unregister(User)

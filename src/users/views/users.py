@@ -83,6 +83,7 @@ def org_users_list(request):
 
     return render(request, "users/users_list.html", context)
 
+
 @require_http_methods(["PATCH"])
 @login_required
 @permission_required("rh.activate_deactivate_user", raise_exception=True)
@@ -121,7 +122,7 @@ def toggle_status(request, user_id):
             from_email=settings.DEFAULT_FROM_EMAIL,
             html_message=html_message,
         )
-    
+
     if request.headers.get("Hx-Trigger", "") == "in-detail-page":
         return HttpResponse(200)
 

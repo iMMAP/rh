@@ -621,7 +621,7 @@ class BudgetProgress(models.Model):
     project = models.ForeignKey(Project, on_delete=models.SET_NULL, null=True, blank=True)
     donor = models.ForeignKey(Donor, on_delete=models.SET_NULL, null=True, blank=True)
     budget_currency = models.ForeignKey(Currency, on_delete=models.SET_NULL, null=True, blank=True)
-    country = models.ForeignKey( Location, blank=True, null=True, on_delete=models.SET_NULL)
+    country = models.ForeignKey(Location, blank=True, null=True, on_delete=models.SET_NULL)
     activity_domains = models.ManyToManyField(ActivityDomain)
 
     title = models.CharField(max_length=NAME_MAX_LENGTH, null=True, blank=True)

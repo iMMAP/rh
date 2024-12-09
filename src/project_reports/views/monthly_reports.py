@@ -274,7 +274,6 @@ def copy_project_monthly_report_view(request, report):
         messages.error(request, "At least one last month approved report is required.")
         return HttpResponse(200)
 
-
     # Check if the new monthly report was successfully created.
     # Get all activity plans reports associated with the current monthly report.
     activity_plan_reports = last_month_report.activityplanreport_set.all()

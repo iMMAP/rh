@@ -69,14 +69,15 @@ def update_report_activity_plan(request, project, plan):
                     f'The Report Activity Plan "<a class="underline" href="{reverse("update_report_activity_plans", args=[project, plan])}">{report_plan}</a>" was updated successfully.'
                 ),
             )
-            if "_continue" in request.POST:
+
+            if "_save" in request.POST:
+                return redirect("view_monthly_report", project=report_instance.project.pk, report=report_instance.pk)
+            elif "_addanother" in request.POST:
                 return redirect(
-                    "update_report_activity_plans",
+                    "create_report_activity_plans",
                     project=report_instance.project.pk,
                     plan=report_plan.pk,
                 )
-            elif "_save" in request.POST:
-                return redirect("view_monthly_report", project=report_instance.project.pk, report=report_instance.pk)
         else:
             messages.error(request, "The form is invalid. Please check the fields and try again.")
     else:

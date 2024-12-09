@@ -47,15 +47,19 @@ def export_report_activities_import_template(request, report):
 
     workbook = Workbook()
     write_import_report_template_sheet(workbook, monthly_report)
+
     excel_file = BytesIO()
     workbook.save(excel_file)
     excel_file.seek(0)
+
     # Convert to CSV file
     # convert_xlsx_to_csv(excel_file)
     response = HttpResponse(content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
     response["Content-Disposition"] = 'attachment; filename="activity_plans_import_template.xlsx"'
+
     # Save the workbook to the response
     workbook.save(response)
+
     return response
 
 

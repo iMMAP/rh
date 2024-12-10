@@ -42,6 +42,7 @@ def cluster_5w_dashboard(request, cluster):
         "to_date__gte": from_date,
         "project__user__profile__country": user_country,
         "activityplanreport__activity_plan__activity_domain__clusters__in": [cluster],
+        "activityplanreport__targetlocationreport__beneficiary_status":"new_beneficiary",
     }
 
     if organization:
@@ -58,7 +59,9 @@ def cluster_5w_dashboard(request, cluster):
     )
 
     people_reached_data = (
-        ProjectMonthlyReport.objects.filter(**filter_params, activityplanreport__beneficiary_status="new_beneficiary")
+        ProjectMonthlyReport.objects.filter(
+            **filter_params, 
+        )
         .order_by("from_date")
         .values("from_date")
         .annotate(
@@ -76,13 +79,13 @@ def cluster_5w_dashboard(request, cluster):
 
     # people reached by activities
     activity_domains = (
-        ProjectMonthlyReport.objects.filter(**filter_params, activityplanreport__beneficiary_status="new_beneficiary")
+        ProjectMonthlyReport.objects.filter(**filter_params)
         .values_list("activityplanreport__activity_plan__activity_domain__name", flat=True)
         .distinct()
     )
 
     reach_by_activity = (
-        ProjectMonthlyReport.objects.filter(**filter_params, activityplanreport__beneficiary_status="new_beneficiary")
+        ProjectMonthlyReport.objects.filter(**filter_params)
         .values(
             "activityplanreport__targetlocationreport__disaggregationlocationreport__disaggregation__name",
             "activityplanreport__activity_plan__activity_domain__name",
@@ -149,6 +152,7 @@ def org_5w_dashboard(request, code):
         "state__in": ["submited", "completed"],
         "from_date__lte": to_date,
         "to_date__gte": from_date,
+        "activityplanreport__targetlocationreport__beneficiary_status":"new_beneficiary",
     }
 
     if cluster_code:
@@ -167,7 +171,6 @@ def org_5w_dashboard(request, code):
     people_reached_data = (
         ProjectMonthlyReport.objects.filter(
             **filter_params,
-            activityplanreport__beneficiary_status="new_beneficiary",
         )
         .order_by("from_date")
         .values("from_date")
@@ -188,7 +191,6 @@ def org_5w_dashboard(request, code):
     activity_domains = (
         ProjectMonthlyReport.objects.filter(
             **filter_params,
-            activityplanreport__beneficiary_status="new_beneficiary",
         )
         .values_list("activityplanreport__activity_plan__activity_domain__name", flat=True)
         .distinct()
@@ -197,7 +199,6 @@ def org_5w_dashboard(request, code):
     reach_by_activity = (
         ProjectMonthlyReport.objects.filter(
             **filter_params,
-            activityplanreport__beneficiary_status="new_beneficiary",
         )
         .values(
             "activityplanreport__targetlocationreport__disaggregationlocationreport__disaggregation__name",

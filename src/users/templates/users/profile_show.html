@@ -18,13 +18,13 @@
     <h1 class="font-bold leading-7 text-red-be">User Information</h1>
     <div class="mt-6 border-t border-gray-e6">
         <dl class="divide-y divide-gray-100">
-                <div class="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+            <div class="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
                 <dt class="text-sm font-medium leading-6 text-gray-900">Full Name</dt>
                 <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
                     {{ profile_user.profile.name }}
                 </dd>
-            </div>
-
+            </div> 
+     
             <div class="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
                 <dt class="text-sm font-medium leading-6 text-gray-900">Email</dt>
                 <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0 js-copy-field">
@@ -73,6 +73,19 @@
                     {% else %} 
                        <span class="draft">Deactive</span> 
                     {% endif %}
+                </dd>
+            </div>
+
+            <div class="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                <dt class="text-sm font-medium leading-6 text-gray-900">Roles</dt>
+                <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+                    {% for group in user.groups.all %}
+                        {% if group.name == "ORG_LEAD" %}
+                            <span class="completed">Admin</span>
+                        {% elif "_CLUSTER_LEADS" in group.name %}
+                            <span class="archived">{{ group.name }}</span>
+                        {% endif %}
+                    {% endfor %}
                 </dd>
             </div>
 

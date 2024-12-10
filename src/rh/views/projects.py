@@ -6,7 +6,7 @@ from django.contrib.auth.decorators import login_required, permission_required
 from django.core.exceptions import PermissionDenied, ValidationError
 from django.core.paginator import Paginator
 from django.db import transaction
-from django.db.models import Count, Q
+from django.db.models import Count, Prefetch, Q
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
@@ -63,13 +63,6 @@ def _preload_project_data(project):
         "organizations": {org.code: org for org in Organization.objects.all()},
         "disaggregations": {d.name: d for d in Disaggregation.objects.all()},
     }
-
-
-def _validate_and_get_object(queryset, filter_key, filter_value, error_message, errors, line_num):
-    obj = queryset.filter(**{filter_key: filter_value}).first()
-    if not obj:
-        errors.append(error_message.format(line=line_num, value=filter_value))
-    return obj
 
 
 def _validate_activity_data(row, project_data, project, errors, line_num):
@@ -361,9 +354,23 @@ def cluster_projects_list(request, cluster: str):
                 cluster,
             ]
         )
-        .select_related("organization")
-        .prefetch_related("clusters", "programme_partners", "implementing_partners")
-        .order_by("-id"),
+        .select_related("organization", "user")
+        .only(
+            "id",
+            "title",
+            "code",
+            "state",
+            "end_date",
+            "user__username",
+            "user__email",
+            "organization__name",
+            "organization__code",
+        )
+        .prefetch_related(
+            Prefetch("clusters", queryset=Cluster.objects.only("title", "code")),
+            Prefetch("implementing_partners", queryset=Organization.objects.only("name", "code")),
+        )
+        .order_by("-updated_at"),
     )
 
     # Setup Pagination
@@ -407,14 +414,27 @@ def users_clusters_projects_list(request):
     """
     user_clusters = request.user.profile.clusters.all()
 
-    # Setup Filter
     project_filter = ProjectsFilter(
         request.GET,
         request=request,
         queryset=Project.objects.filter(clusters__in=user_clusters)
-        .select_related("organization")
-        .prefetch_related("clusters", "programme_partners", "implementing_partners")
-        .order_by("-id"),
+        .select_related("organization", "user")
+        .only(
+            "id",
+            "title",
+            "code",
+            "state",
+            "end_date",
+            "user__username",
+            "user__email",
+            "organization__name",
+            "organization__code",
+        )
+        .prefetch_related(
+            Prefetch("clusters", queryset=Cluster.objects.only("title", "code")),
+            Prefetch("implementing_partners", queryset=Organization.objects.only("name", "code")),
+        )
+        .order_by("-updated_at"),
     )
 
     # Setup Pagination
@@ -460,8 +480,12 @@ def org_projects_list(request):
     project_filter = ProjectsFilter(
         request.GET,
         request=request,
-        queryset=p_queryset.select_related("organization")
-        .prefetch_related("clusters", "programme_partners", "implementing_partners")
+        queryset=p_queryset.select_related("user")
+        .only("id", "title", "code", "state", "end_date", "user__username", "user__email")
+        .prefetch_related(
+            Prefetch("clusters", queryset=Cluster.objects.only("title", "code")),
+            Prefetch("implementing_partners", queryset=Organization.objects.only("name", "code")),
+        )
         .order_by("-updated_at"),
     )
 

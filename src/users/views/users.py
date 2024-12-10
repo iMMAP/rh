@@ -8,7 +8,7 @@ from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.models import Group, User
 from django.core.exceptions import PermissionDenied
 from django.core.paginator import Paginator
-from django.db.models import Count, Q
+from django.db.models import Count, Prefetch, Q
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.template import loader
@@ -56,7 +56,7 @@ def org_users_list(request):
         request=request,
         queryset=User.objects.filter(profile__organization=user_org)
         .select_related("profile")
-        .prefetch_related("groups")
+        .prefetch_related(Prefetch("profile__clusters", queryset=Cluster.objects.only("title")), "groups")
         .order_by("-last_login"),
     )
 
@@ -206,8 +206,12 @@ def profile(request):
 @login_required
 @permission_required("users.change_profile", raise_exception=True)
 def profile_show(request, username):
-    user = get_object_or_404(User, username=username)
-
+    user = get_object_or_404(
+        User.objects.select_related("profile").prefetch_related(
+            Prefetch("profile__clusters", queryset=Cluster.objects.only("title")),
+        ),
+        username=username,
+    )
     if not has_permission(user=request.user, user_obj=user):
         raise PermissionDenied
 

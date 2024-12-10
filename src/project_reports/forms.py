@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django import forms
 from django.forms import BaseInlineFormSet
 from django.forms.models import inlineformset_factory
@@ -39,6 +41,8 @@ class ProjectMonthlyReportForm(forms.ModelForm):
 
     def clean(self):
         cleaned_data = super().clean()
+
+        today_date = datetime.today().date()
         from_date = cleaned_data.get("from_date")
         to_date = cleaned_data.get("to_date")
         obj = self.initial.get("project")
@@ -47,6 +51,10 @@ class ProjectMonthlyReportForm(forms.ModelForm):
         else:
             project = obj
         if from_date and to_date:
+            if from_date.strftime("%B-%Y") > today_date.strftime("%B-%Y"):
+                self.add_error("from_date", "Unable to select future date.")
+            if to_date.strftime("%B-%Y") > today_date.strftime("%B-%Y"):
+                self.add_error("to_date", "Unable to select future date.")
             if from_date.month != to_date.month:
                 self.add_error("from_date", "From date and to date must be in the same month.")
             if from_date > to_date:

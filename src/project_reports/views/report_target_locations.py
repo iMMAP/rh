@@ -167,7 +167,7 @@ def create_report_target_location(request, plan):
                 )
             elif "_save" in request.POST:
                 return redirect(
-                    "list_report_target_locations",
+                    "view_monthly_report",
                     project=plan_report.monthly_report.project.pk,
                     report=plan_report.monthly_report.pk,
                 )

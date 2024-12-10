@@ -4,7 +4,7 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User
 from django.http import HttpResponse
-from django.urls import reverse
+from django.urls import NoReverseMatch, reverse
 from django.utils.html import format_html
 
 from .models import Profile
@@ -69,8 +69,13 @@ class UserAdminCustom(UserAdmin):
         return obj.profile.organization
 
     def name(self, obj):
-        url = reverse("admin:users_profile_change", args=[obj.profile.id])
-        rh_url = reverse("profiles-show", args=[obj.username])
+        try:
+            url = reverse("admin:users_profile_change", args=[obj.profile.id])
+            rh_url = reverse("profiles-show", args=[obj.username])
+        except NoReverseMatch:
+            url = "#"
+            rh_url = "#"
+
         return format_html(
             "{} <em>(<a href='{}'>Profile</a></em>) (<em> <a target='_blank' href='{}'> RH-Profile </a></em>)",
             obj.get_full_name(),

@@ -42,7 +42,7 @@ def cluster_5w_dashboard(request, cluster):
         "to_date__gte": from_date,
         "project__user__profile__country": user_country,
         "activityplanreport__activity_plan__activity_domain__clusters__in": [cluster],
-        "activityplanreport__targetlocationreport__beneficiary_status":"new_beneficiary",
+        "activityplanreport__targetlocationreport__beneficiary_status": "new_beneficiary",
     }
 
     if organization:
@@ -60,7 +60,7 @@ def cluster_5w_dashboard(request, cluster):
 
     people_reached_data = (
         ProjectMonthlyReport.objects.filter(
-            **filter_params, 
+            **filter_params,
         )
         .order_by("from_date")
         .values("from_date")
@@ -152,7 +152,7 @@ def org_5w_dashboard(request, code):
         "state__in": ["submited", "completed"],
         "from_date__lte": to_date,
         "to_date__gte": from_date,
-        "activityplanreport__targetlocationreport__beneficiary_status":"new_beneficiary",
+        "activityplanreport__targetlocationreport__beneficiary_status": "new_beneficiary",
     }
 
     if cluster_code:

@@ -831,7 +831,6 @@ def download_project_monthly_report_view(request, report):
                 plan_report.activity_plan.currency,
                 plan_report.activity_plan.transfer_mechanism_type,
                 plan_report.activity_plan.implement_modility_type,
-                plan_report.get_beneficiary_status_display(),
                 # write target location
                 location_report.target_location.country.name,
                 location_report.target_location.country.code,

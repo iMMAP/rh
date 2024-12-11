@@ -241,7 +241,7 @@ def write_projects_reports_to_csv(monthly_progress_report, response):
                         if plan_report.activity_plan.activity_detail
                         else None,
                         plan_report.activity_plan.indicator.name if plan_report.activity_plan.indicator else None,
-                        "Yes" if plan_report.seasonal_retargeting else "No",
+                        "Yes" if location_report.seasonal_retargeting else "No",
                         plan_report.units if plan_report.units else None,
                         plan_report.unit_type.name if plan_report.unit_type else None,
                         plan_report.no_of_transfers if plan_report.no_of_transfers else None,

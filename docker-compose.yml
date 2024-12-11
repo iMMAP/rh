@@ -5,8 +5,6 @@ services:
       dockerfile: ./docker/Dockerfile
     container_name: rh_django
     restart: always
-    volumes:
-      - ./src/static-cdn:/src/static-cdn
     depends_on:
       - db
     environment:

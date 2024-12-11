@@ -10,6 +10,7 @@ services:
     depends_on:
       - db
     environment:
+      - DJANGO_SETTINGS_MODULE=core.settings.production
       - DB=postgresql
       - DB_HOST=db
       - DB_NAME=rh

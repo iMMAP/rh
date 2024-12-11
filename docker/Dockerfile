@@ -36,12 +36,15 @@ COPY src /usr/src/rh/src
 
 # Install python dependencies with poetry
 RUN make install-no-dev
-RUN make collectstatic settings=core.settings.production
 
 # Install Node.js dependencies and build static files
 # Activate shell for django-vite-plugin build
 RUN poetry run make npm-install
-# RUN poetry run make npm-build
+
+COPY docker/entrypoint.sh /usr/src/rh/entrypoint.sh
+RUN chmod a+x /usr/src/rh/entrypoint.sh
+
+ENTRYPOINT ["/usr/src/rh/entrypoint.sh"]
 
 # Gunicorn will be used to run the server
 CMD ["gunicorn", "--bind", "0.0.0.0:8000", "src.core.wsgi:application"]

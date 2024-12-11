@@ -185,7 +185,6 @@ class ActivityPlanReportForm(forms.ModelForm):
             "currency": forms.Select(attrs={"class": "custom-select"}),
             "transfer_mechanism_type": forms.Select(attrs={"class": "custom-select"}),
             "implement_modility_type": forms.Select(attrs={"class": "custom-select"}),
-            "seasonal_retargeting": forms.CheckboxInput(),
         }
 
     def __init__(self, *args, **kwargs):

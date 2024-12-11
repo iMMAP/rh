@@ -312,7 +312,7 @@ def write_import_report_template_sheet(workbook, monthly_report):
         {"header": "admin1name", "type": "string", "width": 30},
         {"header": "admin2pcode", "type": "string", "width": 30},
         {"header": "admin2name", "type": "string", "width": 30},
-        {"header": "zone", "type": "string", "width": 30},
+        {"header": "admin3pcode", "type": "string", "width": 30},
         {"header": "location_type", "type": "string", "width": 30},
         {"header": "facility_site_type", "type": "string", "width": 30},
         {"header": "facility_id", "type": "string", "width": 30},

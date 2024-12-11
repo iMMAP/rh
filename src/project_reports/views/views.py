@@ -159,7 +159,7 @@ def import_report_activities(request, pk):
                     implement_modility_type = mapped_data.get("implement_modility_type")
 
                     beneficiary_status = {
-                        label: key for key, label in ActivityPlanReport._meta.get_field("beneficiary_status").choices
+                        label: key for key, label in TargetLocationReport._meta.get_field("beneficiary_status").choices
                     }.get(row.get("beneficiary_status", ""), None)
 
                     if beneficiary_status is None:

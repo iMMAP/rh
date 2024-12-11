@@ -78,9 +78,10 @@ format-templates:
 lint-templates:
 	djlint --profile=django src
 
+settings ?= core.settings.local 
 .PHONY: collectstatic
 collectstatic:
-	poetry run python src/manage.py collectstatic --no-input --ignore=node_modules --ignore=*.scss --ignore=*.json --ignore=vite.config.js 
+	poetry run python src/manage.py collectstatic --settings=${settings} --no-input --ignore=node_modules --ignore=*.scss --ignore=*.json --ignore=vite.config.js
 
 .PHONY: run-dependencies
 run-dependencies:

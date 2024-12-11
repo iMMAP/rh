@@ -1,0 +1,47 @@
+# Base image
+FROM python:3.10-slim
+
+# Set environment variables
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+ENV POETRY_VIRTUALENVS_CREATE=false
+ENV PYTHONPATH=/usr/src/rh/src
+
+# Install dependencies
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    libpq-dev curl man wget \
+    npm \
+    && rm -rf /var/lib/apt/lists/*
+RUN apt-get clean
+
+# Install Python dependencies
+RUN pip install poetry
+
+# npm and node latest with n
+RUN npm cache clean -f
+RUN npm install -g n
+RUN n stable
+
+# Set the working directory
+WORKDIR /usr/src/rh
+
+# to preserve the docker cache
+COPY ["README.md", "Makefile", "poetry.lock","pyproject.toml","/usr/src/rh"]
+RUN poetry add gunicorn
+RUN poetry install --without dev --no-root --no-directory
+
+# copy project code -> src to /usr/src/rh/src
+COPY src /usr/src/rh/src
+
+# Install python dependencies with poetry
+RUN make install-no-dev
+RUN make collectstatic settings=core.settings.production
+
+# Install Node.js dependencies and build static files
+# Activate shell for django-vite-plugin build
+RUN poetry run make npm-install
+# RUN poetry run make npm-build
+
+# Gunicorn will be used to run the server
+CMD ["gunicorn", "--bind", "0.0.0.0:8000", "src.core.wsgi:application"]

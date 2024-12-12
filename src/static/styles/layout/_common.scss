@@ -904,6 +904,40 @@ a.text-decoration-none{
   line-height: 1.25rem;
   word-break: break-word;
 }
+.tooltip-red{
+  position: relative;
+}
+.tooltip-red .tooltip-text-red{
+  visibility: hidden;
+  position: absolute;
+  top: 160%;
+  left: -30%;
+  right: 0%;
+  background-color: #c2410c;
+  color: white;
+  font-size: 12px;
+  text-transform: none;
+  text-align: center;
+  padding: 5px;
+  width: 200px;
+  border-radius: 5px;
+  z-index: 100;
+
+}
+.tooltip-red .tooltip-text-red::after{
+  content: "";
+  position: absolute;
+  top: -15%;
+  right: 50%;
+  margin-top: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color:  transparent  transparent #c2410c transparent  ;
+
+}
+.tooltip-red:hover .tooltip-text-red{
+  visibility: visible;
+}
 .Reserved{
   color: #1d4ed8;
 }

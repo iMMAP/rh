@@ -128,19 +128,21 @@
                                 <div class="row">
                                     <div class="col col-lg">
                                         <div class="multiple-fields-row two-items">
-                                            <div class="field-col {% if not location_report_form.prev_targeted_by.value %}hidden{% endif %}" id="{{ location_report_form.prev_targeted_by.id_for_label }}-field">
+                                            <div class="field-col {% if not location_report_form.prev_assisted_by.value %}hidden{% endif %}" id="{{ location_report_form.prev_assisted_by.id_for_label }}-field">
                                                 <div class="select-field">
-                                                    <label for="{{ location_report_form.prev_targeted_by.id_for_label }}">Previously Targeted By</label>
-                                                    {{location_report_form.prev_targeted_by}}
-                                                    <p class="sign-up-field-error">{{ location_report_form.prev_targeted_by.errors }}</p>
+                                                    <label for="{{ location_report_form.prev_assisted_by.id_for_label }}">Previously Assisted By</label>
+                                                    <p class="help-text">{{ location_report_form.prev_assisted_by.help_text }}</p>
+                                                    {{location_report_form.prev_assisted_by}}
+                                                    <p class="sign-up-field-error">{{ location_report_form.prev_assisted_by.errors }}</p>
                                                 </div>
                                             </div>
                                             <div class="field-col">
                                                 <div class="input-check-holder">
                                                     {{ location_report_form.seasonal_retargeting }}
                                                     <label for="{{ location_report_form.seasonal_retargeting.id_for_label }}">
-                                                        <span class="text">Beneficiaries Retargeted due to seasonality</span>
+                                                        <span class="text">Beneficiaries Re-Assisted Due To Seasonality</span>
                                                     </label>
+                                                    <p class="help-text">{{ location_report_form.seasonal_retargeting.help_text }}</p>
                                                 </div>
                                             </div>
                                         </div>
@@ -210,17 +212,17 @@
     });
 
     benefStatusChoice.passedElement.element.addEventListener("change",(e)=>{
-        const prevTargetedBySelect = document.querySelector("#{{location_report_form.prev_targeted_by.id_for_label}}-field")
+        const prevTargetedBySelect = document.querySelector("#{{location_report_form.prev_assisted_by.id_for_label}}-field")
 
         if(e.target.value === "new_beneficiary"){
-            // display the prev_targeted_by indicator select dropdown
+            // display the prev_assisted_by indicator select dropdown
             prevTargetedBySelect.classList.remove("hidden")
             return
         }
 
         prevTargetedBySelect.classList.add("hidden")
         
-        const selectField = document.querySelector("#{{location_report_form.prev_targeted_by.id_for_label}}")
+        const selectField = document.querySelector("#{{location_report_form.prev_assisted_by.id_for_label}}")
         selectField.value= ""
     });
 </script>

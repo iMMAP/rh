@@ -58,7 +58,7 @@ def notify_focal_point(request, report_id: int):
 
     # notify the project.user
     html_message = loader.render_to_string(
-        template_name="rh/emails/pending_report.html",
+        template_name="project_reports/emails/pending_report.html",
         context={
             "report": report,
             "admin_user": admin_user,

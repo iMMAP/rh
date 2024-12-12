@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -e
 
+# TODO:  wait to db here
+
 echo "Preparing Django Application"
 
 # static files

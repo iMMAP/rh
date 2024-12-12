@@ -68,6 +68,13 @@ class TargetLocationReportForm(forms.ModelForm):
         model = TargetLocationReport
         fields = "__all__"
         exclude = ("activity_plan_report",)
+<<<<<<< Updated upstream
+=======
+        help_texts = {
+            
+            "seasonal_retargeting": "Are these beneficiaries being re-targeted due to seasonal needs? If yes, please check the box.",
+        }
+>>>>>>> Stashed changes
         widgets = {
             "beneficiary_status": forms.RadioSelect(
                 choices={

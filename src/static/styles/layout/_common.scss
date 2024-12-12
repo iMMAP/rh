@@ -11,6 +11,42 @@
 //--------------------------------
 //Random added style start
 //----------------------------------
+.large-tooltip{
+  position: relative;
+  display: inline;
+  margin-left: 5px;
+  color: $red-be;
+}
+.large-tooltip .large-tooltip-text{
+  visibility: hidden;
+  position: absolute;
+  bottom: 200%;
+  left: -140px;
+  right: auto;
+  background-color: #636161;
+  color: white;
+  font-size: 12px;
+  text-align:justify;
+  padding: 1rem;
+  width: 300px;
+  border-radius: 5px;
+  z-index: 100;
+
+}
+.large-tooltip .large-tooltip-text::after{
+  content: "";
+  position: absolute;
+  top: 103%;
+  right: 50%;
+  margin-top: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color:  #636161 transparent  transparent transparent  ;
+
+}
+.large-tooltip:hover .large-tooltip-text{
+  visibility: visible;
+}
 .tooltip{
   position: relative;
 }

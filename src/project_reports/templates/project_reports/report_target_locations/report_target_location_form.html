@@ -109,11 +109,75 @@
                                     <div class="sign-up-field-error">{{ location_report_form.target_location.errors }}</div>
                                 </div>
 
+<<<<<<< Updated upstream
                                 <div class="select-field">
                                     <span class="label">Beneficiary Status</span>
                                     <p class="help-text"> {{ location_report_form.beneficiary_status.help_text }} </p>
                                     {{ location_report_form.beneficiary_status}}
                                     <div class="sign-up-field-error">{{ location_report_form.beneficiary_status.errors }}</div>
+=======
+                                <div class="field-col">
+                                    <div class="select-field">
+                                        <label>{{ location_report_form.beneficiary_status.label }}
+                                            [Read the description]
+                                            <div class="large-tooltip">
+                                                <i class="icon-info"></i>
+                                                <span class="large-tooltip-text">
+                                                    <ul>
+                                                        <li><h4 class="title text-white"><span class="text-red">I</span>nstructions</h4></li>
+                                                        <li>
+                                                            Select 'New Beneficiary' if this activity for this project has not 
+                                                            been previously reported for the selected target location.
+                                                        </li>
+                                                        <li>
+                                                            Select 'Existing Beneficiary' if the activity has already been 
+                                                            reported for this target location.
+                                                        </li>
+                                                    </ul> 
+                                                </span>
+                                            </div>
+                                        </label>
+                                        {{ location_report_form.beneficiary_status }}
+                                        <p class="sign-up-field-error">{{ location_report_form.beneficiary_status.errors }}</p>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col col-lg">
+                                        <div class="multiple-fields-row two-items">
+                                            <div class="field-col {% if not location_report_form.prev_assisted_by.value %}hidden{% endif %}" id="{{ location_report_form.prev_assisted_by.id_for_label }}-field">
+                                                <div class="select-field">
+                                                    <label for="{{ location_report_form.prev_assisted_by.id_for_label }}">Previously Assisted By [Read the description]
+                                                        <div class="large-tooltip">
+                                                            <i class="icon-info"></i>
+                                                            <span class="large-tooltip-text">
+                                                                <ul class="space-y-2">
+                                                                    <li><h4 class="title text-white"><span class="text-red">I</span>nstructions</h4></li>
+                                                                    <li>Have these beneficiaries previously been assisted by your organization with a different activity?</li>
+                                                                    <li>If yes, please select the activity through which these beneficiaries were previously reached.</li>
+                                                                    <li>This applies only if the beneficiaries are new to the activity you are reporting now but were assisted through another activity previously.</li>
+                                                                    
+                                                                </ul>
+                                                            </span>
+                                                        </div>
+                                                    </label>
+                                                    {{location_report_form.prev_assisted_by}}
+                                                    <p class="sign-up-field-error">{{ location_report_form.prev_assisted_by.errors }}</p>
+                                                    
+                                                </div>
+                                            </div>
+                                            <div class="field-col">
+                                                <div class="input-check-holder">
+                                                    {{ location_report_form.seasonal_retargeting }}
+                                                    <label for="{{ location_report_form.seasonal_retargeting.id_for_label }}">
+                                                        <span class="text">Beneficiaries Re-Assisted Due To Seasonality</span>
+                                                    </label>
+                                                    <p class="help-text">{{ location_report_form.seasonal_retargeting.help_text }}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+>>>>>>> Stashed changes
                                 </div>
 
                                 {% comment %} the TL info and Tabular Disaggregation Here {% endcomment %}

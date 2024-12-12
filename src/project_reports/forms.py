@@ -76,6 +76,10 @@ class TargetLocationReportForm(forms.ModelForm):
         model = TargetLocationReport
         fields = "__all__"
         exclude = ("activity_plan_report",)
+        help_texts = {
+            "prev_assisted_by": "Select whether these people were previously assisted by another activity in the selected target location.",
+            "seasonal_retargeting": "Select if the beneficiaries re-assisted due to seasonal factors, such as significant weather changes.",
+        }
         widgets = {
             "beneficiary_status": forms.Select(attrs={"class": "custom-select"}),
             "seasonal_retargeting": forms.CheckboxInput(),
@@ -98,7 +102,7 @@ class TargetLocationReportForm(forms.ModelForm):
             activity_plan=plan_report.activity_plan, state="in-progress"
         )
 
-        self.fields["prev_targeted_by"].queryset = Indicator.objects.filter(
+        self.fields["prev_assisted_by"].queryset = Indicator.objects.filter(
             activity_types__activityplan__project=plan_report.monthly_report.project
         )
 

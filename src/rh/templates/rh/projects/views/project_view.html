@@ -26,9 +26,22 @@
                         <li class="{% if project_view %}active{% endif %}">
                             <a href="{% url 'projects-update' project.pk %}">Project planning</a>
                         </li>
+                        {% if project.donors.all and project.budget and project.budget_currency %}
                         <li class="{% if financial_view %}active{% endif %}">
                             <a href="{% if project %}{% url 'create_project_budget_progress' project.pk %}{% else %}#{% endif %}">Financial Reports</a>
                         </li>
+                        {% else %}
+                        <li>
+                            <a href="#" class="tooltip-red">
+                                <span class="text-gray-7d">Financial Reports</span>
+                                <span class="tooltip-text-red">
+                                    The project is missing {% if not project.donors.all %} Donors,  {% endif %}
+                                    {% if not project.budget %} Budget,  {% endif %}
+                                    {% if not project.budget_currency %} Budget Currency,  {% endif %}
+                                </span>
+                            </a>
+                        </li>
+                        {% endif %}
                         <li class="{% if reports_view %}active{% endif %}">
                             <a href="{% if project %}{% url 'project_reports_home' project.pk %}{% else %}#{% endif %}">Project Reports</a>
                         </li>

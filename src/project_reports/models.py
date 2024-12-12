@@ -109,7 +109,7 @@ class TargetLocationReport(models.Model):
     target_location = models.ForeignKey(TargetLocation, on_delete=models.CASCADE)
     location_type = models.ForeignKey(LocationType, on_delete=models.SET_NULL, null=True, blank=True)
 
-    prev_targeted_by = models.ForeignKey(Indicator, null=True, blank=True, on_delete=models.SET_NULL)
+    prev_assisted_by = models.ForeignKey(Indicator, null=True, blank=True, on_delete=models.SET_NULL)
     seasonal_retargeting = models.BooleanField(blank=True, null=True)
     beneficiary_status = models.CharField(
         max_length=25,

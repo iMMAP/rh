@@ -4,7 +4,7 @@ import datetime
 from openpyxl.styles import Font, NamedStyle
 from openpyxl.utils import get_column_letter
 from openpyxl.worksheet.datavalidation import DataValidation
-from rh.models import Disaggregation, FacilitySiteType
+from rh.models import Currency, Disaggregation, FacilitySiteType, GrantType, ImplementationModalityType, PackageType, TransferCategory, TransferMechanismType, UnitType
 
 from project_reports.models import ResponseType
 
@@ -57,7 +57,9 @@ def write_projects_reports_to_csv(monthly_progress_report, response):
         "non-hrp_beneficiary_name",
         "hrp_beneficiary_code",
         "hrp_beneficiary_name",
-        "beneficiary_category",
+        "beneficiary_status",
+        "seasnol_re-assisting",
+        "beneficiary_re-assisted_by",
         "activity_domain_code",
         "activity_domain_name",
         "activity_type_code",
@@ -65,8 +67,6 @@ def write_projects_reports_to_csv(monthly_progress_report, response):
         "activity_detail_code",
         "activity_detail_name",
         "indicator_name",
-        "beneficiary_status",
-        "beneficiaries_retargeted",
         "units",
         "unit_type_name",
         "transfer_type_value",
@@ -157,7 +157,7 @@ def write_projects_reports_to_csv(monthly_progress_report, response):
                         project_reports.from_date.strftime("%B") if project_reports.from_date else None,
                         project_reports.from_date.strftime("%Y") if project_reports.from_date else None,
                         project_reports.from_date.strftime("%Y-%m-%d") if project_reports.from_date else None,
-                        location_report.target_location.implementing_partner.name
+                        location_report.target_location.implementing_partner.code
                         if location_report.target_location.implementing_partner
                         else None,
                         location_report.target_location.country.code
@@ -211,9 +211,9 @@ def write_projects_reports_to_csv(monthly_progress_report, response):
                         plan_report.activity_plan.hrp_beneficiary.name
                         if plan_report.activity_plan.hrp_beneficiary
                         else None,
-                        plan_report.activity_plan.get_beneficiary_category_display()
-                        if plan_report.activity_plan.get_beneficiary_category_display()
-                        else None,
+                        location_report.beneficiary_status if location_report.beneficiary_status else None,
+                        "Yes" if location_report.seasonal_retargeting else "No",
+                        location_report.prev_assisted_by if location_report.prev_assisted_by else None,
                         plan_report.activity_plan.activity_domain.code
                         if plan_report.activity_plan.activity_domain
                         else None,
@@ -233,10 +233,6 @@ def write_projects_reports_to_csv(monthly_progress_report, response):
                         if plan_report.activity_plan.activity_detail
                         else None,
                         plan_report.activity_plan.indicator.name if plan_report.activity_plan.indicator else None,
-                        plan_report.get_beneficiary_status_display()
-                        if plan_report.get_beneficiary_status_display()
-                        else None,
-                        "Yes" if plan_report.seasonal_retargeting else "No",
                         plan_report.units if plan_report.units else None,
                         plan_report.unit_type.name if plan_report.unit_type else None,
                         plan_report.no_of_transfers if plan_report.no_of_transfers else None,
@@ -280,38 +276,39 @@ def write_projects_reports_to_csv(monthly_progress_report, response):
 
 def write_import_report_template_sheet(workbook, monthly_report):
     sheet = workbook.active
-    sheet.title = "Import Template"
+    sheet.title = "import-report-template"
     columns = [
-        {"header": "project_code", "type": "string", "width": 20},
-        {"header": "indicator", "type": "string", "width": 80},
-        {"header": "activity_domain", "type": "string", "width": 80},
-        {"header": "activity_type", "type": "string", "width": 80},
-        {"header": "response_types", "type": "string", "width": 20},
-        {"header": "implementing_partners", "type": "string", "width": 20},
-        {"header": "package_type", "type": "string", "width": 20},
-        {"header": "unit_type", "type": "string", "width": 20},
-        {"header": "units", "type": "string", "width": 20},
-        {"header": "no_of_transfers", "type": "string", "width": 20},
-        {"header": "grant_type", "type": "string", "width": 20},
-        {"header": "transfer_category", "type": "string", "width": 20},
-        {"header": "currency", "type": "string", "width": 20},
-        {"header": "transfer_mechanism_type", "type": "string", "width": 20},
-        {"header": "implement_modility_type", "type": "string", "width": 20},
-        {"header": "beneficiary_status", "type": "string", "width": 20},
-        {"header": "admin0name", "type": "string", "width": 20},
-        {"header": "admin0pcode", "type": "string", "width": 20},
-        {"header": "admin1pcode", "type": "string", "width": 20},
-        {"header": "admin1name", "type": "string", "width": 20},
-        {"header": "admin2pcode", "type": "string", "width": 20},
-        {"header": "admin2name", "type": "string", "width": 20},
-        {"header": "zone", "type": "string", "width": 20},
-        {"header": "location_type", "type": "string", "width": 20},
-        {"header": "facility_site_type", "type": "string", "width": 20},
-        {"header": "facility_monitoring", "type": "string", "width": 20},
-        {"header": "facility_id", "type": "string", "width": 20},
-        {"header": "facility_name", "type": "string", "width": 20},
-        {"header": "facility_lat", "type": "string", "width": 20},
-        {"header": "facility_long", "type": "string", "width": 20},
+        {"header": "project_code", "type": "string", "width": 40},
+        {"header": "indicator", "type": "string", "width": 60},
+        {"header": "activity_domain", "type": "string", "width": 40},
+        {"header": "activity_type", "type": "string", "width": 60},
+        {"header": "response_types", "type": "string", "width": 30},
+        {"header": "implementing_partners", "type": "string", "width": 30},
+        {"header": "package_type", "type": "string", "width": 30},
+        {"header": "unit_type", "type": "string", "width": 30},
+        {"header": "units", "type": "string", "width": 30},
+        {"header": "no_of_transfers", "type": "string", "width": 30},
+        {"header": "grant_type", "type": "string", "width": 30},
+        {"header": "transfer_category", "type": "string", "width": 30},
+        {"header": "currency", "type": "string", "width": 30},
+        {"header": "transfer_mechanism_type", "type": "string", "width": 30},
+        {"header": "implement_modility_type", "type": "string", "width": 30},
+        {"header": "beneficiary_status", "type": "string", "width": 30},
+        {"header": "previously_assisted_by", "type": "string", "width": 40},
+        {"header": "seasonal_re-assisting", "type": "string", "width": 30},
+        {"header": "admin0name", "type": "string", "width": 30},
+        {"header": "admin0pcode", "type": "string", "width": 30},
+        {"header": "admin1pcode", "type": "string", "width": 30},
+        {"header": "admin1name", "type": "string", "width": 30},
+        {"header": "admin2pcode", "type": "string", "width": 30},
+        {"header": "admin2name", "type": "string", "width": 30},
+        {"header": "admin3pcode", "type": "string", "width": 30},
+        {"header": "location_type", "type": "string", "width": 30},
+        {"header": "facility_site_type", "type": "string", "width": 30},
+        {"header": "facility_id", "type": "string", "width": 30},
+        {"header": "facility_name", "type": "string", "width": 30},
+        {"header": "facility_lat", "type": "string", "width": 30},
+        {"header": "facility_long", "type": "string", "width": 30},
     ]
 
     disaggregation_cols = []
@@ -337,16 +334,30 @@ def write_import_report_template_sheet(workbook, monthly_report):
         "indicatorList": ["B"],
         "activityDomainList": ["C"],
         "activityTypeList": ["D"],
-        "admin0nameList": ["Q"],
-        "admin0pcodeList": ["R"],
-        "admin1pcodeList": ["S"],
-        "admin1nameList": ["T"],
-        "admin2pcodeList": ["U"],
-        "admin2nameList": ["V"],
-        "facilitySiteTypeList": ["Y"],
+        "beneficiary_status_list": ["P", "New Beneficiary", "Existing Beneficiaries"],
+        "re-assisted_list": ["Q"],
+        "seasonal_re-assting_list": ["R", "Yes", "No"],
+        "admin0nameList": ["S"],
+        "admin0pcodeList": ["T"],
+        "admin1pcodeList": ["U"],
+        "admin1nameList": ["V"],
+        "admin2pcodeList": ["W"],
+        "admin2nameList": ["X"],
+        "facilitySiteTypeList": ["AA"],
         "reponseTypeList": ["E"],
     }
     project = monthly_report.project
+    project_partners_list = list(project.implementing_partners.values_list("code", flat=True))
+    container_dictionary["package_type"].extend(list(PackageType.objects.values_list("name", flat=True)))
+    container_dictionary["unit_type"].extend(list(UnitType.objects.values_list("name", flat=True)))
+    container_dictionary["grant_type"].extend(list(GrantType.objects.values_list("name", flat=True)))
+    container_dictionary["im_modility_type"].extend(
+        list(ImplementationModalityType.objects.values_list("name", flat=True))
+    )
+
+    container_dictionary["transfer_mc_type"].extend(list(TransferMechanismType.objects.values_list("name", flat=True)))
+    container_dictionary["transfer_category"].extend(list(TransferCategory.objects.values_list("name", flat=True)))
+    container_dictionary["currency"].extend(list(Currency.objects.values_list("name", flat=True)))
     facility = list(FacilitySiteType.objects.values_list("name", flat=True))
     responseType = list(ResponseType.objects.values_list("name", flat=True))
     num_rows = 2
@@ -364,14 +375,17 @@ def write_import_report_template_sheet(workbook, monthly_report):
             container_dictionary["admin2pcodeList"].append(location.district.code)
             container_dictionary["admin2nameList"].append(location.district.name)
             num_rows += 1
+    container_dictionary["re-assisted_list"].extend(container_dictionary["indicatorList"][1:])
     container_dictionary["facilitySiteTypeList"].extend(facility)
     container_dictionary["reponseTypeList"].extend(responseType)
     sheet["A2"] = project_code
-    print(num_rows)
     for key, value in container_dictionary.items():
-        dv = DataValidation(type="list", formula1='"{}"'.format(",".join(list(container_dictionary[key][1:]))))
-        sheet.add_data_validation(dv)
-        for row in range(2, num_rows):
-            cell = sheet[f"{value[0]}{row}"]
+        column = value[0]
+        list_values = ",".join(value[1:])
+        if len(list_values) < 255:
+            dv = DataValidation(type="list", formula1=f'"{list_values}"')
+
+            for row in range(2, num_rows):
+                cell = sheet[f"{column}{row}"]
+                dv.add(cell)
             sheet.add_data_validation(dv)
-            dv.add(cell)

@@ -21,7 +21,7 @@ from ..models import (
 def create_project_budget_progress_view(request, project):
     project = get_object_or_404(Project, pk=project)
     financial_report = project.budgetprogress_set.all()
-
+    
     if request.method == "POST":
         form = BudgetProgressForm(request.POST, project=project)
         country = request.POST.get("country")
@@ -58,24 +58,25 @@ def create_project_budget_progress_view(request, project):
     activity_names = []
     donor_names_funds = {}
     activity_names_funds = {}
-    for data in financial_report:
-        if data.donor.name not in donor_names_funds.keys():
-            donor_names_funds[data.donor.name] = data.amount_recieved
-        else:
-            donor_names_funds[data.donor.name] += data.amount_recieved
+    if financial_report.exists():
+        for data in financial_report:
+            if data.donor.name not in donor_names_funds.keys():
+                donor_names_funds[data.donor.name] = data.amount_recieved
+            else:
+                donor_names_funds[data.donor.name] += data.amount_recieved
 
-        activities = " | ".join([str(ad) for ad in data.activity_domains.all()])
+            activities = " | ".join([str(ad) for ad in data.activity_domains.all()])
 
-        if activities not in activity_names_funds.keys():
-            activity_names_funds[activities] = data.amount_recieved
-        else:
-            activity_names_funds[activities] += data.amount_recieved
-    for names, funds in activity_names_funds.items():
-        activity_funds.append(funds)
-        activity_names.append(names)
-    for donor, fund in donor_names_funds.items():
-        donor_names.append(donor)
-        donor_funds.append(fund)
+            if activities not in activity_names_funds.keys():
+                activity_names_funds[activities] = data.amount_recieved
+            else:
+                activity_names_funds[activities] += data.amount_recieved
+        for names, funds in activity_names_funds.items():
+            activity_funds.append(funds)
+            activity_names.append(names)
+        for donor, fund in donor_names_funds.items():
+            donor_names.append(donor)
+            donor_funds.append(fund)
 
     context = {
         "project": project,
@@ -86,9 +87,6 @@ def create_project_budget_progress_view(request, project):
         "donor_funds": list(donor_funds),
         "activity_names": list(activity_names),
         "activity_funds": list(activity_funds),
-        "project_view": False,
-        "financial_view": True,
-        "reports_view": False,
         # "progress":progress
     }
     return render(request, "rh/financial_reports/project_budget_progress.html", context)
@@ -149,7 +147,6 @@ def update_budget_progress(request, project, pk):
 def delete_budget_progress(request, pk):
     budget_progress = get_object_or_404(BudgetProgress, pk=pk)
     if budget_progress:
-        print(budget_progress)
         budget_progress.delete()
         messages.success(request, f"{budget_progress.donor} financial report has been deleted.")
         return HttpResponse(status=200)

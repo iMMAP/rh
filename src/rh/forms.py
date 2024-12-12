@@ -74,7 +74,7 @@ class ProjectForm(forms.ModelForm):
         user = kwargs.pop("user", None)
         super().__init__(*args, **kwargs)
 
-        if self.instance.pk:
+        if self.instance.pk and self.instance.user:
             user = self.instance.user
 
         self.fields["budget_currency"].queryset = Currency.objects.order_by("name")

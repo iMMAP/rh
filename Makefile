@@ -102,3 +102,7 @@ dbbackup:
 .PHONY: clear_cache 
 clear_cache:
 	poetry run python src/manage.py clear_cache
+
+.PHONY: dev
+dev:
+	make -j3 serve vite

@@ -8,8 +8,6 @@ echo "Preparing Django Application"
 # static files
 make collectstatic settings=core.settings.production
 make npm-build
-
-# Delete the node_modules from container
 rm -rf src/static/node_modules
 
 # Create super user

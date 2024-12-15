@@ -34,6 +34,10 @@ serve:
 vite:
 	cd src/static && npm run dev
 
+.PHONY: dev
+dev:
+	make -j3 serve vite
+
 .PHONY: vite-host
 vite-host:
 	cd src/static && npm run dev -- --host
@@ -102,7 +106,3 @@ dbbackup:
 .PHONY: clear_cache 
 clear_cache:
 	poetry run python src/manage.py clear_cache
-
-.PHONY: dev
-dev:
-	make -j3 serve vite

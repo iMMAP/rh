@@ -13,7 +13,7 @@ export default defineConfig({
         // relative to the folder that vite.config is located
         // "../users/static/users/users.js",
       ],
-      pyArgs: ['--setting', 'core.settings.production'],
+      // pyArgs: ["--settings=core.settings.production"],
       root: "..",
     }),
   ],

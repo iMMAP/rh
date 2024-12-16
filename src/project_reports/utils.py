@@ -4,7 +4,21 @@ import datetime
 from openpyxl.styles import Font, NamedStyle
 from openpyxl.utils import get_column_letter
 from openpyxl.worksheet.datavalidation import DataValidation
+<<<<<<< HEAD
 from rh.models import Currency, Disaggregation, FacilitySiteType, GrantType, ImplementationModalityType, PackageType, TransferCategory, TransferMechanismType, UnitType
+=======
+from rh.models import (
+    Currency,
+    Disaggregation,
+    FacilitySiteType,
+    GrantType,
+    ImplementationModalityType,
+    PackageType,
+    TransferCategory,
+    TransferMechanismType,
+    UnitType,
+)
+>>>>>>> 75c10a833a42a4bce7f48d353adc8e4fe4804d56
 
 from project_reports.models import ResponseType
 
@@ -212,8 +226,11 @@ def write_projects_reports_to_csv(monthly_progress_report, response):
                         if plan_report.activity_plan.hrp_beneficiary
                         else None,
                         location_report.beneficiary_status if location_report.beneficiary_status else None,
+<<<<<<< HEAD
                         "Yes" if location_report.seasonal_retargeting else "No",
                         location_report.prev_assisted_by if location_report.prev_assisted_by else None,
+=======
+>>>>>>> 75c10a833a42a4bce7f48d353adc8e4fe4804d56
                         plan_report.activity_plan.activity_domain.code
                         if plan_report.activity_plan.activity_domain
                         else None,
@@ -233,6 +250,10 @@ def write_projects_reports_to_csv(monthly_progress_report, response):
                         if plan_report.activity_plan.activity_detail
                         else None,
                         plan_report.activity_plan.indicator.name if plan_report.activity_plan.indicator else None,
+<<<<<<< HEAD
+=======
+                        "Yes" if location_report.seasonal_retargeting else "No",
+>>>>>>> 75c10a833a42a4bce7f48d353adc8e4fe4804d56
                         plan_report.units if plan_report.units else None,
                         plan_report.unit_type.name if plan_report.unit_type else None,
                         plan_report.no_of_transfers if plan_report.no_of_transfers else None,
@@ -279,9 +300,15 @@ def write_import_report_template_sheet(workbook, monthly_report):
     sheet.title = "import-report-template"
     columns = [
         {"header": "project_code", "type": "string", "width": 40},
+<<<<<<< HEAD
         {"header": "indicator", "type": "string", "width": 60},
         {"header": "activity_domain", "type": "string", "width": 40},
         {"header": "activity_type", "type": "string", "width": 60},
+=======
+        {"header": "indicator", "type": "string", "width": 40},
+        {"header": "activity_domain", "type": "string", "width": 40},
+        {"header": "activity_type", "type": "string", "width": 40},
+>>>>>>> 75c10a833a42a4bce7f48d353adc8e4fe4804d56
         {"header": "response_types", "type": "string", "width": 30},
         {"header": "implementing_partners", "type": "string", "width": 30},
         {"header": "package_type", "type": "string", "width": 30},
@@ -294,8 +321,11 @@ def write_import_report_template_sheet(workbook, monthly_report):
         {"header": "transfer_mechanism_type", "type": "string", "width": 30},
         {"header": "implement_modility_type", "type": "string", "width": 30},
         {"header": "beneficiary_status", "type": "string", "width": 30},
+<<<<<<< HEAD
         {"header": "previously_assisted_by", "type": "string", "width": 40},
         {"header": "seasonal_re-assisting", "type": "string", "width": 30},
+=======
+>>>>>>> 75c10a833a42a4bce7f48d353adc8e4fe4804d56
         {"header": "admin0name", "type": "string", "width": 30},
         {"header": "admin0pcode", "type": "string", "width": 30},
         {"header": "admin1pcode", "type": "string", "width": 30},
@@ -314,19 +344,21 @@ def write_import_report_template_sheet(workbook, monthly_report):
     disaggregation_cols = []
     disaggregations = Disaggregation.objects.filter(clusters__in=monthly_report.project.clusters.all()).distinct()
     for disaggregation in disaggregations:
-        disaggregation_cols.append({"header": disaggregation.name, "type": "string", "width": 20})
+        disaggregation_cols.append({"header": disaggregation.name, "type": "string", "width": 30})
 
     columns = columns + disaggregation_cols
     # write column headers in excel sheet
     for idx, column in enumerate(columns, start=1):
         cell = sheet.cell(row=1, column=idx, value=column["header"])
         cell.style = header_style
+        # set column width
+        column_letter = get_column_letter(idx)
+        sheet.column_dimensions[column_letter].width = column["width"]
 
-    column_letter = get_column_letter(idx)
-    if column["type"] == "number":
-        sheet.column_dimensions[column_letter].number_format = "General"
-    elif column["type"] == "date":
-        sheet.column_dimensions[column_letter].number_format = "mm-dd-yyyy"
+        if column["type"] == "number":
+            sheet.column_dimensions[column_letter].number_format = "General"
+        elif column["type"] == "date":
+            sheet.column_dimensions[column_letter].number_format = "mm-dd-yyyy"
 
     sheet.column_dimensions[column_letter].width = column["width"]
     # write the rows with report data
@@ -335,6 +367,7 @@ def write_import_report_template_sheet(workbook, monthly_report):
         "activityDomainList": ["C"],
         "activityTypeList": ["D"],
         "beneficiary_status_list": ["P", "New Beneficiary", "Existing Beneficiaries"],
+<<<<<<< HEAD
         "re-assisted_list": ["Q"],
         "seasonal_re-assting_list": ["R", "Yes", "No"],
         "admin0nameList": ["S"],
@@ -344,7 +377,24 @@ def write_import_report_template_sheet(workbook, monthly_report):
         "admin2pcodeList": ["W"],
         "admin2nameList": ["X"],
         "facilitySiteTypeList": ["AA"],
+=======
+        "admin0nameList": ["Q"],
+        "admin0pcodeList": ["R"],
+        "admin1pcodeList": ["S"],
+        "admin1nameList": ["T"],
+        "admin2pcodeList": ["U"],
+        "admin2nameList": ["V"],
+        "facilitySiteTypeList": ["Y"],
+>>>>>>> 75c10a833a42a4bce7f48d353adc8e4fe4804d56
         "reponseTypeList": ["E"],
+        "implementing_partner_list": ["F"],
+        "package_type": ["G"],
+        "unit_type": ["H"],
+        "grant_type": ["K"],
+        "im_modility_type": ["O"],
+        "transfer_mc_type": ["N"],
+        "transfer_category": ["L"],
+        "currency": ["M"],
     }
     project = monthly_report.project
     project_partners_list = list(project.implementing_partners.values_list("code", flat=True))
@@ -354,7 +404,10 @@ def write_import_report_template_sheet(workbook, monthly_report):
     container_dictionary["im_modility_type"].extend(
         list(ImplementationModalityType.objects.values_list("name", flat=True))
     )
+<<<<<<< HEAD
 
+=======
+>>>>>>> 75c10a833a42a4bce7f48d353adc8e4fe4804d56
     container_dictionary["transfer_mc_type"].extend(list(TransferMechanismType.objects.values_list("name", flat=True)))
     container_dictionary["transfer_category"].extend(list(TransferCategory.objects.values_list("name", flat=True)))
     container_dictionary["currency"].extend(list(Currency.objects.values_list("name", flat=True)))
@@ -363,21 +416,22 @@ def write_import_report_template_sheet(workbook, monthly_report):
     num_rows = 2
     project_code = project.code
     for plan in project.activityplan_set.all():
-        container_dictionary["indicatorList"].append(plan.indicator.name)
-        container_dictionary["activityDomainList"].append(plan.activity_domain.name)
-        container_dictionary["activityTypeList"].append(plan.activity_type.name)
+        container_dictionary["indicatorList"].append(str(plan.indicator.name))
+        container_dictionary["activityDomainList"].append(str(plan.activity_domain.name))
+        container_dictionary["activityTypeList"].append(str(plan.activity_type.name))
 
         for location in plan.targetlocation_set.all():
-            container_dictionary["admin0pcodeList"].append(location.country.code)
-            container_dictionary["admin0nameList"].append(location.country.name)
-            container_dictionary["admin1nameList"].append(location.province.name)
-            container_dictionary["admin1pcodeList"].append(location.province.code)
-            container_dictionary["admin2pcodeList"].append(location.district.code)
-            container_dictionary["admin2nameList"].append(location.district.name)
+            container_dictionary["admin0pcodeList"].append(str(location.country.code))
+            container_dictionary["admin0nameList"].append(str(location.country.name))
+            container_dictionary["admin1nameList"].append(str(location.province.name))
+            container_dictionary["admin1pcodeList"].append(str(location.province.code))
+            container_dictionary["admin2pcodeList"].append(str(location.district.code))
+            container_dictionary["admin2nameList"].append(str(location.district.name))
             num_rows += 1
     container_dictionary["re-assisted_list"].extend(container_dictionary["indicatorList"][1:])
     container_dictionary["facilitySiteTypeList"].extend(facility)
     container_dictionary["reponseTypeList"].extend(responseType)
+    container_dictionary["implementing_partner_list"].extend(project_partners_list)
     sheet["A2"] = project_code
     for key, value in container_dictionary.items():
         column = value[0]

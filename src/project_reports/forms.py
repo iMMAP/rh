@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django import forms
 from django.forms import BaseInlineFormSet
 from django.forms.models import inlineformset_factory
@@ -39,6 +41,8 @@ class ProjectMonthlyReportForm(forms.ModelForm):
 
     def clean(self):
         cleaned_data = super().clean()
+
+        today_date = datetime.today().date()
         from_date = cleaned_data.get("from_date")
         to_date = cleaned_data.get("to_date")
         obj = self.initial.get("project")
@@ -47,6 +51,10 @@ class ProjectMonthlyReportForm(forms.ModelForm):
         else:
             project = obj
         if from_date and to_date:
+            if from_date.strftime("%B-%Y") > today_date.strftime("%B-%Y"):
+                self.add_error("from_date", "Unable to select future date.")
+            if to_date.strftime("%B-%Y") > today_date.strftime("%B-%Y"):
+                self.add_error("to_date", "Unable to select future date.")
             if from_date.month != to_date.month:
                 self.add_error("from_date", "From date and to date must be in the same month.")
             if from_date > to_date:
@@ -69,16 +77,17 @@ class TargetLocationReportForm(forms.ModelForm):
         fields = "__all__"
         exclude = ("activity_plan_report",)
         help_texts = {
+<<<<<<< HEAD
             
             "seasonal_retargeting": "Are these beneficiaries being re-targeted due to seasonal needs? If yes, please check the box.",
+=======
+            "prev_assisted_by": "Select whether these people were previously assisted by another activity in the selected target location.",
+            "seasonal_retargeting": "Select if the beneficiaries re-assisted due to seasonal factors, such as significant weather changes.",
+>>>>>>> 75c10a833a42a4bce7f48d353adc8e4fe4804d56
         }
         widgets = {
-            "beneficiary_status": forms.RadioSelect(
-                choices={
-                    "new_beneficiary": "New Beneficiary",
-                    "existing_beneficiaries": "Existing Beneficiaries",
-                },
-            ),
+            "beneficiary_status": forms.Select(attrs={"class": "custom-select"}),
+            "seasonal_retargeting": forms.CheckboxInput(),
         }
 
     def __init__(self, *args, **kwargs):
@@ -96,6 +105,10 @@ class TargetLocationReportForm(forms.ModelForm):
         )
         self.fields["target_location"].queryset = TargetLocation.objects.filter(
             activity_plan=plan_report.activity_plan, state="in-progress"
+        )
+
+        self.fields["prev_assisted_by"].queryset = Indicator.objects.filter(
+            activity_types__activityplan__project=plan_report.monthly_report.project
         )
 
 
@@ -181,7 +194,6 @@ class ActivityPlanReportForm(forms.ModelForm):
             "currency": forms.Select(attrs={"class": "custom-select"}),
             "transfer_mechanism_type": forms.Select(attrs={"class": "custom-select"}),
             "implement_modility_type": forms.Select(attrs={"class": "custom-select"}),
-            "seasonal_retargeting": forms.CheckboxInput(),
         }
 
     def __init__(self, *args, **kwargs):
@@ -212,10 +224,6 @@ class ActivityPlanReportForm(forms.ModelForm):
             self.fields["activity_plan"].queryset = ActivityPlan.objects.filter(
                 project=monthly_report.project.pk, state="in-progress"
             ).select_related("activity_domain")
-
-        self.fields["prev_targeted_by"].queryset = Indicator.objects.filter(
-            activity_types__activityplan__project=monthly_report.project
-        )
 
 
 class MonthlyReportFileUpload(forms.Form):

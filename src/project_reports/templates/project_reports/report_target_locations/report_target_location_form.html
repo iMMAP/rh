@@ -113,6 +113,7 @@
                                     <div class="select-field">
                                         <label>{{ location_report_form.beneficiary_status.label }}
                                             [Read the description]
+<<<<<<< HEAD
                                             <div class="large-tooltip">
                                                 <i class="icon-info"></i>
                                                 <span class="large-tooltip-text">
@@ -128,6 +129,13 @@
                                                         </li>
                                                     </ul> 
                                                 </span>
+=======
+                                            <div class="implement-info">
+                                                <i class="icon-info"></i>
+                                                <span class="implement-text">Select 'New Beneficiary' if this activity for this project has not 
+                                                    been previously reported for the selected target location. 
+                                                    Select 'Existing Beneficiary' if the activity has already been reported for this target location.</span>
+>>>>>>> 75c10a833a42a4bce7f48d353adc8e4fe4804d56
                                             </div>
                                         </label>
                                         {{ location_report_form.beneficiary_status }}
@@ -140,6 +148,7 @@
                                         <div class="multiple-fields-row two-items">
                                             <div class="field-col {% if not location_report_form.prev_assisted_by.value %}hidden{% endif %}" id="{{ location_report_form.prev_assisted_by.id_for_label }}-field">
                                                 <div class="select-field">
+<<<<<<< HEAD
                                                     <label for="{{ location_report_form.prev_assisted_by.id_for_label }}">Previously Assisted By [Read the description]
                                                         <div class="large-tooltip">
                                                             <i class="icon-info"></i>
@@ -157,6 +166,12 @@
                                                     {{location_report_form.prev_assisted_by}}
                                                     <p class="sign-up-field-error">{{ location_report_form.prev_assisted_by.errors }}</p>
                                                     
+=======
+                                                    <label for="{{ location_report_form.prev_assisted_by.id_for_label }}">Previously Assisted By</label>
+                                                    <p class="help-text">{{ location_report_form.prev_assisted_by.help_text }}</p>
+                                                    {{location_report_form.prev_assisted_by}}
+                                                    <p class="sign-up-field-error">{{ location_report_form.prev_assisted_by.errors }}</p>
+>>>>>>> 75c10a833a42a4bce7f48d353adc8e4fe4804d56
                                                 </div>
                                             </div>
                                             <div class="field-col">
@@ -197,6 +212,7 @@
                                                 Delete
                                             </a>
                                         {% endif %}
+                                        <input type="submit" name="_addanother" class="btn btn-gray" value="Save and Add Another">
                                         <input type="submit" name="_save" class="btn btn-red" value="Save">
                                     </div>
                                 </div>
@@ -213,16 +229,39 @@
 {% block scripts %}
 <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
 <script>
+    let benefStatusChoice
     document.querySelectorAll('.custom-select').forEach((select) => {
-      const choice = new Choices(select, {
-       searchEnabled: true,
-       itemSelectText: '',
-       removeItemButton: true,
-       classNames: {
-        listDropdown: 'choices__list--dropdown',
-       },
-       shouldSort: false,
-      });
+        const config ={
+            searchEnabled: true,
+            itemSelectText: '',
+            removeItemButton: true,
+            classNames: {
+                listDropdown: 'choices__list--dropdown',
+            },
+            shouldSort: false,
+        } 
+
+        if(select.id = "{{ location_report_form.beneficiary_status.id_for_label }}"){
+            benefStatusChoice = new Choices(select,config)
+            return
+        }
+
+        const choice = new Choices(select, config);
+    });
+
+    benefStatusChoice.passedElement.element.addEventListener("change",(e)=>{
+        const prevTargetedBySelect = document.querySelector("#{{location_report_form.prev_assisted_by.id_for_label}}-field")
+
+        if(e.target.value === "new_beneficiary"){
+            // display the prev_assisted_by indicator select dropdown
+            prevTargetedBySelect.classList.remove("hidden")
+            return
+        }
+
+        prevTargetedBySelect.classList.add("hidden")
+        
+        const selectField = document.querySelector("#{{location_report_form.prev_assisted_by.id_for_label}}")
+        selectField.value= ""
     });
 </script>
 {% endblock scripts %}

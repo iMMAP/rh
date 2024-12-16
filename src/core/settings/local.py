@@ -8,8 +8,9 @@ APP_ENV = env("APP_ENV", default="local")
 # ALLOWED_HOSTS=reporthub.immap.org,www.reporthub.immap.org
 # env.list() splits comma-separated string into a list
 ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=["*"])
+DJANGO_VITE_PROD_BUILD = True
 
-if not TESTING:
+if not (TESTING or DJANGO_VITE_PROD_BUILD):
     INSTALLED_APPS = [
         *INSTALLED_APPS,
         "debug_toolbar",
@@ -20,7 +21,6 @@ if not TESTING:
     ]
 
 LOCAL_INSTALLED_APPS = [
-    "django_extensions",
     "nplusone.ext.django",
     "django_tui",
 ]

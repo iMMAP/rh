@@ -34,6 +34,10 @@ serve:
 vite:
 	cd src/static && npm run dev
 
+.PHONY: dev
+dev:
+	make -j3 serve vite
+
 .PHONY: vite-host
 vite-host:
 	cd src/static && npm run dev -- --host
@@ -78,9 +82,10 @@ format-templates:
 lint-templates:
 	djlint --profile=django src
 
+settings ?= core.settings.local 
 .PHONY: collectstatic
 collectstatic:
-	poetry run python src/manage.py collectstatic --no-input --ignore=node_modules --ignore=*.scss --ignore=*.json --ignore=vite.config.js 
+	poetry run python src/manage.py collectstatic --settings=${settings} --no-input --ignore=node_modules --ignore=*.scss --ignore=*.json --ignore=vite.config.js
 
 .PHONY: run-dependencies
 run-dependencies:
@@ -101,3 +106,7 @@ dbbackup:
 .PHONY: clear_cache 
 clear_cache:
 	poetry run python src/manage.py clear_cache
+
+.PHONY: loaddata
+loaddata:
+	poetry run python src/manage.py loaddata --database=default groups clusters locations types currencies disaggregation donors facility_sites organizations stock_item stock_unit beneficiaries 

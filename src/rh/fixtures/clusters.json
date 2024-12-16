@@ -1,0 +1,158 @@
+[
+    {
+        "model": "rh.cluster",
+        "pk": 1,
+        "fields": {
+            "name": "Water, Sanitation and Hygiene",
+            "code": "wash",
+            "title": "WASH",
+            "ocha_code": null,
+            "created_at": "2024-03-20T10:41:35.901Z",
+            "updated_at": "2024-03-20T10:41:35.901Z",
+            "countries": []
+        }
+    },
+    {
+        "model": "rh.cluster",
+        "pk": 2,
+        "fields": {
+            "name": "Education",
+            "code": "education",
+            "title": "Education",
+            "ocha_code": null,
+            "created_at": "2024-03-20T10:41:35.901Z",
+            "updated_at": "2024-03-20T10:41:35.901Z",
+            "countries": []
+        }
+    },
+    {
+        "model": "rh.cluster",
+        "pk": 3,
+        "fields": {
+            "name": "Nutrition",
+            "code": "nutrition",
+            "title": "Nutrition",
+            "ocha_code": null,
+            "created_at": "2024-03-20T10:41:35.901Z",
+            "updated_at": "2024-03-20T10:41:35.901Z",
+            "countries": []
+        }
+    },
+    {
+        "model": "rh.cluster",
+        "pk": 4,
+        "fields": {
+            "name": "Health",
+            "code": "health",
+            "title": "Health",
+            "ocha_code": null,
+            "created_at": "2024-03-20T10:41:35.901Z",
+            "updated_at": "2024-03-20T10:41:35.901Z",
+            "countries": []
+        }
+    },
+    {
+        "model": "rh.cluster",
+        "pk": 5,
+        "fields": {
+            "name": "Food Security and Agriculture",
+            "code": "fsac",
+            "title": "FSAC",
+            "ocha_code": null,
+            "created_at": "2024-03-20T10:41:35.901Z",
+            "updated_at": "2024-03-20T10:41:35.901Z",
+            "countries": []
+        }
+    },
+    {
+        "model": "rh.cluster",
+        "pk": 6,
+        "fields": {
+            "name": "Emergency Shelter and NFI",
+            "code": "esnfi",
+            "title": "ESNFI",
+            "ocha_code": null,
+            "created_at": "2024-03-20T10:41:35.901Z",
+            "updated_at": "2024-03-20T10:41:35.901Z",
+            "countries": []
+        }
+    },
+    {
+        "model": "rh.cluster",
+        "pk": 7,
+        "fields": {
+            "name": "Education in Emergencies",
+            "code": "eiewg",
+            "title": "EiEWG",
+            "ocha_code": null,
+            "created_at": "2024-03-20T10:41:35.901Z",
+            "updated_at": "2024-03-20T10:41:35.901Z",
+            "countries": []
+        }
+    },
+    {
+        "model": "rh.cluster",
+        "pk": 8,
+        "fields": {
+            "name": "Multi-Purpose Cash",
+            "code": "cvwg",
+            "title": "MPC",
+            "ocha_code": null,
+            "created_at": "2024-03-20T10:41:35.901Z",
+            "updated_at": "2024-03-20T10:41:35.901Z",
+            "countries": []
+        }
+    },
+    {
+        "model": "rh.cluster",
+        "pk": 9,
+        "fields": {
+            "name": "Communication with Communities",
+            "code": "cwcwg",
+            "title": "CWC",
+            "ocha_code": null,
+            "created_at": "2024-03-20T10:41:35.901Z",
+            "updated_at": "2024-03-20T10:41:35.901Z",
+            "countries": []
+        }
+    },
+    {
+        "model": "rh.cluster",
+        "pk": 10,
+        "fields": {
+            "name": "Coordination and Common Services",
+            "code": "ccs",
+            "title": "CCS",
+            "ocha_code": null,
+            "created_at": "2024-03-20T10:41:35.901Z",
+            "updated_at": "2024-03-20T10:41:35.901Z",
+            "countries": []
+        }
+    },
+    {
+        "model": "rh.cluster",
+        "pk": 11,
+        "fields": {
+            "name": "Early Recovery",
+            "code": "ERR",
+            "title": "ERR",
+            "ocha_code": null,
+            "created_at": "2024-03-20T10:41:35.901Z",
+            "updated_at": "2024-03-20T10:41:35.901Z",
+            "countries": []
+        }
+    },
+    {
+        "model": "rh.cluster",
+        "pk": 12,
+        "fields": {
+            "name": "Protection",
+            "code": "protection",
+            "title": "Protection",
+            "ocha_code": null,
+            "created_at": "2024-03-20T10:41:35.901Z",
+            "updated_at": "2024-03-20T10:41:35.901Z",
+            "countries": []
+        }
+    }
+]

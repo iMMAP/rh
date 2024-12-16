@@ -1,0 +1,101 @@
+[
+    {
+        "model": "rh.currency",
+        "pk": 1,
+        "fields": {
+            "name": "AFN"
+        }
+    },
+    {
+        "model": "rh.currency",
+        "pk": 2,
+        "fields": {
+            "name": "AUD"
+        }
+    },
+    {
+        "model": "rh.currency",
+        "pk": 3,
+        "fields": {
+            "name": "BDT"
+        }
+    },
+    {
+        "model": "rh.currency",
+        "pk": 4,
+        "fields": {
+            "name": "CAD"
+        
+        }
+    },
+    {
+        "model": "rh.currency",
+        "pk": 5,
+        "fields": {
+            "name": "CHF"
+        }
+    },
+    {
+        "model": "rh.currency",
+        "pk": 6,
+        "fields": {
+            "name": "COP"
+        }
+    },
+    {
+        "model": "rh.currency",
+        "pk": 7,
+        "fields": {
+            "name": "DDK"
+        }
+    },
+    {
+        "model": "rh.currency",
+        "pk": 8,
+        "fields": {
+            "name": "ETB"
+        }
+    },
+    {
+        "model": "rh.currency",
+        "pk": 9,
+        "fields": {
+            "name": "EUR"
+        }
+    },
+    {
+        "model": "rh.currency",
+        "pk": 10,
+        "fields": {
+            "name": "GBP"
+        }
+    },
+    {
+        "model": "rh.currency",
+        "pk": 11,
+        "fields": {
+            "name": "NGN"
+        }
+    },
+    {
+        "model": "rh.currency",
+        "pk": 12,
+        "fields": {
+            "name": "NOK"
+        }
+    },
+    {
+        "model": "rh.currency",
+        "pk": 13,
+        "fields": {
+            "name": "SEK"
+        }
+    },
+    {
+        "model": "rh.currency",
+        "pk": 14,
+        "fields": {
+            "name": "USD"
+        }
+    }
+]

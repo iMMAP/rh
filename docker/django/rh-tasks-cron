@@ -1,0 +1,6 @@
+0 2 * * * cd /home/ubuntu/rh && poetry run python src/manage.py dbbackup --database=default --settings=core.settings.production
+0 2 * * * cd /home/ubuntu/rh && poetry run python src/manage.py mediabackup --database=default --settings=core.settings.production
+*       * * * * (/home/ubuntu/rh/.venv/bin/python /home/ubuntu/rh/src/manage.py send_mail >> ~/cron_mail.log 2>&1)
+0,20,40 * * * * (/home/ubuntu/rh/.venv/bin/python /home/ubuntu/rh/src/manage.py retry_deferred >> ~/cron_mail_deferred.log 2>&1)
+0 0 * * * (/home/ubuntu/rh/.venv/bin/python /home/ubuntu/rh/src/manage.py purge_mail_log 7 >> ~/cron_mail_purge.log 2>&1)
+# An empty line is required at the end of this file for a valid cron file.

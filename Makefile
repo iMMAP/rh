@@ -106,3 +106,7 @@ dbbackup:
 .PHONY: clear_cache 
 clear_cache:
 	poetry run python src/manage.py clear_cache
+
+.PHONY loaddata
+loaddata:
+	poetry run python src/manage.py loaddata --database=default groups clusters locations types currencies disaggregation donors facility_sites organizations stock_item stock_unit beneficiaries 

@@ -21,7 +21,6 @@ if not (TESTING or DJANGO_VITE_PROD_BUILD):
     ]
 
 LOCAL_INSTALLED_APPS = [
-    "django_extensions",
     "nplusone.ext.django",
     "django_tui",
 ]

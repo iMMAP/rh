@@ -1,0 +1,542 @@
+[
+    {
+        "model": "stock.stockunit",
+        "pk": 1,
+        "fields": {
+            "name": "AFN",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockunit",
+        "pk": 2,
+        "fields": {
+            "name": "AUD ",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockunit",
+        "pk": 3,
+        "fields": {
+            "name": "BDT ",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockunit",
+        "pk": 4,
+        "fields": {
+            "name": "CAD ",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockunit",
+        "pk": 5,
+        "fields": {
+            "name": "CHF ",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockunit",
+        "pk": 6,
+        "fields": {
+            "name": "DDk ",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockunit",
+        "pk": 7,
+        "fields": {
+            "name": "EUR ",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockunit",
+        "pk": 8,
+        "fields": {
+            "name": "GBP ",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockunit",
+        "pk": 9,
+        "fields": {
+            "name": "NOK ",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockunit",
+        "pk": 10,
+        "fields": {
+            "name": "SEK ",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockunit",
+        "pk": 11,
+        "fields": {
+            "name": "USD ",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockunit",
+        "pk": 12,
+        "fields": {
+            "name": "AFG ",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockunit",
+        "pk": 13,
+        "fields": {
+            "name": "Boxes ",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockunit",
+        "pk": 14,
+        "fields": {
+            "name": "Calls ",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockunit",
+        "pk": 15,
+        "fields": {
+            "name": "Camels ",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockunit",
+        "pk": 16,
+        "fields": {
+            "name": "Cattle ",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockunit",
+        "pk": 17,
+        "fields": {
+            "name": "CBSs ",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockunit",
+        "pk": 18,
+        "fields": {
+            "name": "Centers ",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockunit",
+        "pk": 19,
+        "fields": {
+            "name": "Classroom Kits ",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockunit",
+        "pk": 20,
+        "fields": {
+            "name": "Donkeys ",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockunit",
+        "pk": 21,
+        "fields": {
+            "name": "Doze ",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockunit",
+        "pk": 22,
+        "fields": {
+            "name": "Drums ",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockunit",
+        "pk": 23,
+        "fields": {
+            "name": "Equians ",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockunit",
+        "pk": 24,
+        "fields": {
+            "name": "Facilities",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockunit",
+        "pk": 25,
+        "fields": {
+            "name": "Goats ",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockunit",
+        "pk": 26,
+        "fields": {
+            "name": "Health Extension Workers ",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockunit",
+        "pk": 27,
+        "fields": {
+            "name": "HEB ",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockunit",
+        "pk": 28,
+        "fields": {
+            "name": "Houses ",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockunit",
+        "pk": 29,
+        "fields": {
+            "name": "KG ",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockunit",
+        "pk": 30,
+        "fields": {
+            "name": "Kits ",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockunit",
+        "pk": 31,
+        "fields": {
+            "name": "Litres ",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockunit",
+        "pk": 32,
+        "fields": {
+            "name": "Livestock ",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockunit",
+        "pk": 33,
+        "fields": {
+            "name": "m2 ",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockunit",
+        "pk": 34,
+        "fields": {
+            "name": "m3",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockunit",
+        "pk": 35,
+        "fields": {
+            "name": "Man Days ",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockunit",
+        "pk": 36,
+        "fields": {
+            "name": "Medics ",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockunit",
+        "pk": 37,
+        "fields": {
+            "name": "Metric Tonnes ",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockunit",
+        "pk": 38,
+        "fields": {
+            "name": "MNT ",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockunit",
+        "pk": 39,
+        "fields": {
+            "name": "Oil ",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockunit",
+        "pk": 40,
+        "fields": {
+            "name": "PAC ",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockunit",
+        "pk": 41,
+        "fields": {
+            "name": "People",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockunit",
+        "pk": 42,
+        "fields": {
+            "name": "Pieces ",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockunit",
+        "pk": 43,
+        "fields": {
+            "name": "Quantin ",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockunit",
+        "pk": 44,
+        "fields": {
+            "name": "Rice ",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockunit",
+        "pk": 45,
+        "fields": {
+            "name": "RUSF ",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockunit",
+        "pk": 46,
+        "fields": {
+            "name": "Salt ",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockunit",
+        "pk": 47,
+        "fields": {
+            "name": "School Kits ",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockunit",
+        "pk": 48,
+        "fields": {
+            "name": "Schools",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockunit",
+        "pk": 49,
+        "fields": {
+            "name": "Seeds ",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockunit",
+        "pk": 50,
+        "fields": {
+            "name": "Sessions",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockunit",
+        "pk": 51,
+        "fields": {
+            "name": "Sheep ",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockunit",
+        "pk": 52,
+        "fields": {
+            "name": "Structures",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockunit",
+        "pk": 53,
+        "fields": {
+            "name": "Tablets ",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockunit",
+        "pk": 54,
+        "fields": {
+            "name": "TCs ",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockunit",
+        "pk": 55,
+        "fields": {
+            "name": "Teachers ",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockunit",
+        "pk": 56,
+        "fields": {
+            "name": "Tents ",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockunit",
+        "pk": 57,
+        "fields": {
+            "name": "Units",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockunit",
+        "pk": 58,
+        "fields": {
+            "name": "USD ",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockunit",
+        "pk": 59,
+        "fields": {
+            "name": "Wheat ",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockunit",
+        "pk": 60,
+        "fields": {
+            "name": "Wheat Flour ",
+            "created_at": null,
+            "updated_at": null
+        }
+    }
+]

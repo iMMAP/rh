@@ -1,0 +1,932 @@
+[
+    {
+        "model": "rh.organization",
+        "pk": 1,
+        "fields": {
+            "name": "Department of Public Health",
+            "code": "DoPH",
+            "type": "Government",
+            "old_id": "5c84b3ea4585c9ea024f294a",
+            "created_at": "2019-03-10T06:51:22.535Z",
+            "updated_at": "2022-01-10T09:33:16.238Z",
+            "countries": [
+                2,
+                438
+            ],
+            "clusters": []
+        }
+    },
+    {
+        "model": "rh.organization",
+        "pk": 2,
+        "fields": {
+            "name": "Ministry of Agriculture, Irrigation and Livestock",
+            "code": "MAIL",
+            "type": "Government",
+            "old_id": "5c601411cae34eb950c74bc3",
+            "created_at": "2019-02-10T12:07:45.905Z",
+            "updated_at": "2019-02-10T12:07:45.905Z",
+            "countries": [],
+            "clusters": []
+        }
+    },
+    {
+        "model": "rh.organization",
+        "pk": 3,
+        "fields": {
+            "name": "Ministry of Education",
+            "code": "MoE",
+            "type": "Government",
+            "old_id": "59a3b699795abfbf68bb2170",
+            "created_at": "2017-08-28T06:22:17.357Z",
+            "updated_at": "2017-08-29T07:17:40.168Z",
+            "countries": [
+                2,
+                438
+            ],
+            "clusters": []
+        }
+    },
+    {
+        "model": "rh.organization",
+        "pk": 4,
+        "fields": {
+            "name": "Ministry of Public Health",
+            "code": "MoPH",
+            "type": "Government",
+            "old_id": "581054da92ca5c6e645c93e3",
+            "created_at": "2016-10-26T07:01:46.184Z",
+            "updated_at": "2016-10-26T07:01:46.184Z",
+            "countries": [
+                2,
+                438
+            ],
+            "clusters": []
+        }
+    },
+    {
+        "model": "rh.organization",
+        "pk": 5,
+        "fields": {
+            "name": "Ministry of Rural Rehabilitation and Development",
+            "code": "MRRD",
+            "type": "Government",
+            "old_id": "58ec47c4f76b7ac5633502ab",
+            "created_at": "2017-04-11T03:04:36.670Z",
+            "updated_at": "2021-04-07T04:51:20.113Z",
+            "countries": [
+                2,
+                438
+            ],
+            "clusters": []
+        }
+    },
+    {
+        "model": "rh.organization",
+        "pk": 6,
+        "fields": {
+            "name": "Afghanaid",
+            "code": "Afghanaid",
+            "type": "International NGO",
+            "old_id": "58e328699da5ef972fbc9865",
+            "created_at": "2017-04-04T05:00:25.705Z",
+            "updated_at": "2022-09-05T09:05:33.081Z",
+            "countries": [
+                2,
+                438
+            ],
+            "clusters": []
+        }
+    },
+    {
+        "model": "rh.organization",
+        "pk": 7,
+        "fields": {
+            "name": "Agency for Technical Cooperation & Development",
+            "code": "ACTED",
+            "type": "International NGO",
+            "old_id": "58ef0a27bca225d55e436ce9",
+            "created_at": "2017-04-13T05:18:31.648Z",
+            "updated_at": "2022-03-22T06:35:34.041Z",
+            "countries": [
+                2,
+                438
+            ],
+            "clusters": []
+        }
+    },
+    {
+        "model": "rh.organization",
+        "pk": 8,
+        "fields": {
+            "name": "Catholic Organization for Relief and Development Aid",
+            "code": "CORDAID",
+            "type": "International NGO",
+            "old_id": "58e2084c16a5ecf870710713",
+            "created_at": "2017-04-03T08:31:08.016Z",
+            "updated_at": "2022-04-08T12:26:25.148Z",
+            "countries": [
+                2,
+                438
+            ],
+            "clusters": []
+        }
+    },
+    {
+        "model": "rh.organization",
+        "pk": 9,
+        "fields": {
+            "name": "Children in Crisis",
+            "code": "CIC",
+            "type": "International NGO",
+            "old_id": "59a549cb795abfbf68bb8c84",
+            "created_at": "2017-08-29T11:02:35.245Z",
+            "updated_at": "2022-09-02T12:49:01.401Z",
+            "countries": [
+                2,
+                438
+            ],
+            "clusters": []
+        }
+    },
+    {
+        "model": "rh.organization",
+        "pk": 10,
+        "fields": {
+            "name": "Danish Committee for Aid to Afghan Refugees",
+            "code": "DACAAR",
+            "type": "International NGO",
+            "old_id": "58e202c016a5ecf870710705",
+            "created_at": "2017-04-03T08:07:28.058Z",
+            "updated_at": "2022-08-16T12:07:04.299Z",
+            "countries": [
+                2,
+                438
+            ],
+            "clusters": []
+        }
+    },
+    {
+        "model": "rh.organization",
+        "pk": 11,
+        "fields": {
+            "name": "Deutsche Welthungerhilfe e. V. (German Agro Action)",
+            "code": "WHH",
+            "type": "International NGO",
+            "old_id": "58e328b29da5ef972fbc9871",
+            "created_at": "2017-04-04T05:01:38.376Z",
+            "updated_at": "2022-04-07T05:43:04.245Z",
+            "countries": [
+                2,
+                438
+            ],
+            "clusters": []
+        }
+    },
+    {
+        "model": "rh.organization",
+        "pk": 12,
+        "fields": {
+            "name": "Famine Early Warning Systems Network",
+            "code": "FEWSNET",
+            "type": "International NGO",
+            "old_id": "5c59663fb1eee2651e9119be",
+            "created_at": "2019-02-05T10:32:31.657Z",
+            "updated_at": "2019-02-05T10:32:31.657Z",
+            "countries": [
+                2,
+                438
+            ],
+            "clusters": []
+        }
+    },
+    {
+        "model": "rh.organization",
+        "pk": 13,
+        "fields": {
+            "name": "Good Neighbors International",
+            "code": "GNI",
+            "type": "International NGO",
+            "old_id": "58eb1739e59c4ae36e942016",
+            "created_at": "2017-04-10T05:25:13.675Z",
+            "updated_at": "2017-04-10T07:36:55.469Z",
+            "countries": [
+                2,
+                438
+            ],
+            "clusters": []
+        }
+    },
+    {
+        "model": "rh.organization",
+        "pk": 40,
+        "fields": {
+            "name": "Afghanistan National Re-Construction Coordination",
+            "code": "ANCC",
+            "type": "National NGO",
+            "old_id": "58e484b083d5283b32a7de13",
+            "created_at": "2017-04-05T05:46:24.071Z",
+            "updated_at": "2021-01-20T10:27:05.027Z",
+            "countries": [
+                2
+            ],
+            "clusters": []
+        }
+    },
+    {
+        "model": "rh.organization",
+        "pk": 41,
+        "fields": {
+            "name": "Afghanistan's Children - A New Approach",
+            "code": "ASCHIANA",
+            "type": "National NGO",
+            "old_id": "596b0159823c138d3011e58a",
+            "created_at": "2017-07-16T06:02:01.638Z",
+            "updated_at": "2018-09-26T07:21:40.943Z",
+            "countries": [
+                2
+            ],
+            "clusters": []
+        }
+    },
+    {
+        "model": "rh.organization",
+        "pk": 42,
+        "fields": {
+            "name": "Agency Coordinating Body for Afghan Relief",
+            "code": "ACBAR",
+            "type": "National NGO",
+            "old_id": "596af7af823c138d3011de97",
+            "created_at": "2017-07-16T05:20:47.722Z",
+            "updated_at": "2020-08-12T09:22:28.410Z",
+            "countries": [
+                2
+            ],
+            "clusters": []
+        }
+    },
+    {
+        "model": "rh.organization",
+        "pk": 43,
+        "fields": {
+            "name": "Agency for Assistance and Development of Afghanistan",
+            "code": "AADA",
+            "type": "National NGO",
+            "old_id": "57034d899d711a054b802852",
+            "created_at": "2016-04-05T05:30:49.031Z",
+            "updated_at": "2020-08-13T11:11:53.053Z",
+            "countries": [
+                2
+            ],
+            "clusters": []
+        }
+    },
+    {
+        "model": "rh.organization",
+        "pk": 44,
+        "fields": {
+            "name": "Agency for Humanitarian Development Assistance for Afghanistan",
+            "code": "AHDAA",
+            "type": "National NGO",
+            "old_id": "5937b07ce323f3a3180b6c6a",
+            "created_at": "2017-06-07T07:51:24.891Z",
+            "updated_at": "2017-08-23T04:37:33.916Z",
+            "countries": [
+                2
+            ],
+            "clusters": []
+        }
+    },
+    {
+        "model": "rh.organization",
+        "pk": 45,
+        "fields": {
+            "name": "Agency for Rehabilitation and Energy Conservation in Afghanistan",
+            "code": "AREA",
+            "type": "National NGO",
+            "old_id": "596af75d823c138d3011de93",
+            "created_at": "2017-07-16T05:19:25.603Z",
+            "updated_at": "2022-05-29T05:34:51.904Z",
+            "countries": [
+                2
+            ],
+            "clusters": []
+        }
+    },
+    {
+        "model": "rh.organization",
+        "pk": 46,
+        "fields": {
+            "name": "Ansari Rehabilitation Association for Afghanistan",
+            "code": "ARAA",
+            "type": "National NGO",
+            "old_id": "58f60610fa34238327cc3247",
+            "created_at": "2017-04-18T12:26:56.054Z",
+            "updated_at": "2022-02-03T05:03:16.409Z",
+            "countries": [
+                2
+            ],
+            "clusters": []
+        }
+    },
+    {
+        "model": "rh.organization",
+        "pk": 47,
+        "fields": {
+            "name": "Care of Afghan Families",
+            "code": "CAF",
+            "type": "National NGO",
+            "old_id": "5742a4ba5d2c01113bcf78ef",
+            "created_at": "2016-05-23T06:35:38.799Z",
+            "updated_at": "2022-06-04T05:43:09.788Z",
+            "countries": [
+                2
+            ],
+            "clusters": []
+        }
+    },
+    {
+        "model": "rh.organization",
+        "pk": 48,
+        "fields": {
+            "name": "Central Afghanistan Welfare Committee",
+            "code": "CAWC",
+            "type": "National NGO",
+            "old_id": "58eb27bce59c4ae36e94223f",
+            "created_at": "2017-04-10T06:35:40.953Z",
+            "updated_at": "2020-02-19T09:43:25.130Z",
+            "countries": [
+                2
+            ],
+            "clusters": []
+        }
+    },
+    {
+        "model": "rh.organization",
+        "pk": 49,
+        "fields": {
+            "name": "Community World Service Asia",
+            "code": "CWSA",
+            "type": "National NGO",
+            "old_id": "5adb6c0aec394e5736a9bdbc",
+            "created_at": "2018-04-21T16:51:22.814Z",
+            "updated_at": "2022-07-09T09:07:23.058Z",
+            "countries": [
+                2
+            ],
+            "clusters": []
+        }
+    },
+    {
+        "model": "rh.organization",
+        "pk": 50,
+        "fields": {
+            "name": "Coordination of Afghan Relief",
+            "code": "CoAR",
+            "type": "National NGO",
+            "old_id": "58e2032c16a5ecf870710709",
+            "created_at": "2017-04-03T08:09:16.016Z",
+            "updated_at": "2022-07-07T06:47:47.992Z",
+            "countries": [
+                2
+            ],
+            "clusters": []
+        }
+    },
+    {
+        "model": "rh.organization",
+        "pk": 51,
+        "fields": {
+            "name": "Coordination of Humanitarian Assistance",
+            "code": "CHA",
+            "type": "National NGO",
+            "old_id": "56fd04090c68f2c746e3f834",
+            "created_at": "2016-03-31T11:03:37.900Z",
+            "updated_at": "2022-06-08T09:48:31.561Z",
+            "countries": [
+                2
+            ],
+            "clusters": []
+        }
+    },
+    {
+        "model": "rh.organization",
+        "pk": 52,
+        "fields": {
+            "name": "Coordination of Rehabilitation and Development Services for Afghanistan",
+            "code": "CRDSA",
+            "type": "National NGO",
+            "old_id": "58eb7267e59c4ae36e9427c8",
+            "created_at": "2017-04-10T11:54:15.865Z",
+            "updated_at": "2022-08-17T06:59:06.736Z",
+            "countries": [
+                2
+            ],
+            "clusters": []
+        }
+    },
+    {
+        "model": "rh.organization",
+        "pk": 53,
+        "fields": {
+            "name": "Development and Ability Organization",
+            "code": "DAO",
+            "type": "National NGO",
+            "old_id": "57417d745d2c01113bcf78d5",
+            "created_at": "2016-05-22T09:35:48.262Z",
+            "updated_at": "2018-09-26T07:16:37.406Z",
+            "countries": [
+                2
+            ],
+            "clusters": []
+        }
+    },
+    {
+        "model": "rh.organization",
+        "pk": 54,
+        "fields": {
+            "name": "Development and Humanitarian Services for Afghanistan",
+            "code": "DHSA",
+            "type": "National NGO",
+            "old_id": "596c51d1823c138d3012338b",
+            "created_at": "2017-07-17T05:57:37.819Z",
+            "updated_at": "2021-08-08T06:08:29.395Z",
+            "countries": [
+                2
+            ],
+            "clusters": []
+        }
+    },
+    {
+        "model": "rh.organization",
+        "pk": 55,
+        "fields": {
+            "name": "Empowerment Center for Women",
+            "code": "ECW",
+            "type": "National NGO",
+            "old_id": "5c173895d752ea3643cb7b42",
+            "created_at": "2018-12-17T05:48:05.698Z",
+            "updated_at": "2020-07-07T04:18:30.736Z",
+            "countries": [
+                2
+            ],
+            "clusters": []
+        }
+    },
+    {
+        "model": "rh.organization",
+        "pk": 56,
+        "fields": {
+            "name": "Female Rehabilitation Development Organization",
+            "code": "FRDO",
+            "type": "National NGO",
+            "old_id": "58e47c8383d5283b32a7ddc7",
+            "created_at": "2017-04-05T05:11:31.069Z",
+            "updated_at": "2017-04-05T05:11:31.069Z",
+            "countries": [
+                2
+            ],
+            "clusters": []
+        }
+    },
+    {
+        "model": "rh.organization",
+        "pk": 57,
+        "fields": {
+            "name": "Future Generations Afghanistan",
+            "code": "FGA",
+            "type": "National NGO",
+            "old_id": "596599f0823c138d3010c197",
+            "created_at": "2017-07-12T03:39:28.465Z",
+            "updated_at": "2017-10-02T04:54:32.191Z",
+            "countries": [
+                2
+            ],
+            "clusters": []
+        }
+    },
+    {
+        "model": "rh.organization",
+        "pk": 58,
+        "fields": {
+            "name": "Green Afghanistan Agriculture & Livestock Organization",
+            "code": "GAALO",
+            "type": "National NGO",
+            "old_id": "5c3c1163a1e8e189397e4026",
+            "created_at": "2019-01-14T04:34:43.738Z",
+            "updated_at": "2019-01-14T04:34:43.738Z",
+            "countries": [
+                2
+            ],
+            "clusters": []
+        }
+    },
+    {
+        "model": "rh.organization",
+        "pk": 59,
+        "fields": {
+            "name": "Hewad Reconstruction on Health and Humanitarian Assistance Committee",
+            "code": "HEWAD",
+            "type": "National NGO",
+            "old_id": "5b023f3b704f0cf5309fb799",
+            "created_at": "2018-05-21T03:38:35.882Z",
+            "updated_at": "2018-05-21T03:38:35.882Z",
+            "countries": [
+                2
+            ],
+            "clusters": []
+        }
+    },
+    {
+        "model": "rh.organization",
+        "pk": 65,
+        "fields": {
+            "name": "Organization for Research and Community Development",
+            "code": "ORCD",
+            "type": "National NGO",
+            "old_id": "5774a92354e03b883ffa285d",
+            "created_at": "2016-06-30T05:07:47.552Z",
+            "updated_at": "2022-05-25T05:58:11.018Z",
+            "countries": [
+                2
+            ],
+            "clusters": []
+        }
+    },
+    {
+        "model": "rh.organization",
+        "pk": 66,
+        "fields": {
+            "name": "Organization of Health and Program Management",
+            "code": "OHPM",
+            "type": "National NGO",
+            "old_id": "596af6a3823c138d3011de8d",
+            "created_at": "2017-07-16T05:16:19.503Z",
+            "updated_at": "2017-07-16T05:24:30.115Z",
+            "countries": [
+                2
+            ],
+            "clusters": []
+        }
+    },
+    {
+        "model": "rh.organization",
+        "pk": 67,
+        "fields": {
+            "name": "Organization of Human Welfare",
+            "code": "OHW",
+            "type": "National NGO",
+            "old_id": "5912b6075573b10a5f4a9390",
+            "created_at": "2017-05-10T06:41:11.265Z",
+            "updated_at": "2022-08-27T09:17:19.861Z",
+            "countries": [
+                2
+            ],
+            "clusters": []
+        }
+    },
+    {
+        "model": "rh.organization",
+        "pk": 68,
+        "fields": {
+            "name": "Partners in Revitalization and Building",
+            "code": "PRB",
+            "type": "National NGO",
+            "old_id": "5ac9b5d67f21d73d2ddf39cf",
+            "created_at": "2018-04-08T06:25:26.830Z",
+            "updated_at": "2021-04-07T05:51:26.904Z",
+            "countries": [
+                2
+            ],
+            "clusters": []
+        }
+    },
+    {
+        "model": "rh.organization",
+        "pk": 69,
+        "fields": {
+            "name": "People's Action for Change Organization",
+            "code": "PACO",
+            "type": "National NGO",
+            "old_id": "58e4793a83d5283b32a7ddac",
+            "created_at": "2017-04-05T04:57:30.490Z",
+            "updated_at": "2021-11-17T16:31:35.200Z",
+            "countries": [
+                2
+            ],
+            "clusters": []
+        }
+    },
+    {
+        "model": "rh.organization",
+        "pk": 70,
+        "fields": {
+            "name": "Rehabilitation Association and Agriculture Development for Afghanistan",
+            "code": "RAADA",
+            "type": "National NGO",
+            "old_id": "596af649823c138d3011de89",
+            "created_at": "2017-07-16T05:14:49.768Z",
+            "updated_at": "2024-05-12T10:53:15.369Z",
+            "countries": [
+                2
+            ],
+            "clusters": []
+        }
+    },
+    {
+        "model": "rh.organization",
+        "pk": 71,
+        "fields": {
+            "name": "Rural Capacity Development Committee",
+            "code": "RCDC",
+            "type": "National NGO",
+            "old_id": "58e2059c16a5ecf87071070f",
+            "created_at": "2017-04-03T08:19:40.284Z",
+            "updated_at": "2022-04-05T02:04:22.957Z",
+            "countries": [
+                2
+            ],
+            "clusters": []
+        }
+    },
+    {
+        "model": "rh.organization",
+        "pk": 72,
+        "fields": {
+            "name": "Samin Development and Rehabilitation Organization",
+            "code": "SDRO",
+            "type": "National NGO",
+            "old_id": "5c5bc310e86f3f1e45c044bf",
+            "created_at": "2019-02-07T05:33:04.695Z",
+            "updated_at": "2019-02-07T06:21:34.080Z",
+            "countries": [
+                2
+            ],
+            "clusters": []
+        }
+    },
+    {
+        "model": "rh.organization",
+        "pk": 73,
+        "fields": {
+            "name": "Sanayee Development Organization",
+            "code": "SDO",
+            "type": "National NGO",
+            "old_id": "59d461435b9412592448e916",
+            "created_at": "2017-10-04T04:19:15.597Z",
+            "updated_at": "2018-01-10T09:25:15.220Z",
+            "countries": [
+                2
+            ],
+            "clusters": []
+        }
+    },
+    {
+        "model": "rh.organization",
+        "pk": 74,
+        "fields": {
+            "name": "Serve Health Relief and Development Organization",
+            "code": "SHRDO",
+            "type": "National NGO",
+            "old_id": "56f8c9b82059bf2e23663e98",
+            "created_at": "2016-03-28T06:05:44.295Z",
+            "updated_at": "2017-03-19T09:19:55.488Z",
+            "countries": [
+                2
+            ],
+            "clusters": []
+        }
+    },
+    {
+        "model": "rh.organization",
+        "pk": 75,
+        "fields": {
+            "name": "Shanti Volunteer Association",
+            "code": "SVA",
+            "type": "National NGO",
+            "old_id": "5a5441e6ecb3b9fb0f460ce9",
+            "created_at": "2018-01-09T04:15:34.104Z",
+            "updated_at": "2018-05-21T02:58:18.946Z",
+            "countries": [
+                2
+            ],
+            "clusters": []
+        }
+    },
+    {
+        "model": "rh.organization",
+        "pk": 76,
+        "fields": {
+            "name": "Skateistan",
+            "code": "Skateistan",
+            "type": "National NGO",
+            "old_id": "595cad7a9705078609221d7e",
+            "created_at": "2017-07-05T09:12:26.703Z",
+            "updated_at": "2017-07-05T09:12:26.703Z",
+            "countries": [
+                2,
+                438
+            ],
+            "clusters": []
+        }
+    },
+    {
+        "model": "rh.organization",
+        "pk": 77,
+        "fields": {
+            "name": "Solidarity for Afghan Families",
+            "code": "SAF-AF",
+            "type": "National NGO",
+            "old_id": "596af677823c138d3011de8b",
+            "created_at": "2017-07-16T05:15:35.665Z",
+            "updated_at": "2021-10-11T04:39:25.758Z",
+            "countries": [],
+            "clusters": []
+        }
+    },
+    {
+        "model": "rh.organization",
+        "pk": 78,
+        "fields": {
+            "name": "Tabish Social Health Education Organisation",
+            "code": "Tabish",
+            "type": "National NGO",
+            "old_id": "594b607971f6c2a56741e1e0",
+            "created_at": "2017-06-22T06:15:21.152Z",
+            "updated_at": "2018-05-24T06:43:28.107Z",
+            "countries": [
+                2,
+                438
+            ],
+            "clusters": []
+        }
+    },
+    {
+        "model": "rh.organization",
+        "pk": 79,
+        "fields": {
+            "name": "The Liaison Office",
+            "code": "TLO",
+            "type": "National NGO",
+            "old_id": "596af41a823c138d3011de7e",
+            "created_at": "2017-07-16T05:05:30.684Z",
+            "updated_at": "2017-11-06T05:08:18.981Z",
+            "countries": [
+                2
+            ],
+            "clusters": []
+        }
+    },
+    {
+        "model": "rh.organization",
+        "pk": 80,
+        "fields": {
+            "name": "Watan Social and Technical Services Association",
+            "code": "WSTA",
+            "type": "National NGO",
+            "old_id": "58e328c79da5ef972fbc9876",
+            "created_at": "2017-04-04T05:01:59.392Z",
+            "updated_at": "2022-06-06T05:12:18.404Z",
+            "countries": [
+                2
+            ],
+            "clusters": []
+        }
+    },
+    {
+        "model": "rh.organization",
+        "pk": 81,
+        "fields": {
+            "name": "Welfare Association for Development of Afghanistan",
+            "code": "WADAN",
+            "type": "National NGO",
+            "old_id": "59a52185795abfbf68bb802e",
+            "created_at": "2017-08-29T08:10:45.521Z",
+            "updated_at": "2017-08-29T09:44:09.302Z",
+            "countries": [
+                2
+            ],
+            "clusters": []
+        }
+    },
+    {
+        "model": "rh.organization",
+        "pk": 82,
+        "fields": {
+            "name": "Youth Health and Development Organization",
+            "code": "YHDO",
+            "type": "National NGO",
+            "old_id": "57049cdbeb3e39094c00d7e5",
+            "created_at": "2016-04-06T05:21:31.905Z",
+            "updated_at": "2022-01-05T15:48:49.871Z",
+            "countries": [
+                2
+            ],
+            "clusters": []
+        }
+    },
+    {
+        "model": "rh.organization",
+        "pk": 83,
+        "fields": {
+            "name": "Afghan Red Crescent Society",
+            "code": "ARCS",
+            "type": "Red Cross and Red Crescent Movement",
+            "old_id": "56ff49200c68f2c746e3f83a",
+            "created_at": "2016-04-02T04:22:56.846Z",
+            "updated_at": "2024-12-02T05:35:01.526Z",
+            "countries": [
+                2
+            ],
+            "clusters": [
+                4
+            ]
+        }
+    },
+    {
+        "model": "rh.organization",
+        "pk": 84,
+        "fields": {
+            "name": "United Nations Assistance Mission in Afghanistan",
+            "code": "UNAMA",
+            "type": "United Nations",
+            "old_id": "5aee9ef7ec394e5736b33ec4",
+            "created_at": "2018-05-06T06:21:43.673Z",
+            "updated_at": "2020-08-12T09:23:06.444Z",
+            "countries": [
+                2,
+                438
+            ],
+            "clusters": []
+        }
+    },
+    {
+        "model": "rh.organization",
+        "pk": 85,
+        "fields": {
+            "name": "European Commission",
+            "code": "EC",
+            "type": "Donor",
+            "old_id": "5abb977f315352a4735a9676",
+            "created_at": "2018-03-28T13:24:15.192Z",
+            "updated_at": "2018-03-28T13:24:15.192Z",
+            "countries": [
+                2,
+                438
+            ],
+            "clusters": []
+        }
+    },
+    {
+        "model": "rh.organization",
+        "pk": 86,
+        "fields": {
+            "name": "United States Agency for International Development",
+            "code": "USAID",
+            "type": "Donor",
+            "old_id": "5afc3ea1704f0cf5309cbbfc",
+            "created_at": "2018-05-16T14:22:25.490Z",
+            "updated_at": "2018-05-16T14:22:25.490Z",
+            "countries": [
+                2,
+                438
+            ],
+            "clusters": []
+        }
+    },
+
+    {
+        "model": "rh.organization",
+        "pk": 324,
+        "fields": {
+            "name": "Youth for Positive Change Afghanistan Organization",
+            "code": "YPCAO",
+            "type": "National NGO",
+            "old_id": null,
+            "created_at": "2024-09-18T09:44:12.941Z",
+            "updated_at": "2024-09-18T09:44:12.941Z",
+            "countries": [
+                2
+            ],
+            "clusters": []
+        }
+    },
+    {
+        "model": "rh.organization",
+        "pk": 325,
+        "fields": {
+            "name": "Johanniter International Assistance",
+            "code": "JIA-JUH",
+            "type": "International NGO",
+            "old_id": null,
+            "created_at": "2024-12-02T05:10:20.789Z",
+            "updated_at": "2024-12-02T05:10:20.789Z",
+            "countries": [
+                2
+            ],
+            "clusters": [
+                4
+            ]
+        }
+    }
+]

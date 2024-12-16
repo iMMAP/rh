@@ -32,11 +32,11 @@ INSTALLED_APPS = [
     "django_filters",
     "django_vite_plugin",
     "django_htmx",
-    "guardian",
     "dbbackup",
     "extra_settings",
     "mdeditor",
     "mailer",
+    "django_extensions",
     # RH apps
     "rh.apps.RhConfig",
     "users.apps.UsersConfig",
@@ -86,7 +86,6 @@ DATA_UPLOAD_MAX_NUMBER_FIELDS = 50240
 AUTHENTICATION_BACKENDS = [
     "django.contrib.auth.backends.ModelBackend",
     "users.backends.EmailBackend",
-    "guardian.backends.ObjectPermissionBackend",
 ]
 
 # Guadian Anonymous User

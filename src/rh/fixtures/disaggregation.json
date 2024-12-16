@@ -1,0 +1,294 @@
+[
+    {
+        "model": "rh.disaggregation",
+        "pk": 1,
+        "fields": {
+            "name": "Boys (0-5)",
+            "gender": "Male",
+            "lower_limit": 0,
+            "upper_limit": 5,
+
+            "clusters": [
+                4
+            ]
+        }
+    },
+    {
+        "model": "rh.disaggregation",
+        "pk": 2,
+        "fields": {
+            "name": "Girls (0-5)",
+            "gender": "Female",
+            "lower_limit": 0,
+            "upper_limit": 5,
+
+            "clusters": [
+                4
+            ]
+        }
+    },
+    {
+        "model": "rh.disaggregation",
+        "pk": 3,
+        "fields": {
+            "name": "Boys (6-17)",
+            "gender": "Male",
+            "lower_limit": 6,
+            "upper_limit": 17,
+
+            "clusters": [
+                4
+            ]
+        }
+    },
+    {
+        "model": "rh.disaggregation",
+        "pk": 4,
+        "fields": {
+            "name": "Girls (6-17)",
+            "gender": "Female",
+            "lower_limit": 6,
+            "upper_limit": 17,
+
+            "clusters": [
+                4
+            ]
+        }
+    },
+    {
+        "model": "rh.disaggregation",
+        "pk": 5,
+        "fields": {
+            "name": "Men (18-60)",
+            "gender": "Male",
+            "lower_limit": 18,
+            "upper_limit": 60,
+
+            "clusters": [
+                4
+            ]
+        }
+    },
+    {
+        "model": "rh.disaggregation",
+        "pk": 6,
+        "fields": {
+            "name": "Women (18-60)",
+            "gender": "Female",
+            "lower_limit": 18,
+            "upper_limit": 60,
+            "clusters": [
+                4
+            ]
+        }
+    },
+    {
+        "model": "rh.disaggregation",
+        "pk": 7,
+        "fields": {
+            "name": "Elderly men (60+)",
+            "gender": "Male",
+            "lower_limit": 61,
+            "upper_limit": 80,
+
+            "clusters": [
+                4
+            ]
+        }
+    },
+    {
+        "model": "rh.disaggregation",
+        "pk": 8,
+        "fields": {
+            "name": "Elderly women (60+)",
+            "gender": "Male",
+            "lower_limit": 61,
+            "upper_limit": 80,
+
+            "clusters": [
+                4
+            ]
+        }
+    },
+    {
+        "model": "rh.disaggregation",
+        "pk": 9,
+        "fields": {
+            "name": "Boys (U18)",
+            "gender": null,
+            "lower_limit": 0,
+            "upper_limit": 17,
+
+            "clusters": [
+                1,
+                2,
+                3,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10,
+                11,
+                12
+            ]
+        }
+    },
+    {
+        "model": "rh.disaggregation",
+        "pk": 10,
+        "fields": {
+            "name": "Girls (U18)",
+            "gender": "Female",
+            "lower_limit": 0,
+            "upper_limit": 17,
+
+            "clusters": [
+                2,
+                5
+            ]
+        }
+    },
+    {
+        "model": "rh.disaggregation",
+        "pk": 11,
+        "fields": {
+            "name": "Men (18-64)",
+            "gender": "Male",
+            "lower_limit": 18,
+            "upper_limit": 64,
+
+            "clusters": [
+                2,
+                5
+            ]
+        }
+    },
+    {
+        "model": "rh.disaggregation",
+        "pk": 12,
+        "fields": {
+            "name": "Women (18-64)",
+            "gender": "Female",
+            "lower_limit": 18,
+            "upper_limit": 64,
+
+            "clusters": [
+                2,
+                5
+            ]
+        }
+    },
+    {
+        "model": "rh.disaggregation",
+        "pk": 13,
+        "fields": {
+            "name": "Elderly men (65+)",
+            "gender": "Male",
+            "lower_limit": 66,
+            "upper_limit": 80,
+
+            "clusters": [
+                2,
+                5
+            ]
+        }
+    },
+    {
+        "model": "rh.disaggregation",
+        "pk": 14,
+        "fields": {
+            "name": "Elderly women (65+)",
+            "gender": "Female",
+            "lower_limit": 66,
+            "upper_limit": 80,
+
+            "clusters": [
+                2,
+                5
+            ]
+        }
+    },
+    {
+        "model": "rh.disaggregation",
+        "pk": 15,
+        "fields": {
+            "name": "People with disabilities",
+            "gender": "Male",
+            "lower_limit": null,
+            "upper_limit": null,
+
+            "clusters": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10,
+                11,
+                12
+            ],
+            "indicators": [
+
+            ]
+        }
+    },
+    {
+        "model": "rh.disaggregation",
+        "pk": 16,
+        "fields": {
+            "name": "Total households",
+            "gender": "Male",
+            "lower_limit": null,
+            "upper_limit": null,
+            "clusters": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10,
+                11,
+                12
+            ],
+            "indicators": [
+
+            ]
+        }
+    },
+    {
+        "model": "rh.disaggregation",
+        "pk": 17,
+        "fields": {
+            "name": "Female-headed households",
+            "gender": "Female",
+            "lower_limit": null,
+            "upper_limit": null,
+            "clusters": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10,
+                11,
+                12
+            ],
+            "indicators": [
+
+            ]
+        }
+    }
+]

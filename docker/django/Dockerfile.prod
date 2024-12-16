@@ -1,0 +1,52 @@
+# Base image
+FROM python:3.10-slim
+
+# Set environment variables
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+ENV POETRY_VIRTUALENVS_CREATE=false
+ENV PYTHONPATH=/usr/src/rh/src
+
+# Install dependencies
+RUN apt-get update && apt-get install -y \
+    build-essential cron \
+    libpq-dev curl man wget \
+    npm \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install Python dependencies
+RUN pip install poetry
+
+# npm and node latest with n
+RUN npm cache clean -f
+RUN npm install -g n
+RUN n stable
+
+# Set the working directory
+WORKDIR /usr/src/rh
+
+# to preserve the docker cache
+COPY ["README.md", "Makefile", "poetry.lock","pyproject.toml","/usr/src/rh"]
+RUN poetry install --without dev --no-root --no-directory
+
+# copy project code -> src to /usr/src/rh/src
+COPY src /usr/src/rh/src
+
+# Install Node.js dependencies and build static files
+# Activate shell for django-vite-plugin build
+RUN poetry run make npm-install
+
+COPY docker/django/django-entrypoint.sh /usr/src/rh/django-entrypoint.sh
+RUN chmod a+x /usr/src/rh/django-entrypoint.sh
+
+COPY docker/django/rh-tasks-cron /etc/cron.d/rh-tasks-cron
+RUN chmod 0644 /etc/cron.d/rh-tasks-cron
+RUN crontab /etc/cron.d/rh-tasks-cron
+RUN touch /var/log/cron.log
+RUN service cron start
+
+ENTRYPOINT ["/usr/src/rh/django-entrypoint.sh"]
+
+# Gunicorn will be used to run the server
+CMD ["gunicorn", "--bind", "0.0.0.0:8000","--workers=4","src.core.wsgi:application"]

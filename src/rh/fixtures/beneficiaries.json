@@ -1,0 +1,2186 @@
+[
+    {
+        "model": "rh.beneficiarytype",
+        "pk": 1,
+        "fields": {
+            "country": 2,
+            "name": "New IDPs in 2024",
+            "code": "new_idp_2024",
+            "description": null,
+            "is_active": true,
+            "type": "hrp",
+            "updated_at": "2024-09-24T09:19:53.964Z",
+            "clusters": [
+                4,
+                5,
+                1,
+                3,
+                6,
+                8,
+                12
+            ]
+        }
+    },
+    {
+        "model": "rh.beneficiarytype",
+        "pk": 2,
+        "fields": {
+            "country": 2,
+            "name": "Cross-Border Returnees from Pakistan in 2024 (District of Return)",
+            "code": "cross_border_returnees_from_pakistan_in_2024",
+            "description": null,
+            "is_active": true,
+            "type": "hrp",
+            
+            "updated_at": "2024-09-24T09:35:02.439Z",
+            "clusters": [
+                4,
+                5,
+                1,
+                3,
+                6,
+                8,
+                12
+            ]
+        }
+    },
+    {
+        "model": "rh.beneficiarytype",
+        "pk": 3,
+        "fields": {
+            "country": 2,
+            "name": "Cross-Border Returnees from Iran in 2024 (District of Return)",
+            "code": "cross_border_returnees_from_iran_in_2024",
+            "description": null,
+            "is_active": true,
+            "type": "hrp",
+            
+            "updated_at": "2024-09-24T09:33:11.857Z",
+            "clusters": [
+                4,
+                5,
+                1,
+                3,
+                6,
+                8,
+                12
+            ]
+        }
+    },
+    {
+        "model": "rh.beneficiarytype",
+        "pk": 4,
+        "fields": {
+            "country": 2,
+            "name": "Cross-Border Returnees from Iran and Pakistan in 2024  (Border or Encashment / Transit Centres)",
+            "code": "cross-border-returnees-from-iran-and-pakistan-in-2024-border-or-encashment-transit-centres",
+            "description": null,
+            "is_active": true,
+            "type": "hrp",
+            "updated_at": "2024-08-21T09:38:37.174Z",
+            "clusters": [
+                4,
+                5
+            ]
+        }
+    },
+    {
+        "model": "rh.beneficiarytype",
+        "pk": 5,
+        "fields": {
+            "country": 2,
+            "name": "Cross-Border Returnees from Pakistan in 2024  (Temporary Sites)",
+            "code": "cross_border_returnees_from_pakistan_in_2024_temporary_sites",
+            "description": null,
+            "is_active": true,
+            "type": "hrp",
+            
+            "updated_at": "2024-09-24T09:34:06.171Z",
+            "clusters": [
+                1,
+                3,
+                4,
+                5,
+                8,
+                12
+            ]
+        }
+    },
+    {
+        "model": "rh.beneficiarytype",
+        "pk": 6,
+        "fields": {
+            "country": 2,
+            "name": "Natural Disaster-Affected in 2024 (Non-Displaced)",
+            "code": "natural_disaster_affected_in_2024_non_displaced",
+            "description": null,
+            "is_active": true,
+            "type": "hrp",
+            
+            "updated_at": "2024-09-24T07:49:36.728Z",
+            "clusters": [
+                4,
+                5,
+                1,
+                3,
+                6,
+                8,
+                12
+            ]
+        }
+    },
+    {
+        "model": "rh.beneficiarytype",
+        "pk": 7,
+        "fields": {
+            "country": 2,
+            "name": "Refugees and Asylum Seekers",
+            "code": "refugees_asylum_seekers",
+            "description": null,
+            "is_active": true,
+            "type": "hrp",
+            
+            "updated_at": "2024-09-24T06:42:32.256Z",
+            "clusters": [
+                5,
+                1,
+                3,
+                4,
+                6,
+                8,
+                12
+            ]
+        }
+    },
+    {
+        "model": "rh.beneficiarytype",
+        "pk": 8,
+        "fields": {
+            "country": 2,
+            "name": "Vulnerable people with humanitarian needs",
+            "code": "vulnerable_people_humanitarian_needs",
+            "description": null,
+            "is_active": true,
+            "type": "hrp",
+            "updated_at": "2024-09-24T07:50:36.205Z",
+            "clusters": [
+                1,
+                4,
+                5,
+                12,
+                2,
+                3,
+                8
+            ]
+        }
+    },
+    {
+        "model": "rh.beneficiarytype",
+        "pk": 10,
+        "fields": {
+            "country": 2,
+            "name": "Afghan refugee returnees",
+            "code": "afghan-refugee-returnees",
+            "description": null,
+            "is_active": true,
+            "type": "non-hrp",
+            "created_at": "2024-08-04T07:07:58.868Z",
+            "updated_at": "2024-09-22T09:10:15.734Z",
+            "clusters": [
+                4
+            ]
+        }
+    },
+    {
+        "model": "rh.beneficiarytype",
+        "pk": 11,
+        "fields": {
+            "country": 438,
+            "name": "Newly Displaced",
+            "code": "newly-displaced",
+            "description": null,
+            "is_active": false,
+            "type": "non-hrp",
+
+            "clusters": [
+                4
+            ]
+        }
+    },
+    {
+        "model": "rh.beneficiarytype",
+        "pk": 13,
+        "fields": {
+            "country": 438,
+            "name": "Non-Displaced (Host Communities, Refugees)",
+            "code": "non-displaced-host-communities-refugees",
+            "description": null,
+            "is_active": false,
+            "type": "non-hrp",
+
+            "clusters": [
+                4
+            ]
+        }
+    },
+    {
+        "model": "rh.beneficiarytype",
+        "pk": 14,
+        "fields": {
+            "country": 2,
+            "name": "Multiple Shocks (IPC Phase 4) affected population",
+            "code": "multiple-shocks-IPC-Phase-4-affected-population",
+            "description": null,
+            "is_active": true,
+            "type": "non-hrp",
+
+            "clusters": [
+                5
+            ]
+        }
+    },
+    {
+        "model": "rh.beneficiarytype",
+        "pk": 15,
+        "fields": {
+            "country": 2,
+            "name": "Multiple Shocks (IPC Phase 3) affected population",
+            "code": "multiple-shocks-IPC-Phase-3-affected-population",
+            "description": null,
+            "is_active": true,
+            "type": "non-hrp",
+            "clusters": [
+                5
+            ]
+        }
+    },
+    {
+        "model": "rh.beneficiarytype",
+        "pk": 16,
+        "fields": {
+            "country": 2,
+            "name": "People Displaced Due to Natural Disaster",
+            "code": "People-displaced-due-to-natural-disaster",
+            "description": null,
+            "is_active": true,
+            "type": "non-hrp",
+            "clusters": [
+                5
+            ]
+        }
+    },
+    {
+        "model": "rh.beneficiarytype",
+        "pk": 17,
+        "fields": {
+            "country": 2,
+            "name": "Vulnerable People with Humanitarian Needs (including host community, protracted IDPs, Old Returnees, Old ND affected etc.)",
+            "code": "vulnerable-people-with-humanitarian-needs-including-host-community-protracted-idps-old-returnees-old-nd-affected-etc",
+            "description": null,
+            "is_active": true,
+            "type": "hrp",
+            "clusters": [
+                4,
+                1,
+                3,
+                5,
+                6,
+                8,
+                12
+            ]
+        }
+    },
+    {
+        "model": "rh.beneficiarytype",
+        "pk": 18,
+        "fields": {
+            "country": 2,
+            "name": "Vulnerable people with acute humanitarian needs",
+            "code": "vulnerable-people-with-acute-humanitarian-needs",
+            "description": null,
+            "is_active": true,
+            "type": "hrp",
+            "clusters": [
+                4,
+                1,
+                3,
+                5,
+                6,
+                8,
+                12
+            ]
+        }
+    },
+    {
+        "model": "rh.beneficiarytype",
+        "pk": 19,
+        "fields": {
+            "country": 2,
+            "name": "Other Beneficiaries",
+            "code": "other_beneficiaries",
+            "description": null,
+            "is_active": true,
+            "type": "non-hrp",
+            "clusters": [
+                4
+            ]
+        }
+    },
+    {
+        "model": "rh.beneficiarytype",
+        "pk": 20,
+        "fields": {
+            "country": 2,
+            "name": "Natural disaster non-displaced",
+            "code": "natural_disaster_non_displaced",
+            "description": null,
+            "is_active": true,
+            "type": "non-hrp",
+            "clusters": [
+                4
+            ]
+        }
+    },
+    {
+        "model": "rh.beneficiarytype",
+        "pk": 21,
+        "fields": {
+            "country": 2,
+            "name": "IDPs returnees",
+            "code": "idp_returnees",
+            "description": null,
+            "is_active": true,
+            "type": "non-hrp",
+            "clusters": [
+                4
+            ]
+        }
+    },
+    {
+        "model": "rh.beneficiarytype",
+        "pk": 22,
+        "fields": {
+            "country": 2,
+            "name": "Other IDPs",
+            "code": "idp_other",
+            "description": null,
+            "is_active": true,
+            "type": "non-hrp",
+            "clusters": [
+                4
+            ]
+        }
+    },
+    {
+        "model": "rh.beneficiarytype",
+        "pk": 23,
+        "fields": {
+            "country": 2,
+            "name": "Conflict-Affected IDPs",
+            "code": "idp_conflict",
+            "description": null,
+            "is_active": true,
+            "type": "non-hrp",
+            "clusters": [
+                4
+            ]
+        }
+    },
+    {
+        "model": "rh.beneficiarytype",
+        "pk": 24,
+        "fields": {
+            "country": 2,
+            "name": "Host Communities",
+            "code": "host_communities",
+            "description": null,
+            "is_active": true,
+            "type": "non-hrp",
+            "clusters": [
+                3,
+                4,
+                5
+            ]
+        }
+    },
+    {
+        "model": "rh.beneficiarytype",
+        "pk": 26,
+        "fields": {
+            "country": 2,
+            "name": "Flood Affected Non Displaced ( Response )",
+            "code": "flood_affected_non_displaced_response",
+            "description": null,
+            "is_active": true,
+            "type": "non-hrp",
+            "clusters": [
+                3,
+                4
+            ]
+        }
+    },
+    {
+        "model": "rh.beneficiarytype",
+        "pk": 27,
+        "fields": {
+            "country": 2,
+            "name": "Drought Affected Non Displaced ( Response )",
+            "code": "drought_affected_non_displaced_response",
+            "description": null,
+            "is_active": true,
+            "type": "non-hrp",
+            "clusters": [
+                3,
+                4
+            ]
+        }
+    },
+    {
+        "model": "rh.beneficiarytype",
+        "pk": 28,
+        "fields": {
+            "country": 2,
+            "name": "Conflict Affected Non Displaced",
+            "code": "conflict_affected_non_displaced",
+            "description": null,
+            "is_active": true,
+            "type": "non-hrp",
+            "clusters": [
+                4
+            ]
+        }
+    },
+    {
+        "model": "rh.beneficiarytype",
+        "pk": 29,
+        "fields": {
+            "country": 2,
+            "name": "Internally Displaced (Conflict or Natural Disaster)",
+            "code": "internally-displaced-conflict-or-natural-disaster",
+            "description": null,
+            "is_active": true,
+            "type": "non-hrp",
+            "clusters": [
+                12
+            ]
+        }
+    },
+    {
+        "model": "rh.beneficiarytype",
+        "pk": 30,
+        "fields": {
+            "country": 2,
+            "name": "Refugee Returnees - at border or in encashment centres",
+            "code": "refugee-returnees-at-border-or-in-encashment-centres",
+            "description": null,
+            "is_active": true,
+            "type": "non-hrp",
+            "clusters": [
+                12
+            ]
+        }
+    },
+    {
+        "model": "rh.beneficiarytype",
+        "pk": 31,
+        "fields": {
+            "country": 2,
+            "name": "Refugee Returnees - in their place of return",
+            "code": "refugee_returnees_return_place",
+            "description": null,
+            "is_active": true,
+            "type": "non-hrp",
+            "clusters": [
+                12
+            ]
+        }
+    },
+    {
+        "model": "rh.beneficiarytype",
+        "pk": 32,
+        "fields": {
+            "country": 2,
+            "name": "Refugees",
+            "code": "refugees",
+            "description": null,
+            "is_active": true,
+            "type": "non-hrp",
+            "clusters": [
+                8,
+                12
+            ]
+        }
+    },
+    {
+        "model": "rh.beneficiarytype",
+        "pk": 33,
+        "fields": {
+            "country": 2,
+            "name": "Shock-Affected Non-Displaced (Conflict or Natural Disaster)",
+            "code": "shock-affected-non-displaced-conflict-or-natural-disaster",
+            "description": null,
+            "is_active": true,
+            "type": "non-hrp",
+            "clusters": [
+                12
+            ]
+        }
+    },
+    {
+        "model": "rh.beneficiarytype",
+        "pk": 34,
+        "fields": {
+            "country": 2,
+            "name": "Undocumented Returnees - at border or in encashment centres",
+            "code": "undocumented-returnees-at-border-or-in-encashment-centres",
+            "description": null,
+            "is_active": true,
+            "type": "non-hrp",
+            "clusters": [
+                12
+            ]
+        }
+    },
+    {
+        "model": "rh.beneficiarytype",
+        "pk": 35,
+        "fields": {
+            "country": 2,
+            "name": "Undocumented Returnees - in their place of return",
+            "code": "undocumented-returnees-in-their-place-of-return",
+            "description": null,
+            "is_active": true,
+            "type": "non-hrp",
+            "clusters": [
+                12
+            ]
+        }
+    },
+    {
+        "model": "rh.beneficiarytype",
+        "pk": 36,
+        "fields": {
+            "country": 2,
+            "name": "Vulnerable People with Humanitarian Needs",
+            "code": "vulnerable_people",
+            "description": null,
+            "is_active": true,
+            "type": "non-hrp",
+            "clusters": [
+                12
+            ]
+        }
+    },
+    {
+        "model": "rh.beneficiarytype",
+        "pk": 37,
+        "fields": {
+            "country": 2,
+            "name": "Conflict affected non-displaced",
+            "code": "conflict-affected-non-displaced",
+            "description": null,
+            "is_active": true,
+            "type": "non-hrp",
+            "clusters": [
+                4
+            ]
+        }
+    },
+    {
+        "model": "rh.beneficiarytype",
+        "pk": 38,
+        "fields": {
+            "country": 2,
+            "name": "Drought affected IDPs",
+            "code": "drought-affected-IDPs",
+            "description": null,
+            "is_active": true,
+            "type": "non-hrp",
+            "clusters": [
+                4
+            ]
+        }
+    },
+    {
+        "model": "rh.beneficiarytype",
+        "pk": 39,
+        "fields": {
+            "country": 2,
+            "name": "Drought affected non-displaced",
+            "code": "drought-affected-non-displaced",
+            "description": null,
+            "is_active": true,
+            "type": "non-hrp",
+            "clusters": [
+                4
+            ]
+        }
+    },
+    {
+        "model": "rh.beneficiarytype",
+        "pk": 40,
+        "fields": {
+            "country": 2,
+            "name": "Flood Affected IPDs",
+            "code": "flood-affected-IPDs",
+            "description": null,
+            "is_active": true,
+            "type": "non-hrp",
+            "clusters": [
+                4
+            ]
+        }
+    },
+    {
+        "model": "rh.beneficiarytype",
+        "pk": 41,
+        "fields": {
+            "country": 2,
+            "name": "Food affected non-displaced",
+            "code": "food-affected-non-displaced",
+            "description": null,
+            "is_active": true,
+            "type": "non-hrp",
+            "clusters": [
+                4
+            ]
+        }
+    },
+    {
+        "model": "rh.beneficiarytype",
+        "pk": 42,
+        "fields": {
+            "country": 2,
+            "name": "Health Workers",
+            "code": "health-workers",
+            "description": null,
+            "is_active": true,
+            "type": "non-hrp",
+            "clusters": [
+                4
+            ]
+        }
+    },
+    {
+        "model": "rh.beneficiarytype",
+        "pk": 43,
+        "fields": {
+            "country": 2,
+            "name": "IDPs returners",
+            "code": "idps-returners",
+            "description": null,
+            "is_active": true,
+            "type": "non-hrp",
+            "clusters": [
+                4
+            ]
+        }
+    },
+    {
+        "model": "rh.beneficiarytype",
+        "pk": 44,
+        "fields": {
+            "country": 2,
+            "name": "Natural disaster IDPs",
+            "code": "idp_natural_disaster",
+            "description": null,
+            "is_active": true,
+            "type": "non-hrp",
+            "clusters": [
+                3,
+                4
+            ]
+        }
+    },
+    {
+        "model": "rh.beneficiarytype",
+        "pk": 45,
+        "fields": {
+            "country": 2,
+            "name": "Other beneficiaries",
+            "code": "other-beneficiaries",
+            "description": null,
+            "is_active": true,
+            "type": "non-hrp",
+            "clusters": [
+                4
+            ]
+        }
+    },
+    {
+        "model": "rh.beneficiarytype",
+        "pk": 46,
+        "fields": {
+            "country": 2,
+            "name": "Other IDPs",
+            "code": "other-idps",
+            "description": null,
+            "is_active": true,
+            "type": "non-hrp",
+            "clusters": [
+                4
+            ]
+        }
+    },
+    {
+        "model": "rh.beneficiarytype",
+        "pk": 47,
+        "fields": {
+            "country": 2,
+            "name": "Refugees and asylum seekers",
+            "code": "refugees-and-asylum-seekers",
+            "description": null,
+            "is_active": true,
+            "type": "non-hrp",
+            "clusters": [
+                4,
+                6
+            ]
+        }
+    },
+    {
+        "model": "rh.beneficiarytype",
+        "pk": 48,
+        "fields": {
+            "country": 2,
+            "name": "Afghan Refugee Returnees from Iran (Documented) - Border",
+            "code": "afghan_refugee_returnees_documented_border_iran",
+            "description": null,
+            "is_active": true,
+            "type": "non-hrp",
+            "clusters": [
+                5
+            ]
+        }
+    },
+    {
+        "model": "rh.beneficiarytype",
+        "pk": 49,
+        "fields": {
+            "country": 2,
+            "name": "Afghan Refugee Returnees from Iran (Documented) - Settlement",
+            "code": "afghan_refugee_returnees_documented_settlement_iran",
+            "description": null,
+            "is_active": true,
+            "type": "non-hrp",
+            "clusters": [
+                5
+            ]
+        }
+    },
+    {
+        "model": "rh.beneficiarytype",
+        "pk": 50,
+        "fields": {
+            "country": 2,
+            "name": "Afghan Refugee Returnees from Pakistan (Documented) - Border",
+            "code": "afghan-refugee-returnees-from-pakistan-documented-border",
+            "description": null,
+            "is_active": true,
+            "type": "non-hrp",
+            "clusters": [
+                5
+            ]
+        }
+    },
+    {
+        "model": "rh.beneficiarytype",
+        "pk": 51,
+        "fields": {
+            "country": 2,
+            "name": "Afghan Refugee Returnees from Pakistan (Documented) - Settlement",
+            "code": "afghan-refugee-returnees-from-pakistan-documented-settlement",
+            "description": null,
+            "is_active": true,
+            "type": "non-hrp",
+            "created_at": "2024-09-22T11:04:25.978Z",
+            "updated_at": "2024-09-24T06:56:16.831Z",
+            "clusters": [
+                5
+            ]
+        }
+    },
+    {
+        "model": "rh.beneficiarytype",
+        "pk": 52,
+        "fields": {
+            "country": 2,
+            "name": "Afghan Returnees from Iran (Undocumented) - Border",
+            "code": "afghan-returnees-from-iran-undocumented-border",
+            "description": null,
+            "is_active": true,
+            "type": "non-hrp",
+            "created_at": "2024-09-22T11:07:07.928Z",
+            "updated_at": "2024-09-22T11:07:07.928Z",
+            "clusters": [
+                5
+            ]
+        }
+    },
+    {
+        "model": "rh.beneficiarytype",
+        "pk": 53,
+        "fields": {
+            "country": 2,
+            "name": "Afghan Returnees from Iran (Undocumented) - Settlement",
+            "code": "afghan-returnees-from-iran-undocumented-settlement",
+            "description": null,
+            "is_active": true,
+            "type": "non-hrp",
+            "updated_at": "2024-09-22T11:09:51.806Z",
+            "clusters": [
+                5
+            ]
+        }
+    },
+    {
+        "model": "rh.beneficiarytype",
+        "pk": 54,
+        "fields": {
+            "country": 2,
+            "name": "Afghan Returnees from Pakistan (Undocumented) - Border",
+            "code": "afghan-returnees-from-pakistan-undocumented-border",
+            "description": null,
+            "is_active": true,
+            "type": "non-hrp",
+            "updated_at": "2024-09-22T11:10:54.426Z",
+            "clusters": [
+                5
+            ]
+        }
+    },
+    {
+        "model": "rh.beneficiarytype",
+        "pk": 55,
+        "fields": {
+            "country": 2,
+            "name": "Afghan Returnees from Pakistan (Undocumented) - Settlement",
+            "code": "afghan_refugee_returnees_undocumented_settlement_pakistan",
+            "description": null,
+            "is_active": true,
+            "type": "non-hrp",
+            "updated_at": "2024-09-24T10:58:51.940Z",
+            "clusters": [
+                5
+            ]
+        }
+    },
+    {
+        "model": "rh.beneficiarytype",
+        "pk": 56,
+        "fields": {
+            "country": 2,
+            "name": "COVID-19 Affected People",
+            "code": "COVID-19-affected-people",
+            "description": null,
+            "is_active": true,
+            "type": "non-hrp",
+            "updated_at": "2024-09-22T11:14:58.664Z",
+            "clusters": [
+                5
+            ]
+        }
+    },
+    {
+        "model": "rh.beneficiarytype",
+        "pk": 57,
+        "fields": {
+            "country": 2,
+            "name": "Natural Disaster Affected (Avalanche)",
+            "code": "natural_disaster_affected_avalanche",
+            "description": null,
+            "is_active": true,
+            "type": "non-hrp",
+            "updated_at": "2024-09-24T10:58:00.505Z",
+            "clusters": [
+                5
+            ]
+        }
+    },
+    {
+        "model": "rh.beneficiarytype",
+        "pk": 58,
+        "fields": {
+            "country": 2,
+            "name": "Natural Disaster Affected (Earthquake)",
+            "code": "natural-disaster-affected-earthquake",
+            "description": null,
+            "is_active": true,
+            "type": "non-hrp",
+            "updated_at": "2024-09-22T11:18:45.678Z",
+            "clusters": [
+                5
+            ]
+        }
+    },
+    {
+        "model": "rh.beneficiarytype",
+        "pk": 59,
+        "fields": {
+            "country": 2,
+            "name": "Natural Disaster Affected (Winter / Lean Season)",
+            "code": "natural_disaster_affected_wls",
+            "description": null,
+            "is_active": true,
+            "type": "non-hrp",
+            "updated_at": "2024-09-24T11:00:23.596Z",
+            "clusters": [
+                5
+            ]
+        }
+    },
+    {
+        "model": "rh.beneficiarytype",
+        "pk": 60,
+        "fields": {
+            "country": 2,
+            "name": "Pakistani Refugees",
+            "code": "pakistani-refugees",
+            "description": null,
+            "is_active": true,
+            "type": "non-hrp",
+            "updated_at": "2024-09-24T05:45:39.001Z",
+            "clusters": [
+                3,
+                5
+            ]
+        }
+    },
+    {
+        "model": "rh.beneficiarytype",
+        "pk": 61,
+        "fields": {
+            "country": 2,
+            "name": "People Displaced Due to Conflict",
+            "code": "people-displaced-due-to-conflict",
+            "description": null,
+            "is_active": true,
+            "type": "non-hrp",
+            "updated_at": "2024-09-22T11:20:56.489Z",
+            "clusters": [
+                5
+            ]
+        }
+    },
+    {
+        "model": "rh.beneficiarytype",
+        "pk": 62,
+        "fields": {
+            "country": 2,
+            "name": "Afghan Refugee Returnees (Documented) - Rural",
+            "code": "returnee_documented_rural",
+            "description": null,
+            "is_active": true,
+            "type": "non-hrp",
+            "updated_at": "2024-09-24T07:43:00.188Z",
+            "clusters": [
+                1
+            ]
+        }
+    },
+    {
+        "model": "rh.beneficiarytype",
+        "pk": 63,
+        "fields": {
+            "country": 2,
+            "name": "Afghan Refugee Returnees (Documented) - Urban or Peri Urban",
+            "code": "returnee_documented_urban",
+            "description": null,
+            "is_active": true,
+            "type": "non-hrp",
+            "updated_at": "2024-09-24T07:43:30.355Z",
+            "clusters": [
+                1
+            ]
+        }
+    },
+    {
+        "model": "rh.beneficiarytype",
+        "pk": 64,
+        "fields": {
+            "country": 2,
+            "name": "Afghan Returnees (Undocumented) - Rural",
+            "code": "returnee_undocumented_rural",
+            "description": null,
+            "is_active": true,
+            "type": "non-hrp",
+            "updated_at": "2024-09-24T07:43:52.768Z",
+            "clusters": [
+                1
+            ]
+        }
+    },
+    {
+        "model": "rh.beneficiarytype",
+        "pk": 65,
+        "fields": {
+            "country": 2,
+            "name": "Afghan Returnees (Undocumented) - Urban or Peri Urban",
+            "code": "returnee_undocumented_urban",
+            "description": null,
+            "is_active": true,
+            "type": "non-hrp",
+            "updated_at": "2024-09-24T07:44:13.749Z",
+            "clusters": [
+                1
+            ]
+        }
+    },
+    {
+        "model": "rh.beneficiarytype",
+        "pk": 66,
+        "fields": {
+            "country": 2,
+            "name": "Communities Hosting Conflict IDPs - Rural",
+            "code": "host_communities_conflict_idps_rural",
+            "description": null,
+            "is_active": true,
+            "type": "non-hrp",
+            "updated_at": "2024-09-24T07:20:00.521Z",
+            "clusters": [
+                1
+            ]
+        }
+    },
+    {
+        "model": "rh.beneficiarytype",
+        "pk": 67,
+        "fields": {
+            "country": 2,
+            "name": "Communities Hosting Conflict IDPs - Urban or Peri Urban",
+            "code": "communities_hosting_conflict_idps_urban_peri_urban",
+            "description": null,
+            "is_active": true,
+            "type": "non-hrp",
+            "updated_at": "2024-09-23T08:01:19.259Z",
+            "clusters": [
+                1
+            ]
+        }
+    },
+    {
+        "model": "rh.beneficiarytype",
+        "pk": 68,
+        "fields": {
+            "country": 2,
+            "name": "Communities Hosting Natural Disasater IDPs - Rural",
+            "code": "host_communities_disaster_idps_rural",
+            "description": null,
+            "is_active": true,
+            "type": "non-hrp",
+            "updated_at": "2024-09-24T07:22:37.451Z",
+            "clusters": [
+                1
+            ]
+        }
+    },
+    {
+        "model": "rh.beneficiarytype",
+        "pk": 69,
+        "fields": {
+            "country": 2,
+            "name": "Communities Hosting Natural Disasater IDPs - Urban or Peri Urban",
+            "code": "host_communities_disaster_idps_urban",
+            "description": null,
+            "is_active": true,
+            "type": "non-hrp",
+            "updated_at": "2024-09-24T11:01:40.071Z",
+            "clusters": [
+                1
+            ]
+        }
+    },
+    {
+        "model": "rh.beneficiarytype",
+        "pk": 70,
+        "fields": {
+            "country": 2,
+            "name": "Communities Hosting Refugees - Rural",
+            "code": "host_communities_refugees_rural",
+            "description": null,
+            "is_active": true,
+            "type": "non-hrp",
+            "updated_at": "2024-09-24T07:25:26.541Z",
+            "clusters": [
+                1
+            ]
+        }
+    },
+    {
+        "model": "rh.beneficiarytype",
+        "pk": 71,
+        "fields": {
+            "country": 2,
+            "name": "Communities Hosting Refugees - Urban or Peri Urban",
+            "code": "host_communities_refugees_urban",
+            "description": null,
+            "is_active": true,
+            "type": "non-hrp",
+            "updated_at": "2024-09-24T07:26:19.707Z",
+            "clusters": [
+                1
+            ]
+        }
+    },
+    {
+        "model": "rh.beneficiarytype",
+        "pk": 72,
+        "fields": {
+            "country": 2,
+            "name": "Communities Hosting Returnees - Rural",
+            "code": "host_communities_returnees_rural",
+            "description": null,
+            "is_active": true,
+            "type": "non-hrp",
+            "updated_at": "2024-09-24T07:26:53.801Z",
+            "clusters": [
+                1
+            ]
+        }
+    },
+    {
+        "model": "rh.beneficiarytype",
+        "pk": 73,
+        "fields": {
+            "country": 2,
+            "name": "Communities Hosting Returnees - Urban or Peri Urban",
+            "code": "host_communities_returnees_urban",
+            "description": null,
+            "is_active": true,
+            "type": "non-hrp",
+            "clusters": [
+                1
+            ]
+        }
+    },
+    {
+        "model": "rh.beneficiarytype",
+        "pk": 74,
+        "fields": {
+            "country": 2,
+            "name": "Conflict Affected Community - Rural",
+            "code": "conflict_affected_rural",
+            "description": null,
+            "is_active": true,
+            "type": "non-hrp",
+            "updated_at": "2024-09-24T07:44:57.346Z",
+            "clusters": [
+                1
+            ]
+        }
+    },
+    {
+        "model": "rh.beneficiarytype",
+        "pk": 75,
+        "fields": {
+            "country": 2,
+            "name": "Conflict Affected Community - Urban or Peri Urban",
+            "code": "conflict_affected_urban",
+            "description": null,
+            "is_active": true,
+            "type": "non-hrp",
+            "updated_at": "2024-09-24T07:45:28.726Z",
+            "clusters": [
+                1
+            ]
+        }
+    },
+    {
+        "model": "rh.beneficiarytype",
+        "pk": 76,
+        "fields": {
+            "country": 2,
+            "name": "Conflict IDPs (2022) - Rural",
+            "code": "idp_conflict_2022_rural",
+            "description": null,
+            "is_active": true,
+            "type": "non-hrp",
+            "updated_at": "2024-09-24T07:28:49.024Z",
+            "clusters": [
+                1
+            ]
+        }
+    },
+    {
+        "model": "rh.beneficiarytype",
+        "pk": 77,
+        "fields": {
+            "country": 2,
+            "name": "Conflict IDPs (2022) - Urban or Peri Urban",
+            "code": "conflict_idps_2022_urban_peri_urban",
+            "description": null,
+            "is_active": true,
+            "type": "non-hrp",
+            "updated_at": "2024-09-24T04:39:12.995Z",
+            "clusters": [
+                1
+            ]
+        }
+    },
+    {
+        "model": "rh.beneficiarytype",
+        "pk": 78,
+        "fields": {
+            "country": 2,
+            "name": "Conflict IDPs (Prolonged) - Rural",
+            "code": "idp_protracted_rural",
+            "description": null,
+            "is_active": true,
+            "type": "non-hrp",
+            "updated_at": "2024-09-24T07:38:40.038Z",
+            "clusters": [
+                1
+            ]
+        }
+    },
+    {
+        "model": "rh.beneficiarytype",
+        "pk": 79,
+        "fields": {
+            "country": 2,
+            "name": "Conflict IDPs (Prolonged) - Urban or Peri Urban",
+            "code": "idp_protracted_urban",
+            "description": null,
+            "is_active": true,
+            "type": "non-hrp",
+            "updated_at": "2024-09-24T07:39:11.550Z",
+            "clusters": [
+                1
+            ]
+        }
+    },
+    {
+        "model": "rh.beneficiarytype",
+        "pk": 80,
+        "fields": {
+            "country": 2,
+            "name": "Drought Affected Displaced (2022) - Rural",
+            "code": "drought_affected_displaced_2022_rural",
+            "description": null,
+            "is_active": true,
+            "type": "non-hrp",
+            "updated_at": "2024-09-24T04:41:49.709Z",
+            "clusters": [
+                1
+            ]
+        }
+    },
+    {
+        "model": "rh.beneficiarytype",
+        "pk": 81,
+        "fields": {
+            "country": 2,
+            "name": "Drought Affected Displaced (2022) - Urban or Peri Urban",
+            "code": "drought_affected_displaced_2022_urban",
+            "description": null,
+            "is_active": true,
+            "type": "non-hrp",
+            "updated_at": "2024-09-24T11:03:16.893Z",
+            "clusters": [
+                1
+            ]
+        }
+    },
+    {
+        "model": "rh.beneficiarytype",
+        "pk": 82,
+        "fields": {
+            "country": 2,
+            "name": "Drought Affected Non Displaced ( Response ) - Rural",
+            "code": "drought_affected_non_displaced_response_rural",
+            "description": null,
+            "is_active": true,
+            "type": "non-hrp",
+            "updated_at": "2024-09-24T04:42:58.435Z",
+            "clusters": [
+                1
+            ]
+        }
+    },
+    {
+        "model": "rh.beneficiarytype",
+        "pk": 83,
+        "fields": {
+            "country": 2,
+            "name": "Drought Affected Non Displaced ( Response ) - Urban or Peri Urban",
+            "code": "drought_affected_non_displaced_response_urban",
+            "description": null,
+            "is_active": true,
+            "type": "non-hrp",
+            "updated_at": "2024-09-24T10:59:52.775Z",
+            "clusters": [
+                1
+            ]
+        }
+    },
+    {
+        "model": "rh.beneficiarytype",
+        "pk": 84,
+        "fields": {
+            "country": 2,
+            "name": "Flood Affected Displaced (2022) - Rural",
+            "code": "flood_affected_displaced_2022_rural",
+            "description": null,
+            "is_active": true,
+            "type": "non-hrp",
+            "updated_at": "2024-09-24T04:43:56.467Z",
+            "clusters": [
+                1
+            ]
+        }
+    },
+    {
+        "model": "rh.beneficiarytype",
+        "pk": 85,
+        "fields": {
+            "country": 2,
+            "name": "Flood Affected Displaced (2022) - Urban or Peri Urban",
+            "code": "flood_affected_displaced_2022_urban_peri_urban",
+            "description": null,
+            "is_active": true,
+            "type": "non-hrp",
+            "updated_at": "2024-09-24T04:44:29.844Z",
+            "clusters": [
+                1
+            ]
+        }
+    },
+    {
+        "model": "rh.beneficiarytype",
+        "pk": 86,
+        "fields": {
+            "country": 2,
+            "name": "Flood Affected Non Displaced ( Response ) - Rural",
+            "code": "flood_affected_non_displaced_response_rural",
+            "description": null,
+            "is_active": true,
+            "type": "non-hrp",
+            "updated_at": "2024-09-24T11:02:21.481Z",
+            "clusters": [
+                1
+            ]
+        }
+    },
+    {
+        "model": "rh.beneficiarytype",
+        "pk": 87,
+        "fields": {
+            "country": 2,
+            "name": "Flood Affected Non Displaced ( Response ) - Urban or Peri Urban",
+            "code": "flood_affected_non_displaced_response_urban",
+            "description": null,
+            "is_active": true,
+            "type": "non-hrp",
+            "updated_at": "2024-09-24T11:04:36.047Z",
+            "clusters": [
+                1
+            ]
+        }
+    },
+    {
+        "model": "rh.beneficiarytype",
+        "pk": 88,
+        "fields": {
+            "country": 2,
+            "name": "Natural Disaster Affected Community People - Rural",
+            "code": "natural_disaster_affected_rural",
+            "description": null,
+            "is_active": true,
+            "type": "non-hrp",
+            "updated_at": "2024-09-24T07:40:11.270Z",
+            "clusters": [
+                1
+            ]
+        }
+    },
+    {
+        "model": "rh.beneficiarytype",
+        "pk": 89,
+        "fields": {
+            "country": 2,
+            "name": "Natural Disaster Affected Community People - Urban or Peri Urban",
+            "code": "natural_disaster_affected_urban",
+            "description": null,
+            "is_active": true,
+            "type": "non-hrp",
+            "updated_at": "2024-09-24T07:40:28.406Z",
+            "clusters": [
+                1
+            ]
+        }
+    },
+    {
+        "model": "rh.beneficiarytype",
+        "pk": 90,
+        "fields": {
+            "country": 2,
+            "name": "Other Natural Disaster (Avalanche,Landslide,Earthquake,etc.) IDPs (2022) - Rural",
+            "code": "idp_other_natural_disaster_2022_rural",
+            "description": null,
+            "is_active": true,
+            "type": "non-hrp",
+            "updated_at": "2024-09-24T07:31:39.755Z",
+            "clusters": [
+                1
+            ]
+        }
+    },
+    {
+        "model": "rh.beneficiarytype",
+        "pk": 91,
+        "fields": {
+            "country": 2,
+            "name": "Other Natural Disaster (Avalanche,Landslide,Earthquake,etc.) IDPs (2022) - Urban or Peri Urban",
+            "code": "idp_other_natural_disaster_2022_urban",
+            "description": null,
+            "is_active": true,
+            "type": "non-hrp",
+            "updated_at": "2024-09-24T07:32:03.662Z",
+            "clusters": [
+                1
+            ]
+        }
+    },
+    {
+        "model": "rh.beneficiarytype",
+        "pk": 92,
+        "fields": {
+            "country": 2,
+            "name": "Pakistani Refugees - Rural",
+            "code": "refugee_pakistani_rural",
+            "description": null,
+            "is_active": true,
+            "type": "non-hrp",
+            "updated_at": "2024-09-24T07:41:25.787Z",
+            "clusters": [
+                1
+            ]
+        }
+    },
+    {
+        "model": "rh.beneficiarytype",
+        "pk": 93,
+        "fields": {
+            "country": 2,
+            "name": "Pakistani Refugees - Urban or Peri Urban",
+            "code": "refugee_pakistani_urban",
+            "description": null,
+            "is_active": true,
+            "type": "non-hrp",
+            "updated_at": "2024-09-24T07:41:52.836Z",
+            "clusters": [
+                1
+            ]
+        }
+    },
+    {
+        "model": "rh.beneficiarytype",
+        "pk": 94,
+        "fields": {
+            "country": 2,
+            "name": "Underserved Community - Rural",
+            "code": "access_to_services_rural",
+            "description": null,
+            "is_active": true,
+            "type": "non-hrp",
+            "updated_at": "2024-09-24T07:46:46.047Z",
+            "clusters": [
+                1
+            ]
+        }
+    },
+    {
+        "model": "rh.beneficiarytype",
+        "pk": 95,
+        "fields": {
+            "country": 2,
+            "name": "Underserved Community - Urban or Peri Urban",
+            "code": "access_to_services_urban",
+            "description": null,
+            "is_active": true,
+            "type": "non-hrp",
+            "updated_at": "2024-09-24T07:47:07.592Z",
+            "clusters": [
+                1
+            ]
+        }
+    },
+    {
+        "model": "rh.beneficiarytype",
+        "pk": 96,
+        "fields": {
+            "country": 2,
+            "name": "Conflict affected (non-displaced)",
+            "code": "conflict_affected_non_displaced",
+            "description": null,
+            "is_active": true,
+            "type": "non-hrp",
+            "updated_at": "2024-09-24T04:59:39.936Z",
+            "clusters": [
+                6
+            ]
+        }
+    },
+    {
+        "model": "rh.beneficiarytype",
+        "pk": 98,
+        "fields": {
+            "country": 2,
+            "name": "Conflict IDPs (displaced in 2022)",
+            "code": "conflict_idp_2022",
+            "description": null,
+            "is_active": true,
+            "type": "non-hrp",
+            "updated_at": "2024-09-24T10:58:19.649Z",
+            "clusters": [
+                6
+            ]
+        }
+    },
+    {
+        "model": "rh.beneficiarytype",
+        "pk": 99,
+        "fields": {
+            "country": 2,
+            "name": "Cross Border Returnees",
+            "code": "cross_border_returnees",
+            "description": null,
+            "is_active": true,
+            "type": "non-hrp",
+            "updated_at": "2024-09-24T05:21:54.263Z",
+            "clusters": [
+                6
+            ]
+        }
+    },
+    {
+        "model": "rh.beneficiarytype",
+        "pk": 100,
+        "fields": {
+            "country": 2,
+            "name": "Host community",
+            "code": "host_community",
+            "description": null,
+            "is_active": true,
+            "type": "non-hrp",
+            "updated_at": "2024-09-24T05:22:44.392Z",
+            "clusters": [
+                6
+            ]
+        }
+    },
+    {
+        "model": "rh.beneficiarytype",
+        "pk": 101,
+        "fields": {
+            "country": 2,
+            "name": "Natural Disaster affected (non-displaced)",
+            "code": "natural_disaster_affected_non_displaced",
+            "description": null,
+            "is_active": true,
+            "type": "non-hrp",
+            "updated_at": "2024-09-24T05:23:29.521Z",
+            "clusters": [
+                6
+            ]
+        }
+    },
+    {
+        "model": "rh.beneficiarytype",
+        "pk": 102,
+        "fields": {
+            "country": 2,
+            "name": "Natural Disaster IDPs (displaced)",
+            "code": "natural_disaster_idps_displaced",
+            "description": null,
+            "is_active": true,
+            "type": "non-hrp",
+            "updated_at": "2024-09-24T05:24:27.149Z",
+            "clusters": [
+                6
+            ]
+        }
+    },
+    {
+        "model": "rh.beneficiarytype",
+        "pk": 103,
+        "fields": {
+            "country": 2,
+            "name": "Prolonged IDP ( displaced  2021-2022)",
+            "code": "prolonged_idp_displaced_2021_2022",
+            "description": null,
+            "is_active": true,
+            "type": "non-hrp",
+            "updated_at": "2024-09-24T05:25:02.289Z",
+            "clusters": [
+                6
+            ]
+        }
+    },
+    {
+        "model": "rh.beneficiarytype",
+        "pk": 104,
+        "fields": {
+            "country": 2,
+            "name": "Prolonged IDPs (displaced in 2021-2020)",
+            "code": "prolonged_idp_2021_2020",
+            "description": null,
+            "is_active": true,
+            "type": "non-hrp",
+            "updated_at": "2024-09-24T11:05:48.301Z",
+            "clusters": [
+                6
+            ]
+        }
+    },
+    {
+        "model": "rh.beneficiarytype",
+        "pk": 105,
+        "fields": {
+            "country": 2,
+            "name": "Protracted IDPs (displaced in 2019 and before)",
+            "code": "protracted_idps_displaced_2019_and_before",
+            "description": null,
+            "is_active": true,
+            "type": "non-hrp",
+            "updated_at": "2024-09-24T05:26:54.931Z",
+            "clusters": [
+                6
+            ]
+        }
+    },
+    {
+        "model": "rh.beneficiarytype",
+        "pk": 106,
+        "fields": {
+            "country": 2,
+            "name": "Refugees returnees in their place of return",
+            "code": "refugees-returnees-in-their-place-of-return",
+            "description": null,
+            "is_active": true,
+            "type": "non-hrp",
+            "updated_at": "2024-09-24T10:53:50.981Z",
+            "clusters": [
+                6
+            ]
+        }
+    },
+    {
+        "model": "rh.beneficiarytype",
+        "pk": 107,
+        "fields": {
+            "country": 2,
+            "name": "Undocumented Returnees (at settlement or place of return)",
+            "code": "undocumented_returnees_at_settlement_or_place_of_return",
+            "description": null,
+            "is_active": true,
+            "type": "non-hrp",
+            "updated_at": "2024-09-24T05:29:20.596Z",
+            "clusters": [
+                6
+            ]
+        }
+    },
+    {
+        "model": "rh.beneficiarytype",
+        "pk": 108,
+        "fields": {
+            "country": 2,
+            "name": "Vulnerable people returning to areas of origin",
+            "code": "vulnerable_people_returnees_areas_of_origin",
+            "description": null,
+            "is_active": true,
+            "type": "non-hrp",
+            "updated_at": "2024-09-24T11:01:00.473Z",
+            "clusters": [
+                6
+            ]
+        }
+    },
+    {
+        "model": "rh.beneficiarytype",
+        "pk": 109,
+        "fields": {
+            "country": 2,
+            "name": "Vulnerable People with Humanitarian Needs (including host community,protracted IDPs etc.)",
+            "code": "vulnerable_people_humanitarian_needs",
+            "description": null,
+            "is_active": true,
+            "type": "non-hrp",
+            "updated_at": "2024-09-24T10:51:47.403Z",
+            "clusters": [
+                6
+            ]
+        }
+    },
+    {
+        "model": "rh.beneficiarytype",
+        "pk": 111,
+        "fields": {
+            "country": 2,
+            "name": "Afghan Refugee Returnees (Documented)",
+            "code": "returnee_documented",
+            "description": null,
+            "is_active": true,
+            "type": "non-hrp",
+            "updated_at": "2024-09-24T10:53:16.694Z",
+            "clusters": [
+                3
+            ]
+        }
+    },
+    {
+        "model": "rh.beneficiarytype",
+        "pk": 112,
+        "fields": {
+            "country": 2,
+            "name": "Afghan Returnees (Undocumented)",
+            "code": "returnee_undocumented",
+            "description": null,
+            "is_active": true,
+            "type": "non-hrp",
+            "updated_at": "2024-09-24T11:01:59.765Z",
+            "clusters": [
+                3
+            ]
+        }
+    },
+    {
+        "model": "rh.beneficiarytype",
+        "pk": 113,
+        "fields": {
+            "country": 2,
+            "name": "Conflict Affected",
+            "code": "conflict_affected",
+            "description": null,
+            "is_active": true,
+            "type": "non-hrp",
+            "updated_at": "2024-09-24T05:39:59.403Z",
+            "clusters": [
+                3
+            ]
+        }
+    },
+    {
+        "model": "rh.beneficiarytype",
+        "pk": 114,
+        "fields": {
+            "country": 2,
+            "name": "Conflict IDPs",
+            "code": "conflict_idps",
+            "description": null,
+            "is_active": true,
+            "type": "non-hrp",
+            "updated_at": "2024-09-24T05:40:23.135Z",
+            "clusters": [
+                3
+            ]
+        }
+    },
+    {
+        "model": "rh.beneficiarytype",
+        "pk": 115,
+        "fields": {
+            "country": 2,
+            "name": "Drought Affected Displaced ( Response )",
+            "code": "drought_affected_displaced_response",
+            "description": null,
+            "is_active": true,
+            "type": "non-hrp",
+            "updated_at": "2024-09-24T05:41:29.974Z",
+            "clusters": [
+                3
+            ]
+        }
+    },
+    {
+        "model": "rh.beneficiarytype",
+        "pk": 116,
+        "fields": {
+            "country": 2,
+            "name": "Flood Affected Displaced ( Response )",
+            "code": "flood_affected_displaced_response",
+            "description": null,
+            "is_active": true,
+            "type": "non-hrp",
+            "updated_at": "2024-09-24T05:42:49.975Z",
+            "clusters": [
+                3
+            ]
+        }
+    },
+    {
+        "model": "rh.beneficiarytype",
+        "pk": 117,
+        "fields": {
+            "country": 2,
+            "name": "Natural Disaster Affected",
+            "code": "natural_disaster_affected",
+            "description": null,
+            "is_active": true,
+            "type": "non-hrp",
+            "updated_at": "2024-09-24T05:44:54.778Z",
+            "clusters": [
+                3
+            ]
+        }
+    },
+    {
+        "model": "rh.beneficiarytype",
+        "pk": 118,
+        "fields": {
+            "country": 2,
+            "name": "Protracted IDPs",
+            "code": "idp_protracted",
+            "description": null,
+            "is_active": true,
+            "type": "non-hrp",
+            "updated_at": "2024-09-24T11:01:20.151Z",
+            "clusters": [
+                3
+            ]
+        }
+    },
+    {
+        "model": "rh.beneficiarytype",
+        "pk": 119,
+        "fields": {
+            "country": 2,
+            "name": "Acutely Vulnerable People with Humanitarian Needs",
+            "code": "acutely_vulnerable_people_with_humanitarian_needs",
+            "description": null,
+            "is_active": true,
+            "type": "non-hrp",
+            "updated_at": "2024-09-24T05:48:10.628Z",
+            "clusters": [
+                8
+            ]
+        }
+    },
+    {
+        "model": "rh.beneficiarytype",
+        "pk": 120,
+        "fields": {
+            "country": 2,
+            "name": "New Cross-Border Returnees with Humanitarian Needs",
+            "code": "new_cross_border_returnees_with_humanitarian_needs",
+            "description": null,
+            "is_active": true,
+            "type": "non-hrp",
+            "updated_at": "2024-09-24T06:56:00.490Z",
+            "clusters": [
+                8
+            ]
+        }
+    },
+    {
+        "model": "rh.beneficiarytype",
+        "pk": 121,
+        "fields": {
+            "country": 2,
+            "name": "New IDPs (Conflict + Natural Disaster)",
+            "code": "new_idps_conflict_natural_disaster",
+            "description": null,
+            "is_active": true,
+            "type": "non-hrp",
+            "updated_at": "2024-09-24T05:49:06.924Z",
+            "clusters": [
+                8
+            ]
+        }
+    },
+    {
+        "model": "rh.beneficiarytype",
+        "pk": 122,
+        "fields": {
+            "country": 2,
+            "name": "Newly Shock-Affected People with Humanitarian Needs",
+            "code": "newly_shock_affected_humanitarian_needs",
+            "description": null,
+            "is_active": true,
+            "type": "non-hrp",
+            "updated_at": "2024-09-24T09:47:03.809Z",
+            "clusters": [
+                8
+            ]
+        }
+    },
+    {
+        "model": "rh.beneficiarytype",
+        "pk": 123,
+        "fields": {
+            "country": 2,
+            "name": "Cross-Border Returnees from Iran and Pakistan in 2024 (Border or Encashment/Transit Centres)",
+            "code": "cross_border_returnees_from_iran_and_pakistan_in_2024",
+            "description": null,
+            "is_active": true,
+            "type": "hrp",
+            "updated_at": "2024-09-24T09:25:57.841Z",
+            "clusters": [
+                1,
+                3,
+                4,
+                5,
+                6,
+                8,
+                12
+            ]
+        }
+    },
+    {
+        "model": "rh.beneficiarytype",
+        "pk": 124,
+        "fields": {
+            "country": 2,
+            "name": "Natural disaster-affected 2022 (sudden-onset, non-displaced)",
+            "code": "natural_disaster_affected_2022_sudden_onset_non_displaced",
+            "description": null,
+            "is_active": true,
+            "type": "hrp",
+            "updated_at": "2024-09-24T06:30:31.676Z",
+            "clusters": [
+                1,
+                3,
+                4,
+                5,
+                6,
+                8,
+                12
+            ]
+        }
+    },
+    {
+        "model": "rh.beneficiarytype",
+        "pk": 125,
+        "fields": {
+            "country": 2,
+            "name": "Natural disaster-affected in 2021 (non-displaced)",
+            "code": "natural_disaster_affected_2021_non_displaced",
+            "description": null,
+            "is_active": true,
+            "type": "hrp",
+            "updated_at": "2024-09-24T06:31:19.414Z",
+            "clusters": [
+                1,
+                3,
+                4,
+                5,
+                6,
+                8,
+                12
+            ]
+        }
+    },
+    {
+        "model": "rh.beneficiarytype",
+        "pk": 126,
+        "fields": {
+            "country": 2,
+            "name": "New cross-border returnees in 2022 (at border or EC)",
+            "code": "new_cross_border_returnees_2022_border_ec",
+            "description": null,
+            "is_active": true,
+            "type": "hrp",
+            "updated_at": "2024-09-24T06:39:54.174Z",
+            "clusters": [
+                1,
+                3,
+                4,
+                5,
+                8,
+                12
+            ]
+        }
+    },
+    {
+        "model": "rh.beneficiarytype",
+        "pk": 127,
+        "fields": {
+            "country": 2,
+            "name": "New cross-border returnees in 2022 (at province of return)",
+            "code": "new_cross_border_returnees_2022_province_of_return",
+            "description": null,
+            "is_active": true,
+            "type": "hrp",
+            "updated_at": "2024-09-24T06:35:40.733Z",
+            "clusters": [
+                1,
+                3,
+                4,
+                5,
+                6,
+                8,
+                12
+            ]
+        }
+    },
+    {
+        "model": "rh.beneficiarytype",
+        "pk": 128,
+        "fields": {
+            "country": 2,
+            "name": "New cross-border returnees in 2023",
+            "code": "new_cross_border_returnees_2023",
+            "description": null,
+            "is_active": true,
+            "type": "hrp",
+            "clusters": [
+                1,
+                3,
+                4,
+                5,
+                6,
+                8,
+                12
+            ]
+        }
+    },
+    {
+        "model": "rh.beneficiarytype",
+        "pk": 129,
+        "fields": {
+            "country": 2,
+            "name": "New IDPs in 2022",
+            "code": "new_idps_2022",
+            "description": null,
+            "is_active": true,
+            "type": "hrp",
+            "updated_at": "2024-09-24T06:39:23.385Z",
+            "clusters": [
+                1,
+                3,
+                4,
+                5,
+                8,
+                12
+            ]
+        }
+    },
+    {
+        "model": "rh.beneficiarytype",
+        "pk": 130,
+        "fields": {
+            "country": 2,
+            "name": "New IDPs in 2023",
+            "code": "new_idps_2023",
+            "description": null,
+            "is_active": true,
+            "type": "hrp",
+            "updated_at": "2024-09-24T06:37:43.968Z",
+            "clusters": [
+                1,
+                3,
+                4,
+                5,
+                6,
+                8,
+                12
+            ]
+        }
+    },
+    {
+        "model": "rh.beneficiarytype",
+        "pk": 131,
+        "fields": {
+            "country": 2,
+            "name": "New internally displaced people and vulnerable migrants",
+            "code": "new-internally-displaced-people-and-vulnerable-migrants",
+            "description": null,
+            "is_active": true,
+            "type": "hrp",
+            "updated_at": "2024-09-24T09:20:53.169Z",
+            "clusters": [
+                1,
+                3,
+                4,
+                5,
+                6,
+                8,
+                12
+            ]
+        }
+    },
+    {
+        "model": "rh.beneficiarytype",
+        "pk": 132,
+        "fields": {
+            "country": 2,
+            "name": "Refugees",
+            "code": "refugees",
+            "description": null,
+            "is_active": true,
+            "type": "hrp",
+            "updated_at": "2024-09-24T06:43:57.871Z",
+            "clusters": [
+                1,
+                4,
+                5,
+                8,
+                12
+            ]
+        }
+    },
+    {
+        "model": "rh.beneficiarytype",
+        "pk": 133,
+        "fields": {
+            "country": 2,
+            "name": "Response activity outside of the HRP",
+            "code": "response_activity_outside_hrp",
+            "description": null,
+            "is_active": true,
+            "type": "hrp",
+            "updated_at": "2024-09-24T06:48:04.507Z",
+            "clusters": [
+                1,
+                3,
+                5,
+                6,
+                8,
+                12
+            ]
+        }
+    },
+    {
+        "model": "rh.beneficiarytype",
+        "pk": 134,
+        "fields": {
+            "country": 2,
+            "name": "Shock-affected non-displaced people",
+            "code": "shock_affected_non_displaced_people",
+            "description": null,
+            "is_active": true,
+            "type": "hrp",
+            "clusters": [
+                1,
+                3,
+                4,
+                5,
+                6,
+                8,
+                12
+            ]
+        }
+    },
+    {
+        "model": "rh.beneficiarytype",
+        "pk": 135,
+        "fields": {
+            "country": 2,
+            "name": "Flood affected non-displaced",
+            "code": "flood_affected_non_displaced_response",
+            "description": null,
+            "is_active": true,
+            "type": "non-hrp",
+            "clusters": [
+                1,
+                3,
+                4,
+                5,
+                6,
+                8,
+                12
+            ]
+        }
+    }
+]

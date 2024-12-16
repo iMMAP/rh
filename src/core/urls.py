@@ -19,7 +19,7 @@ urlpatterns = [
     path("", include("django_vite_plugin.urls")),
 ]
 
-if settings.DEBUG or not settings.TESTING:
+if settings.DEBUG or settings.TESTING:
     urlpatterns = [
         *urlpatterns,
         path("__debug__/", include("debug_toolbar.urls")),

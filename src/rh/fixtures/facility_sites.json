@@ -1,0 +1,360 @@
+[
+    {
+        "model": "rh.facilitysitetype",
+        "pk": 1,
+        "fields": {
+            "cluster": 4,
+            "name": "NH (National Hospital)",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "rh.facilitysitetype",
+        "pk": 2,
+        "fields": {
+            "cluster": 4,
+            "name": "RH (Regional Hospital)",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "rh.facilitysitetype",
+        "pk": 3,
+        "fields": {
+            "cluster": 4,
+            "name": "PH (Provincial Hospital)",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "rh.facilitysitetype",
+        "pk": 4,
+        "fields": {
+            "cluster": 4,
+            "name": "DH (District Hospital)",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "rh.facilitysitetype",
+        "pk": 5,
+        "fields": {
+            "cluster": 4,
+            "name": "CHC (Comprehensive Health Center)",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "rh.facilitysitetype",
+        "pk": 6,
+        "fields": {
+            "cluster": 4,
+            "name": "BHC (Basic Health Center)",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "rh.facilitysitetype",
+        "pk": 7,
+        "fields": {
+            "cluster": 4,
+            "name": "SHC (Sub Health Center)",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "rh.facilitysitetype",
+        "pk": 8,
+        "fields": {
+            "cluster": 4,
+            "name": "FATP (First Aid Trauma Post)",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "rh.facilitysitetype",
+        "pk": 9,
+        "fields": {
+            "cluster": 4,
+            "name": "FHH (Family Health House )",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "rh.facilitysitetype",
+        "pk": 10,
+        "fields": {
+            "cluster": 4,
+            "name": "MHNT (Mobile Health Nutrition Team)",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "rh.facilitysitetype",
+        "pk": 11,
+        "fields": {
+            "cluster": 6,
+            "name": "IDP Camp Site",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "rh.facilitysitetype",
+        "pk": 12,
+        "fields": {
+            "cluster": 6,
+            "name": "Host Community Site",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "rh.facilitysitetype",
+        "pk": 13,
+        "fields": {
+            "cluster": 6,
+            "name": "Refugee Site",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "rh.facilitysitetype",
+        "pk": 14,
+        "fields": {
+            "cluster": 6,
+            "name": "Refugee Returnee Site",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "rh.facilitysitetype",
+        "pk": 15,
+        "fields": {
+            "cluster": 6,
+            "name": "IDP Returnee Site",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "rh.facilitysitetype",
+        "pk": 16,
+        "fields": {
+            "cluster": 2,
+            "name": "School/learning Space",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "rh.facilitysitetype",
+        "pk": 17,
+        "fields": {
+            "cluster": 3,
+            "name": "Hospital/health Centre",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "rh.facilitysitetype",
+        "pk": 18,
+        "fields": {
+            "cluster": 3,
+            "name": "Malnutrition Screening Site",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "rh.facilitysitetype",
+        "pk": 19,
+        "fields": {
+            "cluster": 3,
+            "name": "Nutrition Distribution Site",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "rh.facilitysitetype",
+        "pk": 20,
+        "fields": {
+            "cluster": 6,
+            "name": "Shelter Distribution Site",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "rh.facilitysitetype",
+        "pk": 21,
+        "fields": {
+            "cluster": 6,
+            "name": "Camp Site",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "rh.facilitysitetype",
+        "pk": 22,
+        "fields": {
+            "cluster": 6,
+            "name": "Housing Construction Site",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "rh.facilitysitetype",
+        "pk": 23,
+        "fields": {
+            "cluster": 1,
+            "name": "School/learning Space",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "rh.facilitysitetype",
+        "pk": 24,
+        "fields": {
+            "cluster": 1,
+            "name": "Hospital/Health Centre",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "rh.facilitysitetype",
+        "pk": 25,
+        "fields": {
+            "cluster": 1,
+            "name": "Outreach Site",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "rh.facilitysitetype",
+        "pk": 26,
+        "fields": {
+            "cluster": 1,
+            "name": "Toilet",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "rh.facilitysitetype",
+        "pk": 27,
+        "fields": {
+            "cluster": 1,
+            "name": "Bathroom",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "rh.facilitysitetype",
+        "pk": 28,
+        "fields": {
+            "cluster": 1,
+            "name": "Water Point"
+        }
+    },
+    {
+        "model": "rh.facilitysitetype",
+        "pk": 29,
+        "fields": {
+            "cluster": 1,
+            "name": "WASH Distribution Site"
+        }
+    },
+    {
+        "model": "rh.facilitysitetype",
+        "pk": 30,
+        "fields": {
+            "cluster": 1,
+            "name": "Waste collection/disposal point"
+        }
+    },
+    {
+        "model": "rh.facilitysitetype",
+        "pk": 31,
+        "fields": {
+            "cluster": 1,
+            "name": "Waste Treatment Point"
+        }
+    },
+    {
+        "model": "rh.facilitysitetype",
+        "pk": 32,
+        "fields": {
+            "cluster": 12,
+            "name": "Child Friendly Space"
+        }
+    },
+    {
+        "model": "rh.facilitysitetype",
+        "pk": 33,
+        "fields": {
+            "cluster": 12,
+            "name": "Family Protection Centre"
+        }
+    },
+    {
+        "model": "rh.facilitysitetype",
+        "pk": 34,
+        "fields": {
+            "cluster": 12,
+            "name": "MHPSS Site"
+        }
+    },
+    {
+        "model": "rh.facilitysitetype",
+        "pk": 35,
+        "fields": {
+            "cluster": 12,
+            "name": "Women Friendly Space"
+        }
+    },
+    {
+        "model": "rh.facilitysitetype",
+        "pk": 36,
+        "fields": {
+            "cluster": 12,
+            "name": "EOD Site"
+        }
+    },
+    {
+        "model": "rh.facilitysitetype",
+        "pk": 37,
+        "fields": {
+            "cluster": 12,
+            "name": "Housing Site"
+        }
+    },
+    {
+        "model": "rh.facilitysitetype",
+        "pk": 38,
+        "fields": {
+            "cluster": 4,
+            "name": "Others"
+        }
+    }
+]

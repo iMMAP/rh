@@ -1,0 +1,684 @@
+[
+    {
+        "model": "rh.donor",
+        "pk": 1,
+        "fields": {
+            "code": "acf",
+            "name": "ACF",
+            "old_id": "62189a2e5fe2c737c6aec379",
+            "updated_at": "2024-03-20T10:41:36.199Z",
+            "created_at": "2024-03-20T10:41:36.199Z",
+            "countries": [
+                2
+            ],
+            "clusters": []
+        }
+    },
+    {
+        "model": "rh.donor",
+        "pk": 2,
+        "fields": {
+            "code": "afd",
+            "name": "AFD",
+            "old_id": "62189a2e5fe2c737c6aec37a",
+            "updated_at": "2024-03-20T10:41:36.200Z",
+            "created_at": "2024-03-20T10:41:36.200Z",
+            "countries": [
+                2
+            ],
+            "clusters": []
+        }
+    },
+    {
+        "model": "rh.donor",
+        "pk": 3,
+        "fields": {
+            "code": "aga_khan_foundation",
+            "name": "Aga Khan Foundation",
+            "old_id": "62189a2e5fe2c737c6aec37c",
+            "updated_at": "2024-03-20T10:41:36.201Z",
+            "created_at": "2024-03-20T10:41:36.201Z",
+            "countries": [
+                2
+            ],
+            "clusters": []
+        }
+    },
+    {
+        "model": "rh.donor",
+        "pk": 4,
+        "fields": {
+            "code": "ahf",
+            "name": "AHF",
+            "old_id": "62189a2e5fe2c737c6aec5bc",
+            "updated_at": "2024-03-20T10:41:36.201Z",
+            "created_at": "2024-03-20T10:41:36.201Z",
+            "countries": [
+                2
+            ],
+            "clusters": []
+        }
+    },
+    {
+        "model": "rh.donor",
+        "pk": 5,
+        "fields": {
+            "code": "asia_foundation",
+            "name": "Asia Foundation",
+            "old_id": "62189a2e5fe2c737c6aec37b",
+            "updated_at": "2024-03-20T10:41:36.201Z",
+            "created_at": "2024-03-20T10:41:36.201Z",
+            "countries": [
+                2
+            ],
+            "clusters": []
+        }
+    },
+    {
+        "model": "rh.donor",
+        "pk": 6,
+        "fields": {
+            "code": "auswartiges_amt",
+            "name": "Auswrtiges Amt",
+            "old_id": "62189a2e5fe2c737c6aec37e",
+            "updated_at": "2024-05-12T06:11:04.994Z",
+            "created_at": "2024-03-20T10:41:36.202Z",
+            "countries": [
+                2
+            ],
+            "clusters": []
+        }
+    },
+    {
+        "model": "rh.donor",
+        "pk": 7,
+        "fields": {
+            "code": "bprm",
+            "name": "BPRM",
+            "old_id": "62189a2e5fe2c737c6aec382",
+            "updated_at": "2024-12-02T08:58:12.259Z",
+            "created_at": "2024-03-20T10:41:36.202Z",
+            "countries": [
+                2
+            ],
+            "clusters": [
+                4
+            ]
+        }
+    },
+    {
+        "model": "rh.donor",
+        "pk": 8,
+        "fields": {
+            "code": "dg_intpa",
+            "name": "European Commission Directorate-General for International Partnerships",
+            "old_id": "62189a2e5fe2c737c6aec5aa",
+            "updated_at": "2024-03-20T10:41:36.203Z",
+            "created_at": "2022-01-01T00:00:00Z",
+            "countries": [
+                2
+            ],
+            "clusters": []
+        }
+    },
+    {
+        "model": "rh.donor",
+        "pk": 9,
+        "fields": {
+            "code": "global_partnership_education",
+            "name": "Global Partnership for Educaiton",
+            "old_id": "62189a2e5fe2c737c6aec3a9",
+            "updated_at": "2024-03-20T10:41:36.203Z",
+            "created_at": "2024-03-20T10:41:36.203Z",
+            "countries": [
+                2
+            ],
+            "clusters": []
+        }
+    },
+    {
+        "model": "rh.donor",
+        "pk": 10,
+        "fields": {
+            "code": "islamic_relief",
+            "name": "Islamic Relief",
+            "old_id": "62189a2e5fe2c737c6aec3b8",
+            "updated_at": "2024-03-20T10:41:36.204Z",
+            "created_at": "2024-03-20T10:41:36.204Z",
+            "countries": [
+                2
+            ],
+            "clusters": []
+        }
+    },
+    {
+        "model": "rh.donor",
+        "pk": 11,
+        "fields": {
+            "code": "nca",
+            "name": "NCA",
+            "old_id": "62189a2e5fe2c737c6aec3c3",
+            "updated_at": "2024-03-20T10:41:36.204Z",
+            "created_at": "2024-03-20T10:41:36.204Z",
+            "countries": [
+                2
+            ],
+            "clusters": []
+        }
+    },
+    {
+        "model": "rh.donor",
+        "pk": 12,
+        "fields": {
+            "code": "rne",
+            "name": "RNE",
+            "old_id": "62189a2e5fe2c737c6aec3c9",
+            "updated_at": "2024-03-20T10:41:36.204Z",
+            "created_at": "2024-03-20T10:41:36.204Z",
+            "countries": [
+                2
+            ],
+            "clusters": []
+        }
+    },
+    {
+        "model": "rh.donor",
+        "pk": 13,
+        "fields": {
+            "code": "start_fund",
+            "name": "START Fund",
+            "old_id": "62189a2e5fe2c737c6aec3d0",
+            "updated_at": "2024-03-20T10:41:36.205Z",
+            "created_at": "2024-03-20T10:41:36.205Z",
+            "countries": [
+                2
+            ],
+            "clusters": []
+        }
+    },
+    {
+        "model": "rh.donor",
+        "pk": 14,
+        "fields": {
+            "code": "mptf",
+            "name": "UN Multi-Partner Trust Fund",
+            "old_id": "62189a2e5fe2c737c6aec5b0",
+            "updated_at": "2024-03-20T10:41:36.205Z",
+            "created_at": "2022-01-01T00:00:00Z",
+            "countries": [
+                2
+            ],
+            "clusters": []
+        }
+    },
+    {
+        "model": "rh.donor",
+        "pk": 15,
+        "fields": {
+            "code": "undp_trust_fund",
+            "name": "UNDP Administered Trust Fund",
+            "old_id": "62189a2e5fe2c737c6aec5b1",
+            "updated_at": "2024-03-20T10:41:36.206Z",
+            "created_at": "2022-01-01T00:00:00Z",
+            "countries": [
+                2
+            ],
+            "clusters": []
+        }
+    },
+    {
+        "model": "rh.donor",
+        "pk": 16,
+        "fields": {
+            "code": "zoa",
+            "name": "ZOA",
+            "old_id": "62189a2e5fe2c737c6aec3e1",
+            "updated_at": "2024-03-20T10:41:36.206Z",
+            "created_at": "2024-03-20T10:41:36.206Z",
+            "countries": [
+                2
+            ],
+            "clusters": []
+        }
+    },
+    {
+        "model": "rh.donor",
+        "pk": 17,
+        "fields": {
+            "code": "aus_aid",
+            "name": "AusAid",
+            "old_id": "62189a2e5fe2c737c6aec3e3",
+            "updated_at": "2024-03-20T10:41:36.207Z",
+            "created_at": "2024-03-20T10:41:36.207Z",
+            "countries": [
+                2,
+                438
+            ],
+            "clusters": []
+        }
+    },
+    {
+        "model": "rh.donor",
+        "pk": 18,
+        "fields": {
+            "code": "australian_high_commission",
+            "name": "Australian High Commission",
+            "old_id": "62189a2e5fe2c737c6aec4bc",
+            "updated_at": "2024-03-20T10:41:36.207Z",
+            "created_at": "2024-03-20T10:41:36.207Z",
+            "countries": [
+                2,
+                438
+            ],
+            "clusters": []
+        }
+    },
+    {
+        "model": "rh.donor",
+        "pk": 19,
+        "fields": {
+            "code": "bmz",
+            "name": "BMZ",
+            "old_id": "62189a2e5fe2c737c6aec3e4",
+            "updated_at": "2024-03-20T10:41:36.207Z",
+            "created_at": "2024-03-20T10:41:36.207Z",
+            "countries": [
+                2,
+                438
+            ],
+            "clusters": []
+        }
+    },
+    {
+        "model": "rh.donor",
+        "pk": 20,
+        "fields": {
+            "code": "brac",
+            "name": "BRAC",
+            "old_id": "62189a2e5fe2c737c6aec3f2",
+            "updated_at": "2024-03-20T10:41:36.208Z",
+            "created_at": "2024-03-20T10:41:36.208Z",
+            "countries": [
+                2,
+                438
+            ],
+            "clusters": []
+        }
+    },
+    {
+        "model": "rh.donor",
+        "pk": 21,
+        "fields": {
+            "code": "british_high_commission",
+            "name": "British High Commission",
+            "old_id": "62189a2e5fe2c737c6aec4ba",
+            "updated_at": "2024-03-20T10:41:36.208Z",
+            "created_at": "2024-03-20T10:41:36.208Z",
+            "countries": [
+                2,
+                438
+            ],
+            "clusters": []
+        }
+    },
+    {
+        "model": "rh.donor",
+        "pk": 22,
+        "fields": {
+            "code": "care",
+            "name": "Care",
+            "old_id": "62189a2e5fe2c737c6aec3e7",
+            "updated_at": "2024-03-20T10:41:36.209Z",
+            "created_at": "2024-03-20T10:41:36.209Z",
+            "countries": [
+                2,
+                438
+            ],
+            "clusters": []
+        }
+    },
+    {
+        "model": "rh.donor",
+        "pk": 23,
+        "fields": {
+            "code": "caritas",
+            "name": "Caritas ",
+            "old_id": "62189a2e5fe2c737c6aec3e8",
+            "updated_at": "2024-03-20T10:41:36.209Z",
+            "created_at": "2024-03-20T10:41:36.209Z",
+            "countries": [
+                2,
+                438
+            ],
+            "clusters": []
+        }
+    },
+    {
+        "model": "rh.donor",
+        "pk": 24,
+        "fields": {
+            "code": "cerf",
+            "name": "Central Emergency Respond Fund (CERF)",
+            "old_id": "62189a2e5fe2c737c6aec5a8",
+            "updated_at": "2024-03-20T10:41:36.209Z",
+            "created_at": "2022-01-01T00:00:00Z",
+            "countries": [
+                2,
+                438
+            ],
+            "clusters": []
+        }
+    },
+    {
+        "model": "rh.donor",
+        "pk": 25,
+        "fields": {
+            "code": "chf",
+            "name": "CHF",
+            "old_id": "62189a2e5fe2c737c6aec3ea",
+            "updated_at": "2024-03-20T10:41:36.210Z",
+            "created_at": "2024-03-20T10:41:36.210Z",
+            "countries": [
+                2,
+                438
+            ],
+            "clusters": []
+        }
+    },
+    {
+        "model": "rh.donor",
+        "pk": 26,
+        "fields": {
+            "code": "christian_aid",
+            "name": "Christian Aid",
+            "old_id": "62189a2e5fe2c737c6aec38b",
+            "updated_at": "2024-03-20T10:41:36.210Z",
+            "created_at": "2024-03-20T10:41:36.210Z",
+            "countries": [
+                2,
+                438
+            ],
+            "clusters": []
+        }
+    },
+    {
+        "model": "rh.donor",
+        "pk": 27,
+        "fields": {
+            "code": "cida",
+            "name": "CIDA",
+            "old_id": "62189a2e5fe2c737c6aec3eb",
+            "updated_at": "2024-03-20T10:41:36.211Z",
+            "created_at": "2024-03-20T10:41:36.211Z",
+            "countries": [
+                2,
+                438
+            ],
+            "clusters": []
+        }
+    },
+    {
+        "model": "rh.donor",
+        "pk": 28,
+        "fields": {
+            "code": "czech_aid",
+            "name": "Czech Aid",
+            "old_id": "62189a2e5fe2c737c6aec3ec",
+            "updated_at": "2024-03-20T10:41:36.211Z",
+            "created_at": "2024-03-20T10:41:36.211Z",
+            "countries": [
+                2,
+                438
+            ],
+            "clusters": []
+        }
+    },
+    {
+        "model": "rh.donor",
+        "pk": 29,
+        "fields": {
+            "code": "czech_mofa",
+            "name": "Czech MOFA",
+            "old_id": "62189a2e5fe2c737c6aec3ed",
+            "updated_at": "2024-03-20T10:41:36.212Z",
+            "created_at": "2024-03-20T10:41:36.212Z",
+            "countries": [
+                2,
+                438
+            ],
+            "clusters": []
+        }
+    },
+    {
+        "model": "rh.donor",
+        "pk": 30,
+        "fields": {
+            "code": "danish_international_development_agency",
+            "name": "Danish International Development Agency",
+            "old_id": "62189a2e5fe2c737c6aec4c2",
+            "updated_at": "2024-03-20T10:41:36.212Z",
+            "created_at": "2024-03-20T10:41:36.212Z",
+            "countries": [
+                2,
+                438
+            ],
+            "clusters": []
+        }
+    },
+    {
+        "model": "rh.donor",
+        "pk": 31,
+        "fields": {
+            "code": "giz",
+            "name": "Deutsche Gesellschaft vir Internationale Zusammenarbeit (GIZ)",
+            "old_id": "62189a2e5fe2c737c6aec526",
+            "updated_at": "2024-03-20T10:41:36.212Z",
+            "created_at": "2024-03-20T10:41:36.212Z",
+            "countries": [
+                2,
+                438
+            ],
+            "clusters": []
+        }
+    },
+    {
+        "model": "rh.donor",
+        "pk": 32,
+        "fields": {
+            "code": "disaster_emergency_committee_dec",
+            "name": "Disaster Emergency Committee (DEC)",
+            "old_id": "62189a2e5fe2c737c6aec3f1",
+            "updated_at": "2024-03-20T10:41:36.213Z",
+            "created_at": "2024-03-20T10:41:36.213Z",
+            "countries": [
+                2,
+                438
+            ],
+            "clusters": []
+        }
+    },
+    {
+        "model": "rh.donor",
+        "pk": 33,
+        "fields": {
+            "code": "dutch_relief_alliance",
+            "name": "Dutch Relief Alliance",
+            "old_id": "62189a2e5fe2c737c6aec437",
+            "updated_at": "2024-03-20T10:41:36.213Z",
+            "created_at": "2024-03-20T10:41:36.213Z",
+            "countries": [
+                2,
+                438
+            ],
+            "clusters": []
+        }
+    },
+    {
+        "model": "rh.donor",
+        "pk": 34,
+        "fields": {
+            "code": "ehf",
+            "name": "EHF",
+            "old_id": "62189a2e5fe2c737c6aec3f3",
+            "updated_at": "2024-03-20T10:41:36.214Z",
+            "created_at": "2024-03-20T10:41:36.214Z",
+            "countries": [
+                2,
+                438
+            ],
+            "clusters": []
+        }
+    },
+    {
+        "model": "rh.donor",
+        "pk": 35,
+        "fields": {
+            "code": "e_belgium",
+            "name": "Embassy of Belgium",
+            "old_id": "62189a2e5fe2c737c6aec52a",
+            "updated_at": "2024-03-20T10:41:36.214Z",
+            "created_at": "2024-03-20T10:41:36.214Z",
+            "countries": [
+                2,
+                438
+            ],
+            "clusters": []
+        }
+    },
+    {
+        "model": "rh.donor",
+        "pk": 36,
+        "fields": {
+            "code": "e_china",
+            "name": "Embassy of China",
+            "old_id": "62189a2e5fe2c737c6aec53d",
+            "updated_at": "2024-03-20T10:41:36.215Z",
+            "created_at": "2024-03-20T10:41:36.215Z",
+            "countries": [
+                2,
+                438
+            ],
+            "clusters": []
+        }
+    },
+    {
+        "model": "rh.donor",
+        "pk": 37,
+        "fields": {
+            "code": "embassy_of_denmark",
+            "name": "Embassy of Denmark",
+            "old_id": "62189a2e5fe2c737c6aec562",
+            "updated_at": "2024-03-20T10:41:36.215Z",
+            "created_at": "2024-03-20T10:41:36.215Z",
+            "countries": [
+                2,
+                438
+            ],
+            "clusters": []
+        }
+    },
+    {
+        "model": "rh.donor",
+        "pk": 38,
+        "fields": {
+            "code": "embassy_of_finland",
+            "name": "Embassy of Finland",
+            "old_id": "62189a2e5fe2c737c6aec563",
+            "updated_at": "2024-03-20T10:41:36.215Z",
+            "created_at": "2024-03-20T10:41:36.215Z",
+            "countries": [
+                2,
+                438
+            ],
+            "clusters": []
+        }
+    },
+    {
+        "model": "rh.donor",
+        "pk": 39,
+        "fields": {
+            "code": "embassy_of_france",
+            "name": "Embassy of France",
+            "old_id": "62189a2e5fe2c737c6aec564",
+            "updated_at": "2024-03-20T10:41:36.216Z",
+            "created_at": "2024-03-20T10:41:36.216Z",
+            "countries": [
+                2,
+                438
+            ],
+            "clusters": []
+        }
+    },
+    {
+        "model": "rh.donor",
+        "pk": 40,
+        "fields": {
+            "code": "e_germany",
+            "name": "Embassy of Germany",
+            "old_id": "62189a2e5fe2c737c6aec52e",
+            "updated_at": "2024-03-20T10:41:36.216Z",
+            "created_at": "2024-03-20T10:41:36.216Z",
+            "countries": [
+                2,
+                438
+            ],
+            "clusters": []
+        }
+    },
+    {
+        "model": "rh.donor",
+        "pk": 260,
+        "fields": {
+            "code": "other",
+            "name": "Other",
+            "old_id": null,
+            "updated_at": "2024-09-16T07:31:10.116Z",
+            "created_at": "2024-05-12T06:31:30.516Z",
+            "countries": [
+                2
+            ],
+            "clusters": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10,
+                11,
+                12
+            ]
+        }
+    },
+    {
+        "model": "rh.donor",
+        "pk": 261,
+        "fields": {
+            "code": "BHA",
+            "name": "Bureau for Humanitarian Assistance",
+            "old_id": null,
+            "updated_at": "2024-12-02T08:57:14.770Z",
+            "created_at": "2024-12-02T08:57:14.770Z",
+            "countries": [
+                2
+            ],
+            "clusters": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10,
+                11,
+                12
+            ]
+        }
+    }
+]

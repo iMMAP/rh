@@ -1,0 +1,2022 @@
+[
+    {
+        "model": "stock.stockitemstype",
+        "pk": 1,
+        "fields": {
+            "cluster": 4,
+            "name": "Health: IEHK Basic Unit",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 2,
+        "fields": {
+            "cluster": 4,
+            "name": "Health: IEHK Supplementary Unit",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 3,
+        "fields": {
+            "cluster": 4,
+            "name": "Health: New Born Kit",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 4,
+        "fields": {
+            "cluster": 4,
+            "name": "Health: Pneumonia Kit",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 5,
+        "fields": {
+            "cluster": 4,
+            "name": "Health: Trauma Kit A",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 6,
+        "fields": {
+            "cluster": 4,
+            "name": "Health: Trauma Kit B",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 7,
+        "fields": {
+            "cluster": 4,
+            "name": "Health: Miscellaneous",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 8,
+        "fields": {
+            "cluster": 4,
+            "name": "Health: Ringer Lactate",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 9,
+        "fields": {
+            "cluster": 4,
+            "name": "Health: Tent (24sqm)",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 10,
+        "fields": {
+            "cluster": 4,
+            "name": "Health: Chlorine Granules (25kg)",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 11,
+        "fields": {
+            "cluster": 4,
+            "name": "Health: Cholera Community: Drugs Module",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 12,
+        "fields": {
+            "cluster": 4,
+            "name": "Health: Cholera Community: Document Module",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 13,
+        "fields": {
+            "cluster": 4,
+            "name": "Health: Cholera Community: ORP kit",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 14,
+        "fields": {
+            "cluster": 4,
+            "name": "Health: DDK Kit",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 15,
+        "fields": {
+            "cluster": 4,
+            "name": "Health: Sprayer (12 L, IK 12 BS)",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 16,
+        "fields": {
+            "cluster": 4,
+            "name": "Health: Water Drinking Filter",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 17,
+        "fields": {
+            "cluster": 4,
+            "name": "Health: Dignity Kit",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 18,
+        "fields": {
+            "cluster": 4,
+            "name": "Health: Clean Delivery Kit",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 19,
+        "fields": {
+            "cluster": 4,
+            "name": "Health: Kitchen Kit",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 20,
+        "fields": {
+            "cluster": 4,
+            "name": "Health: RH Kit 0",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 21,
+        "fields": {
+            "cluster": 4,
+            "name": "Health: RH Kit 1A",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 22,
+        "fields": {
+            "cluster": 4,
+            "name": "Health: RH Kit 1B",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 23,
+        "fields": {
+            "cluster": 4,
+            "name": "Health: First Aid Kit",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 24,
+        "fields": {
+            "cluster": 4,
+            "name": "Health: RH Kit 2A",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 25,
+        "fields": {
+            "cluster": 4,
+            "name": "Health: RH Kit 2B",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 26,
+        "fields": {
+            "cluster": 4,
+            "name": "Health: RH Kit 3",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 27,
+        "fields": {
+            "cluster": 4,
+            "name": "Health: RH Kit 4",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 28,
+        "fields": {
+            "cluster": 4,
+            "name": "Health: RH Kit 6A",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 29,
+        "fields": {
+            "cluster": 4,
+            "name": "Health: RH Kit 6B",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 30,
+        "fields": {
+            "cluster": 4,
+            "name": "Health: RH Kit 7",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 31,
+        "fields": {
+            "cluster": 4,
+            "name": "Health: RH Kit 5",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 32,
+        "fields": {
+            "cluster": 4,
+            "name": "Health: RH Kit 9",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 33,
+        "fields": {
+            "cluster": 4,
+            "name": "Health: RH Kit 10",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 34,
+        "fields": {
+            "cluster": 4,
+            "name": "Health: RH Kit 8",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 35,
+        "fields": {
+            "cluster": 4,
+            "name": "Health: RH Kit 11A",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 36,
+        "fields": {
+            "cluster": 4,
+            "name": "Health: RH Kit 11B",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 37,
+        "fields": {
+            "cluster": 4,
+            "name": "Health: RH Kit 12",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 38,
+        "fields": {
+            "cluster": 1,
+            "name": "WASH: Aquatabs 33mg",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 39,
+        "fields": {
+            "cluster": 1,
+            "name": "WASH: Aquatabs 1.67g",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 40,
+        "fields": {
+            "cluster": 1,
+            "name": "WASH: Basic Family Water Kit (10 Families)",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 41,
+        "fields": {
+            "cluster": 1,
+            "name": "WASH: Water Tank (Bladder / Other) (2,000 Liters)",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 42,
+        "fields": {
+            "cluster": 1,
+            "name": "WASH: Water Tank (Bladder / Other) (3,000 Liters)",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 43,
+        "fields": {
+            "cluster": 1,
+            "name": "WASH: Water Tank (Bladder / Other) (4,000 Liters)",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 44,
+        "fields": {
+            "cluster": 1,
+            "name": "WASH: Water Tank (Bladder / Other) (5,000 Liters)",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 45,
+        "fields": {
+            "cluster": 1,
+            "name": "WASH: Water Tank (Bladder / Other) (10,000 Liters)",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 46,
+        "fields": {
+            "cluster": 1,
+            "name": "WASH: Water Tank (Bladder / Other) (15,000 Liters)",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 47,
+        "fields": {
+            "cluster": 1,
+            "name": "WASH: Water Tank (Bladder / Other) (20,000 Liters)",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 48,
+        "fields": {
+            "cluster": 1,
+            "name": "WASH: Water Tank (Bladder / Other) (30,000 Liters)",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 49,
+        "fields": {
+            "cluster": 1,
+            "name": "WASH: Water Tank (Bladder / Other) (40,000 Liters)",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 50,
+        "fields": {
+            "cluster": 1,
+            "name": "WASH: Water Tank (Bladder / Other) (50,000 Liters)",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 51,
+        "fields": {
+            "cluster": 1,
+            "name": "WASH: Bucket (10 Liters)",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 52,
+        "fields": {
+            "cluster": 1,
+            "name": "WASH: Bucket (15 Liters)",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 53,
+        "fields": {
+            "cluster": 1,
+            "name": "WASH: Bucket (18 Liters)",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 54,
+        "fields": {
+            "cluster": 1,
+            "name": "WASH: Ceramic Filter",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 55,
+        "fields": {
+            "cluster": 1,
+            "name": "WASH: Chlorine Bleaching Powder (60-65% 35-40KG)",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 56,
+        "fields": {
+            "cluster": 1,
+            "name": "WASH: Chlorine PUR Sachets Water Floc. & Disinfectant,PDR/BOX-240",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 57,
+        "fields": {
+            "cluster": 1,
+            "name": "WASH: Water Tank (Bladder / Other) (1,000 Liters)",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 58,
+        "fields": {
+            "cluster": 1,
+            "name": "WASH: Complete Latrine Tent",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 59,
+        "fields": {
+            "cluster": 1,
+            "name": "WASH: DelAgua kit",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 60,
+        "fields": {
+            "cluster": 1,
+            "name": "WASH: Emergency Family Latrine",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 61,
+        "fields": {
+            "cluster": 1,
+            "name": "WASH: Emergency Latrine Slab",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 62,
+        "fields": {
+            "cluster": 1,
+            "name": "WASH: Cloth for Water Filter",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 63,
+        "fields": {
+            "cluster": 1,
+            "name": "WASH: HTH Chlorine",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 64,
+        "fields": {
+            "cluster": 1,
+            "name": "WASH: Hygiene Kits",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 65,
+        "fields": {
+            "cluster": 1,
+            "name": "WASH: Instruction on use of Chlorine Tablets (Water Kit)",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 66,
+        "fields": {
+            "cluster": 1,
+            "name": "WASH: Instruction on use of Hygiene Kit (Hygiene Kit)",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 67,
+        "fields": {
+            "cluster": 1,
+            "name": "WASH: Family Hygiene+Dignity Kit",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 68,
+        "fields": {
+            "cluster": 1,
+            "name": "WASH: Jerrycan (20 liters)",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 69,
+        "fields": {
+            "cluster": 1,
+            "name": "WASH: Jerrycan (10 liters)",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 70,
+        "fields": {
+            "cluster": 1,
+            "name": "WASH: Metal Door",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 71,
+        "fields": {
+            "cluster": 1,
+            "name": "WASH: Leaflet on use of Chlorine Tablets (Dari + Pashtu)",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 72,
+        "fields": {
+            "cluster": 1,
+            "name": "WASH: Pump Spares (Air Pump)",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 73,
+        "fields": {
+            "cluster": 1,
+            "name": "WASH: Pump Spares (Claft on the Top of the Wall)",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 74,
+        "fields": {
+            "cluster": 1,
+            "name": "WASH: Pump Spares (Clift 1\" on the Top of the Wall)",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 75,
+        "fields": {
+            "cluster": 1,
+            "name": "WASH: Pump Spares (Joining Solution (Glue))",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 76,
+        "fields": {
+            "cluster": 1,
+            "name": "WASH: Pump Spares (Long Pedestal Afrideve Hand pump)",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 77,
+        "fields": {
+            "cluster": 1,
+            "name": "WASH: Pump Spares (PAMIR Hand Pump + Cylinder and Access)",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 78,
+        "fields": {
+            "cluster": 1,
+            "name": "WASH: Pump Spares (PAMIR Hand Pump)",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 79,
+        "fields": {
+            "cluster": 1,
+            "name": "WASH: Pump Spares (PVC Vent Pipe 4')",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 80,
+        "fields": {
+            "cluster": 1,
+            "name": "WASH: Pump Spares (PVC Filter Pipe 6' Class D (26.28 KG))",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 81,
+        "fields": {
+            "cluster": 1,
+            "name": "WASH: Pump Spares (PVC Pipe 63 MM Class E)",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 82,
+        "fields": {
+            "cluster": 1,
+            "name": "WASH: Pump Spares (Rod Center Laiser)",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 83,
+        "fields": {
+            "cluster": 1,
+            "name": "WASH: Pump Spares (Rod)",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 84,
+        "fields": {
+            "cluster": 1,
+            "name": "WASH: Pump Spares (Short Pedestal Afrideve Handpump)",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 85,
+        "fields": {
+            "cluster": 1,
+            "name": "WASH: Soap (Hand Washing)",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 86,
+        "fields": {
+            "cluster": 1,
+            "name": "WASH: Soap (Laundry)",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 87,
+        "fields": {
+            "cluster": 1,
+            "name": "WASH: Squatting Plate (Plastic 120x80cm)",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 88,
+        "fields": {
+            "cluster": 1,
+            "name": "WASH: Squatting Plate (Plastic 80x60cm)",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 89,
+        "fields": {
+            "cluster": 1,
+            "name": "WASH: Water Filter Cloth",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 90,
+        "fields": {
+            "cluster": 1,
+            "name": "WASH: Water Kit (1 Family)",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 91,
+        "fields": {
+            "cluster": 1,
+            "name": "WASH: Pump Spares (Cap for Bottom of Casing)",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 92,
+        "fields": {
+            "cluster": 1,
+            "name": "WASH: Metal Poles (120mm - 140mm diameter x 2,000mm length )",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 93,
+        "fields": {
+            "cluster": 1,
+            "name": "WASH: Trap Door & Frame/Prefab RCC",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 94,
+        "fields": {
+            "cluster": 1,
+            "name": "WASH: Mesh Net",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 95,
+        "fields": {
+            "cluster": 1,
+            "name": "WASH: Cement",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 96,
+        "fields": {
+            "cluster": 1,
+            "name": "WASH: Wire Gauze Fly Trap",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 97,
+        "fields": {
+            "cluster": 1,
+            "name": "WASH: Door Lintel (L=1,400mm & C=25 cm)",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 98,
+        "fields": {
+            "cluster": 1,
+            "name": "WASH: Hygiene Kits for COVID-19",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 99,
+        "fields": {
+            "cluster": 6,
+            "name": "ESNFI: Standard NFI Kit (16 items)",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 100,
+        "fields": {
+            "cluster": 1,
+            "name": "WASH: Water Taps",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 101,
+        "fields": {
+            "cluster": 6,
+            "name": "ESNFI: Emergency Shelter Repair Toolkit (11+2 items)",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 102,
+        "fields": {
+            "cluster": 6,
+            "name": "ESNFI: Winterization Kit",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 103,
+        "fields": {
+            "cluster": 6,
+            "name": "ESNFI: Multi-Purpose Cash",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 104,
+        "fields": {
+            "cluster": 6,
+            "name": "ESNFI: Cash for NFIs",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 105,
+        "fields": {
+            "cluster": 6,
+            "name": "ESNFI: Cash for Winterization",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 106,
+        "fields": {
+            "cluster": 6,
+            "name": "ESNFI: Cash for Rent",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 107,
+        "fields": {
+            "cluster": 6,
+            "name": "ESNFI: Cash for Shelter Repair",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 108,
+        "fields": {
+            "cluster": 6,
+            "name": "ESNFI: Cash for Gas",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 109,
+        "fields": {
+            "cluster": 6,
+            "name": "ESNFI: Axe (Iron with Wood Handle)",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 110,
+        "fields": {
+            "cluster": 6,
+            "name": "ESNFI: Beam",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 111,
+        "fields": {
+            "cluster": 6,
+            "name": "ESNFI: Big Spoon for Cooking",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 112,
+        "fields": {
+            "cluster": 6,
+            "name": "ESNFI: Blankets",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 113,
+        "fields": {
+            "cluster": 6,
+            "name": "ESNFI: Bowl",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 114,
+        "fields": {
+            "cluster": 6,
+            "name": "ESNFI: Claw Hammer (4' Steel Magnetic Head)",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 115,
+        "fields": {
+            "cluster": 6,
+            "name": "ESNFI: Clothes for Children (e.g. socks, gloves, sweaters, hats)",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 116,
+        "fields": {
+            "cluster": 6,
+            "name": "ESNFI: Clothes for Men (e.g. socks, gloves, sweaters, hats)",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 117,
+        "fields": {
+            "cluster": 6,
+            "name": "ESNFI: Emergency Shelter Kit (2+1 items)",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 118,
+        "fields": {
+            "cluster": 6,
+            "name": "ESNFI: Clothes for Women (e.g. socks, gloves, sweaters, hats)",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 119,
+        "fields": {
+            "cluster": 6,
+            "name": "ESNFI: Cooking Pot",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 120,
+        "fields": {
+            "cluster": 6,
+            "name": "ESNFI: Family Sized Tent",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 121,
+        "fields": {
+            "cluster": 6,
+            "name": "ESNFI: Fuel Gel",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 122,
+        "fields": {
+            "cluster": 6,
+            "name": "ESNFI: Gas Cylinder",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 123,
+        "fields": {
+            "cluster": 6,
+            "name": "ESNFI: Hand-held Saw",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 124,
+        "fields": {
+            "cluster": 6,
+            "name": "ESNFI: Hoe (Iron with Wood Handle)",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 125,
+        "fields": {
+            "cluster": 6,
+            "name": "ESNFI: Jerrycan",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 126,
+        "fields": {
+            "cluster": 6,
+            "name": "ESNFI: Kindling",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 127,
+        "fields": {
+            "cluster": 6,
+            "name": "ESNFI: Kitchen Set",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 128,
+        "fields": {
+            "cluster": 6,
+            "name": "ESNFI: Lights (Solar Lantern, Torch w/ Battery, Table Lamp)",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 129,
+        "fields": {
+            "cluster": 6,
+            "name": "ESNFI: Masons Bucket (15 Liters Reinforced)",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 130,
+        "fields": {
+            "cluster": 6,
+            "name": "ESNFI: Matchbox",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 131,
+        "fields": {
+            "cluster": 6,
+            "name": "ESNFI: Nails",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 132,
+        "fields": {
+            "cluster": 6,
+            "name": "ESNFI: Peeling Knife",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 133,
+        "fields": {
+            "cluster": 6,
+            "name": "ESNFI: Pick Digger (with Wooden Handle)",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 134,
+        "fields": {
+            "cluster": 6,
+            "name": "ESNFI: Plastering Trowel (10' with Wood Handle)",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 135,
+        "fields": {
+            "cluster": 6,
+            "name": "ESNFI: Glass for Tea",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 136,
+        "fields": {
+            "cluster": 6,
+            "name": "ESNFI: Plastic Rope (30m / 6-10 mm Diameter)",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 137,
+        "fields": {
+            "cluster": 6,
+            "name": "ESNFI: Pump Spares (PVC Filter Pipe 6' Class D (26.28 KG))",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 138,
+        "fields": {
+            "cluster": 6,
+            "name": "ESNFI: Pump Spares (PVC Pipe 63 MM Class E)",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 139,
+        "fields": {
+            "cluster": 6,
+            "name": "ESNFI: Rope",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 140,
+        "fields": {
+            "cluster": 6,
+            "name": "ESNFI: Plastic Mat",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 141,
+        "fields": {
+            "cluster": 6,
+            "name": "ESNFI: Shovel (Iron with Wood Handle)",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 142,
+        "fields": {
+            "cluster": 6,
+            "name": "ESNFI: Sisal Rope (100m)",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 143,
+        "fields": {
+            "cluster": 6,
+            "name": "ESNFI: Sanitry Napkins",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 144,
+        "fields": {
+            "cluster": 6,
+            "name": "ESNFI: Soap (Handwash)",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 145,
+        "fields": {
+            "cluster": 6,
+            "name": "ESNFI: Spoon",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 146,
+        "fields": {
+            "cluster": 6,
+            "name": "ESNFI: Tarpaulin",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 147,
+        "fields": {
+            "cluster": 6,
+            "name": "ESNFI: Wheelbarrow/Zambil",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 148,
+        "fields": {
+            "cluster": 6,
+            "name": "ESNFI: Tea Pot",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 149,
+        "fields": {
+            "cluster": 6,
+            "name": "ESNFI: Window",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 150,
+        "fields": {
+            "cluster": 6,
+            "name": "ESNFI: Wood",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 151,
+        "fields": {
+            "cluster": 12,
+            "name": "Protection: Dignity Kit",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 152,
+        "fields": {
+            "cluster": 5,
+            "name": "FSAC: Cash",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 153,
+        "fields": {
+            "cluster": 5,
+            "name": "FSAC: Food Package",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 154,
+        "fields": {
+            "cluster": 5,
+            "name": "FSAC: Wheat",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 155,
+        "fields": {
+            "cluster": 5,
+            "name": "FSAC: Wheat Flour",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 156,
+        "fields": {
+            "cluster": 5,
+            "name": "FSAC: Oil",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 157,
+        "fields": {
+            "cluster": 5,
+            "name": "FSAC: Pulses",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 158,
+        "fields": {
+            "cluster": 5,
+            "name": "FSAC: Salt",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 159,
+        "fields": {
+            "cluster": 5,
+            "name": "FSAC: Rice",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 160,
+        "fields": {
+            "cluster": 5,
+            "name": "FSAC: Seed",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 161,
+        "fields": {
+            "cluster": 5,
+            "name": "FSAC: HEB",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 162,
+        "fields": {
+            "cluster": 5,
+            "name": "FSAC: RUSF",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 163,
+        "fields": {
+            "cluster": 5,
+            "name": "FSAC: MNT",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 164,
+        "fields": {
+            "cluster": 5,
+            "name": "FSAC: Other",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 165,
+        "fields": {
+            "cluster": 7,
+            "name": "EiEWG: Classroom Kits",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 166,
+        "fields": {
+            "cluster": 7,
+            "name": "EiEWG: EiE Kits",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 167,
+        "fields": {
+            "cluster": 7,
+            "name": "EiEWG: Recreational Kits",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 168,
+        "fields": {
+            "cluster": 7,
+            "name": "EiEWG: School in Box Kits",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 169,
+        "fields": {
+            "cluster": 7,
+            "name": "EiEWG: Startup Kits",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 170,
+        "fields": {
+            "cluster": 12,
+            "name": "Protection: Tent",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 171,
+        "fields": {
+            "cluster": 7,
+            "name": "EiEWG: Student Bags",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 172,
+        "fields": {
+            "cluster": 7,
+            "name": "EiEWG: Students Kits",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 173,
+        "fields": {
+            "cluster": 7,
+            "name": "EiEWG: Top up Kits",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 174,
+        "fields": {
+            "cluster": 7,
+            "name": "EiEWG: Text Books",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 175,
+        "fields": {
+            "cluster": 7,
+            "name": "EiEWG: Teacher Kits",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 176,
+        "fields": {
+            "cluster": 7,
+            "name": "EiEWG: Teching Kits",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 177,
+        "fields": {
+            "cluster": 7,
+            "name": "EiEWG: Reading Kits",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 178,
+        "fields": {
+            "cluster": 7,
+            "name": "EiEWG: Tents (72 sq.m)",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 179,
+        "fields": {
+            "cluster": 7,
+            "name": "EiEWG: Tents Other",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 180,
+        "fields": {
+            "cluster": 6,
+            "name": "ESNFI in Cash",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 181,
+        "fields": {
+            "cluster": 6,
+            "name": "ESNFI Mixed (Cash+In-Kind)",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 182,
+        "fields": {
+            "cluster": 6,
+            "name": "ESNFI In-Kind",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 183,
+        "fields": {
+            "cluster": 6,
+            "name": "Partial ESNFI Kit",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 184,
+        "fields": {
+            "cluster": 6,
+            "name": "Cash for Shelter/Rent",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 185,
+        "fields": {
+            "cluster": 6,
+            "name": "Emergency Shelter Repair Kits (Partial)",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 186,
+        "fields": {
+            "cluster": 6,
+            "name": "Emergency Shelter Repair Kits (Full)",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 187,
+        "fields": {
+            "cluster": 7,
+            "name": "EiEWG: Tents (24 sq.m)",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 188,
+        "fields": {
+            "cluster": 6,
+            "name": "Cash for Shelter - Communal Shelters",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 189,
+        "fields": {
+            "cluster": 6,
+            "name": "Cash for Partial Repair - Minor",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 190,
+        "fields": {
+            "cluster": 6,
+            "name": "Emergency Shelter Repair Kits Mixed (Cash + In-Kind)",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 191,
+        "fields": {
+            "cluster": 6,
+            "name": "Communal Shelter Construction",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 192,
+        "fields": {
+            "cluster": 6,
+            "name": "Minor Shelter Repair - Kits",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 193,
+        "fields": {
+            "cluster": 6,
+            "name": "Rehabilitation of Communal Existing Structure",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 194,
+        "fields": {
+            "cluster": 6,
+            "name": "Transitional Shelter Construction (Poles+CGI)",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 195,
+        "fields": {
+            "cluster": 6,
+            "name": "Transitional Shelter Construction (Tukul-Poles+Grass)",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 196,
+        "fields": {
+            "cluster": 6,
+            "name": "Transitional Shelter Construction (Tukul-Mud Bricks)",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 197,
+        "fields": {
+            "cluster": 6,
+            "name": "Non-Food Items (NFI) In-Kind",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 198,
+        "fields": {
+            "cluster": 6,
+            "name": "Non-Food Items (NFI) In-Cash",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 199,
+        "fields": {
+            "cluster": 6,
+            "name": "Construction of Communal Facility",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 200,
+        "fields": {
+            "cluster": 6,
+            "name": "Emergency Shelter Kit",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 201,
+        "fields": {
+            "cluster": 6,
+            "name": "Emergency Shelter Construction",
+            "created_at": null,
+            "updated_at": null
+        }
+    },
+    {
+        "model": "stock.stockitemstype",
+        "pk": 202,
+        "fields": {
+            "cluster": 6,
+            "name": "Non-Food Items (NFI) Mixed",
+            "created_at": null,
+            "updated_at": null
+        }
+    }
+]

@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     "extra_settings",
     "mdeditor",
     "mailer",
+    "django_extensions",
     # RH apps
     "rh.apps.RhConfig",
     "users.apps.UsersConfig",

@@ -81,6 +81,9 @@ make run-dependencies
 #### Run Command in the containers
 ```shell
 # Django app
+docker exec -it django bash
+docker compose run --rm django make loaddata
+
 docker-compose -f docker-compose.dev.yml run --rm django make serve
 docker-compose -f docker-compose.dev.yml run --rm django make migrate
 docker-compose -f docker-compose.dev.yml run --rm django make migrations

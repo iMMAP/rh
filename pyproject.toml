@@ -70,10 +70,10 @@ django-mdeditor = "^0.1.20"
 markdown = "^3.6"
 django-mailer = "^2.3.2"
 gunicorn = "^23.0.0"
+django-extensions = "^3.2.3"
 
 
 [tool.poetry.group.dev.dependencies]
-django-extensions = "^3.2.3"
 nplusone = "^1.0.0"
 django-tui = "^23.9"
 django-debug-toolbar = "^4.2.0"

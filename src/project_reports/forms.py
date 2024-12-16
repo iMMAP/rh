@@ -77,8 +77,7 @@ class TargetLocationReportForm(forms.ModelForm):
         fields = "__all__"
         exclude = ("activity_plan_report",)
         help_texts = {
-            "prev_assisted_by": "Select whether these people were previously assisted by another activity in the selected target location.",
-            "seasonal_retargeting": "Select if the beneficiaries re-assisted due to seasonal factors, such as significant weather changes.",
+            "seasonal_retargeting": "Are these beneficiaries being re-targeted due to seasonal needs? If yes, please check the box.",
         }
         widgets = {
             "beneficiary_status": forms.Select(attrs={"class": "custom-select"}),

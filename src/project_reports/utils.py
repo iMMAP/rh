@@ -67,7 +67,9 @@ def write_projects_reports_to_csv(monthly_progress_report, response):
         "non-hrp_beneficiary_name",
         "hrp_beneficiary_code",
         "hrp_beneficiary_name",
-        "beneficiary_category",
+        "beneficiary_status",
+        "previously_assisted_by",
+        "seasonal_re-assisting",
         "activity_domain_code",
         "activity_domain_name",
         "activity_type_code",
@@ -75,8 +77,6 @@ def write_projects_reports_to_csv(monthly_progress_report, response):
         "activity_detail_code",
         "activity_detail_name",
         "indicator_name",
-        "beneficiary_status",
-        "beneficiaries_retargeted",
         "units",
         "unit_type_name",
         "transfer_type_value",
@@ -222,6 +222,8 @@ def write_projects_reports_to_csv(monthly_progress_report, response):
                         if plan_report.activity_plan.hrp_beneficiary
                         else None,
                         location_report.beneficiary_status if location_report.beneficiary_status else None,
+                        location_report.prev_assisted_by if location_report.prev_assisted_by else None,
+                        "Yes" if location_report.seasonal_retargeting else "No",
                         plan_report.activity_plan.activity_domain.code
                         if plan_report.activity_plan.activity_domain
                         else None,
@@ -241,7 +243,6 @@ def write_projects_reports_to_csv(monthly_progress_report, response):
                         if plan_report.activity_plan.activity_detail
                         else None,
                         plan_report.activity_plan.indicator.name if plan_report.activity_plan.indicator else None,
-                        "Yes" if location_report.seasonal_retargeting else "No",
                         plan_report.units if plan_report.units else None,
                         plan_report.unit_type.name if plan_report.unit_type else None,
                         plan_report.no_of_transfers if plan_report.no_of_transfers else None,
@@ -288,9 +289,9 @@ def write_import_report_template_sheet(workbook, monthly_report):
     sheet.title = "Import Template"
     columns = [
         {"header": "project_code", "type": "string", "width": 40},
-        {"header": "indicator", "type": "string", "width": 40},
+        {"header": "indicator", "type": "string", "width": 80},
         {"header": "activity_domain", "type": "string", "width": 40},
-        {"header": "activity_type", "type": "string", "width": 40},
+        {"header": "activity_type", "type": "string", "width": 80},
         {"header": "response_types", "type": "string", "width": 30},
         {"header": "implementing_partners", "type": "string", "width": 30},
         {"header": "package_type", "type": "string", "width": 30},
@@ -348,8 +349,8 @@ def write_import_report_template_sheet(workbook, monthly_report):
         "admin0pcodeList": ["R"],
         "admin1pcodeList": ["S"],
         "admin1nameList": ["T"],
-        "admin2pcodeList": ["U"],
-        "admin2nameList": ["V"],
+        # "admin2pcodeList": ["U"],
+        # "admin2nameList": ["V"],
         "facilitySiteTypeList": ["Y"],
         "reponseTypeList": ["E"],
         "implementing_partner_list": ["F"],
@@ -386,17 +387,38 @@ def write_import_report_template_sheet(workbook, monthly_report):
             container_dictionary["admin0nameList"].append(str(location.country.name))
             container_dictionary["admin1nameList"].append(str(location.province.name))
             container_dictionary["admin1pcodeList"].append(str(location.province.code))
-            container_dictionary["admin2pcodeList"].append(str(location.district.code))
-            container_dictionary["admin2nameList"].append(str(location.district.name))
+            # container_dictionary["admin2pcodeList"].append(str(location.district.code))
+            # container_dictionary["admin2nameList"].append(str(location.district.name))
             num_rows += 1
     container_dictionary["facilitySiteTypeList"].extend(facility)
     container_dictionary["reponseTypeList"].extend(responseType)
     container_dictionary["implementing_partner_list"].extend(project_partners_list)
     sheet["A2"] = project_code
     for key, value in container_dictionary.items():
-        dv = DataValidation(type="list", formula1='"{}"'.format(",".join(list(container_dictionary[key][1:]))))
-        sheet.add_data_validation(dv)
-        for row in range(2, num_rows):
-            cell = sheet[f"{value[0]}{row}"]
+        column = value[0]
+        list_values = ",".join(value[1:])
+        if len(list_values) < 255:
+            dv = DataValidation(type="list", formula1='"{}"'.format(list_values))
             sheet.add_data_validation(dv)
-            dv.add(cell)
+            for row in range(2, num_rows):
+                cell = sheet[f"{column}{row}"]
+                sheet.add_data_validation(dv)
+                dv.add(cell)
+        # Case when the list values exceed 255 characters
+        else:
+            
+            start_row = 2  
+            for i, item in enumerate(container_dictionary[key][1:]):
+                sheet[f"{column}{start_row + i}"] = item
+            
+            # Define a named range for the list of values
+            named_range = f"{column}_List"  # You can name the range based on the column or other criteria
+            sheet.parent.create_named_range(named_range, sheet, f"{column}{start_row}:{column}{start_row + len(list_values) - 1}")
+            
+            # Create a data validation that references the named range
+            dv = DataValidation(type="list", formula1=f"={named_range}",showDropDown=True)
+            sheet.add_data_validation(dv)
+            for row in range(2, num_rows):
+                cell = sheet[f"{column}{row}"]
+                sheet.add_data_validation(dv)
+                dv.add(cell)

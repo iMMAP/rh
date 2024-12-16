@@ -67,7 +67,9 @@ def write_projects_reports_to_csv(monthly_progress_report, response):
         "non-hrp_beneficiary_name",
         "hrp_beneficiary_code",
         "hrp_beneficiary_name",
-        "beneficiary_category",
+        "beneficiary_status",
+        "previously_assisted_by",
+        "seasonal_re-assisting",
         "activity_domain_code",
         "activity_domain_name",
         "activity_type_code",
@@ -75,8 +77,6 @@ def write_projects_reports_to_csv(monthly_progress_report, response):
         "activity_detail_code",
         "activity_detail_name",
         "indicator_name",
-        "beneficiary_status",
-        "beneficiaries_retargeted",
         "units",
         "unit_type_name",
         "transfer_type_value",
@@ -222,6 +222,8 @@ def write_projects_reports_to_csv(monthly_progress_report, response):
                         if plan_report.activity_plan.hrp_beneficiary
                         else None,
                         location_report.beneficiary_status if location_report.beneficiary_status else None,
+                        location_report.prev_assisted_by if location_report.prev_assisted_by else None,
+                        "Yes" if location_report.seasonal_retargeting else "No",
                         plan_report.activity_plan.activity_domain.code
                         if plan_report.activity_plan.activity_domain
                         else None,
@@ -241,7 +243,6 @@ def write_projects_reports_to_csv(monthly_progress_report, response):
                         if plan_report.activity_plan.activity_detail
                         else None,
                         plan_report.activity_plan.indicator.name if plan_report.activity_plan.indicator else None,
-                        "Yes" if location_report.seasonal_retargeting else "No",
                         plan_report.units if plan_report.units else None,
                         plan_report.unit_type.name if plan_report.unit_type else None,
                         plan_report.no_of_transfers if plan_report.no_of_transfers else None,

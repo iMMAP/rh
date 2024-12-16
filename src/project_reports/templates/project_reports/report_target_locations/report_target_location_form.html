@@ -111,14 +111,14 @@
 
                                 <div class="field-col">
                                     <div class="select-field">
-                                        <label>{{ location_report_form.beneficiary_status.label }}
-                                            [Read the description]
-                                            <div class="implement-info">
-                                                <i class="icon-info"></i>
-                                                <span class="implement-text">Select 'New Beneficiary' if this activity for this project has not 
-                                                    been previously reported for the selected target location. 
-                                                    Select 'Existing Beneficiary' if the activity has already been reported for this target location.</span>
-                                            </div>
+                                        <label class="custom-tooltip">{{ location_report_form.beneficiary_status.label }}
+                                            [Read the description]<span class="icon-info ml-2 text-red"></span>
+                                            <span class="custom-tooltip-text">
+                                                <h4 class="text-white"><u>Description</u></h4>
+                                                Select 'New Beneficiary' if this activity for this project has not 
+                                                been previously reported for the selected target location. 
+                                                Select 'Existing Beneficiary' if the activity has already been reported for this target location.
+                                            </span>
                                         </label>
                                         {{ location_report_form.beneficiary_status }}
                                         <p class="sign-up-field-error">{{ location_report_form.beneficiary_status.errors }}</p>
@@ -130,8 +130,17 @@
                                         <div class="multiple-fields-row two-items">
                                             <div class="field-col {% if not location_report_form.prev_assisted_by.value %}hidden{% endif %}" id="{{ location_report_form.prev_assisted_by.id_for_label }}-field">
                                                 <div class="select-field">
-                                                    <label for="{{ location_report_form.prev_assisted_by.id_for_label }}">Previously Assisted By</label>
-                                                    <p class="help-text">{{ location_report_form.prev_assisted_by.help_text }}</p>
+                                                    <label for="{{ location_report_form.prev_assisted_by.id_for_label }}"
+                                                    class="custom-tooltip">Previously Assisted By 
+                                                        [Read the description] <span class="icon-info ml-2 text-red"></span>
+                                                        <span class="custom-tooltip-text">
+                                                            <h4 class="text-white"><u>Description</u></h4>
+                                                                Have these beneficiaries previously been assisted by your organization with a different activity?
+                                                                If yes, please select the activity through which these beneficiaries were previously reached. 
+                                                                This applies only if the beneficiaries are new to the activity you are reporting now but were 
+                                                                assisted through another activity previously.
+                                                        </span>
+                                                    </label>
                                                     {{location_report_form.prev_assisted_by}}
                                                     <p class="sign-up-field-error">{{ location_report_form.prev_assisted_by.errors }}</p>
                                                 </div>

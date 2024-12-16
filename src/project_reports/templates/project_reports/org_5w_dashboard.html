@@ -43,6 +43,7 @@
                          src="{% static 'images/spinner.gif' %}" />
                     <!-- spinner end -->
                 </button>
+                {% include "components/_filter_drawer.html" with filter=dashboard_filter %}
             </div>
         </div>
         <p class="flex items-center gap-2 pb-3">
@@ -51,7 +52,7 @@
         {% comment %}  {% endcomment %}
         <section class="space-y-4 pt-2">
             {% comment %} filter {% endcomment %}
-            <form id="5w-filter-form" method="GET" class="py-4 bg-gray-fa border border-gray-d1 p-4 rounded-lg">
+            <!-- <form id="5w-filter-form" method="GET" class="py-4 bg-gray-fa border border-gray-d1 p-4 rounded-lg">
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div class="flex items-center gap-2">
                         <div class="inline-flex justify-center rounded-md text-sm font-medium flex-col items-start w-full h-auto">
@@ -75,13 +76,14 @@
                                 {% endfor %}
                             </select>
                         </div>
-                    </div>
+                    </div> 
                     <div class="flex items-center justify-end gap-2"> 
                         <a class="btn btn-gray-outline" href="{% url 'organizations-5w' user.profile.organization.code %}">Reset</a>
                         <button type="submit" class="btn btn-red">Filter</button>
                     </div>
                 </div>
-            </form>
+            </form> -->
+            
             {% comment %} cards {% endcomment %}
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 <div class="rounded-lg shadow-sm p-6 border border-gray-d1">

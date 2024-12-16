@@ -8,6 +8,7 @@ from django.shortcuts import get_object_or_404, render
 from rh.models import Cluster, Organization
 from users.utils import is_cluster_lead
 
+from project_reports.filters import Organization5WFilter
 from project_reports.models import ProjectMonthlyReport
 
 
@@ -136,7 +137,12 @@ def org_5w_dashboard(request, code):
         raise PermissionDenied
 
     user_org = request.user.profile.organization
-
+    monthly_report_filter = Organization5WFilter(
+        request.GET,
+        queryset=ProjectMonthlyReport.objects.filter(project__organization=user_org),
+        user=request.user,
+    )
+    monthly_reports = monthly_report_filter.qs
     from_date = request.GET.get("from")
     if not from_date:
         from_date = datetime.date(datetime.datetime.now().year, 1, 1)
@@ -158,7 +164,49 @@ def org_5w_dashboard(request, code):
     if cluster_code:
         filter_params["project__clusters__code__in"] = [cluster_code]
 
-    counts = ProjectMonthlyReport.objects.filter(**filter_params).aggregate(
+    # counts = ProjectMonthlyReport.objects.filter(**filter_params).aggregate(
+    #     report_indicators_count=Count("activityplanreport__activity_plan__indicator", distinct=True),
+    #     report_implementing_partners_count=Count(
+    #         "activityplanreport__targetlocationreport__target_location__implementing_partner", distinct=True
+    #     ),
+    #     report_target_location_province_count=Count(
+    #         "activityplanreport__targetlocationreport__target_location__province", distinct=True
+    #     ),
+    # )
+
+    # people_reached_data = (
+    #     ProjectMonthlyReport.objects.filter(
+    #         **filter_params,
+    #     )
+    #     .order_by("from_date")
+    #     .values("from_date")
+    #     .annotate(
+    #         total_people_reached=Sum("activityplanreport__targetlocationreport__disaggregationlocationreport__reached")
+    #     )
+    # )
+
+    # people reached by activities
+    # activity_domains = (
+    #     ProjectMonthlyReport.objects.filter(
+    #         **filter_params,
+    #     )
+    #     .values_list("activityplanreport__activity_plan__activity_domain__name", flat=True)
+    #     .distinct()
+    # )
+
+    # reach_by_activity = (
+    #     ProjectMonthlyReport.objects.filter(
+    #         **filter_params,
+    #     )
+    #     .values(
+    #         "activityplanreport__targetlocationreport__disaggregationlocationreport__disaggregation__name",
+    #         "activityplanreport__activity_plan__activity_domain__name",
+    #     )
+    #     .annotate(
+    #         total_people_reached=Sum("activityplanreport__targetlocationreport__disaggregationlocationreport__reached"),
+    #     )
+    # )
+    counts = monthly_reports.aggregate(
         report_indicators_count=Count("activityplanreport__activity_plan__indicator", distinct=True),
         report_implementing_partners_count=Count(
             "activityplanreport__targetlocationreport__target_location__implementing_partner", distinct=True
@@ -167,18 +215,13 @@ def org_5w_dashboard(request, code):
             "activityplanreport__targetlocationreport__target_location__province", distinct=True
         ),
     )
-
     people_reached_data = (
-        ProjectMonthlyReport.objects.filter(
-            **filter_params,
-        )
-        .order_by("from_date")
+        monthly_reports.order_by("from_date")
         .values("from_date")
         .annotate(
             total_people_reached=Sum("activityplanreport__targetlocationreport__disaggregationlocationreport__reached")
         )
     )
-
     counts["people_reached"] = sum(report["total_people_reached"] for report in people_reached_data)
 
     labels = [report["from_date"].strftime("%b") for report in people_reached_data]
@@ -186,29 +229,15 @@ def org_5w_dashboard(request, code):
         report["total_people_reached"] if report["total_people_reached"] is not None else 0
         for report in people_reached_data
     ]
-
-    # people reached by activities
-    activity_domains = (
-        ProjectMonthlyReport.objects.filter(
-            **filter_params,
-        )
-        .values_list("activityplanreport__activity_plan__activity_domain__name", flat=True)
-        .distinct()
+    activity_domains = monthly_reports.values_list(
+        "activityplanreport__activity_plan__activity_domain__name", flat=True
+    ).distinct()
+    reach_by_activity = monthly_reports.values(
+        "activityplanreport__targetlocationreport__disaggregationlocationreport__disaggregation__name",
+        "activityplanreport__activity_plan__activity_domain__name",
+    ).annotate(
+        total_people_reached=Sum("activityplanreport__targetlocationreport__disaggregationlocationreport__reached"),
     )
-
-    reach_by_activity = (
-        ProjectMonthlyReport.objects.filter(
-            **filter_params,
-        )
-        .values(
-            "activityplanreport__targetlocationreport__disaggregationlocationreport__disaggregation__name",
-            "activityplanreport__activity_plan__activity_domain__name",
-        )
-        .annotate(
-            total_people_reached=Sum("activityplanreport__targetlocationreport__disaggregationlocationreport__reached"),
-        )
-    )
-
     # Organize data into a dictionary
     data_dict = {}
 
@@ -242,6 +271,7 @@ def org_5w_dashboard(request, code):
         "activity_domains": activity_domains,
         "reach_by_activity": data_dict,
         "clusters": clusters,
+        "dashboard_filter": monthly_report_filter,
     }
 
     return render(request, "project_reports/org_5w_dashboard.html", context)

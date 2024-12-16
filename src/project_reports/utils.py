@@ -406,17 +406,18 @@ def write_import_report_template_sheet(workbook, monthly_report):
                 dv.add(cell)
         # Case when the list values exceed 255 characters
         else:
-            
-            start_row = 2  
+            start_row = 2
             for i, item in enumerate(container_dictionary[key][1:]):
                 sheet[f"{column}{start_row + i}"] = item
-            
+
             # Define a named range for the list of values
             named_range = f"{column}_List"  # You can name the range based on the column or other criteria
-            sheet.parent.create_named_range(named_range, sheet, f"{column}{start_row}:{column}{start_row + len(list_values) - 1}")
-            
+            sheet.parent.create_named_range(
+                named_range, sheet, f"{column}{start_row}:{column}{start_row + len(list_values) - 1}"
+            )
+
             # Create a data validation that references the named range
-            dv = DataValidation(type="list", formula1=f"={named_range}",showDropDown=True)
+            dv = DataValidation(type="list", formula1=f"={named_range}", showDropDown=True)
             sheet.add_data_validation(dv)
             for row in range(2, num_rows):
                 cell = sheet[f"{column}{row}"]

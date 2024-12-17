@@ -3,13 +3,14 @@ import datetime
 from django.contrib.auth.decorators import login_required
 from django.core.cache import cache
 from django.core.exceptions import PermissionDenied
-from django.db.models import Count, Sum
+from django.db.models import Count, Sum, Value
+from django.db.models.functions import Coalesce
 from django.shortcuts import get_object_or_404, render
-from rh.models import Cluster, Organization
-from users.utils import is_cluster_lead
 
 from project_reports.filters import Organization5WFilter
 from project_reports.models import ProjectMonthlyReport
+from rh.models import Cluster, Organization
+from users.utils import is_cluster_lead
 
 
 @login_required
@@ -66,11 +67,15 @@ def cluster_5w_dashboard(request, cluster):
         .order_by("from_date")
         .values("from_date")
         .annotate(
-            total_people_reached=Sum("activityplanreport__targetlocationreport__disaggregationlocationreport__reached")
+            total_people_reached=Coalesce(
+                Sum("activityplanreport__targetlocationreport__disaggregationlocationreport__reached"), Value(0)
+            )
         )
     )
 
-    counts["people_reached"] = sum(report["total_people_reached"] for report in people_reached_data)
+    counts["people_reached"] = 0
+    for report in people_reached_data:
+        counts["people_reached"] += report["total_people_reached"]
 
     labels = [report["from_date"].strftime("%b") for report in people_reached_data]
     data = [
@@ -164,48 +169,6 @@ def org_5w_dashboard(request, code):
     if cluster_code:
         filter_params["project__clusters__code__in"] = [cluster_code]
 
-    # counts = ProjectMonthlyReport.objects.filter(**filter_params).aggregate(
-    #     report_indicators_count=Count("activityplanreport__activity_plan__indicator", distinct=True),
-    #     report_implementing_partners_count=Count(
-    #         "activityplanreport__targetlocationreport__target_location__implementing_partner", distinct=True
-    #     ),
-    #     report_target_location_province_count=Count(
-    #         "activityplanreport__targetlocationreport__target_location__province", distinct=True
-    #     ),
-    # )
-
-    # people_reached_data = (
-    #     ProjectMonthlyReport.objects.filter(
-    #         **filter_params,
-    #     )
-    #     .order_by("from_date")
-    #     .values("from_date")
-    #     .annotate(
-    #         total_people_reached=Sum("activityplanreport__targetlocationreport__disaggregationlocationreport__reached")
-    #     )
-    # )
-
-    # people reached by activities
-    # activity_domains = (
-    #     ProjectMonthlyReport.objects.filter(
-    #         **filter_params,
-    #     )
-    #     .values_list("activityplanreport__activity_plan__activity_domain__name", flat=True)
-    #     .distinct()
-    # )
-
-    # reach_by_activity = (
-    #     ProjectMonthlyReport.objects.filter(
-    #         **filter_params,
-    #     )
-    #     .values(
-    #         "activityplanreport__targetlocationreport__disaggregationlocationreport__disaggregation__name",
-    #         "activityplanreport__activity_plan__activity_domain__name",
-    #     )
-    #     .annotate(
-    #         total_people_reached=Sum("activityplanreport__targetlocationreport__disaggregationlocationreport__reached"),
-    #     )
-    # )
     counts = monthly_reports.aggregate(
         report_indicators_count=Count("activityplanreport__activity_plan__indicator", distinct=True),
         report_implementing_partners_count=Count(
@@ -219,19 +182,25 @@ def org_5w_dashboard(request, code):
         monthly_reports.order_by("from_date")
         .values("from_date")
         .annotate(
-            total_people_reached=Sum("activityplanreport__targetlocationreport__disaggregationlocationreport__reached")
+            total_people_reached=Coalesce(
+                Sum("activityplanreport__targetlocationreport__disaggregationlocationreport__reached"), Value(0)
+            )
         )
     )
-    counts["people_reached"] = sum(report["total_people_reached"] for report in people_reached_data)
+    counts["people_reached"] = 0
+    for report in people_reached_data:
+        counts["people_reached"] += report["total_people_reached"]
 
     labels = [report["from_date"].strftime("%b") for report in people_reached_data]
     data = [
         report["total_people_reached"] if report["total_people_reached"] is not None else 0
         for report in people_reached_data
     ]
+
     activity_domains = monthly_reports.values_list(
         "activityplanreport__activity_plan__activity_domain__name", flat=True
     ).distinct()
+
     reach_by_activity = monthly_reports.values(
         "activityplanreport__targetlocationreport__disaggregationlocationreport__disaggregation__name",
         "activityplanreport__activity_plan__activity_domain__name",

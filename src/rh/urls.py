@@ -1,13 +1,25 @@
-from django.urls import path
 from django.conf import settings
+from django.urls import path
 
 from .views import (
-    budget_progress as budget_progress,
     activity_plans as activity_plans,
-    projects as projects,
-    exports as export_views,
+)
+from .views import (
+    budget_progress as budget_progress,
+)
+from .views import (
     clusters as clusters_views,
+)
+from .views import (
+    exports as export_views,
+)
+from .views import (
     organizations as organizations,
+)
+from .views import (
+    projects as projects,
+)
+from .views import (
     target_locations as target_locations,
 )
 from .views.views import (
@@ -225,6 +237,4 @@ urlpatterns = [
 ]
 
 if settings.DEBUG:
-    urlpatterns.append(
-        path(route="test-email/<str:template_name>",view=test_email,name="test-email")
-    )
+    urlpatterns.append(path(route="test-email/<str:template_name>", view=test_email, name="test-email"))

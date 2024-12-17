@@ -39,23 +39,23 @@ jobs:
       - name: Run deploy
         run: |
           ssh target "
-            python3 --version
-            cd rh/
-            source .venv/bin/activate
-            python3 --version
-            poetry --version
-            node -v
-            npm -v
-            git stash
-            git pull origin main
-            git stash pop
-            poetry install --without dev 
-            make clear_cache
-            make migrate
-            make npm-install
-            make collectstatic
-            make npm-build
-            sudo systemctl restart nginx
-            sudo systemctl restart gunicorn.service
+            python3 --version || exit 1
+            cd rh/ || exit 1
+            source .venv/bin/activate || exit 1
+            python3 --version || exit 1
+            poetry --version || exit 1
+            node -v || exit 1
+            npm -v || exit 1
+            git stash || exit 1
+            git pull origin main || exit 1
+            git stash pop || exit 1
+            poetry install --without dev  || exit 1
+            make clear_cache || exit 1
+            make migrate || exit 1
+            make npm-install || exit 1
+            make collectstatic || exit 1
+            make npm-build || exit 1
+            sudo systemctl restart nginx || exit 1
+            sudo systemctl restart gunicorn.service || exit 1
           "
       

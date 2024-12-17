@@ -21,7 +21,7 @@ from ..models import (
 def create_project_budget_progress_view(request, project):
     project = get_object_or_404(Project, pk=project)
     financial_report = project.budgetprogress_set.all()
-    
+
     if request.method == "POST":
         form = BudgetProgressForm(request.POST, project=project)
         country = request.POST.get("country")

@@ -6,13 +6,14 @@ from django.db.models import Count, Prefetch
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.views.decorators.cache import cache_page
+
 from project_reports.models import ProjectMonthlyReport
 from users.decorators import unauthenticated_user
 
 from ..models import ActivityDomain, ActivityType, Cluster, Indicator, Location, Project
 
 
-def test_email(request,template_name):
+def test_email(request, template_name):
     """
     Route: /test-email/{template_name}
     template_name format: <app_name>-<folder_name>-<file_name>
@@ -20,9 +21,10 @@ def test_email(request,template_name):
     """
     context = {}
 
-    template_name = template_name.replace("-","/")
+    template_name = template_name.replace("-", "/")
 
-    return render(request=request,template_name=f"{template_name}.html",context=context)
+    return render(request=request, template_name=f"{template_name}.html", context=context)
+
 
 @login_required
 def home(request):

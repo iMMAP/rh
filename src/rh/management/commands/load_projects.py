@@ -7,7 +7,6 @@ from django.core.management.base import BaseCommand
 from django.db import connection
 from django.db.models import Q
 from django.utils import timezone
-from users.models import Profile
 
 from rh.models import (
     ActivityDetail,
@@ -29,6 +28,7 @@ from rh.models import (
     TransferMechanismType,
     UnitType,
 )
+from users.models import Profile
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent.parent
 

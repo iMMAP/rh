@@ -3,6 +3,7 @@ from django.core.paginator import Paginator
 from django.db.models import Count
 from django.shortcuts import get_object_or_404, render
 from extra_settings.models import Setting
+
 from project_reports.filters import MonthlyReportsFilter
 from project_reports.models import ProjectMonthlyReport
 

@@ -5,6 +5,7 @@ from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import User
 from factory.django import DjangoModelFactory
 from factory.faker import faker
+
 from rh.models import Cluster, Location, Organization
 
 from .models import Profile

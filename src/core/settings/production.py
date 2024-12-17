@@ -5,7 +5,9 @@ APP_ENV = env("APP_ENV", default="production")
 
 # ALLOWED_HOSTS=reporthub.immap.org,www.reporthub.immap.org
 # env.list() splits comma-separated string into a list
-ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=["localhost","dev.reporthub.immap.org", "www.dev.reporthub.immap.org"])
+ALLOWED_HOSTS = env.list(
+    "ALLOWED_HOSTS", default=["localhost", "dev.reporthub.immap.org", "www.dev.reporthub.immap.org"]
+)
 
 # HSTS settings
 SECURE_HSTS_SECONDS = env("SECURE_HSTS_SECONDS", default=31536000)
@@ -16,7 +18,9 @@ SECURE_HSTS_INCLUDE_SUBDOMAINS = env("SECURE_HSTS_INCLUDE_SUBDOMAINS", default=T
 SESSION_COOKIE_SECURE = env("SESSION_COOKIE_SECURE", default=True)
 CSRF_COOKIE_SECURE = env("CSRF_COOKIE_SECURE", default=True)
 SECURE_SSL_REDIRECT = env("SECURE_SSL_REDIRECT", default=True)
-CSRF_TRUSTED_ORIGINS = env("CSRF_TRUSTED_ORIGINS",default=["http://localhost","https://localhost","https://127.0.0.1","http://127.0.0.1"])
+CSRF_TRUSTED_ORIGINS = env(
+    "CSRF_TRUSTED_ORIGINS", default=["http://localhost", "https://localhost", "https://127.0.0.1", "http://127.0.0.1"]
+)
 
 SENTRY_DSN = env("SENTRY_DSN", default="")
 
@@ -119,4 +123,4 @@ CACHES = {
     }
 }
 
-DJANGO_SUPERUSER_PASSWORD = env("DJANGO_SUPERUSER_PASSWORD",default="change-this")
+DJANGO_SUPERUSER_PASSWORD = env("DJANGO_SUPERUSER_PASSWORD", default="change-this")

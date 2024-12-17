@@ -5,6 +5,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse, reverse_lazy
 from django.utils.safestring import mark_safe
 from django_htmx.http import HttpResponseClientRedirect
+
 from rh.models import ActivityPlan
 
 from ..forms import (

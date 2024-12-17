@@ -203,6 +203,7 @@ def import_activity_plans(request, pk):
                 # Validate locations
                 country, province, district, zone = _validate_location_hierarchy(row, project_data, errors, line_num)
                 if not country or not province or not district:
+                    errors.append(f"Error on row {line_num}: {country} , {province}, {district}")
                     continue
 
                 target_location = TargetLocation(
@@ -274,8 +275,8 @@ def export_activity_plans_import_template(request, pk):
         "admin1pcode",
         "admin2name",
         "admin2pcode",
-        "admin2name",
-        "admin2pcode",
+        "admin3name",
+        "admin3pcode",
         "location_type",
         "implementing_partner_code",
         "facility_site_type",

@@ -3,7 +3,7 @@ import datetime
 from django.contrib.auth.decorators import login_required
 from django.core.cache import cache
 from django.core.exceptions import PermissionDenied
-from django.db.models import Count, Sum, Value
+from django.db.models import Case, Count, IntegerField, Sum, Value, When
 from django.db.models.functions import Coalesce
 from django.shortcuts import get_object_or_404, render
 
@@ -68,7 +68,17 @@ def cluster_5w_dashboard(request, cluster):
         .values("from_date")
         .annotate(
             total_people_reached=Coalesce(
-                Sum("activityplanreport__targetlocationreport__disaggregationlocationreport__reached"), Value(0)
+                Sum(
+                    Case(
+                        When(
+                            activityplanreport__targetlocationreport__beneficiary_status="new_beneficiary",
+                            then="activityplanreport__targetlocationreport__disaggregationlocationreport__reached",
+                        ),
+                        default=Value(0),
+                        output_field=IntegerField(),
+                    )
+                ),
+                Value(0),
             )
         )
     )
@@ -183,7 +193,17 @@ def org_5w_dashboard(request, code):
         .values("from_date")
         .annotate(
             total_people_reached=Coalesce(
-                Sum("activityplanreport__targetlocationreport__disaggregationlocationreport__reached"), Value(0)
+                Sum(
+                    Case(
+                        When(
+                            activityplanreport__targetlocationreport__beneficiary_status="new_beneficiary",
+                            then="activityplanreport__targetlocationreport__disaggregationlocationreport__reached",
+                        ),
+                        default=Value(0),
+                        output_field=IntegerField(),
+                    )
+                ),
+                Value(0),
             )
         )
     )

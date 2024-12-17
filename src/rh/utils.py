@@ -2,9 +2,9 @@ import json
 from datetime import datetime
 
 from django.contrib.auth.models import User
-from users.utils import is_cluster_lead
 
 from rh.models import Project, TargetLocation
+from users.utils import is_cluster_lead
 
 
 def has_permission(user: User, project: Project = None, clusters: list = [], permission: str = ""):

@@ -15,6 +15,7 @@ from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.http import require_http_methods
 from django_htmx.http import HttpResponseClientRedirect
 from extra_settings.models import Setting
+
 from project_reports.models import ProjectMonthlyReport
 
 from ..filters import ProjectsFilter

@@ -114,7 +114,7 @@ class Organization5WFilter(django_filters.FilterSet):
         widget=forms.SelectMultiple(attrs={"class": "custom-select"}),
     )
     disaggregations = django_filters.ModelMultipleChoiceFilter(
-        field_name="activityplanreport__targetlocationreport__target_location__disaggregations__name",
+        field_name="activityplanreport__targetlocationreport__disaggregationlocationreport__disaggregation__name",
         queryset=Disaggregation.objects.all(),
         label="disaggregations",
         widget=forms.SelectMultiple(attrs={"class": "custom-select"}),

@@ -28,7 +28,7 @@ def write_projects_reports_to_csv(monthly_progress_report, response):
         "project_code",
         "report_id",
         "cluster_name",
-        "focal_person_ame",
+        "focal_person_name",
         "focal_person_phone",
         "focal_person_email",
         "organization",
@@ -126,18 +126,18 @@ def write_projects_reports_to_csv(monthly_progress_report, response):
                         )
                         if project_reports.project.clusters
                         else None,
-                        project_reports.project.user.profile.name
-                        if project_reports.project.user and project_reports.project.user.profile
+                        project_reports.project.user.first_name
+                        if project_reports.project.user.first_name 
                         else None,
                         project_reports.project.user.profile.phone
-                        if project_reports.project.user and project_reports.project.user.profile
+                        if project_reports.project.user.profile 
                         else None,
                         project_reports.project.user.email if project_reports.project.user else None,
                         project_reports.project.user.profile.organization.code
-                        if project_reports.project.user
+                        if project_reports.project.user.profile
                         else None,
                         project_reports.project.user.profile.organization.type
-                        if project_reports.project.user
+                        if project_reports.project.user.profile
                         else None,
                         ", ".join([partner.name for partner in project_reports.project.programme_partners.all()])
                         if project_reports.project.programme_partners

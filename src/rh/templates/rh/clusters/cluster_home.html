@@ -128,7 +128,7 @@
                 </div>
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
                     <div class="rounded-lg shadow-sm p-6 border border-gray-d1">
-                        <div class="flex items-center justify-between pb-4 border-b border-gray-e6">
+                        <div class="flex items-center justify-between pb-4 border-b border-red-b5">
                             <h3 class="text-lg font-medium">Active Projects</h3>
                             <a href="{% url 'cluster-projects-list' request.resolver_match.kwargs.cluster %}?state=in-progress" class="btn btn-gray-outline">View All</a>
                         </div>
@@ -145,14 +145,14 @@
                                     </thead>
                                     <tbody class="">
                                         {% for project in active_projects %}
-                                            <tr class="border border-gray-e6 hover:bg-muted/50 ">
+                                            <tr class="border border-red-b5 hover:bg-muted/50 ">
                                                 <td class="py-3 align-middle ">
                                                     <a class="" href="{% url 'projects-detail' project.id %}">{{ project.title }} ({{ project.code }})</a>
                                                 </td>
                                                 <td class="py-3 align-middle">{{ project.end_date|date:"d/m/Y" }}</td>
                                                 <td class="py-3 align-middle text-right">
                                                     <a href="{% url 'project_reports_home' project.pk %}"
-                                                       class="font-medium border border-gray-d1 px-2 rounded">Reports</a>
+                                                       class="font-medium border border-gray-d1 px-2 py-1 rounded">Reports</a>
                                                 </td>
                                             </tr>
                                         {% endfor %}
@@ -165,7 +165,7 @@
                         </div>
                     </div>
                     <div class="rounded-lg shadow-sm p-6 border border-gray-d1">
-                        <div class="flex items-center justify-between pb-4 border-b border-gray-e6">
+                        <div class="flex items-center justify-between pb-4 border-b border-red-b5">
                             <h3 class="text-lg font-medium">Pending Reports</h3>
                             <a href="{% url 'clusters-reports' request.resolver_match.kwargs.cluster %}?state=pending" class="btn btn-gray-outline">View All</a>
                         </div>
@@ -174,7 +174,7 @@
                                 {% if pending_reports|length != 0 %}
                                 <table class="w-full caption-bottom text-sm">
                                     <thead class="">
-                                        <tr class="border-b border-gray-e6 hover:bg-muted/50 font-bold">
+                                        <tr class="border-b border-red-b5 hover:bg-muted/50 font-bold">
                                             <th class="h-12 text-left align-middle ">Project</th>
                                             <th class="h-12 text-left align-middle ">Focal Point</th>
                                             <th class="h-12 text-left align-middle ">Report</th>
@@ -183,7 +183,7 @@
                                     </thead>
                                     <tbody class="">
                                         {% for report in pending_reports %}
-                                            <tr class="border-b border-gray-e6 hover:bg-muted/50 ">
+                                            <tr class="border-b border-red-b5 hover:bg-muted/50 ">
                                                 <td class="py-3 align-middle ">
                                                     <a href="{% url 'projects-detail' report.project.id %}">{{ report.project.code }}</a>
                                                 </td>

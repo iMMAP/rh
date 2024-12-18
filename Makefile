@@ -34,9 +34,13 @@ serve:
 vite:
 	cd src/static && npm run dev
 
+.PHONY: ruff-watch
+ruff-watch:
+	ruff check ./src --watch
+
 .PHONY: dev
 dev:
-	make -j3 serve vite
+	make -j3 serve vite ruff-watch
 
 .PHONY: vite-host
 vite-host:

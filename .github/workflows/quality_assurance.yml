@@ -35,7 +35,6 @@ jobs:
       run: |
         make test
     - name: Formating and Linting check with ruff
-      uses: astral-sh/ruff-action@v2
-      with:
-        args: check --output-format=github
-        src: "./src"
+      run: |
+        ruff check --output-format=github ./src
+        ruff format --check

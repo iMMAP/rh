@@ -126,12 +126,8 @@ def write_projects_reports_to_csv(monthly_progress_report, response):
                         )
                         if project_reports.project.clusters
                         else None,
-                        project_reports.project.user.first_name
-                        if project_reports.project.user.first_name 
-                        else None,
-                        project_reports.project.user.profile.phone
-                        if project_reports.project.user.profile 
-                        else None,
+                        project_reports.project.user.first_name if project_reports.project.user.first_name else None,
+                        project_reports.project.user.profile.phone if project_reports.project.user.profile else None,
                         project_reports.project.user.email if project_reports.project.user else None,
                         project_reports.project.user.profile.organization.code
                         if project_reports.project.user.profile

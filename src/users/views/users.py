@@ -230,11 +230,7 @@ def export_organization_users(request):
     user_org = request.user.profile.organization
     try:
         # get the filtered queryset
-        users_list = (
-            User.objects.filter(profile__organization=user_org, is_active=True)
-            .select_related("profile")
-            .order_by("-id")
-        )
+        users_list = User.objects.filter(profile__organization=user_org).select_related("profile").order_by("-id")
         if request.GET:
             users_filter = UsersFilter(
                 request.GET,

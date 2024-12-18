@@ -47,14 +47,16 @@ class ProjectMonthlyReportForm(forms.ModelForm):
         from_date = cleaned_data.get("from_date")
         to_date = cleaned_data.get("to_date")
         obj = self.initial.get("project")
+
         if isinstance(obj, int):
             project = get_object_or_404(Project, pk=obj)
         else:
             project = obj
+
         if from_date and to_date:
-            if from_date.strftime("%B-%Y") > today_date.strftime("%B-%Y"):
+            if from_date > today_date:
                 self.add_error("from_date", "Unable to select future date.")
-            if to_date.strftime("%B-%Y") > today_date.strftime("%B-%Y"):
+            if to_date > today_date:
                 self.add_error("to_date", "Unable to select future date.")
             if from_date.month != to_date.month:
                 self.add_error("from_date", "From date and to date must be in the same month.")
@@ -69,6 +71,7 @@ class ProjectMonthlyReportForm(forms.ModelForm):
                 self.add_error("to_date", f"It must not precede the project start date {(project.start_date).date()}")
             if to_date > (project.end_date.date()):
                 self.add_error("to_date", f"It must not exceed the project end date {(project.end_date).date()}")
+
         return cleaned_data
 
 

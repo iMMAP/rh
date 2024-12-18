@@ -17,8 +17,6 @@ from users.utils import is_cluster_lead
 def cluster_5w_dashboard(request, cluster):
     cluster = get_object_or_404(Cluster, code=cluster)
 
-   
-
     if not is_cluster_lead(
         user=request.user,
         clusters=[
@@ -26,7 +24,7 @@ def cluster_5w_dashboard(request, cluster):
         ],
     ):
         raise PermissionDenied
-    
+
     user_country = request.user.profile.country
     filter_params = {
         "project__clusters__in": [cluster],

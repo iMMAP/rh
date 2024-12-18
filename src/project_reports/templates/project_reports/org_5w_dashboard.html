@@ -49,41 +49,7 @@
         <p class="flex items-center gap-2 pb-3">
             <span class="text-sm text-gray-700">Organization 5w dashboard.</span>
         </p>
-        {% comment %}  {% endcomment %}
         <section class="space-y-4 pt-2">
-            {% comment %} filter {% endcomment %}
-            <!-- <form id="5w-filter-form" method="GET" class="py-4 bg-gray-fa border border-gray-d1 p-4 rounded-lg">
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div class="flex items-center gap-2">
-                        <div class="inline-flex justify-center rounded-md text-sm font-medium flex-col items-start w-full h-auto">
-                            <label class="font-semibold uppercase text-gray" for="from">From</label>
-                            <input 
-                                type="date"
-                                name="from"
-                                value="{{ request.GET.from }}"
-                                id="from">
-                        </div>
-                        <div class="inline-flex justify-center rounded-md text-sm font-medium flex-col items-start w-full h-auto">
-                            <label class="font-semibold text-gray uppercase text-[0.65rem]" for="to">To</label>
-                            <input type="date" name="to" value="{{ request.GET.to }}" id="to">
-                        </div>
-                        <div class="inline-flex justify-center rounded-md text-sm font-medium flex-col items-start w-full h-auto">
-                            <label class="font-semibold uppercase text-gray" for="cluster">Cluster</label>
-                            <select name="cluster" id="cluster" placeholder="Select a cluster...">
-                                    <option value="" default>Select a cluster</option>
-                                {% for cluster in clusters %}
-                                    <option {% if cluster.code == request.GET.cluster %}selected{% endif %} value="{{cluster.code}}">{{cluster.title}}</option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                    </div> 
-                    <div class="flex items-center justify-end gap-2"> 
-                        <a class="btn btn-gray-outline" href="{% url 'organizations-5w' user.profile.organization.code %}">Reset</a>
-                        <button type="submit" class="btn btn-red">Filter</button>
-                    </div>
-                </div>
-            </form> -->
-            
             {% comment %} cards {% endcomment %}
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 <div class="rounded-lg shadow-sm p-6 border border-gray-d1">
@@ -167,16 +133,6 @@
             </div>
             {% comment %} Grid {% endcomment %}
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                {% comment %} <div class="rounded-lg shadow-sm p-6 border border-gray-d1">
-                    <div class="flex items-center justify-between pb-4 border-b border-gray-e6">
-                        <h3 class="text-lg font-medium">Location Heatmap</h3>
-                    </div>
-                    <div class="mt-4">
-                        <div class="relative w-full bg-gray-d1 h-96">
-                        </div>
-                    </div>
-                </div> {% endcomment %}
-                {% comment %} People reached by activities {% endcomment %}
                 <div class="col-span-2 rounded-lg shadow-sm p-6 border border-gray-d1">
                     <div class="flex items-center justify-between pb-4 border-b border-gray-e6">
                         <h3 class="text-lg font-medium ">People reached by activities</h3>
@@ -228,107 +184,39 @@
 {% endblock content %}
 
 {% block scripts %}
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
-            crossorigin=""></script>
-    <script>
-  const ctx = document.getElementById('myChart').getContext("2d");
-  new Chart(ctx, {
-    type: 'line',
-    data: {
-      labels: {{people_reached_labels|safe}},
-      datasets: [{
-        label: 'People Reached',
-        data: {{people_reached_data|safe}},
-        borderColor:"#a52824",
-        backgroundColor:"rgba(255,0,0, 0.1)",
-        pointBackgroundColor:"#a52824",
-        fill: true,
-        
-        tension: 0.4,
-        borderWidth: 1
-      }]
-    },
-    options: {
-        maintainAspectRatio: false,
-        responsive: true,
-        height: 300,
-        scales: {
-            y: {
-            beginAtZero: true
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+        crossorigin=""></script>
+
+<script>
+    const ctx = document.getElementById('myChart').getContext("2d");
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+        labels: {{people_reached_labels|safe}},
+        datasets: [{
+            label: 'People Reached',
+            data: {{people_reached_data|safe}},
+            borderColor:"#a52824",
+            backgroundColor:"rgba(255,0,0, 0.1)",
+            pointBackgroundColor:"#a52824",
+            fill: true,
+            
+            tension: 0.4,
+            borderWidth: 1
+        }]
+        },
+        options: {
+            maintainAspectRatio: false,
+            responsive: true,
+            height: 300,
+            scales: {
+                y: {
+                beginAtZero: true
+                }
             }
-         }
-    }
-  });
-
-
-  {% comment %} export {% endcomment %}
-  document.querySelectorAll(".export-button")?.forEach(button => {
-    button.addEventListener("click", (event) => {
-	event.preventDefault();
-	event.stopPropagation();
-
-    const exportUrl = button.getAttribute("data-url");
-    const iconDownload = button.querySelector(".icon-download");
-    const iconSpinner = button.querySelector(".downloading");
-    // extract the file name
-    let name = button.getAttribute("title");
-    const today = new Date()
-    const formatDate = today.toISOString().split('T')[0];
-    let file_name = name+formatDate;
-
-    
-    
-    
-	// Get the form data
-	// const formData = new FormData(document.getElementById('5w-filter-form'));
-
-	// Convert the form data to JSON
-	const jsonData = JSON.stringify(Object.fromEntries(formData));
-
-	// Include the JSON data in the fetch body
-	// const requestBody = JSON.stringify({...JSON.parse(jsonData) });
-    iconDownload.style.display='none';
-    iconSpinner.style.display="block";
-    button.disabled = true;
-    console.log((event.loaded / event.total) * 100);
-	// Send an AJAX request to the export URL
-	fetch(exportUrl, {
-		method: "POST",
-		headers: {
-			"Content-Type": "application/json",
-			"X-CSRFToken": csrftoken,
-		},
-		// body: requestBody,
-	})
-	.then(response =>  {
-        return response.blob();
-	})
-    .then(blob =>{
-        const link = document.createElement("a");
-        const url = URL.createObjectURL(blob);
-        link.href = url;
-        link.download = file_name+".csv";
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        URL.revokeObjectURL(url);
-    })
-	.catch((error) => {
-		if (error.status === 400) {
-			console.log("Error: No records selected for export");
-		} else {
-			console.log(`Error: ${error.message}`);
-		}
-	}).finally(() => {
-        button.disabled = false;
-        iconSpinner.style.display = "none";
-        iconDownload.style.display = "inline";
+        }
     });
-})});
-
-    </script>
-
-    
+</script>
 {% endblock scripts %}

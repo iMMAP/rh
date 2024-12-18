@@ -26,31 +26,21 @@ def cluster_5w_dashboard(request, cluster):
         raise PermissionDenied
 
     user_country = request.user.profile.country
-
-    from_date = request.GET.get("from")
-    if not from_date:
-        from_date = datetime.date(datetime.datetime.now().year, 1, 1)
-
-    to_date = request.GET.get("to")
-    if not to_date:
-        to_date = datetime.datetime.now().date()
-
-    organization = request.GET.get("organization", None)
-
     filter_params = {
         "project__clusters__in": [cluster],
         "state__in": ["submited", "completed"],
-        "from_date__lte": to_date,
-        "to_date__gte": from_date,
         "project__user__profile__country": user_country,
         "activityplanreport__activity_plan__activity_domain__clusters__in": [cluster],
         "activityplanreport__targetlocationreport__beneficiary_status": "new_beneficiary",
     }
 
-    if organization:
-        filter_params["project__organization__code"] = organization
+    monthly_report_filter = Organization5WFilter(
+        request.GET,
+        queryset=ProjectMonthlyReport.objects.filter(**filter_params),
+        user=request.user,
+    )
 
-    counts = ProjectMonthlyReport.objects.filter(**filter_params).aggregate(
+    counts = monthly_report_filter.qs.filter(**filter_params).aggregate(
         report_indicators_count=Count("activityplanreport__activity_plan__indicator", distinct=True),
         report_implementing_partners_count=Count(
             "activityplanreport__targetlocationreport__target_location__implementing_partner", distinct=True
@@ -61,7 +51,7 @@ def cluster_5w_dashboard(request, cluster):
     )
 
     people_reached_data = (
-        ProjectMonthlyReport.objects.filter(
+        monthly_report_filter.qs.filter(
             **filter_params,
         )
         .order_by("from_date")
@@ -95,13 +85,13 @@ def cluster_5w_dashboard(request, cluster):
 
     # people reached by activities
     activity_domains = (
-        ProjectMonthlyReport.objects.filter(**filter_params)
+        monthly_report_filter.qs.filter(**filter_params)
         .values_list("activityplanreport__activity_plan__activity_domain__name", flat=True)
         .distinct()
     )
 
     reach_by_activity = (
-        ProjectMonthlyReport.objects.filter(**filter_params)
+        monthly_report_filter.qs.filter(**filter_params)
         .values(
             "activityplanreport__targetlocationreport__disaggregationlocationreport__disaggregation__name",
             "activityplanreport__activity_plan__activity_domain__name",
@@ -137,6 +127,7 @@ def cluster_5w_dashboard(request, cluster):
         "people_reached_data": data,
         "activity_domains": activity_domains,
         "reach_by_activity": data_dict,
+        "dashboard_filter": monthly_report_filter,
     }
 
     return render(request, "project_reports/cluster_5w_dashboard.html", context)
@@ -158,6 +149,7 @@ def org_5w_dashboard(request, code):
         user=request.user,
     )
     monthly_reports = monthly_report_filter.qs
+
     from_date = request.GET.get("from")
     if not from_date:
         from_date = datetime.date(datetime.datetime.now().year, 1, 1)

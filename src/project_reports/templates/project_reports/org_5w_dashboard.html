@@ -21,8 +21,8 @@
         <div class="top-panel pb-2 pt-4 flex flex-col items-center justify-between gap-2 sm:flex-row">
             <h2 class="locations text-red-be">{{ request.user.profile.organization }}'s 5W Dashboard</h2>
             <div class="actions-panel">
-                <button class="export-button btn btn-gray"
-                    data-url="{% url 'export-org-5w-stock-reports' user.profile.organization.code %}"
+                <a class=" btn btn-gray"
+                    href="{% url 'export-org-5w-stock-reports' user.profile.organization.code %}"
                     title="{{user.profile.organization.code}}_5w_stock_reports_">
                     <span class="btn-text">Export Stock Reports</span>
                     <span class="icon-download"></span>
@@ -31,9 +31,9 @@
                          style="width: 1.2rem"
                          src="{% static 'images/spinner.gif' %}" />
                     <!-- spinner end -->
-                </button>
-                <button class="export-button btn btn-red"
-                    data-url="{% url 'export-org-5w-dashboard' user.profile.organization.code %}"
+                </a>
+                <a class=" btn btn-red"
+                    href="{% url 'export-org-5w-dashboard' user.profile.organization.code %}?{{request.GET.urlencode}}"
                     title="{{user.profile.organization.code}}_5w_projects_reports_">
                     <span class="btn-text">Export Projects Reports</span>
                     <span class="icon-download"></span>
@@ -42,7 +42,7 @@
                          style="width: 1.2rem"
                          src="{% static 'images/spinner.gif' %}" />
                     <!-- spinner end -->
-                </button>
+                </a>
                 {% include "components/_filter_drawer.html" with filter=dashboard_filter %}
             </div>
         </div>
@@ -282,13 +282,13 @@
     
     
 	// Get the form data
-	const formData = new FormData(document.getElementById('5w-filter-form'));
+	// const formData = new FormData(document.getElementById('5w-filter-form'));
 
 	// Convert the form data to JSON
 	const jsonData = JSON.stringify(Object.fromEntries(formData));
 
 	// Include the JSON data in the fetch body
-	const requestBody = JSON.stringify({...JSON.parse(jsonData) });
+	// const requestBody = JSON.stringify({...JSON.parse(jsonData) });
     iconDownload.style.display='none';
     iconSpinner.style.display="block";
     button.disabled = true;
@@ -300,7 +300,7 @@
 			"Content-Type": "application/json",
 			"X-CSRFToken": csrftoken,
 		},
-		body: requestBody,
+		// body: requestBody,
 	})
 	.then(response =>  {
         return response.blob();

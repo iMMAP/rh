@@ -99,7 +99,7 @@ class BeneficiaryType(models.Model):
     updated_at = models.DateTimeField(auto_now=True, null=True)
 
     def __str__(self):
-        return f"[{self.type}] {self.name}"
+        return f"{self.name}"
 
     class Meta:
         verbose_name = "Beneficiary Type"
@@ -151,7 +151,7 @@ class Donor(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, null=True)
 
     def __str__(self):
-        return self.name
+        return self.code
 
     class Meta:
         verbose_name = "Donor"

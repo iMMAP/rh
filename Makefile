@@ -113,4 +113,4 @@ clear_cache:
 
 .PHONY: loaddata
 loaddata:
-	poetry run python src/manage.py loaddata --database=default groups clusters locations types currencies disaggregation donors facility_sites organizations stock_item stock_unit beneficiaries 
+	poetry run python src/manage.py loaddata --database=default groups clusters locations beneficiaries types currencies disaggregation donors facility_sites organizations activity_domain activity_type indicator stock_item stock_unit 

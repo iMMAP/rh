@@ -1,7 +1,6 @@
 [
     {
         "model": "auth.group",
-        "pk": 2,
         "fields": {
             "name": "iMMAP_IMO",
             "permissions": [
@@ -88,7 +87,6 @@
     },
     {
         "model": "auth.group",
-        "pk": 3,
         "fields": {
             "name": "CLUSTER_LEAD",
             "permissions": [
@@ -160,7 +158,6 @@
     },
     {
         "model": "auth.group",
-        "pk": 4,
         "fields": {
             "name": "ORG_LEAD",
             "permissions": [
@@ -202,7 +199,6 @@
     },
     {
         "model": "auth.group",
-        "pk": 5,
         "fields": {
             "name": "ORG_USER",
             "permissions": [

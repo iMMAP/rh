@@ -1,0 +1,327 @@
+[
+    {
+        "model": "rh.activitydomain",
+        "pk": 1,
+        "fields": {
+            "name": "CCCM Assistance",
+            "code": "cccm-assistance",
+            "is_active": true,
+            "countries": [],
+            "clusters": [
+                6
+            ]
+        }
+    },
+    {
+        "model": "rh.activitydomain",
+        "pk": 2,
+        "fields": {
+            "name": "NFI Assistance",
+            "code": "nfi-assistance",
+            "is_active": true,
+            "countries": [],
+            "clusters": [
+                6
+            ]
+        }
+    },
+    {
+        "model": "rh.activitydomain",
+        "pk": 3,
+        "fields": {
+            "name": "Shelter Assistance",
+            "code": "shelter-assistance",
+            "is_active": true,
+            "countries": [],
+            "clusters": [
+                6
+            ]
+        }
+    },
+    {
+        "model": "rh.activitydomain",
+        "pk": 4,
+        "fields": {
+            "name": "Winterization Assistance",
+            "code": "winterization-assistance",
+            "is_active": true,
+            "countries": [],
+            "clusters": [
+                6
+            ]
+        }
+    },
+    {
+        "model": "rh.activitydomain",
+        "pk": 5,
+        "fields": {
+            "name": "Agriculture Based Livelihood Support",
+            "code": "agriculture-based-livelihood-support",
+            "is_active": true,
+            "countries": [],
+            "clusters": [
+                5
+            ]
+        }
+    },
+    {
+        "model": "rh.activitydomain",
+        "pk": 7,
+        "fields": {
+            "name": "Food Assistance",
+            "code": "food-assistance",
+            "is_active": true,
+            "countries": [],
+            "clusters": [
+                5
+            ]
+        }
+    },
+    {
+        "model": "rh.activitydomain",
+        "pk": 9,
+        "fields": {
+            "name": "Livelihood Support",
+            "code": "livelihood-support",
+            "is_active": true,
+            "countries": [],
+            "clusters": [
+                5
+            ]
+        }
+    },
+    {
+        "model": "rh.activitydomain",
+        "pk": 12,
+        "fields": {
+            "name": "8. Essential  supplies",
+            "code": "essential_supplies",
+            "is_active": true,
+            "countries": [],
+            "clusters": [
+                4
+            ]
+        }
+    },
+    {
+        "model": "rh.activitydomain",
+        "pk": 14,
+        "fields": {
+            "name": "3. Training",
+            "code": "health_training",
+            "is_active": true,
+            "countries": [],
+            "clusters": [
+                4
+            ]
+        }
+    },
+    {
+        "model": "rh.activitydomain",
+        "pk": 16,
+        "fields": {
+            "name": "4. Mental Health and Psychosocial Support (MHPSS)",
+            "code": "mental_health_psychosocial_support",
+            "is_active": true,
+            "countries": [],
+            "clusters": [
+                4
+            ]
+        }
+    },
+    {
+        "model": "rh.activitydomain",
+        "pk": 17,
+        "fields": {
+            "name": "1. Primary health care services",
+            "code": "primary_health_care_services",
+            "is_active": true,
+            "countries": [],
+            "clusters": [
+                4
+            ]
+        }
+    },
+    {
+        "model": "rh.activitydomain",
+        "pk": 20,
+        "fields": {
+            "name": "7. Vaccination/Immunization",
+            "code": "vaccination",
+            "is_active": true,
+            "countries": [],
+            "clusters": [
+                4
+            ]
+        }
+    },
+    {
+        "model": "rh.activitydomain",
+        "pk": 21,
+        "fields": {
+            "name": "Acute Malnutrition",
+            "code": "acute_malnutrition",
+            "is_active": true,
+            "countries": [],
+            "clusters": [
+                3
+            ]
+        }
+    },
+    {
+        "model": "rh.activitydomain",
+        "pk": 22,
+        "fields": {
+            "name": "Infant and Young Child Feeding",
+            "code": "infant-and-young-child-feeding",
+            "is_active": true,
+            "countries": [],
+            "clusters": [
+                3
+            ]
+        }
+    },
+    {
+        "model": "rh.activitydomain",
+        "pk": 23,
+        "fields": {
+            "name": "Nutrition Emergency",
+            "code": "nutrition-emergency",
+            "is_active": true,
+            "countries": [],
+            "clusters": [
+                3
+            ]
+        }
+    },
+    {
+        "model": "rh.activitydomain",
+        "pk": 25,
+        "fields": {
+            "name": "Nutrition Training ",
+            "code": "nutrition-training ",
+            "is_active": true,
+            "countries": [],
+            "clusters": [
+                3
+            ]
+        }
+    },
+    {
+        "model": "rh.activitydomain",
+        "pk": 28,
+        "fields": {
+            "name": "CPiE",
+            "code": "cpie",
+            "is_active": true,
+            "countries": [],
+            "clusters": [
+                12
+            ]
+        }
+    },
+    {
+        "model": "rh.activitydomain",
+        "pk": 29,
+        "fields": {
+            "name": "GBV",
+            "code": "gbv",
+            "is_active": true,
+            "countries": [],
+            "clusters": [
+                12
+            ]
+        }
+    },
+    {
+        "model": "rh.activitydomain",
+        "pk": 30,
+        "fields": {
+            "name": "GP",
+            "code": "gp",
+            "is_active": true,
+            "countries": [],
+            "clusters": [
+                12
+            ]
+        }
+    },
+    {
+        "model": "rh.activitydomain",
+        "pk": 31,
+        "fields": {
+            "name": "HLP",
+            "code": "hlp",
+            "is_active": true,
+            "countries": [],
+            "clusters": [
+                12
+            ]
+        }
+    },
+    {
+        "model": "rh.activitydomain",
+        "pk": 32,
+        "fields": {
+            "name": "MA",
+            "code": "ma",
+            "is_active": true,
+            "countries": [],
+            "clusters": [
+                12
+            ]
+        }
+    },
+    {
+        "model": "rh.activitydomain",
+        "pk": 35,
+        "fields": {
+            "name": "WASH Evaluation",
+            "code": "evaluation",
+            "is_active": true,
+            "countries": [],
+            "clusters": [
+                1
+            ]
+        }
+    },
+    {
+        "model": "rh.activitydomain",
+        "pk": 36,
+        "fields": {
+            "name": "Hygiene Activities",
+            "code": "hygiene",
+            "is_active": true,
+            "countries": [],
+            "clusters": [
+                1
+            ]
+        }
+    },
+    {
+        "model": "rh.activitydomain",
+        "pk": 38,
+        "fields": {
+            "name": "Sanitation Activities",
+            "code": "sanitation",
+            "is_active": true,
+            "countries": [],
+            "clusters": [
+                1
+            ]
+        }
+    },
+    {
+        "model": "rh.activitydomain",
+        "pk": 40,
+        "fields": {
+            "name": "WASH Supplies",
+            "code": "wash_supplies",
+            "is_active": true,
+            "countries": [],
+            "clusters": [
+                1
+            ]
+        }
+    }
+]

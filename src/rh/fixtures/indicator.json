@@ -1,0 +1,1617 @@
+[
+    {
+        "model": "rh.indicator",
+        "pk": 1,
+        "fields": {
+            "name": "# of IDPs living in ISETs monitored by Mobile CCCM team",
+            "activity_types": [
+                1
+            ]
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 2,
+        "fields": {
+            "name": "# of IDPs living in ISETs which are provided with cash-based care and maintenance",
+            
+            "activity_types": [
+                2
+            ]
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 3,
+        "fields": {
+            "name": "# of IDPs living in ISETs which are provided with in-kind form of care and maintenance",
+            "activity_types": [
+                2
+            ]
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 4,
+        "fields": {
+            "name": "# of people receiving in kind assistance for basic household items / NFIs to meet their immediate needs",
+            "activity_types": [
+                3
+            ]
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 5,
+        "fields": {
+            "name": "# of people receiving cash assistance for basic household items / NFIs  to meet their immediate needs",
+            "activity_types": [
+                3
+            ]
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 6,
+        "fields": {
+            "name": "# of distribution undertaken with safe spaces for women & girls",
+            
+            
+            "activity_types": [
+                3
+            ]
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 7,
+        "fields": {
+            "name": "# of women and girls consulted during assessment and selection of beneficiaries for NFI assistance",
+            
+            
+            "activity_types": [
+                4
+            ]
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 8,
+        "fields": {
+            "name": "# of people receiving emergency shelter assistance, including through cash-for-rent support",
+            
+            
+            "activity_types": []
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 9,
+        "fields": {
+            "name": "# of people receiving emergency shelter assistance through tents and plastic tarpaulin",
+            
+            
+            "activity_types": []
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 10,
+        "fields": {
+            "name": "# of women and girls consulted during assessment and selection of beneficiaries for emergency shelter assistance",
+            
+            
+            "activity_types": []
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 11,
+        "fields": {
+            "name": "# of people receiving support to construct permanent shelters through cash",
+            
+            
+            "activity_types": []
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 12,
+        "fields": {
+            "name": "# of people receiving support to construct permanent shelters through kind",
+            
+            
+            "activity_types": []
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 13,
+        "fields": {
+            "name": "# of women and girls who received technical support / awareness including building back better measures for permanent shelter",
+            
+            
+            "activity_types": []
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 14,
+        "fields": {
+            "name": " # of distribution undertaken with safe spaces for women & girls",
+            "activity_types": []
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 15,
+        "fields": {
+            "name": "# of women and girls consulted during assessment and selection of beneficiaries for permanent shelter support",
+            "activity_types": []
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 16,
+        "fields": {
+            "name": "# of people receiving in kind assistance to repair/upgrade minor damaged shelters",
+            "activity_types": []
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 17,
+        "fields": {
+            "name": "# of people receiving cash assistance to repair/upgrade minor damaged shelters",
+            "activity_types": []
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 18,
+        "fields": {
+            "name": "# of women and girls who received technical support / awareness including building back better measures for shelter reconstruction for minor damages",
+            "activity_types": []
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 19,
+        "fields": {
+            "name": "# of people receiving in kind assistance to repair/upgrade severely damaged shelters",
+            "activity_types": []
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 20,
+        "fields": {
+            "name": "# of people receiving cash assistance to repair/upgrade severely damaged shelters",
+            "activity_types": []
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 21,
+        "fields": {
+            "name": "# of people receiving top up cash assistance to rebuild destroyed shelters",
+            "activity_types": []
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 22,
+        "fields": {
+            "name": "# of people receiving top up in kind assistance to rebuild destroyed shelters",
+            
+            
+            "activity_types": []
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 23,
+        "fields": {
+            "name": "# of women and girls who received technical support / awareness including building back better measures for shelter reconstruction for severe damages",
+            
+            
+            "activity_types": []
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 24,
+        "fields": {
+            "name": "# of people receiving cash assistance for shelter reconstruction toolkits",
+            
+            
+            "activity_types": []
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 25,
+        "fields": {
+            "name": "# of people receiving in kind assitance for shelter reconstruction toolkits",
+            
+            
+            "activity_types": []
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 26,
+        "fields": {
+            "name": "# of women and girls consulted during assessment and selection of beneficiaries for shelter repair / reconstruction support",
+            
+            
+            "activity_types": [
+                13
+            ]
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 27,
+        "fields": {
+            "name": "# of people receiving support to construct transitional shelters through in kind",
+            
+            
+            "activity_types": [
+                14
+            ]
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 28,
+        "fields": {
+            "name": "# of people receiving support to construct transitional shelters through cash",
+            
+            
+            "activity_types": [
+                14
+            ]
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 29,
+        "fields": {
+            "name": "# of people receiving support to construct transitional shelters for PSNs through in kind",
+            
+            
+            "activity_types": [
+                14
+            ]
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 30,
+        "fields": {
+            "name": "# of people receiving support to construct transitional shelters for PSNs through cash",
+            
+            
+            "activity_types": [
+                14
+            ]
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 31,
+        "fields": {
+            "name": "# of women and girls who received technical support / awareness including building back better measures for transitional shelter",
+            
+            
+            "activity_types": [
+                14
+            ]
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 32,
+        "fields": {
+            "name": "# of women and girls consulted during assessment and selection of beneficiaries for transitional shelter support",
+            
+            
+            "activity_types": [
+                15
+            ]
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 33,
+        "fields": {
+            "name": "# of people receiving seasonal cash assistance for blankets or quilts.",
+            
+            
+            "activity_types": []
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 34,
+        "fields": {
+            "name": "# of people receiving seasonal in kind assistance for blankets or quilts.",
+            
+            
+            "activity_types": []
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 35,
+        "fields": {
+            "name": "# of people receiving seasonal in kind assistance for heaters and fuel",
+            
+            
+            "activity_types": []
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 36,
+        "fields": {
+            "name": "# of people receiving seasonal cash assistance for heaters and fuel",
+            
+            
+            "activity_types": []
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 37,
+        "fields": {
+            "name": "# of people receiving seasonal in kind assistance for winter clothing",
+            
+            
+            "activity_types": [
+                18
+            ]
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 38,
+        "fields": {
+            "name": "# of people receiving seasonal cash assistance for winter clothing",
+            
+            
+            "activity_types": [
+                18
+            ]
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 39,
+        "fields": {
+            "name": "# of women and girls consulted during assessment and selection of beneficiaries for seasonal winter assistance",
+            
+            
+            "activity_types": [
+                19
+            ]
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 40,
+        "fields": {
+            "name": "# People receiving cash support for backyard vegetable cultivation (1 month)",
+            
+            
+            "activity_types": [
+                20
+            ]
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 41,
+        "fields": {
+            "name": "# People receiving in-kind support for backyard vegetable cultivation (1 month)",
+            
+            
+            "activity_types": [
+                20
+            ]
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 42,
+        "fields": {
+            "name": "# People receiving cash support for summer cultivation package (1 month)",
+            
+            
+            "activity_types": [
+                20
+            ]
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 43,
+        "fields": {
+            "name": "# People receiving cash winter wheat cultivation package (1 month)",
+            
+            
+            "activity_types": []
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 44,
+        "fields": {
+            "name": "# People receiving in-kind support for summer cultivation package (1 month)",
+            
+            
+            "activity_types": []
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 45,
+        "fields": {
+            "name": "# People receiving in-kind winter wheat cultivation package (1 month)",
+            
+            
+            "activity_types": [
+                22
+            ]
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 46,
+        "fields": {
+            "name": "Asset Creation/Vocational Skills WFP-Food",
+            
+            
+            "activity_types": []
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 47,
+        "fields": {
+            "name": "Asset Creation/Vocational Skills WFP-Cash",
+            
+            
+            "activity_types": []
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 48,
+        "fields": {
+            "name": "# Cross-border returnees receiving cash transfers for food (4 months)",
+            
+            
+            "activity_types": []
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 49,
+        "fields": {
+            "name": "# Cross-border returnees receiving in kind food assistance (4 months)",
+            
+            
+            "activity_types": []
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 50,
+        "fields": {
+            "name": "# IDPs receiving cash transfers for food (3 months)",
+            
+            
+            "activity_types": []
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 51,
+        "fields": {
+            "name": "# IDPs receiving in-kind food assistance (3 months)",
+            
+            
+            "activity_types": []
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 52,
+        "fields": {
+            "name": "# Natural disaster-affected people receiving in-kind food assistance (2 months)",
+            
+            
+            "activity_types": []
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 53,
+        "fields": {
+            "name": "# Natural disaster-affected people receiving cash transfers for food (2 months)",
+            
+            
+            "activity_types": []
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 54,
+        "fields": {
+            "name": "# Pakistani refugees receiving cash transfers for food (6 months)",
+            
+            
+            "activity_types": []
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 55,
+        "fields": {
+            "name": "# Pakistani refugees receiving in kind food assistance (6 months)",
+            
+            
+            "activity_types": []
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 56,
+        "fields": {
+            "name": "# People in IPC Phase 3 receiving cash transfers for food (Jan-Apr, Nov-Dec, 6 months)",
+            
+            
+            "activity_types": [
+                28
+            ]
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 57,
+        "fields": {
+            "name": "# People in IPC Phase 3 receiving in-kind food assistance (Jan-Apr, Nov-Dec, 6 months)",
+            
+            
+            "activity_types": [
+                28
+            ]
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 58,
+        "fields": {
+            "name": "# People in IPC Phase 4 receiving in-kind food assistance (Jan-Apr, Nov-Dec, 6 months)",
+            
+            
+            "activity_types": [
+                29
+            ]
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 59,
+        "fields": {
+            "name": "# People in IPC Phase 4 receiving cash transfers for food (Jan-Apr, Nov-Dec, 6 months)",
+            
+            
+            "activity_types": [
+                29
+            ]
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 60,
+        "fields": {
+            "name": "Hotspot Response-Food",
+            
+            
+            "activity_types": []
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 61,
+        "fields": {
+            "name": "Emergency livelihoods support aimed for women(Cash)",
+            
+            
+            "activity_types": [
+                31
+            ]
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 62,
+        "fields": {
+            "name": "Emergency livelihoods support aimed for women(Food)",
+            
+            
+            "activity_types": []
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 63,
+        "fields": {
+            "name": "Asset Creation-Food (FAO: CFW)",
+            
+            
+            "activity_types": []
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 64,
+        "fields": {
+            "name": "# Natural disaster-affected people receiving in-kind livelihoods assistance (1 month)",
+            
+            
+            "activity_types": [
+                34
+            ]
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 65,
+        "fields": {
+            "name": "# Natural disaster-affected people receiving livelihoods assistance in cash (1 month)",
+            
+            
+            "activity_types": [
+                34
+            ]
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 66,
+        "fields": {
+            "name": "Emergency containment of plant pest and animal diseases outbreaks (Lumpy Sking Disease, Locust, etc.)",
+            
+            
+            "activity_types": []
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 67,
+        "fields": {
+            "name": "# People receiving cash for backyard poultry package (1 month)",
+            
+            
+            "activity_types": []
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 68,
+        "fields": {
+            "name": "# People receiving in-kind backyard poultry package (1 month)",
+            
+            
+            "activity_types": []
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 69,
+        "fields": {
+            "name": "# People receiving cash for livestock protection package (1 month)",
+            
+            
+            "activity_types": []
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 70,
+        "fields": {
+            "name": "# People receiving in-kind livestock protection package (1 month)",
+            
+            
+            "activity_types": []
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 71,
+        "fields": {
+            "name": "# People receiving unconditional cash transfer (1 month)",
+            
+            
+            "activity_types": []
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 72,
+        "fields": {
+            "name": "# of kits distributed",
+            
+            
+            "activity_types": []
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 73,
+        "fields": {
+            "name": "# of people attended health education/awareness sessions ",
+            
+            
+            "activity_types": []
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 74,
+        "fields": {
+            "name": "# of persons reached with Risk Communication and Community Engagement (RCCE) messages for communicable diseases ",
+            
+            
+            "activity_types": []
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 75,
+        "fields": {
+            "name": "# of health care workers trained",
+            
+            
+            "activity_types": []
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 76,
+        "fields": {
+            "name": "# of community health workers / health educators trained",
+            
+            
+            "activity_types": []
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 77,
+        "fields": {
+            "name": "# of Ante-Natal Care (ANC) visits ",
+            
+            
+            "activity_types": []
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 78,
+        "fields": {
+            "name": "# of Post-Natal Care (PNC) visits",
+            
+            
+            "activity_types": []
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 79,
+        "fields": {
+            "name": "# of deliveries attended by a skilled birth attendant",
+            
+            
+            "activity_types": []
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 80,
+        "fields": {
+            "name": "#of pregnant women who received TT2 vaccine",
+            
+            
+            "activity_types": []
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 81,
+        "fields": {
+            "name": "# of child bearing age women who received TT2 vaccine",
+            
+            
+            "activity_types": []
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 82,
+        "fields": {
+            "name": "# of Mental Health and Psychosocial Support (MHPSS) consultations",
+            
+            
+            "activity_types": [
+                74
+            ]
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 83,
+        "fields": {
+            "name": "# of health facilities rehabilitated",
+            
+            
+            "activity_types": []
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 84,
+        "fields": {
+            "name": "# of diarrhea cases treated with oral rehydration solution (ORS) in children under the age of 5 years",
+            
+            
+            "activity_types": []
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 85,
+        "fields": {
+            "name": "# of primary health care consultations",
+            
+            
+            "activity_types": []
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 86,
+        "fields": {
+            "name": "# of patients referred out from PHC facilities",
+            
+            
+            "activity_types": []
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 87,
+        "fields": {
+            "name": "# of patients provided with cash referred out from PHC",
+            
+            
+            "activity_types": []
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 88,
+        "fields": {
+            "name": "# of people with disabilities received rehabilitative care",
+            
+            
+            "activity_types": [
+                79
+            ]
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 89,
+        "fields": {
+            "name": "# of Noncommunicable diseases (NCDs) consultations",
+            
+            
+            "activity_types": [
+                80
+            ]
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 90,
+        "fields": {
+            "name": "# of patients receiving inpatient care at secondary health care facilities",
+            
+            
+            "activity_types": []
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 91,
+        "fields": {
+            "name": "# of patients receiving outpatient care at secondary health care facilities",
+            
+            
+            "activity_types": []
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 92,
+        "fields": {
+            "name": "# of (conflict) inducted trauma cases referred",
+            
+            
+            "activity_types": []
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 93,
+        "fields": {
+            "name": "# of (non-conflict) inducted trauma cases referred",
+            
+            
+            "activity_types": []
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 94,
+        "fields": {
+            "name": "# of (conflict) inducted trauma cases treated",
+            
+            
+            "activity_types": []
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 95,
+        "fields": {
+            "name": "# of (non-conflict) inducted trauma cases treated",
+            
+            
+            "activity_types": []
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 96,
+        "fields": {
+            "name": "# of children under 2 years of age received Measles vaccine",
+            
+            
+            "activity_types": [
+                87
+            ]
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 97,
+        "fields": {
+            "name": "# of children under 2 years of age received Penta3 vaccine",
+            
+            
+            "activity_types": []
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 98,
+        "fields": {
+            "name": "Number of pregnant and lactating women with AM who are admitted for treatment",
+            
+            
+            "activity_types": [
+                89
+            ]
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 99,
+        "fields": {
+            "name": "Number of girls and boys aged 6-59 months provided with specialized nutritious foods",
+            
+            
+            "activity_types": []
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 100,
+        "fields": {
+            "name": "Number of PLW provided with specialized nutritious foods",
+            
+            
+            "activity_types": []
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 101,
+        "fields": {
+            "name": "Number of households with malnourished children or PLW reached with the integrated packge for improved nutrition outcomes",
+            
+            
+            "activity_types": []
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 102,
+        "fields": {
+            "name": "Number of primary caregivers of children aged 0-23 months who received Maternal, Infant and Young Child Nutrition counselling",
+            
+            
+            "activity_types": [
+                93
+            ]
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 103,
+        "fields": {
+            "name": "Number of People ",
+            
+            
+            "activity_types": [
+                94
+            ]
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 104,
+        "fields": {
+            "name": "Number of girls and boys aged 6-59 months who received vitamin A supplement",
+            
+            
+            "activity_types": []
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 105,
+        "fields": {
+            "name": "Number of functional community-based sentinel sites",
+            
+            
+            "activity_types": []
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 106,
+        "fields": {
+            "name": "Number of functionnal cluster coordination teams at national and subnational levels",
+            
+            
+            "activity_types": []
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 107,
+        "fields": {
+            "name": "Number of girls and boys aged 6-59 months with MAM who are admitted for treatment",
+            
+            
+            "activity_types": []
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 108,
+        "fields": {
+            "name": "Number of girls and boys aged 0-59 months with SAM who are admitted for treatment in IPD",
+            
+            
+            "activity_types": []
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 109,
+        "fields": {
+            "name": "Number of girls and boys aged 6-59 months with SAM who are admitted for treatment in OPD",
+            
+            
+            "activity_types": []
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 110,
+        "fields": {
+            "name": "Number of provincial representative SMART surveys conducted",
+            
+            
+            "activity_types": []
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 111,
+        "fields": {
+            "name": "# of community members reached with messaging through mass media sessions (TV, radio, social media)",
+            
+            
+            "activity_types": []
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 112,
+        "fields": {
+            "name": "# of recruited humanitarian workers including social workers   and community volunteers trained on CP Minimum standards and other specialized CP services",
+            
+            
+            "activity_types": []
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 113,
+        "fields": {
+            "name": "# of child protection workers and staff from other sectors receiving capacity building training on the norms and standards of child protection and to adopt new tools and working modalities, including PSS, Caring for Child Survivors (CS) of SGBV Case Management, PFA, (social worker, case worker, teachers, health workers, authorities, staff members)",
+            
+            
+            "activity_types": []
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 114,
+        "fields": {
+            "name": "# of children and youth who have suffered from grave child rights violations (including former CAAC and CoM ) provided with economic reintegration assistance",
+            
+            
+            "activity_types": []
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 115,
+        "fields": {
+            "name": "# of children and youth who have suffered from grave child rights violations including former CAAC and CoM provided with education reintegration assistance",
+            
+            
+            "activity_types": []
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 116,
+        "fields": {
+            "name": "# of children and youth who have suffered from grave child rights violations (including former CAAC and CoM) provided with social reintegration and life skills assistance",
+            
+            
+            "activity_types": []
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 117,
+        "fields": {
+            "name": "# of girls and boys at risk identified, registered, referred, facilitated to access services, and  follow up of case management services in line with the Afghanistan SOP for Case Management ( child labour, child marriage)",
+            
+            
+            "activity_types": []
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 118,
+        "fields": {
+            "name": "# of girls and boys provided with cash as a component of the Case Management services",
+            
+            
+            "activity_types": []
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 119,
+        "fields": {
+            "name": "# of girls and boys at risk, (including unaccompanied and separated children, and  grave child rights violations ) registered in the CPIMS+ and received comprehensive  case management services",
+            
+            
+            "activity_types": []
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 120,
+        "fields": {
+            "name": "# of Unaccompanied and Separated Children UASC provided with interim family-based care or other suitable interim alternative care arrangements",
+            
+            
+            "activity_types": []
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 121,
+        "fields": {
+            "name": "# of children (boys and girls) provided with structured PSS (Child Friendly Spaces, adolescent friendly centers (Adolescent Social Hubs & Girls Friendly facilities) homes and commuities)",
+            
+            
+            "activity_types": []
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 122,
+        "fields": {
+            "name": "# of children (boys and girls) referred to specialized services Mental Heath services",
+            
+            
+            "activity_types": []
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 123,
+        "fields": {
+            "name": "# of parents and caregivers are provided with information on wellbeing messaging to support their children's psychosocial wellbeing",
+            
+            
+            "activity_types": []
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 124,
+        "fields": {
+            "name": "# of Child Friendly Spaces and Adults Friendly Spaces (Adolescent Social Hubs, Child friendly Spaces & Girls Friendly facilities) established to provide MHPSS, Life Skills & new generations skills",
+            
+            
+            "activity_types": []
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 125,
+        "fields": {
+            "name": "# of children (boys and girls) referred to specialized services –Mental Heath",
+            
+            
+            "activity_types": [
+                120
+            ]
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 126,
+        "fields": {
+            "name": "# of Unaccompanied and Separated Children (UASC) provided with interim family-based care or other suitable interim alternative care arrangements",
+            
+            
+            "activity_types": [
+                121
+            ]
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 127,
+        "fields": {
+            "name": "# of Unaccompanied and Separated Children (UASC) provided with Family Tracing and Reunification (FTR) services",
+            
+            
+            "activity_types": [
+                121
+            ]
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 128,
+        "fields": {
+            "name": "# of persons reached with awareness activities",
+            
+            
+            "activity_types": []
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 129,
+        "fields": {
+            "name": "# of staff trained on core concepts, referrals, case management",
+            
+            
+            "activity_types": []
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 130,
+        "fields": {
+            "name": "# of Dignity Kits distributed to women and girls",
+            
+            
+            "activity_types": []
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 131,
+        "fields": {
+            "name": "% of vulnerable populations receiving multi-sectoral lifesaving services  (MHPSS, legal, safety, health & case management)",
+            
+            
+            "activity_types": [
+                125
+            ]
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 132,
+        "fields": {
+            "name": "# of women and girls reached with wellbeing support",
+            
+            
+            "activity_types": [
+                126
+            ]
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 133,
+        "fields": {
+            "name": "# of people receiving structured and sustained psychosocial support services ",
+            
+            
+            "activity_types": [
+                127
+            ]
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 134,
+        "fields": {
+            "name": "# of vulnerable women, men, boys, and girls, including IDPs, refugees, returnees, elderly, and people living with a disability receiving various direct protection assistance including cash and kinds.  and services excluding psychosocial support and referral ",
+            
+            
+            "activity_types": [
+                127
+            ]
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 135,
+        "fields": {
+            "name": "# of individuals receiving counselling and/or legal assistance on / and supported with civil documentation ",
+            
+            
+            "activity_types": [
+                127
+            ]
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 136,
+        "fields": {
+            "name": "# people covered with a protection response through community-based protection activities including awareness raising and protection monitoring",
+            
+            
+            "activity_types": [
+                127
+            ]
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 137,
+        "fields": {
+            "name": "# people including civil society and partners receiving training and/or technical support",
+            
+            
+            "activity_types": [
+                127
+            ]
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 138,
+        "fields": {
+            "name": "# staff trained on protection mainstreaming",
+            
+            
+            "activity_types": [
+                127
+            ]
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 139,
+        "fields": {
+            "name": "# of staff in local authorities are sensitized",
+            
+            
+            "activity_types": [
+                127
+            ]
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 140,
+        "fields": {
+            "name": "# duty bearers including donors reached through advocacy initiatives",
+            
+            
+            "activity_types": [
+                127
+            ]
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 141,
+        "fields": {
+            "name": "% of partners are using the DPISP",
+            
+            
+            "activity_types": [
+                127
+            ]
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 142,
+        "fields": {
+            "name": "#  of HCT meetings where protection concerns are acknowledged and discussed",
+            
+            
+            "activity_types": [
+                127
+            ]
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 143,
+        "fields": {
+            "name": "% of partner using agreed terminology in interaction with authorities/communities",
+            
+            
+            "activity_types": [
+                127
+            ]
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 144,
+        "fields": {
+            "name": "# of individuals receiving information on HLP rights in the community and at border points",
+            
+            
+            "activity_types": [
+                128
+            ]
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 145,
+        "fields": {
+            "name": "# of duty bearers, humanitarian and other actors receiving training and/or technical support on HLP rights",
+            
+            
+            "activity_types": [
+                128
+            ]
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 146,
+        "fields": {
+            "name": "# of individuals receiving counselling and/or legal assistance on HLP rights",
+            
+            
+            "activity_types": [
+                128
+            ]
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 147,
+        "fields": {
+            "name": "# of individual recipients of land allocation",
+            
+            
+            "activity_types": [
+                128
+            ]
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 148,
+        "fields": {
+            "name": "# of individuals with strengthened communal land rights",
+            
+            
+            "activity_types": [
+                128
+            ]
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 149,
+        "fields": {
+            "name": "# of conflict-affected people benefitting from Explosive Ordnance Disposal and survey activities",
+            
+            
+            "activity_types": [
+                129
+            ]
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 150,
+        "fields": {
+            "name": "# of people living within one kilometre of a known explosive hazard benefitting from the removal of those explosive hazards",
+            
+            
+            "activity_types": [
+                129
+            ]
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 151,
+        "fields": {
+            "name": "# of vulnerable people receiving EORE",
+            
+            
+            "activity_types": [
+                129
+            ]
+        }
+    },
+    {
+        "model": "rh.indicator",
+        "pk": 152,
+        "fields": {
+            "name": "# of persons with disabilities supported with victim assistance activities",
+            
+            
+            "activity_types": [
+                130
+            ]
+        }
+    }
+]

@@ -18,6 +18,17 @@ from .models import (
 )
 
 
+def get_month_year(date):
+    return date.strftime("%Y-%m")
+
+
+def check_range_exists(project, from_date, to_date):
+    for date in project.projectmonthlyreport_set.all():
+        if from_date == date.from_date and to_date == date.to_date:
+            return True
+    return False
+
+
 class ProjectMonthlyReportForm(forms.ModelForm):
     class Meta:
         model = ProjectMonthlyReport
@@ -54,9 +65,19 @@ class ProjectMonthlyReportForm(forms.ModelForm):
             project = obj
 
         if from_date and to_date:
-            if from_date > today_date:
+            from_month_year = get_month_year(from_date)
+            to_month_year = get_month_year(to_date)
+            today_month_year = get_month_year(today_date)
+
+            if check_range_exists(project, from_date, to_date):
+                self.add_error("from_date", "Date range already exists.")
+                self.add_error("to_date", "Date range already exists.")
+
+            if from_month_year > today_month_year:
+                print(f"{from_month_year} ******* {today_month_year}")
                 self.add_error("from_date", "Unable to select future date.")
-            if to_date > today_date:
+            if to_month_year > today_month_year:
+                print(f"{to_month_year} ******* {today_month_year}")
                 self.add_error("to_date", "Unable to select future date.")
             if from_date.month != to_date.month:
                 self.add_error("from_date", "From date and to date must be in the same month.")

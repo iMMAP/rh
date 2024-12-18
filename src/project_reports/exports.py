@@ -184,7 +184,7 @@ def org_5w_dashboard_export(request, code):
         return response
     except Exception as e:
         print(f"Error: {e}")
-        return HttpResponse(status=500,content=e)
+        return HttpResponse(status=500, content=e)
 
 
 # export monthly report for single project

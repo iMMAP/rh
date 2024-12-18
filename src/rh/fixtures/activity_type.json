@@ -1,0 +1,482 @@
+[
+    {
+        "model": "rh.activitytype",
+        "pk": 1,
+        "fields": {
+            "activity_domain": 1,
+            "name": "CCCM WG: Mobile Site Management",
+            "code": "cccm-wg-mobile-site-management",
+            "is_active": true
+        }
+    },
+    {
+        "model": "rh.activitytype",
+        "pk": 2,
+        "fields": {
+            "activity_domain": 1,
+            "name": "CCCM WG: Site Care and Maintenance",
+            "code": "cccm-wg-site-care-and-maintenance",
+            "is_active": true
+        }
+    },
+    {
+        "model": "rh.activitytype",
+        "pk": 3,
+        "fields": {
+            "activity_domain": 2,
+            "name": "NFI Assistance",
+            "code": "nfi-assistance",
+            "is_active": true
+        }
+    },
+    {
+        "model": "rh.activitytype",
+        "pk": 4,
+        "fields": {
+            "activity_domain": 2,
+            "name": "NFI assistance (Assessment & Consultations)",
+            "code": "nfi_assistance_assessment_and_consultations",
+            "is_active": true
+        }
+    },
+    {
+        "model": "rh.activitytype",
+        "pk": 13,
+        "fields": {
+            "activity_domain": 3,
+            "name": "Shelter repair / reconstruction assistance (Assessment & Consultations)",
+            "code": "shelter_repair_reconstruction_assistance_assessment_and_consultations",
+            "is_active": true
+        }
+    },
+    {
+        "model": "rh.activitytype",
+        "pk": 14,
+        "fields": {
+            "activity_domain": 3,
+            "name": "Transitional Shelter Support",
+            "code": "transitional-shelter-support",
+            "is_active": true
+        }
+    },
+    {
+        "model": "rh.activitytype",
+        "pk": 15,
+        "fields": {
+            "activity_domain": 3,
+            "name": "Transitional Shelter Support (Assessment & Consultations)",
+            "code": "transitional_shelter_support_assessment_and_consultations",
+            "is_active": true
+        }
+    },
+    {
+        "model": "rh.activitytype",
+        "pk": 18,
+        "fields": {
+            "activity_domain": 4,
+            "name": "Assistance to cover winterization needs (Winter Clothing)",
+            "code": "assistance-to-cover-winterization-needs-winter-clothing",
+            "is_active": true
+        }
+    },
+    {
+        "model": "rh.activitytype",
+        "pk": 19,
+        "fields": {
+            "activity_domain": 4,
+            "name": "Assistance to cover winterization needs (Assessment & Consultations)",
+            "code": "assistance_to_cover_winterization_needs_assessment_and_consultations",
+            "is_active": true
+        }
+    },
+    {
+        "model": "rh.activitytype",
+        "pk": 20,
+        "fields": {
+            "activity_domain": 5,
+            "name": "Livelihoods support: backyard vegetable cultivation (1 month)",
+            "code": "livelihoods-support-backyard-vegetable-cultivation-1-month",
+            "is_active": true
+        }
+    },
+    {
+        "model": "rh.activitytype",
+        "pk": 22,
+        "fields": {
+            "activity_domain": 5,
+            "name": "Livelihoods support: winter wheat cultivation package (1 month)",
+            "code": "livelihoods-support-winter-wheat-cultivation-package-1-month",
+            "is_active": true
+        }
+    },
+    {
+        "model": "rh.activitytype",
+        "pk": 28,
+        "fields": {
+            "activity_domain": 7,
+            "name": "Food assistance for people in IPC Phase 3 (Jan-Apr, Nov-Dec, 6 months)",
+            "code": "food-assistance-for-people-in-ipc-phase-3-jan-apr-nov-dec-6-months",
+            "is_active": true
+        }
+    },
+    {
+        "model": "rh.activitytype",
+        "pk": 29,
+        "fields": {
+            "activity_domain": 7,
+            "name": "Food assistance for people in IPC Phase 4 (Jan-Apr, Nov-Dec, 6 months)",
+            "code": "food-assistance-for-people-in-ipc-phase-4-jan-apr-nov-dec-6-months",
+            "is_active": true
+        }
+    },
+    {
+        "model": "rh.activitytype",
+        "pk": 31,
+        "fields": {
+            "activity_domain": 9,
+            "name": "Emergency livelihoods support aimed for women-cash",
+            "code": "emergency_livelihoods_support_aimed_for_women_cash",
+            "is_active": true
+        }
+    },
+    {
+        "model": "rh.activitytype",
+        "pk": 34,
+        "fields": {
+            "activity_domain": 9,
+            "name": "Livelihoods support for natural disaster-affected (1month)",
+            "code": "livelihoods-support-for-natural-disaster-affected-1month",
+            "is_active": true
+        }
+    },
+    {
+        "model": "rh.activitytype",
+        "pk": 47,
+        "fields": {
+            "activity_domain": 12,
+            "name": "8.8 Provision of essential supplies [Pneumonia Kit]",
+            "code": "provision-of-essential-supplies-pneumonia-kit",
+            "is_active": true
+        }
+    },
+    {
+        "model": "rh.activitytype",
+        "pk": 48,
+        "fields": {
+            "activity_domain": 12,
+            "name": "8.9 Provision of essential supplies [Reproductive Health Kit (RH)]",
+            "code": "provision-of-essential-supplies-reproductive-health-kit-rh",
+            "is_active": true
+        }
+    },
+    {
+        "model": "rh.activitytype",
+        "pk": 49,
+        "fields": {
+            "activity_domain": 12,
+            "name": "8.10 Provision of essential supplies [Trauma and Emergency Surgery Kit  (TESK)]",
+            "code": "provision-of-essential-supplies-trauma-and-emergency-surgery-kit-tesk",
+            "is_active": true
+        }
+    },
+    {
+        "model": "rh.activitytype",
+        "pk": 65,
+        "fields": {
+            "activity_domain": 14,
+            "name": "3.8 Training of health care providers on MHPSS",
+            "code": "training-of-health-care-providers-on-mhpss",
+            "is_active": true
+        }
+    },
+    {
+        "model": "rh.activitytype",
+        "pk": 66,
+        "fields": {
+            "activity_domain": 14,
+            "name": "3.1 Training of health care providers on Prevention of Sexual Exploitation & Abuse (PSEA)",
+            "code": "training-of-health-care-providers-on-prevention-of-sexual-exploitation-abuse-psea",
+            "is_active": true
+        }
+    },
+    {
+        "model": "rh.activitytype",
+        "pk": 67,
+        "fields": {
+            "activity_domain": 14,
+            "name": "3.5 Training of health care providers  on surveillance and outbreak investigation and response ",
+            "code": "training-of-health-care-providers-on-surveillance-and-outbreak-investigation-and-response-",
+            "is_active": true
+        }
+    },
+    {
+        "model": "rh.activitytype",
+        "pk": 68,
+        "fields": {
+            "activity_domain": 14,
+            "name": "3.3 Training of health care providers on trauma care",
+            "code": "training-of-health-care-providers-on-trauma-care",
+            "is_active": true
+        }
+    },
+    {
+        "model": "rh.activitytype",
+        "pk": 74,
+        "fields": {
+            "activity_domain": 16,
+            "name": "4.1 Provision of Mental Health and Psychosocial Support (MHPSS) consultations",
+            "code": "provision-of-mental-health-and-psychosocial-support-mhpss-consultations",
+            "is_active": true
+        }
+    },
+    {
+        "model": "rh.activitytype",
+        "pk": 79,
+        "fields": {
+            "activity_domain": 17,
+            "name": "1.3 Support delivery of disability and physical rehabilitation services",
+            "code": "support-delivery-of-disability-and-physical-rehabilitation-services",
+            "is_active": true
+        }
+    },
+    {
+        "model": "rh.activitytype",
+        "pk": 80,
+        "fields": {
+            "activity_domain": 17,
+            "name": "1.5 Support delivery of primary health care services including non-communicable diseases",
+            "code": "support-delivery-of-primary-health-care-services-including-non-communicable-diseases",
+            "is_active": true
+        }
+    },
+    {
+        "model": "rh.activitytype",
+        "pk": 87,
+        "fields": {
+            "activity_domain": 20,
+            "name": "7.2 Measles vaccination coverage",
+            "code": "measles-vaccination-coverage",
+            "is_active": true
+        }
+    },
+    {
+        "model": "rh.activitytype",
+        "pk": 89,
+        "fields": {
+            "activity_domain": 21,
+            "name": "AM treatment of PLW in OPD",
+            "code": "am_treatment_of_plw_in_opd",
+            "is_active": true
+        }
+    },
+    {
+        "model": "rh.activitytype",
+        "pk": 93,
+        "fields": {
+            "activity_domain": 22,
+            "name": "MIYCN counselling",
+            "code": "miycn-counselling",
+            "is_active": true
+        }
+    },
+    {
+        "model": "rh.activitytype",
+        "pk": 94,
+        "fields": {
+            "activity_domain": 23,
+            "name": "BSFP Received 6-59 Months ",
+            "code": "bsfp-received-6-59-months ",
+            "is_active": true
+        }
+    },
+    {
+        "model": "rh.activitytype",
+        "pk": 102,
+        "fields": {
+            "activity_domain": 23,
+            "name": "Oedema IPD/OPD SAM & OPD-MAM Referral",
+            "code": "oedema-ipd/opd-sam-&-opd-mam-referral",
+            "is_active": true
+        }
+    },
+    {
+        "model": "rh.activitytype",
+        "pk": 103,
+        "fields": {
+            "activity_domain": 23,
+            "name": "Vitamin A Supplementation 6-59 Months",
+            "code": "vitamin-a-supplementation-6-59-months",
+            "is_active": true
+        }
+    },
+    {
+        "model": "rh.activitytype",
+        "pk": 108,
+        "fields": {
+            "activity_domain": 25,
+            "name": "Nutrition and Health Education Session",
+            "code": "nutrition-and-health-education-session",
+            "is_active": true
+        }
+    },
+    {
+        "model": "rh.activitytype",
+        "pk": 109,
+        "fields": {
+            "activity_domain": 25,
+            "name": "Nutrition in Emergencies",
+            "code": "nutrition-in-emergencies",
+            "is_active": true
+        }
+    },
+    {
+        "model": "rh.activitytype",
+        "pk": 120,
+        "fields": {
+            "activity_domain": 28,
+            "name": "Psychosocial distress and mental disorders",
+            "code": "psychosocial-distress-and-mental-disorders",
+            "is_active": true
+        }
+    },
+    {
+        "model": "rh.activitytype",
+        "pk": 121,
+        "fields": {
+            "activity_domain": 28,
+            "name": "Unaccompanied and separated children",
+            "code": "unaccompanied-and-separated-children",
+            "is_active": true
+        }
+    },
+    {
+        "model": "rh.activitytype",
+        "pk": 125,
+        "fields": {
+            "activity_domain": 29,
+            "name": "Provision of multi-sectoral activities",
+            "code": "provision_of_multi_sectoral_activities",
+            "is_active": true
+        }
+    },
+    {
+        "model": "rh.activitytype",
+        "pk": 126,
+        "fields": {
+            "activity_domain": 29,
+            "name": "Wellbeing support to women and girls",
+            "code": "wellbeing_support_to_women_and_girls",
+            "is_active": true
+        }
+    },
+    {
+        "model": "rh.activitytype",
+        "pk": 127,
+        "fields": {
+            "activity_domain": 30,
+            "name": "General Protection",
+            "code": "general-protection",
+            "is_active": true
+        }
+    },
+    {
+        "model": "rh.activitytype",
+        "pk": 128,
+        "fields": {
+            "activity_domain": 31,
+            "name": "Access to Land",
+            "code": "access-to-land",
+            "is_active": true
+        }
+    },
+    {
+        "model": "rh.activitytype",
+        "pk": 129,
+        "fields": {
+            "activity_domain": 32,
+            "name": "Clearance of Mines and other Explosive Remnants of War (ERW)",
+            "code": "clearance-of-mines-and-other-explosive-remnants-of-war-erw",
+            "is_active": true
+        }
+    },
+    {
+        "model": "rh.activitytype",
+        "pk": 130,
+        "fields": {
+            "activity_domain": 32,
+            "name": "Victim Assistance",
+            "code": "victim-assistance",
+            "is_active": true
+        }
+    },
+    {
+        "model": "rh.activitytype",
+        "pk": 135,
+        "fields": {
+            "activity_domain": 35,
+            "name": "PDM Survey",
+            "code": "pdm-survey",
+            "is_active": true
+        }
+    },
+    {
+        "model": "rh.activitytype",
+        "pk": 136,
+        "fields": {
+            "activity_domain": 35,
+            "name": "Results Monitoring Survey",
+            "code": "results-monitoring-survey",
+            "is_active": true
+        }
+    },
+    {
+        "model": "rh.activitytype",
+        "pk": 141,
+        "fields": {
+            "activity_domain": 36,
+            "name": "Mass communication HP campaigns",
+            "code": "mass-communication-hp-campaigns",
+            "is_active": true
+        }
+    },
+    {
+        "model": "rh.activitytype",
+        "pk": 162,
+        "fields": {
+            "activity_domain": 38,
+            "name": "Vector Control Awareness Campaign",
+            "code": "vector-control-awareness-campaign",
+            "is_active": true
+        }
+    },
+    {
+        "model": "rh.activitytype",
+        "pk": 172,
+        "fields": {
+            "activity_domain": 40,
+            "name": "Soap distribution",
+            "code": "soap-distribution",
+            "is_active": true
+        }
+    },
+    {
+        "model": "rh.activitytype",
+        "pk": 173,
+        "fields": {
+            "activity_domain": 40,
+            "name": "Water Treatment  (Aquatab, Chlorination, PUR sachets etc. ) Distribution",
+            "code": "water-treatment-aquatab-chlorination-pur-sachets-etc-distribution",
+            "is_active": true
+        }
+    },
+    {
+        "model": "rh.activitytype",
+        "pk": 195,
+        "fields": {
+            "activity_domain": null,
+            "name": "Water Tankering",
+            "code": "water_tankering",
+            "is_active": true
+        }
+    }
+]

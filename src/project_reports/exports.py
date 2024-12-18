@@ -9,7 +9,7 @@ from django.shortcuts import get_object_or_404
 from openpyxl.styles import Font, NamedStyle
 
 from project_reports.filters import MonthlyReportsFilter, Organization5WFilter
-from rh.models import  Cluster, Organization, Project
+from rh.models import Cluster, Organization, Project
 from stock.models import StockMonthlyReport, StockReport
 from stock.utils import write_csv_columns_and_rows
 from users.utils import is_cluster_lead
@@ -30,30 +30,14 @@ header_style.font = Font(bold=True)
 def cluster_5w_dashboard_export(request, code):
     cluster = get_object_or_404(Cluster, code=code)
 
-    body = json.loads(request.body)
-
-    from_date = body.get("from")
-    if not from_date:
-        from_date = datetime.date(datetime.datetime.now().year, 1, 1)
-
-    to_date = body.get("to")
-    if not to_date:
-        to_date = datetime.datetime.now().date()
-
     user_country = request.user.profile.country
 
     filter_params = {
         "project__clusters__in": [cluster],
         "state__in": ["submited", "completed"],
-        "from_date__lte": to_date,
-        "to_date__gte": from_date,
         "project__user__profile__country": user_country,
         "activityplanreport__activity_plan__activity_domain__clusters__in": [cluster],
     }
-
-    organization_code = body.get("organization")
-    if organization_code:
-        filter_params["project__organization__code"] = organization_code
 
     if not is_cluster_lead(
         user=request.user,
@@ -86,9 +70,16 @@ def cluster_5w_dashboard_export(request, code):
             .distinct()
         )
 
+        monthly_reports_filter = Organization5WFilter(request.GET, queryset=project_reports, user=request.user)
+
+        today = datetime.datetime.now()
+        today_date = today.today().strftime("%d-%m-%Y")
+
         response = HttpResponse(content_type="text/csv")
-        response["Content-Disposition"] = "attachment; filename=reports.csv"
-        write_projects_reports_to_csv(project_reports, response)
+        response["Content-Disposition"] = f"attachment; filename={cluster.code}_5w_reports_data_{today_date}.csv"
+
+        write_projects_reports_to_csv(monthly_reports_filter.qs, response)
+
         return response
 
     except Exception as e:
@@ -155,31 +146,7 @@ def org_5w_dashboard_export(request, code):
         request.user, org.clusters.values_list("code", flat=True)
     ):
         raise PermissionDenied
-    
-   
 
-    # from_date = body.get("from")
-    # if not from_date:
-    #     from_date = datetime.date(datetime.datetime.now().year, 1, 1)
-
-    # to_date = body.get("to")
-    # if not to_date:
-    #     to_date = datetime.datetime.now().date()
-
-    # filter_params = {
-    #     "project__organization": org,
-    #     "state__in": ["submited", "completed"],
-    #     "from_date__lte": to_date,
-    #     "to_date__gte": from_date,
-    # }
-
-    # cluster_code = body.get("cluster")
-    # if cluster_code:
-    #     filter_params["project__clusters__code__in"] = [
-    #         cluster_code,
-    #     ]
-   
-    print(f"This is the GET Request:  {request.GET}")
     try:
         project_reports = (
             ProjectMonthlyReport.objects.select_related("project")
@@ -198,24 +165,26 @@ def org_5w_dashboard_export(request, code):
                         )
                     ),
                 )
-            ).filter(project__organization=org).distinct()
+            )
+            .filter(project__organization=org)
+            .distinct()
         )
-        monthly_reports_filter = Organization5WFilter(
-        request.GET,
-        queryset = project_reports,
-        user=request.user
-        )
+
+        monthly_reports_filter = Organization5WFilter(request.GET, queryset=project_reports, user=request.user)
+
         today = datetime.datetime.now()
         today_date = today.today().strftime("%d-%m-%Y")
         monthly_reports_queryset = monthly_reports_filter.qs
-                
+
         response = HttpResponse(content_type="text/csv")
         response["Content-Disposition"] = f"attachment; filename={org.code}_5w_reports_data_{today_date}.csv"
+
         write_projects_reports_to_csv(monthly_reports_queryset, response)
+
         return response
     except Exception as e:
         print(f"Error: {e}")
-        return HttpResponse(status=500)
+        return HttpResponse(status=500,content=e)
 
 
 # export monthly report for single project

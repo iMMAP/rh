@@ -22,8 +22,8 @@
         <div class="top-panel pb-2 pt-4 flex flex-col items-center justify-between gap-2 sm:flex-row">
             <h2 class="locations text-red-be">{{ request.resolver_match.kwargs.cluster|capfirst }} 5W Dashboard</h2>
             <div class="actions-panel">
-                <button class="export-button btn btn-gray"
-                    data-url="{% url 'cluster-5w-stock-report-export' request.resolver_match.kwargs.cluster %}"
+                <a class="export-button btn btn-gray"
+                    href="{% url 'cluster-5w-stock-report-export' request.resolver_match.kwargs.cluster %}"
                     title="{{request.resolver_match.kwargs.cluster }}_5w_stock_reports_">
                     <span class="btn-text">Export Stocks Reports</span>
                     <span class="icon-download"></span>
@@ -32,9 +32,9 @@
                          style="width: 1.2rem"
                          src="{% static 'images/spinner.gif' %}" />
                     <!-- spinner end -->
-                </button>
-                <button class="export-button btn btn-red"
-                    data-url="{% url 'export-cluster-5w-dashboard' request.resolver_match.kwargs.cluster %}"
+                </a>
+                <a class="export-button btn btn-red"
+                    href="{% url 'export-cluster-5w-dashboard' request.resolver_match.kwargs.cluster %}?{{request.GET.urlencode}}"
                     title="{{request.resolver_match.kwargs.cluster }}_5w_projects_reports_">
                     <span class="btn-text">Export Projects Reports</span>
                     <span class="icon-download"></span>
@@ -43,7 +43,8 @@
                          style="width: 1.2rem"
                          src="{% static 'images/spinner.gif' %}" />
                     <!-- spinner end -->
-                </button>
+                </a>
+                {% include "components/_filter_drawer.html" with filter=dashboard_filter %}
             </div>
         </div>
         <p class="flex items-center gap-2 pb-3">
@@ -51,51 +52,6 @@
         </p>
         {% comment %}  {% endcomment %}
         <section class="space-y-4 pt-2">
-            {% comment %} filter {% endcomment %}
-            <form id="5w-filter-form" method="GET" class="py-4 bg-gray-fa border border-gray-d1 p-4 rounded-lg">
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div class="flex items-center gap-2">
-                        <div class="inline-flex justify-center rounded-md text-sm font-medium flex-col items-start w-full h-auto">
-                            <label class="font-semibold uppercase text-gray" for="from">From</label>
-                            <input 
-                                   type="date"
-                                   name="from"
-                                   value="{{ request.GET.from }}"
-                                   id="from">
-                        </div>
-                        <div class="inline-flex justify-center rounded-md text-sm font-medium flex-col items-start w-full h-auto">
-                            <label class="font-semibold text-gray uppercase text-[0.65rem]" for="to">To</label>
-                            <input type="date" name="to" value="{{ request.GET.to }}" id="to">
-                        </div>
-                        <div class="inline-flex justify-center rounded-md text-sm font-medium flex-col items-start w-full h-auto">
-                            <label class="font-semibold uppercase text-gray" for="organization">Organization</label>
-                            <script>
-                                function checkUserKeydown(event) {
-                                    return event instanceof KeyboardEvent
-                                }
-                            </script>
-                            <input
-                                placeholder="Enter the organization code..."
-                                id="organization"
-                                name="organization"
-                                list="orgList"
-                                hx-get="{% url 'organizations-search' %}"
-                                hx-target="#orgList"
-                                value="{{request.GET.organization}}"
-                                hx-trigger="keyup[checkUserKeydown.call(this, event)] changed delay:500ms"
-                            />
-                            <datalist id="orgList">
-                                {% comment %} data from the htmx {% endcomment %}
-                            </datalist>
-                        </div>
-                    </div>
-                   
-                    <div class="flex items-center justify-end gap-2">
-                        <a class="btn btn-gray-outline" href="{% url 'clusters-5w' request.resolver_match.kwargs.cluster %}">Reset</a>
-                        <button type="submit" class="btn btn-red">Filter</button>
-                    </div>
-                </div>
-            </form>
             {% comment %} cards {% endcomment %}
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 <div class="rounded-lg shadow-sm p-6 border border-gray-d1">
@@ -179,16 +135,6 @@
             </div>
             {% comment %} Grid {% endcomment %}
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                {% comment %} <div class="rounded-lg shadow-sm p-6 border border-gray-d1">
-                    <div class="flex items-center justify-between pb-4 border-b border-gray-e6">
-                        <h3 class="text-lg font-medium">Location Heatmap</h3>
-                    </div>
-                    <div class="mt-4">
-                        <div class="relative w-full bg-gray-d1 h-96">
-                        </div>
-                    </div>
-                </div> {% endcomment %}
-                {% comment %} People reached by activities {% endcomment %}
                 <div class="col-span-2 rounded-lg shadow-sm p-6 border border-gray-d1">
                     <div class="flex items-center justify-between pb-4 border-b border-gray-e6">
                         <h3 class="text-lg font-medium ">People reached by activities</h3>
@@ -274,68 +220,5 @@ options: {
         }
 }
 });
-
-{% comment %} export {% endcomment %}
-document.querySelectorAll(".export-button")?.forEach(button => {
-    button.addEventListener("click", (event) => {
-	event.preventDefault();
-	event.stopPropagation();
-
-    const exportUrl = button.getAttribute("data-url");
-    const iconDownload = button.querySelector(".icon-download");
-    const iconSpinner = button.querySelector(".downloading");
-    // extract the file name
-    let name = button.getAttribute("title");
-    const today = new Date()
-    const formatDate = today.toISOString().split('T')[0];
-    let file_name = name+formatDate;
-
-	// Get the form data
-	const formData = new FormData(document.getElementById('5w-filter-form'));
-
-	// Convert the form data to JSON
-	const jsonData = JSON.stringify(Object.fromEntries(formData));
-
-	// Include the JSON data in the fetch body
-	const requestBody = JSON.stringify({...JSON.parse(jsonData) });
-    iconDownload.style.display='none';
-    iconSpinner.style.display="block";
-    button.disabled = true;
-    console.log((event.loaded / event.total) * 100);
-	// Send an AJAX request to the export URL
-	fetch(exportUrl, {
-		method: "POST",
-		headers: {
-			"Content-Type": "application/json",
-			"X-CSRFToken": csrftoken,
-		},
-		body: requestBody,
-	})
-	.then(response =>  {
-        return response.blob();
-	})
-    .then(blob =>{
-        const link = document.createElement("a");
-        const url = URL.createObjectURL(blob);
-        link.href = url;
-        link.download = file_name+".csv";
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        URL.revokeObjectURL(url);
-    })
-	.catch((error) => {
-		if (error.status === 400) {
-			console.log("Error: No records selected for export");
-		} else {
-			console.log(`Error: ${error.message}`);
-		}
-	}).finally(() => {
-        button.disabled = false;
-        iconSpinner.style.display = "none";
-        iconDownload.style.display = "inline";
-    });
-})});
-
 </script>
 {% endblock scripts %}

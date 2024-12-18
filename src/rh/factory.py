@@ -456,11 +456,11 @@ class ProjectFactory(DjangoModelFactory):
 
     state = factory.Iterator(STATES, getter=lambda c: c[0])
     title = factory.Faker("sentence")
-    code = factory.Faker("word")
+    code = factory.Sequence(lambda n: f"project-{n}")
     # generate unique code
 
     is_hrp_project = factory.Faker("boolean")
-    hrp_code = factory.Faker("word")
+    hrp_code = factory.Sequence(lambda n: f"hrp--{n}")
 
     start_date = factory.Faker("date_time_this_decade", tzinfo=pytz.UTC)
     end_date = factory.Faker("date_time_this_decade", tzinfo=pytz.UTC)
@@ -471,18 +471,6 @@ class ProjectFactory(DjangoModelFactory):
     user = factory.SubFactory(UserFactory)
     description = factory.Faker("paragraph")
     old_id = factory.Faker("word")
-
-    @factory.post_generation
-    def activity_plans(self, create, extracted, **kwargs):
-        if not create:
-            return
-
-        if extracted:
-            for activity_plan in extracted:
-                self.activityplan_set.add(activity_plan)
-        else:
-            for _ in range(random.randint(1, 7)):
-                self.activityplan_set.add(ActivityPlanFactory(project=self))
 
     @factory.post_generation
     def clusters(self, create, extracted, **kwargs):

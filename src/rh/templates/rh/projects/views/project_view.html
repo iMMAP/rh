@@ -2,17 +2,32 @@
 {% load static %}
 {% load humanize %}
 {% load tz %}
+
 {% block title %}
     Project: {{ project.title }}
 {% endblock title %}
 
 {% block breadcrumb_li %}
-<li>
-    <a id="return-url"
-        href="{% url 'projects-list' %}?state={{ project.state }}">
-        {{ project.get_state_display }} Projects
-    </a>
+ <li class="main-nav-item has-drop-down js-main-nav-openclose">
+    <a class="main-nav-link openclose-opener" href="#">Cluster</a>
+    <div class="inner-drop">
+        <ul class="inner-nav divide-y">
+            {% if perms.rh.add_organization %}
+                <li class="inner-nav-item">
+                    <a class="" href="{% url 'organizations-create' %}">
+                        Add Org
+                    </a>
+                </li>
+                <li class="inner-nav-item">
+                    <a class="" href="{% url 'donor-register' %}">
+                        Add Donor
+                    </a>
+                </li>
+            {% endif %}
+        </ul>
+    </div>
 </li>
+
 <li class="current">{{ project.code }}</li>
 {% endblock %}
 

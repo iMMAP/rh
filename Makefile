@@ -40,7 +40,7 @@ ruff-watch:
 
 .PHONY: dev
 dev:
-	make -j3 serve vite ruff-watch
+	make -j3 serve vite
 
 .PHONY: vite-host
 vite-host:

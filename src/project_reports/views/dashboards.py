@@ -143,33 +143,18 @@ def org_5w_dashboard(request, code):
         raise PermissionDenied
 
     user_org = request.user.profile.organization
-    monthly_report_filter = Organization5WFilter(
-        request.GET,
-        queryset=ProjectMonthlyReport.objects.filter(project__organization=user_org),
-        user=request.user,
-    )
-    monthly_reports = monthly_report_filter.qs
-
-    from_date = request.GET.get("from")
-    if not from_date:
-        from_date = datetime.date(datetime.datetime.now().year, 1, 1)
-
-    to_date = request.GET.get("to")
-    if not to_date:
-        to_date = datetime.datetime.now().date()
-
-    cluster_code = request.GET.get("cluster")
-
     filter_params = {
         "project__organization": user_org,
         "state__in": ["submited", "completed"],
-        "from_date__lte": to_date,
-        "to_date__gte": from_date,
         "activityplanreport__targetlocationreport__beneficiary_status": "new_beneficiary",
     }
 
-    if cluster_code:
-        filter_params["project__clusters__code__in"] = [cluster_code]
+    monthly_report_filter = Organization5WFilter(
+        request.GET,
+        queryset=ProjectMonthlyReport.objects.filter(**filter_params),
+        user=request.user,
+    )
+    monthly_reports = monthly_report_filter.qs
 
     counts = monthly_reports.aggregate(
         report_indicators_count=Count("activityplanreport__activity_plan__indicator", distinct=True),
@@ -180,8 +165,13 @@ def org_5w_dashboard(request, code):
             "activityplanreport__targetlocationreport__target_location__province", distinct=True
         ),
     )
+
     people_reached_data = (
-        monthly_reports.order_by("from_date")
+        monthly_reports
+        .exclude(
+            activityplanreport__targetlocationreport__disaggregationlocationreport__disaggregation__name="Total households"
+        )
+        .order_by("from_date")
         .values("from_date")
         .annotate(
             total_people_reached=Coalesce(
@@ -199,6 +189,7 @@ def org_5w_dashboard(request, code):
             )
         )
     )
+
     counts["people_reached"] = 0
     for report in people_reached_data:
         counts["people_reached"] += report["total_people_reached"]

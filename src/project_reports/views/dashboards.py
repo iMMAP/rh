@@ -1,9 +1,6 @@
-import datetime
-
 from django.contrib.auth.decorators import login_required
-from django.core.cache import cache
 from django.core.exceptions import PermissionDenied
-from django.db.models import Case, Count, IntegerField, Sum, Value, When
+from django.db.models import Case, Count, IntegerField, Q, Sum, Value, When
 from django.db.models.functions import Coalesce
 from django.shortcuts import get_object_or_404, render
 
@@ -51,17 +48,16 @@ def cluster_5w_dashboard(request, cluster):
     )
 
     people_reached_data = (
-        monthly_report_filter.qs.filter(
-            **filter_params,
-        )
-        .order_by("from_date")
+        monthly_report_filter.qs.order_by("from_date")
         .values("from_date")
         .annotate(
             total_people_reached=Coalesce(
                 Sum(
                     Case(
                         When(
-                            activityplanreport__targetlocationreport__beneficiary_status="new_beneficiary",
+                            ~Q(
+                                activityplanreport__targetlocationreport__disaggregationlocationreport__disaggregation__name__icontains="households",
+                            ),
                             then="activityplanreport__targetlocationreport__disaggregationlocationreport__reached",
                         ),
                         default=Value(0),
@@ -167,18 +163,16 @@ def org_5w_dashboard(request, code):
     )
 
     people_reached_data = (
-        monthly_reports
-        .exclude(
-            activityplanreport__targetlocationreport__disaggregationlocationreport__disaggregation__name="Total households"
-        )
-        .order_by("from_date")
+        monthly_reports.order_by("from_date")
         .values("from_date")
         .annotate(
             total_people_reached=Coalesce(
                 Sum(
                     Case(
                         When(
-                            activityplanreport__targetlocationreport__beneficiary_status="new_beneficiary",
+                            ~Q(
+                                activityplanreport__targetlocationreport__disaggregationlocationreport__disaggregation__name__icontains="households",
+                            ),
                             then="activityplanreport__targetlocationreport__disaggregationlocationreport__reached",
                         ),
                         default=Value(0),
@@ -186,6 +180,7 @@ def org_5w_dashboard(request, code):
                     )
                 ),
                 Value(0),
+                output_field=IntegerField(),
             )
         )
     )
@@ -230,11 +225,6 @@ def org_5w_dashboard(request, code):
             sum_disaggregation = sum(value for value in total_reached.values() if value is not None)
             data_dict[category]["total"] = sum_disaggregation
 
-    clusters = cache.get("clusters")
-    if clusters is None:
-        clusters = Cluster.objects.all()
-        cache.set("clusters", clusters, 60 * 60 * 24)  # cache for 1 day
-
     context = {
         "org": org,
         "counts": counts,
@@ -242,7 +232,6 @@ def org_5w_dashboard(request, code):
         "people_reached_data": data,
         "activity_domains": activity_domains,
         "reach_by_activity": data_dict,
-        "clusters": clusters,
         "dashboard_filter": monthly_report_filter,
     }
 

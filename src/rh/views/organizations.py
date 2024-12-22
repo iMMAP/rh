@@ -74,9 +74,12 @@ def target_locations(request, org_pk):
     districts_grouped = {}
 
     for target_location in target_locations:
+        if target_location.district is None:
+            continue
+
         district_id = target_location.district.id
         district_name = target_location.district.name
-
+            
         if district_id not in districts_grouped:
             districts_grouped[district_id] = {
                 "district_name": district_name,

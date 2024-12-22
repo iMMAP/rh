@@ -69,7 +69,7 @@
                     </div>
                 </main>
 
-                {% cache 21600 footer %}
+                {% cache 21600 footer request.session.session_key %}
                     {% include "components/footer.html" %}
                 {% endcache %}
             </div>

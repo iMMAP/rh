@@ -61,7 +61,8 @@ def home(request):
             .aggregate(
                 implementing_partners_count=Count("implementing_partners", distinct=True),
                 activity_plans_count=Count("activityplan", distinct=True),
-                target_locations_count=Count("targetlocation__province", distinct=True),
+                # TODO: optimize this part. It takes too much time and gunicorn timesout
+                # target_locations_count=Count("targetlocation__district"),
             )
         )
         cache.set(counts_cache_key, projects_counts, timeout=60 * 60)  # Cache for 1 hour

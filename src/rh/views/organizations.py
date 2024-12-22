@@ -79,7 +79,7 @@ def target_locations(request, org_pk):
 
         district_id = target_location.district.id
         district_name = target_location.district.name
-            
+
         if district_id not in districts_grouped:
             districts_grouped[district_id] = {
                 "district_name": district_name,

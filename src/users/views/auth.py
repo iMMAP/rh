@@ -1,4 +1,3 @@
-from django.utils import timezone
 from django.contrib import messages
 from django.contrib.auth import authenticate, get_user_model, login, logout
 from django.contrib.auth.models import Group, User
@@ -6,6 +5,7 @@ from django.core.mail import EmailMultiAlternatives, send_mail
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.template import loader
+from django.utils import timezone
 from django.utils.encoding import force_bytes, force_str
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 

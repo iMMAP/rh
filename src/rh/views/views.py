@@ -10,7 +10,7 @@ from django.views.decorators.cache import cache_page
 from project_reports.models import ProjectMonthlyReport
 from users.decorators import unauthenticated_user
 
-from ..models import ActivityDomain, ActivityType, Cluster, Indicator, Location, Project
+from ..models import ActivityDomain, ActivityType, Cluster, Indicator, Location, Project, TargetLocation
 
 
 def test_email(request, template_name):
@@ -68,6 +68,14 @@ def home(request):
         cache.set(counts_cache_key, projects_counts, timeout=60 * 60)  # Cache for 1 hour
 
     projects_counts["pending_reports_count"] = pending_reports.count()
+
+    projects_counts["target_locations_count"] = (
+        TargetLocation.objects.filter(project__organization=user_org, project__state="in-progress")
+        .order_by()
+        .values("district")
+        .distinct()
+        .count()
+    )
 
     context = {"active_projects": active_projects, "counts": projects_counts, "pending_reports": pending_reports}
 

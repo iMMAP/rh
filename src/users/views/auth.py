@@ -1,5 +1,3 @@
-from datetime import datetime
-
 from django.contrib import messages
 from django.contrib.auth import authenticate, get_user_model, login, logout
 from django.contrib.auth.models import Group, User
@@ -7,6 +5,7 @@ from django.core.mail import EmailMultiAlternatives, send_mail
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.template import loader
+from django.utils import timezone
 from django.utils.encoding import force_bytes, force_str
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 
@@ -25,7 +24,7 @@ def activate_account(request, uidb64, token):
         user = User.objects.get(pk=uid)
 
         if user is not None and activation_token_generator.check_token(user, token):
-            user.profile.email_verified_at = datetime.now()
+            user.profile.email_verified_at = timezone.now()
             user.profile.save()
 
             messages.info(

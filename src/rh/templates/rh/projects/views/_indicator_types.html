@@ -1,8 +1,9 @@
 <div class="multiple-fields-row">
+
     {% if indicator.package_type %}
         <div class="field-col">
             <div class="select-field">
-                <label>{{ indicator_form.package_type.label }}</label>
+                <label>{{ indicator_form.package_type.label }} / Ration</label>
                 {{ indicator_form.package_type }}
                 <small class="sign-up-field-error">{{ indicator_form.package_type.errors }}</small>
             </div>
@@ -20,7 +21,7 @@
     {% if indicator.grant_type %}
         <div class="field-col">
             <div class="select-field">
-                <label>{{ indicator_form.grant_type.label }}</label>
+                <label>{{ indicator_form.grant_type.label }} / Assistance Type</label>
                 {{ indicator_form.grant_type }}
                 <small class="sign-up-field-error">{{ indicator_form.grant_type.errors }}</small>
             </div>

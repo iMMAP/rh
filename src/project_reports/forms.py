@@ -101,12 +101,8 @@ class TargetLocationReportForm(forms.ModelForm):
         model = TargetLocationReport
         fields = "__all__"
         exclude = ("activity_plan_report",)
-        help_texts = {
-            "seasonal_retargeting": "Are these beneficiaries being re-targeted due to seasonal needs? If yes, please check the box.",
-        }
         widgets = {
             "beneficiary_status": forms.Select(attrs={"class": "custom-select"}),
-            "seasonal_retargeting": forms.CheckboxInput(),
         }
 
     def __init__(self, *args, **kwargs):

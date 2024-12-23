@@ -11,6 +11,25 @@
 //--------------------------------
 //Random added style start
 //----------------------------------
+// remove the increase and decrease button from the input number
+input[type="number"] {
+  // Webkit browsers (Chrome, Safari, Edge)
+  &::-webkit-outer-spin-button,
+  &::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+   // Firefox
+   & {
+    -moz-appearance: textfield;
+    appearance: textfield; // Standard property for broader compatibility
+  }
+  // Internet Explorer
+  &::-ms-clear {
+    display: none;
+  }
+}
+
 .custom-tooltip{
   position: relative;
 }

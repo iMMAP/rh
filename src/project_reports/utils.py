@@ -219,7 +219,6 @@ def write_projects_reports_to_csv(monthly_progress_report, response):
                         else None,
                         location_report.beneficiary_status if location_report.beneficiary_status else None,
                         location_report.prev_assisted_by if location_report.prev_assisted_by else None,
-                        "Yes" if location_report.seasonal_retargeting else "No",
                         plan_report.activity_plan.activity_domain.code
                         if plan_report.activity_plan.activity_domain
                         else None,

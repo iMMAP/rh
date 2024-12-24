@@ -96,6 +96,11 @@ def toggle_status(request, user_id):
     if not has_permission(user=request.user, user_obj=user):
         raise PermissionDenied
 
+    if user.profile.email_verified_at is None:
+        raise PermissionDenied(
+            f"{user} has not verified their email. Please ask the user to verifiy their email first."
+        )
+
     if user.is_active:
         user.is_active = False
         user.save()

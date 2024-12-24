@@ -69,7 +69,6 @@ def write_projects_reports_to_csv(monthly_progress_report, response):
         "hrp_beneficiary_name",
         "beneficiary_status",
         "previously_assisted_by",
-        "seasonal_re-assisting",
         "activity_domain_code",
         "activity_domain_name",
         "activity_type_code",

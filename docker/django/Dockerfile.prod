@@ -9,33 +9,16 @@ ENV PYTHONPATH=/usr/src/rh/src
 
 # Install dependencies
 RUN apt-get update && apt-get install -y \
-    build-essential cron \
-    libpq-dev curl man wget \
-    npm \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+    curl cron \
+    # TODO: This adds 1.3GB to layers
+    npm nodejs && \
+    apt-get clean && \
+    npm cache clean -f && \
+    apt-get autoremove -y && \
+    rm -rf /var/lib/apt/lists/*
 
 # Install Python dependencies
 RUN pip install poetry
-
-# npm and node latest with n
-RUN npm cache clean -f
-RUN npm install -g n
-RUN n stable
-
-# Set the working directory
-WORKDIR /usr/src/rh
-
-# to preserve the docker cache
-COPY ["README.md", "Makefile", "poetry.lock","pyproject.toml","/usr/src/rh"]
-RUN poetry install --without dev --no-root --no-directory
-
-# copy project code -> src to /usr/src/rh/src
-COPY src /usr/src/rh/src
-
-# Install Node.js dependencies and build static files
-# Activate shell for django-vite-plugin build
-RUN poetry run make npm-install
 
 COPY docker/django/django-entrypoint.sh /usr/src/rh/django-entrypoint.sh
 RUN chmod a+x /usr/src/rh/django-entrypoint.sh
@@ -44,9 +27,25 @@ COPY docker/django/rh-tasks-cron /etc/cron.d/rh-tasks-cron
 RUN chmod 0644 /etc/cron.d/rh-tasks-cron
 RUN crontab /etc/cron.d/rh-tasks-cron
 RUN touch /var/log/cron.log
-RUN service cron start
+
+# to preserve the docker cache
+COPY ["README.md", "Makefile", "poetry.lock","pyproject.toml","/usr/src/rh/"]
+# COPY ["src/static/package.json","src/static/vite.config.js","src/static/package-lock.json","/usr/src/rh/src/static/"]
+
+# Set the working directory
+WORKDIR /usr/src/rh
+RUN poetry install --without dev --no-root --no-interaction --no-directory --no-ansi
+# copy project code -> src to /usr/src/rh/src
+COPY src /usr/src/rh/src
+
+# DEBUG should be False by default in production.py file, vite.config.js file should have production settings
+RUN poetry run make npm-install && \
+    poetry run make npm-build && \
+    npm cache clean --force && \
+    rm -rf /root/.npm && \
+    rm -rf src/static/node_modules
 
 ENTRYPOINT ["/usr/src/rh/django-entrypoint.sh"]
 
 # Gunicorn will be used to run the server
-CMD ["gunicorn", "--bind", "0.0.0.0:8000","--workers=4","src.core.wsgi:application"]
+CMD ["gunicorn", "--bind", "0.0.0.0:8000","--error-logfile","-","--workers=4","src.core.wsgi:application"]

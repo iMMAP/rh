@@ -3,6 +3,8 @@ from .base import *
 
 APP_ENV = env("APP_ENV", default="production")
 
+DEBUG = env("DEBUG", default=False)
+
 # ALLOWED_HOSTS=reporthub.immap.org,www.reporthub.immap.org
 # env.list() splits comma-separated string into a list
 ALLOWED_HOSTS = env.list(

@@ -6,16 +6,13 @@ set -e
 echo "Preparing Django Application"
 
 # static files
-make collectstatic settings=core.settings.production
-echo "DEBUG: $DEBUG"
-make npm-build
-# rm -rf src/static/node_modules
+poetry run python src/manage.py collectstatic --settings=core.settings.production --no-input --ignore=node_modules --ignore=*.scss --ignore=*.json --ignore=vite.config.js
 
 # Create super user
 # Password is set in the env file. variable DJANGO_SUPERUSER_PASSWORD 
 poetry run python src/manage.py createsuperuser --username=admin --email=admin@admin.com --no-input --setting=core.settings.production || true
 
 # database
-make migrate
+poetry run python src/manage.py migrate
 
 exec "$@"

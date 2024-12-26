@@ -16,7 +16,6 @@ urlpatterns = [
     path("maintenance/", TemplateView.as_view(template_name="maintenance.html"), name="maintenance"),
     path("admin/", admin.site.urls),
     path(r"mdeditor/", include("mdeditor.urls")),
-    path("", include("django_vite_plugin.urls")),
 ]
 
 if settings.DEBUG or settings.TESTING:

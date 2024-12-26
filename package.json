@@ -10,7 +10,6 @@
     "preview": "vite preview"
   },
   "devDependencies": {
-    "django-vite-plugin": "^3.0.0",
     "sass": "^1.69.4",
     "vite": "^4.0.2"
   },

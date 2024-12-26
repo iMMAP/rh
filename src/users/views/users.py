@@ -138,7 +138,7 @@ def toggle_status(request, user_id):
 @login_required
 @require_http_methods(["POST"])
 @permission_required("rh.activate_deactivate_user", raise_exception=True)
-def make_admin(request, user_id):
+def toggle_org_admin_status(request, user_id):
     user = get_object_or_404(User, pk=user_id)
     admin_user = request.user
 
@@ -147,13 +147,15 @@ def make_admin(request, user_id):
     if user.profile.organization != admin_user.profile.organization:
         messages.error(request, "You do not have permission")
         return PermissionDenied
+    
+    org_lead_group = Group.objects.get(name="ORG_LEAD")
 
-    # add org lead group to user groups
-    user.groups.add(Group.objects.get(name="ORG_LEAD"))
-
-    # TODO: notify the user that they are admin
-
-    messages.success(request, f"{user.username} is admin now.")
+    if org_lead_group in user.groups.all():
+        user.groups.remove(org_lead_group)
+        messages.warning(request, f"{user.username} admin access has been removed.")
+    else:
+        user.groups.add(org_lead_group)
+        messages.success(request, f"{user.username} is organization admin now.")
 
     return render(request, "users/partials/user_tr.html", context={"user": user})
 

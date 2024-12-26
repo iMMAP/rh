@@ -13,4 +13,4 @@ def post_create_cluster(sender, instance, created, **kwargs):
         group, created = Group.objects.get_or_create(name=f"{instance.code.upper()}_CLUSTER_LEADS")
         if created:
             # Assign default permissions to the group
-            assign_default_permissions_to_group(source_group_name="CLUSTER_LEAD", target_group=group)
+            assign_default_permissions_to_group(source_group_name="BASE_CLUSTER_LEAD", target_group=group)

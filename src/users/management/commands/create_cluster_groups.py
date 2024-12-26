@@ -15,7 +15,7 @@ class Command(BaseCommand):
             cluster_group_name = f"{cluster.code.upper()}_CLUSTER_LEADS"
             group, _ = Group.objects.get_or_create(name=cluster_group_name)
 
-            assign_default_permissions_to_group(source_group_name="CLUSTER_LEAD", target_group=group)
+            assign_default_permissions_to_group(source_group_name="BASE_CLUSTER_LEAD", target_group=group)
 
     def handle(self, *args, **options):
         self._cluster_groups()

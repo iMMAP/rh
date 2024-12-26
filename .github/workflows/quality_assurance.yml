@@ -26,8 +26,10 @@ jobs:
       uses: abatilo/actions-poetry@v2.0.0
       with:
         poetry-version: 1.4.2
-    - name: Install node and npm
-      run: apt install nodejs npm
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '22.x'
     - name: Install Dependencies
       run: |
         make install

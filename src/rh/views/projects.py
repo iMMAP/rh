@@ -1,4 +1,5 @@
 import csv
+import random
 from copy import copy
 
 from django.contrib import messages
@@ -291,17 +292,60 @@ def export_activity_plans_import_template(request, pk):
     disaggregation_columns = list(
         Disaggregation.objects.filter(clusters__in=project.clusters.all()).distinct().values_list("name", flat=True)
     )
-
+    disaggregation_value_list = []
+    for i in range(len(disaggregation_columns)):
+        disaggregation_value_list.append(random.randint(100, 999))
+    print(disaggregation_value_list)
     filtered_columns = all_columns + disaggregation_columns
-
     response = HttpResponse(content_type="text/csv")
     response["Content-Disposition"] = f"attachment; filename=project_{project.code}_activity_plans_import_template.csv"
-
     writer = csv.writer(response)
     writer.writerow(filtered_columns)
 
     # Add the project code by default(This value will not impact the import function. it is just for users reference)
-    writer.writerow([project.code])
+    ad = project.activity_domains.first()
+    at = ad.activitytype_set.first()
+    adt = at.activitydetail_set.first()
+    ind = at.indicator_set.first()
+    row = [
+        project.code,
+        ad.name,
+        at.name,
+        adt.name if adt else None,
+        ind.name,
+        BeneficiaryType.objects.filter(type="non-hrp").values_list("name", flat=True).first(),
+        BeneficiaryType.objects.filter(type="hrp").values_list("name", flat=True).first(),
+        "[input any note or description]",
+        "75%",
+        "KG",
+        "1",
+        "200",
+        "Conditional, Unrestricted",
+        "Individual",
+        "AFN",
+        "Bank",
+        "Cash",
+        "Afghanistan",
+        "AF",
+        "Kabul",
+        "AF01",
+        "Paghman",
+        "AF0102",
+        " ",
+        " ",
+        " ",
+        "iMMAP",
+        "Host Community Site",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+    ]
+    row.extend(disaggregation_value_list)
+
+    writer.writerow(row)
 
     return response
 

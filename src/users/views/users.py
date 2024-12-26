@@ -147,7 +147,7 @@ def toggle_org_admin_status(request, user_id):
     if target_user.profile.organization != admin_user.profile.organization:
         messages.error(request, "You do not have permission")
         return PermissionDenied
-    
+
     org_lead_group = Group.objects.get(name="ORG_LEAD")
 
     if org_lead_group in target_user.groups.all():
@@ -156,7 +156,7 @@ def toggle_org_admin_status(request, user_id):
     else:
         target_user.groups.add(org_lead_group)
         messages.success(request, f"`{target_user.username}` is organization admin now.")
-    
+
     if request.headers.get("Hx-Trigger", "") == "in-detail-page":
         return HttpResponse(200)
 

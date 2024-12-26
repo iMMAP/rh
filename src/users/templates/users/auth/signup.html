@@ -1,7 +1,6 @@
 {% extends "_base.html" %}
 
 {% load static %}
-{% load vite %}
 
 {% block title %}
     Register An Account
@@ -68,7 +67,6 @@
 {% endblock content %}
 
 {% block scripts %}
-    {% comment %} {% vite 'users/static/users/users.js' %} {% endcomment %}
     <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
     <script>
         document.querySelectorAll('.custom-select').forEach((select) => {

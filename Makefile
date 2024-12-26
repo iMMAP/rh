@@ -32,7 +32,7 @@ serve:
 
 .PHONY: vite
 vite:
-	cd src/static && npm run dev
+	cd src/static && npm run watch
 
 .PHONY: ruff-watch
 ruff-watch:

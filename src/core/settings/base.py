@@ -30,7 +30,6 @@ INSTALLED_APPS = [
     "django.contrib.humanize",
     # Installed packages apps
     "django_filters",
-    "django_vite_plugin",
     "django_htmx",
     "dbbackup",
     "extra_settings",
@@ -214,4 +213,31 @@ MDEDITOR_CONFIGS = {
         "lineNumbers": True,  # lineNumbers
         "language": "en",  # zh / en / es
     }
+}
+
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+        },
+        "file": {
+            "level": "ERROR",
+            "class": "logging.FileHandler",
+            "filename": BASE_DIR.parent / "rh-django.log",
+        },
+    },
+    "loggers": {
+        "django": {
+            "handlers": ["file"],
+            "level": "ERROR",
+            "propagate": True,
+        },
+    },
+    "root": {
+        "handlers": ["console"],
+        "level": "WARNING",
+    },
 }

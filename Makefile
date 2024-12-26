@@ -48,11 +48,11 @@ vite-host:
 
 .PHONY: npm-install
 npm-install:
-	cd src/static && npm install
+	npm install
 
 .PHONY: npm-build
 npm-build:
-	cd src/static && npm run build
+	npm run build
 
 .PHONY: npm-update
 npm-update:

@@ -30,7 +30,6 @@ INSTALLED_APPS = [
     "django.contrib.humanize",
     # Installed packages apps
     "django_filters",
-    "django_vite_plugin",
     "django_htmx",
     "dbbackup",
     "extra_settings",

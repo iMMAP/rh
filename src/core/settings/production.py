@@ -87,13 +87,6 @@ STORAGES = {
     "staticfiles": {"BACKEND": "django.contrib.staticfiles.storage.ManifestStaticFilesStorage"},
 }
 
-DJANGO_VITE_PLUGIN = {
-    "BUILD_DIR": "static-cdn/build",
-    "BUILD_URL_PREFIX": "/" + STATIC_URL + "build",
-    "DEV_MODE": False,
-    "STATIC_LOOKUP": False,
-}
-
 # Backup to DropBox
 DBBACKUP_STORAGE = "storages.backends.dropbox.DropBoxStorage"
 DBBACKUP_SEND_EMAIL = False

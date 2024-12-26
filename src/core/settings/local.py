@@ -8,9 +8,8 @@ APP_ENV = env("APP_ENV", default="local")
 # ALLOWED_HOSTS=reporthub.immap.org,www.reporthub.immap.org
 # env.list() splits comma-separated string into a list
 ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=["*"])
-DJANGO_VITE_PROD_BUILD = True
 
-if not (TESTING or DJANGO_VITE_PROD_BUILD):
+if not TESTING:
     INSTALLED_APPS = [
         *INSTALLED_APPS,
         "debug_toolbar",
@@ -77,15 +76,6 @@ STORAGES = {
 #
 NPLUSONE_LOGGER = logging.getLogger("nplusone")
 NPLUSONE_LOG_LEVEL = logging.WARN
-
-
-DJANGO_VITE_PLUGIN = {
-    "BUILD_DIR": "static-cdn/build",
-    "BUILD_URL_PREFIX": "/" + STATIC_URL + "build",
-    "DEV_MODE": True,
-    "STATIC_LOOKUP": False,
-    # "SERVER": {"HOST": "0.0.0.0"},
-}
 
 ####################
 # DB Backup Settings

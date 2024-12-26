@@ -4,14 +4,14 @@ import { resolve } from "node:path"
 export default defineConfig({
 	build: {
 		manifest: false,
-		// outDir: resolve(__dirname, "dist"),
+		outDir: resolve(__dirname, "src/static/dist"),
 		emptyOutDir: true,
 		assetsDir: "",
 		rollupOptions: {
 			input: [
-				resolve(__dirname, "js/app.js"),
-				resolve(__dirname, "styles/style.scss"),
-				resolve(__dirname, "js/utils/initSentry.js"),
+				resolve(__dirname, "src/static/js/app.js"),
+				resolve(__dirname, "src/static/styles/style.scss"),
+				resolve(__dirname, "src/static/js/utils/initSentry.js"),
       ],
       output: {
         entryFileNames: "[name].js",

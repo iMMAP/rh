@@ -74,10 +74,8 @@ class ProjectMonthlyReportForm(forms.ModelForm):
                 self.add_error("to_date", "Date range already exists.")
 
             if from_month_year > today_month_year:
-                print(f"{from_month_year} ******* {today_month_year}")
                 self.add_error("from_date", "Unable to select future date.")
             if to_month_year > today_month_year:
-                print(f"{to_month_year} ******* {today_month_year}")
                 self.add_error("to_date", "Unable to select future date.")
             if from_date.month != to_date.month:
                 self.add_error("from_date", "From date and to date must be in the same month.")

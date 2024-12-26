@@ -5,7 +5,7 @@ help:
 
 .PHONY: install
 install:
-	poetry install
+	poetry install --no-root
 
 .PHONY: install-no-dev
 install-no-dev:

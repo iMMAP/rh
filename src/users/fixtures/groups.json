@@ -88,7 +88,7 @@
     {
         "model": "auth.group",
         "fields": {
-            "name": "CLUSTER_LEAD",
+            "name": "BASE_CLUSTER_LEAD",
             "permissions": [
                 ["change_user", "auth", "user"],
                 ["view_user", "auth", "user"],

@@ -1,13 +1,40 @@
 import csv
 
 from django.contrib import admin
-from django.contrib.auth.admin import UserAdmin
-from django.contrib.auth.models import User
-from django.http import HttpResponse
-from django.urls import NoReverseMatch, reverse
+from django.contrib.auth.admin import GroupAdmin, UserAdmin
+from django.contrib.auth.models import Group, User
+from django.core.management import call_command
+from django.http import HttpResponse, HttpResponseRedirect
+from django.urls import NoReverseMatch, path, reverse
 from django.utils.html import format_html
 
 from .models import Profile
+
+
+class GroupAdminCustom(GroupAdmin):
+    change_list_template = "users/admin/groups_changelist.html"
+
+    def run_groups_sync_command(self, request):
+        try:
+            call_command("create_cluster_groups")
+        except Exception as e:
+            self.message_user(request, f"Something went wrong - {e}", "error")
+
+        self.message_user(request, "Groups synced to their base permissions", "success")
+
+        return HttpResponseRedirect("../")
+
+    def get_urls(self):
+        urls = super().get_urls()
+        my_urls = [
+            path("sync_groups/", self.run_groups_sync_command),
+        ]
+
+        return my_urls + urls
+
+
+admin.site.unregister(Group)
+admin.site.register(Group, GroupAdminCustom)
 
 
 class ProfileInline(admin.StackedInline):

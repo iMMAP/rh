@@ -9,7 +9,7 @@ The default groups and their permissions are in the `src/users/fixtures/groups.j
 - ORG_USER
 - iMMAP_IMO
 
-Each clusters have their own group with `CLUSTER_LEAD` group permission.
+Each clusters have their own group with `BASE_CLUSTER_LEAD` group permission.
 Ex:
 
 - WASH_CLUSTER_LEADS
@@ -17,16 +17,12 @@ Ex:
 - ...
 - ...
 
-### Create group for each cluster
+### Create group for each cluster and add base permissions
+If new permission are added to `BASE_CLUSTER_LEAD` groups, run the below command to update all cluster leads groups.
 ```shell
-python src/manage.py create_groups
+python src/manage.py create_cluster_groups
 ```
 
-### Update cluster leads groups permissions
-If new permission are added to `CLUSTER_LEAD` groups, run the below command to update all cluster leads groups.
-```shell
-python src/manage.py update_groups_perms
-```
 
 ## Permission
 Default django model permission and custom ones (check models).
@@ -36,4 +32,5 @@ Default django model permission and custom ones (check models).
 python src/manage.py loaddata groups.json
 ```
 
-
+## Note
+- when a cluster is created, the base groups are applied via post save signal

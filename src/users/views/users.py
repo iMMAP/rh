@@ -138,24 +138,29 @@ def toggle_status(request, user_id):
 @login_required
 @require_http_methods(["POST"])
 @permission_required("rh.activate_deactivate_user", raise_exception=True)
-def make_admin(request, user_id):
-    user = get_object_or_404(User, pk=user_id)
+def toggle_org_admin_status(request, user_id):
+    target_user = get_object_or_404(User, pk=user_id)
     admin_user = request.user
 
     # authorize the request.user
     # only users of the same organization
-    if user.profile.organization != admin_user.profile.organization:
+    if target_user.profile.organization != admin_user.profile.organization:
         messages.error(request, "You do not have permission")
         return PermissionDenied
 
-    # add org lead group to user groups
-    user.groups.add(Group.objects.get(name="ORG_LEAD"))
+    org_lead_group = Group.objects.get(name="ORG_LEAD")
 
-    # TODO: notify the user that they are admin
+    if org_lead_group in target_user.groups.all():
+        target_user.groups.remove(org_lead_group)
+        messages.warning(request, f"`{target_user.username}` admin access has been removed.")
+    else:
+        target_user.groups.add(org_lead_group)
+        messages.success(request, f"`{target_user.username}` is organization admin now.")
 
-    messages.success(request, f"{user.username} is admin now.")
+    if request.headers.get("Hx-Trigger", "") == "in-detail-page":
+        return HttpResponse(200)
 
-    return render(request, "users/partials/user_tr.html", context={"user": user})
+    return render(request, "users/partials/user_tr.html", context={"user": target_user})
 
 
 #############################################

@@ -1,20 +1,23 @@
-import { defineConfig } from "vite";
-import { djangoVitePlugin } from "django-vite-plugin";
+import { defineConfig } from "vite"
+import { resolve } from "node:path"
 
 export default defineConfig({
-  plugins: [
-    djangoVitePlugin({
-      input: [
-        "styles/style.scss", 
-        "js/app.js", 
-        "js/utils/initSentry.js", 
-        "../rh/static/rh/project_planning.js",
-
-        // relative to the folder that vite.config is located
-        // "../users/static/users/users.js",
+	build: {
+		manifest: false,
+		// outDir: resolve(__dirname, "dist"),
+		emptyOutDir: true,
+		assetsDir: "",
+		rollupOptions: {
+			input: [
+				resolve(__dirname, "js/app.js"),
+				resolve(__dirname, "styles/style.scss"),
+				resolve(__dirname, "js/utils/initSentry.js"),
       ],
-      pyArgs: ["--settings=core.settings.production"],
-      root: "..",
-    }),
-  ],
+      output: {
+        entryFileNames: "[name].js",
+        chunkFileNames: "[name].js",
+        assetFileNames: "[name].[ext]",
+      },
+		},
+	},
 });

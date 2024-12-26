@@ -1,7 +1,6 @@
 {% extends "rh/projects/forms/project_form_base.html" %}
 
 {% load static %}
-{% load vite %}
 
 {% block title %}
     {% if project %}
@@ -222,10 +221,9 @@
 {% endblock project_contents %}
 
 {% block project_form_scripts %}
-    {% vite 'rh/static/rh/project_planning.js' %}
+    <script src="{% static 'rh/static/rh/project_planning.js' %}"></script>
 {% endblock project_form_scripts %}
 
 {% block scripts %}
-    {% comment %} {% vite 'users/static/users/users.js' %} {% endcomment %}
     <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
 {% endblock scripts %}

@@ -247,6 +247,10 @@ def import_report_activities(request, pk):
                         zone=zone,
                     ).first()
 
+                    print("===========================================")
+                    print(project_target_location)
+                    print("===========================================")
+
                     target_location = TargetLocationReport(
                         activity_plan_report=activity_plan_report,
                         target_location=project_target_location,

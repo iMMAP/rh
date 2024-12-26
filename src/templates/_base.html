@@ -1,5 +1,4 @@
 {% load static %}
-{% load vite %}
 {% load cache %}
 
 <!DOCTYPE html>
@@ -18,7 +17,9 @@
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
         <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Open+Sans&display=optional"
               rel="stylesheet" />
-        {% vite 'static/styles/style.scss' %}
+
+        <link rel="stylesheet" href="{% static 'dist/style.css' %}">
+
         <link rel="apple-touch-icon"
               sizes="180x180"
               href="{% static 'images/favicon/apple-touch-icon.png' %}" />
@@ -35,7 +36,9 @@
               color="#5bbad5" />
         <meta name="msapplication-TileColor" content="#da532c" />
         <meta name="theme-color" content="#ffffff" />
+
         {% include "components/_analytics.html" %}
+
         {% block head %}
         {% endblock head %}
     </head>
@@ -84,8 +87,8 @@
             const csrftoken = '{{ csrf_token }}';
             htmx.config.useTemplateFragments = true;
         </script>
-        {% comment %} <!-- Full Path relative to location of manage.py file --> {% endcomment %}
-        {% vite 'static/js/app.js' %}
+
+        <script src="{% static 'dist/app.js' %}"></script>
 
         {% block scripts %}
         {% endblock scripts %}

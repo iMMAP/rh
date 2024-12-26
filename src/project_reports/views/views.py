@@ -13,6 +13,7 @@ from openpyxl import Workbook
 from rh.models import (
     ActivityDomain,
     ActivityPlan,
+    BeneficiaryType,
     Currency,
     Disaggregation,
     GrantType,
@@ -182,12 +183,17 @@ def import_report_activities(request, pk):
 
                     location_type = LocationType.objects.filter(name=row.get("location_type")).first()
 
+                    non_hrp_beneficiary = BeneficiaryType.objects.filter(name=row.get("non_hrp_beneficiary")).first()
+                    hrp_beneficiary = BeneficiaryType.objects.filter(name=row.get("hrp_beneficiary")).first()
+
                     project_activity_plan = ActivityPlan.objects.filter(
                         project_id=monthly_report.project.id,
                         state="in-progress",
                         activity_domain_id=activity_domain.id,
                         activity_type_id=activity_type.id,
                         indicator_id=indicator.id,
+                        hrp_beneficiary=hrp_beneficiary,
+                        beneficiary=non_hrp_beneficiary,
                     ).first()
 
                     activity_plan_key = (row["activity_domain"], row["activity_type"], row["indicator"])

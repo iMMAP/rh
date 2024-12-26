@@ -9,6 +9,7 @@ services:
     environment:
       DJANGO_SETTINGS_MODULE: core.settings.production
       DEBUG: False
+      DB_HOST: postgres_db
     volumes:
       # - './src:/usr/src/rh'
       - static_volume:/usr/src/rh/src/static-cdn

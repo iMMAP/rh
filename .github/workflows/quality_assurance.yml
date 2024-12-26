@@ -26,10 +26,14 @@ jobs:
       uses: abatilo/actions-poetry@v2.0.0
       with:
         poetry-version: 1.4.2
+    - name: Install node and npm
+      run: apt install nodejs npm
     - name: Install Dependencies
       run: |
         make install
         pip install ruff
+        npm install
+        npm run build
         make collectstatic
     - name: Run Tests
       run: |

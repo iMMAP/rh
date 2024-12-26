@@ -60,7 +60,6 @@ def write_users_sheet(workbook, users):
     """
     sheet = workbook.active
     sheet.title = "Organization Members"
-    print(users)
     # Define column headers and types
     columns = [
         {"header": "username", "type": "string", "width": 40},

@@ -239,7 +239,6 @@ def update_stock_report_period(request, report):
             return redirect("stock-report-period", pk=monthly_report.warehouse_location.id)
         else:
             messages.error(request, "Something went wrong. Please fix the below errors.")
-    print(form.instance)
 
     context = {"form": form, "warehouse": warehouse, "monthly_report": monthly_report}
     return render(request, "stock/stock_report_period_form.html", context)

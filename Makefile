@@ -5,7 +5,7 @@ help:
 
 .PHONY: install
 install:
-	poetry install
+	poetry install --no-root
 
 .PHONY: install-no-dev
 install-no-dev:
@@ -32,7 +32,7 @@ serve:
 
 .PHONY: vite
 vite:
-	cd src/static && npm run dev
+	cd src/static && npm run watch
 
 .PHONY: ruff-watch
 ruff-watch:
@@ -48,11 +48,11 @@ vite-host:
 
 .PHONY: npm-install
 npm-install:
-	cd src/static && npm install
+	npm install
 
 .PHONY: npm-build
 npm-build:
-	cd src/static && npm run build
+	npm run build
 
 .PHONY: npm-update
 npm-update:

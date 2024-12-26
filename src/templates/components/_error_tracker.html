@@ -1,4 +1,5 @@
-{% load vite %}
+{% load static %}
+
 {% if APP_ENV == 'production' %}
-    {% vite 'static/js/utils/initSentry.js' %}
+    <script src="{% static 'dist/initSentry.js' %}"></script>
 {% endif %}

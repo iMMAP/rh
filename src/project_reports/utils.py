@@ -298,6 +298,7 @@ def write_import_report_template_sheet(workbook, monthly_report):
         {"header": "transfer_mechanism_type", "type": "string", "width": 30},
         {"header": "implement_modility_type", "type": "string", "width": 30},
         {"header": "beneficiary_status", "type": "string", "width": 30},
+        {"header": "previously_assisted_by", "type": "string", "width": 50},
         {"header": "admin0name", "type": "string", "width": 30},
         {"header": "admin0pcode", "type": "string", "width": 30},
         {"header": "admin1pcode", "type": "string", "width": 30},
@@ -311,6 +312,8 @@ def write_import_report_template_sheet(workbook, monthly_report):
         {"header": "facility_name", "type": "string", "width": 30},
         {"header": "facility_lat", "type": "string", "width": 30},
         {"header": "facility_long", "type": "string", "width": 30},
+        {"header": "non_hrp_beneficiary", "type": "string", "width": 30},
+        {"header": "hrp_beneficiary", "type": "string", "width": 30},
     ]
 
     disaggregation_cols = []
@@ -335,19 +338,8 @@ def write_import_report_template_sheet(workbook, monthly_report):
     sheet.column_dimensions[column_letter].width = column["width"]
     # write the rows with report data
     container_dictionary = {
-        "indicatorList": ["B"],
-        "activityDomainList": ["C"],
-        "activityTypeList": ["D"],
         "beneficiary_status_list": ["P", "New Beneficiary", "Existing Beneficiaries"],
-        "admin0nameList": ["Q"],
-        "admin0pcodeList": ["R"],
-        "admin1pcodeList": ["S"],
-        "admin1nameList": ["T"],
-        # "admin2pcodeList": ["U"],
-        # "admin2nameList": ["V"],
-        "facilitySiteTypeList": ["Y"],
         "reponseTypeList": ["E"],
-        "implementing_partner_list": ["F"],
         "package_type": ["G"],
         "unit_type": ["H"],
         "grant_type": ["K"],
@@ -356,8 +348,22 @@ def write_import_report_template_sheet(workbook, monthly_report):
         "transfer_category": ["L"],
         "currency": ["M"],
     }
+    plain_dictionary_lists = {
+        "indicatorList": ["B"],
+        "activityDomainList": ["C"],
+        "activityTypeList": ["D"],
+        "admin0nameList": ["R"],
+        "admin0pcodeList": ["S"],
+        "admin1pcodeList": ["T"],
+        "admin1nameList": ["U"],
+        "admin2pcodeList": ["V"],
+        "admin2nameList": ["W"],
+        "facilitySiteTypeList": ["Z"],
+        "implementing_partner_list": ["F"],
+        "non_hrp_beneficiary": ["AE"],
+        "hrp_beneficiary": ["AF"],
+    }
     project = monthly_report.project
-    project_partners_list = list(project.implementing_partners.values_list("code", flat=True))
     container_dictionary["package_type"].extend(list(PackageType.objects.values_list("name", flat=True)))
     container_dictionary["unit_type"].extend(list(UnitType.objects.values_list("name", flat=True)))
     container_dictionary["grant_type"].extend(list(GrantType.objects.values_list("name", flat=True)))
@@ -372,32 +378,36 @@ def write_import_report_template_sheet(workbook, monthly_report):
     num_rows = 2
     project_code = project.code
     for plan in project.activityplan_set.all():
-        container_dictionary["indicatorList"].append(str(plan.indicator.name))
-        container_dictionary["activityDomainList"].append(str(plan.activity_domain.name))
-        container_dictionary["activityTypeList"].append(str(plan.activity_type.name))
-
         for location in plan.targetlocation_set.all():
-            container_dictionary["admin0pcodeList"].append(str(location.country.code))
-            container_dictionary["admin0nameList"].append(str(location.country.name))
-            container_dictionary["admin1nameList"].append(str(location.province.name))
-            container_dictionary["admin1pcodeList"].append(str(location.province.code))
-            # container_dictionary["admin2pcodeList"].append(str(location.district.code))
-            # container_dictionary["admin2nameList"].append(str(location.district.name))
+            plain_dictionary_lists["indicatorList"].append(str(plan.indicator.name))
+            plain_dictionary_lists["activityDomainList"].append(str(plan.activity_domain.name))
+            plain_dictionary_lists["activityTypeList"].append(str(plan.activity_type.name))
+            plain_dictionary_lists["admin0pcodeList"].append(str(location.country.code))
+            plain_dictionary_lists["admin0nameList"].append(str(location.country.name))
+            plain_dictionary_lists["admin1nameList"].append(str(location.province.name))
+            plain_dictionary_lists["admin1pcodeList"].append(str(location.province.code))
+            plain_dictionary_lists["admin2pcodeList"].append(str(location.district.code))
+            plain_dictionary_lists["admin2nameList"].append(str(location.district.name))
+            plain_dictionary_lists["implementing_partner_list"].append(str(location.implementing_partner.code))
+            plain_dictionary_lists["non_hrp_beneficiary"].append(str(plan.beneficiary))
+            plain_dictionary_lists["hrp_beneficiary"].append(str(plan.hrp_beneficiary))
             num_rows += 1
-    container_dictionary["facilitySiteTypeList"].extend(facility)
+    plain_dictionary_lists["facilitySiteTypeList"].extend(facility)
     container_dictionary["reponseTypeList"].extend(responseType)
-    container_dictionary["implementing_partner_list"].extend(project_partners_list)
-    sheet["A2"] = project_code
+
     for key, value in container_dictionary.items():
         column = value[0]
         list_values = ",".join(value[1:])
+
         if len(list_values) < 255:
             dv = DataValidation(type="list", formula1='"{}"'.format(list_values))
             sheet.add_data_validation(dv)
             for row in range(2, num_rows):
+                sheet[f"A{row}"] = project_code
                 cell = sheet[f"{column}{row}"]
                 sheet.add_data_validation(dv)
                 dv.add(cell)
+
         # Case when the list values exceed 255 characters
         else:
             start_row = 2
@@ -417,3 +427,24 @@ def write_import_report_template_sheet(workbook, monthly_report):
                 cell = sheet[f"{column}{row}"]
                 sheet.add_data_validation(dv)
                 dv.add(cell)
+    # display as plain list in the corresponding columns
+    for key, value in plain_dictionary_lists.items():
+        column = value[0]
+        long_list_values = ",".join(value[1:])
+        start_row = 2
+        for i, item in enumerate(plain_dictionary_lists[key][1:]):
+            sheet[f"{column}{start_row + i}"] = item
+
+        # Define a named range for the list of values
+        named_range = f"{column}_List"  # You can name the range based on the column or other criteria
+        sheet.parent.create_named_range(
+            named_range, sheet, f"{column}{start_row}:{column}{start_row + len(long_list_values) - 1}"
+        )
+
+        # Create a data validation that references the named range
+        dv = DataValidation(type="list", formula1=f"={named_range}", showDropDown=True)
+        sheet.add_data_validation(dv)
+        for row in range(2, num_rows):
+            cell = sheet[f"{column}{row}"]
+            sheet.add_data_validation(dv)
+            dv.add(cell)

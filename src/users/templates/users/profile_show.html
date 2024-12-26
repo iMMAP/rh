@@ -168,6 +168,18 @@
                                 src="{% static 'images/spinner.gif' %}" />
                     </button>
                 {% endif %}
+                  {% if perms.rh.activate_deactivate_user %}
+                    <button 
+                        class="btn btn-gray"
+                        hx-post="{% url 'users-make-admin' user.id %}"
+                        hx-swap="none"
+                        id="in-detail-page"
+                        hx-disable-element="#dectivate-button-{{ profile_user.id }}"
+                        hx-ext="disable-element"
+                    >
+                        Toggle Admin Status
+                    </button>
+                {% endif %}
                 </dd>
             </div>
         </dl>

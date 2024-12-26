@@ -46,9 +46,9 @@ jobs:
             poetry --version || exit 1
             node -v || exit 1
             npm -v || exit 1
-            git stash || exit 1
+            git stash
             git pull origin main || exit 1
-            git stash pop || exit 1
+            git stash pop
             poetry install --without dev  || exit 1
             make clear_cache || exit 1
             make migrate || exit 1

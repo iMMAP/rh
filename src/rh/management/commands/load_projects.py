@@ -36,8 +36,29 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent.parent
 class Command(BaseCommand):
     help = "Import Projects"
 
-    def _load_target_locations(self):
-        path = os.path.join(BASE_DIR.parent, "scripts/data/updated_nov_2023/esnfi_locations.xlsx")
+    def add_arguments(self, parser):
+        parser.add_argument(
+            "--target-locations-path",
+            type=str,
+            help="The path to target location file. relative to the project base. `pyproject.yml` location",
+            required=True,
+        )
+        parser.add_argument(
+            "--activity-plans-path",
+            type=str,
+            help="The path to activity plans file. relative to the project base. `pyproject.yml` location",
+            required=True,
+        )
+        parser.add_argument(
+            "--projects-path",
+            type=str,
+            help="The path to projects file. relative to the project base. `pyproject.yml` location",
+            required=True,
+        )
+        # parser.add_argument('amount', nargs='+', type=int)
+
+    def _load_target_locations(self, path):
+        path = os.path.join(BASE_DIR.parent, path)
         df = pd.read_excel(path)
         df.fillna(False, inplace=True)
         locations = df.to_dict(orient="records")
@@ -98,9 +119,9 @@ class Command(BaseCommand):
         self.stdout.write(self.style.SUCCESS(f"{locations_created} Target Locations - created successfully!!!"))
         self.stdout.write(self.style.SUCCESS(f"{locations_exists} Target Locations - Already Exists!!!"))
 
-    def _load_activity_plans(self):
+    def _load_activity_plans(self, path):
         # Import the actvity_domain, activity_types, activity_details
-        path = os.path.join(BASE_DIR.parent, "scripts/data/updated_nov_2023/esnfi_plans.xlsx")
+        path = os.path.join(BASE_DIR.parent, path)
         df = pd.read_excel(path)
         df.fillna(False, inplace=True)
         plans_exits = 0
@@ -184,9 +205,9 @@ class Command(BaseCommand):
         self.stdout.write(self.style.SUCCESS(f"{plans_created} Plans - created successfully!!"))
         self.stdout.write(self.style.SUCCESS(f"{plans_exits} Plans - Already Exist!!"))
 
-    def _load_projects(self):
+    def _load_projects(self, path):
         # Import the actvity_domain, activity_types, activity_details
-        path = os.path.join(BASE_DIR.parent, "scripts/data/updated_nov_2023/esnfi_projects.xlsx")
+        path = os.path.join(BASE_DIR.parent, path)
         df = pd.read_excel(path)
         df.fillna(False, inplace=True)
 
@@ -299,13 +320,19 @@ class Command(BaseCommand):
     def _import_data(self):
         # Import Projects
         self.stdout.write(self.style.SUCCESS("Loading Projects!"))
-        self._load_projects()
+        self._load_projects(self, self.projects_path)
+
         self.stdout.write(self.style.SUCCESS("Loading Plans!"))
-        self._load_activity_plans()
+        self._load_activity_plans(self, self.activity_plans_path)
+
         self.stdout.write(self.style.SUCCESS("Loading Locations!"))
-        self._load_target_locations()
+        self._load_target_locations(self, self.target_locations_path)
+
         self.stdout.write(self.style.SUCCESS("ALL DONE!"))
 
     def handle(self, *args, **options):
+        self.target_locations_path = options.get("target_locations_path")
+        self.activity_plans_path = options.get("activity_plans_path")
+        self.projects_path = options.get("projects_path")
+
         self._import_data()
-        # self._update_data()

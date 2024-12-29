@@ -1,4 +1,5 @@
 # Setup the project locally
+> Read the README.md of the repo
 
 Clone the project
 ```shell
@@ -8,22 +9,7 @@ git clone https://github.com/iMMAP/rh.git
 ## Using Docker
 Build the containers
 ```shell
-make run-dependencies
-```
-
-**Run Command in the containers**
-```shell
-# Django app
-docker-compose -f docker-compose.dev.yml run --rm django make serve
-docker-compose -f docker-compose.dev.yml run --rm django make migrate
-docker-compose -f docker-compose.dev.yml run --rm django make migrations
-
-# Vite app on the static
-docker-compose -f docker-compose.dev.yml run --rm npm make vite-host
-docker-compose -f docker-compose.dev.yml run --rm --service-ports make vite-host
-#
-docker-compose -f docker-compose.dev.yml run --rm npm make npm-install
-docker-compose -f docker-compose.dev.yml run --rm npm make npm-build
+make docker-up
 ```
 
 ## No Docker
@@ -78,16 +64,6 @@ poetry run python src/manage.py seed --amount 10
 Will create fake data necessary for testing and starting out.
 for more information check `src/rh/management/commands/seed.py` file.
 
-### Use data from CSV file
-Beside using fake data you can also use the data provided in the csv files.
-```shell
-cd scripts
-
-python migrate_mongodb.py
-```
-
-The above script will add data from CSV files to your sqlite database.
-
 ## Check code with linter and formatter
 ```shell
 make lint
@@ -97,5 +73,3 @@ make lint
 Ruff is an extremely fast Python linter and code formatter.
 It can replace Flake8 and black formatter.
 Install the vs code extension to setup immediatly.
-
-

@@ -32,19 +32,11 @@ serve:
 
 .PHONY: vite
 vite:
-	cd src/static && npm run watch
-
-.PHONY: ruff-watch
-ruff-watch:
-	ruff check ./src --watch
+	npm run watch
 
 .PHONY: dev
 dev:
 	make -j3 serve vite
-
-.PHONY: vite-host
-vite-host:
-	cd src/static && npm run dev -- --host
 
 .PHONY: npm-install
 npm-install:
@@ -53,10 +45,6 @@ npm-install:
 .PHONY: npm-build
 npm-build:
 	npm run build
-
-.PHONY: npm-update
-npm-update:
-	npm-install npm-build;
 
 .PHONY: superuser
 superuser:
@@ -73,11 +61,6 @@ test:
 db-seed:
 	poetry run python src/manage.py seed
 
-.PHONY: seed
-seed:
-	cd scripts && python migrate_mongodb.py
-	poetry run python src/manage.py load_activities
-
 .PHONY: format-templates
 format-templates:
 	djlint --reformat --profile=django src
@@ -91,9 +74,9 @@ settings ?= core.settings.local
 collectstatic:
 	poetry run python src/manage.py collectstatic --settings=${settings} --no-input --ignore=node_modules --ignore=*.scss --ignore=*.json --ignore=vite.config.js
 
-.PHONY: run-dependencies
-run-dependencies:
-	docker-compose -f docker-compose.dev.yml up -d --build
+.PHONY: docker-up 
+docker-up:
+	docker compose up -d --build
 
 .PHONY: shell
 shell:

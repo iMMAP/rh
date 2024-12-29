@@ -10,7 +10,9 @@ poetry run python src/manage.py collectstatic --settings=core.settings.productio
 
 # Create super user
 # Password is set in the env file. variable DJANGO_SUPERUSER_PASSWORD 
-poetry run python src/manage.py createsuperuser --username=admin --email=admin@admin.com --no-input --setting=core.settings.production || true
+if [ "$DEBUG" == "true" ]; then
+    poetry run python src/manage.py createsuperuser --username=admin --email=admin@admin.com --no-input --setting=core.settings.production || true
+fi
 
 # database
 poetry run python src/manage.py migrate

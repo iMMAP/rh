@@ -41,13 +41,26 @@ def get_target_and_reached_of_disaggregationlocation(request):
     if not target_location_id or not disaggregation_id:
         return JsonResponse({"error": "Both target_location_id and disaggregation_id are required."}, status=400)
 
+    try:
+        target_location_id = int(target_location_id)
+        disaggregation_id = int(disaggregation_id)
+    except ValueError:
+        return JsonResponse({"error": "Both target_location_id and disaggregation_id must be integers."}, status=400)
+
     dis_loc = DisaggregationLocation.objects.filter(
         disaggregation_id=disaggregation_id, target_location_id=target_location_id
     ).first()
 
-    total_reached = DisaggregationLocationReport.objects.filter(
-        target_location_report__target_location_id=target_location_id, disaggregation_id=disaggregation_id
-    ).aggregate(total_reached=Sum("reached"))["total_reached"]
+    total_reached = (
+        DisaggregationLocationReport.objects.filter(
+            target_location_report__target_location_id=target_location_id,
+            disaggregation_id=disaggregation_id,
+        )
+        .filter(
+            target_location_report__beneficiary_status="new_beneficiary",
+        )
+        .aggregate(total_reached=Sum("reached"))["total_reached"]
+    )
 
     return JsonResponse({"target": dis_loc.target, "reached": total_reached})
 

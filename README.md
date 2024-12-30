@@ -37,7 +37,7 @@ Create `.env` file by copying the sample file and update the values.
 cp .env.sample .env
 ```
 
-### Generate secrete key
+### Generate secret key
 ```shell
 python src/manage.py generate_secret_key
 ```
@@ -63,12 +63,13 @@ Populat the database with necessary data to start testing
 # Adds default db data for testing
 # The below command loads django fixtures data which is located in each django app. 
 # rh/fixtures/<data>.json
+
 make loaddata
 ```
 
 #### Run the project:
+Run Django development server.
 
-Run Django development server
 The `dev` command will run a django dev sever and vite server in the same terminal.
 ```shell
 make dev

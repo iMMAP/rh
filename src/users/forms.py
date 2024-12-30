@@ -74,7 +74,7 @@ class ProfileUpdateForm(forms.ModelForm):
     class Meta:
         model = Profile
         fields = "__all__"
-        exclude = ("old_id", "is_cluster_contact", "visits", "name", "user")
+        exclude = ("email_verified_at", "old_id", "is_cluster_contact", "visits", "name", "user")
         labels = {"name": "Full Name", "clusters": "Clusters / Sectors"}
 
         widgets = {

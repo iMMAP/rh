@@ -1,5 +1,5 @@
 import { defineConfig } from "vite"
-import { resolve } from "node:path"
+import { resolve } from "path"
 
 export default defineConfig({
 	build: {
@@ -11,13 +11,12 @@ export default defineConfig({
 			input: [
 				resolve(__dirname, "src/static/js/app.js"),
 				resolve(__dirname, "src/static/styles/style.scss"),
-				resolve(__dirname, "src/static/js/utils/initSentry.js"),
-      ],
-      output: {
-        entryFileNames: "[name].js",
-        chunkFileNames: "[name].js",
-        assetFileNames: "[name].[ext]",
-      },
+			],
+			output: {
+				entryFileNames: "[name].js",
+				chunkFileNames: "[name].js",
+				assetFileNames: "[name].[ext]",
+			},
 		},
 	},
 });

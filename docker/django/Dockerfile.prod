@@ -1,5 +1,5 @@
 # Stage 1: Use NPM to run build command
-FROM node:21 AS node-build
+FROM node:20 AS node-build
 
 COPY ["package*.json","vite.config.js","./"]
 

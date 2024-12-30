@@ -54,7 +54,7 @@ jobs:
             make migrate || exit 1
             make npm-install || exit 1
             make npm-build || exit 1
-            make collectstatic || exit 1
+            make collectstatic settings=core.settings.production || exit 1
             sudo systemctl restart nginx || exit 1
             sudo systemctl restart gunicorn.service || exit 1
           "

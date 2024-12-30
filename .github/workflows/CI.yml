@@ -51,7 +51,7 @@ jobs:
             git stash pop
             poetry install --without dev  || exit 1
             make clear_cache settings=core.settings.production || exit 1
-            make migrate || exit 1
+            make migrate settings=core.settings.production || exit 1
             make npm-install || exit 1
             make npm-build || exit 1
             make collectstatic settings=core.settings.production || exit 1

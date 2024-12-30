@@ -17,9 +17,10 @@ lint:
 	ruff format ./src
 	ruff check --select I --fix
 
+settings ?= core.settings.local 
 .PHONY: migrate
 migrate:
-	poetry run python src/manage.py migrate
+	poetry run python src/manage.py migrate --settings=${settings}
 
 .PHONY: migrations
 migrations:

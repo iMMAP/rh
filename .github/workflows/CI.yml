@@ -50,7 +50,7 @@ jobs:
             git pull origin main || exit 1
             git stash pop
             poetry install --without dev  || exit 1
-            make clear_cache || exit 1
+            make clear_cache settings=core.settings.production || exit 1
             make migrate || exit 1
             make npm-install || exit 1
             make npm-build || exit 1

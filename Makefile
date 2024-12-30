@@ -90,9 +90,10 @@ shell_plus:
 dbbackup:
 	poetry run python src/manage.py dbbackup
 
+settings ?= core.settings.production
 .PHONY: clear_cache 
 clear_cache:
-	poetry run python src/manage.py clear_cache
+	poetry run python src/manage.py clear_cache --settings=${settings}
 
 .PHONY: loaddata
 loaddata:

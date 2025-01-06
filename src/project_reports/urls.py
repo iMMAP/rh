@@ -168,9 +168,4 @@ urlpatterns = [
         export_views.export_monthly_report_view,
         name="export_monthly_report",
     ),
-    path(
-        "stock/report/organization/<str:code>/export",
-        export_views.export_org_stock_monthly_report,
-        name="export-org-5w-stock-reports",
-    ),
 ]

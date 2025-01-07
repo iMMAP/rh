@@ -525,7 +525,7 @@ def stock_dashbaord(request):
         showlegend=True,
         margin=dict(r=0, t=50, b=0, l=0),
         title={
-            "text": "<b>Stock Report Monthly Trend</b>",
+            "text": "<b>Stock Report Monthly Trends</b>",
             "font": {
                 "size": 14,
                 "color": "#A52824",

@@ -1,10 +1,15 @@
 import calendar
+from collections import defaultdict
 from datetime import datetime
 
+import pandas as pd
+import plotly.express as px
+import plotly.graph_objects as go
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
-from django.db.models import Prefetch, Sum
+from django.db.models import Count, Prefetch, Sum
+from django.db.models.functions import Coalesce
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
@@ -12,7 +17,7 @@ from django.utils.safestring import mark_safe
 from django_htmx.http import HttpResponseClientRedirect
 from extra_settings.models import Setting
 
-from stock.filter import StockFilter, StockMonthlyReportFilter, StockReportFilter
+from stock.filter import StockDashboardFilter, StockFilter, StockMonthlyReportFilter, StockReportFilter
 from stock.utils import write_csv_columns_and_rows
 
 from .forms import StockMonthlyReportForm, StockReportForm, WarehouseForm
@@ -371,8 +376,243 @@ def export_stock_monthly_report(request, warehouse):
     return response
 
 
+@login_required
 def report_details_view(request, report):
     stock_report = get_object_or_404(StockReport, pk=report)
     monthly_report = stock_report.monthly_report
     context = {"stock_report": stock_report, "monthly_report": monthly_report}
     return render(request, "stock/report_details_view.html", context)
+
+
+@login_required
+def stock_dashbaord(request):
+    user_org = request.user.profile.organization
+    # Prefetch related stock reports for submitted stock monthly reports
+    stock_report_prefetch = Prefetch("stockreport_set", queryset=StockReport.objects.all())
+
+    # Prefetch related stock monthly reports with the submitted state
+    stock_monthly_report_prefetch = Prefetch(
+        "stockmonthlyreport_set",
+        queryset=StockMonthlyReport.objects.filter(state="submitted").prefetch_related(stock_report_prefetch),
+    )
+
+    # Annotate the total beneficiary coverage
+    ware = (
+        Warehouse.objects.filter(organization=user_org)
+        .prefetch_related(stock_monthly_report_prefetch)
+        .annotate(total_beneficiary=Coalesce(Sum("stockmonthlyreport__stockreport__beneficiary_coverage"), 0))
+    )
+
+    warehouses_filter = StockDashboardFilter(request.GET, queryset=ware, request=request)
+    warehouses = warehouses_filter.qs
+    # Prepare the aggregated data for the response.
+    data_calculate = {
+        "total_beneficiary_coverage": warehouses.aggregate(
+            total_beneficiary_coverage_sum=Sum("stockmonthlyreport__stockreport__beneficiary_coverage")
+        )["total_beneficiary_coverage_sum"]
+        or 0,
+        "total_reports": warehouses.aggregate(total_reports_sum=Count("stockmonthlyreport__stockreport__id"))[
+            "total_reports_sum"
+        ]
+        or 0,  # Counting reports as the sum of ids
+        "total_warehouse": warehouses.count(),
+        "total_stock": warehouses.aggregate(total_stock_sum=Sum("stockmonthlyreport__stockreport__qty_in_stock"))[
+            "total_stock_sum"
+        ]
+        or 0,
+        "total_pipeline": warehouses.aggregate(
+            total_pipeline_sum=Sum("stockmonthlyreport__stockreport__qty_in_pipeline")
+        )["total_pipeline_sum"]
+        or 0,
+        "total_people_assisted": warehouses.aggregate(
+            total_people_assisted_sum=Sum("stockmonthlyreport__stockreport__people_to_assisted")
+        )["total_people_assisted_sum"]
+        or 0,
+        "total_unit_required": warehouses.aggregate(
+            total_unit_required_sum=Sum("stockmonthlyreport__stockreport__unit_required")
+        )["total_unit_required_sum"]
+        or 0,
+    }
+
+    # Initialize defaultdicts to handle default values
+    clusters_beneficiary_dict = defaultdict(int)
+    cluster_pipeline_list = defaultdict(int)
+    cluster_stock_list = defaultdict(int)
+    months_beneficiary = defaultdict(int)
+    total_clusters = 0
+    warehouse_beneficiary = {"warehouse_name": [], "total_beneficiary": []}
+
+    # Create a single query to fetch all necessary data
+    warehouse_data = warehouses.annotate(
+        total_beneficiary=Coalesce(Sum("stockmonthlyreport__stockreport__beneficiary_coverage"), 0),
+        total_stock=Coalesce(Sum("stockmonthlyreport__stockreport__qty_in_stock"), 0),
+        total_pipeline=Coalesce(Sum("stockmonthlyreport__stockreport__qty_in_pipeline"), 0),
+        total_people_assisted=Coalesce(Sum("stockmonthlyreport__stockreport__people_to_assisted"), 0),
+        total_unit_required=Coalesce(Sum("stockmonthlyreport__stockreport__unit_required"), 0),
+    ).values(
+        "name",
+        "total_beneficiary",
+        "total_stock",
+        "total_pipeline",
+        "total_people_assisted",
+        "total_unit_required",
+        "stockmonthlyreport__stockreport__cluster__code",
+        "stockmonthlyreport__stockreport__beneficiary_coverage",
+        "stockmonthlyreport__stockreport__qty_in_pipeline",
+        "stockmonthlyreport__stockreport__qty_in_stock",
+        "stockmonthlyreport__from_date",
+    )
+
+    # Process the data
+    for data in warehouse_data:
+        warehouse_name = data["name"] if data["name"] is not None else "Unknown"
+        total_beneficiary = data["total_beneficiary"] if data["total_beneficiary"] is not None else 0
+
+        warehouse_beneficiary["warehouse_name"].append(warehouse_name)
+        warehouse_beneficiary["total_beneficiary"].append(total_beneficiary)
+
+        report_date = data["stockmonthlyreport__from_date"]
+        months_beneficiary[report_date] += data["stockmonthlyreport__stockreport__beneficiary_coverage"]
+
+        cluster_code = data["stockmonthlyreport__stockreport__cluster__code"]
+        if cluster_code not in clusters_beneficiary_dict:
+            total_clusters += 1
+
+        clusters_beneficiary_dict[cluster_code] += data["stockmonthlyreport__stockreport__beneficiary_coverage"]
+        cluster_pipeline_list[cluster_code] += data["stockmonthlyreport__stockreport__qty_in_pipeline"]
+        cluster_stock_list[cluster_code] += data["stockmonthlyreport__stockreport__qty_in_stock"]
+
+    # Create lists using comprehensions
+    clusters = list(clusters_beneficiary_dict.keys())
+    number_in_stock = list(cluster_stock_list.values())
+    number_in_pipeline = list(cluster_pipeline_list.values())
+    beneficiary_coverage = list(clusters_beneficiary_dict.values())
+
+    df = pd.DataFrame(warehouse_beneficiary)
+    fig = px.bar(df, x="warehouse_name", y="total_beneficiary")
+
+    fig.update_traces(marker=dict(color="#a52824"))
+    fig.update_layout(
+        xaxis_title="Warehouses",
+        yaxis_title="Beneficiaries",
+        showlegend=True,
+        margin=dict(r=0, t=50, b=0, l=0),
+        title={
+            "text": "<b>Warehouse Beneficiary Coverage Trends</b>",
+            "font": {
+                "size": 14,
+                "color": "#A52824",
+            },
+        },
+    )
+    # Line chart
+    # Create the DataFrame for the line chart using pd.Series constructor
+    df = pd.DataFrame(
+        {
+            "x": pd.Series(months_beneficiary.keys()).fillna("unknown"),
+            "y": pd.Series(months_beneficiary.values()).fillna(0),
+        }
+    )
+    df = df.sort_values(by="x")
+    line_chart = px.line(
+        df,
+        x="x",
+        y="y",
+    )
+    line_chart.update_layout(
+        xaxis_title="Months",
+        yaxis_title="Beneficiary Coverage",
+        showlegend=True,
+        margin=dict(r=0, t=50, b=0, l=0),
+        title={
+            "text": "<b>Stock Report Monthly Trends</b>",
+            "font": {
+                "size": 14,
+                "color": "#A52824",
+            },
+        },
+    )
+    line_chart.update_traces(
+        line=dict(shape="spline", color="#a52824"),
+        mode="lines+markers",
+        hovertemplate="<b>Month:</b> %{x}<br><b>Beneficiary:</b> %{y}<br><extra></extra>",
+    )
+
+    fig2 = go.Figure()
+    # Plot each metric as a line
+    fig2.add_trace(
+        go.Scatter(
+            x=clusters,
+            y=number_in_stock,
+            mode="lines+markers",
+            name="Quantity in Stock",
+            hovertemplate="<b>cluster:</b> %{x}<br><b>quantity in stock:</b> %{y}<br><extra></extra>",
+            line=dict(shape="spline"),
+        )
+    )
+    fig2.add_trace(
+        go.Scatter(
+            x=clusters,
+            y=number_in_pipeline,
+            mode="lines+markers",
+            name="Quantity in Pipeline",
+            hovertemplate="<b>cluster:</b> %{x}<br><b>quantity in pipeline:</b> %{y}<br><extra></extra>",
+            line=dict(shape="spline"),
+        )
+    )
+    fig2.add_trace(
+        go.Scatter(
+            x=clusters,
+            y=beneficiary_coverage,
+            mode="lines+markers",
+            name="Beneficiary Coverage",
+            hovertemplate="<b>cluster:</b> %{x}<br><b>beneficiary coverage:</b> %{y}<br><extra></extra>",
+            line=dict(shape="spline"),
+        )
+    )
+
+    # Update layout
+    fig2.update_layout(
+        xaxis_title="Clusters",
+        yaxis_title="Stock Data Values",
+        showlegend=True,
+        margin=dict(r=0, t=50, b=0, l=0),
+        height=400,
+        title={
+            "text": "<b>Cluster-wise In Stock, In Pipeline, and Beneficiary Coverage Trends</b>",
+            "font": {
+                "size": 14,
+                "color": "#A52824",
+            },
+        },
+    )
+    data_calculate["total_cluster"] = total_clusters
+    context = {
+        "bar_chart": fig.to_html(),
+        "pie_chart": fig2.to_html(),
+        "line_chart": line_chart.to_html(),
+        "data": data_calculate,
+        "warehouse_filter": warehouses_filter,
+    }
+    return render(request, "stock/stock_dashboard.html", context)
+
+
+def export_org_stock_beneficiary(request):
+    user_org = request.user.profile.organization
+    ware = Warehouse.objects.filter(organization=user_org).annotate(
+        total_beneficiary=Sum("stockmonthlyreport__stockreport__beneficiary_coverage")
+    )
+    warehouses_filter = StockDashboardFilter(request.GET, queryset=ware, request=request)
+    warehouses = warehouses_filter.qs
+
+    today = datetime.now()
+    filename = today.today().strftime("%d-%m-%Y")
+
+    try:
+        response = HttpResponse(content_type="text/csv")
+        response["Content-Disposition"] = f"attachment; filename={user_org}_stock_reports_exported_on_{filename}.csv"
+        write_csv_columns_and_rows(warehouses, response)
+        return response
+    except Exception as e:
+        print(f"Error: {e}")
+        return HttpResponse(status=500)

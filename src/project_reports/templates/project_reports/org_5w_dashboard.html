@@ -21,16 +21,10 @@
         <div class="top-panel pb-2 pt-4 flex flex-col items-center justify-between gap-2 sm:flex-row">
             <h2 class="locations text-red-be">{{ request.user.profile.organization }}'s 5W Dashboard</h2>
             <div class="actions-panel">
-                <a class=" btn btn-gray"
-                    href="{% url 'export-org-5w-stock-reports' user.profile.organization.code %}"
+                <a class=" btn btn-red"
+                    href="{% url 'stock-dashboard' %}"
                     title="{{user.profile.organization.code}}_5w_stock_reports_">
-                    <span class="btn-text">Export Stock Reports</span>
-                    <span class="icon-download"></span>
-                    <!-- spinner start-->
-                    <img class="downloading"
-                         style="width: 1.2rem"
-                         src="{% static 'images/spinner.gif' %}" />
-                    <!-- spinner end -->
+                    <span class="btn-text">Stock Dashboard</span>
                 </a>
                 <a class=" btn btn-red"
                     href="{% url 'export-org-5w-dashboard' user.profile.organization.code %}?{{request.GET.urlencode}}"

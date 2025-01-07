@@ -92,4 +92,14 @@ urlpatterns = [
         user_views.report_details_view,
         name="report-details-view",
     ),
+    path(
+        "stock/dashboard",
+        user_views.stock_dashbaord,
+        name="stock-dashboard",
+    ),
+    path(
+        "stock/export/organization/stock",
+        user_views.export_org_stock_beneficiary,
+        name="export-org-stock-beneficiary",
+    ),
 ]

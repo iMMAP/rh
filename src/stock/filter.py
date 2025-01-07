@@ -61,3 +61,44 @@ class StockMonthlyReportFilter(django_filters.FilterSet):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
+
+class StockDashboardFilter(django_filters.FilterSet):
+    from_date = django_filters.DateFilter(
+        field_name="stockmonthlyreport__from_date",
+        label="From Date",
+        lookup_expr="exact",
+        widget=forms.DateInput(
+            attrs={
+                "type": "date",
+            }
+        ),
+    )
+    due_date = django_filters.DateFilter(
+        field_name="stockmonthlyreport__due_date",
+        label="To Date",
+        lookup_expr="exact",
+        widget=forms.DateInput(attrs={"type": "date"}),
+    )
+    name = django_filters.ModelChoiceFilter(
+        lookup_expr="icontains", queryset=Warehouse.objects.all(), label="Warehouse Name"
+    )
+    status = django_filters.ChoiceFilter(
+        field_name="stockmonthlyreport__stockreport__status",
+        choices=StockReport.STATUS_TYPES,
+        label="Stock Status",
+    )
+    cluster = django_filters.ModelMultipleChoiceFilter(
+        field_name="stockmonthlyreport__stockreport__cluster",
+        queryset=Cluster.objects.all(),
+        lookup_expr="exact",
+        label="Clusters / Sectors",
+        widget=forms.SelectMultiple(attrs={"class": "custom-select"}),
+    )
+
+    class Meta:
+        mode = Warehouse
+        fields = ["from_date", "due_date", "name", "status", "cluster"]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)

@@ -99,9 +99,6 @@ def write_projects_reports_to_csv(monthly_progress_report, response):
         else:
             continue
 
-    disaggregation_list.append("total")
-    disaggregation_cols.append("total")
-
     if disaggregations:
         for disaggregation_col in disaggregation_cols:
             columns.append(disaggregation_col)
@@ -256,10 +253,7 @@ def write_projects_reports_to_csv(monthly_progress_report, response):
                         disaggregation_location.disaggregation.name: disaggregation_location.reached
                         for disaggregation_location in disaggregation_locations
                     }
-                    total_disaggregation = 0
-                    for value in disaggregation_location_list.values():
-                        total_disaggregation += value
-                    disaggregation_location_list["total"] = total_disaggregation
+
                     # Update disaggregation_data with values from disaggregation_location_list
                     for disaggregation_entry in disaggregation_list:
                         if disaggregation_entry not in disaggregation_location_list:

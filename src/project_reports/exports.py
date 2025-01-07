@@ -1,5 +1,4 @@
 import datetime
-import json
 
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
@@ -10,8 +9,6 @@ from openpyxl.styles import Font, NamedStyle
 
 from project_reports.filters import MonthlyReportsFilter, Organization5WFilter
 from rh.models import Cluster, Organization, Project
-from stock.models import StockMonthlyReport, StockReport
-from stock.utils import write_csv_columns_and_rows
 from users.utils import is_cluster_lead
 
 from .models import ActivityPlanReport, DisaggregationLocationReport, ProjectMonthlyReport, TargetLocationReport
@@ -82,57 +79,6 @@ def cluster_5w_dashboard_export(request, code):
 
         return response
 
-    except Exception as e:
-        response = {"error": str(e)}
-        return HttpResponse(response, status=500)
-
-
-@login_required
-def cluster_5w_stock_report_export(request, code):
-    cluster = get_object_or_404(Cluster, code=code)
-
-    body = json.loads(request.body)
-
-    from_date = body.get("from")
-    if not from_date:
-        from_date = datetime.date(datetime.datetime.now().year, 1, 1)
-
-    to_date = body.get("to")
-    if not to_date:
-        to_date = datetime.datetime.now().date()
-
-    user_country = request.user.profile.country
-
-    filter_params = {
-        "stockreport__cluster__in": [cluster],
-        "state__in": ["submitted"],
-        "from_date__lte": to_date,
-        "due_date__gte": from_date,
-        "warehouse_location__user__profile__country": user_country,
-    }
-
-    organization_code = body.get("organization")
-    if organization_code:
-        filter_params["warehouse_location__organization__code"] = organization_code
-
-    if not is_cluster_lead(
-        user=request.user,
-        clusters=[
-            cluster.code,
-        ],
-    ):
-        raise PermissionDenied
-    try:
-        stock_monthly_reports = (
-            StockMonthlyReport.objects.select_related("warehouse_location")
-            .prefetch_related(Prefetch("stockreport_set", queryset=StockReport.objects.all()))
-            .filter(**filter_params)
-            .distinct()
-        )
-        response = HttpResponse(content_type="text/csv")
-        response["Content-Disposition"] = "attachment; filename=reports.csv"
-        write_csv_columns_and_rows(stock_monthly_reports, response)
-        return response
     except Exception as e:
         response = {"error": str(e)}
         return HttpResponse(response, status=500)

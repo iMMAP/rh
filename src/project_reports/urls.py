@@ -158,11 +158,11 @@ urlpatterns = [
         export_views.cluster_5w_dashboard_export,
         name="export-cluster-5w-dashboard",
     ),
-    path(
-        "stock-reports/cluster/<str:code>/export",
-        export_views.cluster_5w_stock_report_export,
-        name="cluster-5w-stock-report-export",
-    ),
+    # path(
+    #     "stock-reports/cluster/<str:code>/export",
+    #     export_views.cluster_5w_stock_report_export,
+    #     name="cluster-5w-stock-report-export",
+    # ),
     path(
         "project/monthly-report/export/<int:pk>",
         export_views.export_monthly_report_view,

@@ -22,17 +22,17 @@
         <div class="top-panel pb-2 pt-4 flex flex-col items-center justify-between gap-2 sm:flex-row">
             <h2 class="locations text-red-be">{{ request.resolver_match.kwargs.cluster|capfirst }} 5W Dashboard</h2>
             <div class="actions-panel">
-                <a class="export-button btn btn-gray"
+                <!-- <a class="export-button btn btn-gray"
                     href="{% url 'cluster-5w-stock-report-export' request.resolver_match.kwargs.cluster %}"
                     title="{{request.resolver_match.kwargs.cluster }}_5w_stock_reports_">
                     <span class="btn-text">Export Stocks Reports</span>
                     <span class="icon-download"></span>
-                    <!-- spinner start-->
+                    spinner start
                     <img class="downloading"
                          style="width: 1.2rem"
                          src="{% static 'images/spinner.gif' %}" />
-                    <!-- spinner end -->
-                </a>
+                    spinner end 
+                </a> -->
                 <a class="export-button btn btn-red"
                     href="{% url 'export-cluster-5w-dashboard' request.resolver_match.kwargs.cluster %}?{{request.GET.urlencode}}"
                     title="{{request.resolver_match.kwargs.cluster }}_5w_projects_reports_">

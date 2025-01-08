@@ -472,15 +472,17 @@ def stock_dashbaord(request):
         warehouse_beneficiary["total_beneficiary"].append(total_beneficiary)
 
         report_date = data["stockmonthlyreport__from_date"]
-        months_beneficiary[report_date] += data["stockmonthlyreport__stockreport__beneficiary_coverage"]
+        months_beneficiary[report_date] += data.get("stockmonthlyreport__stockreport__beneficiary_coverage", 0) or 0
 
         cluster_code = data["stockmonthlyreport__stockreport__cluster__code"]
         if cluster_code not in clusters_beneficiary_dict:
             total_clusters += 1
 
-        clusters_beneficiary_dict[cluster_code] += data["stockmonthlyreport__stockreport__beneficiary_coverage"]
-        cluster_pipeline_list[cluster_code] += data["stockmonthlyreport__stockreport__qty_in_pipeline"]
-        cluster_stock_list[cluster_code] += data["stockmonthlyreport__stockreport__qty_in_stock"]
+        clusters_beneficiary_dict[cluster_code] += (
+            data.get("stockmonthlyreport__stockreport__beneficiary_coverage", 0) or 0
+        )
+        cluster_pipeline_list[cluster_code] += data.get("stockmonthlyreport__stockreport__qty_in_pipeline", 0) or 0
+        cluster_stock_list[cluster_code] += data.get("stockmonthlyreport__stockreport__qty_in_stock", 0) or 0
 
     # Create lists using comprehensions
     clusters = list(clusters_beneficiary_dict.keys())

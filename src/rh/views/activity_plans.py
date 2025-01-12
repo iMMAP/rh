@@ -1,8 +1,10 @@
+import json
+
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.db.models import Count
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.utils.safestring import mark_safe
@@ -11,16 +13,16 @@ from django_htmx.http import HttpResponseClientRedirect
 from extra_settings.models import Setting
 
 from ..filters import ActivityPlansFilter
-from ..forms import (
-    ActivityPlanForm,
-    ProjectIndicatorTypeForm,
-)
+from ..forms import ActivityPlanForm, CashInkindDetailFormset
 from ..models import (
     ActivityPlan,
     DisaggregationLocation,
+    ImplementationModalityType,
     Indicator,
     Project,
     TargetLocation,
+    TransferMechanismType,
+    UnitType,
 )
 
 
@@ -81,9 +83,15 @@ def create_activity_plan(request, project):
 
     if request.method == "POST":
         form = ActivityPlanForm(request.POST, project=project)
+        cash_in_kind_formset = CashInkindDetailFormset(request.POST)
+
         if form.is_valid():
             activity_plan = form.save(commit=False)
             activity_plan.project = project
+            if cash_in_kind_formset.is_valid():
+                cash_inkind = cash_in_kind_formset.save(commit=False)
+                cash_inkind.activity_plan = activity_plan
+                cash_in_kind_formset.save()
             activity_plan.save()
 
             messages.success(
@@ -100,8 +108,10 @@ def create_activity_plan(request, project):
             messages.error(request, "The form is invalid. Please check the fields and try again.")
     else:
         form = ActivityPlanForm(project=project)
+        cash_in_kind_formset = CashInkindDetailFormset()
 
-    return render(request, "rh/activity_plans/activity_plan_form.html", {"form": form, "project": project})
+    context = {"form": form, "project": project, "cash_in_kind_formset": cash_in_kind_formset}
+    return render(request, "rh/activity_plans/activity_plan_form.html", context)
 
 
 @login_required
@@ -192,34 +202,48 @@ def list_activity_plans(request, project):
 
 
 @login_required
-def update_indicator_type(request):
+def update_indicator_type(request, pk):
     """Indicator related types fields"""
-    activity_plan_id = request.GET.get("activity_plan", "")
     indicator_id = request.GET.get("indicator")
+    indicator = get_object_or_404(Indicator, pk=indicator_id)
+    t = indicator.implement_modility
+    implement_modility_value = ImplementationModalityType.objects.filter(type=t)
 
-    indicator_type_fields = [
-        "package_type",
-        "unit_type",
-        "grant_type",
-        "transfer_category",
-        "currency",
-        "transfer_mechanism_type",
-        "implement_modility_type",
-    ]
-
-    initial_data = {}
-    if activity_plan_id:
-        activity_plan = get_object_or_404(ActivityPlan, pk=activity_plan_id)
-        if (activity_plan.indicator) and (str(activity_plan.indicator.pk) != indicator_id):
-            fields_to_update = {field: None for field in indicator_type_fields}
-
-            # Update the fields in one query
-            ActivityPlan.objects.filter(pk=activity_plan.pk).update(**fields_to_update)
-
-        initial_data = {field: getattr(activity_plan, field, None) for field in indicator_type_fields}
-
-    indicator = Indicator.objects.get(id=indicator_id)
-    indicator_form = ProjectIndicatorTypeForm(initial=initial_data)
-    context = {"indicator": indicator, "indicator_form": indicator_form}
-
+    context = {
+        "option": implement_modility_value,
+    }
     return render(request, "rh/projects/views/_indicator_types.html", context)
+
+
+def get_transfer_mechanism_type(request):
+    """Get the implement modility type"""
+    implement_modility_id = request.GET.get("implement_modility_type")
+    implement = get_object_or_404(ImplementationModalityType, pk=implement_modility_id)
+    transfer_mechanism = TransferMechanismType.objects.filter(modility=implement)
+    context = {
+        "option": transfer_mechanism,
+    }
+    return render(request, "rh/projects/views/_transfer_mechanism_type.html", context)
+
+
+def get_unit_type(request):
+    transfer_mechanism_id = request.GET.get("transfer_mechanism_type")
+    transfer_type = get_object_or_404(TransferMechanismType, pk=transfer_mechanism_id)
+    implement = transfer_type.modility
+    unit_type = UnitType.objects.filter(modility=implement)
+    print(unit_type)
+    context = {
+        "option": unit_type,
+    }
+    return render(request, "rh/projects/views/_unit_type.html", context)
+
+
+def displaty_cash_in_kind(request):
+    data = json.loads(request.body)
+    indicator = get_object_or_404(Indicator, pk=data["indicator"])
+    # Get the implement_modility attribute from the indicator
+    data = False
+    if indicator.implement_modility:
+        data = True
+    response_data = {"data": data}
+    return JsonResponse(response_data, safe=False)

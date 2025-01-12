@@ -1,23 +1,26 @@
 from django import forms
 from django.contrib.auth.models import User
-from django.forms import BaseInlineFormSet
+from django.forms import BaseInlineFormSet, inlineformset_factory
 from django.urls import reverse_lazy
 
 from .models import (
     ActivityPlan,
     ActivityType,
     BudgetProgress,
+    CashInKindDetail,
     Cluster,
     Currency,
     Disaggregation,
     DisaggregationLocation,
     Donor,
+    ImplementationModalityType,
     Indicator,
     Location,
     Organization,
     Project,
-    ProjectIndicatorType,
     TargetLocation,
+    TransferMechanismType,
+    UnitType,
 )
 
 
@@ -250,7 +253,7 @@ class ActivityPlanForm(forms.ModelForm):
         self.fields["activity_type"].required = True
         self.fields["indicator"].required = True
 
-        self.fields["activity_domain"].queryset = project.activity_domains.all()
+        self.fields["activity_domain"].queryset = project.activity_domains.filter(is_active=True)
 
         project_clusters = project.clusters.all()
         self.fields["beneficiary"].queryset = (
@@ -406,14 +409,26 @@ class OrganizationForm(forms.ModelForm):
         return code
 
 
-class ProjectIndicatorTypeForm(forms.ModelForm):
+class CashInKindDetailForm(forms.ModelForm):
     class Meta:
-        model = ProjectIndicatorType
+        model = CashInKindDetail
         fields = "__all__"
-        exclude = (
-            "project",
-            "indicator",
-        )
+        exclude = ("activity_plan", "indicator")
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["implement_modility_type"].queryset = ImplementationModalityType.objects.none()
+        self.fields["transfer_mechanism_type"].queryset = TransferMechanismType.objects.none()
+        self.fields["unit_type"].queryset = UnitType.objects.none()
+
+
+CashInkindDetailFormset = inlineformset_factory(
+    parent_model=ActivityPlan,
+    model=CashInKindDetail,
+    form=CashInKindDetailForm,
+    extra=1,
+    can_delete=True,
+)
 
 
 class DonorForm(forms.ModelForm):

@@ -1,0 +1,83 @@
+
+
+{{ cash_in_kind_formset.management_form }}
+<div class="row">
+    <div class="multiple-fields-row  three-items">
+        {% for form in cash_in_kind_formset %}
+        <div class="field-col">
+            <div class="select-field is-required">
+                <label for="{{ form.implement_modility_type.id_for_label }}">Implementation Modality</label>
+                <select required
+                        name="{{ form.implement_modility_type.name }}"
+                        id="implement_modility_type_id"
+                        class="form-control"
+                        hx-get="{% url 'get-transfer-mechanism-type' %}"
+                        hx-trigger="change,load"
+                        hx-target="#transfer_mechanism_type_id, #unit_type_id"
+                        hx-swap="innerHTML"
+                        hx-indicator=".progress">
+                        {% for modility in form.implement_modility_type %}{{ modility }}{% endfor %}
+                </select>
+                <div class="sign-up-field-error">{{ form.instance.implement_modility_type.errors }}</div>
+            </div>
+        </div>
+        
+        <div class="field-col">
+            <div class="select-field is-required">
+                <label for="{{ form.transfer_mechanism_type.id_for_label }}">Transfer Mechanism</label>
+                <select required
+                        name="{{ form.transfer_mechanism_type.name }}"
+                        id="transfer_mechanism_type_id"
+                        class="form-control"
+                        hx-get="{% url 'get-unit-type' %}"
+                        hx-trigger="change,load"
+                        hx-target="#unit_type_id"
+                        hx-swap="innerHTML"
+                        hx-indicator=".progress">
+                        {% for modility in form.transfer_mechanism_type %}{{ modility }}{% endfor %}
+                </select>
+                <div class="sign-up-field-error">{{ form.transfer_mechanism_type.errors }}</div>
+            </div>
+        </div>
+        <div class="field-col">
+            <div class="select-field is-required">
+                <label for="{{ form.unit_type.id_for_label }}">Unit Type</label>
+                <select name="{{form.unit_type.name}}" id="unit_type_id">
+                    {% for unit in form.unit_type %}{{ unit }}{% endfor %}
+                </select>
+                <div class="sign-up-field-error">{{ form.unit_type.errors }}</div>
+            </div>
+        </div>
+        <div class="field-col">
+            <div class="select-field is-required">
+                <label for="{{ form.transfer_category.id_for_label }}">Transfer Category</label>
+                {{ form.transfer_category }}
+                <div class="sign-up-field-error">{{ form.transfer_category.errors }}</div>
+            </div>
+        </div>
+        <div class="field-col">
+            <div class="select-field is-required">
+                <label for="{{ form.grant_type.id_for_label }}">Grant Type</label>
+                {{ form.grant_type }}
+                <div class="sign-up-field-error">{{ form.grant_type.errors }}</div>
+            </div>
+        </div>
+        
+        <div class="field-col">
+            <div class="input-field is-required">
+                <label for="{{ form.units.id_for_label }}">Units</label>
+                {{ form.units }}
+                <div class="sign-up-field-error">{{ form.units.errors }}</div>
+            </div>
+        </div>
+        <div class="field-col">
+            <div class="input-field is-required">
+                <label for="{{ form.no_of_transfers.id_for_label }}">No of Transfers</label>
+                {{ form.no_of_transfers }}
+                <div class="sign-up-field-error">{{ form.no_of_transfers.errors }}</div>
+            </div>
+        </div>
+  
+        {% endfor %}
+    </div>
+</div>

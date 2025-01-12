@@ -162,7 +162,6 @@ class Currency(models.Model):
     """Currencies model"""
 
     name = models.CharField(max_length=15, null=True)
-
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, null=True)
 
@@ -206,13 +205,14 @@ class FacilitySiteType(models.Model):
 
 
 class ImplementationModalityType(models.Model):
+    TYPE_CHOICES = [("cash", "Cash"), ("in-kind", "In-Kind")]
     name = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
-
+    type = models.CharField(max_length=NAME_MAX_LENGTH, choices=TYPE_CHOICES, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, null=True)
 
     def __str__(self):
-        return self.name
+        return self.type
 
     class Meta:
         verbose_name = "Implementation Modality Type"
@@ -220,7 +220,7 @@ class ImplementationModalityType(models.Model):
 
 
 class TransferMechanismType(models.Model):
-    modality = models.ForeignKey(ImplementationModalityType, on_delete=models.SET_NULL, blank=True, null=True)
+    modility = models.ForeignKey(ImplementationModalityType, on_delete=models.SET_NULL, blank=True, null=True)
     name = models.CharField(max_length=NAME_MAX_LENGTH, unique=True)
 
     created_at = models.DateTimeField(auto_now_add=True, null=True)
@@ -250,7 +250,7 @@ class PackageType(models.Model):
 
 class TransferCategory(models.Model):
     name = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
-
+    modility = models.ForeignKey(ImplementationModalityType, on_delete=models.SET_NULL, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, null=True)
 
@@ -279,7 +279,7 @@ class GrantType(models.Model):
 class UnitType(models.Model):
     code = models.SlugField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
     name = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
-
+    modility = models.ForeignKey(ImplementationModalityType, on_delete=models.SET_NULL, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, null=True)
 
@@ -362,24 +362,9 @@ class Indicator(models.Model):
     numerator = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
     denominator = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
     description = models.CharField(max_length=1200, blank=True, null=True)
-
     enable_retargeting = models.BooleanField(blank=True, null=True)
-
-    # RELATIONSHIPS
-    package_type = models.ForeignKey(PackageType, on_delete=models.SET_NULL, null=True, blank=True)
-    unit_type = models.ForeignKey(UnitType, on_delete=models.SET_NULL, null=True, blank=True)
-    units = models.IntegerField(default=0, null=True, blank=True)
-    no_of_transfers = models.IntegerField(
-        default=0, null=True, blank=True, validators=[MinValueValidator(0), MaxValueValidator(30)]
-    )
-    grant_type = models.ForeignKey(GrantType, on_delete=models.SET_NULL, null=True, blank=True)
-    transfer_category = models.ForeignKey(TransferCategory, on_delete=models.SET_NULL, null=True, blank=True)
-    currency = models.ForeignKey(Currency, on_delete=models.SET_NULL, null=True, blank=True)
-    transfer_mechanism_type = models.ForeignKey(TransferMechanismType, on_delete=models.SET_NULL, null=True, blank=True)
-    implement_modility_type = models.ForeignKey(
-        ImplementationModalityType, on_delete=models.SET_NULL, null=True, blank=True
-    )
-
+    implement_modility = models.ForeignKey(ImplementationModalityType, on_delete=models.SET_NULL, blank=True, null=True)
+    is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, null=True)
 
@@ -483,6 +468,21 @@ class ActivityPlan(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, null=True)
 
+    def get_available_states(self):
+        return [state[0] for state in STATES]
+
+    def __str__(self):
+        return f"Activity Plan: {self.activity_domain} - {self.indicator}"
+
+    class Meta:
+        verbose_name = "Activity Plan"
+        verbose_name_plural = "Activity Plans"
+
+
+class CashInKindDetail(models.Model):
+    # RELATIONSHIPS
+    activity_plan = models.ForeignKey(ActivityPlan, on_delete=models.CASCADE)
+    indicator = models.ForeignKey(Indicator, on_delete=models.SET_NULL, blank=True, null=True)
     package_type = models.ForeignKey(PackageType, on_delete=models.SET_NULL, null=True, blank=True)
     unit_type = models.ForeignKey(UnitType, on_delete=models.SET_NULL, null=True, blank=True)
     units = models.IntegerField(default=0, null=True, blank=True)
@@ -497,15 +497,11 @@ class ActivityPlan(models.Model):
         ImplementationModalityType, on_delete=models.SET_NULL, null=True, blank=True
     )
 
-    def get_available_states(self):
-        return [state[0] for state in STATES]
-
     def __str__(self):
-        return f"Activity Plan: {self.activity_domain} - {self.indicator}"
+        return f"Cash-in-Kind Detail: {self.implement_modility_type}"
 
     class Meta:
-        verbose_name = "Activity Plan"
-        verbose_name_plural = "Activity Plans"
+        verbose_name = "Cash-in-Kind Detail"
 
 
 class TargetLocation(models.Model):
@@ -640,21 +636,3 @@ class BudgetProgress(models.Model):
     class Meta:
         verbose_name = "Budget Progress"
         verbose_name_plural = "Budget Progress"
-
-
-class ProjectIndicatorType(models.Model):
-    project = models.ForeignKey(Project, on_delete=models.SET_NULL, null=True, blank=True)
-    indicator = models.ForeignKey(Indicator, on_delete=models.SET_NULL, null=True, blank=True)
-
-    package_type = models.ForeignKey(PackageType, on_delete=models.SET_NULL, null=True, blank=True)
-    unit_type = models.ForeignKey(UnitType, on_delete=models.SET_NULL, null=True, blank=True)
-    grant_type = models.ForeignKey(GrantType, on_delete=models.SET_NULL, null=True, blank=True)
-    transfer_category = models.ForeignKey(TransferCategory, on_delete=models.SET_NULL, null=True, blank=True)
-    currency = models.ForeignKey(Currency, on_delete=models.SET_NULL, null=True, blank=True)
-    transfer_mechanism_type = models.ForeignKey(TransferMechanismType, on_delete=models.SET_NULL, null=True, blank=True)
-    implement_modility_type = models.ForeignKey(
-        ImplementationModalityType, on_delete=models.SET_NULL, null=True, blank=True
-    )
-
-    def __str__(self):
-        return self.project

@@ -515,7 +515,7 @@ def stock_dashbaord(request):
             "y": pd.Series(months_beneficiary.values()).fillna(0),
         }
     )
-    df = df.sort_values(by="x")
+    df = df.sort_values(by="y")
     line_chart = px.line(
         df,
         x="x",

@@ -119,9 +119,19 @@ urlpatterns = [
         name="activity-types-indicators",
     ),
     path(
-        "indicator/types",
+        "indicator/types/<int:pk>",
         activity_plans.update_indicator_type,
         name="update-indicator-type",
+    ),
+    path(
+        "implement-modility/transfer-mechanism",
+        activity_plans.get_transfer_mechanism_type,
+        name="get-transfer-mechanism-type",
+    ),
+    path(
+        "implement-modility/unit-type",
+        activity_plans.get_unit_type,
+        name="get-unit-type",
     ),
     # Projects Activity Plannings CRUD
     path(
@@ -233,6 +243,11 @@ urlpatterns = [
         "project/export/<str:pk>/<str:format>",
         export_views.single_project_export,
         name="single-project-export",
+    ),
+    path(
+        "indicator/cash-in-kind/detail",
+        activity_plans.displaty_cash_in_kind,
+        name="display-cash-in-kind",
     ),
 ]
 

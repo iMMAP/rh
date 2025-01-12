@@ -2,5 +2,5 @@
     {% if forloop.first %}
         <option value selected disabled>-------- Click to select options -------------</option>
     {% endif %}
-    <option value="{{ op.pk }}">{{ op.name }}</option>
+    <option value="{{ op.pk }}">{{ op }}</option>
 {% endfor %}

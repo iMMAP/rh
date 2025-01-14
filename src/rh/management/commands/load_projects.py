@@ -349,21 +349,22 @@ class Command(BaseCommand):
         self.stdout.write(self.style.SUCCESS(f"{projects_created} Projects - created successfully"))
 
     def _import_data(self):
-        # Import Projects
-        self.stdout.write(self.style.SUCCESS("Loading Projects!"))
-        self._load_projects(self.projects_path)
+        if self.projects_path:
+            self.stdout.write(self.style.SUCCESS("Loading Projects!"))
+            self._load_projects(self.projects_path)
 
-        # self.stdout.write(self.style.SUCCESS("Loading Plans!"))
-        # self._load_activity_plans(self.activity_plans_path)
-        #
-        # self.stdout.write(self.style.SUCCESS("Loading Locations!"))
-        # self._load_target_locations(self.target_locations_path)
-        #
-        # self.stdout.write(self.style.SUCCESS("ALL DONE!"))
+        if self.activity_plans_path:
+            self.stdout.write(self.style.SUCCESS("Loading Plans!"))
+            self._load_activity_plans(self.activity_plans_path)
+
+        if self.target_locations_path:
+            self.stdout.write(self.style.SUCCESS("Loading Locations!"))
+            self._load_target_locations(self.target_locations_path)
+
+        self.stdout.write(self.style.SUCCESS("ALL DONE!"))
 
     def handle(self, *args, **options):
-        # self.target_locations_path = options.get("target_locations_path")
-        # self.activity_plans_path = options.get("activity_plans_path")
+        self.target_locations_path = options.get("target_locations_path")
+        self.activity_plans_path = options.get("activity_plans_path")
         self.projects_path = options.get("projects_path")
-        print(self.projects_path)
         self._import_data()

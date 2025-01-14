@@ -317,13 +317,9 @@ class Command(BaseCommand):
                     print(f"User Created: {user}")
 
                     # Add user details to the list
-                    user_details.append({
-                        "Username": username,
-                        "Email": email,
-                        "Password": "asd54321"
-                    })
+                    user_details.append({"Username": username, "Email": email, "Password": "asd54321"})
 
-                if not hasattr(user, 'profile'):
+                if not hasattr(user, "profile"):
                     profile = Profile.objects.create(user=user)
                     print(f"User Profile Created: {profile}")
 

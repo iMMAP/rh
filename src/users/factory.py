@@ -24,7 +24,7 @@ class UserFactory(DjangoModelFactory):
 
     first_name = factory.Faker("first_name")
     last_name = factory.Faker("last_name")
-    last_name = factory.Faker("name")
+    # last_name = factory.Faker("name")
 
     @factory.post_generation
     def profile(self, create, extracted, **kwargs):

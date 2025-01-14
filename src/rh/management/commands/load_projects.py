@@ -20,7 +20,7 @@ from rh.models import (
     GrantType,
     ImplementationModalityType,
     Indicator,
-    Location,
+    # Location,
     Organization,
     PackageType,
     Project,

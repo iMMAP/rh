@@ -20,7 +20,7 @@ from rh.models import (
     GrantType,
     ImplementationModalityType,
     Indicator,
-    Location,
+    # Location,
     Organization,
     PackageType,
     Project,
@@ -41,19 +41,19 @@ class Command(BaseCommand):
             "--target-locations-path",
             type=str,
             help="The path to target location file. relative to the project base. `pyproject.yml` location",
-            required=True,
+            required=False,
         )
         parser.add_argument(
             "--activity-plans-path",
             type=str,
             help="The path to activity plans file. relative to the project base. `pyproject.yml` location",
-            required=True,
+            required=False,
         )
         parser.add_argument(
             "--projects-path",
             type=str,
             help="The path to projects file. relative to the project base. `pyproject.yml` location",
-            required=True,
+            required=False,
         )
         # parser.add_argument('amount', nargs='+', type=int)
 
@@ -206,7 +206,7 @@ class Command(BaseCommand):
         self.stdout.write(self.style.SUCCESS(f"{plans_exits} Plans - Already Exist!!"))
 
     def _load_projects(self, path):
-        # Import the actvity_domain, activity_types, activity_details
+        # Import the activity_domain, activity_types, activity_details
         path = os.path.join(BASE_DIR.parent, path)
         df = pd.read_excel(path)
         df.fillna(False, inplace=True)
@@ -214,7 +214,12 @@ class Command(BaseCommand):
         projects = df.to_dict(orient="records")
         projects_created = 0
 
+        # List to store user details
+        user_details = []
+
         for index, project_vals in enumerate(projects):
+            print(f"\nProcessing Project {index + 1}/{len(projects)}: {project_vals}")
+
             # Convert the naive datetime to an aware datetime using the timezone
             aware_start_date = timezone.make_aware(project_vals.get("project_start_date", "test"))
             aware_end_date = timezone.make_aware(project_vals.get("project_end_date", "test"))
@@ -223,12 +228,21 @@ class Command(BaseCommand):
             hrp_code = project_vals.get("project_hrp_code", "test")
             if not project_code:
                 project_code = f"{project_vals.get('_id', 'test')}-TEST-CODE"
+            print(f"Initial Project Code: {project_code}")
+
             project_with_code_exists = Project.objects.filter(code=project_code)
+            print(f"Project with Code Exists: {project_with_code_exists.exists()}")
+
             if project_with_code_exists:
                 project_code = f"{project_vals.get('_id', 'test')}-{project_code}"
+            print(f"Final Project Code: {project_code}")
+
             project_with_hrp_exists = Project.objects.filter(hrp_code=project_vals.get("project_hrp_code", "test"))
+            print(f"Project with HRP Exists: {project_with_hrp_exists.exists()}")
+
             if project_with_hrp_exists:
                 hrp_code = f"{project_vals.get('_id', 'test')}-{project_vals.get('project_hrp_code', 'test')}"
+            print(f"Final HRP Code: {hrp_code}")
 
             project, created = Project.objects.get_or_create(
                 title=project_vals.get("project_title", "test"),
@@ -242,91 +256,106 @@ class Command(BaseCommand):
                 description=project_vals.get("project_description", "test"),
                 old_id=project_vals.get("_id", "test"),
             )
+            print(f"Project Created: {created} | Project ID: {project.id}")
 
             cluster_ids = project_vals.get("cluster_id").split(",")
+            print(f"Cluster IDs: {cluster_ids}")
 
             # Set ManyToMany field values and related field values
             if created:
                 projects_created += 1
                 cluster = Cluster.objects.filter(code__in=cluster_ids)
+                print(f"Clusters Found: {cluster.count()}")
                 project.clusters.set(cluster)
+
                 activity_types = project_vals.get("activity_type").split(",")
                 activity_domains = ActivityDomain.objects.filter(code__in=activity_types)
+                print(f"Activity Domains Found: {activity_domains.count()}")
                 project.activity_domains.set(activity_domains)
 
                 implementing_partners = project_vals.get("implementing_partners")
-                if not implementing_partners:
-                    project.implementing_partners.set([])
-                else:
-                    implementing_partners = project_vals.get("implementing_partners").split(",")
+                if implementing_partners:
+                    implementing_partners = implementing_partners.split(",")
                     partners = Organization.objects.filter(code__in=implementing_partners)
+                    print(f"Implementing Partners Found: {partners.count()}")
                     project.implementing_partners.set(partners)
+                else:
+                    project.implementing_partners.set([])
+                    print("No Implementing Partners Set")
 
                 programme_partners = project_vals.get("programme_partners")
-                if not programme_partners:
-                    project.programme_partners.set([])
-                else:
+                if programme_partners:
                     partners = programme_partners.split(",")
                     organizations = Organization.objects.filter(code__in=partners)
+                    print(f"Programme Partners Found: {organizations.count()}")
                     project.programme_partners.set(organizations)
+                else:
+                    project.programme_partners.set([])
+                    print("No Programme Partners Set")
 
                 project_donors = project_vals.get("project_donor")
                 if project_donors:
                     donors_list = project_donors.split(",")
                     donors = Donor.objects.filter(code__in=donors_list)
+                    print(f"Donors Found: {donors.count()}")
                     project.donors.set(donors)
 
                 # Handle User and Profile Creation
                 username = project_vals.get("username", "test")
-                name = project_vals.get("name", "test")
-                user_org = project_vals.get("organization", "test")
                 email = project_vals.get("email", "test")
-
+                print(f"Processing User: Username: {username}, Email: {email}")
                 users = User.objects.filter(Q(username=username) | Q(email=email))
+                print(f"Users Found: {users.count()}")
 
                 if users.exists():
                     user = users.first()
+                    print(f"User Exists: {user}")
                 else:
-                    # If user does not exist, create a new one
                     user = User.objects.create_user(
-                        username=username, email=email, first_name=name, password="asd54321"
+                        username=username, email=email, first_name=project_vals.get("name", "test"), password="asd54321"
                     )
-                    country = Location.objects.filter(code="AF")
+                    print(f"User Created: {user}")
 
-                    # Retrieve or create the organization based on the provided code
-                    org_obj, created = Organization.objects.get_or_create(code=user_org)
-                    if created:
-                        org_obj.clusters.set(cluster)
-                        org_obj.countries.set(country)
+                    # Add user details to the list
+                    user_details.append({"Username": username, "Email": email, "Password": "asd54321"})
 
-                    # Create user profile
-                    profile = Profile.objects.create(user=user, organization=org_obj, country=country.first())
-                    # Set many-to-many relationship for clusters
-                    profile.clusters.set(cluster)
+                if not hasattr(user, "profile"):
+                    profile = Profile.objects.create(user=user)
+                    print(f"User Profile Created: {profile}")
 
                 project.user = user
                 project.organization = user.profile.organization
+                print(f"User Organization: {user.profile.organization}")
 
                 budget_currencies = Currency.objects.filter(
                     name=project_vals.get("project_budget_currency", "usd").upper()
                 )
+                print(f"Budget Currencies Found: {budget_currencies.count()}")
                 if budget_currencies.exists():
-                    budget_currency = budget_currencies.first()
-                    project.budget_currency = budget_currency
+                    project.budget_currency = budget_currencies.first()
 
                 project.save()
+                print(f"Project Saved: {project.id}")
+
+        # Export user details to Excel
+        user_df = pd.DataFrame(user_details)
+        output_path = os.path.join(BASE_DIR, "created_users.xlsx")
+        user_df.to_excel(output_path, index=False)
+
         self.stdout.write(self.style.SUCCESS(f"{projects_created} Projects - created successfully"))
 
     def _import_data(self):
-        # Import Projects
-        self.stdout.write(self.style.SUCCESS("Loading Projects!"))
-        self._load_projects(self, self.projects_path)
+        if self.projects_path:
+            self.stdout.write(self.style.SUCCESS("Loading Projects!"))
+            self._load_projects(self.projects_path)
 
-        self.stdout.write(self.style.SUCCESS("Loading Plans!"))
-        self._load_activity_plans(self, self.activity_plans_path)
+        if self.activity_plans_path:
+            self.stdout.write(self.style.SUCCESS("Loading Plans!"))
+            self._load_activity_plans(self.activity_plans_path)
 
-        self.stdout.write(self.style.SUCCESS("Loading Locations!"))
-        self._load_target_locations(self, self.target_locations_path)
+        if self.target_locations_path:
+            self.stdout.write(self.style.SUCCESS("Loading Locations!"))
+            self._load_target_locations(self.target_locations_path)
 
         self.stdout.write(self.style.SUCCESS("ALL DONE!"))
 
@@ -334,5 +363,4 @@ class Command(BaseCommand):
         self.target_locations_path = options.get("target_locations_path")
         self.activity_plans_path = options.get("activity_plans_path")
         self.projects_path = options.get("projects_path")
-
         self._import_data()

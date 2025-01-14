@@ -24,7 +24,6 @@ class UserFactory(DjangoModelFactory):
 
     first_name = factory.Faker("first_name")
     last_name = factory.Faker("last_name")
-    last_name = factory.Faker("name")
 
     @factory.post_generation
     def profile(self, create, extracted, **kwargs):
@@ -39,7 +38,7 @@ class UserFactory(DjangoModelFactory):
 
     @factory.lazy_attribute
     def username(self):
-        return f"{self.first_name}_{self.last_name}_{randint(1,11)}"
+        return f"{self.first_name}_{self.last_name}_{randint(1, 11)}"
 
     @factory.lazy_attribute
     def email(self):
@@ -50,7 +49,6 @@ class ProfileFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Profile
 
-    # user = factory.SubFactory(UserFactory,profile=None)
     position = factory.Faker("job")
     phone = factory.Faker("phone_number")
     whatsapp = factory.Faker("phone_number")

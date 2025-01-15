@@ -17,7 +17,7 @@ from ..forms import (
     DisaggregationLocationForm,
     TargetLocationForm,
 )
-from ..models import ActivityPlan, DisaggregationLocation, Project, TargetLocation, Disaggregation
+from ..models import ActivityPlan, Disaggregation, DisaggregationLocation, Project, TargetLocation
 
 
 @require_http_methods(["POST"])
@@ -103,10 +103,7 @@ def update_target_location(request, pk):
 
 def create_target_location(request, activity_plan):
     # Prefetch disaggregations for the related indicator
-    activity_plan = get_object_or_404(
-        ActivityPlan.objects.select_related("project", "indicator"),
-        pk=activity_plan
-    )
+    activity_plan = get_object_or_404(ActivityPlan.objects.select_related("project", "indicator"), pk=activity_plan)
 
     related_disaggregations = Disaggregation.objects.filter(indicators=activity_plan.indicator)
 
@@ -153,9 +150,7 @@ def create_target_location(request, activity_plan):
         initial_data = [{"disaggregation": d, "target": 0} for d in related_disaggregations]
         target_location_form = TargetLocationForm(user=request.user, activity_plan=activity_plan)
         disaggregation_formset = DisaggregationFormSet(
-            instance=target_location_form.instance,
-            activity_plan=activity_plan,
-            initial=initial_data
+            instance=target_location_form.instance, activity_plan=activity_plan, initial=initial_data
         )
         # target_location_form = TargetLocationForm(user=request.user, activity_plan=activity_plan)
         # disaggregation_formset = DisaggregationFormSet(activity_plan=activity_plan)

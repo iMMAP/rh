@@ -264,6 +264,7 @@ class ActivityPlanForm(forms.ModelForm):
             self.fields["beneficiary"]
             .queryset.filter(
                 clusters__in=project_clusters,
+                is_active=True,
             )
             .distinct()
         )
@@ -271,6 +272,7 @@ class ActivityPlanForm(forms.ModelForm):
             self.fields["hrp_beneficiary"]
             .queryset.filter(
                 clusters__in=project_clusters,
+                is_active=True,
             )
             .distinct()
         )

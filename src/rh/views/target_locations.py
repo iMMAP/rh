@@ -17,7 +17,7 @@ from ..forms import (
     DisaggregationLocationForm,
     TargetLocationForm,
 )
-from ..models import ActivityPlan, DisaggregationLocation, Project, TargetLocation
+from ..models import ActivityPlan, DisaggregationLocation, Project, TargetLocation, Disaggregation
 
 
 @require_http_methods(["POST"])
@@ -102,15 +102,21 @@ def update_target_location(request, pk):
 
 
 def create_target_location(request, activity_plan):
-    activity_plan = get_object_or_404(ActivityPlan.objects.select_related("project"), pk=activity_plan)
+    # Prefetch disaggregations for the related indicator
+    activity_plan = get_object_or_404(
+        ActivityPlan.objects.select_related("project", "indicator"),
+        pk=activity_plan
+    )
+
+    related_disaggregations = Disaggregation.objects.filter(indicators=activity_plan.indicator)
 
     DisaggregationFormSet = inlineformset_factory(
         parent_model=TargetLocation,
         model=DisaggregationLocation,
         form=DisaggregationLocationForm,
         formset=BaseDisaggregationLocationFormSet,
-        extra=1,
-        can_delete=True,
+        extra=len(related_disaggregations),
+        can_delete=False,
         # max_num=2
     )
 
@@ -143,8 +149,16 @@ def create_target_location(request, activity_plan):
         else:
             messages.error(request, "The form is invalid. Please check the fields and try again.")
     else:
+        # Pre-fill formset with related disaggregations
+        initial_data = [{"disaggregation": d, "target": 0} for d in related_disaggregations]
         target_location_form = TargetLocationForm(user=request.user, activity_plan=activity_plan)
-        disaggregation_formset = DisaggregationFormSet(activity_plan=activity_plan)
+        disaggregation_formset = DisaggregationFormSet(
+            instance=target_location_form.instance,
+            activity_plan=activity_plan,
+            initial=initial_data
+        )
+        # target_location_form = TargetLocationForm(user=request.user, activity_plan=activity_plan)
+        # disaggregation_formset = DisaggregationFormSet(activity_plan=activity_plan)
 
     return render(
         request,

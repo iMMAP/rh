@@ -337,10 +337,10 @@ class Command(BaseCommand):
                 project.save()
                 print(f"Project Saved: {project.id}")
 
-        # Export user details to Excel
-        user_df = pd.DataFrame(user_details)
-        output_path = os.path.join(BASE_DIR, "created_users.xlsx")
-        user_df.to_excel(output_path, index=False)
+        # # Export user details to Excel
+        # user_df = pd.DataFrame(user_details)
+        # output_path = os.path.join(BASE_DIR, "created_users.xlsx")
+        # user_df.to_excel(output_path, index=False)
 
         self.stdout.write(self.style.SUCCESS(f"{projects_created} Projects - created successfully"))
 

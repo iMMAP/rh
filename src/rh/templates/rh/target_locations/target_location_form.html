@@ -248,7 +248,6 @@
                                                 {{ field|capfirst }}
                                             </th>
                                         {% endfor %}
-                                        {% if disaggregation_formset.can_delete %}<th>Delete?</th>{% endif %}
                                     </tr>
                                 </thead>
  
@@ -270,10 +269,6 @@
                                                     </td>
                                                 {% endif %}
                                             {% endfor %}
-
-                                            <td class="delete">
-                                                {% if form.instance.pk %}{{ form.DELETE }}{% endif %}
-                                            </td>
                                         </tr>
                                     {% endfor %}
                                 </tbody>

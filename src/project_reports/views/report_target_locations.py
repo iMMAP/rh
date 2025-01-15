@@ -12,10 +12,10 @@ from django.utils.safestring import mark_safe
 from django_htmx.http import HttpResponseClientRedirect
 
 from rh.models import (
+    Disaggregation,
     DisaggregationLocation,
     Project,
     TargetLocation,
-    Disaggregation,
 )
 
 from ..filters import TargetLocationReportFilter
@@ -132,7 +132,7 @@ def hx_diaggregation_tabular_form(request):
 
         report_disaggregation_formset = DisaggregationReportFormSet(
             target_location=target_location,
-            initial=[{'disaggregation': disaggregation} for disaggregation in related_disaggregations]
+            initial=[{"disaggregation": disaggregation} for disaggregation in related_disaggregations],
         )
     except Exception:
         pass
@@ -147,7 +147,9 @@ def hx_diaggregation_tabular_form(request):
 @login_required
 def create_report_target_location(request, plan):
     """Report for a location of an ActivityPlanReport"""
-    plan_report = get_object_or_404(ActivityPlanReport.objects.select_related("monthly_report", "activity_plan"), pk=plan)
+    plan_report = get_object_or_404(
+        ActivityPlanReport.objects.select_related("monthly_report", "activity_plan"), pk=plan
+    )
 
     if request.method == "POST":
         related_disaggregations = Disaggregation.objects.filter(indicators=plan_report.activity_plan.indicator)

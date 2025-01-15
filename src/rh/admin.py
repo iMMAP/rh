@@ -229,9 +229,12 @@ class DisaggregationInline(admin.TabularInline):
 
 
 class IndicatorAdmin(admin.ModelAdmin):
-    list_display = ("name", "is_active",)            
+    list_display = (
+        "name",
+        "is_active",
+    )
     search_fields = ("activity_types__name", "name")
-    list_filter = ('activity_types__name',)
+    list_filter = ("activity_types__name",)
     inlines = [
         DisaggregationInline,
     ]

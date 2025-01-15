@@ -15,6 +15,7 @@ from .models import (
     ActivityType,
     BeneficiaryType,
     BudgetProgress,
+    CashInKindDetail,
     Cluster,
     Currency,
     Disaggregation,
@@ -43,6 +44,7 @@ admin.site.register(PackageType)
 admin.site.register(TransferCategory)
 admin.site.register(GrantType)
 admin.site.register(UnitType)
+admin.site.register(CashInKindDetail)
 
 
 def export_as_csv(self, request, queryset):

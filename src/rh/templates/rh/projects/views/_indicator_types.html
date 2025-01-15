@@ -1,67 +1,9 @@
-<div class="multiple-fields-row">
 
-    {% if indicator.package_type %}
-        <div class="field-col">
-            <div class="select-field">
-                <label>{{ indicator_form.package_type.label }} / Ration</label>
-                {{ indicator_form.package_type }}
-                <small class="sign-up-field-error">{{ indicator_form.package_type.errors }}</small>
-            </div>
-        </div>
+{% for op in options %}
+    {% if forloop.first %}
+        <option value selected disabled>-------- Click to select options -------------</option>
     {% endif %}
-    {% if indicator.unit_type %}
-        <div class="field-col">
-            <div class="select-field">
-                <label>{{ indicator_form.unit_type.label }}</label>
-                {{ indicator_form.unit_type }}
-                <small class="sign-up-field-error">{{ indicator_form.unit_type.errors }}</small>
-            </div>
-        </div>
-    {% endif %}
-    {% if indicator.grant_type %}
-        <div class="field-col">
-            <div class="select-field">
-                <label>{{ indicator_form.grant_type.label }} / Assistance Type</label>
-                {{ indicator_form.grant_type }}
-                <small class="sign-up-field-error">{{ indicator_form.grant_type.errors }}</small>
-            </div>
-        </div>
-    {% endif %}
-    {% if indicator.implement_modility_type %}
-        <div class="field-col">
-            <div class="select-field">
-                <label>{{ indicator_form.implement_modility_type.label }}</label>
-                {{ indicator_form.implement_modility_type }}
-                <small class="sign-up-field-error">{{ indicator_form.implement_modility_type.errors }}</small>
-            </div>
-        </div>
-    {% endif %}
-    {% if indicator.transfer_mechanism_type %}
-        <div class="field-col">
-            <div class="select-field">
-                <label>{{ indicator_form.transfer_mechanism_type.label }}</label>
-                {{ indicator_form.transfer_mechanism_type }}
-                <small class="sign-up-field-error">{{ indicator_form.transfer_mechanism_type.errors }}</small>
-            </div>
-        </div>
-    {% endif %}
-    {% if indicator.transfer_category %}
-        <div class="field-col">
-            <div class="select-field">
-                <label>{{ indicator_form.transfer_category.label }}</label>
-                {{ indicator_form.transfer_category }}
-                <small class="sign-up-field-error">{{ indicator_form.transfer_category.errors }}</small>
-            </div>
-        </div>
-    {% endif %}
-    {% if indicator.currency %}
-        <div class="field-col">
-            <div class="select-field">
-                <label>{{ indicator_form.currency.label }}</label>
-                {{ indicator_form.currency }}
-                <small class="sign-up-field-error">{{ indicator_form.currency.errors }}</small>
-            </div>
-        </div>
-    {% endif %}
- 
-</div>
+    <option value="{{ op.pk }}">{{ op }}</option>
+{% endfor %}
+
+

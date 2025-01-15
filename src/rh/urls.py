@@ -123,6 +123,26 @@ urlpatterns = [
         activity_plans.update_indicator_type,
         name="update-indicator-type",
     ),
+    path(
+        "transfer-mechanism/types",
+        activity_plans.get_transfer_mechanism_types,
+        name="get-transfer-mechanism-types",
+    ),
+    path(
+        "unit/types",
+        activity_plans.get_unit_types,
+        name="get-unit-types",
+    ),
+    path(
+        "show/indicator/detail",
+        activity_plans.show_indicator_detail,
+        name="show-indicator-detail",
+    ),
+    path(
+        "package/types",
+        activity_plans.get_package_types,
+        name="get-package-types",
+    ),
     # Projects Activity Plannings CRUD
     path(
         "activity-plans/<int:pk>/update",

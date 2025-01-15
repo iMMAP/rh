@@ -7,17 +7,22 @@ from .models import (
     ActivityPlan,
     ActivityType,
     BudgetProgress,
+    CashInKindDetail,
     Cluster,
     Currency,
     Disaggregation,
     DisaggregationLocation,
     Donor,
+    ImplementationModalityType,
     Indicator,
     Location,
     Organization,
+    PackageType,
     Project,
     ProjectIndicatorType,
     TargetLocation,
+    TransferMechanismType,
+    UnitType,
 )
 
 
@@ -97,7 +102,9 @@ class ProjectForm(forms.ModelForm):
             # Entering Update mode
             self.fields["activity_domains"].choices = (
                 self.fields["activity_domains"]
-                .queryset.filter(clusters__in=self.instance.clusters.all(), countries=user.profile.country)
+                .queryset.filter(
+                    clusters__in=self.instance.clusters.all(), is_active=True, countries=user.profile.country
+                )
                 .order_by("name")
                 .values_list("id", "name")
             )
@@ -290,6 +297,39 @@ class ActivityPlanForm(forms.ModelForm):
             # Updating
             self.fields["activity_type"].queryset = self.instance.activity_domain.activitytype_set.all()
             self.fields["indicator"].queryset = self.instance.activity_type.indicator_set.all()
+
+
+class CashInKindDetailForm(forms.ModelForm):
+    class Meta:
+        model = CashInKindDetail
+        fields = "__all__"
+        exclude = ["activity_plan", "currency"]
+
+        help_texts = {
+            "no_of_transfers": "Please enter the TOTAL number of planned transfers for the ENTIRE project",
+            "implement_modality_type": "Implementation modality type related to selected indicator",
+            "transfer_mechanism_type": "Transfer mechanism type related to selected implementation modality type",
+            "package_type": "Package type related to selected implementation modality type",
+            "transfer_category": "Select the category that best describes the type of transfer",
+            "grant_type": "Select the type of assistance provided to the beneficiary",
+            "units": "Please enter the amount per HOUSEHOLD ( HH ) per Transfer",
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.fields["implement_modality_type"].queryset = ImplementationModalityType.objects.none()
+        self.fields["unit_type"].queryset = UnitType.objects.none()
+        self.fields["transfer_mechanism_type"].queryset = TransferMechanismType.objects.none()
+        self.fields["package_type"].queryset = PackageType.objects.none()
+
+
+class BaseCashInKindDetailFormSet(BaseInlineFormSet):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    def _construct_form(self, i, **kwargs):
+        return super()._construct_form(i, **kwargs)
 
 
 class BudgetProgressForm(forms.ModelForm):

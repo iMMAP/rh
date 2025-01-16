@@ -316,15 +316,12 @@
 
         function handleFacilityMonitoringToggle() {
             const facilityDetailsDiv = document.querySelector(`#facility_details`);
-
             if (!facilityMonitoringCheckBox.checked) {
                 facilityDetailsDiv.style.display = 'none';
                 return
             }
-
             facilityDetailsDiv.style.display = 'block';
         }
-
         handleFacilityMonitoringToggle()
 
         facilityMonitoringCheckBox.addEventListener('change', function() {

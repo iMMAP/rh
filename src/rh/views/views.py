@@ -105,7 +105,9 @@ def get_activity_domain_types(request):
     activity_domain_pk = request.GET.get("activity_domain")
 
     if activity_domain_pk:
-        activity_types = ActivityType.objects.filter(activity_domain=activity_domain_pk).order_by("name")
+        activity_types = ActivityType.objects.filter(activity_domain=activity_domain_pk, is_active=True).order_by(
+            "name"
+        )
     else:
         activity_types = ActivityType.objects.none()
 
@@ -121,7 +123,7 @@ def get_activity_type_indicators(request):
     activity_type_pk = request.GET.get("activity_type")
 
     if activity_type_pk:
-        indicators = Indicator.objects.filter(activity_types=activity_type_pk).order_by("name")
+        indicators = Indicator.objects.filter(activity_types=activity_type_pk, is_active=True).order_by("name")
     else:
         indicators = Indicator.objects.none()
 

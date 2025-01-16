@@ -62,6 +62,7 @@ def get_target_and_reached_of_disaggregationlocation(request):
         )
         .aggregate(total_reached=Sum("reached"))["total_reached"]
     )
+    print({"target": dis_loc.target, "reached": total_reached})
 
     return JsonResponse({"target": dis_loc.target, "reached": total_reached})
 

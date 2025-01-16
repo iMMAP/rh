@@ -185,7 +185,7 @@ admin.site.register(Donor, DonorAdmin)
 
 
 class BeneficiaryTypeAdmin(admin.ModelAdmin):
-    list_display = ("name", "type", "country", "Clusters")
+    list_display = ("name", "type", "is_active", "country", "Clusters")
     search_fields = ("code", "name")
     list_filter = (
         "type",

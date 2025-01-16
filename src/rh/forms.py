@@ -92,7 +92,8 @@ class ProjectForm(forms.ModelForm):
         # Show only the project's organization members
         self.fields["donors"].queryset = Donor.objects.filter(countries=user.profile.country).order_by("name")
         self.fields["clusters"].queryset = user.profile.clusters.all()
-
+        self.fields["budget_currency"].required = True
+        self.fields["budget"].required = True
         # Show only the user's organization members
         self.fields["user"].queryset = User.objects.filter(profile__organization=user.profile.organization)
         self.fields["user"].initial = user
@@ -265,6 +266,7 @@ class ActivityPlanForm(forms.ModelForm):
             self.fields["beneficiary"]
             .queryset.filter(
                 clusters__in=project_clusters,
+                is_active=True,
             )
             .distinct()
         )
@@ -272,6 +274,7 @@ class ActivityPlanForm(forms.ModelForm):
             self.fields["hrp_beneficiary"]
             .queryset.filter(
                 clusters__in=project_clusters,
+                is_active=True,
             )
             .distinct()
         )

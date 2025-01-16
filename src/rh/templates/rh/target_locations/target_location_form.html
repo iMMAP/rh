@@ -147,7 +147,7 @@
                 <div class="row" id="">
                     <div class="col col-lg">
                         <div class="multiple-fields-row two-items">
-
+                            {% if cluster_facility %}
                             <div class="field-col input-field input-check-holder flex gap-3">
                                 <div class="flex h-6 items-center">
                                     {{ target_location_form.facility_monitoring }}
@@ -160,7 +160,7 @@
                                     <div class="sign-up-field-error">{{ target_location_form.facility_monitoring.errors }}</div>
                                 </div>
                             </div>
-
+                            {% endif %}
                             {% if target_location_form.instance.id %}
                                 <div class="field-col">
                                     <div class="select-field">
@@ -176,7 +176,7 @@
                         </div>
                     </div>
                 </div>
-
+                {% if cluster_facility %}
                 <div class="row" id="facility_details">
                     <div class="col col-lg">
                         <div class="multiple-fields-row two-items">
@@ -226,7 +226,7 @@
                         </div>
                     </div>
                 </div>
-
+                {% endif %}
                 <div class="disaggregation-block js-inline-admin-formset inline-group divide-y-2"
                      id="{{ disaggregation_formset.prefix }}-group"
                      data-inline-type="tabular"

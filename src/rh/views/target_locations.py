@@ -42,6 +42,8 @@ def update_target_location_state(request, pk):
 def update_target_location(request, pk):
     target_location = get_object_or_404(TargetLocation, pk=pk)
 
+    cluster_facility = target_location.facility_monitoring
+
     DisaggregationFormSet = inlineformset_factory(
         parent_model=TargetLocation,
         model=DisaggregationLocation,
@@ -97,6 +99,7 @@ def update_target_location(request, pk):
             "disaggregation_formset": disaggregation_formset,
             "activity_plan": target_location.activity_plan,
             "project": target_location.activity_plan.project,
+            "cluster_facility": cluster_facility,
         },
     )
 
@@ -104,8 +107,12 @@ def update_target_location(request, pk):
 def create_target_location(request, activity_plan):
     # Prefetch disaggregations for the related indicator
     activity_plan = get_object_or_404(ActivityPlan.objects.select_related("project", "indicator"), pk=activity_plan)
-
     related_disaggregations = Disaggregation.objects.filter(indicators=activity_plan.indicator)
+
+    cluster_code = activity_plan.activity_domain.clusters.values_list("code", flat=True)
+    cluster_facility = True
+    if "fsac" in cluster_code:
+        cluster_facility = False
 
     DisaggregationFormSet = inlineformset_factory(
         parent_model=TargetLocation,
@@ -163,6 +170,7 @@ def create_target_location(request, activity_plan):
             "disaggregation_formset": disaggregation_formset,
             "activity_plan": activity_plan,
             "project": activity_plan.project,
+            "cluster_facility": cluster_facility,
         },
     )
 

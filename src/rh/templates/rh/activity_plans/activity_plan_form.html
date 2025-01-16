@@ -122,28 +122,39 @@
                                     <div class="sign-up-field-error">{{form.activity_detail.errors}}</div>
                                 </div>
                             </div> {% endcomment %}
+                            <div class="field-col">
+                                <div class="select-field is-required">
+                                    <label for="{{ form.indicator.id_for_label }}">Indicator</label>
+                                    <p class="help-text">{{ form.indicator.help_text }}</p>
+                                    <select required
+                                            name="{{ form.indicator.name }}"
+                                            id="{{ form.indicator.id_for_label }}"
+                                            class="form-control indicator-details"
+                                            hx-get="{% url 'update-indicator-type' %}"
+                                            hx-trigger="change"
+                                            hx-target="#implement_modality_type_id"
+                                            hx-swap="innerHTML"
+                                            hx-indicator=".progress">
+                                        {% for type in form.indicator %}{{ type }}{% endfor %}
+                                    </select>
+                                    <div class="sign-up-field-error">{{ form.indicator.errors }}</div>
+                                </div>
+                            </div>
+            
+                            <div class="field-col w-full">
+                                <div class="select-field">
+                                    <label for="{{ form.hrp_beneficiary.id_for_label }}">HRP Beneficiary</label>
+                                    <p class="help-text">{{ form.hrp_beneficiary.help_text }}</p>
+                                    {{ form.hrp_beneficiary }}
+                                    <div class="sign-up-field-error">{{ form.hrp_beneficiary.errors }}</div>
+                                </div>
+                            </div>
+            
                         </div>
                     </div>
                 </div>
 
-                <div class="select-field is-required">
-                    <label for="{{ form.indicator.id_for_label }}">Indicator</label>
-                    <p class="help-text">{{ form.indicator.help_text }}</p>
-                    <select required
-                            name="{{ form.indicator.name }}"
-                            id="{{ form.indicator.id_for_label }}"
-                            class="form-control indicator-details"
-                            hx-get="{% url 'update-indicator-type' %}"
-                            hx-trigger="change"
-                            hx-target="#implement_modality_type_id"
-                            hx-swap="innerHTML"
-                            hx-indicator=".progress">
-                        {% for type in form.indicator %}{{ type }}{% endfor %}
-                    </select>
-                    <div class="sign-up-field-error">{{ form.indicator.errors }}</div>
-                </div>
-
-                <div class="multiple-fields-row two-items ">
+                <!-- <div class="multiple-fields-row two-items ">
                     <div class="field-col w-full">
                         <div class="select-field">
                             <label for="{{ form.beneficiary.id_for_label }}">Beneficiary</label>
@@ -161,7 +172,7 @@
                             <div class="sign-up-field-error">{{ form.hrp_beneficiary.errors }}</div>
                         </div>
                     </div>
-                </div>
+                </div> -->
                 
                 <div class="input-field">
                     <label for="{{ form.description.id_for_label }}">Activity Description</label>
@@ -192,7 +203,7 @@
                                         hx-trigger="change"
                                         hx-target="#{{ cash_in_kind_form.transfer_mechanism_type.id_for_label }}"
                                         hx-swap="innerHTML"
-                                        required>
+                                        >
                                     {% for type in cash_in_kind_form.implement_modality_type.field.queryset %}
                                         <option value="{{ type.id }}" {% if type.id == cash_in_kind_form.implement_modality_type.value %}selected{% endif %}>{{ type }}</option>
                                     {% endfor %}
@@ -211,7 +222,7 @@
                                         hx-trigger="change"
                                         hx-target="#{{ cash_in_kind_form.unit_type.id_for_label }}"
                                         hx-swap="innerHTML"
-                                        required>
+                                        >
                                     {% for type in cash_in_kind_form.transfer_mechanism_type.field.queryset %}
                                         <option value="{{ type.id }}" {% if type.id == cash_in_kind_form.transfer_mechanism_type.value %}selected{% endif %}>{{ type }}</option>
                                     {% endfor %}
@@ -230,7 +241,7 @@
                                         hx-trigger="change"
                                         hx-target="#{{ cash_in_kind_form.package_type.id_for_label }}"
                                         hx-swap="innerHTML"
-                                        required>
+                                        >
                                     {% for type in cash_in_kind_form.unit_type.field.queryset %}
                                         <option value="{{ type.id }}" {% if type.id == cash_in_kind_form.unit_type.value %}selected{% endif %}>{{ type }}</option>
                                     {% endfor %}
@@ -259,7 +270,7 @@
                                 <label for="{{cash_in_kind_form.transfer_category.id_for_label}}">{{ cash_in_kind_form.transfer_category.label }}</label>
                                 <p class="help-text">{{ cash_in_kind_form.transfer_category.help_text }}</p>
                                 <select name="{{cash_in_kind_form.transfer_category.name}}" 
-                                        id="{{cash_in_kind_form.transfer_category.id_for_label}}" required>
+                                        id="{{cash_in_kind_form.transfer_category.id_for_label}}">
                                     {% for category in cash_in_kind_form.transfer_category.field.queryset %}
                                         <option value="{{ category.id }}" {% if category.id == cash_in_kind_form.transfer_category.value %}selected{% endif %}>{{ category }}</option>
                                     {% endfor %}
@@ -272,7 +283,7 @@
                                 <label for="{{ cash_in_kind_form.grant_type.id_for_label }}">{{ cash_in_kind_form.grant_type.label }} / Assistance Type</label>
                                 <p class="help-text">{{ cash_in_kind_form.grant_type.help_text }}</p>
                                 <select name="{{ cash_in_kind_form.grant_type.name }}" 
-                                        id="{{ cash_in_kind_form.grant_type.id_for_label }}" required>
+                                        id="{{ cash_in_kind_form.grant_type.id_for_label }}">
                                     {% for type in cash_in_kind_form.grant_type.field.queryset %}
                                         <option value="{{ type.id }}" {% if type.id == cash_in_kind_form.grant_type.value %}selected{% endif %}>{{ type }}</option>
                                     {% endfor %}

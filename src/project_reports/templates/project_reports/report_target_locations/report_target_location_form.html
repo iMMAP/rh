@@ -58,7 +58,7 @@
                         </div>
                     </div>
                     <div class="target-location-form">
-                        <form action="" method="post" class="form-container" id="location-form">
+                        <form action="" method="post" class="form-container" id="location-form" onsubmit="enableDisaggregations(event);">
                             <div class="progress bg-red h-0.5">
                                 <div class="indeterminate bg-white"></div>
                             </div>
@@ -225,5 +225,22 @@
         const selectField = document.querySelector("#{{location_report_form.prev_assisted_by.id_for_label}}")
         selectField.value= ""
     });
+
+    /*
+        This function is used to enable the disaggregation fields when submitting the form
+        **can be improved
+    */
+    function enableDisaggregations(event) {
+        // Prevent form from submitting immediately
+        event.preventDefault();
+
+        var disaggregationSelects = document.querySelectorAll('[id^="id_disaggregationlocationreport_set-"][id$="-disaggregation"]');
+        disaggregationSelects.forEach(function(disaggregationSelect) {
+            disaggregationSelect.removeAttribute("disabled");
+        });
+
+        // Submit the form after the changes
+        event.target.submit();
+    };
 </script>
 {% endblock scripts %}

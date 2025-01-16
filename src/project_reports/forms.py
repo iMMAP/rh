@@ -165,6 +165,7 @@ class DisaggregationLocationReportForm(forms.ModelForm):
                 "onchange": "getTarget(event)",
                 "onload": "getTarget(event)",
                 "data-url": reverse_lazy("get_target_and_reached_of_disaggregationlocation"),
+                "disabled": "disabled",
             }
         )
         self.fields["disaggregation"].empty_value = "-----"

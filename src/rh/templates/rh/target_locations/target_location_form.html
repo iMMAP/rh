@@ -69,7 +69,7 @@
             </div>
         </div>
 
-        <form action="" method="post" class="form-container">
+        <form action="" method="post" class="form-container" onsubmit="enableDisaggregations(event);">
             <div class="progress bg-red h-0.5">
                 <div class="indeterminate bg-white"></div>
             </div>
@@ -330,5 +330,22 @@
         facilityMonitoringCheckBox.addEventListener('change', function() {
             handleFacilityMonitoringToggle()
         });
+
+        /*
+            This function is used to enable the disaggregation fields when submitting the form
+            **can be improved
+        */
+        function enableDisaggregations(event) {
+            // Prevent form from submitting immediately
+            event.preventDefault();
+
+            var disaggregationSelects = document.querySelectorAll('[id^="id_disaggregationlocation_set-"][id$="-disaggregation"]');
+            disaggregationSelects.forEach(function(disaggregationSelect) {
+                disaggregationSelect.removeAttribute("disabled");
+            });
+
+            // Submit the form after the changes
+            event.target.submit();
+        };
     </script>
 {% endblock project_form_scripts %}

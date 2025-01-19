@@ -23,7 +23,6 @@ from ..models import (
     DisaggregationLocation,
     ImplementationModalityType,
     Indicator,
-    PackageType,
     Project,
     TargetLocation,
     TransferMechanismType,
@@ -258,27 +257,21 @@ def get_unit_types(request):
     return render(request, "rh/projects/views/_indicator_types.html", {"options": unit_types})
 
 
-def get_package_types(request):
-    """Get package types"""
-    unit_type_id = request.GET.get("unit_type")
-    unit_type = get_object_or_404(UnitType, pk=unit_type_id)
-    package_types = PackageType.objects.filter(unit=unit_type).order_by("-id")
-
-    return render(request, "rh/projects/views/_indicator_types.html", {"options": package_types})
-
-
 def show_indicator_detail(request):
     """Show indicator detail"""
     indicator_id = request.GET.get("indicator")
     indicator = get_object_or_404(Indicator, pk=indicator_id)
+    food = False
+    package = False
+    if indicator.food:
+        food = True
+    elif indicator.package:
+        package = True
     flag = False
     cash = False
     if indicator.implement_category:
         flag = True
     if str(indicator.implement_category) == "Cash":
         cash = True
-    response_data = {
-        "indicator": flag,
-        "category": cash,
-    }
+    response_data = {"indicator": flag, "cash": cash, "food": food, "package": package}
     return JsonResponse(response_data, safe=False)

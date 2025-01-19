@@ -244,6 +244,7 @@ class IndicatorAdmin(admin.ModelAdmin):
     ]
 
     filter_horizontal = ("activity_types",)
+    actions = [export_as_csv]
 
 
 admin.site.register(Indicator, IndicatorAdmin)
@@ -259,6 +260,7 @@ class ActivityDomainAdmin(admin.ModelAdmin):
         "clusters",
         "countries",
     )
+    actions = [export_as_csv]
 
 
 admin.site.register(ActivityDomain, ActivityDomainAdmin)
@@ -274,7 +276,7 @@ class ActivityTypeAdmin(admin.ModelAdmin):
     list_filter = ("activity_domain",)
     raw_id_fields = ["activity_domain"]
     prepopulated_fields = {"code": ["name"]}
-
+    actions = [export_as_csv]
 
 admin.site.register(ActivityType, ActivityTypeAdmin)
 
@@ -286,6 +288,7 @@ class ActivityDetailAdmin(admin.ModelAdmin):
         "code",
     )
     search_fields = ("activity_type__name", "name", "code")
+    actions = [export_as_csv]
 
 
 admin.site.register(ActivityDetail, ActivityDetailAdmin)

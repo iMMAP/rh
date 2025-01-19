@@ -278,6 +278,7 @@ class ActivityTypeAdmin(admin.ModelAdmin):
     prepopulated_fields = {"code": ["name"]}
     actions = [export_as_csv]
 
+
 admin.site.register(ActivityType, ActivityTypeAdmin)
 
 

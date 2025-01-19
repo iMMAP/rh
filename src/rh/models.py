@@ -280,6 +280,32 @@ class UnitType(models.Model):
         verbose_name_plural = "Unit Types"
 
 
+class RationType(models.Model):
+    name = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = "Ration Type"
+        verbose_name_plural = "Ration Types"
+
+
+class RationSize(models.Model):
+    name = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = "Ration size"
+        verbose_name_plural = "Ration sizes"
+
+
 class PackageType(models.Model):
     unit = models.ForeignKey(UnitType, on_delete=models.SET_NULL, blank=True, null=True)
     name = models.CharField(max_length=NAME_MAX_LENGTH, blank=True, null=True)
@@ -367,6 +393,8 @@ class Indicator(models.Model):
     description = models.CharField(max_length=1200, blank=True, null=True)
     is_active = models.BooleanField(default=True)
     implement_category = models.ForeignKey(ImplementationModalityType, on_delete=models.SET_NULL, null=True, blank=True)
+    food = models.BooleanField(default=False)
+    package = models.BooleanField(default=False)
     enable_retargeting = models.BooleanField(blank=True, null=True)
 
     # RELATIONSHIPS
@@ -520,6 +548,8 @@ class CashInKindDetail(models.Model):
     no_of_transfers = models.IntegerField(
         default=0, null=True, blank=True, validators=[MinValueValidator(0), MaxValueValidator(30)]
     )
+    ration_size = models.ForeignKey(RationSize, on_delete=models.SET_NULL, null=True, blank=True)
+    ration_type = models.ForeignKey(RationType, on_delete=models.SET_NULL, null=True, blank=True)
     grant_type = models.ForeignKey(GrantType, on_delete=models.SET_NULL, null=True, blank=True)
     transfer_category = models.ForeignKey(TransferCategory, on_delete=models.SET_NULL, null=True, blank=True)
     currency = models.ForeignKey(Currency, on_delete=models.SET_NULL, null=True, blank=True)

@@ -20,6 +20,8 @@ from .models import (
     PackageType,
     Project,
     ProjectIndicatorType,
+    RationSize,
+    RationType,
     TargetLocation,
     TransferMechanismType,
     UnitType,
@@ -316,6 +318,8 @@ class CashInKindDetailForm(forms.ModelForm):
             "transfer_category": "Select the category that best describes the type of transfer",
             "grant_type": "Select the type of assistance provided to the beneficiary",
             "units": "Please enter the amount per HOUSEHOLD ( HH ) per Transfer",
+            "ration_size": "Ration size related to selected activity",
+            "ration_type": "Ration size related to selected ration size",
         }
 
     def __init__(self, *args, **kwargs):
@@ -324,7 +328,9 @@ class CashInKindDetailForm(forms.ModelForm):
         self.fields["implement_modality_type"].queryset = ImplementationModalityType.objects.none()
         self.fields["unit_type"].queryset = UnitType.objects.none()
         self.fields["transfer_mechanism_type"].queryset = TransferMechanismType.objects.none()
-        self.fields["package_type"].queryset = PackageType.objects.none()
+        self.fields["package_type"].queryset = PackageType.objects.all()
+        self.fields["ration_type"].queryset = RationType.objects.all()
+        self.fields["ration_size"].queryset = RationSize.objects.all()
 
 
 class BaseCashInKindDetailFormSet(BaseInlineFormSet):

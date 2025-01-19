@@ -333,16 +333,10 @@
             **can be improved
         */
         function enableDisaggregations(event) {
-            // Prevent form from submitting immediately
-            event.preventDefault();
-
             var disaggregationSelects = document.querySelectorAll('[id^="id_disaggregationlocation_set-"][id$="-disaggregation"]');
             disaggregationSelects.forEach(function(disaggregationSelect) {
                 disaggregationSelect.removeAttribute("disabled");
             });
-
-            // Submit the form after the changes
-            event.target.submit();
         };
     </script>
 {% endblock project_form_scripts %}

@@ -62,7 +62,6 @@ def get_target_and_reached_of_disaggregationlocation(request):
         )
         .aggregate(total_reached=Sum("reached"))["total_reached"]
     )
-    print({"target": dis_loc.target, "reached": total_reached})
 
     return JsonResponse({"target": dis_loc.target, "reached": total_reached})
 
@@ -120,14 +119,17 @@ def hx_diaggregation_tabular_form(request):
         target_location_id = request.POST.get("target_location", None)
         target_location = get_object_or_404(TargetLocation, pk=target_location_id)
 
-        related_disaggregations = target_location.disaggregations.all()
+        related_disaggregation_locations = target_location.disaggregationlocation_set.filter(target__gt=0)
+        related_disaggregations = Disaggregation.objects.filter(
+            id__in=related_disaggregation_locations.values_list("disaggregation_id", flat=True)
+        )
 
         DisaggregationReportFormSet = inlineformset_factory(
             parent_model=TargetLocationReport,
             model=DisaggregationLocationReport,
             form=DisaggregationLocationReportForm,
             formset=BaseDisaggregationLocationReportFormSet,
-            extra=len(related_disaggregations),
+            extra=len(related_disaggregations) + 1,
             can_delete=False,
         )
 
@@ -153,15 +155,21 @@ def create_report_target_location(request, plan):
     )
 
     if request.method == "POST":
-        related_disaggregations = Disaggregation.objects.filter(indicators=plan_report.activity_plan.indicator)
-        location_report_form = TargetLocationReportForm(request.POST, plan_report=plan_report)
+        target_location_id = request.POST.get("target_location", None)
+        target_location = get_object_or_404(TargetLocation, pk=target_location_id)
 
+        related_disaggregation_locations = target_location.disaggregationlocation_set.filter(target__gt=0)
+        related_disaggregations = Disaggregation.objects.filter(
+            id__in=related_disaggregation_locations.values_list("disaggregation_id", flat=True)
+        )
+
+        location_report_form = TargetLocationReportForm(request.POST, plan_report=plan_report)
         DisaggregationReportFormSet = inlineformset_factory(
             parent_model=TargetLocationReport,
             model=DisaggregationLocationReport,
             form=DisaggregationLocationReportForm,
             formset=BaseDisaggregationLocationReportFormSet,
-            extra=len(related_disaggregations),
+            extra=len(related_disaggregations) + 1,
             can_delete=False,
         )
         report_disaggregation_formset = DisaggregationReportFormSet(

@@ -11,7 +11,7 @@ from rh.models import (
     Project,
 )
 
-from .models import ActivityPlanReport, ProjectMonthlyReport, TargetLocationReport
+from .models import ActivityPlanReport, ProjectMonthlyReport, ResponseType, TargetLocationReport
 
 
 class MonthlyReportsFilter(django_filters.FilterSet):
@@ -119,12 +119,34 @@ class Organization5WFilter(django_filters.FilterSet):
         label="disaggregations",
         widget=forms.SelectMultiple(attrs={"class": "custom-select"}),
     )
+    response_type = django_filters.ModelMultipleChoiceFilter(
+        field_name="activityplanreport__response_types",
+        queryset=ResponseType.objects.all(),
+        label="Reponse Types",
+        widget=forms.SelectMultiple(attrs={"class": "custom-select"}),
+    )
+    activity_type = django_filters.ModelMultipleChoiceFilter(
+        field_name="activityplanreport__activity_plan__activity_type",
+        queryset=ActivityType.objects.all(),
+        label="Activity Types",
+        widget=forms.SelectMultiple(attrs={"class": "custom-select"}),
+    )
     to_date = django_filters.DateFilter(widget=forms.DateInput(attrs={"type": "date"}))
     from_date = django_filters.DateFilter(widget=forms.DateInput(attrs={"type": "date"}))
 
     class Meta:
         model = ProjectMonthlyReport
-        fields = ["from_date", "to_date", "cluster", "project", "province", "district", "disaggregations"]
+        fields = [
+            "from_date",
+            "to_date",
+            "cluster",
+            "project",
+            "response_type",
+            "activity_type",
+            "province",
+            "district",
+            "disaggregations",
+        ]
 
     def __init__(self, data=None, *args, **kwargs):
         user = kwargs.pop("user", None)

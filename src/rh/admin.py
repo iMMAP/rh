@@ -30,6 +30,8 @@ from .models import (
     Organization,
     PackageType,
     Project,
+    RationSize,
+    RationType,
     TargetLocation,
     TransferCategory,
     TransferMechanismType,
@@ -45,6 +47,8 @@ admin.site.register(TransferCategory)
 admin.site.register(GrantType)
 admin.site.register(UnitType)
 admin.site.register(CashInKindDetail)
+admin.site.register(RationType)
+admin.site.register(RationSize)
 
 
 def export_as_csv(self, request, queryset):

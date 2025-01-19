@@ -138,11 +138,6 @@ urlpatterns = [
         activity_plans.show_indicator_detail,
         name="show-indicator-detail",
     ),
-    path(
-        "package/types",
-        activity_plans.get_package_types,
-        name="get-package-types",
-    ),
     # Projects Activity Plannings CRUD
     path(
         "activity-plans/<int:pk>/update",

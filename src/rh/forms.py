@@ -283,7 +283,7 @@ class ActivityPlanForm(forms.ModelForm):
 
         # The choices, does not validate the data ,(self.fields["indicator"].widget.choices = [])
         # Updating the queryset for validation purposes
-        # If the data does not matche the queryset, it throws error
+        # If the data does not match the queryset, it throws error
         self.fields["indicator"].queryset = Indicator.objects.none()
         self.fields["activity_type"].queryset = ActivityType.objects.none()
 
@@ -332,6 +332,28 @@ class CashInKindDetailForm(forms.ModelForm):
         self.fields["package_type"].queryset = PackageType.objects.all()
         self.fields["ration_type"].queryset = RationType.objects.all()
         self.fields["ration_size"].queryset = RationSize.objects.all()
+
+        # Ensure `self.instance` is valid and linked to an ActivityPlan
+        if self.data:
+            try:
+                # Creating
+                implement_modality_type = int(self.data.get("implement_modality_type"))
+                self.fields["implement_modality_type"].queryset = ImplementationModalityType.objects.all()
+                self.fields["transfer_mechanism_type"].queryset = TransferMechanismType.objects.filter(
+                    modality=implement_modality_type
+                )
+                self.fields["unit_type"].queryset = UnitType.objects.filter(modality=implement_modality_type)
+            except Exception:
+                self.add_error(None, "Do not mess with the form!")
+        elif self.instance.pk:
+            self.fields["implement_modality_type"].queryset = ImplementationModalityType.objects.all()
+            self.fields["transfer_mechanism_type"].queryset = TransferMechanismType.objects.filter(
+                modality=self.instance.implement_modality_type
+            )
+            self.fields["unit_type"].queryset = UnitType.objects.filter(modality=self.instance.implement_modality_type)
+        # else:
+        #     self.fields["transfer_mechanism_type"].queryset = TransferMechanismType.objects.none()
+        #     self.fields["unit_type"].queryset = UnitType.objects.none()
 
 
 class BaseCashInKindDetailFormSet(BaseInlineFormSet):

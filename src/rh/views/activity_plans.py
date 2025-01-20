@@ -2,7 +2,6 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.db.models import Count
-from django.forms import inlineformset_factory
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
@@ -14,7 +13,6 @@ from extra_settings.models import Setting
 from ..filters import ActivityPlansFilter
 from ..forms import (
     ActivityPlanForm,
-    BaseCashInKindDetailFormSet,
     CashInKindDetailForm,
 )
 from ..models import (
@@ -51,23 +49,17 @@ def update_activity_plan_state(request, pk):
 def update_activity_plan(request, pk):
     """Update an existing activity plan"""
     activity_plan = get_object_or_404(ActivityPlan.objects.select_related("project"), pk=pk)
-    # cash_in_kind_detail = get_object_or_404(CashInKindDetail, activity_plan=activity_plan)
-    cashinkindFormSet = inlineformset_factory(
-        parent_model=ActivityPlan,
-        model=CashInKindDetail,
-        form=CashInKindDetailForm,
-        formset=BaseCashInKindDetailFormSet,
-        extra=0,
-    )
+    # Get the related CashInKindDetail instance, or None if it doesn't exist
+    cashinkind_instance = CashInKindDetail.objects.filter(activity_plan=activity_plan).first()
+
     if request.method == "POST":
         form = ActivityPlanForm(request.POST, instance=activity_plan)
-        cashinkind_formset = cashinkindFormSet(request.POST, instance=activity_plan)
-        if form.is_valid() and cashinkind_formset.is_valid():
+        cashinkind_form = CashInKindDetailForm(request.POST, instance=cashinkind_instance)
+        if form.is_valid() and cashinkind_form.is_valid():
             form.save()
-            cashinkind_details = cashinkind_formset.save(commit=False)
-            for cashinkind in cashinkind_details:
-                cashinkind.activity_plan = activity_plan
-                cashinkind.save()
+            cashinkind_details = cashinkind_form.save(commit=False)
+            cashinkind_details.activity_plan = activity_plan
+            cashinkind_details.save()
 
             messages.success(
                 request,
@@ -85,12 +77,12 @@ def update_activity_plan(request, pk):
             messages.error(request, "The form is invalid. Please check the fields and try again.")
     else:
         form = ActivityPlanForm(instance=activity_plan)
-        cashinkind_formset = cashinkindFormSet(instance=activity_plan)
+        cashinkind_form = CashInKindDetailForm(instance=cashinkind_instance)
 
     return render(
         request,
         "rh/activity_plans/activity_plan_form.html",
-        {"form": form, "project": activity_plan.project, "cashinkind_formset": cashinkind_formset},
+        {"form": form, "project": activity_plan.project, "cashinkind_form": cashinkind_form},
     )
 
 
@@ -98,25 +90,17 @@ def update_activity_plan(request, pk):
 def create_activity_plan(request, project):
     """Create a new activity plan for a specific project"""
     project = get_object_or_404(Project, pk=project)
-    cashinkindFormSet = inlineformset_factory(
-        parent_model=ActivityPlan,
-        model=CashInKindDetail,
-        form=CashInKindDetailForm,
-        formset=BaseCashInKindDetailFormSet,
-        extra=1,
-    )
     if request.method == "POST":
         form = ActivityPlanForm(request.POST, project=project)
-        cashinkind_formset = cashinkindFormSet(request.POST, instance=form.instance)
-        if form.is_valid() and cashinkind_formset.is_valid():
+        cashinkind_form = CashInKindDetailForm(request.POST)
+        if form.is_valid() and cashinkind_form.is_valid():
             activity_plan = form.save(commit=False)
             activity_plan.project = project
             activity_plan.save()
 
-            cashinkind_details = cashinkind_formset.save(commit=False)
-            for cashinkind in cashinkind_details:
-                cashinkind.activity_plan = activity_plan
-                cashinkind.save()
+            cashinkind_details = cashinkind_form.save(commit=False)
+            cashinkind_details.activity_plan = activity_plan
+            cashinkind_details.save()
             messages.success(
                 request,
                 mark_safe(
@@ -131,11 +115,11 @@ def create_activity_plan(request, project):
             messages.error(request, "The form is invalid. Please check the fields and try again.")
     else:
         form = ActivityPlanForm(project=project)
-        cashinkind_formset = cashinkindFormSet()
+        cashinkind_form = CashInKindDetailForm()
     context = {
         "form": form,
         "project": project,
-        "cashinkind_formset": cashinkind_formset,
+        "cashinkind_form": cashinkind_form,
     }
     return render(request, "rh/activity_plans/activity_plan_form.html", context)
 

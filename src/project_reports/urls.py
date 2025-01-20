@@ -42,6 +42,11 @@ urlpatterns = [
         name="create_project_monthly_report",
     ),
     path(
+        "projects/<int:project>/monthly-report/auto-create",
+        report_views.auto_create_monthly_report_period,
+        name="auto-create-monthly-report-period",
+    ),
+    path(
         "projects/<int:project>/monthly-progress/<str:report>/update",
         report_views.update_project_monthly_report_view,
         name="update_project_monthly_report",

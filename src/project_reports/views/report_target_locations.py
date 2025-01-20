@@ -12,6 +12,7 @@ from django.utils.safestring import mark_safe
 from django_htmx.http import HttpResponseClientRedirect
 
 from rh.models import (
+    Disaggregation,
     DisaggregationLocation,
     Project,
     TargetLocation,
@@ -116,18 +117,26 @@ def hx_diaggregation_tabular_form(request):
 
     try:
         target_location_id = request.POST.get("target_location", None)
-        target_location = TargetLocation.objects.get(pk=target_location_id)
+        target_location = get_object_or_404(TargetLocation, pk=target_location_id)
+
+        related_disaggregation_locations = target_location.disaggregationlocation_set.filter(target__gt=0)
+        related_disaggregations = Disaggregation.objects.filter(
+            id__in=related_disaggregation_locations.values_list("disaggregation_id", flat=True)
+        )
 
         DisaggregationReportFormSet = inlineformset_factory(
             parent_model=TargetLocationReport,
             model=DisaggregationLocationReport,
             form=DisaggregationLocationReportForm,
             formset=BaseDisaggregationLocationReportFormSet,
-            extra=2,
-            can_delete=True,
+            extra=len(related_disaggregations) + 1,
+            can_delete=False,
         )
 
-        report_disaggregation_formset = DisaggregationReportFormSet(target_location=target_location)
+        report_disaggregation_formset = DisaggregationReportFormSet(
+            target_location=target_location,
+            initial=[{"disaggregation": disaggregation} for disaggregation in related_disaggregations],
+        )
     except Exception:
         pass
 
@@ -141,17 +150,27 @@ def hx_diaggregation_tabular_form(request):
 @login_required
 def create_report_target_location(request, plan):
     """Report for a location of an ActivityPlanReport"""
-    plan_report = get_object_or_404(ActivityPlanReport.objects.select_related("monthly_report"), pk=plan)
+    plan_report = get_object_or_404(
+        ActivityPlanReport.objects.select_related("monthly_report", "activity_plan"), pk=plan
+    )
 
     if request.method == "POST":
+        target_location_id = request.POST.get("target_location", None)
+        target_location = get_object_or_404(TargetLocation, pk=target_location_id)
+
+        related_disaggregation_locations = target_location.disaggregationlocation_set.filter(target__gt=0)
+        related_disaggregations = Disaggregation.objects.filter(
+            id__in=related_disaggregation_locations.values_list("disaggregation_id", flat=True)
+        )
+
         location_report_form = TargetLocationReportForm(request.POST, plan_report=plan_report)
         DisaggregationReportFormSet = inlineformset_factory(
             parent_model=TargetLocationReport,
             model=DisaggregationLocationReport,
             form=DisaggregationLocationReportForm,
             formset=BaseDisaggregationLocationReportFormSet,
-            extra=2,
-            can_delete=True,
+            extra=len(related_disaggregations) + 1,
+            can_delete=False,
         )
         report_disaggregation_formset = DisaggregationReportFormSet(
             request.POST, instance=location_report_form.instance

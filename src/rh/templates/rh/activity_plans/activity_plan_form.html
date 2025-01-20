@@ -133,7 +133,7 @@
                                             class="form-control indicator-details"
                                             hx-get="{% url 'update-indicator-type' %}"
                                             hx-trigger="change"
-                                            hx-target="#implement_modality_type_id"
+                                            hx-target="#{{ cashinkind_form.implement_modality_type.id_for_label }}"
                                             hx-swap="innerHTML"
                                             hx-indicator=".progress">
                                         {% for type in form.indicator %}{{ type }}{% endfor %}
@@ -154,27 +154,6 @@
                         </div>
                     </div>
                 </div>
-
-                <!-- <div class="multiple-fields-row two-items ">
-                    <div class="field-col w-full">
-                        <div class="select-field">
-                            <label for="{{ form.beneficiary.id_for_label }}">Beneficiary</label>
-                            <p class="help-text">{{ form.beneficiary.help_text }}</p>
-                            {{ form.beneficiary }}
-                            <div class="sign-up-field-error">{{ form.beneficiary.errors }}</div>
-                        </div>
-                    </div>
-
-                    <div class="field-col w-full">
-                        <div class="select-field">
-                            <label for="{{ form.hrp_beneficiary.id_for_label }}">HRP Beneficiary</label>
-                            <p class="help-text">{{ form.hrp_beneficiary.help_text }}</p>
-                            {{ form.hrp_beneficiary }}
-                            <div class="sign-up-field-error">{{ form.hrp_beneficiary.errors }}</div>
-                        </div>
-                    </div>
-                </div> -->
-                
                 <div class="input-field">
                     <label for="{{ form.description.id_for_label }}">Activity Description</label>
                     <div class="input-holder">{{ form.description }}</div>
@@ -182,152 +161,136 @@
                 </div>
                 
                 <div class="input-field">
-                    <label for="state">State</label>
+                    <label for="{{ form.instance.state.id_for_label }}">State</label>
                     <div class="input-holder">
                         <span class="{{form.instance.state}}">{{ form.instance.state}}</span>
                     </div>
                 </div>
                 <!-- *********************Activity plan Cash In-Kind Details*************** -->
-                <div class="indicator-details-toggle hidden border border-gray-d1 p-6 rounded-lg my-6">
-                    {{ cashinkind_formset.management_form }}
+                <div class="indicator-details-toggle border border-gray-d1 p-6 rounded-lg my-6">
                     <div class="row">
                         <div class="multiple-fields-row three-items">
-                            {% for cash_in_kind_form in cashinkind_formset %}
                             <div class="field-col">
                                 <div class="select-field is-required">
-                                    <label for="implement_modality_type_id">Implement Modality</label>
-                                    <p class="help-text">{{ cash_in_kind_form.implement_modality_type.help_text }}</p>
+                                    <label for="{{ cashinkind_form.implement_modality_type.id_for_label }}">Implement Modality</label>
+                                    <p class="help-text">{{ cashinkind_form.implement_modality_type.help_text }}</p>
                                     <select 
-                                            name="implement_modality_type"
-                                            id="implement_modality_type_id"
+                                            name="{{ cashinkind_form.implement_modality_type.name }}"
+                                            id="{{ cashinkind_form.implement_modality_type.id_for_label }}"
                                             hx-get="{% url 'get-transfer-mechanism-types' %}"
                                             hx-trigger="change"
-                                            hx-target="#{{ cash_in_kind_form.transfer_mechanism_type.id_for_label }}"
+                                            hx-target="#{{ cashinkind_form.transfer_mechanism_type.id_for_label }}"
                                             hx-swap="innerHTML"
                                             >
-                                        {% for type in cash_in_kind_form.implement_modality_type.field.queryset %}
-                                            <option value="{{ type.id }}" {% if type.id == cash_in_kind_form.implement_modality_type.value %}selected{% endif %}>{{ type }}</option>
-                                        {% endfor %}
+                                        {% for type in cashinkind_form.implement_modality_type %}{{ type }}{% endfor %}
                                     </select>
-                                    <div class="sign-up-field-error">{{ cash_in_kind_form.implement_modality_type.errors }}</div>
+                                    <div class="sign-up-field-error">{{ cashinkind_form.implement_modality_type.errors }}</div>
                                 </div>
                             </div>
                             <div class="field-col">
                                 <div class="select-field is-required">
-                                    <label for="{{ cash_in_kind_form.transfer_mechanism_type.id_for_label }}">Transfer Mechanism</label>
-                                    <p class="help-text">{{ cash_in_kind_form.transfer_mechanism_type.help_text }}</p>
+                                    <label for="{{ cashinkind_form.transfer_mechanism_type.id_for_label }}">Transfer Mechanism</label>
+                                    <p class="help-text">{{ cashinkind_form.transfer_mechanism_type.help_text }}</p>
                                     <select 
-                                            name="transfer_mechanism_type"
-                                            id="{{ cash_in_kind_form.transfer_mechanism_type.id_for_label }}"
+                                            name="{{ cashinkind_form.transfer_mechanism_type.name }}"
+                                            id="{{ cashinkind_form.transfer_mechanism_type.id_for_label }}"
                                             hx-get="{% url 'get-unit-types' %}"
                                             hx-trigger="change"
-                                            hx-target="#{{ cash_in_kind_form.unit_type.id_for_label }}"
+                                            hx-target="#{{ cashinkind_form.unit_type.id_for_label }}"
                                             hx-swap="innerHTML"
                                             >
-                                        {% for type in cash_in_kind_form.transfer_mechanism_type.field.queryset %}
-                                            <option value="{{ type.id }}" {% if type.id == cash_in_kind_form.transfer_mechanism_type.value %}selected{% endif %}>{{ type }}</option>
-                                        {% endfor %}
+                                        {% for type in cashinkind_form.transfer_mechanism_type %}{{ type }}{% endfor %}
                                     </select>
-                                    <div class="sign-up-field-error">{{ cash_in_kind_form.transfer_mechanism_type.errors }}</div>
+                                    <div class="sign-up-field-error">{{ cashinkind_form.transfer_mechanism_type.errors }}</div>
                                 </div>
                             </div>
                             <div class="field-col">
                                 <div class="select-field">
-                                    <label for="{{cash_in_kind_form.package_type.id_for_label}}">Package Type</label>
-                                    <p class="help-text">{{ cash_in_kind_form.package_type.help_text }}</p>
+                                    <label for="{{ cashinkind_form.package_type.id_for_label }}">Package Type</label>
+                                    <p class="help-text">{{ cashinkind_form.package_type.help_text }}</p>
                                     <select
                                         name="package_type"
-                                        id="{{ cash_in_kind_form.package_type.id_for_label }}">
-                                        {% for type in cash_in_kind_form.package_type.field.queryset %}
-                                        <option value="{{ type.id }}" {% if type.id == cash_in_kind_form.package_type.value %}selected{% endif %}>{{ type }}</option>
-                                        {% endfor %}
+                                        id="{{ cashinkind_form.package_type.id_for_label }}">
+                                        {% for type in cashinkind_form.package_type %}{{ type }}{% endfor %}
                                     </select>
-                                    <small class="sign-up-field-error">{{ cash_in_kind_form.package_type.errors }}</small>
+                                    <small class="sign-up-field-error">{{ cashinkind_form.package_type.errors }}</small>
                                 </div>
                             </div>
                             <div class="field-col cash-package-section">
                                 <div class="select-field is-required">
-                                    <label for="{{cash_in_kind_form.unit_type.id_for_label}}">Unit Type</label>
+                                    <label for="{{cashinkind_form.unit_type.id_for_label}}">Unit Type</label>
                                     <p class="help-text" id="unit_type_help_text"></p>
                                     <select 
-                                            name="unit_type"
-                                            id="{{ cash_in_kind_form.unit_type.id_for_label }}"
+                                            name="{{ cashinkind_form.unit_type.name }}"
+                                            id="{{ cashinkind_form.unit_type.id_for_label }}"
                                             hx-trigger="change"
-                                            hx-target="#{{ cash_in_kind_form.package_type.id_for_label }}"
+                                            hx-target="#{{ cashinkind_form.package_type.id_for_label }}"
                                             hx-swap="innerHTML"
                                             >
-                                        {% for type in cash_in_kind_form.unit_type.field.queryset %}
-                                            <option value="{{ type.id }}" {% if type.id == cash_in_kind_form.unit_type.value %}selected{% endif %}>{{ type }}</option>
-                                        {% endfor %}
+                                            {% for type in cashinkind_form.unit_type %}{{ type }}{% endfor %}
                                     </select>
-                                    <small class="sign-up-field-error">{{ cash_in_kind_form.unit_type.errors }}</small>
+                                    <small class="sign-up-field-error">{{ cashinkind_form.unit_type.errors }}</small>
                                 </div>
                             </div>
                             <div class="field-col food-section">
                                 <div class="select-field">
-                                    <label for="{{cash_in_kind_form.ration_type.id_for_label}}">Ration Type</label>
-                                    <p class="help-text">{{cash_in_kind_form.ration_type.help_text}}</p>
-                                    <select name="{{cash_in_kind_form.ration_type.name}}"
-                                    id="{{cash_in_kind_form.ration_size.id_for_label}}">
-                                    {% for type in cash_in_kind_form.ration_type.field.queryset %}
-                                            <option value="{{ type.id }}" {% if type.id == cash_in_kind_form.ration_type.value %}selected{% endif %}>{{ type }}</option>
-                                        {% endfor %}
+                                    <label for="{{cashinkind_form.ration_type.id_for_label}}">Ration Type</label>
+                                    <p class="help-text">{{cashinkind_form.ration_type.help_text}}</p>
+                                    <select name="{{cashinkind_form.ration_type.name}}"
+                                    id="{{cashinkind_form.ration_size.id_for_label}}">
+                                        {% for type in cashinkind_form.ration_type %}{{ type }}{% endfor %}
                                     </select>
-                                    <small class="sign-up-field-error">{{cash_in_kind_form.ration_type.errors}}</small>
+                                    <small class="sign-up-field-error">{{cashinkind_form.ration_type.errors}}</small>
                                 </div>
                             </div>
                             <div class="field-col food-section">
                                 <div class="select-field">
-                                    <label for="{{cash_in_kind_form.ration_size.id_for_label}}">Ration Size</label>
-                                    <p class="help-text">{{cash_in_kind_form.ration_size.help_text}}</p>
-                                    {{cash_in_kind_form.ration_size}}
-                                    <small class="sign-up-field-error">{{cash_in_kind_form.ration_size.errors}}</small>
+                                    <label for="{{cashinkind_form.ration_size.id_for_label}}">Ration Size</label>
+                                    <p class="help-text">{{cashinkind_form.ration_size.help_text}}</p>
+                                    {{cashinkind_form.ration_size}}
+                                    <small class="sign-up-field-error">{{cashinkind_form.ration_size.errors}}</small>
                                 </div>
                             </div>
                             <div class="field-col food-section">
                                 <div class="select-field is-required">
-                                    <label for="{{cash_in_kind_form.transfer_category.id_for_label}}">{{ cash_in_kind_form.transfer_category.label }}</label>
-                                    <p class="help-text">{{ cash_in_kind_form.transfer_category.help_text }}</p>
-                                    <select name="{{cash_in_kind_form.transfer_category.name}}" 
-                                            id="{{cash_in_kind_form.transfer_category.id_for_label}}">
-                                        {% for category in cash_in_kind_form.transfer_category.field.queryset %}
-                                            <option value="{{ category.id }}" {% if category.id == cash_in_kind_form.transfer_category.value %}selected{% endif %}>{{ category }}</option>
-                                        {% endfor %}
+                                    <label for="{{cashinkind_form.transfer_category.id_for_label}}">{{ cashinkind_form.transfer_category.label }}</label>
+                                    <p class="help-text">{{ cashinkind_form.transfer_category.help_text }}</p>
+                                    <select name="{{cashinkind_form.transfer_category.name}}" 
+                                            id="{{cashinkind_form.transfer_category.id_for_label}}"
+                                    >
+                                        {% for type in cashinkind_form.transfer_category %}{{ type }}{% endfor %}
                                     </select>
-                                    <small class="sign-up-field-error">{{ cash_in_kind_form.transfer_category.errors }}</small>
+                                    <small class="sign-up-field-error">{{ cashinkind_form.transfer_category.errors }}</small>
                                 </div>
                             </div>
                             <div class="field-col">
                                 <div class="select-field">
-                                    <label>{{ cash_in_kind_form.no_of_transfers.label }}</label>
-                                    <p class="help-text">{{ cash_in_kind_form.no_of_transfers.help_text }}</p>
-                                    {{ cash_in_kind_form.no_of_transfers }}
-                                    <small class="sign-up-field-error">{{ cash_in_kind_form.no_of_transfers.errors }}</small>
+                                    <label>{{ cashinkind_form.no_of_transfers.label }}</label>
+                                    <p class="help-text">{{ cashinkind_form.no_of_transfers.help_text }}</p>
+                                    {{ cashinkind_form.no_of_transfers }}
+                                    <small class="sign-up-field-error">{{ cashinkind_form.no_of_transfers.errors }}</small>
                                 </div>
                             </div>
                             <div class="field-col">
                                 <div class="select-field">
-                                    <label>{{ cash_in_kind_form.units.label }} / Transfer Value</label>
-                                    <p class="help-text">{{ cash_in_kind_form.units.help_text }}</p>
-                                    {{ cash_in_kind_form.units }}
-                                    <small class="sign-up-field-error">{{ cash_in_kind_form.units.errors }}</small>
+                                    <label>{{ cashinkind_form.units.label }} / Transfer Value</label>
+                                    <p class="help-text">{{ cashinkind_form.units.help_text }}</p>
+                                    {{ cashinkind_form.units }}
+                                    <small class="sign-up-field-error">{{ cashinkind_form.units.errors }}</small>
                                 </div>
                             </div>
                         <div class="field-col grant-type-section">
                             <div class="select-field is-required">
-                                <label for="{{ cash_in_kind_form.grant_type.id_for_label }}">{{ cash_in_kind_form.grant_type.label }} / Assistance Type</label>
-                                <p class="help-text">{{ cash_in_kind_form.grant_type.help_text }}</p>
-                                <select name="{{ cash_in_kind_form.grant_type.name }}" 
-                                        id="{{ cash_in_kind_form.grant_type.id_for_label }}">
-                                    {% for type in cash_in_kind_form.grant_type.field.queryset %}
-                                        <option value="{{ type.id }}" {% if type.id == cash_in_kind_form.grant_type.value %}selected{% endif %}>{{ type }}</option>
-                                    {% endfor %}
+                                <label for="{{ cashinkind_form.grant_type.id_for_label }}">{{ cashinkind_form.grant_type.label }} / Assistance Type</label>
+                                <p class="help-text">{{ cashinkind_form.grant_type.help_text }}</p>
+                                <select name="{{ cashinkind_form.grant_type.name }}" 
+                                        id="{{ cashinkind_form.grant_type.id_for_label }}">
+                                    {% for type in cashinkind_form.grant_type %}{{ type }}{% endfor %}
                                 </select>
-                                <small class="sign-up-field-error">{{ cash_in_kind_form.grant_type.errors }}</small>
+                                <small class="sign-up-field-error">{{ cashinkind_form.grant_type.errors }}</small>
                             </div>
                         </div> 
                         
-                        {% endfor %}
                     </div>
                 </div>
              <!-- *********************Activity plan cash in-kind Detail end******************************** -->
@@ -363,45 +326,5 @@
 
 {% block project_form_scripts %}
 <script>
-    function showCashInKindForm() {
-        let indicator = document.querySelector(".indicator-details").value;
-        fetch("{% url 'show-indicator-detail' %}?indicator="+indicator)
-            .then(response => response.json())
-            .then(data => {
-                if(data.indicator){
-                    const packageElement = document.querySelectorAll(".package-section");
-                    const foodElement = document.querySelectorAll(".food-section");
-                    document.querySelector(".indicator-details-toggle").classList.remove("hidden");
-                    if(data.food){
-                        foodElement.forEach(element => {
-                            element.classList.remove("hidden");
-                        });
-                        document.querySelector(".grant-type-section").classList.add("hidden");
-                        document.querySelector(".cash-package-section").classList.add("hidden");
-                    }
-                    if(data.cash){
-                        foodElement.forEach(element => {
-                            element.classList.add("hidden");
-                        });
-                        document.querySelector(".cash-package-section").classList.remove("hidden");
-                        document.getElementById("unit_type_help_text").innerHTML = "If the cash you are transfering is not in USD, please exchange it for USD.";
-                    } else{
-                        document.getElementById("unit_type_help_text").innerHTML = "Unit type related to implementation modality type";
-                    }
-                } else {
-                    document.querySelector(".indicator-details-toggle").classList.add("hidden");
-                }
-                
-                    
-                
-            });
-    }
-    window.onload = function() {
-        showCashInKindForm();
-    }
-
-    document.querySelector(".indicator-details").addEventListener("change", ()=>{
-        showCashInKindForm();
-    });
 </script>
 {% endblock project_form_scripts %}

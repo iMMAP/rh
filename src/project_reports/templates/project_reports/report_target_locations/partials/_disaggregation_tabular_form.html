@@ -92,7 +92,6 @@
                                 {% endif %}
                             </th>
                         {% endfor %}
-                        {% if report_disaggregation_formset.can_delete %}<th>Delete?</th>{% endif %}
                     </tr>
                 </thead>
                 <tbody>
@@ -113,9 +112,6 @@
                                     </td>
                                 {% endif %}
                             {% endfor %}
-                            <td class="delete">
-                                {% if form.instance.pk %}{{ form.DELETE }}{% endif %}
-                            </td>
                         </tr>
                     {% endfor %}
                 </tbody>
@@ -157,8 +153,34 @@
         }).finally(()=>{
             spinner.style.display = "none";
         });
-
     }
+
+    /* get targets on load */
+    document.addEventListener("DOMContentLoaded", function () {
+        const elements = document.querySelectorAll('[data-init="true"]');
+
+        elements.forEach((element) => {
+            if (!element.closest('.empty-form')) {
+                getTarget({ target: element });
+            }
+        });
+    });
+
+    /* get targets on change*/
+    document.addEventListener("htmx:afterSwap", function (event) {
+        // Check if the updated element is #target-location-info div
+        const updatedElement = event.detail.target;
+        if (updatedElement.id === "target-location-info") {
+            // Trigger getTarget for all elements with data-init="true" inside the updated div
+            const elements = updatedElement.querySelectorAll('[data-init="true"]');
+            elements.forEach((element) => {
+                if (!element.closest('.empty-form')) {
+                    getTarget({ target: element });
+                }
+            });
+        }
+    });
+
 </script>
 <script defer src="{% static 'js/utils/inlines.js' %}"></script>
 {% comment %} end of Tabular Disaggregation Table form {% endcomment %}

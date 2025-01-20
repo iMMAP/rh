@@ -211,6 +211,7 @@ class DisaggregationLocationForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
 
         self.fields["disaggregation"].required = True
+        self.fields["disaggregation"].widget = forms.Select(attrs={"disabled": "disabled"})
 
         if activity_plan:
             self.fields["disaggregation"].queryset = self.fields["disaggregation"].queryset.filter(

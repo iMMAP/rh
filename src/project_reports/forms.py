@@ -162,9 +162,9 @@ class DisaggregationLocationReportForm(forms.ModelForm):
         self.fields["disaggregation"].required = True
         self.fields["disaggregation"].widget = forms.Select(
             attrs={
-                "onchange": "getTarget(event)",
-                "onload": "getTarget(event)",
+                "data-init": "true",
                 "data-url": reverse_lazy("get_target_and_reached_of_disaggregationlocation"),
+                "disabled": "disabled",
             }
         )
         self.fields["disaggregation"].empty_value = "-----"

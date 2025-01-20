@@ -18,6 +18,7 @@ from django.utils import timezone
 from django_htmx.http import HttpResponseClientRedirect
 from extra_settings.models import Setting
 
+from project_reports.utils import get_project_reporting_months
 from rh.models import (
     ActivityDetail,
     ActivityDomain,
@@ -117,6 +118,13 @@ def index_project_report_view(request, project):
     }
 
     return render(request, "project_reports/monthly_reports/views/monthly_reports_view_base.html", context)
+
+
+# auto generate monthly report periods form project start date
+def auto_create_monthly_report_period(request, project):
+    projects = get_object_or_404(Project, pk=project)
+    get_project_reporting_months(projects)
+    return redirect("project_reports_home", project=project)
 
 
 @login_required

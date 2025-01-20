@@ -1,11 +1,14 @@
 import csv
 import datetime
 
+from dateutil.relativedelta import relativedelta
+from django.db.models import Exists, OuterRef
+from django.utils.timezone import now
 from openpyxl.styles import Font, NamedStyle
 from openpyxl.utils import get_column_letter
 from openpyxl.worksheet.datavalidation import DataValidation
 
-from project_reports.models import ResponseType
+from project_reports.models import ActivityPlanReport, ProjectMonthlyReport, ResponseType
 from rh.models import (
     Currency,
     Disaggregation,
@@ -442,3 +445,40 @@ def write_import_report_template_sheet(workbook, monthly_report):
             cell = sheet[f"{column}{row}"]
             sheet.add_data_validation(dv)
             dv.add(cell)
+
+
+def get_project_reporting_months(project):
+    start_date = project.start_date
+    end_date = project.end_date
+    today = now()
+    current_date = start_date
+    months = []
+    # Remove records that are beyond the project's start_date and end_date and without associated ActivityPlanReport
+    ProjectMonthlyReport.objects.filter(project=project).exclude(
+        from_date__gte=start_date, to_date__lte=end_date
+    ).annotate(has_activityplanreport=Exists(ActivityPlanReport.objects.filter(monthly_report=OuterRef("pk")))).filter(
+        has_activityplanreport=False
+    ).delete()
+
+    # Initialize variables
+    current_date = start_date
+    while current_date <= today:
+        from_date = current_date.replace(day=1)
+        first_day_next_month = current_date + relativedelta(months=1)
+        to_date = first_day_next_month - relativedelta(days=1)
+        if to_date < today:
+            state = "pending"
+        elif from_date <= today <= to_date:
+            state = "todo"
+        report, created = ProjectMonthlyReport.objects.get_or_create(
+            project=project, from_date=from_date, to_date=to_date, defaults={"state": state}
+        )
+        if not created:
+            # If the record exists, update its fields
+            report.state = state
+            report.save()
+
+        months.append({"from_date": from_date, "to_date": to_date, "state": state})
+
+        current_date += relativedelta(months=1)
+    return months

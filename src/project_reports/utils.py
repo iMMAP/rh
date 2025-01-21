@@ -475,7 +475,6 @@ def get_project_reporting_months(project):
         )
         if not created:
             # If the record exists, update its fields
-            report.state = state
             report.save()
 
         months.append({"from_date": from_date, "to_date": to_date, "state": state})

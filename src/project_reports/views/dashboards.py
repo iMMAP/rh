@@ -1,3 +1,4 @@
+import plotly.graph_objects as go
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
 from django.db.models import Case, Count, IntegerField, Q, Sum, Value, When
@@ -115,7 +116,26 @@ def cluster_5w_dashboard(request, cluster):
         if total_reached and all(value is not None for value in total_reached.values()):
             sum_disaggregation = sum(value for value in total_reached.values() if value is not None)
             data_dict[category]["total"] = sum_disaggregation
-
+    line_chart = go.Figure()
+    # Plot each metric as a line
+    line_chart.add_trace(
+        go.Scatter(
+            x=labels,
+            y=data,
+            mode="lines+markers",
+            name="Projects Monthly Reached",
+            hovertemplate="<b>Months:</b> %{x}<br><b>Beneficiary Reached:</b> %{y}<br><extra></extra>",
+            line=dict(shape="spline", color="#a52824"),
+        )
+    )
+    # Update layout
+    line_chart.update_layout(
+        xaxis_title="Month Names",
+        yaxis_title="Beneficiary Reached",
+        showlegend=True,
+        margin=dict(r=0, t=0, b=0, l=0),
+        height=400,
+    )
     context = {
         "cluster": cluster,
         "counts": counts,
@@ -124,6 +144,7 @@ def cluster_5w_dashboard(request, cluster):
         "activity_domains": activity_domains,
         "reach_by_activity": data_dict,
         "dashboard_filter": monthly_report_filter,
+        "line_chart": line_chart.to_html(),
     }
 
     return render(request, "project_reports/cluster_5w_dashboard.html", context)

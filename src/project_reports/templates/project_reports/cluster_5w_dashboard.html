@@ -22,17 +22,14 @@
         <div class="top-panel pb-2 pt-4 flex flex-col items-center justify-between gap-2 sm:flex-row">
             <h2 class="locations text-red-be">{{ request.resolver_match.kwargs.cluster|capfirst }} 5W Dashboard</h2>
             <div class="actions-panel">
-                <!-- <a class="export-button btn btn-gray"
-                    href="{% url 'cluster-5w-stock-report-export' request.resolver_match.kwargs.cluster %}"
-                    title="{{request.resolver_match.kwargs.cluster }}_5w_stock_reports_">
-                    <span class="btn-text">Export Stocks Reports</span>
+                <a href="{% url 'export-organization-partners' request.resolver_match.kwargs.cluster %}?{{request.GET.urlencode}}" class="btn btn-gray">
+                    Export Organizations
                     <span class="icon-download"></span>
-                    spinner start
-                    <img class="downloading"
-                         style="width: 1.2rem"
-                         src="{% static 'images/spinner.gif' %}" />
-                    spinner end 
-                </a> -->
+                </a>
+                <a href="{% url 'export-focal-persons' request.resolver_match.kwargs.cluster %}?{{request.GET.urlencode}}" class="btn btn-gray">
+                    Export Users
+                    <span class="icon-download"></span>
+                </a>
                 <a class="export-button btn btn-red"
                     href="{% url 'export-cluster-5w-dashboard' request.resolver_match.kwargs.cluster %}?{{request.GET.urlencode}}"
                     title="{{request.resolver_match.kwargs.cluster }}_5w_projects_reports_">
@@ -177,7 +174,7 @@
                         </p>
                     </div>
                     <div class="mt-4">
-                        <canvas id="myChart"></canvas>
+                         {{ line_chart|safe }}
                     </div>
                 </div>
             </div>
@@ -190,35 +187,5 @@
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
         integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
         crossorigin=""></script>
-<script>
 
-const ctx = document.getElementById('myChart').getContext("2d");
-new Chart(ctx, {
-type: 'line',
-data: {
-    labels: {{people_reached_labels|safe}},
-    datasets: [{
-    label: 'People Reached',
-    data: {{people_reached_data|safe}},
-    borderColor:"#a52824",
-    backgroundColor:"rgba(255,0,0, 0.1)",
-    pointBackgroundColor:"#a52824",
-    fill: true,
-    
-    tension: 0.4,
-    borderWidth: 1
-    }]
-},
-options: {
-    maintainAspectRatio: false,
-    responsive: true,
-    height: 300,
-    scales: {
-        y: {
-        beginAtZero: true
-        }
-        }
-}
-});
-</script>
 {% endblock scripts %}

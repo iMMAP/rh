@@ -173,4 +173,14 @@ urlpatterns = [
         export_views.export_monthly_report_view,
         name="export_monthly_report",
     ),
+    path(
+        "cluster/<str:code>/organization",
+        export_views.export_organization_partners,
+        name="export-organization-partners",
+    ),
+    path(
+        "cluster/<str:code>/focal-points",
+        export_views.export_focal_persons,
+        name="export-focal-persons",
+    ),
 ]

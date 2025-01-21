@@ -482,3 +482,68 @@ def get_project_reporting_months(project):
 
         current_date += relativedelta(months=1)
     return months
+
+
+def write_projects_organization_to_csv(monthly_reports, response):
+    writer = csv.writer(response)
+    columns = ["organization name", "organization Acryname", "organization_type", "orgnaization clusters"]
+    # write csv columns
+    writer.writerow(columns)
+    rows = []
+    try:
+        for project_report in monthly_reports:
+            row = [
+                project_report.project.organization.name,
+                project_report.project.organization.code,
+                project_report.project.organization.type,
+                ",".join([str(cluster.code) for cluster in project_report.project.organization.clusters.all()]),
+            ]
+            if row not in rows:
+                rows.append(row)
+        writer.writerows(rows)
+
+    except Exception as e:
+        print("Error:", e)
+
+
+def write_focal_persons_to_csv(monthly_reports, response):
+    writer = csv.writer(response)
+    columns = [
+        "username",
+        "first name",
+        "last name",
+        "email",
+        "phone",
+        "whatsapp",
+        "skype",
+        "organization",
+        "position",
+        "clusters",
+        "country",
+    ]
+    # write csv columns
+    writer.writerow(columns)
+    rows = []
+    try:
+        for project_report in monthly_reports:
+            row = [
+                project_report.project.user.username,
+                project_report.project.user.first_name if project_report.project.user.first_name else None,
+                project_report.project.user.last_name if project_report.project.user.last_name else None,
+                project_report.project.user.email if project_report.project.user.email else None,
+                project_report.project.user.profile.phone if project_report.project.user.profile.phone else None,
+                project_report.project.user.profile.whatsapp if project_report.project.user.profile.whatsapp else None,
+                project_report.project.user.profile.skype if project_report.project.user.profile.skype else None,
+                project_report.project.user.profile.organization.code
+                if project_report.project.user.profile.organization
+                else None,
+                project_report.project.user.profile.position if project_report.project.user.profile.position else None,
+                ",".join([str(cluster.code) for cluster in project_report.project.user.profile.clusters.all()]),
+                project_report.project.user.profile.country if project_report.project.user.profile.country else None,
+            ]
+            if row not in rows:
+                rows.append(row)
+        writer.writerows(rows)
+
+    except Exception as e:
+        print("Error:", e)

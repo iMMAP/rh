@@ -253,7 +253,7 @@ admin.site.register(Indicator, IndicatorAdmin)
 class ActivityDomainAdmin(admin.ModelAdmin):
     list_display = ("name", "code", "is_active")
     search_fields = ("name", "clusters__title", "code", "countries__name")
-    list_filter = ("clusters",)
+    list_filter = ("clusters", "countries")
     prepopulated_fields = {"code": ["name"]}
 
     filter_horizontal = (

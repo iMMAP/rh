@@ -174,7 +174,7 @@
                                 <div class="select-field is-required">
                                     <label for="{{ cashinkind_form.implement_modality_type.id_for_label }}">Implement Modality</label>
                                     <p class="help-text">{{ cashinkind_form.implement_modality_type.help_text }}</p>
-                                    <select 
+                                    <select
                                             name="{{ cashinkind_form.implement_modality_type.name }}"
                                             id="{{ cashinkind_form.implement_modality_type.id_for_label }}"
                                             hx-get="{% url 'get-transfer-mechanism-types' %}"
@@ -191,7 +191,7 @@
                                 <div class="select-field is-required">
                                     <label for="{{ cashinkind_form.transfer_mechanism_type.id_for_label }}">Transfer Mechanism</label>
                                     <p class="help-text">{{ cashinkind_form.transfer_mechanism_type.help_text }}</p>
-                                    <select 
+                                    <select
                                             name="{{ cashinkind_form.transfer_mechanism_type.name }}"
                                             id="{{ cashinkind_form.transfer_mechanism_type.id_for_label }}"
                                             hx-get="{% url 'get-unit-types' %}"
@@ -220,7 +220,7 @@
                                 <div class="select-field is-required">
                                     <label for="{{cashinkind_form.unit_type.id_for_label}}">Unit Type</label>
                                     <p class="help-text" id="unit_type_help_text"></p>
-                                    <select 
+                                    <select
                                             name="{{ cashinkind_form.unit_type.name }}"
                                             id="{{ cashinkind_form.unit_type.id_for_label }}"
                                             hx-trigger="change"
@@ -255,7 +255,7 @@
                                 <div class="select-field is-required">
                                     <label for="{{cashinkind_form.transfer_category.id_for_label}}">{{ cashinkind_form.transfer_category.label }}</label>
                                     <p class="help-text">{{ cashinkind_form.transfer_category.help_text }}</p>
-                                    <select name="{{cashinkind_form.transfer_category.name}}" 
+                                    <select name="{{cashinkind_form.transfer_category.name}}"
                                             id="{{cashinkind_form.transfer_category.id_for_label}}"
                                     >
                                         {% for type in cashinkind_form.transfer_category %}{{ type }}{% endfor %}
@@ -283,14 +283,13 @@
                             <div class="select-field is-required">
                                 <label for="{{ cashinkind_form.grant_type.id_for_label }}">{{ cashinkind_form.grant_type.label }} / Assistance Type</label>
                                 <p class="help-text">{{ cashinkind_form.grant_type.help_text }}</p>
-                                <select name="{{ cashinkind_form.grant_type.name }}" 
+                                <select name="{{ cashinkind_form.grant_type.name }}"
                                         id="{{ cashinkind_form.grant_type.id_for_label }}">
                                     {% for type in cashinkind_form.grant_type %}{{ type }}{% endfor %}
                                 </select>
                                 <small class="sign-up-field-error">{{ cashinkind_form.grant_type.errors }}</small>
                             </div>
-                        </div> 
-                        
+                        </div>
                     </div>
                 </div>
              <!-- *********************Activity plan cash in-kind Detail end******************************** -->

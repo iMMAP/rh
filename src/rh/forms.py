@@ -332,8 +332,6 @@ class CashInKindDetailForm(forms.ModelForm):
         self.fields["package_type"].queryset = PackageType.objects.all()
         self.fields["ration_type"].queryset = RationType.objects.all()
         self.fields["ration_size"].queryset = RationSize.objects.all()
-
-        # Ensure `self.instance` is valid and linked to an ActivityPlan
         if self.data:
             try:
                 # Creating
@@ -344,16 +342,13 @@ class CashInKindDetailForm(forms.ModelForm):
                 )
                 self.fields["unit_type"].queryset = UnitType.objects.filter(modality=implement_modality_type)
             except Exception:
-                self.add_error(None, "Do not mess with the form!")
+                pass
         elif self.instance.pk:
             self.fields["implement_modality_type"].queryset = ImplementationModalityType.objects.all()
             self.fields["transfer_mechanism_type"].queryset = TransferMechanismType.objects.filter(
                 modality=self.instance.implement_modality_type
             )
             self.fields["unit_type"].queryset = UnitType.objects.filter(modality=self.instance.implement_modality_type)
-        # else:
-        #     self.fields["transfer_mechanism_type"].queryset = TransferMechanismType.objects.none()
-        #     self.fields["unit_type"].queryset = UnitType.objects.none()
 
 
 class BaseCashInKindDetailFormSet(BaseInlineFormSet):

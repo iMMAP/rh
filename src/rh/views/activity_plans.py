@@ -37,9 +37,7 @@ def update_activity_plan_state(request, pk):
 
     activity_plan = ActivityPlan.objects.get(id=pk)
     activity_plan.state = new_state
-
     activity_plan.save()
-
     messages.success(request, f"Activity Plan state updated to '{new_state}' !")
 
     return HttpResponse(200)

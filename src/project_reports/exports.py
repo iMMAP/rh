@@ -12,7 +12,7 @@ from rh.models import Cluster, Organization, Project
 from users.utils import is_cluster_lead
 
 from .models import ActivityPlanReport, DisaggregationLocationReport, ProjectMonthlyReport, TargetLocationReport
-from .utils import write_projects_reports_to_csv
+from .utils import write_focal_persons_to_csv, write_projects_organization_to_csv, write_projects_reports_to_csv
 
 #############################################
 ############### Export Views #################
@@ -76,6 +76,120 @@ def cluster_5w_dashboard_export(request, code):
         response["Content-Disposition"] = f"attachment; filename={cluster.code}_5w_reports_data_{today_date}.csv"
 
         write_projects_reports_to_csv(monthly_reports_filter.qs, response)
+
+        return response
+
+    except Exception as e:
+        response = {"error": str(e)}
+        return HttpResponse(response, status=500)
+
+
+def export_organization_partners(request, code):
+    cluster = get_object_or_404(Cluster, code=code)
+    user_country = request.user.profile.country
+    filter_params = {
+        "project__clusters__in": [cluster],
+        "state__in": ["submited", "completed"],
+        "project__user__profile__country": user_country,
+        "activityplanreport__activity_plan__activity_domain__clusters__in": [cluster],
+    }
+
+    if not is_cluster_lead(
+        user=request.user,
+        clusters=[
+            cluster.code,
+        ],
+    ):
+        raise PermissionDenied
+    try:
+        project_reports = (
+            ProjectMonthlyReport.objects.select_related("project")
+            .prefetch_related(
+                Prefetch(
+                    "activityplanreport_set",
+                    queryset=ActivityPlanReport.objects.prefetch_related(
+                        Prefetch(
+                            "targetlocationreport_set",
+                            queryset=TargetLocationReport.objects.prefetch_related(
+                                Prefetch(
+                                    "disaggregationlocationreport_set",
+                                    DisaggregationLocationReport.objects.select_related("disaggregation"),
+                                )
+                            ),
+                        )
+                    ),
+                )
+            )
+            .filter(**filter_params)
+            .distinct()
+        )
+
+        monthly_reports_filter = Organization5WFilter(request.GET, queryset=project_reports, user=request.user)
+
+        today = datetime.datetime.now()
+        today_date = today.today().strftime("%d-%m-%Y")
+
+        response = HttpResponse(content_type="text/csv")
+        response["Content-Disposition"] = f"attachment; filename={cluster.code}_5w_Orgnanizations_data_{today_date}.csv"
+
+        write_projects_organization_to_csv(monthly_reports_filter.qs, response)
+
+        return response
+
+    except Exception as e:
+        response = {"error": str(e)}
+        return HttpResponse(response, status=500)
+
+
+def export_focal_persons(request, code):
+    cluster = get_object_or_404(Cluster, code=code)
+    user_country = request.user.profile.country
+    filter_params = {
+        "project__clusters__in": [cluster],
+        "state__in": ["submited", "completed"],
+        "project__user__profile__country": user_country,
+        "activityplanreport__activity_plan__activity_domain__clusters__in": [cluster],
+    }
+
+    if not is_cluster_lead(
+        user=request.user,
+        clusters=[
+            cluster.code,
+        ],
+    ):
+        raise PermissionDenied
+    try:
+        project_reports = (
+            ProjectMonthlyReport.objects.select_related("project")
+            .prefetch_related(
+                Prefetch(
+                    "activityplanreport_set",
+                    queryset=ActivityPlanReport.objects.prefetch_related(
+                        Prefetch(
+                            "targetlocationreport_set",
+                            queryset=TargetLocationReport.objects.prefetch_related(
+                                Prefetch(
+                                    "disaggregationlocationreport_set",
+                                    DisaggregationLocationReport.objects.select_related("disaggregation"),
+                                )
+                            ),
+                        )
+                    ),
+                )
+            )
+            .filter(**filter_params)
+            .distinct()
+        )
+
+        monthly_reports_filter = Organization5WFilter(request.GET, queryset=project_reports, user=request.user)
+
+        today = datetime.datetime.now()
+        today_date = today.today().strftime("%d-%m-%Y")
+
+        response = HttpResponse(content_type="text/csv")
+        response["Content-Disposition"] = f"attachment; filename={cluster.code}_5w_focal_persons_data_{today_date}.csv"
+
+        write_focal_persons_to_csv(monthly_reports_filter.qs, response)
 
         return response
 

@@ -73,7 +73,6 @@ def update_activity_plan(request, pk):
         cashinkind_form = CashInKindDetailForm(request.POST, instance=cashinkind_instance)
         if form.is_valid() and cashinkind_form.is_valid():
             form.save()
-
             cashinkind_details = cashinkind_form.save(commit=False)
             cashinkind_details.activity_plan = activity_plan
             cashinkind_details.save()

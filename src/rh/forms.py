@@ -326,7 +326,7 @@ class CashInKindDetailForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.fields["implement_modality_type"].queryset = ImplementationModalityType.objects.none()
+        # self.fields["implement_modality_type"].queryset = ImplementationModalityType.objects.none()
         self.fields["unit_type"].queryset = UnitType.objects.none()
         self.fields["transfer_mechanism_type"].queryset = TransferMechanismType.objects.none()
         self.fields["package_type"].queryset = PackageType.objects.all()

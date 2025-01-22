@@ -13,11 +13,9 @@ from extra_settings.models import Setting
 from ..filters import ActivityPlansFilter
 from ..forms import (
     ActivityPlanForm,
-    # CashInKindDetailForm,
 )
 from ..models import (
     ActivityPlan,
-    # CashInKindDetail,
     DisaggregationLocation,
     ImplementationModalityType,
     Indicator,
@@ -106,7 +104,6 @@ def create_activity_plan(request, project):
         form = ActivityPlanForm(project=project)
 
     return render(request, "rh/activity_plans/activity_plan_form.html", {"form": form, "project": project})
-
 
 
 @login_required

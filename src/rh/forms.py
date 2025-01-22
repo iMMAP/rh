@@ -292,18 +292,20 @@ class ActivityPlanForm(forms.ModelForm):
                 # Creating
                 activity_domain_id = int(self.data.get("activity_domain"))
                 self.fields["activity_type"].queryset = ActivityType.objects.filter(
-                    activity_domain_id=activity_domain_id,
-                    is_active=True
+                    activity_domain_id=activity_domain_id, is_active=True
                 )
 
                 activity_type_id = int(self.data.get("activity_type"))
-                self.fields["indicator"].queryset = Indicator.objects.filter(activity_types=activity_type_id,
-                                                                             is_active=True)
+                self.fields["indicator"].queryset = Indicator.objects.filter(
+                    activity_types=activity_type_id, is_active=True
+                )
             except Exception:
                 self.add_error(None, "Do not mess with the form!")
         elif self.instance.pk:
             # Updating
-            self.fields["activity_type"].queryset = self.instance.activity_domain.activitytype_set.filter(is_active=True)
+            self.fields["activity_type"].queryset = self.instance.activity_domain.activitytype_set.filter(
+                is_active=True
+            )
             self.fields["indicator"].queryset = self.instance.activity_type.indicator_set.all.filter(is_active=True)
 
 

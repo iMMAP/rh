@@ -87,17 +87,15 @@ def update_target_location(request, pk):
 
     else:
         # Get all the DisaggregationLocation instances related to target_location with prefetch_related to avoid N+1 query
-        excluded_disaggregation_locations = target_location.disaggregationlocation_set.all().select_related('disaggregation')
+        excluded_disaggregation_locations = target_location.disaggregationlocation_set.all().select_related(
+            "disaggregation"
+        )
 
         # Extract the related Disaggregation instances from the DisaggregationLocation objects
-        excluded_disaggregations = [
-            dl.disaggregation for dl in excluded_disaggregation_locations
-        ]
+        excluded_disaggregations = [dl.disaggregation for dl in excluded_disaggregation_locations]
 
         # Filter out those disaggregations from the related_disaggregations list
-        filtered_disaggregations = [
-            d for d in related_disaggregations if d not in excluded_disaggregations
-        ]
+        filtered_disaggregations = [d for d in related_disaggregations if d not in excluded_disaggregations]
         initial_data = [{"disaggregation": d, "target": 0} for d in filtered_disaggregations]
         target_location_form = TargetLocationForm(
             instance=target_location, user=request.user, activity_plan=target_location.activity_plan

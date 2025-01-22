@@ -306,7 +306,7 @@ class ActivityPlanForm(forms.ModelForm):
             self.fields["activity_type"].queryset = self.instance.activity_domain.activitytype_set.filter(
                 is_active=True
             )
-            self.fields["indicator"].queryset = self.instance.activity_type.indicator_set.all.filter(is_active=True)
+            self.fields["indicator"].queryset = self.instance.activity_type.indicator_set.filter(is_active=True)
 
 
 class CashInKindDetailForm(forms.ModelForm):

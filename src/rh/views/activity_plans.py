@@ -2,7 +2,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.db.models import Count
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.utils.safestring import mark_safe
@@ -17,7 +17,6 @@ from ..forms import (
 )
 from ..models import (
     ActivityPlan,
-    CashInKindDetail,
     DisaggregationLocation,
     ImplementationModalityType,
     Indicator,
@@ -41,6 +40,7 @@ def update_activity_plan_state(request, pk):
     messages.success(request, f"Activity Plan state updated to '{new_state}' !")
 
     return HttpResponse(200)
+
 
 @login_required
 def show_indicator_details(request):
@@ -69,10 +69,19 @@ def render_cash_in_kind_form(request, activity_plan_id=None):
             cash_in_kind_detail.save()
             return HttpResponse('<div class="alert alert-success">Details saved successfully!</div>')
 
-        return render(request, "rh/activity_plans/partials/cash_in_kind_form.html", {"cashinkind_form": form, "activity_plan": activity_plan}, status=400)
+        return render(
+            request,
+            "rh/activity_plans/partials/cash_in_kind_form.html",
+            {"cashinkind_form": form, "activity_plan": activity_plan},
+            status=400,
+        )
 
     form = CashInKindDetailForm()
-    return render(request, "rh/activity_plans/partials/cash_in_kind_form.html", {"cashinkind_form": form, "activity_plan": activity_plan})
+    return render(
+        request,
+        "rh/activity_plans/partials/cash_in_kind_form.html",
+        {"cashinkind_form": form, "activity_plan": activity_plan},
+    )
 
 
 @login_required
@@ -144,11 +153,11 @@ def create_activity_plan(request, project):
         form = ActivityPlanForm(project=project)
         cash_in_kind_form = CashInKindDetailForm()
 
-    return render(request, "rh/activity_plans/activity_plan_form.html", {
-        "form": form,
-        "cash_in_kind_form": cash_in_kind_form,
-        "project": project
-    })
+    return render(
+        request,
+        "rh/activity_plans/activity_plan_form.html",
+        {"form": form, "cash_in_kind_form": cash_in_kind_form, "project": project},
+    )
 
 
 @login_required

@@ -49,12 +49,20 @@ def hx_show_indicator_details(request):
         indicator_id = request.POST.get("indicator", None)
         indicator = get_object_or_404(Indicator, pk=indicator_id)
 
-        if indicator.implement_category and str(indicator.implement_category) == "Cash":
-            # Render the CashInKindDetailForm
-            form = CashInKindDetailForm()
-            context = {"cashinkind_form": form}
-            return render(request, "rh/activity_plans/partials/_cash_in_kind_form.html", context)
+        food = indicator.food
+        package = indicator.package
 
+        form = CashInKindDetailForm()
+        context = {"cashinkind_form": form, "indicator": indicator}
+
+        if indicator.implement_category and str(indicator.implement_category) == "Cash":
+            return render(request, "rh/activity_plans/partials/_cash_in_kind_form_with_cash_sections.html", context)
+        elif indicator.implement_category and str(indicator.implement_category) == "In kind" and food:
+            return render(request, "rh/activity_plans/partials/_cash_in_kind_form_with_food_sections.html", context)
+        elif package:
+            return render(request, "rh/activity_plans/partials/_cash_in_kind_form_with_package_sections.html", context)
+        else:
+            return HttpResponse("<p>No additional details required for this indicator.</p>")
     except Exception:
         pass
 

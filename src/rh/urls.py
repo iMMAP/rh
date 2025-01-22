@@ -135,10 +135,9 @@ urlpatterns = [
     ),
     path(
         "show/indicator/detail",
-        activity_plans.show_indicator_details,
-        name="show-indicator-details",
+        activity_plans.hx_show_indicator_details,
+        name="hx-show-indicator-details",
     ),
-    path("render-cash-in-kind-form", activity_plans.render_cash_in_kind_form, name="render_cash_in_kind_form"),
     # Projects Activity Plannings CRUD
     path(
         "activity-plans/<int:pk>/update",

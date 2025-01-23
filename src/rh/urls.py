@@ -135,8 +135,8 @@ urlpatterns = [
     ),
     path(
         "show/indicator/detail",
-        activity_plans.show_indicator_detail,
-        name="show-indicator-detail",
+        activity_plans.hx_show_indicator_details,
+        name="hx-show-indicator-details",
     ),
     # Projects Activity Plannings CRUD
     path(

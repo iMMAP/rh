@@ -1,0 +1,100 @@
+<div class="row">
+    <div class="multiple-fields-row three-items">
+        <div class="field-col">
+            <div class="select-field is-required">
+                <label for="{{ cashinkind_form.implement_modality_type.id_for_label }}">Implement Modality</label>
+                <p class="help-text">{{ cashinkind_form.implement_modality_type.help_text }}</p>
+                <select
+                        name="{{ cashinkind_form.implement_modality_type.name }}"
+                        id="{{ cashinkind_form.implement_modality_type.id_for_label }}"
+                        hx-get="{% url 'get-transfer-mechanism-types' %}"
+                        hx-trigger="change"
+                        hx-target="#{{ cashinkind_form.transfer_mechanism_type.id_for_label }}"
+                        hx-swap="innerHTML"
+                >
+                    {% for type in cashinkind_form.implement_modality_type %}{{ type }}{% endfor %}
+                </select>
+                <div class="sign-up-field-error">{{ cashinkind_form.implement_modality_type.errors }}</div>
+            </div>
+        </div>
+        <div class="field-col">
+            <div class="select-field is-required">
+                <label for="{{ cashinkind_form.transfer_mechanism_type.id_for_label }}">Transfer Mechanism</label>
+                <p class="help-text">{{ cashinkind_form.transfer_mechanism_type.help_text }}</p>
+                <select
+                        name="{{ cashinkind_form.transfer_mechanism_type.name }}"
+                        id="{{ cashinkind_form.transfer_mechanism_type.id_for_label }}"
+                        hx-get="{% url 'get-unit-types' %}"
+                        hx-trigger="change"
+                        hx-target="#{{ cashinkind_form.unit_type.id_for_label }}"
+                        hx-swap="innerHTML"
+                >
+                    {% for type in cashinkind_form.transfer_mechanism_type %}{{ type }}{% endfor %}
+                </select>
+                <div class="sign-up-field-error">{{ cashinkind_form.transfer_mechanism_type.errors }}</div>
+            </div>
+        </div>
+        <div class="field-col">
+            <div class="select-field">
+                <label for="{{ cashinkind_form.package_type.id_for_label }}">Package Type</label>
+                <p class="help-text">{{ cashinkind_form.package_type.help_text }}</p>
+                <select
+                        name="package_type"
+                        id="{{ cashinkind_form.package_type.id_for_label }}">
+                    {% for type in cashinkind_form.package_type %}{{ type }}{% endfor %}
+                </select>
+                <small class="sign-up-field-error">{{ cashinkind_form.package_type.errors }}</small>
+            </div>
+        </div>
+        <div class="field-col food-section">
+            <div class="select-field">
+                <label for="{{cashinkind_form.ration_type.id_for_label}}">Ration Type</label>
+                <p class="help-text">{{cashinkind_form.ration_type.help_text}}</p>
+                <select name="{{cashinkind_form.ration_type.name}}"
+                        id="{{cashinkind_form.ration_size.id_for_label}}">
+                    {% for type in cashinkind_form.ration_type %}{{ type }}{% endfor %}
+                </select>
+                <small class="sign-up-field-error">{{cashinkind_form.ration_type.errors}}</small>
+            </div>
+        </div>
+        <div class="field-col food-section">
+            <div class="select-field">
+                <label for="{{cashinkind_form.ration_size.id_for_label}}">Ration Size</label>
+                <p class="help-text">{{cashinkind_form.ration_size.help_text}}</p>
+                {{cashinkind_form.ration_size}}
+                <small class="sign-up-field-error">{{cashinkind_form.ration_size.errors}}</small>
+            </div>
+        </div>
+        <div class="field-col food-section">
+            <div class="select-field is-required">
+                <label for="{{ cashinkind_form.transfer_category.id_for_label }}">
+                    {{cashinkind_form.transfer_category.label }}
+                </label>
+                <p class="help-text">{{ cashinkind_form.transfer_category.help_text }}</p>
+                <select name="{{cashinkind_form.transfer_category.name}}"
+                        id="{{cashinkind_form.transfer_category.id_for_label}}"
+                >
+                    {% for type in cashinkind_form.transfer_category %}{{ type }}{% endfor %}
+                </select>
+                <small class="sign-up-field-error">{{ cashinkind_form.transfer_category.errors }}</small>
+            </div>
+        </div>
+        <div class="field-col">
+            <div class="select-field">
+                <label>{{ cashinkind_form.no_of_transfers.label }}</label>
+                <p class="help-text">{{ cashinkind_form.no_of_transfers.help_text }}</p>
+                {{ cashinkind_form.no_of_transfers }}
+                <small class="sign-up-field-error">{{ cashinkind_form.no_of_transfers.errors }}</small>
+            </div>
+        </div>
+        <div class="field-col">
+            <div class="select-field">
+                <label>{{ cashinkind_form.units.label }} / Transfer Value</label>
+                <p class="help-text">{{ cashinkind_form.units.help_text }}</p>
+                {{ cashinkind_form.units }}
+                <small class="sign-up-field-error">{{ cashinkind_form.units.errors }}</small>
+            </div>
+        </div>
+    </div>
+</div>
+

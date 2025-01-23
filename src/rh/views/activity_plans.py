@@ -2,7 +2,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.db.models import Count
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.utils.safestring import mark_safe
@@ -13,9 +13,11 @@ from extra_settings.models import Setting
 from ..filters import ActivityPlansFilter
 from ..forms import (
     ActivityPlanForm,
+    CashInKindDetailForm,
 )
 from ..models import (
     ActivityPlan,
+    CashInKindDetail,
     DisaggregationLocation,
     ImplementationModalityType,
     Indicator,
@@ -35,23 +37,56 @@ def update_activity_plan_state(request, pk):
 
     activity_plan = ActivityPlan.objects.get(id=pk)
     activity_plan.state = new_state
-
     activity_plan.save()
-
     messages.success(request, f"Activity Plan state updated to '{new_state}' !")
 
     return HttpResponse(200)
 
 
 @login_required
+def hx_show_indicator_details(request):
+    try:
+        indicator_id = request.POST.get("indicator", None)
+        indicator = get_object_or_404(Indicator, pk=indicator_id)
+
+        food = indicator.food
+        package = indicator.package
+
+        form = CashInKindDetailForm(indicator=indicator)
+        context = {"cashinkind_form": form, "indicator": indicator}
+
+        if indicator.implement_category and str(indicator.implement_category) == "Cash":
+            return render(request, "rh/activity_plans/partials/_cash_in_kind_form_with_cash_sections.html", context)
+        elif indicator.implement_category and str(indicator.implement_category) == "In Kind" and food:
+            return render(request, "rh/activity_plans/partials/_cash_in_kind_form_with_food_sections.html", context)
+        elif package:
+            return render(request, "rh/activity_plans/partials/_cash_in_kind_form_with_package_sections.html", context)
+        else:
+            return HttpResponse("<p>No additional details required for this indicator.</p>")
+    except Exception:
+        pass
+
+    return HttpResponse("<p>No additional details required for this indicator.</p>")
+
+
+@login_required
 def update_activity_plan(request, pk):
     """Update an existing activity plan"""
     activity_plan = get_object_or_404(ActivityPlan.objects.select_related("project"), pk=pk)
+    # Get the related CashInKindDetail instance, or None if it doesn't exist
+    cashinkind_instance = CashInKindDetail.objects.filter(activity_plan=activity_plan).first()
 
     if request.method == "POST":
         form = ActivityPlanForm(request.POST, instance=activity_plan)
-        if form.is_valid():
+        cashinkind_form = CashInKindDetailForm(
+            request.POST, instance=cashinkind_instance, indicator=activity_plan.indicator
+        )
+        if form.is_valid() and cashinkind_form.is_valid():
             form.save()
+            cashinkind_details = cashinkind_form.save(commit=False)
+            cashinkind_details.activity_plan = activity_plan
+            cashinkind_details.save()
+
             messages.success(
                 request,
                 mark_safe(
@@ -68,11 +103,12 @@ def update_activity_plan(request, pk):
             messages.error(request, "The form is invalid. Please check the fields and try again.")
     else:
         form = ActivityPlanForm(instance=activity_plan)
+        cashinkind_form = CashInKindDetailForm(instance=cashinkind_instance, indicator=activity_plan.indicator)
 
     return render(
         request,
         "rh/activity_plans/activity_plan_form.html",
-        {"form": form, "project": activity_plan.project},
+        {"form": form, "project": activity_plan.project, "cashinkind_form": cashinkind_form},
     )
 
 
@@ -83,10 +119,18 @@ def create_activity_plan(request, project):
 
     if request.method == "POST":
         form = ActivityPlanForm(request.POST, project=project)
-        if form.is_valid():
+        cash_in_kind_form = CashInKindDetailForm(request.POST)
+
+        # Validate both forms
+        if form.is_valid() and cash_in_kind_form.is_valid():
             activity_plan = form.save(commit=False)
             activity_plan.project = project
             activity_plan.save()
+
+            # Save CashInKindForm details if needed
+            cash_in_kind_detail = cash_in_kind_form.save(commit=False)
+            cash_in_kind_detail.activity_plan = activity_plan
+            cash_in_kind_detail.save()
 
             messages.success(
                 request,
@@ -99,11 +143,16 @@ def create_activity_plan(request, project):
             elif "_addanother" in request.POST:
                 return redirect("activity-plans-create", project=project.pk)
         else:
-            messages.error(request, "The form is invalid. Please check the fields and try again.")
+            messages.error(request, "There are errors in the form. Please check and try again.")
     else:
         form = ActivityPlanForm(project=project)
+        cash_in_kind_form = CashInKindDetailForm()
 
-    return render(request, "rh/activity_plans/activity_plan_form.html", {"form": form, "project": project})
+    return render(
+        request,
+        "rh/activity_plans/activity_plan_form.html",
+        {"form": form, "cash_in_kind_form": cash_in_kind_form, "project": project},
+    )
 
 
 @login_required
@@ -221,23 +270,3 @@ def get_unit_types(request):
     unit_types = UnitType.objects.filter(modality=transfer_mechanism.modality)
 
     return render(request, "rh/projects/views/_indicator_types.html", {"options": unit_types})
-
-
-def show_indicator_detail(request):
-    """Show indicator detail"""
-    indicator_id = request.GET.get("indicator")
-    indicator = get_object_or_404(Indicator, pk=indicator_id)
-    food = False
-    package = False
-    if indicator.food:
-        food = True
-    elif indicator.package:
-        package = True
-    flag = False
-    cash = False
-    if indicator.implement_category:
-        flag = True
-    if str(indicator.implement_category) == "Cash":
-        cash = True
-    response_data = {"indicator": flag, "cash": cash, "food": food, "package": package}
-    return JsonResponse(response_data, safe=False)

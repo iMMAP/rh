@@ -173,7 +173,7 @@
                     {% if cashinkind_form %}
                         {% if form.instance.indicator.implement_category and form.instance.indicator.implement_category|stringformat:"s" == "Cash" %}
                             {% include "rh/activity_plans/partials/_cash_in_kind_form_with_cash_sections.html" with cashinkind_form=cashinkind_form %}
-                        {% elif form.instance.indicator.implement_category and form.instance.indicator.implement_category|stringformat:"s" == "In kind" and form.instance.indicator.food %}
+                        {% elif form.instance.indicator.implement_category and form.instance.indicator.implement_category|stringformat:"s" == "In Kind" and form.instance.indicator.food %}
                             {% include "rh/activity_plans/partials/_cash_in_kind_form_with_food_sections.html" with cashinkind_form=cashinkind_form %}
                         {% elif form.instance.indicator.package %}
                             {% include "rh/activity_plans/partials/_cash_in_kind_form_with_package_sections.html" with cashinkind_form=cashinkind_form %}

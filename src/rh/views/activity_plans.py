@@ -52,12 +52,12 @@ def hx_show_indicator_details(request):
         food = indicator.food
         package = indicator.package
 
-        form = CashInKindDetailForm()
+        form = CashInKindDetailForm(indicator=indicator)
         context = {"cashinkind_form": form, "indicator": indicator}
 
         if indicator.implement_category and str(indicator.implement_category) == "Cash":
             return render(request, "rh/activity_plans/partials/_cash_in_kind_form_with_cash_sections.html", context)
-        elif indicator.implement_category and str(indicator.implement_category) == "In kind" and food:
+        elif indicator.implement_category and str(indicator.implement_category) == "In Kind" and food:
             return render(request, "rh/activity_plans/partials/_cash_in_kind_form_with_food_sections.html", context)
         elif package:
             return render(request, "rh/activity_plans/partials/_cash_in_kind_form_with_package_sections.html", context)
@@ -78,7 +78,9 @@ def update_activity_plan(request, pk):
 
     if request.method == "POST":
         form = ActivityPlanForm(request.POST, instance=activity_plan)
-        cashinkind_form = CashInKindDetailForm(request.POST, instance=cashinkind_instance)
+        cashinkind_form = CashInKindDetailForm(
+            request.POST, instance=cashinkind_instance, indicator=activity_plan.indicator
+        )
         if form.is_valid() and cashinkind_form.is_valid():
             form.save()
             cashinkind_details = cashinkind_form.save(commit=False)
@@ -101,7 +103,7 @@ def update_activity_plan(request, pk):
             messages.error(request, "The form is invalid. Please check the fields and try again.")
     else:
         form = ActivityPlanForm(instance=activity_plan)
-        cashinkind_form = CashInKindDetailForm(instance=cashinkind_instance)
+        cashinkind_form = CashInKindDetailForm(instance=cashinkind_instance, indicator=activity_plan.indicator)
 
     return render(
         request,

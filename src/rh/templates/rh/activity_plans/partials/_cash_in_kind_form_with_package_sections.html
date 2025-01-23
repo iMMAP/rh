@@ -62,6 +62,20 @@
                 <small class="sign-up-field-error">{{ cashinkind_form.package_type.errors }}</small>
             </div>
         </div>
+        <div class="field-col food-section">
+            <div class="select-field is-required">
+                <label for="{{ cashinkind_form.transfer_category.id_for_label }}">
+                    {{cashinkind_form.transfer_category.label }}
+                </label>
+                <p class="help-text">{{ cashinkind_form.transfer_category.help_text }}</p>
+                <select name="{{cashinkind_form.transfer_category.name}}"
+                        id="{{cashinkind_form.transfer_category.id_for_label}}"
+                >
+                    {% for type in cashinkind_form.transfer_category %}{{ type }}{% endfor %}
+                </select>
+                <small class="sign-up-field-error">{{ cashinkind_form.transfer_category.errors }}</small>
+            </div>
+        </div>
         <div class="field-col">
             <div class="select-field">
                 <label>{{ cashinkind_form.no_of_transfers.label }}</label>

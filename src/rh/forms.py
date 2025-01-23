@@ -333,7 +333,7 @@ class CashInKindDetailForm(forms.ModelForm):
 
         if indicator and indicator.implement_category:
             self.fields["implement_modality_type"].queryset = ImplementationModalityType.objects.filter(
-                pk=indicator.implement_category.pk
+                type=indicator.implement_category.type
             )
         else:
             self.fields["implement_modality_type"].queryset = ImplementationModalityType.objects.all()
@@ -357,7 +357,7 @@ class CashInKindDetailForm(forms.ModelForm):
         elif self.instance.pk:
             if indicator and indicator.implement_category:
                 self.fields["implement_modality_type"].queryset = ImplementationModalityType.objects.filter(
-                    pk=indicator.implement_category.pk
+                    type=indicator.implement_category.type
                 )
             else:
                 self.fields["implement_modality_type"].queryset = ImplementationModalityType.objects.all()

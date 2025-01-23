@@ -97,7 +97,7 @@
                                     <div class="sign-up-field-error">{{ form.activity_domain.errors }}</div>
                                 </div>
                             </div>
-                            
+
                             <div class="field-col">
                                 <div class="select-field is-required">
                                     <label for="{{ form.activity_type.id_for_label }}">Activity Type</label>
@@ -131,13 +131,17 @@
                                             name="{{ form.indicator.name }}"
                                             id="{{ form.indicator.id_for_label }}"
                                             class="form-control indicator-details"
+                                            hx-post="{% url 'hx-show-indicator-details' %}"
+                                            hx-trigger="change"
+                                            hx-target="#cashinkind-details-info"
+                                            hx-swap="innerHTML"
                                             hx-indicator=".progress">
                                         {% for type in form.indicator %}{{ type }}{% endfor %}
                                     </select>
                                     <div class="sign-up-field-error">{{ form.indicator.errors }}</div>
                                 </div>
                             </div>
-            
+
                             <div class="field-col w-full">
                                 <div class="select-field">
                                     <label for="{{ form.hrp_beneficiary.id_for_label }}">HRP Beneficiary</label>
@@ -146,7 +150,7 @@
                                     <div class="sign-up-field-error">{{ form.hrp_beneficiary.errors }}</div>
                                 </div>
                             </div>
-            
+
                         </div>
                     </div>
                 </div>
@@ -155,14 +159,32 @@
                     <div class="input-holder">{{ form.description }}</div>
                     <div class="sign-up-field-error">{{ form.description.errors }}</div>
                 </div>
-                
+
                 <div class="input-field">
                     <label for="{{ form.instance.state.id_for_label }}">State</label>
                     <div class="input-holder">
                         <span class="{{form.instance.state}}">{{ form.instance.state}}</span>
                     </div>
                 </div>
+
+
+                <!-- *********************Activity plan Cash In-Kind Details*************** -->
+                <div id="cashinkind-details-info" class="indicator-details-toggle border border-gray-d1 p-6 rounded-lg my-6">
+                    {% if cashinkind_form %}
+                        {% if form.instance.indicator.implement_category and form.instance.indicator.implement_category|stringformat:"s" == "Cash" %}
+                            {% include "rh/activity_plans/partials/_cash_in_kind_form_with_cash_sections.html" with cashinkind_form=cashinkind_form %}
+                        {% elif form.instance.indicator.implement_category and form.instance.indicator.implement_category|stringformat:"s" == "In Kind" and form.instance.indicator.food %}
+                            {% include "rh/activity_plans/partials/_cash_in_kind_form_with_food_sections.html" with cashinkind_form=cashinkind_form %}
+                        {% elif form.instance.indicator.package %}
+                            {% include "rh/activity_plans/partials/_cash_in_kind_form_with_package_sections.html" with cashinkind_form=cashinkind_form %}
+                        {% else %}
+                            <p>No additional details required for this indicator.</p>
+                        {% endif %}
+                    {% endif %}
                 </div>
+
+                <!-- *********************Activity plan cash in-kind Detail end******************************** -->
+
                 <div class="plan-submit-holder">
                     {% if form.initial %}
                         <a id="delete-btn"

@@ -252,12 +252,14 @@ def import_report_activities(request, pk):
                         district=district,
                         zone=zone,
                     ).first()
+                    safe_space = row.get("with_safe_spaces").strip().upper() == "TRUE"
 
                     target_location = TargetLocationReport(
                         activity_plan_report=activity_plan_report,
                         target_location=project_target_location,
                         location_type=location_type,
                         beneficiary_status=beneficiary_status,
+                        safe_space=safe_space,
                         # add previously_targeted_by and
                     )
                     report_target_locations.append(target_location)

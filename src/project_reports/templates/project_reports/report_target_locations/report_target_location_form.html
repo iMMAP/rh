@@ -146,9 +146,23 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        {% if safe_space %}
+                                        <div class="multiple-fields-row two-items py-2">
+                                            <div class="field-col">
+                                                {{ location_report_form.safe_space }}
+                                                <label for="{{ location_report_form.safe_space.id_for_label }}">
+                                                    Distribution Undertaken with safe spaces
+                                                </label>
+                                                <p class="help-text ml-4">
+                                                    Was the distribution undertaken with safe spaces for women, girls and people with disabilities?
+                                                </p>
+                                                <div class="sign-up-field-error">{{ location_report_form.safe_space.errors }}</div>
+                                            </div>
+                                        </div>
+                                        {% endif %}
                                     </div>
                                 </div>
-
+                                
                                 {% comment %} the TL info and Tabular Disaggregation Here {% endcomment %}
                                 <div id="target-location-info">
                                     {% if location_report %}

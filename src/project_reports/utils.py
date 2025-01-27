@@ -90,6 +90,7 @@ def write_projects_reports_to_csv(monthly_progress_report, response):
         "currency",
         "updated_at",
         "created_at",
+        "safe_spaces_for_women-girls",
     ]
     disaggregation_cols = []
     disaggregations = Disaggregation.objects.all()
@@ -248,6 +249,7 @@ def write_projects_reports_to_csv(monthly_progress_report, response):
                         plan_report.currency.name if plan_report.currency else None,
                         project_reports.created_at.astimezone(datetime.timezone.utc).replace(tzinfo=None),
                         project_reports.updated_at.astimezone(datetime.timezone.utc).replace(tzinfo=None),
+                        "Yes" if location_report.safe_space else None,
                     ]
 
                     # Iterate through disaggregation locations and get disaggregation values
@@ -311,6 +313,7 @@ def write_import_report_template_sheet(workbook, monthly_report):
         {"header": "facility_long", "type": "string", "width": 30},
         {"header": "non_hrp_beneficiary", "type": "string", "width": 30},
         {"header": "hrp_beneficiary", "type": "string", "width": 30},
+        {"header": "with_safe_spaces", "type": "string", "width": 30},
     ]
 
     disaggregation_cols = []
@@ -344,6 +347,8 @@ def write_import_report_template_sheet(workbook, monthly_report):
         "transfer_mc_type": ["N"],
         "transfer_category": ["L"],
         "currency": ["M"],
+        "safe_space": ["AG", "True", "False"],
+        "facilitySiteTypeList": ["Z"],
     }
     plain_dictionary_lists = {
         "indicatorList": ["B"],
@@ -355,7 +360,6 @@ def write_import_report_template_sheet(workbook, monthly_report):
         "admin1nameList": ["U"],
         "admin2pcodeList": ["V"],
         "admin2nameList": ["W"],
-        "facilitySiteTypeList": ["Z"],
         "implementing_partner_list": ["F"],
         "non_hrp_beneficiary": ["AE"],
         "hrp_beneficiary": ["AF"],
@@ -370,11 +374,14 @@ def write_import_report_template_sheet(workbook, monthly_report):
     container_dictionary["transfer_mc_type"].extend(list(TransferMechanismType.objects.values_list("name", flat=True)))
     container_dictionary["transfer_category"].extend(list(TransferCategory.objects.values_list("name", flat=True)))
     container_dictionary["currency"].extend(list(Currency.objects.values_list("name", flat=True)))
-    facility = list(FacilitySiteType.objects.values_list("name", flat=True))
+    facility = list(FacilitySiteType.objects.filter(cluster__code="health").values_list("name", flat=True))
     responseType = list(ResponseType.objects.values_list("name", flat=True))
     num_rows = 2
+
+    cluster_code = []
     project_code = project.code
     for plan in project.activityplan_set.all():
+        cluster_code.extend(plan.activity_domain.clusters.values_list("code", flat=True))
         for location in plan.targetlocation_set.all():
             plain_dictionary_lists["indicatorList"].append(str(plan.indicator.name))
             plain_dictionary_lists["activityDomainList"].append(str(plan.activity_domain.name))
@@ -389,8 +396,10 @@ def write_import_report_template_sheet(workbook, monthly_report):
             plain_dictionary_lists["non_hrp_beneficiary"].append(str(plan.beneficiary))
             plain_dictionary_lists["hrp_beneficiary"].append(str(plan.hrp_beneficiary))
             num_rows += 1
-    plain_dictionary_lists["facilitySiteTypeList"].extend(facility)
+
     container_dictionary["reponseTypeList"].extend(responseType)
+    if "health" in cluster_code:
+        container_dictionary["facilitySiteTypeList"].extend(facility)
 
     for key, value in container_dictionary.items():
         column = value[0]

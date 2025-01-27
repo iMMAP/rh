@@ -111,6 +111,7 @@ class TargetLocationReport(models.Model):
     location_type = models.ForeignKey(LocationType, on_delete=models.SET_NULL, null=True, blank=True)
 
     prev_assisted_by = models.ForeignKey(Indicator, null=True, blank=True, on_delete=models.SET_NULL)
+    safe_space = models.BooleanField(default=False)
     beneficiary_status = models.CharField(
         max_length=25,
         choices=[

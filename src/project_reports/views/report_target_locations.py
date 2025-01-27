@@ -153,7 +153,10 @@ def create_report_target_location(request, plan):
     plan_report = get_object_or_404(
         ActivityPlanReport.objects.select_related("monthly_report", "activity_plan"), pk=plan
     )
-
+    safe_space = False
+    cluster_codes = plan_report.activity_plan.activity_domain.clusters.values_list("code", flat=True)
+    if "esnfi" in cluster_codes:
+        safe_space = True
     if request.method == "POST":
         target_location_id = request.POST.get("target_location", None)
         target_location = get_object_or_404(TargetLocation, pk=target_location_id)
@@ -222,6 +225,7 @@ def create_report_target_location(request, plan):
         "report_plan": plan_report,
         "monthly_report": plan_report.monthly_report,
         "project": plan_report.monthly_report.project,
+        "safe_space": safe_space,
     }
 
     return render(request, "project_reports/report_target_locations/report_target_location_form.html", context)
@@ -235,6 +239,7 @@ def update_report_target_locations(request, project, plan, location):
 
     # Get the existing location report to be updated
     location_report = get_object_or_404(TargetLocationReport.objects.select_related("target_location"), pk=location)
+    safe_space = location_report.safe_space
 
     DisaggregationReportFormSet = inlineformset_factory(
         parent_model=TargetLocationReport,
@@ -316,6 +321,7 @@ def update_report_target_locations(request, project, plan, location):
             "report_plan": plan_report,
             "monthly_report": monthly_report,
             "project": monthly_report.project,
+            "safe_space": safe_space,
         },
     )
 

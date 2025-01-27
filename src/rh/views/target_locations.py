@@ -123,9 +123,10 @@ def create_target_location(request, activity_plan):
     related_disaggregations = Disaggregation.objects.filter(indicators=activity_plan.indicator)
 
     cluster_code = activity_plan.activity_domain.clusters.values_list("code", flat=True)
-    cluster_facility = True
-    if "fsac" in cluster_code:
-        cluster_facility = False
+    cluster_facility = False
+
+    if "health" in cluster_code:
+        cluster_facility = True
 
     DisaggregationFormSet = inlineformset_factory(
         parent_model=TargetLocation,

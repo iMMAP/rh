@@ -184,11 +184,16 @@ def copy_activity_plan(request, pk):
     new_activity_plan = get_object_or_404(ActivityPlan, pk=pk)
 
     target_locations = TargetLocation.objects.filter(activity_plan=new_activity_plan)
+    cash_details = CashInKindDetail.objects.get(activity_plan=new_activity_plan)
 
     new_activity_plan.id = None
     new_activity_plan.state = "draft"
 
     new_activity_plan.save()
+
+    cash_details.id = None
+    cash_details.activity_plan = new_activity_plan
+    cash_details.save()
 
     for location in target_locations:
         disagg_locations = DisaggregationLocation.objects.filter(

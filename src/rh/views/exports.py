@@ -256,6 +256,8 @@ def single_project_export(request, pk, format):
             {"header": "Unit Type", "type": "string", "width": 20},
             {"header": "Units", "type": "string", "width": 20},
             {"header": "No_of_Transfer", "type": "string", "width": 20},
+            {"header": "Ration Size", "type": "string", "width": 20},
+            {"header": "Ration Type", "type": "string", "width": 20},
             {"header": "Grant Type", "type": "string", "width": 20},
             {"header": "Transfer Category", "type": "string", "width": 20},
             {"header": "Currency", "type": "string", "width": 20},
@@ -319,6 +321,7 @@ def single_project_export(request, pk, format):
         plans = project.activityplan_set.all()
         for plan in plans:
             locations = plan.targetlocation_set.all()
+            cash_details = plan.cashinkinddetail_set.all().first()
             for location in locations:
                 # Create a dictionary to hold disaggregation data
                 disaggregation_data = {}
@@ -365,15 +368,21 @@ def single_project_export(request, pk, format):
                     plan.beneficiary.name if plan.beneficiary else None,
                     plan.hrp_beneficiary.name if plan.hrp_beneficiary else None,
                     plan.description if plan.description else None,
-                    plan.package_type.name if plan.package_type else None,
-                    plan.unit_type.name if plan.unit_type else None,
-                    plan.units if plan.units else None,
-                    plan.no_of_transfers if plan.no_of_transfers else None,
-                    plan.grant_type.name if plan.grant_type else None,
-                    plan.transfer_category.name if plan.transfer_category else None,
-                    plan.currency.name if plan.currency else None,
-                    plan.transfer_mechanism_type.name if plan.transfer_mechanism_type else None,
-                    plan.implement_modility_type.name if plan.implement_modility_type else None,
+                    cash_details.package_type.name if cash_details and cash_details.package_type else None,
+                    cash_details.unit_type.name if cash_details and cash_details.unit_type else None,
+                    cash_details.units if cash_details and cash_details.units else None,
+                    cash_details.no_of_transfers if cash_details and cash_details.no_of_transfers else None,
+                    cash_details.ration_size.name if cash_details and cash_details.ration_size else None,
+                    cash_details.ration_type.name if cash_details and cash_details.ration_type else None,
+                    cash_details.grant_type.name if cash_details and cash_details.grant_type else None,
+                    cash_details.transfer_category.name if cash_details and cash_details.transfer_category else None,
+                    cash_details.currency.name if cash_details and cash_details.currency else None,
+                    cash_details.transfer_mechanism_type.name
+                    if cash_details and cash_details.transfer_mechanism_type
+                    else None,
+                    cash_details.implement_modality_type.name
+                    if cash_details and cash_details.implement_modality_type
+                    else None,
                     location.country.code if location.province else None,
                     location.country.name if location.province else None,
                     location.province.code if location.province else None,

@@ -383,18 +383,24 @@ def write_import_report_template_sheet(workbook, monthly_report):
     for plan in project.activityplan_set.all():
         cluster_code.extend(plan.activity_domain.clusters.values_list("code", flat=True))
         for location in plan.targetlocation_set.all():
-            plain_dictionary_lists["indicatorList"].append(str(plan.indicator.name))
-            plain_dictionary_lists["activityDomainList"].append(str(plan.activity_domain.name))
-            plain_dictionary_lists["activityTypeList"].append(str(plan.activity_type.name))
-            plain_dictionary_lists["admin0pcodeList"].append(str(location.country.code))
-            plain_dictionary_lists["admin0nameList"].append(str(location.country.name))
-            plain_dictionary_lists["admin1nameList"].append(str(location.province.name))
-            plain_dictionary_lists["admin1pcodeList"].append(str(location.province.code))
-            plain_dictionary_lists["admin2pcodeList"].append(str(location.district.code))
-            plain_dictionary_lists["admin2nameList"].append(str(location.district.name))
-            plain_dictionary_lists["implementing_partner_list"].append(str(location.implementing_partner.code))
-            plain_dictionary_lists["non_hrp_beneficiary"].append(str(plan.beneficiary))
-            plain_dictionary_lists["hrp_beneficiary"].append(str(plan.hrp_beneficiary))
+            plain_dictionary_lists["indicatorList"].append(str(plan.indicator.name if plan.indicator else ""))
+            plain_dictionary_lists["activityDomainList"].append(
+                str(plan.activity_domain.name if plan.activity_domain else "")
+            )
+            plain_dictionary_lists["activityTypeList"].append(
+                str(plan.activity_type.name if plan.activity_type else "")
+            )
+            plain_dictionary_lists["admin0pcodeList"].append(str(location.country.code if location.country else ""))
+            plain_dictionary_lists["admin0nameList"].append(str(location.country.name if location.country else ""))
+            plain_dictionary_lists["admin1nameList"].append(str(location.province.name if location.province else ""))
+            plain_dictionary_lists["admin1pcodeList"].append(str(location.province.code if location.province else ""))
+            plain_dictionary_lists["admin2pcodeList"].append(str(location.district.code if location.district else ""))
+            plain_dictionary_lists["admin2nameList"].append(str(location.district.name if location.district else ""))
+            plain_dictionary_lists["implementing_partner_list"].append(
+                str(location.implementing_partner.code if location.implementing_partner else "")
+            )
+            plain_dictionary_lists["non_hrp_beneficiary"].append(str(plan.beneficiary if plan.beneficiary else ""))
+            plain_dictionary_lists["hrp_beneficiary"].append(str(plan.hrp_beneficiary if plan.hrp_beneficiary else ""))
             num_rows += 1
 
     container_dictionary["reponseTypeList"].extend(responseType)

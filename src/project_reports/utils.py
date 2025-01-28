@@ -388,6 +388,7 @@ def write_import_report_template_sheet(workbook, monthly_report):
     for plan in project.activityplan_set.all():
         cluster_code.extend(plan.activity_domain.clusters.values_list("code", flat=True))
         for location in plan.targetlocation_set.all():
+ 
             plain_dictionary_lists["indicatorList"].append(str(plan.indicator.name))
             plain_dictionary_lists["activityDomainList"].append(str(plan.activity_domain.name))
             plain_dictionary_lists["activityTypeList"].append(str(plan.activity_type.name))

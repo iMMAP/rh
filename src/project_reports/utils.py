@@ -398,7 +398,6 @@ def write_import_report_template_sheet(workbook, monthly_report):
             plain_dictionary_lists["admin2pcodeList"].append(str(location.district.code))
             plain_dictionary_lists["admin2nameList"].append(str(location.district.name))
             plain_dictionary_lists["implementing_partner_list"].append(str(location.implementing_partner.code))
-
             plain_dictionary_lists["hrp_beneficiary"].append(str(plan.hrp_beneficiary))
             num_rows += 1
 

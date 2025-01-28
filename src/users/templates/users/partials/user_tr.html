@@ -2,7 +2,7 @@
 {% load humanize %}
 
 <tr id="user-{{ user.id }}">
-    <td style="">
+    <td>
         {% for group in user.groups.all %}
             {% if group.name == "ORG_LEAD" %}
                 <span class="completed">Admin</span>
@@ -31,45 +31,32 @@
         {% endif %}
     </td>
     <td>
-        <div class="table-flex-holder">
-            <ul class="table-options-buttons">
-                {% if perms.rh.activate_deactivate_user %}
-                    <li>
-                        <button id="dectivate-button-{{ user.id }}"
-                                class="btn btn-gray"
-                                hx-patch="{% url 'users-toggle-status' user.id %}"
-                                hx-swap="outerHTML"
-                                hx-target="#user-{{ user.id }}"
-                                hx-disable-element="#dectivate-button-{{ user.id }}"
-                                hx-ext="disable-element">
-                            {% if user.is_active %}
-                                <span class="project-detail icon-trashbin"></span> Deactivate
-                            {% else %}
-                                Activate
-                            {% endif %}
-                            <img class="htmx-indicator"
-                                 id="spinner"
-                                 alt="spinner"
-                                 style="width: 1.2rem"
-                                 src="{% static 'images/spinner.gif' %}" />
-                        </button>
-                    </li>
-                {% endif %}
-                {% if perms.rh.activate_deactivate_user %}
-                <li>
-                    <button 
-                        class="btn btn-gray"
-                        hx-post="{% url 'users-make-admin' user.id %}"
-                        hx-swap="outerHTML"
-                        hx-target="#user-{{ user.id }}"
-                        hx-disable-element="#dectivate-button-{{ user.id }}"
-                        hx-ext="disable-element"
-                    >
-                        Toggle Admin Status
-                    </button>
-                </li>
-                {% endif %}
-            </ul>
-        </div>
+        {% if perms.rh.activate_deactivate_user %}
+            <button id="dectivate-button-{{ user.id }}"
+                class="btn btn-gray"
+                hx-patch="{% url 'users-toggle-status' user.id %}"
+                hx-swap="outerHTML"
+                hx-target="#user-{{ user.id }}"
+                hx-disable-element="#dectivate-button-{{ user.id }}"
+                hx-ext="disable-element">
+            {% if user.is_active %}
+                <span class="project-detail icon-trashbin"></span> Deactivate
+            {% else %}
+                Activate
+            {% endif %}
+            <img class="htmx-indicator"
+                    id="spinner"
+                    alt="spinner"
+                    style="width: 1.2rem"
+                    src="{% static 'images/spinner.gif' %}" />
+            </button>
+        {% endif %}
+    </td>
+    <td>    
+        {% if perms.rh.activate_deactivate_user %}
+            <a href="{% url 'profiles-show' user.username %}" class="btn btn-red">
+                <small>Manage Access</small>
+            </a>
+        {% endif %}
     </td>
 </tr>

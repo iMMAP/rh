@@ -17,22 +17,238 @@
 <div class="container">
     <h1 class="font-bold leading-7 text-red-be">User Information</h1>
     <div class="mt-6 border-t border-gray-e6">
-        <dl class="divide-y divide-gray-100">
-            <div class="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+        <div class="multiple-fields-row two-items py-6">
+            <div class="field-col divide-y divide-gray-100 border-r border-gray-e6" style="padding-right: 5%;">
+                <div class=" py-3">
+                    <p class="text-sm font-medium leading-6 text-gray-900 font-bold">Full Name</p>
+                    <p class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">{{ profile_user.profile.name }}</p>
+                </div>
+                <div class=" py-3">
+                    <p class="text-sm font-medium leading-6 text-gray-900 font-bold">
+                        Email
+                    </p>
+                    <p class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+                        {{ profile_user.email }}
+                    </p>
+                </div>
+                <div class=" py-3">
+                    <p class="text-sm font-medium leading-6 text-gray-900 font-bold">Position</p>
+                    <p class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+                        {{ profile_user.profile.position }}
+                    </p>
+                </div>
+                <div class=" py-3">
+                    <p class="text-sm font-medium leading-6 text-gray-900 font-bold">Country</p>
+                    <p class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+                        {{ profile_user.profile.country}}
+                    </p>
+                </div>
+                <div class=" py-3">
+                    <p class="text-sm font-medium leading-6 text-gray-900 font-bold">Date Joined</p>
+                    <p class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+                        {{profile_user.date_joined}}
+                    </p>
+                </div>
+                
+            </div>
+            <div class="field-col divide-y divide-gray-100" style="padding-left: 5%;">
+                <div class=" py-1">
+                    <p class="text-sm font-medium leading-6 text-gray-900 font-bold">Cluster</p>
+                    <p class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+                        <span class="text-read-only m2m-badges">
+                            {% for cluster in profile_user.profile.clusters.all %}
+                                <span class="border border-gray-d1 rounded-full px-4 py-1 bg-gray-f5">{{ cluster.title }}</span>
+                            {% endfor %}
+                        </span>
+                    </p>
+                </div>
+                <div class=" pt-2 pb-1">
+                    <p class="text-sm font-medium leading-6 text-gray-900 font-bold">State</p>
+                    <p class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+                        <span class="text-read-only m2m-badges">
+                            {% if profile_user.is_active %}
+                            <span class="in-progress">Active</span>
+                            {% else %} 
+                            <span class="draft">Deactive</span> 
+                            {% endif %}                            
+                        </span>
+                    </p>
+                </div>
+                <div class=" py-3">
+                    <p class="text-sm font-medium leading-6 text-gray-900 font-bold">Role</p>
+                    <p class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+                        <span class="text-read-only m2m-badges">
+                        {% for group in profile_user.groups.all %}
+                            {% if group.name == "ORG_LEAD" %}
+                                <span class="completed">Admin</span>
+                            {% elif "_CLUSTER_LEADS" in group.name %}
+                                <span class="archived">{{ group.name }}</span>
+                            {% elif "ORG_USER" in group.name %}
+                                <span class="archived">{{group.name}}</span>
+                            {% endif %}
+                        {% endfor %}
+                        </span>
+                    </p>
+                </div>
+                <div class=" py-2">
+                    <p class="text-sm font-medium leading-6 text-gray-900 font-bold">Organization</p>
+                    <p class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+                        <span class="text-read-only m2m-badges">
+                            <span class="border border-gray-d1 rounded-full px-4 py-1 bg-gray-f5">{{profile_user.profile.organization}}</span>
+                        </span>
+                    </p>
+                </div>
+                <div class=" py-3">
+                    <p class="text-sm font-medium leading-6 text-gray-900 font-bold">Last Login</p>
+                    <p class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+                        {{profile_user.last_login}}
+                    </p>
+                </div>
+                
+                
+            </div>
+        </div>
+    </div>
+    <p class="border-t border-gray-e6 text-sm font-medium leading-6 text-gray-900 py-4">Other Info</p>
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-4 py-4 bg-gray-fa rounded px-4 py-4">
+            <div class="flex flex-col items-center justify-center space-y-2">
+                <span class="text-sm font-medium leading-6 text-gray-900">Cluster Contact</span>
+                <span class="text-sm text-muted-foreground">
+                    {% if project.is_cluster_contact %}
+                        Yes
+                    {% else %}
+                        No
+                    {% endif %}
+                </span>
+            </div>
+            <div class="flex flex-col items-center justify-center space-y-2">
+                <span class="text-sm font-medium leading-6 text-gray-900">Skype</span>
+                {% if profile_user.profile.skype %}
+                <div class="input-field read-only">
+                    <div class="input-holder">
+                        <a href="skype:{{ profile_user.profile.skype }}?userinfo">{{ profile_user.profile.skype }}</a>  
+                    </div>
+                </div>
+                {% else %}
+                <span class="text-sm text-muted-foreground">Not Provided</span>
+                {% endif %}
+            </div>
+            <div class="flex flex-col items-center justify-center space-y-2">
+                <span class="text-sm font-medium leading-6 text-gray-900">Phone</span>
+                {% if profile_user.profile.phone %}
+                <div class="input-field read-only">
+                    <div class="input-holder">
+                        {{profile_user.profile.phone}}
+                    </div>
+                </div>
+                {% else %}
+                <span class="text-sm text-muted-foreground">Not Provided</span>
+                {% endif %}
+            </div>
+            <div class="flex flex-col items-center justify-center space-y-2">
+                <span class="text-sm font-medium leading-6 text-gray-900">Whatsapp</span>
+                {% if profile_user.profile.whatsup %}
+                <div class="input-field read-only">
+                    <div class="input-holder">
+                        {{profile_user.profile.whatsup }}
+                    </div>
+                </div>
+                {% else %}
+                <span class="text-sm text-muted-foreground">Not Provided</span>
+                {% endif %}
+            </div>
+        </div>
+        <div class="flex flex-row justify-center gap-4 bg-gray-f5 my-4 py-4 border border-gray-d1 px-2 rounded ">
+            {% if perms.rh.activate_deactivate_user %}
+                <button id="in-detail-page"
+                        class="btn btn-gray"
+                        hx-patch="{% url 'users-toggle-status' profile_user.id %}"
+                        hx-swap="none"
+                        hx-disable-element="in-detail-page"
+                        hx-ext="disable-element">
+                    {% if profile_user.is_active %}
+                        <span class="text-red">
+                            <span class="project-detail icon-trashbin"></span> Deactivate
+                        </span>
+                    {% else %}
+                        Activate
+                    {% endif %}
+                    <img class="htmx-indicator"
+                            id="spinner"
+                            alt="spinner"
+                            style="width: 1.2rem"
+                            src="{% static 'images/spinner.gif' %}" />
+                </button>
+            {% endif %}
+                {% if perms.rh.activate_deactivate_user %}
+                    {% if is_org_lead %}
+                        <button 
+                        class="btn btn-gray"
+                        hx-post="{% url 'users-make-admin' profile_user.id %}"
+                        hx-vals='{"remove":"_remove"}'
+                        hx-swap="none"
+                        hx-confirm="Are you sure you want to remove admin access from {{profile_user.username}} ?"
+                        id="in-detail-page"
+                        hx-disable-element="#dectivate-button-{{ profile_user.id }}"
+                        hx-ext="disable-element">
+                        <svg xmlns="http://www.w3.org/2000/svg" 
+                        viewBox="0 0 24 24" fill="#a52824" 
+                        class="size-4">
+                            <path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25Zm3 10.5a.75.75 0 0 0 0-1.5H9a.75.75 0 0 0 0 1.5h6Z" clip-rule="evenodd" />
+                          </svg>
+                        <span class="text-red">Remove Admin Access</span>
+                        </button>
+                    {% else %}
+                        <button 
+                        class="btn btn-gray"
+                        hx-post="{% url 'users-make-admin' profile_user.id %}"
+                        hx-vals='{"grant":"_grant"}'
+                        hx-swap="none"
+                        hx-confirm="Are you sure you want to gran admin access to {{profile_user.username}} ?"
+                        id="in-detail-page"
+                        hx-disable-element="#dectivate-button-{{ profile_user.id }}"
+                        hx-ext="disable-element">
+                        <svg xmlns="http://www.w3.org/2000/svg" 
+                        viewBox="0 0 24 24" fill="green" 
+                        class="size-4">
+                            <path fill-rule="evenodd" d="M12.516 2.17a.75.75 0 0 0-1.032 0 11.209 11.209 0 0 1-7.877 3.08.75.75 0 0 0-.722.515A12.74 12.74 0 0 0 2.25 9.75c0 5.942 4.064 10.933 9.563 12.348a.749.749 0 0 0 .374 0c5.499-1.415 9.563-6.406 9.563-12.348 0-1.39-.223-2.73-.635-3.985a.75.75 0 0 0-.722-.516l-.143.001c-2.996 0-5.717-1.17-7.734-3.08Zm3.094 8.016a.75.75 0 1 0-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 0 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.14-.094l3.75-5.25Z" clip-rule="evenodd" />
+                          </svg>
+                        Grant Admin Access
+                        </button>
+                    {% endif %}
+                       
+              
+                <!-- <button 
+                    class="btn btn-gray"
+                    hx-post="{% url 'users-make-admin' user.id %}"
+                    hx-swap="none"
+                    id="in-detail-page"
+                    hx-disable-element="#dectivate-button-{{ profile_user.id }}"
+                    hx-ext="disable-element">
+                    Toggle Admin Status
+                </button> -->
+            {% endif %}
+                
+        </div>
+        
+            
+            <!--<div class="mt-6 border-t border-gray-e6">
+            <dl class="divide-y divide-gray-100">
+             <div class="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
                 <dt class="text-sm font-medium leading-6 text-gray-900">Full Name</dt>
                 <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
                     {{ profile_user.profile.name }}
                 </dd>
             </div> 
-     
+    
             <div class="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
                 <dt class="text-sm font-medium leading-6 text-gray-900">Email</dt>
                 <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0 js-copy-field">
                     {{ profile_user.email }}
                 </dd>
-            </div>
+            </div> -->
             
-            <div class="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+            <!-- <div class="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
                 <dt class="text-sm font-medium leading-6 text-gray-900">Position</dt>
                 <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
                     {{ profile_user.profile.position }}
@@ -43,35 +259,23 @@
                 <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
                     {{ profile_user.profile.country}}
                 </dd>
-            </div>
+            </div> -->
 
-            <div class="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+            <!-- <div class="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
                 <dt class="text-sm font-medium leading-6 text-gray-900">Organization</dt>
                 <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
                     <span class="text-read-only m2m-badges">
                         <span class="border border-gray-d1 rounded-full px-4 py-1 bg-gray-f5">{{profile_user.profile.organization}}</span>
                     </span>
                 </dd>
-            </div>
-
-            <div class="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-                <dt class="text-sm font-medium leading-6 text-gray-900">Clusters</dt>
-                <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
-                    <span class="text-read-only m2m-badges">
-                        {% for cluster in profile_user.profile.clusters.all %}
-                            <span class="border border-gray-d1 rounded-full px-4 py-1 bg-gray-f5">{{ cluster.title }}</span>
-                        {% endfor %}
-                    </span>
-                </dd>
-            </div>
-
+            </div> 
             <div class="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
                 <dt class="text-sm font-medium leading-6 text-gray-900">State</dt>
                 <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
                     {% if profile_user.is_active %}
                         <span class="in-progress">Active</span>
                     {% else %} 
-                       <span class="draft">Deactive</span> 
+                        <span class="draft">Deactive</span> 
                     {% endif %}
                 </dd>
             </div>
@@ -84,11 +288,12 @@
                             <span class="completed">Admin</span>
                         {% elif "_CLUSTER_LEADS" in group.name %}
                             <span class="archived">{{ group.name }}</span>
+                        {% elif "ORG_USER" in group.name %}
+                            <span class="archived">{{group.name}}</span>
                         {% endif %}
                     {% endfor %}
                 </dd>
             </div>
-
             <div class="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
                 <dt class="text-sm font-medium leading-6 text-gray-900">Last Login</dt>
                 <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
@@ -101,8 +306,21 @@
                     {{profile_user.date_joined}}
                 </dd>
             </div>
-        
             <div class="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                <dt class="text-sm font-medium leading-6 text-gray-900">Clusters</dt>
+                <dd class=" text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+                    <span class="text-read-only m2m-badges">
+                        {% for cluster in profile_user.profile.clusters.all %}
+                            <span class="border border-gray-d1 rounded-full px-4 py-1 bg-gray-f5">{{ cluster.title }}</span>
+                        {% endfor %}
+                    </span>
+                </dd>
+            </div>-->
+            
+        
+            
+                
+            <!-- <div class="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0 ">
                 <dt class="text-sm font-medium leading-6 text-gray-900">Other</dt>
                 <dd class="mt-2 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
                     <div class="flex gap-4">
@@ -182,7 +400,14 @@
                 {% endif %}
                 </dd>
             </div>
-        </dl>
-    </div>
+        </dl> 
+    </div>-->
 </div>
 {% endblock content %}
+<script>
+    document.addEventListener('htmx:afterRequest', function(event) {
+        if (event.detail.xhr.status === 200) {
+            window.location.reload();
+        }
+    });
+</script>

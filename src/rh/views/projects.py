@@ -258,16 +258,16 @@ def export_activity_plans_import_template(request, pk):
         "activity_type",
         "activity_detail",
         "indicator",
-        "beneficiary",
         "hrp_beneficiary",
         "description",
         "package_type",
         "unit_type",
-        "units",
+        "units/transfer_value",
+        "ration_type",
+        "ration_size",
         "no_of_transfers",
         "grant_type",
         "transfer_category",
-        "currency",
         "transfer_mechanism_type",
         "implement_modility_type",
         "admin0name",
@@ -290,16 +290,20 @@ def export_activity_plans_import_template(request, pk):
     ]
 
     disaggregation_columns = list(
-        Disaggregation.objects.filter(clusters__in=project.clusters.all()).distinct().values_list("name", flat=True)
+        Disaggregation.objects.filter(clusters__in=project.clusters.all())
+        .order_by("-id")
+        .distinct()
+        .values_list("name", flat=True)
     )
     disaggregation_value_list = []
     for i in range(len(disaggregation_columns)):
         disaggregation_value_list.append(random.randint(100, 999))
-    print(disaggregation_value_list)
+
     filtered_columns = all_columns + disaggregation_columns
     response = HttpResponse(content_type="text/csv")
     response["Content-Disposition"] = f"attachment; filename=project_{project.code}_activity_plans_import_template.csv"
     writer = csv.writer(response)
+
     writer.writerow(filtered_columns)
 
     # Add the project code by default(This value will not impact the import function. it is just for users reference)
@@ -313,18 +317,18 @@ def export_activity_plans_import_template(request, pk):
         at.name,
         adt.name if adt else None,
         ind.name,
-        BeneficiaryType.objects.filter(type="non-hrp").values_list("name", flat=True).first(),
         BeneficiaryType.objects.filter(type="hrp").values_list("name", flat=True).first(),
         "[input any note or description]",
-        "75%",
+        "standard",
+        "",
+        "500",
+        "50%",
         "KG",
-        "1",
-        "200",
+        "4",
         "Conditional, Unrestricted",
         "Individual",
-        "AFN",
         "Bank",
-        "Cash",
+        "In Kind",
         "Afghanistan",
         "AF",
         "Kabul",

@@ -1,6 +1,5 @@
 from datetime import date
 
-from django.urls import reverse_lazy
 import django_filters
 from django import forms
 from django.conf import settings
@@ -11,10 +10,11 @@ from django.core.exceptions import PermissionDenied
 from django.core.paginator import Paginator
 from django.db.models import Count, Prefetch, Q
 from django.http import HttpResponse
-from django_htmx.http import HttpResponseClientRedirect
 from django.shortcuts import get_object_or_404, redirect, render
 from django.template import loader
+from django.urls import reverse_lazy
 from django.views.decorators.http import require_http_methods
+from django_htmx.http import HttpResponseClientRedirect
 from extra_settings.models import Setting
 from openpyxl import Workbook
 
@@ -60,7 +60,7 @@ def org_users_list(request):
         queryset=User.objects.filter(profile__organization=user_org)
         .select_related("profile")
         .prefetch_related(Prefetch("profile__clusters", queryset=Cluster.objects.only("title")), "groups")
-        .order_by("-last_login")
+        .order_by("-last_login"),
     )
 
     RECORDS_PER_PAGE = Setting.get("RECORDS_PER_PAGE", default=10)
@@ -137,7 +137,6 @@ def toggle_status(request, user_id):
     return render(request, "users/partials/user_tr.html", context={"user": user})
 
 
-
 #############################################
 ############### Profile Views #################
 #############################################
@@ -200,11 +199,11 @@ def profile_show(request, username):
     )
     if not has_permission(user=request.user, user_obj=user):
         raise PermissionDenied
-    is_org_lead = False 
+    is_org_lead = False
     for access in user.groups.all():
         if "ORG_LEAD" in access.name:
             is_org_lead = True
-    context = {"profile_user": user,"is_org_lead":is_org_lead}
+    context = {"profile_user": user, "is_org_lead": is_org_lead}
 
     return render(request, "users/profile_show.html", context)
 
@@ -250,8 +249,7 @@ def export_organization_users(request):
 @permission_required("rh.activate_deactivate_user", raise_exception=True)
 def toggle_org_admin_status(request, user_id):
     target_user = get_object_or_404(User, pk=user_id)
-    
-   
+
     admin_user = request.user
     # authorize the request.user
     # only users of the same organization
@@ -269,9 +267,7 @@ def toggle_org_admin_status(request, user_id):
             target_user.groups.add(org_lead_group)
             messages.success(request, f"`{target_user.username}` is organization admin now.")
 
-    url = reverse_lazy(
-            "profiles-show", kwargs={"username":target_user.username}
-        )
+    url = reverse_lazy("profiles-show", kwargs={"username": target_user.username})
     if request.headers.get("Hx-Trigger", "") == "in-detail-page":
         return HttpResponseClientRedirect(url)
     return render(request, "users/partials/user_tr.html", context={"user": target_user})

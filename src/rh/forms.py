@@ -106,7 +106,9 @@ class ProjectForm(forms.ModelForm):
             self.fields["activity_domains"].choices = (
                 self.fields["activity_domains"]
                 .queryset.filter(
-                    clusters__in=self.instance.clusters.all(), is_active=True, countries=user.profile.country
+                    clusters__in=self.data.getlist("clusters") or self.instance.clusters.all(),
+                    is_active=True,
+                    countries=user.profile.country,
                 )
                 .order_by("name")
                 .values_list("id", "name")
@@ -126,7 +128,7 @@ class ProjectForm(forms.ModelForm):
             self.fields["activity_domains"].choices = (
                 self.fields["activity_domains"]
                 .queryset.filter(
-                    clusters__in=[self.data.get("clusters")] or user.profile.clusters.all(),
+                    clusters__in=self.data.getlist("clusters") or user.profile.clusters.all(),
                     is_active=True,
                     countries=user.profile.country,
                 )

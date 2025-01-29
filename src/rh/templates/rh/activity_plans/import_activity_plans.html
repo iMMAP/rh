@@ -23,7 +23,9 @@
                     <div class="activity-title">
                         <span>Import Project Activity Plans and Target Locations</span>
                     </div>
-                    <a href="{% url 'projects-ap-import-template' project.pk %}?csrfmiddlewaretoken={{ csrf_token }}"  class="btn btn-grey" onclick="return confirm('Download template?');">Download template</a>
+                    <a href="{% url 'projects-ap-import-template' project.pk %}?csrfmiddlewaretoken={{ csrf_token }}"  
+                    class="btn btn-gray" onclick="return confirm('Download template?');">Download template
+                    </a>
                 </div>
 
                 <p class="pb-2">Import Activity Plans and Target Locations from a CSV file</p>
@@ -56,6 +58,10 @@
                     </li>
                     <li> <span class="icon-info mr-2"></span> 
                         <a class="underline" href="{% url 'guides-detail' 'project-and-activity-planning' %}">Project and planning guide</a>
+                    </li>
+                    <li class="text-red my-3"><strong>Important Note: </strong>
+                        The first row of the template is populated with demo data for your guidance.
+                        Please replace it with your accurate project activity plan data before uploading.
                     </li>
                 </ul>
 

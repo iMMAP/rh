@@ -10,12 +10,13 @@ from openpyxl.worksheet.datavalidation import DataValidation
 
 from project_reports.models import ActivityPlanReport, ProjectMonthlyReport, ResponseType
 from rh.models import (
-    Currency,
     Disaggregation,
     FacilitySiteType,
     GrantType,
     ImplementationModalityType,
     PackageType,
+    RationSize,
+    RationType,
     TransferCategory,
     TransferMechanismType,
     UnitType,
@@ -288,12 +289,13 @@ def write_import_report_template_sheet(workbook, monthly_report):
         {"header": "response_types", "type": "string", "width": 30},
         {"header": "implementing_partners", "type": "string", "width": 30},
         {"header": "package_type", "type": "string", "width": 30},
+        {"header": "ration_type", "type": "string", "width": 30},
+        {"header": "ration_size", "type": "string", "width": 30},
         {"header": "unit_type", "type": "string", "width": 30},
-        {"header": "units", "type": "string", "width": 30},
+        {"header": "units/transfer_value", "type": "string", "width": 30},
         {"header": "no_of_transfers", "type": "string", "width": 30},
         {"header": "grant_type", "type": "string", "width": 30},
         {"header": "transfer_category", "type": "string", "width": 30},
-        {"header": "currency", "type": "string", "width": 30},
         {"header": "transfer_mechanism_type", "type": "string", "width": 30},
         {"header": "implement_modility_type", "type": "string", "width": 30},
         {"header": "beneficiary_status", "type": "string", "width": 30},
@@ -311,7 +313,6 @@ def write_import_report_template_sheet(workbook, monthly_report):
         {"header": "facility_name", "type": "string", "width": 30},
         {"header": "facility_lat", "type": "string", "width": 30},
         {"header": "facility_long", "type": "string", "width": 30},
-        {"header": "non_hrp_beneficiary", "type": "string", "width": 30},
         {"header": "hrp_beneficiary", "type": "string", "width": 30},
         {"header": "with_safe_spaces", "type": "string", "width": 30},
     ]
@@ -338,30 +339,30 @@ def write_import_report_template_sheet(workbook, monthly_report):
     sheet.column_dimensions[column_letter].width = column["width"]
     # write the rows with report data
     container_dictionary = {
-        "beneficiary_status_list": ["P", "New Beneficiary", "Existing Beneficiaries"],
         "reponseTypeList": ["E"],
         "package_type": ["G"],
-        "unit_type": ["H"],
-        "grant_type": ["K"],
-        "im_modility_type": ["O"],
-        "transfer_mc_type": ["N"],
-        "transfer_category": ["L"],
-        "currency": ["M"],
+        "ration_type": ["H"],
+        "ration_size": ["I"],
+        "unit_type": ["J"],
+        "grant_type": ["M"],
+        "transfer_category": ["N"],
+        "transfer_mc_type": ["O"],
+        "im_modility_type": ["P"],
+        "beneficiary_status_list": ["Q", "New Beneficiary", "Existing Beneficiaries"],
         "safe_space": ["AG", "True", "False"],
-        "facilitySiteTypeList": ["Z"],
+        "facilitySiteTypeList": ["AA"],
     }
     plain_dictionary_lists = {
         "indicatorList": ["B"],
         "activityDomainList": ["C"],
         "activityTypeList": ["D"],
-        "admin0nameList": ["R"],
-        "admin0pcodeList": ["S"],
-        "admin1pcodeList": ["T"],
-        "admin1nameList": ["U"],
-        "admin2pcodeList": ["V"],
-        "admin2nameList": ["W"],
+        "admin0nameList": ["S"],
+        "admin0pcodeList": ["T"],
+        "admin1pcodeList": ["U"],
+        "admin1nameList": ["V"],
+        "admin2pcodeList": ["W"],
+        "admin2nameList": ["X"],
         "implementing_partner_list": ["F"],
-        "non_hrp_beneficiary": ["AE"],
         "hrp_beneficiary": ["AF"],
     }
     project = monthly_report.project
@@ -371,9 +372,11 @@ def write_import_report_template_sheet(workbook, monthly_report):
     container_dictionary["im_modility_type"].extend(
         list(ImplementationModalityType.objects.values_list("name", flat=True))
     )
+    container_dictionary["ration_size"].extend(list(RationSize.objects.values_list("name", flat=True).order_by("-id")))
+    container_dictionary["ration_type"].extend(list(RationType.objects.values_list("name", flat=True)))
     container_dictionary["transfer_mc_type"].extend(list(TransferMechanismType.objects.values_list("name", flat=True)))
     container_dictionary["transfer_category"].extend(list(TransferCategory.objects.values_list("name", flat=True)))
-    container_dictionary["currency"].extend(list(Currency.objects.values_list("name", flat=True)))
+
     facility = list(FacilitySiteType.objects.filter(cluster__code="health").values_list("name", flat=True))
     responseType = list(ResponseType.objects.values_list("name", flat=True))
     num_rows = 2
@@ -399,7 +402,6 @@ def write_import_report_template_sheet(workbook, monthly_report):
             plain_dictionary_lists["implementing_partner_list"].append(
                 str(location.implementing_partner.code if location.implementing_partner else "")
             )
-            plain_dictionary_lists["non_hrp_beneficiary"].append(str(plan.beneficiary if plan.beneficiary else ""))
             plain_dictionary_lists["hrp_beneficiary"].append(str(plan.hrp_beneficiary if plan.hrp_beneficiary else ""))
             num_rows += 1
 

@@ -106,7 +106,9 @@ class ProjectForm(forms.ModelForm):
             self.fields["activity_domains"].choices = (
                 self.fields["activity_domains"]
                 .queryset.filter(
-                    clusters__in=self.instance.clusters.all(), is_active=True, countries=user.profile.country
+                    clusters__in=self.data.getlist("clusters") or self.instance.clusters.all(),
+                    is_active=True,
+                    countries=user.profile.country,
                 )
                 .order_by("name")
                 .values_list("id", "name")
@@ -122,8 +124,17 @@ class ProjectForm(forms.ModelForm):
                     pk__in=user_clusters.union(project_clusters).values("pk")
                 )
         else:
-            # Create mode
-            self.fields["activity_domains"].choices = []
+            # Create mode and POST mode: Ensure activity_domains is populated
+            self.fields["activity_domains"].choices = (
+                self.fields["activity_domains"]
+                .queryset.filter(
+                    clusters__in=self.data.getlist("clusters") or user.profile.clusters.all(),
+                    is_active=True,
+                    countries=user.profile.country,
+                )
+                .order_by("name")
+                .values_list("id", "name")
+            )
 
 
 class TargetLocationForm(forms.ModelForm):

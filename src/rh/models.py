@@ -631,7 +631,7 @@ class TargetLocation(models.Model):
     def __str__(self):
         location_str = f"Target Location: {self.province}, {self.district}"
         if self.facility_name:
-            location_str += f", {self.facility_name}"
+            location_str += f", {self.facility_name} ({self.facility_id})"
         return location_str
 
     # def __str__(self):

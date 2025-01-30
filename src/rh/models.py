@@ -629,7 +629,13 @@ class TargetLocation(models.Model):
         return [state[0] for state in STATES]
 
     def __str__(self):
-        return f"Target Location: {self.province}, {self.district}"
+        location_str = f"Target Location: {self.province}, {self.district}"
+        if self.facility_name:
+            location_str += f", {self.facility_name}"
+        return location_str
+
+    # def __str__(self):
+    #     return f"Target Location: {self.province}, {self.district}"
 
     class Meta:
         verbose_name = "Target Location"

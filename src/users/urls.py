@@ -15,6 +15,7 @@ urlpatterns = [
     # Profile routes
     path("profile", users_views.profile, name="profile"),
     path("profiles/<str:username>", users_views.profile_show, name="profiles-show"),
+    path("cluster/user/profiles/<str:username>", users_views.cluster_users_profile, name="cluster-user-profile"),
     path("users/organization", users_views.org_users_list, name="users-organization"),
     path("users/<int:user_id>/toggle_status", users_views.toggle_status, name="users-toggle-status"),
     path("users/<int:user_id>/toggle-org-admin-status", users_views.toggle_org_admin_status, name="users-make-admin"),
@@ -70,5 +71,10 @@ urlpatterns = [
         "export/org/users",
         users_views.export_organization_users,
         name="export_org_users",
+    ),
+    path(
+        "export/cluster/<str:cluster>/users",
+        users_views.export_cluster_users,
+        name="export-cluster-users",
     ),
 ]

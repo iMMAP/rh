@@ -1,0 +1,204 @@
+{% extends "_base.html" %}
+
+{% load static %}
+{% load humanize %}
+{% block title %}
+    {{cluster.code}} Members
+{% endblock title %}
+
+{% block breadcrumb_li %}
+  <li class=""><a href="{% url 'clusters-home' cluster.code %}">
+    {{ request.resolver_match.kwargs.cluster|upper }}'s Home
+  </a></li>
+  <li class="current">Members</a>
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="projects-options-panel">
+            <div class="holder">
+                <div class="input-holder">
+                    <h2 class="text-red-be">{{ cluster.code|upper }}'s Members</h2>
+                </div>
+            </div>
+             <p class="py-4 rounded flex items-center gap-2">
+                <span class="icon-info"></span>
+                The below table list your organization's users. 
+                You can filter the users by their using the filter sidebar. 
+                The actions column in the table lets gives you ability to activate and deactivate users. 
+            </p>
+        </div>
+
+        <div class="tabs-nav-holder">
+            <ul class="tabs-nav">
+                <li class=" {% if not request.GET.is_active %}active{% endif %}">
+                    <a href="{% url 'users-organization' %}">All Users
+                        ({{ users_count }})
+                    </a>
+                </li>
+                <li class=" {% if request.GET.is_active == 'true' %}active{% endif %}">
+                    <a href="{{ request.GET.url }}?is_active=true">Active Users
+                        (
+                        {% if active_users_count %}
+                            {{ active_users_count }}
+                        {% else %}
+                            {{ active_users | length }}
+                        {% endif %}
+                        )
+                    </a>
+                </li>
+                <li class=" {% if request.GET.is_active == 'false' %}active{% endif %}">
+                    <a href="{{ request.GET.url }}?is_active=false">Deactivated Users
+                        (
+                        {% if deactive_users_count %}{{ deactive_users_count }}{% endif %}
+                        )
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <div class="">
+            <div class="table-container">
+                {% comment %} Table Actions and filters {% endcomment %}
+                <div class="page-top-panel bottom-border">
+                    <!-- filter applied  -->
+                    <div class="filter-container" id="filter-container">
+                        {% for field in users_filter.form %}
+                            {% if forloop.first %}<span>Applied Filters:</span>{% endif %}
+                            {% if field.value and field.name != 'state' %}
+            
+                                <span class="filter-item title" 
+                                id="title">{{ field.name }}</span>
+                                {% if forloop.last %}<span class="close-alert-message">x</span>{% endif %}
+                            {% endif %}
+            
+                        {% endfor %}
+                    </div>
+                    <!-- filter applied end -->
+            
+                    <div class="actions-panel">
+                        <a href="{% url 'export-cluster-users' cluster.code %}?{{request.GET.urlencode}}" 
+                        class="btn btn-gray tooltip" onclick="return confirm('Are you sure you want to export {{cluster.code|upper}} users?')">
+                            Export <span class="icon-download"></span>
+                            <span class="tooltip-text">Download your cluster users</span>
+                        </a>
+                        {% if users_filter %}
+                            {% include "components/_filter_drawer.html" with filter=users_filter %}
+                        {% endif %}
+                    </div>
+                </div>
+
+                {% comment %} Table {% endcomment %}
+                {% if users %}
+                    <div class="table-wrapper-scrollable ">
+                        <table class="table all-projects-table " >
+                            <thead class="content-block ">
+                                <tr>
+                                    <th></th>
+                                    <th>
+                                        <strong class="table-title">Name</strong>
+                                    </th>
+                                    <th class="description-col">
+                                        <strong class="table-title">Email</strong>
+                                    </th>
+                                    <th>
+                                        <strong class="table-title">Clusters</strong>
+                                    </th>
+                                    <th>
+                                        <strong class="table-title">Date Joined</strong>
+                                    </th>
+                                    <th>
+                                        <strong class="table-title">Last Login</strong>
+                                    </th>
+                                    <th>
+                                        <strong class="table-title">Status</strong>
+                                    </th>
+                                    <th>
+                                        <strong class="table-title">Action</strong>
+                                    </th>
+                                </tr>
+                            </thead>
+            
+                            <tbody>
+                                {% for user in users %}
+                                    <tr id="user-{{ user.id }}">
+                                        <td>
+                                            {% for group in user.groups.all %}
+                                                {% if group.name == "ORG_LEAD" %}
+                                                    <span class="completed">Admin</span>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </td>
+                                        <td>
+                                        <a href="{% url 'cluster-user-profile' user.username %}">
+                                                {{ user.first_name }} {{ user.last_name }} <em>({{ user.username }})</em>
+                                            </a>
+                                        </td>
+                                        <td>{{ user.email }}</td>
+                                        <td>
+                                            {% for cluster in user.profile.clusters.all %}
+                                                {{ cluster.title }}
+                                                {% if not forloop.last %},{% endif %}
+                                            {% endfor %}
+                                        </td>
+                                        <td>{{ user.date_joined|naturaltime }}</td>
+                                        <td>{{ user.last_login|naturaltime }}</td>
+                                        <td>
+                                            {% if user.is_active %}
+                                                <span class="in-progress">Active</span>
+                                            {% else %}
+                                                <span class="archive">Deactive</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <div class="table-flex-holder">
+                                                <ul class="table-options-buttons">
+                                                    {% if perms.rh.activate_deactivate_user %}
+                                                        <li>
+                                                            <button id="dectivate-button-{{ user.id }}"
+                                                                    class="btn btn-gray"
+                                                                    hx-patch="{% url 'users-toggle-status' user.id %}"
+                                                                    hx-swap="outerHTML"
+                                                                    hx-target="#user-{{ user.id }}"
+                                                                    hx-disable-element="#dectivate-button-{{ user.id }}"
+                                                                    hx-ext="disable-element">
+                                                                {% if user.is_active %}
+                                                                    <span class="project-detail icon-trashbin"></span> Deactivate
+                                                                {% else %}
+                                                                    Activate
+                                                                {% endif %}
+                                                                <img class="htmx-indicator"
+                                                                    id="spinner"
+                                                                    alt="spinner"
+                                                                    style="width: 1.2rem"
+                                                                    src="{% static 'images/spinner.gif' %}" />
+                                                            </button>
+                                                        </li>
+                                                    {% endif %}
+                                                </ul>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="view_nocontent">
+                        <div class="nocontent_help">
+                            <h4>No users found.</h4>
+                            <p>Ask your organizations members to register for a new account in ReportHub.</p>
+                        </div>
+                    </div>
+                {% endif %}
+
+                {% comment %} Pagination {% endcomment %}
+                {% include "components/_pagination.html" with object_list=users %}
+            </div>
+
+        </div>
+        
+    </div>
+{% endblock content %}
+
+{% block scripts %}
+{% endblock scripts %}

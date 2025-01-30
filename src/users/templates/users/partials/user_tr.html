@@ -2,7 +2,7 @@
 {% load humanize %}
 
 <tr id="user-{{ user.id }}">
-    <td style="">
+    <td>
         {% for group in user.groups.all %}
             {% if group.name == "ORG_LEAD" %}
                 <span class="completed">Admin</span>
@@ -31,45 +31,48 @@
         {% endif %}
     </td>
     <td>
-        <div class="table-flex-holder">
-            <ul class="table-options-buttons">
-                {% if perms.rh.activate_deactivate_user %}
-                    <li>
-                        <button id="dectivate-button-{{ user.id }}"
-                                class="btn btn-gray"
-                                hx-patch="{% url 'users-toggle-status' user.id %}"
-                                hx-swap="outerHTML"
-                                hx-target="#user-{{ user.id }}"
-                                hx-disable-element="#dectivate-button-{{ user.id }}"
-                                hx-ext="disable-element">
-                            {% if user.is_active %}
-                                <span class="project-detail icon-trashbin"></span> Deactivate
-                            {% else %}
-                                Activate
-                            {% endif %}
-                            <img class="htmx-indicator"
-                                 id="spinner"
-                                 alt="spinner"
-                                 style="width: 1.2rem"
-                                 src="{% static 'images/spinner.gif' %}" />
-                        </button>
-                    </li>
-                {% endif %}
-                {% if perms.rh.activate_deactivate_user %}
-                <li>
-                    <button 
-                        class="btn btn-gray"
-                        hx-post="{% url 'users-make-admin' user.id %}"
-                        hx-swap="outerHTML"
-                        hx-target="#user-{{ user.id }}"
-                        hx-disable-element="#dectivate-button-{{ user.id }}"
-                        hx-ext="disable-element"
-                    >
-                        Toggle Admin Status
-                    </button>
-                </li>
-                {% endif %}
-            </ul>
-        </div>
+        {% if perms.rh.activate_deactivate_user %}
+        <button id="dectivate-button-{{ user.id }}"
+                class="btn btn-gray"
+                hx-patch="{% url 'users-toggle-status' user.id %}"
+                hx-swap="outerHTML"
+                hx-target="#user-{{ user.id }}"
+                hx-disable-element="#dectivate-button-{{ user.id }}"
+                hx-ext="disable-element">
+            {% if user.is_active %}
+                <span class="project-detail icon-trashbin"></span> Deactivate
+            {% else %}
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4">
+                <path fill-rule="evenodd" d="M12 2.25a.75.75 0 0 1 .75.75v9a.75.75 0 0 1-1.5 0V3a.75.75 0 0 1 .75-.75ZM6.166 5.106a.75.75 0 0 1 0 1.06 8.25 8.25 0 1 0 11.668 0 .75.75 0 1 1 1.06-1.06c3.808 3.807 3.808 9.98 0 13.788-3.807 3.808-9.98 3.808-13.788 0-3.808-3.807-3.808-9.98 0-13.788a.75.75 0 0 1 1.06 0Z" clip-rule="evenodd" />
+            </svg>
+            Activate
+            {% endif %}
+            <img class="htmx-indicator"
+                id="spinner"
+                alt="spinner"
+                style="width: 1.2rem"
+                src="{% static 'images/spinner.gif' %}" />
+        </button>
+        {% endif %}
+    </td>
+    <td style="width: 145px;">
+        {% if perms.rh.activate_deactivate_user %}
+        <a 
+        class="btn btn-red"
+        href="{% url 'profiles-show' user.username %}">
+        <small>Manage Access</small>
+        </a>
+        <!-- <button 
+            class="btn btn-red"
+            hx-post="{% url 'users-make-admin' user.id %}"
+            hx-swap="outerHTML"
+            hx-target="#user-{{ user.id }}"
+            hx-disable-element="#dectivate-button-{{ user.id }}"
+            hx-ext="disable-element">
+            <small>
+                Manage Access
+            </small>
+        </button> -->
+        {% endif %}
     </td>
 </tr>

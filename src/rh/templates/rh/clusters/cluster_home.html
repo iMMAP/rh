@@ -26,6 +26,12 @@
                     <ul class="buttons-list-inline">
                         <li>
                             {% if request.resolver_match.kwargs.cluster %}
+                                <a href="{% url 'cluster-users' request.resolver_match.kwargs.cluster %}" 
+                                class="btn btn-gray-outline" >Cluster Users</a>
+                            {% endif %}
+                        </li>
+                        <li>
+                            {% if request.resolver_match.kwargs.cluster %}
                                 <a href="{% url 'cluster-projects-list' request.resolver_match.kwargs.cluster %}" class="btn btn-gray-outline" >Cluster Projects</a>
                             {% endif %}
                         </li>

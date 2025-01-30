@@ -22,13 +22,17 @@
         <div class="top-panel pb-2 pt-4 flex flex-col items-center justify-between gap-2 sm:flex-row">
             <h2 class="locations text-red-be">{{ request.resolver_match.kwargs.cluster|capfirst }} 5W Dashboard</h2>
             <div class="actions-panel">
-                <a href="{% url 'export-organization-partners' request.resolver_match.kwargs.cluster %}?{{request.GET.urlencode}}" class="btn btn-gray">
+                <a href="{% url 'export-organization-partners' request.resolver_match.kwargs.cluster %}?{{request.GET.urlencode}}" 
+                class="tooltip btn btn-gray">
                     Export Organizations
                     <span class="icon-download"></span>
+                    <span class="tooltip-text">Download the list of organizations that have submitted reports.</span>
                 </a>
-                <a href="{% url 'export-focal-persons' request.resolver_match.kwargs.cluster %}?{{request.GET.urlencode}}" class="btn btn-gray">
-                    Export Users
+                <a href="{% url 'export-focal-persons' request.resolver_match.kwargs.cluster %}?{{request.GET.urlencode}}" 
+                class="tooltip btn btn-gray">
+                    Export Focal Points
                     <span class="icon-download"></span>
+                    <span class="tooltip-text">Download the list of focal points who have submitted reports. </span>
                 </a>
                 <a class="export-button btn btn-red"
                     href="{% url 'export-cluster-5w-dashboard' request.resolver_match.kwargs.cluster %}?{{request.GET.urlencode}}"

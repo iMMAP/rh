@@ -169,7 +169,7 @@
                         </p>
                     </div>
                     <div class="mt-4">
-                        <canvas id="myChart" style="max-width: 100%;"></canvas>
+                        {{ line_chart|safe }}
                     </div>
                 </div>
             </div>
@@ -182,35 +182,4 @@
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
         integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
         crossorigin=""></script>
-
-<script>
-    const ctx = document.getElementById('myChart').getContext("2d");
-    new Chart(ctx, {
-        type: 'line',
-        data: {
-        labels: {{people_reached_labels|safe}},
-        datasets: [{
-            label: 'People Reached',
-            data: {{people_reached_data|safe}},
-            borderColor:"#a52824",
-            backgroundColor:"rgba(255,0,0, 0.1)",
-            pointBackgroundColor:"#a52824",
-            fill: true,
-            
-            tension: 0.4,
-            borderWidth: 1
-        }]
-        },
-        options: {
-            maintainAspectRatio: false,
-            responsive: true,
-            height: 300,
-            scales: {
-                y: {
-                beginAtZero: true
-                }
-            }
-        }
-    });
-</script>
 {% endblock scripts %}

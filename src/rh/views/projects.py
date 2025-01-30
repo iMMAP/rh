@@ -4,6 +4,7 @@ from copy import copy
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
+from django.contrib.auth.models import User
 from django.core.exceptions import PermissionDenied, ValidationError
 from django.core.paginator import Paginator
 from django.db import transaction
@@ -18,6 +19,7 @@ from django_htmx.http import HttpResponseClientRedirect
 from extra_settings.models import Setting
 
 from project_reports.models import ProjectMonthlyReport
+from users.views.users import UsersFilter
 
 from ..filters import ProjectsFilter
 from ..forms import ProjectForm
@@ -829,3 +831,41 @@ def complete_project(request, pk):
         messages.success(request, "Project has been marked as completed")
 
         return HttpResponseClientRedirect(reverse("projects-detail", args=[project.id]))
+
+
+def cluster_users(request, cluster: str):
+    if not has_permission(request.user, clusters=[cluster]):
+        raise PermissionDenied
+
+    cl = Cluster.objects.get(code=cluster)
+    users_filter = UsersFilter(
+        request.GET,
+        request=request,
+        queryset=User.objects.filter(profile__clusters=cl)
+        .select_related("profile")
+        .prefetch_related(Prefetch("profile__clusters", queryset=Cluster.objects.only("title")), "groups")
+        .order_by("-last_login"),
+    )
+
+    RECORDS_PER_PAGE = Setting.get("RECORDS_PER_PAGE", default=10)
+    per_page = request.GET.get("per_page", RECORDS_PER_PAGE)
+    paginator = Paginator(users_filter.qs, per_page=per_page)
+    page_number = request.GET.get("page", 1)
+    paginated_users = paginator.get_page(page_number)
+    paginated_users.adjusted_elided_pages = paginator.get_elided_page_range(page_number)
+
+    users = User.objects.filter(profile__clusters=cl).aggregate(
+        users_count=Count("id"),
+        active_users_count=Count("id", filter=Q(is_active=True)),
+        deactive_users_count=Count("id", filter=Q(is_active=False)),
+    )
+
+    context = {
+        "users": paginated_users,
+        "users_filter": users_filter,
+        "users_count": users["users_count"],
+        "active_users_count": users["active_users_count"],
+        "deactive_users_count": users["deactive_users_count"],
+        "cluster": cl,
+    }
+    return render(request, "rh/clusters/cluster_user_list.html", context)

@@ -62,6 +62,7 @@ urlpatterns = [
     ),
     path("projects/clusters", projects.users_clusters_projects_list, name="user-clusters-projects-list"),
     path("projects/clusters/<str:cluster>", projects.cluster_projects_list, name="cluster-projects-list"),
+    path("users/clusters/<str:cluster>", projects.cluster_users, name="cluster-users"),
     # cluster
     path("clusters/<str:cluster>", clusters_views.cluster_home, name="clusters-home"),
     path("clusters/<str:cluster>/reports", clusters_views.pending_reports, name="clusters-reports"),

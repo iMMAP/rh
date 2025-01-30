@@ -12,11 +12,13 @@ from django.db.models import Count, Prefetch, Q
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.template import loader
+from django.urls import reverse_lazy
 from django.views.decorators.http import require_http_methods
+from django_htmx.http import HttpResponseClientRedirect
 from extra_settings.models import Setting
 from openpyxl import Workbook
 
-from rh.models import Cluster
+from rh.models import Cluster, Organization
 
 from ..forms import (
     ProfileUpdateForm,
@@ -32,13 +34,19 @@ class UsersFilter(django_filters.FilterSet):
         queryset=Cluster.objects.all(),
         widget=forms.SelectMultiple(attrs={"class": "input-select"}),
     )
+    organization = django_filters.ModelMultipleChoiceFilter(
+        field_name="profile__organization",
+        label="Organization",
+        queryset=Organization.objects.all(),
+        widget=forms.SelectMultiple(attrs={"class": "input-select"}),
+    )
     last_login = django_filters.DateRangeFilter(field_name="last_login")
     date_joined = django_filters.DateRangeFilter(field_name="date_joined")
 
     class Meta:
         model = User
         # fields = "__all__"
-        fields = ["username", "email", "first_name", "last_name", "clusters", "is_active"]
+        fields = ["username", "email", "first_name", "last_name", "clusters", "organization", "is_active"]
 
 
 #############################################
@@ -121,46 +129,21 @@ def toggle_status(request, user_id):
                 "domain": f"{request.scheme}://{request.get_host()}",
             },
         )
-
         user.email_user(
             subject,
             message,
             from_email=settings.DEFAULT_FROM_EMAIL,
             html_message=html_message,
         )
+    url = reverse_lazy(
+        "profiles-show",
+        kwargs={"username": user.username},
+    )
 
     if request.headers.get("Hx-Trigger", "") == "in-detail-page":
-        return HttpResponse(200)
+        return HttpResponseClientRedirect(url)
 
     return render(request, "users/partials/user_tr.html", context={"user": user})
-
-
-@login_required
-@require_http_methods(["POST"])
-@permission_required("rh.activate_deactivate_user", raise_exception=True)
-def toggle_org_admin_status(request, user_id):
-    target_user = get_object_or_404(User, pk=user_id)
-    admin_user = request.user
-
-    # authorize the request.user
-    # only users of the same organization
-    if target_user.profile.organization != admin_user.profile.organization:
-        messages.error(request, "You do not have permission")
-        return PermissionDenied
-
-    org_lead_group = Group.objects.get(name="ORG_LEAD")
-
-    if org_lead_group in target_user.groups.all():
-        target_user.groups.remove(org_lead_group)
-        messages.warning(request, f"`{target_user.username}` admin access has been removed.")
-    else:
-        target_user.groups.add(org_lead_group)
-        messages.success(request, f"`{target_user.username}` is organization admin now.")
-
-    if request.headers.get("Hx-Trigger", "") == "in-detail-page":
-        return HttpResponse(200)
-
-    return render(request, "users/partials/user_tr.html", context={"user": target_user})
 
 
 #############################################
@@ -215,6 +198,39 @@ def profile(request):
 
 
 @login_required
+@require_http_methods(["POST"])
+@permission_required("rh.activate_deactivate_user", raise_exception=True)
+def toggle_org_admin_status(request, user_id):
+    target_user = get_object_or_404(User, pk=user_id)
+    admin_user = request.user
+    print(request.POST.get("name"))
+    # authorize the request.user
+    # only users of the same organization
+    if target_user.profile.organization != admin_user.profile.organization:
+        messages.error(request, "You do not have permission")
+        return PermissionDenied
+
+    org_lead_group = Group.objects.get(name="ORG_LEAD")
+    if request.POST.get("remove"):
+        if org_lead_group in target_user.groups.all():
+            target_user.groups.remove(org_lead_group)
+            messages.warning(request, f"`{target_user.username}` admin access has been removed.")
+    if request.POST.get("grant"):
+        if org_lead_group not in target_user.groups.all():
+            target_user.groups.add(org_lead_group)
+            messages.success(request, f"`{target_user.username}` is organization admin now.")
+    url = reverse_lazy(
+        "profiles-show",
+        kwargs={"username": target_user.username},
+    )
+
+    if request.headers.get("Hx-Trigger", "") == "in-detail-page":
+        return HttpResponseClientRedirect(url)
+
+    return render(request, "users/partials/user_tr.html", context={"user": target_user})
+
+
+@login_required
 @permission_required("users.change_profile", raise_exception=True)
 def profile_show(request, username):
     user = get_object_or_404(
@@ -223,10 +239,11 @@ def profile_show(request, username):
         ),
         username=username,
     )
+    is_org_lead = user.groups.filter(name__icontains="ORG_LEAD").exists()
     if not has_permission(user=request.user, user_obj=user):
         raise PermissionDenied
 
-    context = {"profile_user": user}
+    context = {"profile_user": user, "is_org_lead": is_org_lead}
 
     return render(request, "users/profile_show.html", context)
 
@@ -265,3 +282,49 @@ def export_organization_users(request):
     except Exception as e:
         response = {"error": str(e)}
         return HttpResponse(response, status=500)
+
+
+def export_cluster_users(request, cluster: str):
+    cl = Cluster.objects.get(code=cluster)
+
+    try:
+        users_filter = UsersFilter(
+            request.GET,
+            request=request,
+            queryset=User.objects.filter(profile__clusters=cl)
+            .select_related("profile")
+            .prefetch_related(Prefetch("profile__clusters", queryset=Cluster.objects.only("title")), "groups")
+            .order_by("-last_login"),
+        )
+        # define the excel workbook
+        workbook = Workbook()
+        write_users_sheet(workbook, users_filter.qs)
+
+        # get today date
+        today = date.today()
+        response = HttpResponse(content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+        response["Content-Disposition"] = f'attachment; filename="{cl}_users_{today}.xlsx"'
+
+        # Save the workbook to the response
+        workbook.save(response)
+
+        return response
+    except Exception as e:
+        response = {"error": str(e)}
+        return HttpResponse(response, status=500)
+
+
+def cluster_users_profile(request, username):
+    user = get_object_or_404(
+        User.objects.select_related("profile").prefetch_related(
+            Prefetch("profile__clusters", queryset=Cluster.objects.only("title")),
+        ),
+        username=username,
+    )
+    cluster_admin = True
+    if not has_permission(user=request.user, user_obj=user):
+        raise PermissionDenied
+
+    context = {"profile_user": user, "cluster_admin": cluster_admin}
+
+    return render(request, "users/profile_show.html", context)

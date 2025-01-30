@@ -17,7 +17,182 @@
 <div class="container">
     <h1 class="font-bold leading-7 text-red-be">User Information</h1>
     <div class="mt-6 border-t border-gray-e6">
-        <dl class="divide-y divide-gray-100">
+        <!-- new code  -->
+         <div class="multiple-fields-row two-items my-5">
+            <div class="field-col divide-y divide-gray-100 border-r border-gray-e6" style="padding-right: 2%;">
+                <div class="p-3">
+                    <p class="font-bold text-sm font-medium leading-6 text-gray-900">Full Name</p>
+                    <p class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">{{ profile_user.profile.name }}</p>
+                </div>
+                <div class="p-3">
+                    <p class="font-bold text-sm font-medium leading-6 text-gray-900">Email</p>
+                    <p class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">{{ profile_user.email }}</p>
+                </div>
+                <div class="p-3">
+                    <p class="font-bold text-sm font-medium leading-6 text-gray-900">Position</p>
+                    <p class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">{{ profile_user.profile.position }}</p>
+                </div>
+                <div class="p-3">
+                    <p class="font-bold text-sm font-medium leading-6 text-gray-900">Country</p>
+                    <p class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">{{ profile_user.profile.country}}</p>
+                </div>
+                <div class="p-3">
+                    <p class="font-bold text-sm font-medium leading-6 text-gray-900">Date Joined</p>
+                    <p class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">{{profile_user.date_joined}}</p>
+                </div>
+            </div>
+            <div class="field-col divide-y divide-gray-100 " style="padding-left: 2%;">
+                <div class="p-3">
+                    <p class="font-bold text-sm font-medium leading-6 text-gray-900">Organization</p>
+                    <p class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+                        <span class="border border-gray-d1 rounded-full px-4 bg-gray-f5">{{profile_user.profile.organization}}</span> 
+                    </p>
+                        
+                    
+                </div>
+                <div class="p-3">
+                    <p class="font-bold text-sm font-medium leading-6 text-gray-900">Clusters</p>
+                    <p class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+                        {% for cluster in profile_user.profile.clusters.all %}
+                            <span class="border border-gray-d1 rounded-full px-4 bg-gray-f5">{{ cluster.title }}</span>
+                        {% endfor %}
+                    </p>
+                    
+                    
+                </div>
+                <div class="p-3">
+                    <p class="font-bold text-sm font-medium leading-6 text-gray-900">State</p>
+                    {% if profile_user.is_active %}
+                        <span class="in-progress">Active</span>
+                    {% else %} 
+                       <span class="draft">Deactive</span> 
+                    {% endif %}
+                </div>
+                <div class="p-2.5">
+                    <p class="font-bold text-sm font-medium leading-6 text-gray-900">Roles</p>
+                    {% for group in profile_user.groups.all %}
+                        {% if group.name == "ORG_LEAD" %}
+                            <span class="completed">Admin</span>
+                        {% elif "_CLUSTER_LEADS" in group.name %}
+                            <span class="archived">{{ group.name }}</span>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+                <div class="p-3">
+                    <p class="font-bold text-sm font-medium leading-6 text-gray-900">Last Login</p>
+                    <p class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">{{profile_user.last_login}}</p>
+                </div>
+            </div>
+         </div>
+         <div class="flex justify-between gap-4 mt-6 border border-gray-e6 rounded p-5">
+            <div class="input-field read-only">
+                <span class="label">Cluster Contact</span>
+                <div class="input-holder">
+                    {% if project.is_cluster_contact %}
+                        Yes
+                    {% else %}
+                        No
+                    {% endif %}
+                </div>
+            </div>
+            <div class="input-field read-only">
+                <span class="label">Skype</span>
+                <div class="input-holder">
+                    <a href="skype:{{ profile_user.profile.skype }}?userinfo">{{ profile_user.profile.skype }}</a>  
+                </div>
+            </div>
+            <div class="input-field read-only">
+                <span class="label">Phone</span>
+                <div class="input-holder">
+                    {{profile_user.profile.phone}}
+                </div>
+            </div>
+            <div class="input-field read-only">
+                <span class="label">Whatsapp</span>
+                <div class="input-holder">
+                    {{profile_user.profile.whatsup }}
+                </div>
+            </div>
+        </div>
+        <div class="flex justify-center items-center gap-2 py-4">
+            <div class="">
+                {% if perms.rh.activate_deactivate_user %}
+                    <button id="in-detail-page"
+                            class="btn btn-gray"
+                            hx-patch="{% url 'users-toggle-status' profile_user.id %}"
+                            hx-swap="none"
+                            hx-disable-element="in-detail-page"
+                            hx-ext="disable-element">
+                        {% if profile_user.is_active %}
+                            <span class="project-detail icon-trashbin"></span>
+                            <span class="text-sm">Deactivate</span> 
+                        {% else %}
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4">
+                            <path fill-rule="evenodd" d="M12 2.25a.75.75 0 0 1 .75.75v9a.75.75 0 0 1-1.5 0V3a.75.75 0 0 1 .75-.75ZM6.166 5.106a.75.75 0 0 1 0 1.06 8.25 8.25 0 1 0 11.668 0 .75.75 0 1 1 1.06-1.06c3.808 3.807 3.808 9.98 0 13.788-3.807 3.808-9.98 3.808-13.788 0-3.808-3.807-3.808-9.98 0-13.788a.75.75 0 0 1 1.06 0Z" clip-rule="evenodd" />
+                        </svg>
+                        Activate
+                        {% endif %}
+                        <img class="htmx-indicator"
+                                id="spinner"
+                                alt="spinner"
+                                style="width: 1.2rem"
+                                src="{% static 'images/spinner.gif' %}" />
+                    </button>
+                {% endif %}
+            </div>
+            <div class="">
+                {% if perms.rh.activate_deactivate_user %}
+                    {% if not cluster_admin %}
+                        {% if is_org_lead %}
+                        <button 
+                            class="btn btn-red"
+                            hx-post="{% url 'users-make-admin' profile_user.id %}"
+                            hx-swap="none"
+                            hx-vals='{"remove":"_remove"}'
+                            id="in-detail-page"
+                            hx-confirm="Are you sure you want to remove admin access of {{profile_user.username}} ?"
+                            hx-disable-element="#dectivate-button-{{ profile_user.id }}"
+                            hx-ext="disable-element">
+                            <svg xmlns="http://www.w3.org/2000/svg" 
+                            fill="none" 
+                            viewBox="0 0 24 24" 
+                            stroke-width="1.5" 
+                            stroke="currentColor" 
+                            class="size-4">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m0-10.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.75c0 5.592 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.57-.598-3.75h-.152c-3.196 0-6.1-1.25-8.25-3.286Zm0 13.036h.008v.008H12v-.008Z" />
+                            </svg>
+                            <span class="text-sm">Remove Admin Access</span>
+                            
+                        </button>
+                        {% else %}
+                        <button 
+                            class="btn btn-red"
+                            hx-post="{% url 'users-make-admin' profile_user.id %}"
+                            hx-swap="none"
+                            hx-vals='{"grant":"_grnat"}'
+                            id="in-detail-page"
+                            hx-confirm="Are you sure you want to grant admin access to {{ profile_user.username }} ?"
+                            hx-disable-element="#dectivate-button-{{ profile_user.id }}"
+                            hx-ext="disable-element">
+                            <svg xmlns="http://www.w3.org/2000/svg" 
+                            fill="none" viewBox="0 0 24 24" 
+                            stroke-width="1.5" 
+                            stroke="currentColor" 
+                            class="size-4">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285Z" />
+                            </svg>
+                            <span class="text-sm">Grant Admin Access</span>
+                              
+                            
+                        </button>
+                        {% endif %}
+                    
+                    {% endif %}
+                {% endif %}
+            </div>
+        </div>
+        <!-- new code  -->
+        <!-- <dl class="divide-y divide-gray-100">
             <div class="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
                 <dt class="text-sm font-medium leading-6 text-gray-900">Full Name</dt>
                 <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
@@ -43,7 +218,7 @@
                 <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
                     {{ profile_user.profile.country}}
                 </dd>
-            </div>
+            </div> 
 
             <div class="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
                 <dt class="text-sm font-medium leading-6 text-gray-900">Organization</dt>
@@ -100,9 +275,9 @@
                 <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
                     {{profile_user.date_joined}}
                 </dd>
-            </div>
-        
-            <div class="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+            </div>-->
+            
+            <!-- <div class="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0 mt-6 border border-gray-e6 rounded p-5">
                 <dt class="text-sm font-medium leading-6 text-gray-900">Other</dt>
                 <dd class="mt-2 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
                     <div class="flex gap-4">
@@ -116,38 +291,30 @@
                                 {% endif %}
                             </div>
                         </div>
-                        {% if profile_user.profile.skype %}
                         <div class="input-field read-only">
                             <span class="label">Skype</span>
                             <div class="input-holder">
                                 <a href="skype:{{ profile_user.profile.skype }}?userinfo">{{ profile_user.profile.skype }}</a>  
                             </div>
                         </div>
-                        {% endif %}
-
-                        {% if profile_user.profile.phone %}
                         <div class="input-field read-only">
                             <span class="label">Phone</span>
                             <div class="input-holder">
                                 {{profile_user.profile.phone}}
                             </div>
                         </div>
-                        {% endif %}
-
-                        {% if profile_user.profile.whatsup %}
                         <div class="input-field read-only">
-                            <span class="label">Phone</span>
+                            <span class="label">Whatsapp</span>
                             <div class="input-holder">
                                 {{profile_user.profile.whatsup }}
                             </div>
                         </div>
-                        {% endif %}
                     </div>
                 </dd>
-            </div>
+            </div> -->
 
-            <div class="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-                <dt class="text-sm font-medium leading-6 text-gray-900">Actions</dt>
+            <!-- <div class="py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                <dt class="text-sm font-medium leading-6 text-gray-900"></dt>
                 <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
                 {% if perms.rh.activate_deactivate_user %}
                     <button id="in-detail-page"
@@ -168,8 +335,9 @@
                                 src="{% static 'images/spinner.gif' %}" />
                     </button>
                 {% endif %}
-                  {% if perms.rh.activate_deactivate_user %}
-                    <button 
+                {% if perms.rh.activate_deactivate_user %}
+                {% if not cluster_admin %}
+                <button 
                         class="btn btn-gray"
                         hx-post="{% url 'users-make-admin' user.id %}"
                         hx-swap="none"
@@ -179,10 +347,12 @@
                     >
                         Toggle Admin Status
                     </button>
+                
+                {% endif %}
                 {% endif %}
                 </dd>
-            </div>
-        </dl>
+            </div> 
+        </dl>-->
     </div>
 </div>
 {% endblock content %}

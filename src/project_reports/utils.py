@@ -466,6 +466,7 @@ def write_import_report_template_sheet(workbook, monthly_report):
 
 def get_project_reporting_months(project):
     start_date = project.start_date
+    start_date = start_date.replace(day=1)
     end_date = project.end_date
     today = now()
     current_date = start_date

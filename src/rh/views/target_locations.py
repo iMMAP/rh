@@ -45,7 +45,10 @@ def update_target_location(request, pk):
     # Use select_related to fetch related disaggregations in one query to avoid N+1 issue
     related_disaggregations = Disaggregation.objects.filter(indicators=target_location.activity_plan.indicator)
 
-    cluster_facility = target_location.facility_monitoring
+    cluster_code = target_location.activity_plan.activity_domain.clusters.values_list("code", flat=True)
+    cluster_facility = False
+    if "health" in cluster_code:
+        cluster_facility = True
 
     DisaggregationFormSet = inlineformset_factory(
         parent_model=TargetLocation,

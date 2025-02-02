@@ -26,8 +26,8 @@ from ..forms import ProjectForm
 from ..models import (
     ActivityPlan,
     BeneficiaryType,
+    CashInKindDetail,
     Cluster,
-    Currency,
     Disaggregation,
     DisaggregationLocation,
     GrantType,
@@ -36,6 +36,8 @@ from ..models import (
     Organization,
     PackageType,
     Project,
+    RationSize,
+    RationType,
     TargetLocation,
     TransferCategory,
     TransferMechanismType,
@@ -58,9 +60,10 @@ def _preload_project_data(project):
         "beneficiaries": {b.name: b for b in BeneficiaryType.objects.all()},
         "package_types": {pt.name: pt for pt in PackageType.objects.all()},
         "unit_types": {ut.name: ut for ut in UnitType.objects.all()},
+        "ration_types": {rt.name: rt for rt in RationType.objects.all()},
+        "ration_sizes": {rs.name: rs for rs in RationSize.objects.all()},
         "grant_types": {gt.name: gt for gt in GrantType.objects.all()},
         "transfer_categories": {tc.name: tc for tc in TransferCategory.objects.all()},
-        "currencies": {c.name: c for c in Currency.objects.all()},
         "transfer_mechanisms": {tm.name: tm for tm in TransferMechanismType.objects.all()},
         "implementation_modalities": {im.name: im for im in ImplementationModalityType.objects.all()},
         "locations": {loc.code: loc for loc in Location.objects.select_related("parent")},
@@ -142,10 +145,10 @@ def _validate_location_hierarchy(row, project_data, errors, line_num):
             ),
             None,
         )
-        if not zone:
-            errors.append(
-                IMPORT_ERRORS["location_missing"].format(line=line_num, level="Zone", code=row["admin3pcode"])
-            )
+        # if not zone:
+        #     errors.append(
+        #         IMPORT_ERRORS["location_missing"].format(line=line_num, level="Zone", code=row["admin3pcode"])
+        #     )
 
     return country, province, district, zone
 
@@ -167,6 +170,7 @@ def import_activity_plans(request, pk):
         project_data = _preload_project_data(project)
 
         activity_plans = {}
+        cash_in_kind_details = []
         target_locations = []
         disaggregation_locations = []
 
@@ -186,23 +190,28 @@ def import_activity_plans(request, pk):
                         activity_domain=activity_domain,
                         activity_type=activity_type,
                         indicator=indicator,
-                        beneficiary=project_data["beneficiaries"].get(row["beneficiary"]),
                         hrp_beneficiary=project_data["beneficiaries"].get(row["hrp_beneficiary"]),
-                        package_type=project_data["package_types"].get(row["package_type"]),
-                        unit_type=project_data["unit_types"].get(row["unit_type"]),
-                        grant_type=project_data["grant_types"].get(row["grant_type"]),
-                        transfer_category=project_data["transfer_categories"].get(row["transfer_category"]),
-                        currency=project_data["currencies"].get(row["currency"]),
-                        transfer_mechanism_type=project_data["transfer_mechanisms"].get(row["transfer_mechanism_type"]),
-                        implement_modility_type=project_data["implementation_modalities"].get(
-                            row["implement_modility_type"]
-                        ),
                         description=row.get("description", None),
                     )
                     activity_plans[activity_plan_key] = activity_plan
                 else:
                     activity_plan = activity_plans[activity_plan_key]
-
+                cashinkin_detail = CashInKindDetail(
+                    activity_plan=activity_plan,
+                    package_type=project_data["package_types"].get(row["package_type"]),
+                    unit_type=project_data["unit_types"].get(row["unit_type"]),
+                    units=row.get("transfer_value"),
+                    no_of_transfers=row.get("no_of_transfers"),
+                    ration_size=project_data["ration_sizes"].get(row["ration_size"]),
+                    ration_type=project_data["ration_types"].get(row["ration_type"]),
+                    grant_type=project_data["grant_types"].get(row["grant_type"]),
+                    transfer_category=project_data["transfer_categories"].get(row["transfer_category"]),
+                    transfer_mechanism_type=project_data["transfer_mechanisms"].get(row["transfer_mechanism_type"]),
+                    implement_modality_type=project_data["implementation_modalities"].get(
+                        row["implement_modality_type"]
+                    ),
+                )
+                cash_in_kind_details.append(cashinkin_detail)
                 # Validate locations
                 country, province, district, zone = _validate_location_hierarchy(row, project_data, errors, line_num)
                 if not country or not province or not district:
@@ -240,6 +249,7 @@ def import_activity_plans(request, pk):
         else:
             with transaction.atomic():
                 ActivityPlan.objects.bulk_create(activity_plans.values())
+                CashInKindDetail.objects.bulk_create(cash_in_kind_details)
                 TargetLocation.objects.bulk_create(target_locations)
                 DisaggregationLocation.objects.bulk_create(disaggregation_locations)
 
@@ -266,7 +276,7 @@ def export_activity_plans_import_template(request, pk):
         "unit_type",
         "ration_type",
         "ration_size",
-        "units/transfer_value",
+        "transfer_value",
         "no_of_transfers",
         "grant_type",
         "transfer_category",

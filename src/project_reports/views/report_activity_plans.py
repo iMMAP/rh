@@ -115,6 +115,7 @@ def delete_report_activity_plan(request, plan_report):
 @login_required
 def hx_activity_plan_info(request):
     activity_plan = None
+    cashinkind_detail = None
     try:
         activity_plan_id = request.POST.get("activity_plan", None)
 
@@ -122,9 +123,12 @@ def hx_activity_plan_info(request):
             raise
 
         activity_plan = ActivityPlan.objects.get(pk=activity_plan_id)
+        cashinkind_detail = activity_plan.cashinkinddetail_set.all()
     except Exception:
         activity_plan = None
+        cashinkind_detail = None
+    display_block = any(item.implement_modality_type for item in cashinkind_detail)
 
-    context = {"activity_plan": activity_plan}
+    context = {"activity_plan": activity_plan, "cashinkind_detail": cashinkind_detail, "display_block": display_block}
 
     return render(request, "project_reports/report_activity_plans/partials/_activity_plan_info.html", context)

@@ -12,14 +12,14 @@ from project_reports.models import ActivityPlanReport, ProjectMonthlyReport, Res
 from rh.models import (
     Disaggregation,
     FacilitySiteType,
-    GrantType,
-    ImplementationModalityType,
-    PackageType,
-    RationSize,
-    RationType,
-    TransferCategory,
-    TransferMechanismType,
-    UnitType,
+    # GrantType,
+    # ImplementationModalityType,
+    # PackageType,
+    # RationSize,
+    # RationType,
+    # TransferCategory,
+    # TransferMechanismType,
+    # UnitType,
 )
 
 header_style = NamedStyle(name="header")
@@ -288,16 +288,16 @@ def write_import_report_template_sheet(workbook, monthly_report):
         {"header": "activity_type", "type": "string", "width": 80},
         {"header": "response_types", "type": "string", "width": 30},
         {"header": "implementing_partners", "type": "string", "width": 30},
-        {"header": "package_type", "type": "string", "width": 30},
-        {"header": "ration_type", "type": "string", "width": 30},
-        {"header": "ration_size", "type": "string", "width": 30},
-        {"header": "unit_type", "type": "string", "width": 30},
-        {"header": "units/transfer_value", "type": "string", "width": 30},
-        {"header": "no_of_transfers", "type": "string", "width": 30},
-        {"header": "grant_type", "type": "string", "width": 30},
-        {"header": "transfer_category", "type": "string", "width": 30},
-        {"header": "transfer_mechanism_type", "type": "string", "width": 30},
         {"header": "implement_modility_type", "type": "string", "width": 30},
+        {"header": "transfer_mechanism_type", "type": "string", "width": 30},
+        {"header": "package_type", "type": "string", "width": 30},
+        {"header": "ration_size", "type": "string", "width": 30},
+        {"header": "ration_type", "type": "string", "width": 30},
+        {"header": "unit_type", "type": "string", "width": 30},
+        {"header": "transfer_category", "type": "string", "width": 30},
+        {"header": "grant_type", "type": "string", "width": 30},
+        {"header": "no_of_transfers", "type": "string", "width": 30},
+        {"header": "transfer_value", "type": "string", "width": 30},
         {"header": "beneficiary_status", "type": "string", "width": 30},
         {"header": "previously_assisted_by", "type": "string", "width": 50},
         {"header": "admin0name", "type": "string", "width": 30},
@@ -340,14 +340,6 @@ def write_import_report_template_sheet(workbook, monthly_report):
     # write the rows with report data
     container_dictionary = {
         "reponseTypeList": ["E"],
-        "package_type": ["G"],
-        "ration_type": ["H"],
-        "ration_size": ["I"],
-        "unit_type": ["J"],
-        "grant_type": ["M"],
-        "transfer_category": ["N"],
-        "transfer_mc_type": ["O"],
-        "im_modility_type": ["P"],
         "beneficiary_status_list": ["Q", "New Beneficiary", "Existing Beneficiaries"],
         "safe_space": ["AG", "True", "False"],
         "facilitySiteTypeList": ["AA"],
@@ -364,18 +356,28 @@ def write_import_report_template_sheet(workbook, monthly_report):
         "admin2nameList": ["X"],
         "implementing_partner_list": ["F"],
         "hrp_beneficiary": ["AF"],
+        "transfer_value": ["P"],
+        "no_of_transfers": ["O"],
+        "grant_type": ["N"],
+        "transfer_category": ["M"],
+        "unit_type": ["L"],
+        "ration_type": ["K"],
+        "ration_size": ["J"],
+        "package_type": ["I"],
+        "transfer_mc_type": ["H"],
+        "im_modility_type": ["G"],
     }
     project = monthly_report.project
-    container_dictionary["package_type"].extend(list(PackageType.objects.values_list("name", flat=True)))
-    container_dictionary["unit_type"].extend(list(UnitType.objects.values_list("name", flat=True)))
-    container_dictionary["grant_type"].extend(list(GrantType.objects.values_list("name", flat=True)))
-    container_dictionary["im_modility_type"].extend(
-        list(ImplementationModalityType.objects.values_list("name", flat=True))
-    )
-    container_dictionary["ration_size"].extend(list(RationSize.objects.values_list("name", flat=True).order_by("-id")))
-    container_dictionary["ration_type"].extend(list(RationType.objects.values_list("name", flat=True)))
-    container_dictionary["transfer_mc_type"].extend(list(TransferMechanismType.objects.values_list("name", flat=True)))
-    container_dictionary["transfer_category"].extend(list(TransferCategory.objects.values_list("name", flat=True)))
+    # container_dictionary["package_type"].extend(list(PackageType.objects.values_list("name", flat=True)))
+    # container_dictionary["unit_type"].extend(list(UnitType.objects.values_list("name", flat=True)))
+    # container_dictionary["grant_type"].extend(list(GrantType.objects.values_list("name", flat=True)))
+    # container_dictionary["im_modility_type"].extend(
+    #     list(ImplementationModalityType.objects.values_list("name", flat=True))
+    # )
+    # container_dictionary["ration_size"].extend(list(RationSize.objects.values_list("name", flat=True).order_by("-id")))
+    # container_dictionary["ration_type"].extend(list(RationType.objects.values_list("name", flat=True)))
+    # container_dictionary["transfer_mc_type"].extend(list(TransferMechanismType.objects.values_list("name", flat=True)))
+    # container_dictionary["transfer_category"].extend(list(TransferCategory.objects.values_list("name", flat=True)))
 
     facility = list(FacilitySiteType.objects.filter(cluster__code="health").values_list("name", flat=True))
     responseType = list(ResponseType.objects.values_list("name", flat=True))
@@ -404,6 +406,23 @@ def write_import_report_template_sheet(workbook, monthly_report):
             )
             plain_dictionary_lists["hrp_beneficiary"].append(str(plan.hrp_beneficiary if plan.hrp_beneficiary else ""))
             num_rows += 1
+        for item in plan.cashinkinddetail_set.all():
+            plain_dictionary_lists["im_modility_type"].append(
+                str(item.implement_modality_type.name) if item.implement_modality_type else ""
+            )
+            plain_dictionary_lists["transfer_mc_type"].append(
+                str(item.transfer_mechanism_type.name) if item.transfer_mechanism_type else ""
+            )
+            plain_dictionary_lists["package_type"].append(str(item.package_type.name) if item.package_type else "")
+            plain_dictionary_lists["ration_type"].append(str(item.ration_type.name) if item.ration_type else "")
+            plain_dictionary_lists["ration_size"].append(str(item.ration_size.name) if item.ration_size else "")
+            plain_dictionary_lists["unit_type"].append(str(item.unit_type.name) if item.unit_type else "")
+            plain_dictionary_lists["transfer_category"].append(
+                str(item.transfer_category.name) if item.transfer_category else ""
+            )
+            plain_dictionary_lists["grant_type"].append(str(item.grant_type.name) if item.grant_type else "")
+            plain_dictionary_lists["no_of_transfers"].append(str(item.no_of_transfers) if item.no_of_transfers else "")
+            plain_dictionary_lists["transfer_value"].append(str(item.units) if item.units else "")
 
     container_dictionary["reponseTypeList"].extend(responseType)
     if "health" in cluster_code:

@@ -14,7 +14,6 @@ from rh.models import (
     ActivityDomain,
     ActivityPlan,
     BeneficiaryType,
-    Currency,
     Disaggregation,
     GrantType,
     ImplementationModalityType,
@@ -22,6 +21,8 @@ from rh.models import (
     LocationType,
     Organization,
     PackageType,
+    RationSize,
+    RationType,
     TargetLocation,
     TransferCategory,
     TransferMechanismType,
@@ -125,10 +126,12 @@ def import_report_activities(request, pk):
                     field_mappings = {
                         "package_type": PackageType,
                         "unit_type": UnitType,
+                        "ration_size": RationSize,
+                        "ration_type": RationType,
                         "grant_type": GrantType,
                         "transfer_category": TransferCategory,
                         "transfer_mechanism_type": TransferMechanismType,
-                        "implement_modility_type": ImplementationModalityType,
+                        "implement_modality_type": ImplementationModalityType,
                     }
 
                     mapped_data = {}
@@ -151,14 +154,16 @@ def import_report_activities(request, pk):
                             mapped_data[field] = None
 
                     # Unpack mapped_data
-                    package_type = mapped_data.get("package_type")
-                    unit_type = mapped_data.get("unit_type")
-                    units = row["units"] or 0
-                    no_of_transfers = row["no_of_transfers"] or 0
-                    grant_type = mapped_data.get("grant_type")
-                    transfer_category = mapped_data.get("transfer_category")
-                    transfer_mechanism_type = mapped_data.get("transfer_mechanism_type")
-                    implement_modility_type = mapped_data.get("implement_modility_type")
+                    # package_type = mapped_data.get("package_type")
+                    # unit_type = mapped_data.get("unit_type")
+                    # ration_size = mapped_data.get("ration_size")
+                    # ration_type = mapped_data.get("ration_type")
+                    # units = row["transfer_value"] or 0
+                    # no_of_transfers = row["no_of_transfers"] or 0
+                    # grant_type = mapped_data.get("grant_type")
+                    # transfer_category = mapped_data.get("transfer_category")
+                    # transfer_mechanism_type = mapped_data.get("transfer_mechanism_type")
+                    # implement_modality_type = mapped_data.get("implement_modility_type")
 
                     beneficiary_status = {
                         label: key for key, label in TargetLocationReport._meta.get_field("beneficiary_status").choices
@@ -183,7 +188,7 @@ def import_report_activities(request, pk):
 
                     location_type = LocationType.objects.filter(name=row.get("location_type")).first()
 
-                    non_hrp_beneficiary = BeneficiaryType.objects.filter(name=row.get("non_hrp_beneficiary")).first()
+                    # non_hrp_beneficiary = BeneficiaryType.objects.filter(name=row.get("non_hrp_beneficiary")).first()
                     hrp_beneficiary = BeneficiaryType.objects.filter(name=row.get("hrp_beneficiary")).first()
 
                     project_activity_plan = ActivityPlan.objects.filter(
@@ -193,7 +198,7 @@ def import_report_activities(request, pk):
                         activity_type_id=activity_type.id,
                         indicator_id=indicator.id,
                         hrp_beneficiary=hrp_beneficiary,
-                        beneficiary=non_hrp_beneficiary,
+                        # beneficiary=non_hrp_beneficiary,
                     ).first()
 
                     activity_plan_key = (row["activity_domain"], row["activity_type"], row["indicator"])
@@ -206,15 +211,16 @@ def import_report_activities(request, pk):
                         activity_plan_report = ActivityPlanReport(
                             monthly_report=monthly_report,
                             activity_plan=project_activity_plan,
-                            package_type=package_type,
-                            unit_type=unit_type,
-                            units=units,
-                            no_of_transfers=no_of_transfers,
-                            grant_type=grant_type,
-                            transfer_category=transfer_category,
-                            currency=Currency.objects.filter(name=row["currency"]).first(),
-                            transfer_mechanism_type=transfer_mechanism_type,
-                            implement_modility_type=implement_modility_type,
+                            # package_type=package_type,
+                            # unit_type=unit_type,
+                            # ration_size=ration_size,
+                            # ration_type=ration_type,
+                            # units=units,
+                            # no_of_transfers=no_of_transfers,
+                            # grant_type=grant_type,
+                            # transfer_category=transfer_category,
+                            # transfer_mechanism_type=transfer_mechanism_type,
+                            # implement_modality_type=implement_modality_type,
                         )
                         report_activities[activity_plan_key] = activity_plan_report
                         activity_plan_reports_list.append(activity_plan_report)

@@ -35,5 +35,58 @@
             </div>
         </div>
     </div>
+    {% if display_block %}
+        <div class="bg-gray-f5 border border-gray-e6">
+            <p class="p-2 text-gray-53 font-semibold border-b border-gray-e6 flex gap-2 items-center">
+                Activity Plan Cash & In Kind Details Info 
+            </p>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 p-3 py-4">
+                {% for item in cashinkind_detail %}
+                <div class="field-col">
+                    <span class="">Implementation Modality</span>
+                    <span class="text-read-only">{{item.implement_modality_type.name}}</span>
+                </div>
+                <div class="field-col">
+                    <span>Package Type</span>
+                    <span class="text-read-only">{{item.package_type.name}}</span>
+                </div>
+                {% if item.unit_type %}
+                <div class="field-col">
+                    <span>Unit type</span>
+                    <span class="text-read-only">{{item.unit_type.name}}</span>
+                </div>
+                {% endif %}
+                {% if item.ration_type %}
+                <div class="field-col">
+                    <span>Ration type</span>
+                    <span class="text-read-only">{{item.ration_type.name}}</span>
+                </div>
+                {% endif %}
+                {% if item.ration_size %}
+                <div class="field-col">
+                    <span>Ration size</span>
+                    <span class="text-read-only">{{item.ration_size.name}}</span>
+                </div>
+                {% endif %}
+                <div class="field-col">
+                    <span>Transfer Mechanism Type</span>
+                    <span class="text-read-only">{{item.transfer_mechanism_type.name}}</span>
+                </div>
+                <div class="field-col">
+                    <span>Transfer Category</span>
+                    <span class="text-read-only">{{item.transfer_category.name}}</span>
+                </div>
+                <div class="field-col">
+                    <span>Transfer Value</span>
+                    <span class="text-read-only">{{item.units}}</span>
+                </div>
+                <div class="field-col">
+                    <span>No.of Transfers</span>
+                    <span class="text-read-only">{{item.no_of_transfers}}</span>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    {% endif %}
 </div>
 {% endif %}

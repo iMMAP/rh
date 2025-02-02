@@ -64,8 +64,8 @@
                                         </a>
                                     </span>
                                     <span class="btn btn-gray" style="float:right">
-                                        <a <a href="{% url 'create_report_target_location'  report_activity_plan.pk %}" class="btn btn-gray">
-                                            <svg style="" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4 text-red">
+                                        <a href="{% url 'create_report_target_location'  report_activity_plan.pk %}" class="btn btn-gray">
+                                            <svg viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4 text-red">
                                                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
                                             </svg>
                                             Location
@@ -105,7 +105,11 @@
                                             <div class="select-field">
                                                 <span class="label">Project Activity Plan</span>
                                                 <p class="help-text">{{ form.activity_plan.help_text }}
-                                                    <span class="icon-info mr-1 "></span>Only `In-progress` Activity plans are displayed. If you the don't see your indicator in the list, go to <a target="_blank" href="{% url 'activity-plans-list' project.pk %}" class="text-red underline">activity plans</a> page to add new activity plan or update existing one.
+                                                    <span class="icon-info mr-1"></span>Only `In-progress` Activity plans are displayed. If you the don't see your indicator in the list, go to <a target="_blank" href="{% url 'activity-plans-list' project.pk %}" class="text-red underline">activity plans</a> page to add new activity plan or update existing one. <br>
+                                                </p>
+                                                <p class="help-text">
+                                                    <span class="icon-info mr-1"></span>
+                                                    The Activity plan is presented in the following order in the dropdown list: (Activity Plan: Activity Domain - Activity Type - Indicator.)
                                                 </p>
                                                 {{ form.activity_plan }}
                                                 <p class="sign-up-field-error">{{ form.activity_plan.errors }}</p>
@@ -127,110 +131,6 @@
                                                             <p class="sign-up-field-error">{{ form.response_types.errors }}</p>
                                                         </div>
                                                     </div>
-
-                                                   
-                                                 
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                       
-
-                                        <!-- Indicator types start to diaplay -->
-                                        <div id="{{ form.prefix }}-indicator-types">
-                                            <div class="row">
-                                                <div class="multiple-fields-row">
-                                                    {% if report_activity_plan.indicator.package_type %}
-                                                        <div class="field-col">
-                                                            <div class="select-field">
-                                                                <label>{{ form.package_type.label }}/Ration</label>
-                                                                {{ form.package_type }}
-                                                                <small class="sign-up-field-error">{{ form.package_type.errors }}</small>
-                                                            </div>
-                                                        </div>
-                                                    {% endif %}
-                                                    {% if report_activity_plan.indicator.grant_type %}
-                                                        <div class="field-col">
-                                                            <div class="select-field">
-                                                                <label>{{ form.grant_type.label }}/Assistance Type</label>
-                                                                {{ form.grant_type }}
-                                                                <small class="sign-up-field-error">{{ form.grant_type.errors }}</small>
-                                                            </div>
-                                                        </div>
-                                                    {% endif %}
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col col-lg">
-                                                    <div class="multiple-fields-row three-items">
-                                                        {% if report_activity_plan.indicator.unit_type %}
-                                                            <div class="field-col">
-                                                                <div class="select-field">
-                                                                    <label>{{ form.unit_type.label }}</label>
-                                                                    {{ form.unit_type }}
-                                                                    <small class="sign-up-field-error">{{ form.unit_type.errors }}</small>
-                                                                </div>
-                                                            </div>
-                                                        {% endif %}
-                                                        {% if report_activity_plan.indicator.units %}
-                                                            <div class="field-col" style="margin-bottom: 7px;">
-                                                                <div class="select-field">
-                                                                    <label>{{ form.units.label }}</label>
-                                                                    {{ form.units }}
-                                                                    <small class="sign-up-field-error">{{ form.units.errors }}</small>
-                                                                </div>
-                                                            </div>
-                                                        {% endif %}
-                                                        {% if report_activity_plan.indicator.no_of_transfers %}
-                                                            <div class="field-col" style="margin-bottom: 7px;">
-                                                                <div class="select-field">
-                                                                    <label>{{ form.no_of_transfers.label }}</label>
-                                                                    {{ form.no_of_transfers }}
-                                                                    <small class="sign-up-field-error">{{ form.no_of_transfers.errors }}</small>
-                                                                </div>
-                                                            </div>
-                                                        {% endif %}
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="multiple-fields-row">
-                                                    {% if report_activity_plan.indicator.implement_modility_type %}
-                                                        <div class="field-col">
-                                                            <div class="select-field">
-                                                                <label>{{ form.implement_modility_type.label }}</label>
-                                                                {{ form.implement_modility_type }}
-                                                                <small class="sign-up-field-error">{{ form.implement_modility_type.errors }}</small>
-                                                            </div>
-                                                        </div>
-                                                    {% endif %}
-                                                    {% if report_activity_plan.indicator.transfer_mechanism_type %}
-                                                        <div class="field-col">
-                                                            <div class="select-field">
-                                                                <label>{{ form.transfer_mechanism_type.label }}</label>
-                                                                {{ form.transfer_mechanism_type }}
-                                                                <small class="sign-up-field-error">{{ form.transfer_mechanism_type.errors }}</small>
-                                                            </div>
-                                                        </div>
-                                                    {% endif %}
-                                                    {% if report_activity_plan.indicator.transfer_category or form.initial.indicator.transfer_category %}
-                                                        <div class="field-col">
-                                                            <div class="select-field">
-                                                                <label>{{ form.transfer_category.label }}</label>
-                                                                {{ form.transfer_category }}
-                                                                <small class="sign-up-field-error">{{ form.transfer_category.errors }}</small>
-                                                            </div>
-                                                        </div>
-                                                    {% endif %}
-                                                    {% if report_activity_plan.indicator.currency or form.initial.indicator.currency %}
-                                                        <div class="field-col">
-                                                            <div class="select-field">
-                                                                <label>{{ form.currency.label }}</label>
-                                                                {{ form.currency }}
-                                                                <small class="sign-up-field-error">{{ form.currency.errors }}</small>
-                                                            </div>
-                                                        </div>
-                                                    {% endif %}
                                                 </div>
                                             </div>
                                         </div>

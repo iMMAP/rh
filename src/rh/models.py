@@ -533,7 +533,7 @@ class ActivityPlan(models.Model):
         return [state[0] for state in STATES]
 
     def __str__(self):
-        return f"Activity Plan: {self.activity_domain} - {self.indicator}"
+        return f"Activity Plan: {self.activity_domain} - {self.activity_type} - {self.indicator}"
 
     class Meta:
         verbose_name = "Activity Plan"

@@ -41,7 +41,7 @@ class ProfileCreateForm(forms.ModelForm):
 
     class Meta:
         model = Profile
-        fields = ["position", "organization", "clusters", "country"]
+        fields = ["position", "phone", "organization", "clusters", "country"]
         labels = {"clusters": "Clusters / Sectors"}
         help_texts = {
             "organization": "If your organization is not listed, please contact us",
@@ -56,6 +56,11 @@ class ProfileCreateForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.fields["position"].required = True
+        self.fields["organization"].required = True
+        self.fields["clusters"].required = True
+        self.fields["country"].required = True
+        self.fields["phone"].required = True
 
 
 class UserUpdateForm(forms.ModelForm):
